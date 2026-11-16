@@ -1,0 +1,40 @@
+{{Deadman permanent}}
+{{Infobox Item
+|name = Blood money
+|image = [[File:Blood money 1.png]] [[File:Blood money 2.png]] [[File:Blood money 3.png]] [[File:Blood money 4.png]] [[File:Blood money 5.png]]<br/>[[File:Blood money 25.png]] [[File:Blood money 100.png]] [[File:Blood money 250.png]] [[File:Blood money 1000.png]] [[File:Blood money 10000.png]]
+|release = [[29 October]] [[2015]]
+|update = Deadman Mode
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = Yes
+|noteable = No
+|options = Drop
+|examine = These can be taken to Deadman Nigel in Lumbridge.
+|value = 1
+|alchable = No
+|weight = 0.000
+|id = 13307
+}}
+[[File:Blood money detail.png|100px|left]]
+'''Blood money''' is received as a drop in [[Deadman Mode]] after killing another player. It can be used on [[Nigel]] in order to purchase [[Deadman armour]] at the price of {{Currency|Blood money|1}} per piece.
+
+Blood money was also used in the [[Deadman: All Stars Season 3#Blood money|Deadman: All Stars Season 3]] event, where it could be earned in varying amounts for kills and spent on items for the finale.
+
+==Gallery==
+<gallery captionalign="center" widths="120">
+Blood money 1 detail.png|One piece of blood money
+Blood money 2 detail.png|Two pieces of blood money
+Blood money 3 detail.png|Three pieces of blood money
+Blood money 4 detail.png|Four pieces of blood money
+Blood money 5 detail.png|Five pieces of blood money
+Blood money 25 detail.png|Twenty-five pieces of blood money
+Blood money 100 detail.png|One hundred pieces of blood money
+Blood money 250 detail.png|250 pieces of blood money
+Blood money 1000 detail.png|1,000 pieces of blood money
+Blood money detail.png|10,000 pieces of blood money
+</gallery>
+
+{{Currencies}}
+{{Deadman Mode}}

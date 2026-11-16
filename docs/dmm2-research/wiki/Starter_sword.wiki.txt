@@ -1,0 +1,86 @@
+{{Deadman seasonal}}
+{{Infobox Item
+|name = Starter sword
+|image = [[File:Starter sword.png]]
+|release = [[17 March]] [[2018]]
+|update = Deadman Summer Season, live now!
+|members = No
+|quest = No
+|tradeable = No
+|equipable = Yes
+|stackable = No
+|noteable = No
+|options = Wield, Destroy
+|destroy = You can get another from a starter pack.
+|examine = A sword from a starter pack.
+|value = 1
+|alchable = No
+|weight = 1.814
+|id = 22331
+}}
+[[File:Starter sword detail.png|left|130px]]
+The '''starter sword''' is a weapon obtained from a [[Deadman starter pack]], along with the [[starter bow]] and [[starter staff|staff]]. It has no requirements to wield, and is intended to be used to help a player get started in a seasonal [[Deadman Mode]] server.
+
+Despite appearing as a [[shortsword]], it is actually a [[Weapons/Categories#Slash sword|slash sword]] with the stats equal to that of a [[mithril scimitar]].
+
+As with all starter weapons, it cannot be used against other players.
+
+==Combat stats==
+{{Infobox Bonuses
+|astab = +5
+|aslash = +21
+|acrush = -2
+|amagic = 0
+|arange = 0
+|dstab = 0
+|dslash = +1
+|dcrush = 0
+|dmagic = 0
+|drange = 0
+|str = +20
+|rstr = 0
+|mdmg = 0
+|prayer = 0
+|slot = weapon
+|speed = 4
+|attackrange = 1
+|combatstyle = Slash Sword
+|image = [[File:Starter sword equipped male.png|170px]]
+|altimage = [[File:Starter sword equipped female.png|170px]]
+}}
+
+{{CombatStyles|Slash Sword|speed=4|attackrange=1}}
+
+==Gallery==
+<gallery mode="packed" heights="200" style="text-align:left">
+DMM Apoc starter weapons concept.jpg|Concept art of the starter weapons, by [[Mod Jerv]].
+</gallery>
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 21 January 2026
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|change = The item's value was decreased from 500 to 1.
+}}
+{{Subject changes
+|date = 23 August 2023
+|update = Deadman: Apocalypse - Friday 25th August
+|change = The item has been [[graphically updated]].
+}}
+{{Subject changes footer}}
+
+===Gallery (historical)===
+{|style="text-align: center" cellpadding="15"
+|[[File:Starter sword v1 detail.png|center|300x150px]]
+|[[File:Starter sword detail.png|center|300x150px]]
+|-
+|[[File:Starter sword v1.png|center]]
+|[[File:Starter sword.png|center]]
+|-
+|17 March 2018 –<br/>23 August 2023
+|23 August 2023–<br/>present
+|}
+
+{{Deadman Mode}}
+{{Slash weapons}}

@@ -1,0 +1,234 @@
+{{Infobox NPC
+|version1 = Void Knights' Outpost
+|version2 = Port Phasmatys
+|version3 = Lumbridge, East Varrock
+|version4 = West Varrock
+|version5 = Falador, Ardougne, Kourend Castle
+|version6 = Catherby, Seers' Village, Sophanem
+|version7 = Tree Gnome Stronghold
+|version8 = Unused
+|version9 = Ferox Enclave
+|name = Financial Wizard
+|image1 = [[File:Financial Wizard (1).png|250x250px]]
+|image2 = [[File:Financial Wizard (2).png|250x250px]]
+|image3 = [[File:Financial Wizard (3).png|250x250px]]
+|image4 = [[File:Financial Wizard (4).png|250x250px]]
+|image5 = [[File:Financial Wizard (5).png|250x250px]]
+|image6 = [[File:Financial Wizard (6).png|250x250px]]
+|image7 = [[File:Financial Wizard (7).png|250x250px]]
+|image8 = [[File:Financial Wizard (8).png|250x250px]]
+|image9 = [[File:Financial Wizard (9).png|250x250px]]
+|release = [[29 October]] [[2015]]
+|update = Deadman Mode
+|members = Yes
+|race1 = [[Human]]
+|race2 = [[Ghost]]
+|race3 = [[Human]]
+|race4 = [[Human]]
+|race5 = [[Human]]
+|race6 = [[Human]]
+|race7 = [[Gnome]]
+|race8 = [[Human]]
+|race9 = [[Human]]
+|location = Next to bankers
+|gender = Male
+|options1 = Talk-to, Bank, Collect, Deposit-box
+|options2 = Talk-to, Bank, Collect, Deposit-box
+|options3 = Talk-to, Bank, Collect, Deposit-box
+|options4 = Talk-to, Bank, Collect, Deposit-box
+|options5 = Talk-to, Bank, Collect, Deposit-box
+|options6 = Talk-to, Bank, Collect, Deposit-box
+|options7 = Talk-to, Bank, Collect, Deposit-box
+|options8 = Talk-to
+|options9 = Talk-to, Bank, Collect, Deposit-box
+|examine1 = A master of the arcane arts - aka finance.
+|examine2 = A dead master of the arcane arts - aka finance.
+|examine3 = A master of the arcane arts - aka finance.
+|examine4 = A master of the arcane arts - aka finance.
+|examine5 = A master of the arcane arts - aka finance.
+|examine6 = A master of the arcane arts - aka finance.
+|examine7 = A master of the arcane arts - aka finance.
+|examine8 = He's a wiz with valuables.
+|examine9 = A master of the arcane arts - aka finance.
+|map = No
+|id1 = 6510
+|id2 = 6514
+|id3 = 6515
+|id4 = 6516
+|id5 = 6517
+|id6 = 6518
+|id7 = 6519
+|id8 = 6703
+|id9 = 10391
+|leagueRegion = No
+}}
+{{Synced switch
+|version1 = [[File:Financial Wizard (1) chathead.png|left]]
+|version2 = [[File:Financial Wizard (2) chathead.png|left]]
+|version3 = [[File:Financial Wizard (3) chathead.png|left]]
+|version4 = [[File:Financial Wizard (4) chathead.png|left]]
+|version5 = [[File:Financial Wizard (5) chathead.png|left]]
+|version6 = [[File:Financial Wizard (6) chathead.png|left]]
+|version7 = [[File:Financial Wizard (7) chathead.png|left]]
+|version8 = [[File:Financial Wizard (8) chathead.png|left]]
+|version9 = [[File:Financial Wizard (9) chathead.png|left]]
+}}
+'''Financial Wizards''' are NPCs that only appear in [[Deadman Mode]] and are located in or near banks. Players can give them ten individual items that they wish to keep safe; when the 10 items are given to the Financial Wizards, they are securely stored in the Safe Deposit Box and cannot be used nor lost on death.
+
+Safe deposit-box can not be accessed while [[Skull (status)|skulled]].
+
+[[File:Deadman_mode_-_Safe_Deposit_Box.png|thumb|left|The Safe Deposit Box, accessed by visiting a Financial Wizard.]]
+You cannot store untradeable items. Stackable items such as bank notes, runes, arrows, bolts, etc. will not count as one item. For example, 10 [[air rune]]s will count as 10 items.
+
+==Locations==
+{{ObjectTableHead}}
+{{ObjectLocLine
+|name = Financial Wizard
+|location = [[Sophanem#Bank|Sophanem Bank]]
+|members = Yes
+|mapID = 10142
+|plane = 0
+|x:2801,y:5171
+|mtype = pin
+|leagueRegion = No
+}}
+{{ObjectLocLine
+|name = Financial Wizard
+|location = [[Tree Gnome Stronghold]]
+|members = Yes
+|mapID = 0
+|plane = 1
+|x:2440,y:3488|x:2450,y:3480|x:2443,y:3424
+|mtype = pin
+|leagueRegion = No
+}}
+{{ObjectLocLine
+|name = Financial Wizard
+|location = [[Lumbridge Castle]]
+|members = Yes
+|mapID = 0
+|plane = 2
+|x:3209,y:3222
+|mtype = pin
+|leagueRegion = No
+}}
+{{ObjectLocLine
+|name = Financial Wizard
+|location = [[Kourend Castle]]
+|members = Yes
+|mapID = 0
+|plane = 2
+|x:1611,y:3679
+|mtype = pin
+|leagueRegion = No
+}}
+{{ObjectLocLine
+|name = Financial Wizard
+|location = [[Void Knights' Outpost]]
+|members = Yes
+|mapID = 0
+|plane = 0
+|x:2666,y:2651
+|mtype = pin
+|leagueRegion = No
+}}
+{{ObjectLocLine
+|name = Financial Wizard
+|location = [[Yanille]]
+|members = Yes
+|mapID = 0
+|plane = 0
+|x:2615,y:3094
+|mtype = pin
+|leagueRegion = No
+}}
+{{ObjectLocLine
+|name = Financial Wizard
+|location = [[Port Phasmatys]]
+|members = Yes
+|mapID = 0
+|plane = 0
+|x:3690,y:3464
+|mtype = pin
+|leagueRegion = No
+}}
+{{ObjectLocLine
+|name = Financial Wizard
+|location = [[Ferox Enclave]]
+|members = Yes
+|mapID = 0
+|plane = 0
+|x:3135,y:3627
+|mtype = pin
+|leagueRegion = No
+}}
+{{ObjectLocLine
+|name = Financial Wizard
+|location = [[Catherby]]
+|members = Yes
+|mapID = 0
+|plane = 0
+|x:2810,y:3443
+|mtype = pin
+|leagueRegion = No
+}}
+{{ObjectLocLine
+|name = Financial Wizard
+|location = [[Seers' Village]]
+|members = Yes
+|mapID = 0
+|plane = 0
+|x:2728,y:3495
+|mtype = pin
+|leagueRegion = No
+}}
+{{ObjectLocLine
+|name = Financial Wizard
+|location = [[East Ardougne]]
+|members = Yes
+|mapID = 0
+|plane = 0
+|x:2615,y:3330|x:2657,y:3283
+|mtype = pin
+|leagueRegion = No
+}}
+{{ObjectLocLine
+|name = Financial Wizard
+|location = [[Falador]]
+|members = Yes
+|mapID = 0
+|plane = 0
+|x:2949,y:3366|x:3015,y:3353
+|mtype = pin
+|leagueRegion = No
+}}
+{{ObjectLocLine
+|name = Financial Wizard
+|location = [[Varrock]]
+|members = Yes
+|mapID = 0
+|plane = 0
+|x:3163,y:3490|x:3187,y:3436|x:3251,y:3418
+|mtype = pin
+|leagueRegion = No
+}}
+{{ObjectTableBottom}}
+
+==Dialogue==
+{{Hastranscript|npc}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 27 July 2017
+|update = Improvements to: Blast Furnace, Blast Mine, and Lighthouse Dungeon
+|change = One of the Grand Exchange bankers now functions as a Financial Wizard on Deadman worlds.
+}}
+{{Subject changes
+|date = 6 July 2017
+|update = Fishing Guild Expansion
+|change = A financial wizard can now be found within the bank in the Central Kourend Safezone in Deadman.
+}}
+{{Subject changes footer}}
+
+{{Deadman Mode}}

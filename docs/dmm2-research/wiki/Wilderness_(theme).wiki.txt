@@ -1,0 +1,53 @@
+'''Wilderness theme''' is a [[House style]] option for a [[player-owned house]].
+[[File:Deadman- Annihilation Overview %26 Rewards Blog (6).png|thumb|Concept art of the Wilderness theme style.]]
+This house style can be used by owning the [[annihilation blueprints]] and requires level 1 Construction to use in a player's house. The blueprints are a tradeable item that can be purchased from the [[Deadman Reward Store]] for 15,000 [[Deadman points]].
+
+The option to change to the Wilderness theme style is permanently unlocked after redecorating with the blueprints the first time. Upon unlocking the house style, a set of [[Annihilation exit portal blueprints]] are also given which can be used to recolour the exit portal.
+
+{|class="wikitable"
+!Walls<br/>(inside)
+!Walls<br/>(outside)
+!Floor<br/>(inside)
+!Flat Ground<br/>(outside)
+!Textured<br/>Ground<br/>(outside)
+!Walls<br/>(dungeon)
+!Floor<br/>(dungeon)
+|-
+|[[File:POH Wilderness theme Inside Wall.png|112x112px]]
+|[[File:POH Wilderness theme Inside Wall.png|112x112px]]
+|[[File:POH Wilderness theme Floor.png|112x112px]]
+|[[File:POH Wilderness theme Floor.png|112x112px]]
+|[[File:POH Wilderness theme Floor.png|112x112px]]
+|[[File:POH Wilderness theme Dungeon Wall.png|112x112px]]
+|[[File:POH Wilderness theme Dungeon Floor.png|112x112px]]
+|}
+
+{{Table/POH redecoration}}
+
+: '''''Tip:''' Compare the design of all the styles before choosing a suitable one for a house!''
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 5 August 2026
+|update = Wyrmscraig & Sailing Changes
+|change = Telescopes now work with the Wilderness theme for Player-Owned-Houses.
+}}
+{{Subject changes
+|date = 18 March 2026
+|update = Boat Combat Fixes
+|change = The terrain in the Wilderness [[player-owned house]] theme no longer blocks the [[Stair Space|stairwell]] opening to the [[Dungeon (Construction)|dungeon]] level.
+}}
+{{Subject changes
+|date = 11 March 2026
+|update = More from the Getting Around Poll
+|change = The superior garden floor for the Wilderness theme house style has been adjusted to display the correct shades and textures.
+}}
+{{Subject changes
+|date = 4 March 2026
+|update = Cow Boss and Skill Guide & Level-Up Changes
+|change = A bug that affected pathfinding between rooms when using the Wilderness theme house style was fixed.
+}}
+{{Subject changes footer}}
+
+{{House}}

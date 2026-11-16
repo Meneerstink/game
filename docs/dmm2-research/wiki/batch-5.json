@@ -1,0 +1,117 @@
+{
+  "batchcomplete": true,
+  "query": {
+    "pages": [
+      {
+        "ns": 120,
+        "title": "Transcript:Trinket of avarice",
+        "missing": true
+      },
+      {
+        "ns": 120,
+        "title": "Transcript:Trinket of fairies",
+        "missing": true
+      },
+      {
+        "ns": 120,
+        "title": "Transcript:Trinket of undead",
+        "missing": true
+      },
+      {
+        "pageid": 119948,
+        "ns": 6,
+        "title": "File:Deadman Tutor icon.png",
+        "revisions": [
+          {
+            "revid": 8049367,
+            "parentid": 7020701,
+            "timestamp": "2018-11-26T00:24:19Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Interface license|Icon}}\n[[Category:Map icons]]"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 586213,
+        "ns": 120,
+        "title": "Transcript:Trinket of advanced weaponry",
+        "revisions": [
+          {
+            "revid": 15355107,
+            "parentid": 15299173,
+            "timestamp": "2026-09-24T05:35:30Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{transcript|item}}\n\n==When opened==\n* {{tcond|If the player doesn't have enough space around them to open it:}}\n** {{mes|You must have nothing surrounding you to open this trinket.}}\n* {{trandom}}\n* {{topt|Corrupted armadyl godsword}}\n** {{mes|Your trinket gave you a Corrupted armadyl godsword!}}\n* {{topt|Corrupted dragon claws}}\n** {{mes|Your trinket gave you a Corrupted dragon claws!}}\n* {{topt|Corrupted Scythe of Vitur (uncharged)}}\n** {{mes|Your trinket gave you a Corrupted Scythe of Vitur (uncharged)!}}\n* {{topt|Corrupted tumeken's shadow (uncharged)}}\n** {{mes|Your trinket gave you a Corrupted tumeken's shadow (uncharged)!}}\n* {{topt|Corrupted twisted bow}}\n** {{mes|Your trinket gave you a Corrupted twisted bow!}}\n* {{topt|Corrupted voidwaker}}\n** {{mes|Your trinket gave you a Corrupted voidwaker!}}\n* {{topt|Corrupted dark bow}}\n** {{mes|Your trinket gave you a Corrupted dark bow!}}\n* {{topt|Corrupted Volatile Nightmare staff}}\n** {{mes|Your trinket gave you a Corrupted Volatile Nightmare staff!}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 640939,
+        "ns": 0,
+        "title": "Annihilation teleport scroll",
+        "revisions": [
+          {
+            "revid": 15194299,
+            "parentid": 15147167,
+            "timestamp": "2026-04-22T05:02:24Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Confuse|Armageddon teleport scroll}}\n{{Infobox Item\n|name = Annihilation teleport scroll\n|image = [[File:Annihilation teleport scroll.png]]\n|release = [[25 February]] [[2026]]\n|update = Cow Boss is Out Today!\n|members = Yes\n|quest = No\n|tradeable = Yes\n|bankable = Yes\n|equipable = Yes\n|stackable = No\n|noteable = Yes\n|options = Read, Drop\n|examine = A scroll which unlocks the Deadman: Annihilation home teleport animation.\n|value = 25000\n|alchable = No\n|weight = 0.100\n|exchange = Yes\n|id = 33018\n}}\n[[File:Annihilation teleport scroll detail.png|130px|left]]\nThe '''Annihilation teleport scroll''' is an item that can be purchased from the [[Deadman Reward Store]] for 10,000 [[Deadman: Apocalypse/Points|Deadman Points]], which are earned from participating in seasonal [[Deadman]] events. It can be used to unlock a [[Lever (Deserted Keep)|Wilderness lever]] themed [[Home Teleport]] [[animation override]]. To enable it, players can right click \"Animation\" on the Home Teleport spell icon in their spellbook and select \"Annihilation.\"\n\n==Shop locations==\n{{Store locations list|Annihilation teleport scroll}}\n\n==Transcript==\n{{hastranscript|transclude=yes}}\n\n==Gallery==\n<gallery widths=400 heights=250 mode=nolines>\nFile:Deadman- Annihilation Overview & Rewards Blog (7).png|Concept art from the [[Update:Deadman: Annihilation Overview & Rewards Blog|poll blog]]\nFile:Cow Boss is Out Today!_(22).gif|The Deadman: Annihilation home teleport animation.\n</gallery>\n\n==Changes==\n{{Subject changes header}}\n{{Subject changes\n|date = 11 March 2026\n|update = More from the Getting Around Poll\n|change = The item can now be sacrificed to [[Death's Coffer]].\n}}\n{{Subject changes\n|date = 25 February 2026\n|update = Cow Boss is Out Today!\n|change = The item was made available.\n}}\n{{Subject changes\n|date = 21 January 2026\n|update = Holy Moleys and the Hooded Slayer Helm are Here!\n|change = The item was added to the game, but was unobtainable.\n}}\n{{Subject changes footer}}\n\n{{Deadman: Annihilation}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 643328,
+        "ns": 120,
+        "title": "Transcript:Trinket of fortuity",
+        "revisions": [
+          {
+            "revid": 15120414,
+            "parentid": 15120413,
+            "timestamp": "2026-02-04T06:50:15Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Transcript|item}}\n{{incomplete|likely missing other things}}\n\n==Charging the trinket==\n* {{tbox|pic=Trinket of fortuity detail.png|You charge your trinket with 10,000,000 coins.}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 681758,
+        "ns": 0,
+        "title": "Fire ruby",
+        "revisions": [
+          {
+            "revid": 15396853,
+            "parentid": 15356561,
+            "timestamp": "2026-11-08T15:57:06Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Infobox Item\n|name = Fire ruby\n|image = [[File:Fire ruby.png]]\n|release = [[2 September]] [[2026]]\n|update = Summer Sweep Up Miscellaneous\n|members = Yes\n|quest = No\n|tradeable = Yes\n|equipable = No\n|stackable = No\n|noteable = Yes\n|options = Drop\n|examine = Rather hot to the touch, maybe I could start a fire with this.\n|value = 20000\n|weight = 0.100\n|exchange = Yes\n|id = 34422\n}}\n[[File:Fire ruby detail.png|left|120px]]\nThe '''fire ruby''' is an [[elemental gems|elemental gem]] obtained by killing [[Infernal Mage|infernal mage]]s. It is used in the creation of the [[amulet of fire]]; the fire ruby must be used on the [[Fire Altar]] along with an [[amulet of magic]] and 100 [[fire rune]]s.\n\nThe player may bring a fire ruby or other elemental gems to [[Archmage Sedridor]] to get some hints on what to do with them.\n\n==Item sources==\n{{Drop sources|Fire ruby}}\n\n==Products==\n{{Uses material list|Fire ruby}}\n\n==Trivia==\n* Despite the fire ruby's examine text it cannot, in fact, be used to light fires.\n\n==See also==\n* [[Air diamond]]\n* [[Water sapphire]]\n* [[Earth emerald]]\n\n{{Gems}}\n\n[[Category:Collection log items]]"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

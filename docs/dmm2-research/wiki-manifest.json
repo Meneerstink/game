@@ -1,0 +1,606 @@
+[
+  {
+    "title": "Corrupted Tumeken's shadow",
+    "missing": true
+  },
+  {
+    "title": "Corrupted scythe of Vitur",
+    "missing": true
+  },
+  {
+    "title": "Corrupted voidwaker",
+    "revid": 15191591,
+    "timestamp": "2026-04-22T04:45:39Z",
+    "file": "Corrupted_voidwaker.wiki.txt",
+    "sha256": "67c248e59c36ae6c10e2fd4f266972c8cf4d1b9457919a6193443d17ad421276",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15191591"
+  },
+  {
+    "title": "Corrupted dragon claws",
+    "revid": 15191592,
+    "timestamp": "2026-04-22T04:45:39Z",
+    "file": "Corrupted_dragon_claws.wiki.txt",
+    "sha256": "b73b774e39c3e57ac7a98000ac3bfac9752b606d4b2b8e597bac5c44feb72226",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15191592"
+  },
+  {
+    "title": "Corrupted armadyl godsword",
+    "revid": 15191593,
+    "timestamp": "2026-04-22T04:45:40Z",
+    "file": "Corrupted_armadyl_godsword.wiki.txt",
+    "sha256": "509237b02c68f9b1306250c7056926f6950abcaa24861f20342eba5fec8ce8f4",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15191593"
+  },
+  {
+    "title": "Corrupted twisted bow",
+    "revid": 15191594,
+    "timestamp": "2026-04-22T04:45:40Z",
+    "file": "Corrupted_twisted_bow.wiki.txt",
+    "sha256": "0b9492c558077ebb9e4ae07cc1a1bd5c6a5d7583ee8d755945816b9ecca4404e",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15191594"
+  },
+  {
+    "title": "Trinket of fairies",
+    "revid": 15191597,
+    "timestamp": "2026-04-22T04:45:42Z",
+    "file": "Trinket_of_fairies.wiki.txt",
+    "sha256": "c5534f3928ee26aee8134d262f5328b6a325a01f23ec29631773e5debc9b0471",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15191597"
+  },
+  {
+    "title": "Trinket of undead",
+    "revid": 15298165,
+    "timestamp": "2026-08-13T23:52:21Z",
+    "file": "Trinket_of_undead.wiki.txt",
+    "sha256": "7e827e926a3cc85e9e2cecccd0cc859a3b335865be3c47522ea253d7067911dc",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15298165"
+  },
+  {
+    "title": "Corrupted dark bow",
+    "revid": 15192587,
+    "timestamp": "2026-04-22T04:51:40Z",
+    "file": "Corrupted_dark_bow.wiki.txt",
+    "sha256": "bc8da8f0cafb33a48acd9c27a9c1e2c08990cfe8e875ff0e8385fa03554c7fbe",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15192587"
+  },
+  {
+    "title": "Corrupted Volatile Nightmare staff",
+    "revid": 15303344,
+    "timestamp": "2026-08-16T19:03:05Z",
+    "file": "Corrupted_Volatile_Nightmare_staff.wiki.txt",
+    "sha256": "95845579b6e49a3687d58ed7180549ce576e20a6c40de4651c83b293072ef721",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15303344"
+  },
+  {
+    "title": "Thunder khopesh",
+    "revid": 15237675,
+    "timestamp": "2026-06-22T22:05:32Z",
+    "file": "Thunder_khopesh.wiki.txt",
+    "sha256": "c2d8d20f25b4224fc3653d84b180bc4ec1abf10a86183c35cc9b686e2a82aa64",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15237675"
+  },
+  {
+    "title": "Trinket of avarice",
+    "revid": 15286577,
+    "timestamp": "2026-08-03T18:19:52Z",
+    "file": "Trinket_of_avarice.wiki.txt",
+    "sha256": "e671a43273aa51cf03be35d08e8693866adda4b011777fa38ecfeddf60aa95db",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15286577"
+  },
+  {
+    "title": "Trinket of fortuity",
+    "revid": 15286578,
+    "timestamp": "2026-08-03T18:20:04Z",
+    "file": "Trinket_of_fortuity.wiki.txt",
+    "sha256": "cfd7f5752addb0fdd57b0b348b17ae641623b5e5d001f9237dd08289185877c9",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15286578"
+  },
+  {
+    "title": "Amulet of fire",
+    "revid": 15396852,
+    "timestamp": "2026-11-08T15:54:52Z",
+    "file": "Amulet_of_fire.wiki.txt",
+    "sha256": "26711b486930a2c21dc8cdce2019957af667b0b45924f737618c64dd9a93fc95",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15396852"
+  },
+  {
+    "title": "Nigel",
+    "revid": 15401296,
+    "timestamp": "2026-11-12T18:13:26Z",
+    "file": "Nigel.wiki.txt",
+    "sha256": "8542e56fd3b0b0181feee0aaf03dd25d892acdb154a20047008ee89f0ed50159",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15401296"
+  },
+  {
+    "title": "Financial Wizard",
+    "revid": 15364116,
+    "timestamp": "2026-10-04T10:35:18Z",
+    "file": "Financial_Wizard.wiki.txt",
+    "sha256": "02ff28e63fa2d37d62b1f106a2d41d463776baf1a9797bff6868f9e7dff1e512",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15364116"
+  },
+  {
+    "title": "Blood money",
+    "revid": 15380671,
+    "timestamp": "2026-10-23T22:06:09Z",
+    "file": "Blood_money.wiki.txt",
+    "sha256": "be0870ddead36b7690808830efbc4020b953cf0cb772096b73489907613af1b7",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15380671"
+  },
+  {
+    "title": "Deadman starter pack",
+    "revid": 15188784,
+    "timestamp": "2026-04-22T04:24:14Z",
+    "file": "Deadman_starter_pack.wiki.txt",
+    "sha256": "02c81efebbe6f73e237536d6ebba8128afe7b7c3421ab42b5ccf5242305f40e8",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15188784"
+  },
+  {
+    "title": "Financial Seer",
+    "revid": 15390113,
+    "timestamp": "2026-11-02T19:29:12Z",
+    "file": "Financial_Seer.wiki.txt",
+    "sha256": "81427be232f820318f29912a52ff2edb05c31f88de976a3e6081392e8d37f3f6",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15390113"
+  },
+  {
+    "title": "Transcript:Nigel",
+    "revid": 15394041,
+    "timestamp": "2026-11-04T18:44:19Z",
+    "file": "Transcript%3ANigel.wiki.txt",
+    "sha256": "92cdddd6bd52e7a6bb9e28f4d2d2e6cda531010b0687228a5770fba807209b6b",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15394041"
+  },
+  {
+    "title": "Transcript:Financial Wizard",
+    "revid": 14868949,
+    "timestamp": "2025-03-23T15:53:01Z",
+    "file": "Transcript%3AFinancial_Wizard.wiki.txt",
+    "sha256": "9c8b4d45166961a6cd31a12d456916e0af27d503cb0b1a4a01c9436707012431",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/14868949"
+  },
+  {
+    "title": "Deadman armour",
+    "revid": 15226533,
+    "timestamp": "2026-06-05T21:53:41Z",
+    "file": "Deadman_armour.wiki.txt",
+    "sha256": "9b353d79f1b393506033907025d7675bbe53f13b8894a89c6ca0b04d6ca8b1ea",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15226533"
+  },
+  {
+    "title": "Starter sword",
+    "revid": 15260147,
+    "timestamp": "2026-07-10T19:21:37Z",
+    "file": "Starter_sword.wiki.txt",
+    "sha256": "3d759b6e6a2b49779518f006cb34a8c43777e1ca76a5f8d44e862ff8cb36d4d0",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15260147"
+  },
+  {
+    "title": "Starter bow",
+    "revid": 15188786,
+    "timestamp": "2026-04-22T04:24:15Z",
+    "file": "Starter_bow.wiki.txt",
+    "sha256": "0c5a197cd3843ca7f2ba0793395c3861eb9e776524d85814d3b11e05822bd619",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15188786"
+  },
+  {
+    "title": "Starter staff",
+    "revid": 15188787,
+    "timestamp": "2026-04-22T04:24:16Z",
+    "file": "Starter_staff.wiki.txt",
+    "sha256": "93013c7e42002570ede9811ee735a1eb1d7b698bd1be18755f4f0d1f985003d2",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15188787"
+  },
+  {
+    "title": "Transcript:Financial Seer",
+    "revid": 14996472,
+    "timestamp": "2025-09-29T15:21:08Z",
+    "file": "Transcript%3AFinancial_Seer.wiki.txt",
+    "sha256": "ca57166bc36364700eb0c6a92a4469fcc862972eeb1bb41674d228f1f5cbd36a",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/14996472"
+  },
+  {
+    "title": "Armageddon weapon scroll",
+    "revid": 15299526,
+    "timestamp": "2026-08-14T03:24:52Z",
+    "file": "Armageddon_weapon_scroll.wiki.txt",
+    "sha256": "6cc34f5370ab88ac5627533cd0af702ffe7055b00b6b0b8ca45f4f08c781da89",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15299526"
+  },
+  {
+    "title": "Armageddon cape fabric",
+    "revid": 15401338,
+    "timestamp": "2026-11-12T18:56:24Z",
+    "file": "Armageddon_cape_fabric.wiki.txt",
+    "sha256": "ca188cca8739cb04359f16191defed85b51b0abf9c3b828a417865f176e4b8f0",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15401338"
+  },
+  {
+    "title": "Armageddon teleport scroll",
+    "revid": 15238901,
+    "timestamp": "2026-06-24T19:50:32Z",
+    "file": "Armageddon_teleport_scroll.wiki.txt",
+    "sha256": "d10d09ceb637cb06ac33e4e7710493e7d993addf3931547685153151478e79fe",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15238901"
+  },
+  {
+    "title": "Armageddon rug",
+    "revid": 15238900,
+    "timestamp": "2026-06-24T19:50:31Z",
+    "file": "Armageddon_rug.wiki.txt",
+    "sha256": "8fdb4973934d023800f543220b76b2b560d57bbbf72d260a68ba32422f364f50",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15238900"
+  },
+  {
+    "title": "Annihilation weapon scroll",
+    "revid": 15301001,
+    "timestamp": "2026-08-14T11:58:15Z",
+    "file": "Annihilation_weapon_scroll.wiki.txt",
+    "sha256": "ddfeeeeaa2849f3ce7e8f120c49ed194290d116d20ffd5feaa1737d5570ab4f7",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15301001"
+  },
+  {
+    "title": "Annihilation blueprints",
+    "revid": 15288053,
+    "timestamp": "2026-08-05T17:34:06Z",
+    "file": "Annihilation_blueprints.wiki.txt",
+    "sha256": "6d207e9fb95732d85c653ce15c60cd17d8fca5305ab3b6458ec88d8e42bab19b",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15288053"
+  },
+  {
+    "title": "Deadman's skull",
+    "revid": 15194310,
+    "timestamp": "2026-04-22T05:02:29Z",
+    "file": "Deadman's_skull.wiki.txt",
+    "sha256": "814ca4fb25c046538c8b5488d90abe68e37f69f835be3da1cf94ef4a628ce668",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15194310"
+  },
+  {
+    "title": "Deadman's chest (scenery)",
+    "revid": 15389083,
+    "timestamp": "2026-11-01T19:58:26Z",
+    "file": "Deadman's_chest_(scenery).wiki.txt",
+    "sha256": "90d5f6fe34a3247bc980f47d584b0ed02ca13d3258a7fe582fce109ff5ba3786",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15389083"
+  },
+  {
+    "title": "Transcript:Trinket of avarice",
+    "missing": true
+  },
+  {
+    "title": "Transcript:Trinket of fairies",
+    "missing": true
+  },
+  {
+    "title": "Transcript:Trinket of undead",
+    "missing": true
+  },
+  {
+    "title": "File:Deadman Tutor icon.png",
+    "revid": 8049367,
+    "timestamp": "2018-11-26T00:24:19Z",
+    "file": "File%3ADeadman_Tutor_icon.png.wiki.txt",
+    "sha256": "bbcfb0d8a1512800e4c2796e4757cff184521b2784bdbe7789483bf79db9aaac",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/8049367"
+  },
+  {
+    "title": "Transcript:Trinket of advanced weaponry",
+    "revid": 15355107,
+    "timestamp": "2026-09-24T05:35:30Z",
+    "file": "Transcript%3ATrinket_of_advanced_weaponry.wiki.txt",
+    "sha256": "c8c5123ac9529c6e40fd107b669537c38ade3b175052be502def6d9919eef243",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15355107"
+  },
+  {
+    "title": "Annihilation teleport scroll",
+    "revid": 15194299,
+    "timestamp": "2026-04-22T05:02:24Z",
+    "file": "Annihilation_teleport_scroll.wiki.txt",
+    "sha256": "834c18e35927d879ff2806faebc81fd9a65d7a050f76bf149e9e9436ac70cf0d",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15194299"
+  },
+  {
+    "title": "Transcript:Trinket of fortuity",
+    "revid": 15120414,
+    "timestamp": "2026-02-04T06:50:15Z",
+    "file": "Transcript%3ATrinket_of_fortuity.wiki.txt",
+    "sha256": "45c48f0a70244496029c599fc3fbf8bf708b51c1b5d3a9ce413be3e321e08c4f",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15120414"
+  },
+  {
+    "title": "Fire ruby",
+    "revid": 15396853,
+    "timestamp": "2026-11-08T15:57:06Z",
+    "file": "Fire_ruby.wiki.txt",
+    "sha256": "48ea905debfce44724a84ee7d159c600ad4d71fce951e6dca57e4ed52aa5edd4",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15396853"
+  },
+  {
+    "title": "Dark bow",
+    "revid": 15360512,
+    "timestamp": "2026-10-02T17:47:25Z",
+    "file": "Dark_bow.wiki.txt",
+    "sha256": "9d833280b0cdbd063cd6a9d65a8e80b668709e3f470c48ead77f530c7b663ced",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15360512"
+  },
+  {
+    "title": "Armadyl godsword",
+    "revid": 15329390,
+    "timestamp": "2026-09-03T11:47:01Z",
+    "file": "Armadyl_godsword.wiki.txt",
+    "sha256": "2121d946657b7f56722d9442952384c3aa0cd0c212eb6e60cc1d2b8075072446",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15329390"
+  },
+  {
+    "title": "Dragon claws",
+    "revid": 15362682,
+    "timestamp": "2026-10-03T14:53:36Z",
+    "file": "Dragon_claws.wiki.txt",
+    "sha256": "826992c6e1f46f1558c2a3995d8878e912f93c05f8ca94e64653caac0cdc3ff7",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15362682"
+  },
+  {
+    "title": "Voidwaker",
+    "revid": 15327980,
+    "timestamp": "2026-09-02T01:59:59Z",
+    "file": "Voidwaker.wiki.txt",
+    "sha256": "c59e791d806d8f0566c7b36a779f4b29409297e1ec2bf345f2f171099ce168d8",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15327980"
+  },
+  {
+    "title": "The dogsword",
+    "revid": 15237680,
+    "timestamp": "2026-06-22T22:05:55Z",
+    "file": "The_dogsword.wiki.txt",
+    "sha256": "6883283a242f1fc2486b93d437c3be35704ad5d1e2e35a46658fd44b38b1a6f5",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15237680"
+  },
+  {
+    "title": "Thunder khopesh (Deadman Mode)",
+    "revid": 15262511,
+    "timestamp": "2026-07-13T15:38:51Z",
+    "file": "Thunder_khopesh_(Deadman_Mode).wiki.txt",
+    "sha256": "7f53143dfcd21fd931ce08cca0172a5e38c5cda70f72b6989f8b08b22eb7baea",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15262511"
+  },
+  {
+    "title": "Chronicle",
+    "revid": 15366319,
+    "timestamp": "2026-10-05T22:39:10Z",
+    "file": "Chronicle.wiki.txt",
+    "sha256": "fad92d3b143c6de7f7daca73b8adc1fa348a002239a6d087273b4f8d17434a00",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15366319"
+  },
+  {
+    "title": "Twisted bow",
+    "revid": 15385385,
+    "timestamp": "2026-10-29T11:14:54Z",
+    "file": "Twisted_bow.wiki.txt",
+    "sha256": "d599c1302453c9ec6f9613b0adb6386dff7694f979a4ad9de0f739c481ca9f90",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15385385"
+  },
+  {
+    "title": "Scythe of Vitur",
+    "revid": 15398553,
+    "timestamp": "2026-11-11T00:39:18Z",
+    "file": "Scythe_of_Vitur.wiki.txt",
+    "sha256": "2e266d93b635695883822bb78bbaf87bdc57b9766288e649053ac27f8ada399b",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15398553"
+  },
+  {
+    "title": "Volatile Nightmare staff",
+    "revid": 15384147,
+    "timestamp": "2026-10-27T23:46:51Z",
+    "file": "Volatile_Nightmare_staff.wiki.txt",
+    "sha256": "5b5d5c6a6ffb69c5aa42ee281e85e6d8bd1449b0bc1dadbad7525dd36eb90210",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15384147"
+  },
+  {
+    "title": "Tuna (Deadman starter pack)",
+    "revid": 15233336,
+    "timestamp": "2026-06-14T01:55:53Z",
+    "file": "Tuna_(Deadman_starter_pack).wiki.txt",
+    "sha256": "86c8314dd7b2957a836f9aafe6281efca436e396978534ac6f54bbce6d73461a",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15233336"
+  },
+  {
+    "title": "Tumeken's shadow",
+    "revid": 15373159,
+    "timestamp": "2026-10-15T17:28:46Z",
+    "file": "Tumeken's_shadow.wiki.txt",
+    "sha256": "bfc73c39073953575b6a45c01b89d652682a66ba20acc38a4f8753bcf35dd10b",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15373159"
+  },
+  {
+    "title": "Deadman: Annihilation",
+    "revid": 15275551,
+    "timestamp": "2026-07-26T00:51:06Z",
+    "file": "Deadman%3A_Annihilation.wiki.txt",
+    "sha256": "6065788461defdf8e4ca99a390cf87d591c79dcc148066c864fe34adf8c0da0d",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15275551"
+  },
+  {
+    "title": "Starter cape",
+    "revid": 15194309,
+    "timestamp": "2026-04-22T05:02:29Z",
+    "file": "Starter_cape.wiki.txt",
+    "sha256": "d2deae4065bf1abb438f6261b8edaa1e0f930514dd9790b3009fff3565b55043",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15194309"
+  },
+  {
+    "title": "Deadman: All Stars Season 3",
+    "revid": 15351317,
+    "timestamp": "2026-09-19T18:17:41Z",
+    "file": "Deadman%3A_All_Stars_Season_3.wiki.txt",
+    "sha256": "df7e1ed2865921be2a46fe1b84ace6982339f250b410ef35b71877ba0aa91c4c",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15351317"
+  },
+  {
+    "title": "Vengeance",
+    "revid": 15359389,
+    "timestamp": "2026-10-01T09:01:13Z",
+    "file": "Vengeance.wiki.txt",
+    "sha256": "5d900ce8d3e584e2864b6b45eda27a995a6802eccc449ab9ce0fc6a2130eb3b5",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15359389"
+  },
+  {
+    "title": "Deadman's chest",
+    "revid": 15386524,
+    "timestamp": "2026-10-30T17:19:22Z",
+    "file": "Deadman's_chest.wiki.txt",
+    "sha256": "ae38dfaabb92ef5d94c7a6093f6a0aa4daf113bf751f3ad5a2fdc002843788d2",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15386524"
+  },
+  {
+    "title": "Resurrect Greater Skeleton",
+    "revid": 15327964,
+    "timestamp": "2026-09-02T01:32:17Z",
+    "file": "Resurrect_Greater_Skeleton.wiki.txt",
+    "sha256": "bd3b6cee2d0919f05711e13e542d2c701bd3ce2d95edc5dca0a6809fbb55f6d4",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15327964"
+  },
+  {
+    "title": "Greater ghostly thrall",
+    "revid": 15350895,
+    "timestamp": "2026-09-19T12:28:48Z",
+    "file": "Greater_ghostly_thrall.wiki.txt",
+    "sha256": "d23d2f48d2050c6c0915a8fbf407ad44f0a18beed460c53c7b6724623e77b6f4",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15350895"
+  },
+  {
+    "title": "Greater zombified thrall",
+    "revid": 15350897,
+    "timestamp": "2026-09-19T12:29:51Z",
+    "file": "Greater_zombified_thrall.wiki.txt",
+    "sha256": "5ece10fc386bd52945239725b8e1e9eb5179742b0fdda8193975c9c635720a99",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15350897"
+  },
+  {
+    "title": "Trinket of vengeance",
+    "revid": 15351326,
+    "timestamp": "2026-09-19T18:21:31Z",
+    "file": "Trinket_of_vengeance.wiki.txt",
+    "sha256": "27e403f91d3a2ed0aa186f2fd248b1bf4f6b89c420155f12584ac505ac86d6a4",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15351326"
+  },
+  {
+    "title": "Deadman's legs",
+    "revid": 15360469,
+    "timestamp": "2026-10-02T17:29:23Z",
+    "file": "Deadman's_legs.wiki.txt",
+    "sha256": "2200f07b7c723e23a5a23897615cebe61961e67edbb9fd2e2e2f2cbd16d869f2",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15360469"
+  },
+  {
+    "title": "Deadman's cape",
+    "revid": 15239882,
+    "timestamp": "2026-06-25T22:52:05Z",
+    "file": "Deadman's_cape.wiki.txt",
+    "sha256": "ce744b5504bc1d6c3ef4a438ebc8b91af5e4f7239563da3bdca6e0610f662642",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15239882"
+  },
+  {
+    "title": "Bounty Hunter Shop (Deadman Mode)",
+    "revid": 15345703,
+    "timestamp": "2026-09-16T14:25:45Z",
+    "file": "Bounty_Hunter_Shop_(Deadman_Mode).wiki.txt",
+    "sha256": "8e432e6dc481023da8076ca91448cebbd0a3b87068eb774211c5f50d86736f7e",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15345703"
+  },
+  {
+    "title": "Deadman rug",
+    "revid": 15122909,
+    "timestamp": "2026-02-07T03:44:39Z",
+    "file": "Deadman_rug.wiki.txt",
+    "sha256": "d00fbf566188f1134a84bb6b213ee7b959da7cbb429dca97debcdd373d4ca00c",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15122909"
+  },
+  {
+    "title": "Trinket dust",
+    "revid": 15193183,
+    "timestamp": "2026-04-22T04:55:39Z",
+    "file": "Trinket_dust.wiki.txt",
+    "sha256": "65f4cad5b4e88524d388329ecab1833638d0f430dfd395ae421101b927d504f0",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15193183"
+  },
+  {
+    "title": "Annihilation exit portal blueprints",
+    "revid": 15286513,
+    "timestamp": "2026-08-03T17:55:09Z",
+    "file": "Annihilation_exit_portal_blueprints.wiki.txt",
+    "sha256": "f2dbce5c73675a669e753620b0f84dee7b40f689d45675510073e2b54a3f5d30",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15286513"
+  },
+  {
+    "title": "Wilderness (theme)",
+    "revid": 15287903,
+    "timestamp": "2026-08-05T16:31:27Z",
+    "file": "Wilderness_(theme).wiki.txt",
+    "sha256": "fcdd702ee8af18ab854d00aab417e886e555c2439675c6a3b02b56f2fefb3f5e",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15287903"
+  },
+  {
+    "title": "Deadman Mode",
+    "revid": 15375850,
+    "timestamp": "2026-10-19T09:47:26Z",
+    "file": "Deadman_Mode.wiki.txt",
+    "sha256": "1d2ae42dfbe956887a269233a9121f925dc770f77f274a50f0c31a7108d32982",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15375850"
+  },
+  {
+    "title": "Trinket of advanced weaponry",
+    "revid": 15355050,
+    "timestamp": "2026-09-24T03:52:56Z",
+    "file": "Trinket_of_advanced_weaponry.wiki.txt",
+    "sha256": "7d38d70031e5329bbf75870060fa064c7bf9b6295339e7853b7b15d53b2f57a0",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15355050"
+  },
+  {
+    "title": "Trinket (disambiguation)",
+    "revid": 15343713,
+    "timestamp": "2026-09-14T20:54:50Z",
+    "file": "Trinket_(disambiguation).wiki.txt",
+    "sha256": "b85209af5f625be94a2467265da795338c3a53fa3aa65b90ad5a75e1b5e522c4",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15343713"
+  },
+  {
+    "title": "Deadman Reward Store",
+    "revid": 15394269,
+    "timestamp": "2026-11-05T00:21:19Z",
+    "file": "Deadman_Reward_Store.wiki.txt",
+    "sha256": "c242b1e63cf79d4c6eef03e5fdcdb8ce4bea5122127783b7763438ecc3aa8d4e",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15394269"
+  },
+  {
+    "title": "Infernal Mage",
+    "revid": 15403365,
+    "timestamp": "2026-11-15T21:01:22Z",
+    "file": "Infernal_Mage.wiki.txt",
+    "sha256": "5ae47e19d1944208d9e23c7d7176eccfe3e1086df5eff20978758514b2ff31e8",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15403365"
+  },
+  {
+    "title": "Corrupted Scythe of Vitur",
+    "revid": 15350112,
+    "timestamp": "2026-09-18T00:40:02Z",
+    "file": "Corrupted_Scythe_of_Vitur.wiki.txt",
+    "sha256": "4809f5b5ed704b040a187506bda8cd47d2f57d203df6f5347fde0c01067060d4",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15350112"
+  },
+  {
+    "title": "Corrupted tumeken's shadow",
+    "revid": 15191600,
+    "timestamp": "2026-04-22T04:45:43Z",
+    "file": "Corrupted_tumeken's_shadow.wiki.txt",
+    "sha256": "6bedc46be51807a165d3d4a76e7569298a54c8697d56dd8c2460584d18ea9a5b",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15191600"
+  },
+  {
+    "title": "Template:DeadmanAnnihilationBreachDropTable",
+    "revid": 15293993,
+    "timestamp": "2026-08-12T18:23:28Z",
+    "file": "Template%3ADeadmanAnnihilationBreachDropTable.wiki.txt",
+    "sha256": "ecfcbd7cfff60442d631296afc192f8f4ed4300552a59c5565d7011ee9ccae4a",
+    "url": "https://oldschool.runescape.wiki/w/Special:PermanentLink/15293993"
+  }
+]

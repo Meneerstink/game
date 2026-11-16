@@ -1,0 +1,40 @@
+{{Deadman permanent}}
+{{Infobox Item
+|name = Trinket of avarice
+|image = [[File:Trinket of avarice.png]]
+|release = [[21 January]] [[2026]]
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|members = Yes
+|quest = No
+|tradeable = Yes
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Note/Unnote, Value, Drop
+|examine = A magic rock! This one automatically notes and retrieves drops.
+|value = 100000
+|weight = 1.000
+|exchange = dmm
+|id = 33044
+}}
+[[File:Trinket of avarice detail.png|left|100px]]
+The '''trinket of avarice''' is an item in [[Deadman Mode]]. It allows loot to be automatically noted and picked up. It will also put loot into [[looting bag]]s if possible. The value option can be used to adjust what items are automatically picked up, based on their value.
+
+It can be acquired as a drop from monsters found during [[breach]]es.
+
+==Item sources==
+{{Drop sources|Trinket of avarice}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 18 February 2026
+|update = 25th Anniversary Event: 25 Years, 25 Mementos!
+|change = 
+* The trinket of avarice will now also loot bones from NPCs automatically.
+* Noted items will now stack as intended even if your looting bag is full when you have the trinket of avarice active.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Annihilation}}
+{{Deadman Mode}}

@@ -1,0 +1,93 @@
+{
+  "batchcomplete": true,
+  "query": {
+    "pages": [
+      {
+        "ns": 120,
+        "title": "Transcript:Corrupted tumeken's shadow",
+        "missing": true
+      },
+      {
+        "ns": 120,
+        "title": "Transcript:Trinket of vengeance",
+        "missing": true
+      },
+      {
+        "pageid": 517699,
+        "ns": 0,
+        "title": "Deadman rug",
+        "revisions": [
+          {
+            "revid": 15122909,
+            "parentid": 14997022,
+            "timestamp": "2026-02-07T03:44:39Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Infobox Construction\n|name = Deadman rug\n|image = [[File:Deadman rug built.png|250px]]\n|icon = [[File:Deadman rug icon.png]]\n|furniturename = Rug\n|release = [[7 August]] [[2024]]\n|update = Poll 82 Changes\n|level = 28\n|experience = 283\n|room = [[Parlour]], [[bedroom]], [[skill hall]], [[quest hall]], [[chapel]], [[Dungeon (Construction)|dungeon]], [[portal nexus]]\n|hotspot = [[Rug space]], [[stair space]]\n|flatpack = No\n|examine = A rug adorned with the icon of Deadman.\n|id = 54114, 54115, 54116\n|itemid = 29598\n}}\nA '''deadman rug''' can be built in the [[rug space]] of the [[parlour]], [[bedroom]], [[skill hall]], [[quest hall]], [[chapel]], [[Dungeon (Construction)|dungeon]], and [[portal nexus]] in a [[player-owned house]]. It requires 28 [[Construction]] to build and gives 283 [[experience]] when built.\n\nIf the furniture is removed, players will receive their [[Armageddon rug]] back, allowing them to sell it if they so wish. Note that players '''will not''' get their rug back if the room the rug is built in is deleted.\n\n==Creation==\n{{Recipe\n|skill1 = Construction\n|skill1lvl = 28\n|skill1boostable = Yes\n|skill1exp =283 \n|members = Yes\n|ticks = 5\n|tools = Saw, Hammer\n|mat1 = Bolt of cloth\n|mat1quantity = 4\n|mat2 = Armageddon rug\n|output1 = Deadman rug\n|output1pic = Deadman rug icon\n|output1cost = 0\n}}\n\n==Changes==\n{{Subject changes header}}\n{{Subject changes\n|daterange = 27-28 November 2024\n|type=hotfix\n|change = The deadman rug was removed from the [[Lumbridge Castle]]'s {{FloorNumber|uk=0}}.\n}}\n{{Subject changes\n|date = 27 November 2024\n|update = Leagues V: Raging Echoes OUT NOW!\n|change = A DMM rug tile has mysteriously appeared in Lumbridge Castle.\n}}\n{{Subject changes\n|date = 23 October 2024\n|update = Halloween Fixes & Miscellaneous Changes\n|change = The skulls on the rug have been darkened so that they are more visible.\n}}\n{{Subject changes footer}}\n\n===Gallery (historical)===\n{|style=\"text-align: center\" cellpadding=\"15\"\n|[[File:Deadman rug built (historical, v1).png|center|200px]]\n|[[File:Deadman rug built.png|center|200px]]\n|-\n|7 August 2024 - <br/>23 October 2024\n|23 October 2024 \u2013 <br/>present\n|}\n\n{{Parlour}}\n{{Bedroom}}\n{{Hall (skill trophies)}}\n{{Hall (quest trophies)}}\n{{Chapel}}\n{{Dungeon (Construction)}}\n{{Portal nexus}}\n{{Deadman: Armageddon}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 574018,
+        "ns": 0,
+        "title": "Trinket dust",
+        "revisions": [
+          {
+            "revid": 15193183,
+            "parentid": 15117425,
+            "timestamp": "2026-04-22T04:55:39Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Deadman permanent}}\n{{Infobox Item\n|name = Trinket dust\n|image = [[File:Trinket dust.png]]\n|release = [[26 March]] [[2025]]\n|update = Poll 83 QoL Changes\n|members = Yes\n|quest = No\n|tradeable = No\n|bankable = No\n|equipable = No\n|stackable = No\n|noteable = No\n|options = Drop\n|examine = Looks like this used to be useful.\n|value = 12\n|weight = 0.056\n|id = 30689\n}}\n[[File:Trinket dust detail.png|130px|left]]\n'''Trinket dust''' is the remains of [[Deadman Mode]] [[Trinket (disambiguation)|trinkets]] upon player death.\n\n{{Deadman Mode}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 646273,
+        "ns": 0,
+        "title": "Annihilation exit portal blueprints",
+        "revisions": [
+          {
+            "revid": 15286513,
+            "parentid": 15238894,
+            "timestamp": "2026-08-03T17:55:09Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Infobox Item\n|name = Annihilation exit portal blueprints\n|image = [[File:Annihilation exit portal blueprints.png]]\n|release = [[25 February]] [[2026]]\n|update = Cow Boss is Out Today!\n|members = Yes\n|quest = No\n|tradeable = No\n|equipable = No\n|stackable = No\n|noteable = \n|options = Drop\n|examine = Blueprints used to build an exit portal in your player-owned house.\n|value = 1\n|alchable = No\n|weight = 0.100\n|id = 33122\n}}\n[[File:Annihilation exit portal blueprints detail.png|left|130px]]\n'''Annihilation exit portal blueprints''' are received when first using the [[Annihilation blueprints]] to redecorate a [[player-owned house]] to the [[Wilderness (theme)|wilderness theme]] house style. They are used to construct an [[Exit portal#Wilderness|Annihilation exit portal]], which can be used with any [[house style]].\n\nTo use the blueprints, players must build an Annihilation [[exit portal]] in the [[centrepiece space]] of a [[garden]] or [[formal garden]] in their [[player-owned house]], requiring 10 [[iron bar]]s and the Annihilation exit portal blueprints. The player must have a [[hammer]] and [[saw]] in their inventory to build it. If players only have one exit portal in their house, they will not be able to remove it until a second one is built.\n\nPlayers will not receive back the blueprints upon removing the portal. However, additional copies can be obtained by speaking to [[Nigel]] in [[Lumbridge]].\n\n==Gallery==\n<gallery mode=\"nolines\" widths=\"200\">\nExit portal (Wilderness).png|The Wilderness exit portal.\nDeadman- Annihilation Overview & Rewards Blog (6).png|Concept art for Wilderness theme, including the exit portal.\n</gallery>\n\n{{Deadman: Annihilation}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 646541,
+        "ns": 0,
+        "title": "Wilderness (theme)",
+        "revisions": [
+          {
+            "revid": 15287903,
+            "parentid": 15229617,
+            "timestamp": "2026-08-05T16:31:27Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "'''Wilderness theme''' is a [[House style]] option for a [[player-owned house]].\n[[File:Deadman- Annihilation Overview %26 Rewards Blog (6).png|thumb|Concept art of the Wilderness theme style.]]\nThis house style can be used by owning the [[annihilation blueprints]] and requires level 1 Construction to use in a player's house. The blueprints are a tradeable item that can be purchased from the [[Deadman Reward Store]] for 15,000 [[Deadman points]].\n\nThe option to change to the Wilderness theme style is permanently unlocked after redecorating with the blueprints the first time. Upon unlocking the house style, a set of [[Annihilation exit portal blueprints]] are also given which can be used to recolour the exit portal.\n\n{|class=\"wikitable\"\n!Walls<br/>(inside)\n!Walls<br/>(outside)\n!Floor<br/>(inside)\n!Flat Ground<br/>(outside)\n!Textured<br/>Ground<br/>(outside)\n!Walls<br/>(dungeon)\n!Floor<br/>(dungeon)\n|-\n|[[File:POH Wilderness theme Inside Wall.png|112x112px]]\n|[[File:POH Wilderness theme Inside Wall.png|112x112px]]\n|[[File:POH Wilderness theme Floor.png|112x112px]]\n|[[File:POH Wilderness theme Floor.png|112x112px]]\n|[[File:POH Wilderness theme Floor.png|112x112px]]\n|[[File:POH Wilderness theme Dungeon Wall.png|112x112px]]\n|[[File:POH Wilderness theme Dungeon Floor.png|112x112px]]\n|}\n\n{{Table/POH redecoration}}\n\n: '''''Tip:''' Compare the design of all the styles before choosing a suitable one for a house!''\n\n==Changes==\n{{Subject changes header}}\n{{Subject changes\n|date = 5 August 2026\n|update = Wyrmscraig & Sailing Changes\n|change = Telescopes now work with the Wilderness theme for Player-Owned-Houses.\n}}\n{{Subject changes\n|date = 18 March 2026\n|update = Boat Combat Fixes\n|change = The terrain in the Wilderness [[player-owned house]] theme no longer blocks the [[Stair Space|stairwell]] opening to the [[Dungeon (Construction)|dungeon]] level.\n}}\n{{Subject changes\n|date = 11 March 2026\n|update = More from the Getting Around Poll\n|change = The superior garden floor for the Wilderness theme house style has been adjusted to display the correct shades and textures.\n}}\n{{Subject changes\n|date = 4 March 2026\n|update = Cow Boss and Skill Guide & Level-Up Changes\n|change = A bug that affected pathfinding between rooms when using the Wilderness theme house style was fixed.\n}}\n{{Subject changes footer}}\n\n{{House}}"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{{Confuse|Armageddon teleport scroll}}
+{{Infobox Item
+|name = Annihilation teleport scroll
+|image = [[File:Annihilation teleport scroll.png]]
+|release = [[25 February]] [[2026]]
+|update = Cow Boss is Out Today!
+|members = Yes
+|quest = No
+|tradeable = Yes
+|bankable = Yes
+|equipable = Yes
+|stackable = No
+|noteable = Yes
+|options = Read, Drop
+|examine = A scroll which unlocks the Deadman: Annihilation home teleport animation.
+|value = 25000
+|alchable = No
+|weight = 0.100
+|exchange = Yes
+|id = 33018
+}}
+[[File:Annihilation teleport scroll detail.png|130px|left]]
+The '''Annihilation teleport scroll''' is an item that can be purchased from the [[Deadman Reward Store]] for 10,000 [[Deadman: Apocalypse/Points|Deadman Points]], which are earned from participating in seasonal [[Deadman]] events. It can be used to unlock a [[Lever (Deserted Keep)|Wilderness lever]] themed [[Home Teleport]] [[animation override]]. To enable it, players can right click "Animation" on the Home Teleport spell icon in their spellbook and select "Annihilation."
+
+==Shop locations==
+{{Store locations list|Annihilation teleport scroll}}
+
+==Transcript==
+{{hastranscript|transclude=yes}}
+
+==Gallery==
+<gallery widths=400 heights=250 mode=nolines>
+File:Deadman- Annihilation Overview & Rewards Blog (7).png|Concept art from the [[Update:Deadman: Annihilation Overview & Rewards Blog|poll blog]]
+File:Cow Boss is Out Today!_(22).gif|The Deadman: Annihilation home teleport animation.
+</gallery>
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 11 March 2026
+|update = More from the Getting Around Poll
+|change = The item can now be sacrificed to [[Death's Coffer]].
+}}
+{{Subject changes
+|date = 25 February 2026
+|update = Cow Boss is Out Today!
+|change = The item was made available.
+}}
+{{Subject changes
+|date = 21 January 2026
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|change = The item was added to the game, but was unobtainable.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Annihilation}}

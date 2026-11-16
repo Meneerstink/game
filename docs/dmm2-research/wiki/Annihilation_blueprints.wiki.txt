@@ -1,0 +1,72 @@
+{{Infobox Item
+|name = Annihilation blueprints
+|image = [[File:Annihilation blueprints.png]]
+|release = [[25 February]] [[2026]]
+|update = Cow Boss is Out Today!
+|members = Yes
+|quest = No
+|tradeable = Yes
+|bankable = Yes
+|equipable = No
+|stackable = No
+|noteable = Yes
+|options = Read, Drop
+|examine = Take this to an estate agent and ask them to redecorate your player-owned house for a Wilderness theme.
+|value = 25000
+|alchable = No
+|weight = 0.100
+|exchange = Yes
+|id = 33015
+}}
+[[File:Annihilation blueprints detail.png|130px|left]]
+'''Annihilation blueprints''' can be used to change a [[player-owned house]]'s appearance to the [[Wilderness (theme)|Wilderness theme]] [[house style]]. Having the [[Estate agent]] re-decorate your house into the Wilderness house style while having the blueprints in the inventory will consume them and permanently unlock the house style.
+
+Upon unlocking the house style, a set of [[Annihilation exit portal blueprints]] will replace the consumed Annihilation blueprints in the player's inventory, which can then be used to recolour the exit portal. These exit portal blueprints can be infinitely reclaimed from [[Nigel]] in [[Lumbridge]].
+
+==Setting up an orange exit portal==
+Due to how [[exit portal]]s work in player-owned houses, additional steps are required to replace the normal purple exit portal with the orange Wilderness-themed one. 
+
+* Build a new [[Garden]] room in your POH. This will not be permanent.
+* In the new garden, build a basic [[exit portal]].
+* Remove the original exit portal and build an Annihilation exit portal (using the [[Annihilation exit portal blueprints]]) in its place.
+* Remove the second garden, if you wish.
+
+==Shop locations==
+{{Store locations list|Annihilation blueprints}}
+
+==Transcript==
+{{hastranscript|item}}
+
+==Gallery==
+<gallery widths=260 heights=220>
+File:Deadman- Annihilation Overview & Rewards Blog (6).png|Concept art from the [[Update:Deadman: Annihilation Overview & Rewards Blog|poll blog]]
+Wilderness exterior.png|The Wilderness house exterior.
+Wilderness interior.png|The Wilderness house interior.
+Wilderness dungeon.png|The Wilderness house dungeon.
+</gallery>
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 5 August 2026
+|update = Wyrmscraig & Sailing Changes
+|change = Telescopes now work with the Wilderness theme for Player-Owned-Houses.
+}}
+{{Subject changes
+|date = 11 March 2026
+|update = More from the Getting Around Poll
+|change = The item can now be sacrificed to [[Death's Coffer]].
+}}
+{{Subject changes
+|date = 25 February 2026
+|update = Cow Boss is Out Today!
+|change = The item was made available.
+}}
+{{Subject changes
+|date = 21 January 2026
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|change = The item was added to the game, but was unobtainable.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Annihilation}}

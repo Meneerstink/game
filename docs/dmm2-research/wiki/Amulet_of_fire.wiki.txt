@@ -1,0 +1,70 @@
+{{Infobox Item
+|name = Amulet of fire
+|image = [[File:Amulet of fire.png]]
+|release = [[2 September]] [[2026]]
+|update = Summer Sweep Up Miscellaneous
+|members = Yes
+|quest = No
+|tradeable = Yes
+|equipable = Yes
+|stackable = No
+|noteable = Yes
+|options = Wear, Drop
+|examine = I hope my clothes don't catch on fire.
+|value = 21000
+|weight = 0.107
+|exchange = Yes
+|id = 34425
+}}
+[[File:Amulet of fire detail.png|left|120px]]
+The '''amulet of fire''' is an amulet requiring level 59 [[Magic]] to equip. It is made by using a [[fire ruby]] on the [[Fire Altar]], along with an [[amulet of magic]] and 100 [[fire rune]]s; creating the amulet requires level 21 [[Runecraft]], granting 125 experience. It can also be created when accessing the altars via [[Guardians of the Rift]], as they are the same altars as outside the minigame.
+
+Alongside identical stats to an amulet of magic, the amulet of fire adds a +2 max hit to [[fire spells]], which is added before [[magic damage]] and [[elemental weakness]] modifiers are applied, and therefore scales with both. Additionally, this +2 max hit stacks additively with the bonus from the [[chaos gauntlets]], for a total of +5 max hits when casting [[bolt spells]]. Lastly, the max hit bonus also works against [[Salarin the twisted]].
+
+The amulet of fire, alongside the [[Amulet of air|amulets of air]], [[Amulet of water|water]], and [[Amulet of earth|earth]], can be combined into an [[elemental amulet]] at any elemental [[runic altar]], which combines the effects of all four amulets into one. Doing so requires level 30 [[Runecraft]] and 500 of each elemental rune, granting 175 experience.
+
+==Combat stats==
+{{Infobox Bonuses
+|astab = 0
+|aslash = 0
+|acrush = 0
+|amagic = +10
+|arange = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|drange = 0
+|str = 0
+|rstr = 0
+|mdmg = 0
+|prayer = 0
+|slot = neck
+|image = [[File:Amulet of fire equipped male.png]]
+|altimage = [[File:Amulet of fire equipped female.png]]
+}}
+
+==Creation==
+[[File:Creating amulet of fire.webp|right|thumb|A player creating the amulet of fire.]]
+{{Recipe
+|skill1 = Runecraft
+|skill1lvl = 21
+|skill1boostable = Yes
+|skill1exp = 125
+|members = Yes
+|ticks = 3
+|facilities = Fire Altar
+|mat1 = Amulet of magic
+|mat2 = Fire ruby
+|mat3 = Fire rune
+|mat3quantity = 100
+|output1 = Amulet of fire
+}}
+
+==Products==
+{{Uses material list|Amulet of fire}}
+
+==Used in recommended equipment==
+{{Used in recommended equipment|Amulet of fire}}
+
+{{Amulets}}

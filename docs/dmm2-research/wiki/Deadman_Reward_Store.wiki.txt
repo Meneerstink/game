@@ -1,0 +1,62 @@
+{{Obsolete|Shop moved to the GE on main game worlds}}
+{{Infobox Shop
+|name = Deadman Reward Store
+|image = [[File:Deadman Reward Store.png|300px]]
+|release = [[17 July]] [[2024]]
+|update = Deadman: Armageddon & While Guthix Sleeps Updates
+|members = Yes
+|icon = [[File:Deadman Tutor icon.png]]
+|location = [[Grand Exchange]]
+|owner = [[Nigel]]
+|special = [[Deadman]] rewards
+|map = {{Map|name=Nigel|x=3245|y=3200|r=3|mtype=square|bucket=yes}}
+|leagueRegion = No
+}}
+The '''Deadman Reward Store''' is a store run by [[Nigel]] at the [[Grand Exchange]]. He sells and buys rewards from [[Deadman: Armageddon]] and [[Deadman: Annihilation]] in exchange for [[Deadman Points]]. The Deadman Points balance is separate for both main game and Deadman Mode, which means that they can be spent on both gamemodes without affecting the other. The points accumulate between events.
+
+'''Note''': You need to log onto the permanent Deadman Mode world 345 after the event ends to have your Deadman Points be available in the main game.
+
+==Stock==
+===Deadman: Armageddon===
+{{StoreTableHead|currency=Deadman Points|column1=GP per point|hidecaption=y|hidestock=y|hiderestock=y}}
+{{StoreLine|name=Armageddon weapon scroll|stock=inf|restock=N/A|buy=12000|sell=12000|column1={{Coins|{{GEP|Armageddon weapon scroll}}/12000}}}}
+{{StoreLine|name=Armageddon cape fabric|stock=inf|restock=N/A|buy=6000|sell=6000|column1={{Coins|{{GEP|Armageddon cape fabric}}/6000}}}}
+{{StoreLine|name=Armageddon teleport scroll|stock=inf|restock=N/A|buy=9000|sell=9000|column1={{Coins|{{GEP|Armageddon teleport scroll}}/9000}}}}
+{{StoreLine|name=Armageddon rug|stock=inf|restock=N/A|buy=3000|sell=3000|column1={{Coins|{{GEP|Armageddon rug}}/3000}}}}
+{{StoreTableBottom}}
+A total of 30,000 points is required for all Armageddon rewards. However, an Armageddon rug only fits one [[rug space]], so multiple may be desired.
+
+===Deadman: Annihilation===
+{{StoreTableHead|currency=Deadman Points|column1=GP per point|hidecaption=y|hidestock=y|hiderestock=y}}
+{{StoreLine|name=Annihilation weapon scroll|stock=inf|restock=N/A|buy=12000|sell=12000|column1={{Coins|{{GEP|Annihilation weapon scroll}}/12000}}}}
+{{StoreLine|name=Annihilation blueprints|stock=inf|restock=N/A|buy=15000|sell=15000|column1={{Coins|{{GEP|Annihilation blueprints}}/15000}}}}
+{{StoreLine|name=Annihilation teleport scroll|stock=inf|restock=N/A|buy=10000|sell=10000|column1={{Coins|{{GEP|Annihilation teleport scroll}}/10000}}}}
+{{StoreTableBottom}}
+A total of 37,000 points is required for all Annihilation rewards.
+
+==Gallery==
+<gallery style="text-align:left">
+Deadman Reward Store interface.png|The store's interface.
+</gallery>
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 3 November 2026
+|update = Quest Month Kick Off, TFA Tweaks & More
+|change = Nigel was moved to the Grand Exchange on main game worlds. He remains in Lumbridge on Deadman Mode worlds.
+}}
+{{Subject changes
+|date = 14 August 2024
+|update = Slayer Partners
+|change = Rewards can now be sold back to the store for the same price.
+}}
+{{Subject changes footer}}
+
+== Trivia ==
+* The store is accessible in [[free-to-play]], but all of its rewards are members only.
+
+{{Deadman: Armageddon}}
+{{Deadman: Annihilation}}
+{{Shops}}
+{{Lumbridge}}

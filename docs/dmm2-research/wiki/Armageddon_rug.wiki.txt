@@ -1,0 +1,48 @@
+{{Infobox Item
+|name = Armageddon rug
+|image = [[File:Armageddon rug.png]]
+|release = [[7 August]] [[2024]]
+|update = Poll 82 Changes
+|members = Yes
+|quest = No
+|tradeable = Yes
+|equipable = No
+|stackable = No
+|noteable = Yes
+|options = Drop
+|examine = A fearsome yet stylish souvenir from Deadman: Armageddon.
+|value = 50000
+|alchable = No
+|weight = 0.100
+|exchange = Yes
+|id = 29619
+}}
+[[File:Armageddon rug detail.png|left|130px]]
+The '''Armageddon rug''' is an item that can be purchased from the [[Deadman Reward Store]] for 3,000 [[Deadman: Apocalypse/Points|Deadman Points]], which is earned from participating in [[Deadman: Armageddon]]. It is used to build a [[deadman rug]] within a [[player-owned house]].
+
+==Products==
+{{Uses material list|Armageddon rug}}
+
+==Shop locations==
+{{Store locations list|Armageddon rug}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 11 March 2026
+|update = More from the Getting Around Poll
+|change = The item can now be sacrificed to [[Death's Coffer]].
+}}
+{{Subject changes
+|date = 7 August 2024
+|update = Poll 82 Changes
+|change = The item was made available.
+}}
+{{Subject changes
+|date = 17 July 2024
+|update = Deadman: Armageddon & While Guthix Sleeps Updates
+|change = The item was added to the game, but was unobtainable.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Armageddon}}

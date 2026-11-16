@@ -1,0 +1,56 @@
+{{Deadman seasonal}}
+{{Infobox Item
+|name = Corrupted armadyl godsword
+|image = [[File:Corrupted armadyl godsword.png]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|quest = No
+|tradeable = Yes
+|equipable = Yes
+|stackable = No
+|noteable = Yes
+|options = Wield, Drop
+|examine = A beautiful, heavy sword.
+|value = 250000
+|weight = 10.000
+|exchange = dmm
+|id = 28537
+}}
+[[File:Corrupted armadyl godsword detail.png|left|130px]]
+The '''corrupted Armadyl godsword''' is a melee weapon that requires level 65 [[Attack]] to wield. Exclusive to [[Deadman Mode]] seasonals, it can be acquired by opening a [[trinket of advanced weaponry]] obtained from a [[Deadman:_Apocalypse#Breaches|breach]].
+
+As a corrupted variant of the [[Armadyl godsword]], it has 20% lower bonuses than the regular variant.
+
+==Combat stats==
+{{Infobox Bonuses
+|astab = 0
+|aslash = +106
+|acrush = +64
+|amagic = +0
+|arange = +0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|drange = 0
+|str = +106
+|rstr = 0
+|mdmg = 0
+|prayer = +7
+|slot = 2h
+|speed = 6
+|attackrange = 1
+|combatstyle = 2h Sword
+|image = [[File:Corrupted armadyl godsword equipped male.png|120px]]
+|altimage = [[File:Corrupted armadyl godsword equipped female.png|140px]]
+}}
+
+{{CombatStyles|2h Sword|speed=6|attackrange=1}}
+
+==Item sources==
+{{Drop sources|Corrupted armadyl godsword}}
+
+{{Deadman: Annihilation}}
+{{Deadman: Armageddon}}
+{{Deadman: Apocalypse}}

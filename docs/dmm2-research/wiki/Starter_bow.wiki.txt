@@ -1,0 +1,88 @@
+{{Deadman seasonal}}
+{{Otheruses|the seasonal [[Deadman Mode]] training bow|the [[training equipment]]|training bow}} 
+{{Infobox Item
+|name = Starter bow
+|image = [[File:Starter bow.png]]
+|release = [[17 March]] [[2018]]
+|update = Deadman Summer Season, live now!
+|members = No
+|quest = No
+|tradeable = No
+|equipable = Yes
+|stackable = No
+|noteable = No
+|options = Wield, Check, Destroy
+|wornoptions = Check
+|destroy = You can get another from a starter pack.
+|examine = A bow from a starter pack.
+|value = 1
+|alchable = No
+|weight = 1.360
+|id = 22333
+}}
+[[File:Starter bow detail.png|left|130px]]
+The '''starter bow''' is a weapon obtained from a [[Deadman starter pack]], along with the [[starter sword]] and [[starter staff|staff]]. It has no requirements to wield, and is intended to be used to help a player get started in a seasonal [[Deadman Mode]] server.
+
+It has stats equal to that of a [[willow shortbow]], and fires its own ammunition, much like a [[crystal bow]]. The bow's [[Ranged Strength]] is the same as [[bronze arrow]]s. The bow possesses 2,000 charges before fully degrading.
+
+As with all starter weapons, it cannot be used against other players. It also cannot be used for [[Barbarian Firemaking]].
+
+==Combat stats==
+{{Infobox Bonuses
+|astab = 0
+|aslash = 0
+|acrush = 0
+|amagic = 0
+|arange = +20
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|drange = 0
+|str = 0
+|rstr = +7
+|mdmg = 0
+|prayer = 0
+|slot = 2h
+|speed = 4
+|attackrange = 7
+|combatstyle = Bow
+|image = [[File:Starter bow equipped male.png|170px]]
+|altimage = [[File:Starter bow equipped female.png|170px]]
+}}
+
+{{CombatStyles|Bow|speed=4|attackrange=7}}
+
+==Gallery==
+<gallery mode="packed" heights="200" style="text-align:left">
+DMM Apoc starter weapons concept.jpg|Concept art of the starter weapons, by [[Mod Jerv]].
+</gallery>
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 21 January 2026
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|change = The item's value was decreased from 500 to 1.
+}}
+{{Subject changes
+|date = 23 August 2023
+|update = Deadman: Apocalypse - Friday 25th August
+|change = The item has been [[graphically updated]].
+}}
+{{Subject changes footer}}
+
+===Gallery (historical)===
+{|style="text-align: center" cellpadding="15"
+|[[File:Starter bow v1 detail.png|center|300x150px]]
+|[[File:Starter bow detail.png|center|300x150px]]
+|-
+|[[File:Starter bow v1.png|center]]
+|[[File:Starter bow.png|center]]
+|-
+|17 March 2018 –<br/>23 August 2023
+|23 August 2023–<br/>present
+|}
+
+{{Deadman Mode}}
+{{Ranged weapons}}

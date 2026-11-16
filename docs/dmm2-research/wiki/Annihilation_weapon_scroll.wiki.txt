@@ -1,0 +1,69 @@
+{{Confuse|Armageddon weapon scroll}}
+{{Infobox Item
+|name = Annihilation weapon scroll
+|image = [[File:Annihilation weapon scroll.png]]
+|release = [[25 February]] [[2026]]
+|update = Cow Boss is Out Today!
+|members = Yes
+|quest = No
+|tradeable = Yes
+|bankable = Yes
+|equipable = No
+|stackable = No
+|noteable = Yes
+|options = Read, Drop
+|examine = Take this to Nigel to give the Toxic Staff of the Dead, Bow of Faerdhinen (c) or Crystal armour a cosmetic theme from Deadman: Annihilation.
+|value = 25000
+|alchable = No
+|weight = 0.100
+|exchange = Yes
+|id = 33012
+}}
+[[File:Annihilation weapon scroll detail.png|130px|left]]
+The '''Annihilation weapon scroll''' can be used to cosmetically change the [[toxic staff of the dead]], [[Bow of Faerdhinen (c)]], or all three pieces of [[Crystal equipment#Crystal armour|crystal armour]]. It can be purchased from the [[Deadman Reward Store]] for 12,000 [[Deadman: Apocalypse/Points|Deadman Points]], which are earned from participating in seasonal [[Deadman]] events.
+
+The scroll can be used by bringing it to [[Nigel]]. When you give the scroll to [[Nigel]], it will permanently unlock the 5 cosmetics for the player and remove the scroll permanently. You can then freely switch any of the items{{CiteReddit|author=Mod Goblin|url=https://np.reddit.com/r/2007scape/comments/1qkr9lh/deadman_annihilation_everything_you_need_to_know/o18lh98/|title=Deadman: Annihilation - Everything You Need to Know|quote=12k points, permanent unlock that you can use on all affected items, so one scroll can do all armour pieces + bow!|date=23 January 2026|archiveurl=https://archive.ph/apzmT|archivedate=2026-01-31}} between their standard and deadman variant at [[Nigel]], and it can be applied to however many of the item you wish.
+
+Crystal equipment reverted from the Deadman variant will be reset to the default colours of the item; the [[Crystal equipment#Recolouring|Meilyr clan colours]] for the armour, and the [[Bow of Faerdhinen (c)|Hefin clan colours]] for the bow.
+
+Upon PvP death the PK'er will receive the normal variant of the item.<ref>OldSchoolRS; Let's Talk Deadman: Armageddon! stream. https://www.youtube.com/live/enmaX1RmXLw?t=1670s</ref>
+
+==Products==
+{{Uses material list|Annihilation weapon scroll}}
+
+==Shop locations==
+{{Store locations list|Annihilation weapon scroll}}
+
+==Transcript==
+{{hastranscript|item}}
+
+==Gallery==
+<gallery widths=250 heights=200>
+File:Deadman- Annihilation Overview & Rewards Blog (8).png|Concept art from the [[Update:Deadman: Annihilation Overview & Rewards Blog|poll blog]]
+</gallery>
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 11 March 2026
+|update = More from the Getting Around Poll
+|change = The item can now be sacrificed to [[Death's Coffer]].
+}}
+{{Subject changes
+|date = 25 February 2026
+|update = Cow Boss is Out Today!
+|change = The item was made available.
+}}
+{{Subject changes
+|date = 21 January 2026
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|change = The item was added to the game, but was unobtainable.
+}}
+{{Subject changes footer}}
+
+==References==
+{{Reflist}}
+
+{{Deadman: Annihilation}}
+{{Ornament kits}}
+[[Category:Ornament kits]]

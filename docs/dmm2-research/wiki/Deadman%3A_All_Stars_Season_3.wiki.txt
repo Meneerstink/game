@@ -1,0 +1,554 @@
+{{Infobox Temporary Game Mode
+|name = Deadman: All Stars Season 3
+|image = [[File:Deadman All Stars Season 3 logo.png|280px]]
+|type = Deadman
+|open = [[6 June]] [[2026]]
+|end = [[20 June]] [[2026]]
+|update = None
+|removalupdate = None
+}}
+'''Deadman: All Stars Season 3''' was the third season of [[Deadman: All Stars]], an invite-only variant of [[Deadman Mode]] running from [[6 June]] [[2026]] to [[15 June]] [[2026]]. As with seasons 1 and 2, it was hosted and spearheaded by content creator Solo Mission, in collaboration with Jagex.
+
+The finale took place on [[20 June]] [[2026]], and was held at a live in-person event at the Rosemont Theatre in Rosemont, Illinois, USA.
+
+==Teams==
+Each of the 6 teams was led by a team captain, who drafted their team members using a snake draft during a livestream at 19<span title="19:00 UTC">:00 UTC</span> on [[31 May]] [[2026]]. '''Bold contestants''' were new for season 3.
+
+{| class="wikitable"
+!Name
+!Colour
+!Members
+!Storage NPC
+|-
+|Odablock Warriors
+|{{plinkp|Red boots}}'''Red'''
+|
+* Odablock (c)
+* DubieDobies
+* '''Gnomonkey'''
+* Raikesy
+* Evscape
+|[[Warrior (Deadman: All Stars)|Warrior]]
+|-
+|Framed Friends
+|{{plinkp|Pink boots}}'''Pink'''
+|
+* '''Framed (c)'''
+* Lake
+* Pip
+* '''Synq'''
+* Alfie
+|[[Friend (Deadman: All Stars)|Friend]]
+|-
+|Westham Weasels
+|{{plinkp|Yellow boots}}'''Yellow'''
+|
+* Westham (c)
+* '''Greg'''
+* Mika
+* Eliop14
+* Faux
+|[[Weasel (Deadman: All Stars)|Weasel]]
+|-
+|Dino Nuggets
+|{{plinkp|Fremennik boots}}'''Green'''
+|
+* Dino (c)
+* B0aty
+* '''61M'''
+* Sick Nerd
+* MMORPG
+| [[Nugget (Deadman: All Stars)|Nugget]]
+|-
+|Rhys Rhinos
+|{{plinkp|Blue boots}}'''Blue'''
+|
+* Rhys (c)
+* Torvesta
+* Muts
+* V the Victim
+* C Engineer
+| [[Rhino (Deadman: All Stars)|Rhino]]
+|-
+|Purpp Rebels
+|{{plinkp|Purple boots}}'''Purple'''
+|
+* Purpp (c)
+* Skiddler
+* Skill Specs
+* Coxie
+* Mr Mammal
+|[[Rebel (Deadman: All Stars)|Rebel]]
+|}
+Players that did not return from the previous season: Verf, Sparc Mac, Port Khazard, Ditterbitter, Purespam and Solo Mission.
+
+==Format==
+Starting with fresh accounts, each team had 9 days to build accounts on a private [[Deadman]] world, from [[6 June]] [[2026]] to [[15 June]] [[2026]]. Competitors were limited to 120 total hours playtime each, with 6 hours of enforced downtime per day, with the server being closed from <span title="04:00 UTC">05:00 BST (0:00 EDT)</span> to <span title="10:00 UTC">11:00</span> BST (6:00 EDT) each day. There was also a midweek break, with the world being closed on June 11. The world opened June 6th at <span title="12:00 UTC">13:00</span> BST (8:00 EDT).
+
+The event was streamed by most of the competitors, as well as an official commentary stream hosted by Solo Mission and PureSpam.
+
+===Finale event===
+The in-person finale event occurred at 13:00 CDT (19:00 BST) [[20 June]] [[2026]] at the Rosemont Theatre in Rosemont, Illinois, USA.
+
+Pre-sale tickets were made available to active players using the [[Jagex Launcher]] on [[27 February]] [[2026]] 17:00 BST through link displayed on a banner. General sale tickets were made available 24 hours after the pre-sale via Ticketmaster.
+
+Three ticket tiers were available: a standard ticket, the Rune Package ticket, and the Dragon Package ticket.
+
+Standard tickets include:
+* Seat in the audience
+* Full access to event
+* Free gifts on entry
+
+Rune Package tickets include:
+* Some of the best seating in the house
+* Goodie Bag
+* 15% Discount on all in-event merchandise
+* Early entry into the venue.
+
+Dragon Package tickets include:
+* The best seating in the house
+* Goodie Bag
+* 20% Discount on all in-event merchandise
+* Early entry into venue
+* Open bar and open catering for the entire event in private VIP lounge
+* Commemorative event lanyard
+
+Event-exclusive merchandise was also available for sale during the event, and was made available to preorder via the Ticketmaster link as an event extra.
+
+The event was streamed on the ''Old School RuneScape'' Twitch channel, hosted by Purespam and Mod Manked, to provide an easy way to follow the action and offer commentary on teams' strategies and performance.
+
+==Mechanics==
+Most game mechanics worked similarly to the seasonal [[Deadman Mode]] events. Drop rates were boosted 6x and XP rates were boosted 15x for all skills outside of [[instance]]s, 3x for combat skills in instances, and no boost for non-combat skills in instances.
+
+===Reverted [[Deadman: Annihilation]] changes===
+Various changes from Deadman: Annihilation, intended to make the game mode more accessible to casual players, were reverted.{{CiteVideo|author=Solo Mission|title=DEADMAN ALLSTARS SEASON 3 ft Odablock, B0aty, Framed, and more....|url=4nzHRYEe4io|timestamp=4:22|date=|site=|notes=|name=}}
+
+* [[Bank key]]s were reinstated.
+* [[Deadman's chest (scenery)|Deadman's chests]] were removed.
+* [[Ancient Warriors' equipment|Ancient Warriors' armour]] was removed.
+** Some exceptions such as breaches, missions, and blood money. See below for more details.
+
+===Auto-completed quests===
+* [[Temple of Ikov]]
+* [[The Dig Site]]
+* [[The Tourist Trap]]
+* [[Troll Stronghold]]
+* [[Waterfall Quest]]
+* [[Regicide]]
+* [[One Small Favour]]
+* [[Beneath Cursed Sands]]
+* [[Monkey Madness II]]
+
+===Drop table changes===
+* In [[God Wars Dungeon]], [[godsword hilt]] drops were replaced with fully completed [[godsword]]s
+** Godsword shards could still be dropped as well.
+* [[Nex]] uniques were dropped in their repaired/completed state.
+** [[Torva equipment]] dropped as repaired.
+** [[Nihil horn]] drops were replaced with the [[Zaryte crossbow]].
+* [[Ahrim the Blighted's equipment]] drops were replaced with equivalent [[Karil the Tainted's equipment]] pieces.
+
+===Safezones===
+All [[safezone]]s except for [[Varrock]] were removed. Players spawned, respawned, and could [[home teleport]] to the [[Grand Exchange]]. [[Safe deposit box]]es were removed and replaced with a designated NPC for each team which could hold up to 40 tradeable items, accessible by any member of a team.
+
+These designated NPCs were:
+* [[Friend (Deadman: All Stars)|Friend]]
+* [[Nugget (Deadman: All Stars)|Nugget]]
+* [[Rebel (Deadman: All Stars)|Rebel]]
+* [[Rhino (Deadman: All Stars)|Rhino]]
+* [[Warrior (Deadman: All Stars)|Warrior]]
+* [[Weasel (Deadman: All Stars)|Weasel]]
+
+===Sigils===
+Players began with eight [[sigil]]s in their bank. Additional sigils were not obtainable in any way.
+
+The starting sigils were:
+* [[Sigil of Consistency|Consistency]]
+* [[Sigil of Finality|Finality]]
+* [[Sigil of Aggression|Aggression]]
+* [[Sigil of Rampage|Rampage]]
+* [[Sigil of Arcane Swiftness|Arcane swiftness]]
+* [[Sigil of the Gunslinger|Gunslinger]]
+* [[Sigil of the Swashbuckler|Swashbuckler]]
+* [[Sigil of the Lightbearer|Lightbearer]]
+
+Additionally, the [[skull shop]] was fully removed from the gamemode.
+
+===Breaches===
+Breaches made a return, functioning similarly to those in [[Deadman: All Stars Season 2|season 2]]. They spawned once a day at <span title="19:00 UTC">20:00 BST (15:00 EDT)</span> in a multi-combat area and lasted for 30 minutes. [[Breach monster]]s drop [[Ancient Warriors' equipment|Ancient Warriors' weapons]] at a rate in 1/90 and [[corrupted weapons]] at a rate of 1/80, and attacking a breach monster [[Skull (status)|skulls]] the player. The breaches took place in the following locations:
+* Day 1: [[Mole Hole]]
+* Day 2: [[Rogues' Castle]]
+* Day 3: [[Al Kharid]] 
+** Multicombat area expanded to the south and east to include the [[Shantay Pass]] and [[Kalphite Cave]] entrance
+* Day 4: Middle of the [[Wilderness]]
+* Day 5: South [[Varlamore]] (near the [[Colossal Wyrm Remains]])
+* Day 6: [[Mor Ul Rek]]
+* Day 7: [[Ape Atoll]]
+* Day 8: [[Port Piscarilius]] 
+** Multicombat area expanded to the north-east to include the bank and [[anglerfish]] fishing area
+
+===Missions===
+Twice a day, a mission was posted for all teams, at <span title="15:00 UTC">16:00 BST (11:00 EDT)</span> and <span title="23:00 UTC">00:00 BST (19:00 EDT)</span>. Missions varied in difficulty but always required a specific boss or monster to be killed. The monster dropped a [[mission totem]], which must be brought back to the totem trader<!--not an NPC, but rather an account operated by the casters--> at the [[Grand Exchange]] to complete the mission and claim the reward. The player currently holding the totem was marked with a red [[Skull (status)|skull]], meaning they couldn't safely enter the safezone around [[Varrock]], and if killed in PvP, the totem was lost to the player who killed them, who could turn the totem in for their team instead.
+
+Rewards for turning in a mission totem varied from tier 4 (gear useful for progression) to tier 1 (best-in-slot gear for the finale), with later missions rewarding better gear.{{CiteVideo|author=Solo Mission|title=DEADMAN ALLSTARS SEASON 3 ft Odablock, B0aty, Framed, and more....|url=4nzHRYEe4io|timestamp=7:32|date=|site=|notes=|name=}}
+
+* Tier 1 example power level: [[Vesta's longsword (Deadman Mode)|Vesta's longsword]], [[Zuriel's staff (Deadman Mode)|Zuriel's staff]]
+* Tier 2 example power level: [[Armadyl chestplate]], [[Virtus robe bottom]]
+* Tier 3 example power level: [[Corrupted weapons]], [[Morrigan's throwing axe (Deadman Mode)|Morrigan's throwing axes]]
+* Tier 4 example power level: [[Statius's warhammer (Deadman Mode)|Statius's warhammer]], [[Vesta's spear (Deadman Mode)|Vesta's spear]]
+
+While teams did not know the exact mission or reward in advance, they did know the tier that each mission awards.
+
+When the mission totem is dropped after defeating the target, a global message of {{mes|[Target] has been defeated.}} was sent.
+
+{| class="wikitable"
+!Day
+!Tier
+!Mission
+!Winning Team
+!Reward
+|-
+|rowspan=2|Day 1
+(6 June)
+|Tier 2||Kill [[King Black Dragon]]||{{plinkp|Blue boots}} Rhys Rhinos||{{plink|Dragonfire shield}}
+|-
+|Tier 4||Kill [[Dagannoth Prime]]||{{plinkp|Red boots}} Odablock Warriors||All four [[Fremennik rings]] (unimbued)
+|-
+|rowspan=2|Day 2
+(7 June)
+|Tier 4||Kill [[Scurrius]]{{efn|Special version with 5000 Hitpoints|name=5k}} on [[Crabclaw Isle]]||{{plinkp|Pink boots}} Framed Friends||{{plink|Statius's warhammer (Deadman Mode)|txt=Statius's warhammer|pic=Statius's warhammer}}
+|-
+|Tier 3||Kill [[the Hueycoatl]]||{{plinkp|Fremennik boots}} Dino Nuggets||Team's choice of any [[The Hueycoatl|Hueycoatl]] unique.<br/>Chose the {{plink|dragon hunter wand}}.
+|-
+|rowspan=2|Day 3
+(8 June)
+|Tier 3||Kill [[Callisto]]||{{plinkp|Blue boots}} Rhys Rhinos||Team's choice of any {{plink|Voidwaker}} piece.<br/>Chose the {{plink|Voidwaker gem}}.
+|-
+|Tier 3||Kill [[Sol Heredit]]{{efn|Special version with 5000 Hitpoints|name=5k}} in [[Kruk's Dungeon]]||{{plinkp|Fremennik boots}} Dino Nuggets||Team's choice of any [[Trinket of advanced weaponry|corrupted weapon]].<br/>Chose the {{plink|corrupted twisted bow}}.
+|-
+|rowspan=2|Day 4
+(9 June)
+|Tier 3||Kill [[Kree'arra]]{{efn|Special version with 5000 Hitpoints|name=5k}} in the [[Enchanted Valley]]|| {{plinkp|Yellow boots}} Westham Weasels||100 {{plink|Morrigan's javelin (Deadman Mode)|txt=Morrigan's javelins|pic=Morrigan's javelin}}
+|-
+|Tier 2||Complete the [[Theatre of Blood]] on at least Normal mode||{{plinkp|Fremennik boots}} Dino Nuggets||Team's choice of any [[Theatre of Blood]] unique.<br/>Chose the {{plink|Scythe of Vitur}} (fully charged).
+|-
+|rowspan=2|Day 5
+(10 June)
+|Tier 3|| Kill [[Elidinis' Warden]]{{efn|Special version with 5000 Hitpoints|name=5k}} in the [[White Knights' Castle|White Knight's Castle]]|| {{plinkp|Yellow boots}} Westham Weasels||Team's choice of any [[Trinket of advanced weaponry|corrupted weapon]].<br/>Chose the {{plink|Corrupted voidwaker|txt=corrupted Voidwaker}}.
+|-
+|Tier 1|| Kill [[TzTok-Jad|Tztok-Jad]]{{efn|Special version with 5000 Hitpoints|name=5k}} on [[Lava Dragon Isle]]|| {{plinkp|Purple boots}} Purpp Rebels{{efn|Due to the circumstances of the mission, where a referee mistakenly told contestants V the Victim was holding the mission totem, no blood money was lost and all gear lost from deaths was refunded (except for the Purpp Rebels). Blood money was still rewarded for any kills during this mission.}}|| {{plink|Vesta's longsword (Deadman Mode)|txt=Vesta's longsword|pic=Vesta's longsword}}
+|-
+|rowspan=2|Day 6
+(12 June)
+|Tier 2|| Kill [[General Graardor]]|| {{plinkp|Blue boots}} Rhys Rhinos|| Team's choice of any [[God Wars Dungeon|God Wars]] unique (not including Nex).
+Chose the {{plink|Armadyl crossbow|txt=Armadyl crossbow}}.
+|-
+|Tier 2|| Kill the [[Doom of Mokhaiotl]] (Delve 16)|| {{plinkp|Blue boots}} Rhys Rhinos|| Team's choice of any [[Doom of Mokhaiotl]] unique.
+Chose the {{plink|Avernic treads|txt=Avernic treads}}.
+|-
+|rowspan=2|Day 7
+(13 June)
+|Tier 3|| Kill [[TzKal-Zuk]] in the [[Inferno]] || {{plinkp|Red boots}} Odablock Warriors|| Team's choice of any [[Trinket of advanced weaponry|corrupted weapon]].
+Chose the {{plink|Corrupted voidwaker|txt=corrupted Voidwaker}}.
+|-
+|Tier 1|| Kill [[Nex]]|| {{plinkp|Yellow boots}} Westham Weasels|| Team's choice of any [[Nex]] unique.
+Chose the {{plink|Zaryte crossbow|txt=Zaryte crossbow}}.
+|-
+|rowspan=2|Day 8
+(14 June)
+|Tier 2|| Kill the [[Corporeal Beast]]|| {{plinkp|Yellow boots}} Westham Weasels||{{plink|Arcane spirit shield}} 
+|-
+|Tier 1||Kill [[Yama]]{{efn|Special version with 5000 Hitpoints|name=5k}} at the [[Settlement Ruins]]|| {{plinkp|Fremennik boots}} Dino Nuggets|| {{plink|Zuriel's staff (Deadman Mode)|pic=Zuriel's staff|txt=Zuriel's staff}}
+|-
+|Day 9
+(15 June)
+|Tier 3 || Complete the [[Fortis Colosseum]] || {{plinkp|Red boots}} Odablock Warriors ||Team's choice of any [[Trinket of advanced weaponry|corrupted weapon]].
+Chose the {{plink|Corrupted voidwaker|txt=corrupted Voidwaker}}.
+|}
+{{Notelist}}
+
+===Blood money===
+Killing other players during the week rewarded the killer's team with [[blood money]]. Kills in [[single-way combat]] or later in the week will reward more blood money than those in [[multicombat area]]s, at breaches, or earlier in the week. Dying removed 1 blood money from a team's total, regardless of time or location. A team could never have a negative amount of blood money.
+
+{| class="wikitable sortable align-center-1 align-left-2" style="text-align:right;"
+|+ Blood Money Rewards and Penalties
+|-
+! Day !! Date !! Single kill !! Multi kill !! Breach Kill !! Death 
+|-
+| 1 || June 6th || {{Currency|Blood money|1}} || {{Currency|Blood money|1}} || {{Currency|Blood money|2}} || {{Currency|Blood money|-1}}
+|-
+| 2 || June 7th || {{Currency|Blood money|2}} || {{Currency|Blood money|1}} || {{Currency|Blood money|2}} || {{Currency|Blood money|-1}} 
+|-
+| 3 || June 8th || {{Currency|Blood money|3}} || {{Currency|Blood money|1}} || {{Currency|Blood money|2}} || {{Currency|Blood money|-1}}
+|-
+| 4 || June 9th || {{Currency|Blood money|4}} || {{Currency|Blood money|2}} || {{Currency|Blood money|2}} || {{Currency|Blood money|-1}} 
+|-
+| 5 || June 10th || {{Currency|Blood money|5}} || {{Currency|Blood money|2}} || {{Currency|Blood money|3}} || {{Currency|Blood money|-1}}
+|-
+| 6 || June 12th || {{Currency|Blood money|6}} || {{Currency|Blood money|2}} || {{Currency|Blood money|3}} || {{Currency|Blood money|-1}}
+|-
+| 7 || June 13th || {{Currency|Blood money|6}} || {{Currency|Blood money|2}} || {{Currency|Blood money|3}} || {{Currency|Blood money|-1}}
+|-
+| 8 || June 14th || {{Currency|Blood money|6}} || {{Currency|Blood money|2}} || {{Currency|Blood money|4}} || {{Currency|Blood money|-1}}
+|-
+| 9 || June 15th || {{Currency|Blood money|6}} || {{Currency|Blood money|2}} || {{NA}} || {{Currency|Blood money|-1}}
+|}
+
+Blood money could be spent on upgrades for use exclusively in the finale. Available upgrades were [[Arcane prayer scroll|arcane]] and [[dexterous prayer scroll]]s, [[Trinket of vengeance|trinkets of vengeance]] with two charges, and [[Saradomin brew]] upgrades (replacing one [[anglerfish]] in the finale inventory). The price of each upgrade increased each time it was purchased. Purchases are for individual team members, not upgrades for the full team.
+
+Additionally, the [[Vesta's longsword]], [[Zuriel's staff]], [[Morrigan's javelin]]s, and [[Morrigan's throwing axe]]s were available for purchase but could only be purchased once per team.
+
+{| class="wikitable sortable" style="text-align:right;"
+|+ Finale Shop Prices
+|-
+! # !! {{Plinkp|Arcane prayer scroll}} !! {{Plinkp|Dexterous prayer scroll}} !! {{Plinkp|Trinket of vengeance}} !! {{Plinkp|Saradomin brew}} !! {{Plinkp|Vesta's longsword}} !! {{Plinkp|Zuriel's staff}} !! {{Plinkp|Morrigan's throwing axe}}!! {{Plinkp|Morrigan's javelin}}
+|-
+| 1st || {{Currency|Blood money|1}} || {{Currency|Blood money|1}} || {{Currency|Blood money|1}} || {{Currency|Blood money|5}} || {{Currency|Blood money|40}} || {{Currency|Blood money|25}} || {{Currency|Blood money|15}} || {{Currency|Blood money|15}}
+|-
+| 2nd || {{Currency|Blood money|2}} || {{Currency|Blood money|2}} || {{Currency|Blood money|2}} || {{Currency|Blood money|10}} 
+|-
+| 3rd || {{Currency|Blood money|3}} || {{Currency|Blood money|3}} || {{Currency|Blood money|4}} || {{Currency|Blood money|20}}
+|-
+| 4th || {{Currency|Blood money|4}} || {{Currency|Blood money|4}} || {{Currency|Blood money|8}} || {{Currency|Blood money|40}}
+|-
+| 5th || {{Currency|Blood money|5}} || {{Currency|Blood money|5}} || {{Currency|Blood money|16}} || {{Currency|Blood money|80}}
+|}
+
+===Finale rules===
+Sigils were banned during the finale. Other banned items, spellbooks, actions, etc. include:
+* Entity Hider, ::renderself, or the Death Dotter plug-in.
+* The [[Lunar spellbook|Lunar]] or [[Arceuus spellbook]]s
+* [[Phoenix necklace]]s
+* [[Prayer regeneration potion]]s
+* Extra [[Hitpoints]] gain through non-PvP means
+** Hitpoints gained from [[special attacks]] and [[blood spells]] is allowed
+* [[Rock cake]]s, [[locator orb]]s, or any other item that lowers a player's Hitpoints intentionally
+* More than 1 [[ring of recoil]]
+** [[Ring of suffering|Rings of suffering]] can have any number of charges
+* Drinking [[potions]] before a player enters for their team's match
+** Players can pre-pot "in line" while waiting for their turn once their team's match has begun
+* Pre-seeding the arena with [[Mithril seeds|mithril]] or [[adamant seeds]]
+* A player placing bets on themselves or other teams
+
+All players began with a base inventory consisting of a [[ranging potion]], [[supercombat potion]], three [[Sanfew serum]]s, two [[Saradomin brew]]s, and nine [[anglerfish]] or [[manta ray]]s. One food for each player could be replaced by a Saradomin brew by spending [[#Blood money|blood money]] earned by killing other players throughout the week.
+
+==Results==
+===Kills/Deaths/Blood Money===
+====By team====
+Blood money was calculated on a per-team basis, not individually.
+{| class="wikitable sortable"
+|- 
+! Team
+! Team Kills
+! Team Deaths
+! K/D Ratio
+! Blood Money
+|- 
+| {{plinkp|Red boots}} '''Odablock Warriors'''
+| 16
+| 61
+| 0.26
+| 40
+|-
+| {{plinkp|Yellow boots}} '''Westham Weasels'''
+| 97
+| 28
+| 3.46
+| 162
+|-
+| {{plinkp|Fremennik boots}} '''Dino Nuggets'''
+| 53
+| 46
+| 1.15
+| 80
+|-
+| {{plinkp|Pink boots}} '''Framed Friends'''
+| 19
+| 29
+| 0.655
+| 19
+|-
+| {{plinkp|Blue boots}} '''Rhys Rhinos'''
+| 40
+| 41
+| 0.98
+| 50
+|-
+| {{plinkp|Purple boots}} '''Purpp Rebels'''
+| 32
+| 52
+| 0.62
+| 32
+|}
+
+====By individual====
+{| class="wikitable sortable"
+|- 
+! Team
+! Player
+! Kills
+! Deaths
+! K/D Ratio
+|-
+| {{plinkp|Red boots}} || Odablock || 13 || 14 || 0.93
+|-
+| {{plinkp|Red boots}} || DubieDobies || 1 || 16 || 0.06
+|-
+| {{plinkp|Red boots}} || Gnomonkey || 1 || 8 || 0.13
+|-
+| {{plinkp|Red boots}} || Raikesy || 1 || 17 || 0.06
+|-
+| {{plinkp|Red boots}} || EVScape || 1 || 7 || 0.14
+|-
+| {{plinkp|Pink boots}} || Framed || 8 || 4 || 2.00
+|-
+| {{plinkp|Pink boots}} || Lake || 5 || 2 || 2.50
+|-
+| {{plinkp|Pink boots}} || Pip || 2 || 9 || 0.22
+|-
+| {{plinkp|Pink boots}} || Synq || 2 || 7 || 0.22
+|-
+| {{plinkp|Pink boots}} || Alfie || 2 || 7 || 0.22
+|-
+| {{plinkp|Yellow boots}} || Westham || 27 || 4 || 6.75
+|-
+| {{plinkp|Yellow boots}} || Greg || 25 || 5 || 5.00
+|-
+| {{plinkp|Yellow boots}} || Mika || 19 || 3 || 6.33
+|-
+| {{plinkp|Yellow boots}} || Eliop14 || 16 || 7 || 2.29
+|-
+| {{plinkp|Yellow boots}} || Faux || 10 || 9 || 1.11
+|-
+| {{plinkp|Fremennik boots}} || Dino || 14 || 7 || 2.00
+|-
+| {{plinkp|Fremennik boots}} || B0aty || 14 || 4 || 3.50
+|-
+| {{plinkp|Fremennik boots}} || 61M || 6 || 11 || 0.55
+|-
+| {{plinkp|Fremennik boots}} || Sick Nerd || 14 || 6 || 2.33
+|-
+| {{plinkp|Fremennik boots}} || MMORPG || 5 || 18 || 0.28
+|-
+| {{plinkp|Blue boots}} || Rhys || 19 || 9 || 2.11
+|-
+| {{plinkp|Blue boots}} || Torvesta || 5 || 10 || 0.50
+|-
+| {{plinkp|Blue boots}} || Muts || 7 || 5 || 1.40
+|-
+| {{plinkp|Blue boots}} || V the Victim || 3 || 12 || 0.25
+|-
+| {{plinkp|Blue boots}} || C Engineer || 6 || 5 || 1.20
+|-
+| {{plinkp|Purple boots}} || Purpp || 12 || 8 || 1.50
+|-
+| {{plinkp|Purple boots}} || Skiddler || 4 || 10 || 0.40
+|-
+| {{plinkp|Purple boots}} || Skill Specs || 8 || 17 || 0.47
+|-
+| {{plinkp|Purple boots}} || Coxie || 2 || 6 || 0.33
+|-
+| {{plinkp|Purple boots}} || Mr Mammal || 6 || 11 || 0.55
+|}
+
+===Finale===
+The finale has two stages, a group stage and a bracket. Teams are seeded based on blood money earned. The fights all took place in an altered version of the [[1v1_Arena#All_Stars_Season_3|1v1 Arena]].
+
+During the group stage, the teams are divided into two groups of three each. Each team will fight one match each against the other teams in their group, with the top teams from each group advancing to the semifinals and the semifinal winners advancing to the finals.
+
+Each match is a continuous series of 1v1 fights, starting with the last-row pick for each team and the next teammate stepping in when their teammate dies. The winner is the last team with members still alive.
+
+====Group Stage====
+{| class="wikitable" 
+!Group 
+!Team
+!Matches
+!Round 1
+!Round 2
+|-
+! rowspan="3" | Group A
+|class="table-bg-green" | {{plinkp|Blue boots}} '''Rhys Rhinos'''
+|style="text-align: center;" class="table-bg-green" | '''2-0'''
+|style="text-align: center;" class="table-bg-green" | {{plinkp|Fremennik boots}}
+|style="text-align: center;" class="table-bg-green" | {{plinkp|Pink boots}}
+|-
+|class="table-bg-green" | {{plinkp|Fremennik boots}} '''Dino Nuggets'''
+|style="text-align: center;" class="table-bg-green" | '''1-1'''
+|style="text-align: center;" class="table-bg-red" | {{plinkp|Blue boots}} 
+|style="text-align: center;" class="table-bg-green" | {{plinkp|Pink boots}}
+|-
+|class="table-bg-red" | {{plinkp|Pink boots}} Framed Friends
+|style="text-align: center;" class="table-bg-red" | 0-2
+|style="text-align: center;" class="table-bg-red" | {{plinkp|Fremennik boots}}
+|style="text-align: center;" class="table-bg-red" | {{plinkp|Blue boots}}
+|-
+
+! rowspan="3" | Group B
+|class="table-bg-green" | {{plinkp|Yellow boots}} '''Westham Weasels'''
+|style="text-align: center;" class="table-bg-green" | '''2-0'''
+|style="text-align: center;" class="table-bg-green" | {{plinkp|Purple boots}}
+|style="text-align: center;" class="table-bg-green" | {{plinkp|Red boots}}
+|-
+|class="table-bg-green" | {{plinkp|Purple boots}} '''Purpp Rebels'''
+|style="text-align: center;" class="table-bg-green"| '''1-1'''
+|style="text-align: center;" class="table-bg-red" | {{plinkp|Yellow boots}}
+|style="text-align: center;" class="table-bg-green" | {{plinkp|Red boots}}
+|-
+|class="table-bg-red" | {{plinkp|Red boots}} Odablock Warriors
+|style="text-align: center;" class="table-bg-red"  | 0-2
+|style="text-align: center;" class="table-bg-red" | {{plinkp|Yellow boots}}
+|style="text-align: center;" class="table-bg-red" | {{plinkp|Purple boots}}
+|-
+
+|}
+
+====Playoffs====
+{| class="wikitable"
+|-
+! colspan="2" | Semifinals
+! colspan="2" | Grand Finale
+|-
+| class="table-bg-green" | {{plinkp|Fremennik boots}} '''Dino Nuggets'''
+| class="table-bg-green" | '''1'''
+| rowspan="3" class="table-bg-green" | {{plinkp|Fremennik boots}} '''Dino Nuggets'''
+| rowspan="3" class="table-bg-green" | '''2'''
+|-
+| {{plinkp|Yellow boots}} Westham Weasels
+| 0
+|-
+| colspan="2" style="height: 25px; border: none;" |
+|-
+| class="table-bg-green" | {{plinkp|Blue boots}} '''Rhys Rhinos'''
+| class="table-bg-green" | '''1'''
+| rowspan="2" | {{plinkp|Blue boots}} Rhys Rhinos
+| rowspan="2" | 1
+|-
+| {{plinkp|Purple boots}} Purpp Rebels
+| 0
+|}
+
+==Sources==
+===Newsposts===
+{| class="wikitable"
+!Post
+!Date
+|-
+|[[Update:Deadman All Stars Season 3 Launch!]]||[[6 June]] [[2026]]
+|-
+|[[Update:Deadman All Stars Season 3 Live Finale Tickets Onsale in 24 Hours!]]||[[26 February]] [[2026]]
+|-
+|[[Update:Update on Deadman All-Stars Ticket Sales]]||[[17 February]] [[2026]]
+|-
+|[[Update:Deadman: Annihilation & All-Stars 3]]||[[25 January]] [[2026]]
+|}
+
+==External links==
+* Links to competitors' livestreams and third-party tools can be found at [[Guide:Deadman: All Stars Season 3 spectator resources]]
+* Live commentary stream on [https://kick.com/solomission Kick]
+* Daily recap and highlights on [https://www.youtube.com/@SoloMission YouTube]
+* [https://osrs.runescape.com/deadman-allstars Official website]
+* [https://secure.runescape.com/m=hiscore_oldschool_tournament/overall Official HiScores]
+
+==References==
+{{Reflist}}
+
+{{Deadman Mode}}

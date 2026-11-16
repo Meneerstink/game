@@ -1,0 +1,53 @@
+{{Deadman seasonal}}
+{{Infobox Item
+|name = Deadman starter pack
+|image = [[File:Deadman starter pack.png]]
+|release = [[17 March]] [[2018]]
+|update = Deadman Summer Season, live now!
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Open, Destroy
+|destroy = You can get another from the Lumbridge combat tutors.
+|examine = Contains some useful supplies.
+|value = 1
+|alchable = No
+|weight = 4.000
+|id = 22330
+}}
+[[File:Deadman starter pack detail.png|left|150px]]
+'''Deadman starter packs''' are crates obtained from [[Brugsen Bursen]] and the [[Melee combat tutor|melee]], [[magic combat tutor|magic]], or [[ranged combat tutor]]s in seasonal [[Deadman Mode]]. They are obtained on death if not toggled off, and cannot be brought to [[Entrana]]. 11 free inventory spaces are required to open it.
+
+The pack contains the following items:
+*[[Starter sword]]
+*[[Starter bow]]
+*[[Starter staff]]
+*12 [[Tuna (Deadman starter pack)|tunas]]
+*[[Chronicle]] with 10 charges added to it
+*[[Deadman's chest]]
+*[[Deadman's legs]]
+*[[Starter cape]]
+*[[Dramen staff]]
+*[[Deadman's skull]]
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = You can now claim an unlimited amount of starter packs, and they can now be claimed from [[Brugsen Bursen]].
+}}
+{{Subject changes
+|date = 21 January 2026
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|change = The item's value was decreased from 500 to 1.
+}}
+{{Subject changes footer}}
+
+{{Deadman Mode}}
+{{Deadman: Annihilation}}
+{{Deadman: Reborn}}
+{{Deadman: Apocalypse}}

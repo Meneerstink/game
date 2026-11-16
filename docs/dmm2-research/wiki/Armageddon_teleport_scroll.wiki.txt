@@ -1,0 +1,55 @@
+{{Confuse|Annihilation teleport scroll}}
+{{Infobox Item
+|name = Armageddon teleport scroll
+|image = [[File:Armageddon teleport scroll.png]]
+|release = [[7 August]] [[2024]]
+|update = Poll 82 Changes
+|members = Yes
+|quest = No
+|tradeable = Yes
+|equipable = No
+|stackable = No
+|noteable = Yes
+|options = Read, Drop
+|examine = A scroll which unlocks the Deadman: Armageddon home teleport animation.
+|value = 25000
+|alchable = No
+|weight = 0.100
+|exchange = Yes
+|id = 29622
+}}
+[[File:Armageddon teleport scroll detail.png|left|130px]]
+The '''Armageddon teleport scroll''' is an item that can be purchased from the [[Deadman Reward Store]] for 9,000 [[Deadman: Apocalypse/Points|Deadman Points]], which is earned from participating in [[Deadman: Armageddon]]. It can be used to unlock a Deadman: Armageddon-themed [[Home Teleport]] [[animation override]]. To enable it, players can right click "Animation" on the Home Teleport spell icon in their spellbook and select "Armageddon."
+
+==Shop locations==
+{{Store locations list|Armageddon teleport scroll}}
+
+==Transcript==
+{{Hastranscript|transclude=yes}}
+
+==Gallery==
+<gallery mode="packed" heights="250" style="text-align:left">
+Home Teleport (Deadman Armageddon).gif|The Deadman: Armageddon home teleport animation.
+Deadman- Armageddon - First Look (6).png|Concept art for the armageddon teleport animation.
+</gallery>
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 11 March 2026
+|update = More from the Getting Around Poll
+|change = The item can now be sacrificed to [[Death's Coffer]].
+}}
+{{Subject changes
+|date = 7 August 2024
+|update = Poll 82 Changes
+|change = The item was made available.
+}}
+{{Subject changes
+|date = 17 July 2024
+|update = Deadman: Armageddon & While Guthix Sleeps Updates
+|change = The item was added to the game, but was unobtainable.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Armageddon}}

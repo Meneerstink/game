@@ -1,0 +1,2586 @@
+[
+  {
+    "kind": "model",
+    "id": 18,
+    "ref": [
+      "npc 6519"
+    ],
+    "bytes": 2724,
+    "sha256": "fd5087ecf823532385249fb69ae2365bf4da9e243432f58f7bc306e5ba0a0dc8",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 44,
+    "ref": [
+      "npc 6515",
+      "npc 6517",
+      "npc 6518",
+      "npc 10391"
+    ],
+    "bytes": 553,
+    "sha256": "f3ce74a42178ee007d969812349703178f89bd4f03f6f07f5700db4acf6bd6e1",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 52,
+    "ref": [
+      "npc 6516"
+    ],
+    "bytes": 2667,
+    "sha256": "c694ba4c0d23bb7eb8123e97a3f9350c31897c6831e2a42803d2dd6041911959",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 53,
+    "ref": [
+      "npc 6515",
+      "npc 6517",
+      "npc 6518",
+      "npc 10391"
+    ],
+    "bytes": 2537,
+    "sha256": "11608a0d008893db6bbbeb81fb29d5feb8f1082d9e648008a7ecda737bb0b0d4",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 55,
+    "ref": [
+      "npc 6703"
+    ],
+    "bytes": 2700,
+    "sha256": "6421774ae90eeaf7697844920e08b100bebcb76c96c917889855fc2f19bc7c6b",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 63,
+    "ref": [
+      "npc 6510"
+    ],
+    "bytes": 2537,
+    "sha256": "9f3bba507ddd6526c7689e2dd1dad2773423fcc34391e36a4f01723298d9cc21",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 80,
+    "ref": [
+      "npc 6518"
+    ],
+    "bytes": 144,
+    "sha256": "04c7a346a18ee6cd0637f69c525a101edde7a37809c2c46eedfc55dfabe10f0c",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 82,
+    "ref": [
+      "npc 6516",
+      "npc 6517",
+      "npc 10391"
+    ],
+    "bytes": 220,
+    "sha256": "22fa71f15b534765fae6e07ef876a937db7e92e27bc67b95f0f48abdfdb3b698",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 125,
+    "ref": [
+      "npc 6485"
+    ],
+    "bytes": 2501,
+    "sha256": "ffdd971fed6171137baf8420379cfb2b55067e2f4693970834db2454253d2f7c",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 136,
+    "ref": [
+      "npc 6485"
+    ],
+    "bytes": 303,
+    "sha256": "5fd927844c9f0997aee2d5b6dcd2cf6f87ac1aafbbe8a9c4df8e19aa37ef66b6",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 176,
+    "ref": [
+      "npc 6515",
+      "npc 6517",
+      "npc 6518",
+      "npc 6703",
+      "npc 10391"
+    ],
+    "bytes": 496,
+    "sha256": "ac298875181b792e44d261c19a9033471fb8d47cbff366e12fe7f0b16f49327f",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 177,
+    "ref": [
+      "npc 6516"
+    ],
+    "bytes": 496,
+    "sha256": "43d891cf64b9cb7ae62e41cb6344fbfc7ae6f74aa479e2189297ba58d25e959c",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 181,
+    "ref": [
+      "npc 6510",
+      "npc 6515",
+      "npc 6516",
+      "npc 6517",
+      "npc 6518",
+      "npc 6703",
+      "npc 10391"
+    ],
+    "bytes": 610,
+    "sha256": "4cc8b2579b1a718cdc247a44ec62b8896d9c90a8179ad60a1fea316eac80641a",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 202,
+    "ref": [
+      "npc 6515",
+      "npc 6517",
+      "npc 6518",
+      "npc 10391"
+    ],
+    "bytes": 472,
+    "sha256": "d49310cc61abcba462c64506a1c8021973fb8916c63518c8540618301e4b5a49",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 214,
+    "ref": [
+      "npc 6516"
+    ],
+    "bytes": 1206,
+    "sha256": "3f83b9b1fa7ee2b4a3e3427dd28df248d11cfee121e90ce0d88bd91d03521248",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 215,
+    "ref": [
+      "npc 6515",
+      "npc 6517",
+      "npc 6518",
+      "npc 10391"
+    ],
+    "bytes": 1095,
+    "sha256": "da48b524be716eee90a6aa62ab5351811d49856054eb94800a0b3ff8b2778214",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 217,
+    "ref": [
+      "npc 6703"
+    ],
+    "bytes": 991,
+    "sha256": "cf36a0681815aaf445ee32942ebcb6f896e01a0c4a78f826ce10f01b6a56606d",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 230,
+    "ref": [
+      "npc 6510"
+    ],
+    "bytes": 978,
+    "sha256": "f5617105d8f5ca6daee9b2d26766ccfc2732443680473e90694e69be0973bcf8",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 246,
+    "ref": [
+      "npc 6510",
+      "npc 6515"
+    ],
+    "bytes": 131,
+    "sha256": "0142f11fe723d1841570f638af021dea7833c585d183b96d8dd13b194381cb12",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 248,
+    "ref": [
+      "npc 6518"
+    ],
+    "bytes": 159,
+    "sha256": "a89756669f39b2a37600d0299d2257b0c4f74678fa5a3c119fcfbaa945372be0",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 250,
+    "ref": [
+      "npc 6516",
+      "npc 6517",
+      "npc 10391"
+    ],
+    "bytes": 231,
+    "sha256": "e225e7ff0a3e420d4aaae8330ae3e4ebdc090df13402ebbe330d8ac165b29818",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 301,
+    "ref": [
+      "npc 6510"
+    ],
+    "bytes": 5569,
+    "sha256": "2fd187eba3cb4d2da76a37a3e150b866af819f50cd64e501f13d2369dd8d5e7d",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 320,
+    "ref": [
+      "npc 6703"
+    ],
+    "bytes": 182,
+    "sha256": "ab9c65fbe53f6c5f151f1308799338b6dda009971079eb1961d1ca70184322ec",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 358,
+    "ref": [
+      "npc 6485"
+    ],
+    "bytes": 507,
+    "sha256": "bc845581c222731b17407dbe7c3e9eeb0c42d88c39e0a1ba914e866d5dc2b79f",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 408,
+    "ref": [
+      "npc 6485"
+    ],
+    "bytes": 922,
+    "sha256": "eb115c687a793431502d547ce625d5b5af17a76e344b01c00bc1dd97509f90d1",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 417,
+    "ref": [
+      "npc 6485"
+    ],
+    "bytes": 342,
+    "sha256": "50fda419dc8e1b412b7d60ae6451f3a8e969aa84600d0ecb5c4832d1c8d2a198",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 437,
+    "ref": [
+      "npc 6485"
+    ],
+    "bytes": 140,
+    "sha256": "d68cdabd802cf7cba9557f94af35e8e5182534445ac143b2ac8d751646c46a54",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 596,
+    "ref": [
+      "item 14401 opcode 44"
+    ],
+    "bytes": 24,
+    "sha256": "77340103a8053fbb20dd10790206c71f1bebbe19c8275b7317ddded1ee5e9fa6",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 2355,
+    "ref": [
+      "item 26149 opcode 44"
+    ],
+    "bytes": 907,
+    "sha256": "00b445bd698fc7b6afce34224cc19da5e0288238ce0e1f43369edfb4a94fd09b",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 2423,
+    "ref": [
+      "item 13314 opcode 44"
+    ],
+    "bytes": 1612,
+    "sha256": "194a5f88fab5e6c402e446954e41a074e21d06f21ef67881a4445b8f627c6e1e",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 2429,
+    "ref": [
+      "item 799 opcode 44"
+    ],
+    "bytes": 257,
+    "sha256": "7d788267cfe785b9f1e9f58508f0a5b5ec6e9bda57ed3955fa53b2a76afeed6f",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 2484,
+    "ref": [
+      "item 13307 opcode 44"
+    ],
+    "bytes": 177,
+    "sha256": "5b28e064be1c58a76dbbdf1bd409417b978c0c28dc62bc6019c8a19a3baf664e",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 2485,
+    "ref": [
+      "item 13308 opcode 44"
+    ],
+    "bytes": 352,
+    "sha256": "33f6d4c5a7c8e21a282476bdedfa116b2192a8a7e1397a2c0ae45641dba7e003",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 2486,
+    "ref": [
+      "item 13309 opcode 44"
+    ],
+    "bytes": 515,
+    "sha256": "8910da0111f5c7cd995d5186dbb2401fcb073131b5b33179587c18ccae306411",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 2487,
+    "ref": [
+      "item 13310 opcode 44"
+    ],
+    "bytes": 680,
+    "sha256": "da874240720eec6ff487bfedd8c6d8c96ccd812d91777b450110f02cd312bdc7",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 2488,
+    "ref": [
+      "item 13311 opcode 44"
+    ],
+    "bytes": 959,
+    "sha256": "76cb2c2970be5411e854206c9dd3810f47107c6766fe06f05039738d472c7df4",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 2667,
+    "ref": [
+      "item 13312 opcode 44"
+    ],
+    "bytes": 1422,
+    "sha256": "b7a4cdde5263971cd35b2a76d16362ef1c59b55ee8cf546893959d7894182101",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 2710,
+    "ref": [
+      "item 13315 opcode 44"
+    ],
+    "bytes": 1650,
+    "sha256": "e582583b0f96ea1ff98bd7abfbf231b03639c424cec981154c79c2aa81ab1178",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 2742,
+    "ref": [
+      "item 30689 opcode 44"
+    ],
+    "bytes": 211,
+    "sha256": "a1e5d217093297098cb77e091e6cf394a5b93e17c5399888ad298d12d2ea875d",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 2775,
+    "ref": [
+      "item 13316 opcode 44"
+    ],
+    "bytes": 1650,
+    "sha256": "441f2ab3905620e6b06e2f201b7f4682760bd7c161a1a24840d74566d815e70a",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 2825,
+    "ref": [
+      "item 13313 opcode 44"
+    ],
+    "bytes": 1641,
+    "sha256": "3ae50652899d4bc7a258d432f0cca9c7c1674b4fc9b76bb6647d554ce92e6129",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 3189,
+    "ref": [
+      "npc 6515",
+      "npc 6516",
+      "npc 6703"
+    ],
+    "bytes": 1594,
+    "sha256": "bba046d8f52ce983cdd9026c89af4d060659bde673fa4b5f36e600f82e58d28c",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 5203,
+    "ref": [
+      "npc 6514"
+    ],
+    "bytes": 2900,
+    "sha256": "795e93d5e399382550efef7ca549dbc883219f7e7ce472d6b4331fbe521c4722",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 5209,
+    "ref": [
+      "npc 6514"
+    ],
+    "bytes": 1112,
+    "sha256": "f7f4974a5e6e0744ae1a13033db7619c4c8efde89845fd4d18a0f157c1c9e4d2",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 5212,
+    "ref": [
+      "npc 6514"
+    ],
+    "bytes": 1168,
+    "sha256": "6ab7f7a0dc613bc69bdeaa75a02625df8e9be5a41c55e0a9e6216247e3a86fbf",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 5216,
+    "ref": [
+      "npc 6514"
+    ],
+    "bytes": 1352,
+    "sha256": "ed75053720badcabb73d2d840aa895900604045a004c27d16bbc13bb6a81e20d",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 5220,
+    "ref": [
+      "npc 6514"
+    ],
+    "bytes": 826,
+    "sha256": "6308c0bb64df35b24e23a7d9ab83d8125081987e6d92dcc0f3a9b6f219799d76",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 7685,
+    "ref": [
+      "item 22330 opcode 44"
+    ],
+    "bytes": 2285,
+    "sha256": "f2a3490dc9323c2b2e98f9da67ee98dee655b1ef89233243ce1eb08983b6eefa",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 10218,
+    "ref": [
+      "npc 6510"
+    ],
+    "bytes": 496,
+    "sha256": "b3762ca4408d62659c65a9237fb73b8ffc6e08fd9bba48974fe963339c8e95e1",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 10706,
+    "ref": [
+      "npc 6485"
+    ],
+    "bytes": 507,
+    "sha256": "16becdb104cbfc3c0c1ea66289d8ac8c130e9d70aaf927457b1c962762eda076",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 13704,
+    "ref": [
+      "npc 6703"
+    ],
+    "bytes": 401,
+    "sha256": "00f8d73b1041ceb495e5e6b3e0ff0aa297c628798d34dcbc8d871cfedd8b527e",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 14445,
+    "ref": [
+      "npc 6510"
+    ],
+    "bytes": 1049,
+    "sha256": "12dbcc0c43eecc2f3407e4a146d7db6d2a00bd6c77e1351b1f7f1dd567fd2bc2",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 14565,
+    "ref": [
+      "npc 6510"
+    ],
+    "bytes": 1232,
+    "sha256": "f2fc3335898b70a779629bbe8b74e8f3f578744d7c844acd346c0dc61950b919",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 16980,
+    "ref": [
+      "npc 6519"
+    ],
+    "bytes": 224,
+    "sha256": "7ba88d4958d7ce9f958915af7eaf86f4fbb3b823d1438eac283655ffe2732d7c",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 20391,
+    "ref": [
+      "npc 6703"
+    ],
+    "bytes": 1527,
+    "sha256": "6c86ce59efe53447609c869fb9e7d8e09786ef2c9c5d1cbbb7f344c36ecb0edf",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 20393,
+    "ref": [
+      "npc 6516"
+    ],
+    "bytes": 1193,
+    "sha256": "8f5d48e0ce9a62cab799d610cefee4a909f5418d99cee99ea4980180cf953104",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 20395,
+    "ref": [
+      "npc 6515",
+      "npc 6516"
+    ],
+    "bytes": 1521,
+    "sha256": "09d047d38568658e7c668409de0adfdd6c7dc2edcfa7a0244d6bc03a45d7ffbe",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 20397,
+    "ref": [
+      "npc 6703"
+    ],
+    "bytes": 1720,
+    "sha256": "43f7abb7d31481036dc1792a4de3d6fb14200a9892a57507b8160f7a7e0ec7ae",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 20399,
+    "ref": [
+      "npc 6516"
+    ],
+    "bytes": 1349,
+    "sha256": "bdb879d932ac1c9aa48944c9e72a4e4a94e8cac917f10ee35d770a283ff256ca",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 20402,
+    "ref": [
+      "npc 6516"
+    ],
+    "bytes": 1300,
+    "sha256": "5f2aece5b7cba254a912008d323a872dedbca54db2ae313a91db30a82332b223",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 20403,
+    "ref": [
+      "npc 6515"
+    ],
+    "bytes": 1477,
+    "sha256": "61be7775982b448a7c092390cabb696d61c3392e86459557651429b8d753537a",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 20405,
+    "ref": [
+      "npc 6515",
+      "npc 6516"
+    ],
+    "bytes": 744,
+    "sha256": "005a48b2efe6df91ca745da2671e252d7351117dbf780a98221f06bf145147c7",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 21899,
+    "ref": [
+      "npc 6485"
+    ],
+    "bytes": 869,
+    "sha256": "2bdca17cd2394598d38162d479490d846540781fe30ecb28cdae3a7404cb585c",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 21911,
+    "ref": [
+      "npc 6485"
+    ],
+    "bytes": 883,
+    "sha256": "74b3e6c148536ef799641385eb3ae0ee7324065d747f920957ae112e999a1427",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 21914,
+    "ref": [
+      "npc 6485"
+    ],
+    "bytes": 904,
+    "sha256": "933327cb90c1ced81299cccb5de54a083c06e00cbdd815dd19513fc7220f4da0",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 24602,
+    "ref": [
+      "npc 15570"
+    ],
+    "bytes": 5057,
+    "sha256": "cb24553db48d18a9cd44050d51a3c8fb7ff14a5ad0114eedf51c6260bdbbd8b8",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 24605,
+    "ref": [
+      "npc 15570"
+    ],
+    "bytes": 2423,
+    "sha256": "d03564fe3a1618f818e1e6b16d1fdcc7d66b4eccffefbc6ac3824cc0ae086138",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 24606,
+    "ref": [
+      "npc 15570"
+    ],
+    "bytes": 9510,
+    "sha256": "70c1cf3f1f67fd1f56659d0bb1164ab32d7164f070cab5faec2d11e419b1af73",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 26630,
+    "ref": [
+      "npc 6517",
+      "npc 6518",
+      "npc 6703",
+      "npc 10391"
+    ],
+    "bytes": 779,
+    "sha256": "f1fd37a2f808139eed1a0d25b0bb6cf88dbe43e58d30de3cff3d22b0d8ead454",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 27139,
+    "ref": [
+      "npc 6510"
+    ],
+    "bytes": 604,
+    "sha256": "54ee5838b3452706a527e6323dec2c841b0e69727a80a4dc858ee4c4cca43ef1",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 27151,
+    "ref": [
+      "npc 6510"
+    ],
+    "bytes": 1056,
+    "sha256": "978495cf3fb17ab324a7727f8c8d2f790ba4b28baec3d9e495bd68d8eb29fd50",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 28285,
+    "ref": [
+      "npc 6517",
+      "npc 6518",
+      "npc 6703",
+      "npc 10391"
+    ],
+    "bytes": 573,
+    "sha256": "c1368a6a773129be968e82f4223a41270ee9130cbdcce7b2fc366b490613fd1a",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 28459,
+    "ref": [
+      "item 33065 opcode 44"
+    ],
+    "bytes": 1976,
+    "sha256": "b23c5e59248725a752ec44af72902e6e5a6b894c109455e26808a7e63ed6f4fe",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 28470,
+    "ref": [
+      "item 33015 opcode 44",
+      "item 33122 opcode 44"
+    ],
+    "bytes": 2064,
+    "sha256": "2d378caf2abdd12b3a19fd5873075ed3e6aa39b2cdebbcfbedc2a22d56d4e9be",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 28471,
+    "ref": [
+      "item 33044 opcode 44"
+    ],
+    "bytes": 530,
+    "sha256": "b5ea47f02722f1c8c0cc0342257b5af3c8c0073e0aa4c71ce0a15e196d9475a4",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 28473,
+    "ref": [
+      "item 33047 opcode 44"
+    ],
+    "bytes": 517,
+    "sha256": "23aa60c7f6075f7162933e4a7e0fff6c19d63ab0125e2e350ee777d641c40f47",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 28474,
+    "ref": [
+      "item 33050 opcode 44"
+    ],
+    "bytes": 683,
+    "sha256": "01a3af68942398686a573104d3c5c4d3145fdf002fa061027d6a0a70174e08b3",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 28476,
+    "ref": [
+      "item 33021 opcode 44"
+    ],
+    "bytes": 3026,
+    "sha256": "80a4dfb85099215d558273e028676dc10b94a7991fa9b3bcc7cf0dccdde423c2",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 28515,
+    "ref": [
+      "npc 6703"
+    ],
+    "bytes": 536,
+    "sha256": "d4c82ce90419a4daead878dc9c62bba8b46e6158f36281ea1cfc4103ff8487c1",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 28897,
+    "ref": [
+      "item 33035 opcode 44"
+    ],
+    "bytes": 3423,
+    "sha256": "94396830e68e159442574c62732d967d53087af8a8ab685d96910f4f8b11a77c",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29020,
+    "ref": [
+      "item 13318 opcode 45",
+      "item 24190 opcode 45"
+    ],
+    "bytes": 1942,
+    "sha256": "2866c48a7b363606a8e9fe3d0fd421595b2fef5175baefd72b981642326ba33b",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29473,
+    "ref": [
+      "npc 8390",
+      "npc 8391"
+    ],
+    "bytes": 1200,
+    "sha256": "e49a5370cb63c714955a330c69daff6b6d45f083e0ad6d086898cecd770080c7",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29633,
+    "ref": [
+      "item 13319 opcode 45",
+      "item 24191 opcode 45",
+      "npc 8390",
+      "npc 8391"
+    ],
+    "bytes": 1992,
+    "sha256": "6ddfd82a1bd26b751aff0ca9b59b2fbd2712b6112609e81ede415dd1e37eb053",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29634,
+    "ref": [
+      "npc 8390",
+      "npc 8391"
+    ],
+    "bytes": 515,
+    "sha256": "a6accee63daf77c5978d5de276890596f2e8d92a5488f4261899f5e22db45e43",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29635,
+    "ref": [
+      "npc 8390",
+      "npc 8391"
+    ],
+    "bytes": 1821,
+    "sha256": "6bf0815130f3b4daea7ae51d1c70f0fe3f687b970adb0f494f29118cb43c41e1",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29636,
+    "ref": [
+      "item 13317 opcode 46",
+      "item 24189 opcode 46",
+      "npc 8390",
+      "npc 8391"
+    ],
+    "bytes": 1457,
+    "sha256": "c020d35744a5c725925059189559eb649268dc4d62222d3c76752eef508a1e26",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29637,
+    "ref": [
+      "item 13317 opcode 45",
+      "item 24189 opcode 45",
+      "npc 8390",
+      "npc 8391"
+    ],
+    "bytes": 2176,
+    "sha256": "6ed9a27f4defd42c562e0a67caac02b77815347ac08bea4aef8e861a2fdc9ebe",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29638,
+    "ref": [
+      "npc 8390",
+      "npc 8391"
+    ],
+    "bytes": 1956,
+    "sha256": "eda1b25529ca32365716fff5cb7a206b3883ebf05e05b8cea18e65750c2cd66a",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29639,
+    "ref": [
+      "npc 8390",
+      "npc 8391"
+    ],
+    "bytes": 1445,
+    "sha256": "2fcd128e757f54a82450c9ffea2d9fda310c266f209b3597dba7cf555f63590c",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29640,
+    "ref": [
+      "npc 8390",
+      "npc 8391"
+    ],
+    "bytes": 3558,
+    "sha256": "bb98acc9a1cdab6c4c7555178c9a13dc7b8451e21f5f2e2e1fa0231beace1efe",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29663,
+    "ref": [
+      "npc 6514"
+    ],
+    "bytes": 532,
+    "sha256": "b1df272e9dbecd7bab1f84ead4f6092739115a84be15438fbd070542c8c924cf",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29664,
+    "ref": [
+      "npc 6514"
+    ],
+    "bytes": 627,
+    "sha256": "5709cf2d72183b362ce72bcce8ffc5621dd80c60c8a0e996e4f593568bb50a02",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29725,
+    "ref": [
+      "item 13319 opcode 48",
+      "item 24191 opcode 48"
+    ],
+    "bytes": 1979,
+    "sha256": "f980009694ff68f61ace2fdeac341e484aeffcffb3bf93060806d2bc5f770570",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29743,
+    "ref": [
+      "item 13318 opcode 48",
+      "item 24190 opcode 48"
+    ],
+    "bytes": 1955,
+    "sha256": "6f4f52f0d4ddda66dfebe76e9e78e4c4ba2f242da8098a9dd978c4f5f04906d5",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29744,
+    "ref": [
+      "item 13317 opcode 49",
+      "item 24189 opcode 49"
+    ],
+    "bytes": 1409,
+    "sha256": "497f50e3c3ec16f716a7246bece362c1afd26d5e74737e6273fc7c9542f5be7e",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29745,
+    "ref": [
+      "item 13317 opcode 48",
+      "item 24189 opcode 48"
+    ],
+    "bytes": 2451,
+    "sha256": "568e10d3e9e0bf3f4a0b7d4c01b53948a3d642ca7bf82a88c1c4fe3db061fa77",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29748,
+    "ref": [
+      "item 13319 opcode 44",
+      "item 24191 opcode 44"
+    ],
+    "bytes": 1633,
+    "sha256": "ddc89f85464bd3f5101ae57eb86eaf9233ed1238d16befd0b2931f5906482417",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29749,
+    "ref": [
+      "item 13317 opcode 44",
+      "item 24189 opcode 44"
+    ],
+    "bytes": 3119,
+    "sha256": "1e769419174b27a77565804567ce0b5988d8adb2ba950e775a7bc4d1d4f1aa6d",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 29752,
+    "ref": [
+      "item 13318 opcode 44",
+      "item 24190 opcode 44"
+    ],
+    "bytes": 1648,
+    "sha256": "73ed80767f51efa1b4d909b3e2ab9b63df9f487cf96e1e58e68c58a0c8e6336c",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 30556,
+    "ref": [
+      "item 772 opcode 45"
+    ],
+    "bytes": 1646,
+    "sha256": "659bdfe307f45396c7f7d44e29d358376d82257ffed4bcf99f7d1583bf260ee0",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 31193,
+    "ref": [
+      "item 13660 opcode 45"
+    ],
+    "bytes": 3528,
+    "sha256": "74466e643910cc2f8feb7c1be3246a7d5bc7ededb0630f2ee8522bc9c0e1db7e",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 31194,
+    "ref": [
+      "item 13660 opcode 48"
+    ],
+    "bytes": 3488,
+    "sha256": "ab7e11f5e764acad0260439313a4a5fa9f25979f0d0f8e2d04d4ed83932c402b",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 31195,
+    "ref": [
+      "item 772 opcode 48"
+    ],
+    "bytes": 1646,
+    "sha256": "a24a5002c20c5009dcb53efca7c368601d3257033777ca50414139cbd4ca5d9a",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 31242,
+    "ref": [
+      "item 13658 opcode 44"
+    ],
+    "bytes": 898,
+    "sha256": "74958fbf42ff72349b51d9b7d8a288f9ff1630dbfcc01f3f86920b553c30851b",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 31245,
+    "ref": [
+      "item 13660 opcode 44"
+    ],
+    "bytes": 2738,
+    "sha256": "ff6432c752af96d89825a1ab2e35ab7ca0cd00a0512f012d663ac240ab07610b",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 34586,
+    "ref": [
+      "npc 15569"
+    ],
+    "bytes": 33298,
+    "sha256": "9c228d0f53155bdae64e1d0d8c47c2ca7159306d3d5838011a9070760140ec75",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 35763,
+    "ref": [
+      "item 772 opcode 44"
+    ],
+    "bytes": 1312,
+    "sha256": "8b773ac0d534b65c6b168a523115a5ef638712bf8fc6fbe5acf67f2680e927ff",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 37019,
+    "ref": [
+      "item 33063 opcode 45"
+    ],
+    "bytes": 3723,
+    "sha256": "75ab0fd7c09d5560d6c1e2b7049dd1371046b088e007dc84e53aa2dbacac0619",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 37051,
+    "ref": [
+      "item 33063 opcode 48"
+    ],
+    "bytes": 3723,
+    "sha256": "e5197dc3f503bedbddde22a33287e53cfdd371b4c0af403c5b8c782857d06aca",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 37197,
+    "ref": [
+      "item 33063 opcode 44"
+    ],
+    "bytes": 2880,
+    "sha256": "df08a7662eccc59d8eab5053c1e364a1f0623b775b63924063830151daff34db",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 41576,
+    "ref": [
+      "item 33036 opcode 44"
+    ],
+    "bytes": 3483,
+    "sha256": "d7c733c7bdb5fe4e83f008c49637a73af920fa769b9fc670b827a3dc776701e9",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49218,
+    "ref": [
+      "npc 15571"
+    ],
+    "bytes": 6315,
+    "sha256": "29b476cc3197478741d4ce675e22aced62df6e94a2f97aab08d4f580f695d27e",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49221,
+    "ref": [
+      "npc 15571"
+    ],
+    "bytes": 13538,
+    "sha256": "5fa94351e46327555e351f081aa54836450e5624da29cc086656dd5e20eabc01",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49222,
+    "ref": [
+      "npc 15571"
+    ],
+    "bytes": 20541,
+    "sha256": "7a6837aa28bcaf8c9d0aa9afbdb662065358efc01f5334aec489072b5dc7f33b",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49224,
+    "ref": [
+      "npc 15571"
+    ],
+    "bytes": 881,
+    "sha256": "f5a79944559f06db7fb0128a9eaf5c6ca97ef2a986a917f3070b742576287645",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49467,
+    "ref": [
+      "item 28534 opcode 48"
+    ],
+    "bytes": 2790,
+    "sha256": "d7c4fa5e9951747185236750180b874bc6e40669004549e4b9f711c8d2c488e1",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49468,
+    "ref": [
+      "item 28534 opcode 45"
+    ],
+    "bytes": 2790,
+    "sha256": "adafdbfacdd4e1879a109b42a0f2670f3385755afbe735cbeee09f8ae6cfd59e",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49469,
+    "ref": [
+      "item 28537 opcode 45",
+      "item 29605 opcode 45"
+    ],
+    "bytes": 2899,
+    "sha256": "ee72f24bb7dbba37d7b9b44ffea6134a9abc16cfbd7562f692c40a1c6bacbe7c",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49470,
+    "ref": [
+      "item 28537 opcode 48",
+      "item 29605 opcode 48"
+    ],
+    "bytes": 2899,
+    "sha256": "df9c2b1f8f9da1c8fb82a8133643656454047180daa190c5b38e56c02dffbcf7",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49471,
+    "ref": [
+      "item 28531 opcode 48",
+      "item 29607 opcode 48"
+    ],
+    "bytes": 888,
+    "sha256": "c1faf3b26fd68f4ca830f762012a1b2d929e24624d9449f9b03482a1929c2673",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49472,
+    "ref": [
+      "item 28531 opcode 45",
+      "item 29607 opcode 45"
+    ],
+    "bytes": 888,
+    "sha256": "bd273b4610598e0d4f55c9f24aad1d1eac706d448a65ddbceeac23772791317d",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49473,
+    "ref": [
+      "item 28540 opcode 45"
+    ],
+    "bytes": 2790,
+    "sha256": "1f61c787b935de0f261778ecc4c3227cf30204ae64fa76dbf31df564d50024f7",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49474,
+    "ref": [
+      "item 28540 opcode 48"
+    ],
+    "bytes": 2790,
+    "sha256": "3f9095b3980df45a6e12609185130dad0d5b84511ae13203e5e34ed040d47323",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49475,
+    "ref": [
+      "item 28545 opcode 45"
+    ],
+    "bytes": 6594,
+    "sha256": "6ecf483f18499dab85629ca1820fc7657aae2dbf6a52ca575b2fdb0ff909532e",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49476,
+    "ref": [
+      "item 28543 opcode 48"
+    ],
+    "bytes": 6594,
+    "sha256": "e279e8ab63d2c3c262e63caac6645052f4c8128d706a73db02869e327e79dd87",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49477,
+    "ref": [
+      "item 28545 opcode 48"
+    ],
+    "bytes": 6594,
+    "sha256": "c25c63166ccf3c3dd4d695def426459b05c7f78b27ceaf6ed3e6861c1dff3f31",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49478,
+    "ref": [
+      "item 28543 opcode 45"
+    ],
+    "bytes": 6594,
+    "sha256": "85c048bdd90ba45d7268669babfba2b4561c17efad866d2ff97ac59442c0ce3b",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49479,
+    "ref": [
+      "item 28547 opcode 45",
+      "item 28549 opcode 45"
+    ],
+    "bytes": 6452,
+    "sha256": "550cf7427be53487488010bfbd1fbcd9cdc6d155ddade995c54841deef6271d6",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49480,
+    "ref": [
+      "item 28547 opcode 48",
+      "item 28549 opcode 48"
+    ],
+    "bytes": 6452,
+    "sha256": "4165f0bb7bf8d09c52f853583fa186baf2e91f7bcfd30d1e0c7ea31c09bf503e",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49481,
+    "ref": [
+      "item 22335 opcode 45",
+      "item 28557 opcode 45"
+    ],
+    "bytes": 1317,
+    "sha256": "f68e8d1d187441b0c2663b505894708f6249677a596eaba9a101cfdf03bdb4a2",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49482,
+    "ref": [
+      "item 22333 opcode 48",
+      "item 28555 opcode 48"
+    ],
+    "bytes": 622,
+    "sha256": "066ab08d20da32e1dfdc540d2fd1ee57306e94b60c7be4aeec1028e04eaf695c",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49483,
+    "ref": [
+      "item 22331 opcode 48",
+      "item 28559 opcode 48"
+    ],
+    "bytes": 652,
+    "sha256": "8cea6706030507a9b6c8f176cc6b422d80d458bff582504d843cd23cb3f18ecf",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49484,
+    "ref": [
+      "item 22331 opcode 45",
+      "item 28559 opcode 45"
+    ],
+    "bytes": 652,
+    "sha256": "26868dd333dafcee4e3e7c65082517285157f4bc19d0523101e98b0fdc56dadc",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49485,
+    "ref": [
+      "item 22335 opcode 48",
+      "item 28557 opcode 48"
+    ],
+    "bytes": 1318,
+    "sha256": "d16d3303ad711a37b52873332a6dc2f65409e871dad454fe1f6d6dc93616d348",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49486,
+    "ref": [
+      "item 22333 opcode 45",
+      "item 28555 opcode 45"
+    ],
+    "bytes": 622,
+    "sha256": "665e91b67bebbe933a47088beed6949f8fc95c9916d2dcd9f80202eb80fe9d5c",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49493,
+    "ref": [
+      "item 28567 opcode 44"
+    ],
+    "bytes": 478,
+    "sha256": "97fe2983e9abde3e75e648d8f809e0f0fba66fe34fa81bce6186c0fe7da7cbfb",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49494,
+    "ref": [
+      "item 28564 opcode 44"
+    ],
+    "bytes": 642,
+    "sha256": "7f684863a1519dab6692642b23f7ceaa02b2e7736759eb17b5f691d838189497",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49495,
+    "ref": [
+      "item 28561 opcode 44",
+      "item 28570 opcode 44",
+      "item 33428 opcode 44",
+      "item 33431 opcode 44"
+    ],
+    "bytes": 582,
+    "sha256": "9a602ea3e68cf8294af8c4f524bbb74cf40f500da6d05b01f1b028fa6c05dacf",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49496,
+    "ref": [
+      "item 28534 opcode 44"
+    ],
+    "bytes": 2256,
+    "sha256": "84381064b66bef124642b641a4f55ac0a7c6741a61492dbf490375b6d9136cbb",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49497,
+    "ref": [
+      "item 28543 opcode 44"
+    ],
+    "bytes": 5336,
+    "sha256": "5d72d8fe904d05876e66980d581900029b5bd24a9f0713655973f864a26dda1b",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49498,
+    "ref": [
+      "item 28547 opcode 44",
+      "item 28549 opcode 44"
+    ],
+    "bytes": 4835,
+    "sha256": "e0dd5ab90e609f140627e0d85fa9439a950f27c971e1f160d1c04ce89bf4da06",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49499,
+    "ref": [
+      "item 28540 opcode 44"
+    ],
+    "bytes": 2671,
+    "sha256": "c4c6a6dfc43101dd5ac089ad8e2072ac94d0f6c57c4573aec697496d13ecad83",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49500,
+    "ref": [
+      "item 28531 opcode 44",
+      "item 29607 opcode 44"
+    ],
+    "bytes": 695,
+    "sha256": "4aa0c1529aa6328ae3a9d4fd2b784d275cc311e9dcbbe3e4f252d8c59d175a87",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49501,
+    "ref": [
+      "item 28545 opcode 44"
+    ],
+    "bytes": 5336,
+    "sha256": "ae32e66a8326e81373a9e02eb283698c3b69696cc683d3ce21af0cf0dab02b17",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49502,
+    "ref": [
+      "item 28537 opcode 44",
+      "item 29605 opcode 44"
+    ],
+    "bytes": 1385,
+    "sha256": "29179f0ead3ae7b3cf11a64cb691f8257fce8ef7651d06993adb421d053fe885",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49503,
+    "ref": [
+      "item 22331 opcode 44",
+      "item 28559 opcode 44"
+    ],
+    "bytes": 474,
+    "sha256": "57d5cd46c5614b70f62fc00b1ec8fca4b93fb33cc5e9b677d1adaebf56131b26",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49504,
+    "ref": [
+      "item 22335 opcode 44",
+      "item 28557 opcode 44"
+    ],
+    "bytes": 1005,
+    "sha256": "1435de5b18f564b475b773fb6420deaf3daf5ed04d1c47d1e271ddb3893c981e",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 49505,
+    "ref": [
+      "item 22333 opcode 44",
+      "item 28555 opcode 44"
+    ],
+    "bytes": 505,
+    "sha256": "99919087bc2abe20562ba0a57349bce32c074a0ba4b2bc9bd88fabfbd54cfc21",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 54198,
+    "ref": [
+      "item 29598 opcode 44"
+    ],
+    "bytes": 331,
+    "sha256": "2aeb114eeaae46ebaca7f8e9a50707cb92a08f74ef225635c8bf6b2cb816e33a",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 54201,
+    "ref": [
+      "item 29628 opcode 44"
+    ],
+    "bytes": 563,
+    "sha256": "39df5a6bf1bb15b1669623b97e9b66f89edccd2541d8383b76a47cf51a0f04e1",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 54203,
+    "ref": [
+      "item 29613 opcode 44",
+      "item 29615 opcode 44",
+      "item 29617 opcode 44"
+    ],
+    "bytes": 2055,
+    "sha256": "6919bc6dcb036ac320d6588e3f50846e8dcf853de4968ab4de42fae24f5b4fad",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 54204,
+    "ref": [
+      "item 29602 opcode 44",
+      "item 29609 opcode 44"
+    ],
+    "bytes": 5781,
+    "sha256": "f6796e1ef879cf8fdaccfa7b2206d98f77270b7d8124a9d6c268a0515560a212",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 54205,
+    "ref": [
+      "item 29599 opcode 44",
+      "item 29611 opcode 44"
+    ],
+    "bytes": 1652,
+    "sha256": "45a23e169bcf4501c7cc33cd0d56da2482e43b771fd7430e0b47db8409f8d275",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 54206,
+    "ref": [
+      "item 29622 opcode 44",
+      "item 33018 opcode 44"
+    ],
+    "bytes": 2186,
+    "sha256": "b8222f1a551ed7c4ab2c4206d79496e647e259f85e2bcaea84b053c1942acd98",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 54207,
+    "ref": [
+      "item 29625 opcode 44",
+      "item 33012 opcode 44"
+    ],
+    "bytes": 3154,
+    "sha256": "1b1524a74ad3a98d9267e47c00e60f244874fc62715011630943a44ff437fdca",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 54208,
+    "ref": [
+      "item 29619 opcode 44"
+    ],
+    "bytes": 959,
+    "sha256": "d28526115715bfd8ecfd6706eedc652cb3fc3b20312819814158b526573bbb8a",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 54210,
+    "ref": [
+      "item 29602 opcode 45",
+      "item 29609 opcode 45"
+    ],
+    "bytes": 6872,
+    "sha256": "2e7f0d641e2388568287ff178569dc1c3221c50581bbcad6ae844655572b137c",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 54211,
+    "ref": [
+      "item 29622 opcode 45",
+      "item 29622 opcode 48",
+      "item 33018 opcode 45",
+      "item 33018 opcode 48"
+    ],
+    "bytes": 2750,
+    "sha256": "1a6cadcb2c025d8d45b9ff5f0122166d2b9a8c9974f83a2ab8a8be6d0a4b86a8",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 54212,
+    "ref": [
+      "item 29599 opcode 48",
+      "item 29611 opcode 48"
+    ],
+    "bytes": 3227,
+    "sha256": "573ab572825195c5a21a597e939277f9b9de82a67501e5f9f43549cfe73acb36",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 54213,
+    "ref": [
+      "item 29599 opcode 45",
+      "item 29611 opcode 45"
+    ],
+    "bytes": 3228,
+    "sha256": "44a9ab76bb96d5611a6c8f5dec956be36bac4e0b73371034008e0af0f047170b",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 54214,
+    "ref": [
+      "item 29602 opcode 48",
+      "item 29609 opcode 48"
+    ],
+    "bytes": 6870,
+    "sha256": "d31f1475ee0483d0177e938a045df663367db1c4ab988f3fd0102df8701b257a",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 54215,
+    "ref": [
+      "item 29613 opcode 48",
+      "item 29615 opcode 48",
+      "item 29617 opcode 48"
+    ],
+    "bytes": 2710,
+    "sha256": "f82e7554f4e92a9f5d85da7d13041b96fceed2015a246905d54e772f1d275c3f",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 54216,
+    "ref": [
+      "item 29613 opcode 45",
+      "item 29615 opcode 45",
+      "item 29617 opcode 45"
+    ],
+    "bytes": 2705,
+    "sha256": "f3c05d9539ded9d2316838b03070a5a41285ad4794ddc63b76b418080bdcd461",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 55628,
+    "ref": [
+      "item 33038 opcode 44"
+    ],
+    "bytes": 5203,
+    "sha256": "facd9f4f2dde29bb783a798751e105fab77dbb377a5239a701af81eae1830b65",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 55637,
+    "ref": [
+      "item 30388 opcode 44",
+      "item 33041 opcode 44"
+    ],
+    "bytes": 976,
+    "sha256": "0998519d1ba84e4e8cd221f2291e9c45fc09d987b44f1dd2d120add3fe97f728",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 55751,
+    "ref": [
+      "item 33038 opcode 45"
+    ],
+    "bytes": 4888,
+    "sha256": "b1fc79e6dc2a3a1150460546e0db4b20f516a7c1bd5617d1f5f14a025a40bfca",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 55756,
+    "ref": [
+      "item 30388 opcode 48",
+      "item 33041 opcode 48"
+    ],
+    "bytes": 2571,
+    "sha256": "360dd3fe2b399fe84c7793974f4ad456f5b7e9cd4a47e6f0ee3d2ac2cbeaa16f",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 55757,
+    "ref": [
+      "item 30388 opcode 45",
+      "item 33041 opcode 45"
+    ],
+    "bytes": 2570,
+    "sha256": "054878f63df13de1b7ea4de4e09a9057574bc2fbfc61fc0b95cbd9666b76c37c",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 55764,
+    "ref": [
+      "item 33038 opcode 48"
+    ],
+    "bytes": 4888,
+    "sha256": "646f90d4c6f82805a34152cd0ddc2b2490077db484081fc90101ad47366bd32a",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 56090,
+    "ref": [
+      "npc 6519"
+    ],
+    "bytes": 237,
+    "sha256": "1c8590982e34bdb9c6161e04422e9a7072f921889a844ab8bc5d45223f792830",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 56139,
+    "ref": [
+      "npc 6519"
+    ],
+    "bytes": 796,
+    "sha256": "ec627f8bf6bce2cbf87e485f482a92a14f399296d097fa43384a4337a0043a24",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 56180,
+    "ref": [
+      "npc 6519"
+    ],
+    "bytes": 1226,
+    "sha256": "e394b8c446b98a485d5b3c2bea44815ebe7a2322849d38fef80ce2d70bf352e5",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 56200,
+    "ref": [
+      "npc 6519"
+    ],
+    "bytes": 2759,
+    "sha256": "34f01e13efef7065419801e5d0dc040cc7707e2f262ced1013084e1d246cac67",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59824,
+    "ref": [
+      "npc 6517",
+      "npc 6518",
+      "npc 10391"
+    ],
+    "bytes": 796,
+    "sha256": "7440d7f5a60474737528fba28cc89d7409e5b7982fd9cfaf8477b3ad6892b3fe",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59930,
+    "ref": [
+      "item 33031 opcode 51"
+    ],
+    "bytes": 2399,
+    "sha256": "adca2c28771443619e71b73dede9533b422bf34e85f3bed7cff1b7cfb1526e34",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59931,
+    "ref": [
+      "item 33033 opcode 51"
+    ],
+    "bytes": 2399,
+    "sha256": "8e20bb46d7a2f5dd3b987ce81f174b12213a9cee774d37efb14f563882ef8908",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59932,
+    "ref": [
+      "item 33031 opcode 53"
+    ],
+    "bytes": 3170,
+    "sha256": "2eb99d3ae376531ada9e41428792b9f7bf55b1d8ca9699fe04de2ba6b847d8dc",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59933,
+    "ref": [
+      "item 33033 opcode 53"
+    ],
+    "bytes": 3170,
+    "sha256": "6d1bcb2752fbc8a9e1f3a04b5dbab7e0ccc6937aced3fb3947f8feb2c2537a2f",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59935,
+    "ref": [
+      "item 33031 opcode 45"
+    ],
+    "bytes": 1945,
+    "sha256": "17c5218d2559e89fa15cfbabd6bae0e87c63a0a45bf44bd24a3dbaf28e1dee56",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59936,
+    "ref": [
+      "item 33033 opcode 45"
+    ],
+    "bytes": 1955,
+    "sha256": "de310d45fce3687f2ff7b86202073a8c5ed500890362750c0b30cc3636c15927",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59938,
+    "ref": [
+      "item 33027 opcode 45"
+    ],
+    "bytes": 3241,
+    "sha256": "8e5b702e5207b2a3001cd4839de6aaca91037ee88805eaea318708b4d7b2bc22",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59939,
+    "ref": [
+      "item 33029 opcode 45"
+    ],
+    "bytes": 3241,
+    "sha256": "6b7a6c1250920eb475b3b1413f0bbd81491e9325ef36149644a380142c33aa64",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59940,
+    "ref": [
+      "item 33023 opcode 45"
+    ],
+    "bytes": 3139,
+    "sha256": "1ac541dc3a3008a1edbd10f433144a74b96c2ae45769e945b41172aa0e433eec",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59941,
+    "ref": [
+      "item 33025 opcode 45"
+    ],
+    "bytes": 3149,
+    "sha256": "dfb053a028f5ec4a98c4a910dc10cce06717e430fb9fbfd28187d6bdbfbdc263",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59942,
+    "ref": [
+      "item 33021 opcode 45"
+    ],
+    "bytes": 3635,
+    "sha256": "30b3ce3815e0cb795175f376165b0070c9c26365642a970279fdc71da9241193",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59943,
+    "ref": [
+      "item 33021 opcode 48"
+    ],
+    "bytes": 3632,
+    "sha256": "198862cdea859ebf0e36aa60bd906da7e8b9b755fb7a67b300dce6f0966cfdf3",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59944,
+    "ref": [
+      "item 33036 opcode 45"
+    ],
+    "bytes": 3961,
+    "sha256": "23784879d7575c9b4ffd47719f53307f882aa09d11d9e4ddc81d36320ff8ebd5",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59945,
+    "ref": [
+      "item 33036 opcode 48"
+    ],
+    "bytes": 3961,
+    "sha256": "c3dbe6f191377af7362cb2401f301c5e4d797067b7bdd289a06a2aa9702c0e0d",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59946,
+    "ref": [
+      "item 33035 opcode 45"
+    ],
+    "bytes": 3935,
+    "sha256": "45349f3a052c14d1cd7c72d24039162eecd6bee36f3ce3b11635e362ce55e37f",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59947,
+    "ref": [
+      "item 33035 opcode 48"
+    ],
+    "bytes": 3935,
+    "sha256": "6c02872977f76d66675a7fd9d6a7cc1807686774e587a334f696d9109708d014",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59949,
+    "ref": [
+      "item 33031 opcode 48"
+    ],
+    "bytes": 2138,
+    "sha256": "4c33f938f0a430fc6255e211dd2eded862e48619b3d22b5b7e60f746972fa0ea",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59950,
+    "ref": [
+      "item 33033 opcode 48"
+    ],
+    "bytes": 2138,
+    "sha256": "57eed29a06c9f8383c34d242331e960e16db85509e0eb651c89c674e85039914",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59952,
+    "ref": [
+      "item 33027 opcode 48"
+    ],
+    "bytes": 3864,
+    "sha256": "ec776c93e1b8a46f493944aa7d877a4160bd88f90f6906c5f0c16f0877e6e145",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59953,
+    "ref": [
+      "item 33029 opcode 48"
+    ],
+    "bytes": 3864,
+    "sha256": "2a69d0091d5e7e7e5239f266a5c3c903efd8828cbaff2192434b68d5d15c681b",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59954,
+    "ref": [
+      "item 33023 opcode 48"
+    ],
+    "bytes": 3228,
+    "sha256": "47a9d87fc7a9328cbeb054883e86017def2111d43998f482a9d0717b53aae084",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59955,
+    "ref": [
+      "item 33025 opcode 48"
+    ],
+    "bytes": 3228,
+    "sha256": "3afe6db1ebc8f8771e7ea206965fd4c06fbd7d4f993038291334876c2037fe54",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59957,
+    "ref": [
+      "item 33031 opcode 44"
+    ],
+    "bytes": 959,
+    "sha256": "5823ebd63bbcff2a9375a42f61b4d9519b88999cdf4adc262da206d9b32021c9",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59958,
+    "ref": [
+      "item 33033 opcode 44"
+    ],
+    "bytes": 959,
+    "sha256": "8c947ea97f8b5f8da7babd0c0f080c4ec885a96c129b6ffcc40d56319e5192eb",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59959,
+    "ref": [
+      "item 33027 opcode 44"
+    ],
+    "bytes": 2653,
+    "sha256": "fac826bfceb43b9f1517ee591dd629f3f80f4a33517c15c7b1284ab0ae39b302",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59960,
+    "ref": [
+      "item 33029 opcode 44"
+    ],
+    "bytes": 2748,
+    "sha256": "3ac2b7c1ea7f201ca73fa26fd187a76269dcb6dca7147796c9d676dba484dcfd",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59961,
+    "ref": [
+      "item 33023 opcode 44"
+    ],
+    "bytes": 2717,
+    "sha256": "8ceeaaf722fc5cde25b97a710235ea3f931051cc57ceec64d4dde067c803381b",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 59962,
+    "ref": [
+      "item 33025 opcode 44"
+    ],
+    "bytes": 2623,
+    "sha256": "4c9887ed2c5497526533d5befec6eafc989fc7144f7cfdc766d8d09dbdaef065",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 61875,
+    "ref": [
+      "item 34422 opcode 44"
+    ],
+    "bytes": 432,
+    "sha256": "d8c9a64680744bee7975db10009cff8ed79736856157f131ede1b1bfd4cce457",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 61877,
+    "ref": [
+      "item 34425 opcode 44"
+    ],
+    "bytes": 887,
+    "sha256": "2a87b80be1d12c4fc47d219e450586149862a71bd4cd2073a84bd68506102261",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 61881,
+    "ref": [
+      "item 34425 opcode 45"
+    ],
+    "bytes": 370,
+    "sha256": "8358c0c150a0bc845a8a3e0f557b543e11c94dad6b34ec31bd7948859200f790",
+    "present": true
+  },
+  {
+    "kind": "model",
+    "id": 61884,
+    "ref": [
+      "item 34425 opcode 48"
+    ],
+    "bytes": 371,
+    "sha256": "dd5dafa09209dc1e0262ab0aba135b89d438e526755b775ce9508d6dfb3acd81",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 11444,
+    "ref": [
+      "HUMAN_DEADMAN_ARMAGEDDON_REWARD_TELEPORT_01"
+    ],
+    "bytes": 866,
+    "sha256": "ef5ba7f021dd34cb99877ac746da27a7a92b6fd8297ee003b4e188d3af2bb45c",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 11810,
+    "ref": [
+      "VFX_KHOPESH_LIGHTNING_EXTRA"
+    ],
+    "bytes": 95,
+    "sha256": "4167694c8bed65201b1b8ff156c41cd5c403cfd17d40e27621228551dd0556d3",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 11811,
+    "ref": [
+      "VFX_KHOPESH_LIGHTNING_IMPACT"
+    ],
+    "bytes": 179,
+    "sha256": "e13ce3c51298c19cd9c0a1876529b67f36bef70be6667cb56fae7b0df150e25e",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 11812,
+    "ref": [
+      "HUMAN_SPECIAL_KHOPESH"
+    ],
+    "bytes": 135,
+    "sha256": "f99974e247e71c4d27437677347123b90a6bf2fe61799e449af9c85ec047522d",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 11935,
+    "ref": [
+      "LEAGUE_5_KHOPESH_READY"
+    ],
+    "bytes": 294,
+    "sha256": "7f547f367a30006898338d4d0e214c195e61700b7f8fd422ab870a4ba2bb1660",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 11936,
+    "ref": [
+      "LEAGUE_5_KHOPESH_WALK_F"
+    ],
+    "bytes": 216,
+    "sha256": "d4345dafa0ca6cff7b591380aa9c9faf46758799b46f0280eb87ef3f074821f0",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 11937,
+    "ref": [
+      "LEAGUE_5_KHOPESH_RUN_F"
+    ],
+    "bytes": 294,
+    "sha256": "c7f059744b86383c3fc3f48ded8a36efcbd3b65dd7f805f356453f767d95b526",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 13701,
+    "ref": [
+      "HUMAN_DEADMAN_ANNIHILATION_REWARD_TELEPORT_FULL"
+    ],
+    "bytes": 749,
+    "sha256": "f1af6ddf4123f192c2f6c24f983fc9ef9c2d15c1649921bc7879febfa621c873",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 13702,
+    "ref": [
+      "HUMAN_DEADMAN_ANNIHILATION_REWARD_TELEPORT_01"
+    ],
+    "bytes": 150,
+    "sha256": "c287ebdff518c903ff99781b139c00ce74a0d43a24efdbaf52cad800558b426d",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 13703,
+    "ref": [
+      "HUMAN_DEADMAN_ANNIHILATION_REWARD_TELEPORT_02"
+    ],
+    "bytes": 206,
+    "sha256": "bb99e7b08f3100bf14237adf9a9a3f726c1b45dadfd5aa23a36184f6647eaf1c",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 13704,
+    "ref": [
+      "HUMAN_DEADMAN_ANNIHILATION_REWARD_TELEPORT_03"
+    ],
+    "bytes": 156,
+    "sha256": "4b1cb1b523b5d4dd9a2481a6f44f90858a9896ed45eec230fc9e46af0f7b0c2e",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 13705,
+    "ref": [
+      "HUMAN_DEADMAN_ANNIHILATION_REWARD_TELEPORT_04"
+    ],
+    "bytes": 144,
+    "sha256": "ed75753a44dc5ee653a39d9034556d96e22e0453058ca2c913b4c7d0ff075bdb",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 13706,
+    "ref": [
+      "HUMAN_DEADMAN_ANNIHILATION_REWARD_TELEPORT_05"
+    ],
+    "bytes": 164,
+    "sha256": "2f38d93dc19b59dd06910d89fb0e7252a18b18f96f0ea77ad8247898a3dc745f",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 13707,
+    "ref": [
+      "HUMAN_DEADMAN_ANNIHILATION_REWARD_TELEPORT_06"
+    ],
+    "bytes": 182,
+    "sha256": "8384df57f7a5fa4b7355d3dc4fc32e110db195242ba8c9d523d63162485ee785",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 13708,
+    "ref": [
+      "DEADMAN_2026_HOME_TELE_SPOTANIM_FULL"
+    ],
+    "bytes": 694,
+    "sha256": "e116219752d0fc307ae1b9bf11d76877787153a8cb397809fbcb42bee40d86c0",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 13709,
+    "ref": [
+      "DEADMAN_2026_HOME_TELE_SPOTANIM_01"
+    ],
+    "bytes": 112,
+    "sha256": "65143e2b53a476af080433d6a1092f6463e5169c5ec41e4e06f0567c80a33adf",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 13710,
+    "ref": [
+      "DEADMAN_2026_HOME_TELE_SPOTANIM_02"
+    ],
+    "bytes": 112,
+    "sha256": "3c42623491e7aa998ba07e3728c8c31326f3355eb05e5dfc99b7846eb28d1efb",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 13711,
+    "ref": [
+      "DEADMAN_2026_HOME_TELE_SPOTANIM_03"
+    ],
+    "bytes": 112,
+    "sha256": "2968721b8572e7f986ee6256d7a5297f103d94f09686766a3b2e00821b0802e3",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 13712,
+    "ref": [
+      "DEADMAN_2026_HOME_TELE_SPOTANIM_04"
+    ],
+    "bytes": 112,
+    "sha256": "0c4a062aacec76ae73735b11153d5038e9097de5fe9b2e17220c9304c28019a4",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 13713,
+    "ref": [
+      "DEADMAN_2026_HOME_TELE_SPOTANIM_05"
+    ],
+    "bytes": 124,
+    "sha256": "71fe07262e7aba7646d511944744d51564b17e43c829958d9f2c1d525054cf34",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 13714,
+    "ref": [
+      "DEADMAN_2026_HOME_TELE_SPOTANIM_06"
+    ],
+    "bytes": 142,
+    "sha256": "2fb5b864d8d809e16139351b982180cc541dc8999a309dd114ec8cd23641b6fd",
+    "present": true
+  },
+  {
+    "kind": "seq",
+    "id": 14497,
+    "ref": [
+      "SPOTANIM_AMULET_OF_FIRE_CREATE"
+    ],
+    "bytes": 82,
+    "sha256": "7f5dc50edd2d084a52a3f48b9f7aff74d6133e090e07e92676b0f4bd66701f8d",
+    "present": true
+  },
+  {
+    "kind": "spotanim",
+    "id": 3030,
+    "ref": [
+      "FX_KHOPESH_SPECIAL"
+    ],
+    "bytes": 27,
+    "sha256": "a993bd144a5e52beb1fdd6451da3242b0761abdd99799964b3999b6a85f40409",
+    "present": true
+  },
+  {
+    "kind": "spotanim",
+    "id": 3031,
+    "ref": [
+      "FX_KHOPESH_LIGHTNING_SPECIAL_EXTRA"
+    ],
+    "bytes": 27,
+    "sha256": "edfad1dfa892b2ff2e2d909c0ac5203e8111f67713da6f76ffaf32622d1bf262",
+    "present": true
+  },
+  {
+    "kind": "spotanim",
+    "id": 3032,
+    "ref": [
+      "FX_KHOPESH_LIGHTNING_BASIC"
+    ],
+    "bytes": 27,
+    "sha256": "edfad1dfa892b2ff2e2d909c0ac5203e8111f67713da6f76ffaf32622d1bf262",
+    "present": true
+  },
+  {
+    "kind": "spotanim",
+    "id": 3033,
+    "ref": [
+      "FX_KHOPESH_LIGHTNING_SPECIAL"
+    ],
+    "bytes": 27,
+    "sha256": "4ffc0ec657e6da79715992ba9dc66e6bfc842c6f0a6ea044472d074e44998ec3",
+    "present": true
+  },
+  {
+    "kind": "spotanim",
+    "id": 3565,
+    "ref": [
+      "DEADMAN_2026_HOME_TELE_SPOTANIM_FULL"
+    ],
+    "bytes": 9,
+    "sha256": "9912bc6062ddfad2fb296d7be76148a768aa666a4edc83d82d089764838ba68d",
+    "present": true
+  },
+  {
+    "kind": "spotanim",
+    "id": 3566,
+    "ref": [
+      "DEADMAN_2026_HOME_TELE_SPOTANIM_01"
+    ],
+    "bytes": 9,
+    "sha256": "1d40bb0aef95011be86e7f4ada4e65c216f6e7d3637d3215136a664ca15c1057",
+    "present": true
+  },
+  {
+    "kind": "spotanim",
+    "id": 3567,
+    "ref": [
+      "DEADMAN_2026_HOME_TELE_SPOTANIM_02"
+    ],
+    "bytes": 9,
+    "sha256": "c0c4c3c4f86da3fec4a62d5161549657dacae68792e2ac4c2fc10e33f28cbb94",
+    "present": true
+  },
+  {
+    "kind": "spotanim",
+    "id": 3568,
+    "ref": [
+      "DEADMAN_2026_HOME_TELE_SPOTANIM_03"
+    ],
+    "bytes": 9,
+    "sha256": "97e66297bdf3f4c2f4eee9af6e1e8177a4a8789260f39b5b271144141a462f04",
+    "present": true
+  },
+  {
+    "kind": "spotanim",
+    "id": 3569,
+    "ref": [
+      "DEADMAN_2026_HOME_TELE_SPOTANIM_04"
+    ],
+    "bytes": 9,
+    "sha256": "51327b2c615e428a32e7bb025a52d2030001434ca8b818f6420ec9db7cfc2d7a",
+    "present": true
+  },
+  {
+    "kind": "spotanim",
+    "id": 3570,
+    "ref": [
+      "DEADMAN_2026_HOME_TELE_SPOTANIM_05"
+    ],
+    "bytes": 9,
+    "sha256": "1fee41cad17bdf675e5d81269b065f83b36a4041e201eab2c620948d22aebbe9",
+    "present": true
+  },
+  {
+    "kind": "spotanim",
+    "id": 3571,
+    "ref": [
+      "DEADMAN_2026_HOME_TELE_SPOTANIM_06"
+    ],
+    "bytes": 9,
+    "sha256": "f23dbd83f766821afc1b3562882b2aafa742a3bd95e1f3e987082e4fe5bd1533",
+    "present": true
+  },
+  {
+    "kind": "spotanim",
+    "id": 4020,
+    "ref": [
+      "SPOTANIM_AMULET_OF_FIRE"
+    ],
+    "bytes": 19,
+    "sha256": "b266c4a22c75a88f13a1992c5c3bdf86c82920daaa639c3b8d706fafe41e23cd",
+    "present": true
+  },
+  {
+    "kind": "sprite",
+    "id": 170,
+    "ref": [
+      "safebox or Deadman Tutor icon candidate"
+    ],
+    "bytes": 1342,
+    "sha256": "f414775bc7341e3187ceb4f1f26f4fc8b85f2c2a12938599b18145ec98a5e0df",
+    "present": true
+  },
+  {
+    "kind": "sprite",
+    "id": 828,
+    "ref": [
+      "safebox or Deadman Tutor icon candidate"
+    ],
+    "bytes": 277,
+    "sha256": "bf84c8df5cc1fd658e8320faa77d7894ab7f3a3f6b83404c42570e940a9e642c",
+    "present": true
+  },
+  {
+    "kind": "sprite",
+    "id": 829,
+    "ref": [
+      "safebox or Deadman Tutor icon candidate"
+    ],
+    "bytes": 211,
+    "sha256": "3caa04f6f9297b534ec09383a2420fd1cea0f73e140356eff317396b32a1e9e8",
+    "present": true
+  },
+  {
+    "kind": "sprite",
+    "id": 830,
+    "ref": [
+      "safebox or Deadman Tutor icon candidate"
+    ],
+    "bytes": 202,
+    "sha256": "db8594c63d7fa2cb63cca233ff957d6f1ff88c757324e358c0fa293840b9b8ea",
+    "present": true
+  },
+  {
+    "kind": "sprite",
+    "id": 1041,
+    "ref": [
+      "safebox or Deadman Tutor icon candidate"
+    ],
+    "bytes": 733,
+    "sha256": "8e278ef425f4b3914a5f5e5e92377e60bd585ad20f95c88d64484d952fedd824",
+    "present": true
+  },
+  {
+    "kind": "sprite",
+    "id": 1042,
+    "ref": [
+      "safebox or Deadman Tutor icon candidate"
+    ],
+    "bytes": 715,
+    "sha256": "839d6b2843334a0c59ebbdb15ac3841c1282a30a73a4edaad56961d23c20db72",
+    "present": true
+  },
+  {
+    "kind": "sprite",
+    "id": 1524,
+    "ref": [
+      "safebox or Deadman Tutor icon candidate"
+    ],
+    "bytes": 268,
+    "sha256": "bb88292809cb5660a0547a92a1f1dc10cf7c52df3b52a8af0fcc6461ec320330",
+    "present": true
+  },
+  {
+    "kind": "sprite",
+    "id": 1681,
+    "ref": [
+      "safebox or Deadman Tutor icon candidate"
+    ],
+    "bytes": 262,
+    "sha256": "d761977696c6acfc8dfcd0a747b9c8eefc60ee696e40d796e0b1d4abd7a3811d",
+    "present": true
+  }
+]

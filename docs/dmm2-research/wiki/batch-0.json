@@ -1,0 +1,118 @@
+{
+  "batchcomplete": true,
+  "query": {
+    "redirects": [
+      {
+        "from": "Corrupted weapons",
+        "to": "Trinket of advanced weaponry"
+      }
+    ],
+    "pages": [
+      {
+        "ns": 0,
+        "title": "Corrupted Tumeken's shadow",
+        "missing": true
+      },
+      {
+        "ns": 0,
+        "title": "Corrupted scythe of Vitur",
+        "missing": true
+      },
+      {
+        "pageid": 393450,
+        "ns": 0,
+        "title": "Corrupted voidwaker",
+        "revisions": [
+          {
+            "revid": 15191591,
+            "parentid": 15119962,
+            "timestamp": "2026-04-22T04:45:39Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Deadman seasonal}}\n{{Infobox Item\n|name = Corrupted voidwaker\n|image = [[File:Corrupted voidwaker.png]]\n|release = [[23 August]] [[2023]]\n|update = Deadman: Apocalypse - Friday 25th August\n|members = Yes\n|quest = No\n|tradeable = Yes\n|equipable = Yes\n|stackable = No\n|noteable = Yes\n|options = Wield, Drop\n|examine = A truly fearsome weapon.\n|value = 250000\n|weight = 1.814\n|exchange = dmm\n|id = 28531\n}}\n[[File:Corrupted voidwaker detail.png|left|150px]]\nThe '''corrupted voidwaker''' is a melee weapon that requires level 65 [[Attack]] to wield. Exclusive to [[Deadman Mode]] seasonals, it can be acquired by opening a [[trinket of advanced weaponry]] obtained from a [[Deadman:_Apocalypse#Breaches|breach]].\n\nAs a corrupted variant of the [[voidwaker]], it has 20% lower bonuses than the regular variant.\n\n==Combat stats==\n{{Infobox Bonuses\n|astab = +56\n|aslash = +64\n|acrush = -2\n|amagic = +4\n|arange = 0\n|dstab = 0\n|dslash = +1\n|dcrush = 0\n|dmagic = +2\n|drange = 0\n|str = +64\n|rstr = 0\n|mdmg = 0\n|prayer = 0\n|slot = weapon\n|speed = 4\n|attackrange = 1\n|combatstyle = Slash Sword\n|image = [[File:Corrupted voidwaker equipped male.png|180px]]\n|altimage = [[File:Corrupted voidwaker equipped female.png|180px]]\n}}\n\n{{CombatStyles|Slash Sword|speed=4|attackrange=1}}\n\n==Item sources==\n{{Drop sources|Corrupted voidwaker}}\n\n{{Deadman: Annihilation}}\n{{Deadman: Armageddon}}\n{{Deadman: Apocalypse}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 393452,
+        "ns": 0,
+        "title": "Corrupted dragon claws",
+        "revisions": [
+          {
+            "revid": 15191592,
+            "parentid": 15122813,
+            "timestamp": "2026-04-22T04:45:39Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Deadman seasonal}}\n{{confuse|Dragon claws (cr)}}\n{{Infobox Item\n|name = Corrupted dragon claws\n|image = [[File:Corrupted dragon claws.png]]\n|release = [[23 August]] [[2023]]\n|update = Deadman: Apocalypse - Friday 25th August\n|members = Yes\n|quest = No\n|tradeable = Yes\n|equipable = Yes\n|stackable = No\n|noteable = Yes\n|options = Wield, Drop\n|examine = A set of fighting claws.\n|value = 250000\n|weight = 0.907\n|exchange = dmm\n|id = 28534\n}}\n[[File:Corrupted dragon claws detail.png|left|150px]]\n'''Corrupted dragon claws''' are a melee weapon that require level 40 [[Attack]] to wield. Exclusive to [[Deadman Mode]] seasonals, it can be acquired by opening a [[trinket of advanced weaponry]] obtained from a [[Deadman:_Apocalypse#Breaches|breach]].\n\nAs a corrupted variant of the [[dragon claws]], it has 20% lower bonuses than the regular variant.\n\n==Combat stats==\n{{Infobox Bonuses\n|astab = 33\n|aslash = 46\n|acrush = -4\n|amagic = 0\n|arange = 0\n|dstab = 11\n|dslash = 21\n|dcrush = 6\n|dmagic = 0\n|drange = 0\n|str = 48\n|rstr = 0\n|mdmg = 0\n|prayer = 0\n|slot = 2h\n|speed = 4\n|attackrange = 1\n|combatstyle = Claw\n|image = [[File:Corrupted dragon claws equipped male.png|130px]]\n|altimage = [[File:Corrupted dragon claws equipped female.png|140px]]\n}}\n\n{{CombatStyles|Claw|speed=4|attackrange=1}}\n\n==Item sources==\n{{Drop sources|Corrupted dragon claws}}\n\n{{Deadman: Annihilation}}\n{{Deadman: Armageddon}}\n{{Deadman: Apocalypse}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 393453,
+        "ns": 0,
+        "title": "Corrupted armadyl godsword",
+        "revisions": [
+          {
+            "revid": 15191593,
+            "parentid": 15119964,
+            "timestamp": "2026-04-22T04:45:40Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Deadman seasonal}}\n{{Infobox Item\n|name = Corrupted armadyl godsword\n|image = [[File:Corrupted armadyl godsword.png]]\n|release = [[23 August]] [[2023]]\n|update = Deadman: Apocalypse - Friday 25th August\n|members = Yes\n|quest = No\n|tradeable = Yes\n|equipable = Yes\n|stackable = No\n|noteable = Yes\n|options = Wield, Drop\n|examine = A beautiful, heavy sword.\n|value = 250000\n|weight = 10.000\n|exchange = dmm\n|id = 28537\n}}\n[[File:Corrupted armadyl godsword detail.png|left|130px]]\nThe '''corrupted Armadyl godsword''' is a melee weapon that requires level 65 [[Attack]] to wield. Exclusive to [[Deadman Mode]] seasonals, it can be acquired by opening a [[trinket of advanced weaponry]] obtained from a [[Deadman:_Apocalypse#Breaches|breach]].\n\nAs a corrupted variant of the [[Armadyl godsword]], it has 20% lower bonuses than the regular variant.\n\n==Combat stats==\n{{Infobox Bonuses\n|astab = 0\n|aslash = +106\n|acrush = +64\n|amagic = +0\n|arange = +0\n|dstab = 0\n|dslash = 0\n|dcrush = 0\n|dmagic = 0\n|drange = 0\n|str = +106\n|rstr = 0\n|mdmg = 0\n|prayer = +7\n|slot = 2h\n|speed = 6\n|attackrange = 1\n|combatstyle = 2h Sword\n|image = [[File:Corrupted armadyl godsword equipped male.png|120px]]\n|altimage = [[File:Corrupted armadyl godsword equipped female.png|140px]]\n}}\n\n{{CombatStyles|2h Sword|speed=6|attackrange=1}}\n\n==Item sources==\n{{Drop sources|Corrupted armadyl godsword}}\n\n{{Deadman: Annihilation}}\n{{Deadman: Armageddon}}\n{{Deadman: Apocalypse}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 393454,
+        "ns": 0,
+        "title": "Corrupted twisted bow",
+        "revisions": [
+          {
+            "revid": 15191594,
+            "parentid": 15126711,
+            "timestamp": "2026-04-22T04:45:40Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Deadman seasonal}}\n{{Infobox Item\n|name = Corrupted twisted bow\n|image = [[File:Corrupted twisted bow.png]]\n|release = [[23 August]] [[2023]]\n|update = Deadman: Apocalypse - Friday 25th August\n|members = Yes\n|quest = No\n|tradeable = Yes\n|equipable = Yes\n|stackable = No\n|noteable = Yes\n|options = Wield, Drop\n|examine = A mystical bow carved from the twisted remains of the Great Olm.\n|value = 250000\n|weight = 1.814\n|exchange = dmm\n|id = 28540\n}}\n[[File:Corrupted twisted bow detail.png|left|150px]]\nThe '''corrupted twisted bow''' is a ranged weapon that requires level 70 [[Ranged]] to wield. Exclusive to [[Deadman Mode]] seasonals, it can be acquired by opening a [[trinket of advanced weaponry]] obtained from a [[Deadman:_Apocalypse#Breaches|breach]].\n\nAs a corrupted variant of the [[twisted bow]], it has 20% lower bonuses than the regular variant, with its [[Ranged Strength]] reduced from +20 to +2.\n\nLike the normal variant, the [[Budget Setup]] combat achievement will not be completed if the bow is brought into [[The Inferno]].\n\n==Combat stats==\n{{Infobox Bonuses\n|astab = 0\n|aslash = 0\n|acrush = 0\n|amagic = 0\n|arange = +56\n|dstab = 0\n|dslash = 0\n|dcrush = 0\n|dmagic = 0\n|drange = 0\n|str = 0\n|rstr = +2\n|mdmg = 0\n|prayer = 0\n|slot = 2h\n|speed = 6\n|attackrange = 10\n|combatstyle = Bow\n|image = [[File:Corrupted twisted bow equipped male.png|180px]]\n|altimage = [[File:Corrupted twisted bow equipped female.png|180px]]\n}}\n\n{{CombatStyles|Bow|speed=6|attackrange=10}}\n\n==Item sources==\n{{Drop sources|Corrupted twisted bow}}\n\n{{Deadman: Annihilation}}\n{{Deadman: Armageddon}}\n{{Deadman: Apocalypse}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 393459,
+        "ns": 0,
+        "title": "Trinket of advanced weaponry",
+        "revisions": [
+          {
+            "revid": 15355050,
+            "parentid": 15299273,
+            "timestamp": "2026-09-24T03:52:56Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Deadman seasonal}}\n{{Infobox Item\n|name = Trinket of advanced weaponry\n|image = [[File:Trinket of advanced weaponry.png]]\n|release = [[23 August]] [[2023]]\n|update = Deadman: Apocalypse - Friday 25th August\n|members = Yes\n|quest = No\n|tradeable = Yes\n|equipable = No\n|stackable = No\n|noteable = \n|options = Open, Drop\n|examine = A magic rock! This one gives you a random corrupted weapon instead.\n|value = 100000\n|weight = 1.000\n|exchange = dmm\n|id = 28567\n|leagueRegion = No\n}}\n[[File:Trinket of advanced weaponry detail.png|left|130px]]\nThe '''trinket of advanced weaponry''' is an item in [[Deadman Mode]] that can be opened to give one of eight corrupted weapons, which are weaker versions of existing weapons. It cannot be opened if there is a player or obstacle in the way that would block the animation of opening it, and attempting to do so gives the message {{mes|You must have nothing surrounding you to open this trinket.}}.\n\n[[File:Trinket of advanced weaponry opening.webm|thumb|left|250px|The animation of opening the trinket.]]\nIt can be acquired as a drop from monsters found during [[breach]]es, as well as from looting the [[Deadman's chest (scenery)|Deadman's chest]].\n\n==Rewards==\nOne of the following corrupted weapons is rewarded as a result of opening the trinket:\n\n{{DropsTableHead|leagueRegion=No}}\n{{DropsLineReward|name=Corrupted armadyl godsword|quantity=1|rarity=1/8}}\n{{DropsLineReward|name=Corrupted dragon claws|quantity=1|rarity=1/8}}\n{{DropsLineReward|name=Corrupted Scythe of Vitur (uncharged)|quantity=1|rarity=1/8}}\n{{DropsLineReward|name=Corrupted tumeken's shadow (uncharged)|quantity=1|rarity=1/8}}\n{{DropsLineReward|name=Corrupted twisted bow|quantity=1|rarity=1/8}}\n{{DropsLineReward|name=Corrupted voidwaker|quantity=1|rarity=1/8}}\n{{DropsLineReward|name=Corrupted dark bow|quantity=1|rarity=1/8}}\n{{DropsLineReward|name=Corrupted Volatile Nightmare staff|quantity=1|rarity=1/8}}\n{{DropsTableBottom}}\n\n==Item sources==\n{{Drop sources|Trinket of advanced weaponry}}\n\n==Transcript==\n{{hastranscript|item}}\n\n==Changes==\n{{Subject changes header}}\n{{Subject changes\n|date = 21 January 2026\n|update = Holy Moleys and the Hooded Slayer Helm are Here!\n|change = The trinket's value was increased from 10,000 to 100,000.\n}}\n{{Subject changes footer}}\n\n==Trivia==\n* Opening the trinket forces the player to face north.\n\n{{Deadman: Annihilation}}\n{{Deadman: Armageddon}}\n{{Deadman: Apocalypse}}"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

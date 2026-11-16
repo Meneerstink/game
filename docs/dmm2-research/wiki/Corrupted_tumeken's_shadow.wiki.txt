@@ -1,0 +1,97 @@
+{{Deadman seasonal}}
+{{Infobox Item
+|defver = 2
+|version1 = Uncharged
+|version2 = Charged
+|name1 = Corrupted tumeken's shadow (uncharged)
+|name2 = Corrupted tumeken's shadow
+|image1 = [[File:Corrupted tumeken's shadow (uncharged).png]]
+|image2 = [[File:Corrupted tumeken's shadow.png]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|quest = No
+|tradeable1 = Yes
+|tradeable2 = No
+|equipable1 = No
+|equipable2 = Yes
+|stackable = No
+|noteable1 = Yes
+|noteable2 = No
+|options1 = Wield, Charge, Drop
+|options2 = Wield, Check, Charge, Uncharge
+|wornoptions = Check
+|examine = An ancient staff created using a higher power.
+|value = 250000
+|weight1 = 4.000
+|weight2 = 5.000
+|exchange1 = dmm
+|exchange2 = No
+|id1 = 28549
+|id2 = 28547
+}}
+{{Synced switch
+|version1 = [[File:Corrupted tumeken's shadow (uncharged) detail.png|left|180px]]
+|version2 = [[File:Corrupted tumeken's shadow detail.png|left|180px]]
+}}
+The '''corrupted Tumeken's shadow''' is a magic weapon that requires level 75 [[Magic]] to wield. Exclusive to [[Deadman Mode]] seasonals, it can be acquired by opening a [[trinket of advanced weaponry]] obtained from a [[Deadman:_Apocalypse#Breaches|breach]].
+
+As a corrupted variant of the [[tumeken's shadow]], the staff's magic attack bonus and [[magic damage]] are doubled rather than tripled from the player's worn equipment (within the [[Tombs of Amascut]], they are tripled rather than quadrupled).
+
+{{Bug|If the player has charged the corrupted Tumeken's shadow and adds more charges, uncharging the staff will only return the latest batch of runes — e.g. charging 500 charges then 250 charges will only return 250 charges worth of runes when uncharged.}}
+
+==Combat stats==
+{{Infobox Bonuses
+|version1 = Uncharged
+|version2 = Charged
+|astab = 0
+|aslash = 0
+|acrush = 0
+|amagic = +35
+|arange = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = +20
+|drange = 0
+|str = 0
+|rstr = 0
+|mdmg = 0
+|prayer = +1
+|slot = 2h
+|speed = 5
+|attackrange = 8
+|combatstyle = Powered Staff
+|image1 = [[File:Corrupted tumeken's shadow (uncharged) equipped male.png|200px]]
+|image2 = [[File:Corrupted tumeken's shadow equipped male.png|200px]]
+|altimage1 = [[File:Corrupted tumeken's shadow (uncharged) equipped female.png|200px]]
+|altimage2 = [[File:Corrupted tumeken's shadow equipped female.png|200px]]
+}}
+
+{{CombatStyles|Powered Staff|speed=5|attackrange=8}}
+
+==Charging==
+To use the staff's magic spell, it must be charged with [[soul rune|soul]] and [[chaos rune]]s, holding up to 20,000 charges when fully charged. Each cast requires 2 soul runes and 5 chaos runes. Players can configure the charges while the weapon is in their bank by right-clicking on Configure-Charges, as long as players have the required materials.
+
+{| class="wikitable"
+|+ Resources
+|-
+| 2 x {{plink|Soul rune}} || 5 x {{plink|Chaos rune}}
+|}
+
+==Item sources==
+{{Drop sources|Corrupted tumeken's shadow (uncharged)}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 5 March 2025
+|update = Game Jam: Charges QoL
+|change = The Corrupted tumeken's shadow supports a bank item option for changing charges.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Annihilation}}
+{{Deadman: Armageddon}}
+{{Deadman: Apocalypse}}
+[[Category:Items with charges]]

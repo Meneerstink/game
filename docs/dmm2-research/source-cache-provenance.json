@@ -1,0 +1,6 @@
+{
+  "source": "C:\\RSPS\\import-source\\openrs2-2686\\cache",
+  "item_group_sha256": "bcb0212677e886a6adcaab57831ff9a77fb348b325b5914869024bc65228f6a4",
+  "npc_group_sha256": "826cb9929fe65bd8ba3d8170dc5332041ce87b81978a32d4fd63f4e99715ba09",
+  "note": "Read-only; local cache is this worktree/data/cache; ids must not be treated as allocated import ids."
+}

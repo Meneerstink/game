@@ -1,0 +1,100 @@
+{{otheruses|the item|the bar in [[Brimhaven]]|Dead Man's Chest|the loot chest in [[Deadman Mode]]|Deadman's chest (scenery)|the bank chests in Deadman Mode|Deadman chest}}
+{{Infobox Item
+|version1 = Cosmetic
+|version2 = Deadman Mode
+|name = Deadman's chest
+|image1 = [[File:Deadman's chest (cosmetic).png]]
+|image2 = [[File:Deadman's chest (Deadman Mode).png]]
+|release1 = [[29 August]] [[2019]]
+|release2 = [[29 October]] [[2015]]
+|update1 = Last Man Standing (2019)
+|update2 = Deadman Mode
+|members = No
+|quest = No
+|tradeable = No
+|equipable = Yes
+|stackable = No
+|noteable = No
+|options1 = Wear, Drop
+|options2 = Wear, Destroy
+|destroy1 = N/A
+|destroy2 = You can get another from Deadman Nigel in Lumbridge.
+|examine = 15 men may jump on you, but only to steal the contents of your bank.
+|value1 = 2
+|value2 = 1
+|alchable = Yes
+|weight1 = 0.120
+|weight2 = 9.979
+|id1 = 24189
+|id2 = 13317
+|leagueRegion = No
+}}
+{{Synced switch
+|version1 = [[File:Deadman's chest (cosmetic) detail.png|left|150px]]
+|version2 = [[File:Deadman's chest (Deadman Mode) detail.png|left|150px]]
+}}
+The '''Deadman's chest''' is a cosmetic platebody that can be bought from [[Justine's stuff for the Last Shopper Standing]] for 160 [[Last Man Standing]] points. It is part of the [[Deadman armour]] set.
+
+In [[Deadman Mode]], it has similar defensive stats to an [[iron platebody]] but with no negative offensive stats, and is purchased from [[Nigel]] for one [[blood money]], and may be reclaimed for free. In order to purchase [[deadman armour]] in Deadman mode, players must use the blood money on Nigel, instead of speaking to him, as there are no dialogue options for purchasing the armour.
+
+{{Costume storage|armour case|[[Deadman armour]] set|set=true}}
+
+==Combat stats==
+{{Infobox Bonuses
+|version1 = Cosmetic
+|version2 = Deadman Mode
+|astab = 0
+|aslash = 0
+|acrush = 0
+|amagic = 0
+|arange = 0
+|dstab1 = 0
+|dstab2 = 21
+|dslash1 = 0
+|dslash2 = 20
+|dcrush1 = 0
+|dcrush2 = 12
+|dmagic1 = 0
+|dmagic2 = 3
+|drange1 = 0
+|drange2 = 20
+|str = 0
+|rstr = 0
+|mdmg = 0
+|prayer = 0
+|slot = body
+|image = [[File:Deadman's chest equipped male.png|130px]]
+|altimage = [[File:Deadman's chest equipped female.png|130px]]
+}}
+
+==Shop locations==
+{{Store locations list|Deadman's chest}}
+
+==Gallery==
+<gallery heights="250" style="text-align:left">
+Deadman armour equipped male.png|The full Deadman armour set on body type A.
+Deadman armour equipped female.png|The full Deadman armour set on body type B.
+</gallery>
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 21 January 2026
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|change = The Deadman mode version's stats were adjusted.
+}}
+{{Subject changes
+|date = 14 September 2017
+|update = Fossil Island changes
+|change = The Deadman mode version was made available to free-to-play players.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+*The name and examine text are references to the fictional sea shanty ''{{Wp|Dead Man's Chest}}'' from the book ''{{Wp|Treasure Island}}''.
+*Although the [[Deadman Mode]] version is marked as a free-to-play item, it is not obtainable in free-to-play as Deadman Mode is members only.
+
+{{Deadman Mode}}
+{{Last Man Standing}}
+[[Category:Items storable in the costume room]]
+[[Category:Collection log items]]

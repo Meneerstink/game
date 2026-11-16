@@ -1,0 +1,362 @@
+{
+  "23822": {
+    "name": "Trinket of fairies",
+    "inv": [
+      "Fairy-ring",
+      "Spirit-tree",
+      "Tool-leprechauns",
+      "Last-destination",
+      null
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 63897,
+    "cost": 100000,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "23823": {
+    "name": "Trinket of avarice",
+    "inv": [
+      "Note/Unnote",
+      "Value",
+      null,
+      null,
+      null
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 63900,
+    "cost": 100000,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "23824": {
+    "name": "Trinket of undead",
+    "inv": [
+      "Summon Lil Zuk",
+      "Summon Lil Kal",
+      "Summon Lil Wisp",
+      null,
+      null
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 63903,
+    "cost": 100000,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "23825": {
+    "name": "Trinket of fortuity (inactive)",
+    "inv": [
+      "Charge",
+      null,
+      null,
+      null,
+      null
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 63911,
+    "cost": 100000,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "23856": {
+    "name": "Deadman's skull",
+    "inv": [
+      "Shop",
+      "Unlocks",
+      null,
+      "Breach Check",
+      "Destroy"
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 64063,
+    "cost": 1,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "23881": {
+    "name": "Deadman starter pack",
+    "inv": [
+      "Open",
+      null,
+      null,
+      null,
+      "Destroy"
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 64647,
+    "cost": 1,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "24232": {
+    "name": "Kalphite burden trinket",
+    "inv": [
+      "Bind",
+      "Check",
+      "Unbind",
+      null,
+      ""
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 29380,
+    "cost": 60000,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "24233": {
+    "name": "Bull ant burden trinket",
+    "inv": [
+      "Bind",
+      "Check",
+      "Unbind",
+      null,
+      ""
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 29374,
+    "cost": 90000,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "24234": {
+    "name": "Terrorbird burden trinket",
+    "inv": [
+      "Bind",
+      "Check",
+      "Unbind",
+      null,
+      ""
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 29362,
+    "cost": 120000,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "24235": {
+    "name": "Tortoise burden trinket",
+    "inv": [
+      "Bind",
+      "Check",
+      "Unbind",
+      null,
+      ""
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 29360,
+    "cost": 180000,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "24236": {
+    "name": "Pack yak burden trinket",
+    "inv": [
+      "Bind",
+      "Check",
+      "Unbind",
+      null,
+      ""
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 29356,
+    "cost": 300000,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "24309": {
+    "name": "Upgraded Prince Black Dragon",
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      "Drop"
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 32612,
+    "cost": 1,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  }
+}

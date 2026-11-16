@@ -1,0 +1,56 @@
+{{Deadman seasonal}}
+{{Infobox Item
+|name = Corrupted voidwaker
+|image = [[File:Corrupted voidwaker.png]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|quest = No
+|tradeable = Yes
+|equipable = Yes
+|stackable = No
+|noteable = Yes
+|options = Wield, Drop
+|examine = A truly fearsome weapon.
+|value = 250000
+|weight = 1.814
+|exchange = dmm
+|id = 28531
+}}
+[[File:Corrupted voidwaker detail.png|left|150px]]
+The '''corrupted voidwaker''' is a melee weapon that requires level 65 [[Attack]] to wield. Exclusive to [[Deadman Mode]] seasonals, it can be acquired by opening a [[trinket of advanced weaponry]] obtained from a [[Deadman:_Apocalypse#Breaches|breach]].
+
+As a corrupted variant of the [[voidwaker]], it has 20% lower bonuses than the regular variant.
+
+==Combat stats==
+{{Infobox Bonuses
+|astab = +56
+|aslash = +64
+|acrush = -2
+|amagic = +4
+|arange = 0
+|dstab = 0
+|dslash = +1
+|dcrush = 0
+|dmagic = +2
+|drange = 0
+|str = +64
+|rstr = 0
+|mdmg = 0
+|prayer = 0
+|slot = weapon
+|speed = 4
+|attackrange = 1
+|combatstyle = Slash Sword
+|image = [[File:Corrupted voidwaker equipped male.png|180px]]
+|altimage = [[File:Corrupted voidwaker equipped female.png|180px]]
+}}
+
+{{CombatStyles|Slash Sword|speed=4|attackrange=1}}
+
+==Item sources==
+{{Drop sources|Corrupted voidwaker}}
+
+{{Deadman: Annihilation}}
+{{Deadman: Armageddon}}
+{{Deadman: Apocalypse}}

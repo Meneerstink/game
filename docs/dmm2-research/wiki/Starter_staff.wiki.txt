@@ -1,0 +1,88 @@
+{{Deadman seasonal}}
+{{Infobox Item
+|name = Starter staff
+|image = [[File:Starter staff.png]]
+|release = [[17 March]] [[2018]]
+|update = Deadman Summer Season, live now!
+|members = No
+|quest = No
+|tradeable = No
+|equipable = Yes
+|stackable = No
+|noteable = No
+|options = Wield, Check, Destroy
+|wornoptions = Check
+|destroy = You can get another from a starter pack.
+|examine = A staff from a starter pack.
+|value = 1
+|alchable = No
+|weight = 1.814
+|id = 22335
+}}
+[[File:Starter staff detail.png|left|130px]]
+The '''starter staff''' is a [[powered staff]] obtained from a [[Deadman starter pack]], along with the [[starter sword]] and [[starter bow|bow]]. It has no requirements to wield, and is intended to be used to help a player get started in a seasonal [[Deadman Mode]] server.
+
+It is equipped with a built-in [[Fire Strike]], being able to cast 500 of them before fully degrading, displaying the message {{mes|Your starter staff has fallen apart!|colour=red}}
+
+As with all starter weapons, it cannot be used against other players.
+
+==Combat stats==
+{{Infobox Bonuses
+|astab = 0
+|aslash = 0
+|acrush = 0
+|amagic = 10
+|arange = 0
+|dstab = +2
+|dslash = +3
+|dcrush = +1
+|dmagic = 10
+|drange = 0
+|str = 0
+|rstr = 0
+|mdmg = 0
+|prayer = 0
+|slot = weapon
+|speed = 4
+|attackrange = 1
+|combatstyle = Powered Staff
+|image = [[File:Starter staff equipped male.png|175px]]
+|altimage = [[File:Starter staff equipped female.png|170px]]
+}}
+
+{{CombatStyles|Powered Staff|speed=4|attackrange=6}}
+
+==Gallery==
+<gallery mode="packed" heights="200" style="text-align:left">
+DMM Apoc starter weapons concept.jpg|Concept art of the starter weapons, by [[Mod Jerv]].
+</gallery>
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 21 January 2026
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|change = The item's value was decreased from 500 to 1.
+}}
+{{Subject changes
+|date = 23 August 2023
+|update = Deadman: Apocalypse - Friday 25th August
+|change = The item has been [[graphically updated]].
+}}
+{{Subject changes footer}}
+
+===Gallery (historical)===
+{|style="text-align: center" cellpadding="15"
+|[[File:Starter staff v1 detail.png|center|300x150px]]
+|[[File:Starter staff detail.png|center|300x150px]]
+|-
+|[[File:Starter staff v1.png|center]]
+|[[File:Starter staff.png|center]]
+|-
+|17 March 2018 –<br/>23 August 2023
+|23 August 2023–<br/>present
+|}
+
+{{Deadman Mode}}
+{{Magic weapons}}
+[[Category:Items with charges]]

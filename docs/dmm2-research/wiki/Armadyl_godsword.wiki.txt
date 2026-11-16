@@ -1,0 +1,145 @@
+{{External|rs}}
+{{Redirect|Ags|the [[Zaros|ancient]] version of the godsword|Ancient godsword}}
+{{Infobox Item
+|name = Armadyl godsword
+|image = [[File:Armadyl godsword.png]]
+|release = [[17 October]] [[2013]]
+|update = The God Wars Dungeon has been uncovered!
+|aka = AGS
+|members = Yes
+|quest = No
+|tradeable = Yes
+|equipable = Yes
+|stackable = No
+|noteable = Yes
+|options = Wield, Dismantle, Drop
+|examine = A beautiful, heavy sword.
+|value = 1250000
+|weight = 10.000
+|exchange = Yes
+|id = 11802
+|leagueRegion = Asgarnia
+}}
+[[File:Armadyl godsword detail.png|left|130px]]
+The '''Armadyl godsword''' is one of the five variants of the [[Godsword]] that was fought over during the [[God Wars]]. It is created by using an [[Armadyl hilt]], obtained from [[Kree'arra]], on a completed [[godsword blade]]. As with all godsword variants, it requires level 75 [[Attack]] to wield.
+
+Players can attach an [[Armadyl godsword ornament kit]], obtained from [[master clue scroll]]s, to cosmetically modify the godsword, creating an [[Armadyl godsword (or)]]. This only alters its appearance, and gives no stat enhancements. Doing so also makes the weapon untradeable. Dismantling the sword will return both the Armadyl godsword and the ornament kit.
+
+==Combat stats==
+{{Infobox Bonuses
+|astab = 0
+|aslash = +132
+|acrush = +80
+|amagic = +0
+|arange = +0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|drange = 0
+|str = +132
+|rstr = 0
+|mdmg = 0
+|prayer = +8
+|slot = 2h
+|speed = 6
+|attackrange = 1
+|combatstyle = 2h Sword
+|image = [[File:Armadyl godsword equipped.png|120px]]
+|altimage = [[File:Armadyl godsword equipped female.png|140px]]
+}}
+
+{{CombatStyles|2h Sword|speed=6|attackrange=1}}
+
+==Special attack==
+[[File:The Judgement.gif|frame|A player uses ''The Judgement'', the Armadyl godsword's special attack]]
+Like all godswords, the Armadyl godsword has a [[special attacks|special attack]], ''The Judgement'', which consumes 50% of the player's special attack energy. In addition to doubled accuracy, its max hit is boosted twice: first by the hidden 1.1x multiplier every godsword special possesses (rounded down to an integer), then by a further 1.25x on top of that, giving a combined ~37.5% increase over its normal max hit. ''The Judgement'' also always rolls against the opponent's slash defence roll.
+
+''The Judgement'' is capable of dealing a very large amount of damage; under ideal conditions, a player can potentially deal over 70 damage to a [[monster]] with the special attack, or just over 90 damage when utilising the effects of a [[black mask]] or a [[Castle wars bracelet]]. Because of this, the Armadyl godsword is very popular for many combat situations. In PvP scenarios the Armadyl godsword is most commonly used as a "knock-out" weapon, as the special is often capable of finishing an injured player in one large blow. In PvM scenarios its high hits are advantageous when fighting [[boss]] monsters such as [[General Graardor]], especially when several players are competing to deal the most damage in order to secure a drop.
+
+The special attack [[animation]]'s colours can be changed to gold, which costs 75 [[Last Man Standing]] points. Once unlocked, the gold trim can be toggled at [[Justine's stuff for the Last Shopper Standing]] whenever the player desires.
+
+==Creation==
+{{Recipe
+|members = Yes
+|ticks = 0
+|mat1 = Godsword blade
+|mat2 = Armadyl hilt
+|output1 = Armadyl godsword
+}}
+
+==Products==
+{{Uses material list|Armadyl godsword}}
+
+==Sound effects==
+{{SFXTableHead}}
+{{SFXLine|file=Equip sword.wav|desc=Wielding}}
+{{SFXLine|file=Godsword special attack.wav|desc=Special attack}}
+{{SFXLine|file=Godsword attack with slash.wav|desc=Attacking with slash}}
+{{SFXLine|file=Godsword attack with crush.wav|desc=Attacking with crush}}
+{{SFXLine|file=Godsword attack with stab.wav|desc=''Unused''}}
+{{SFXLine|file=Godsword attach hilt.wav|desc=Attaching the hilt to a godsword blade}}
+{{SFXTableBottom}}
+
+==Used in recommended equipment==
+{{Used in recommended equipment|Armadyl godsword}}
+
+==Transcript==
+{{Hastranscript|item}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 7 July 2021
+|update = Small Changes & Tweaks
+|poll =
+|change = The weapon's position on female players has been adjusted so that they appear to be equipped properly.
+}}
+{{Subject changes 
+|date = 14 July 2016
+|update = Hidey Holes & Miniquests
+|change = The item's inventory sprite was reverted to the original version.
+}}
+{{Subject changes 
+|date = 6 July 2016
+|update = Treasure Trail Expansion (2016)
+|change = The item's inventory sprite was slightly adjusted with the release of ornamental godswords.
+}}
+{{Subject changes
+|date = 19 March 2015
+|update = Boss Pets, Sets, Chat & More
+|poll = Old School Content Poll 30: Near Miss Poll
+|change = The accurate attack style of the Godswords has been adjusted to use slash rather than crush. As the slash attack bonus on Godswords has always been higher than the crush bonus, having the accurate attack style of the weapons use slash rather than crush means that the accurate attack style takes advantage of the best offensive bonus of the weapon.
+}}
+{{Subject changes
+|date = 7 November 2013
+|update = POH updates & weapon tweaks
+|poll = Old School feature poll 12: Player-designed content
+|change = 
+*The Accurate combat mode of godswords has been changed from 'Stab' to 'Crush', since godswords have no stab-attack bonus
+* Godswords will now pop up a confirmation box when you try to dismantle them
+}}
+{{Subject changes footer}}
+
+===Gallery (historical)===
+{|style="text-align: center" cellpadding="15"
+|[[File:Armadyl godsword detail.png|center|300x150px]]
+|[[File:Armadyl godsword (v1) detail.png|center|300x150px]]
+|-
+|[[File:Armadyl godsword.png|center]]
+|[[File:Armadyl godsword v1.png|center]]
+|-
+|17 October 2013 – 6 July 2016<br/>14 July 2016 - present
+|6 July 2016 –<br/>14 July 2016
+|}
+
+==Trivia==
+* If an Armadyl godsword is equipped while attempting to cut a [[Kharidian cactus]], or the godsword is used on the cactus, the Armadyl godsword's special attack animation is used instead of the normal knife animation.
+*A [[Jagex Moderator]]-[[Armadyl godsword (rotten)|exclusive ''rotten'' variant]] of this item exists which allows the user to kill any player instantly.
+*Typing "73" in the [[settings]] returns a smiley face. This is a reference to an infamous PvP fight between streamers Skill Specs and B0aty, in which the former killed the latter with the special attack of an Armadyl godsword that hit for 73 damage.
+
+{{Slash weapons}}
+{{God Wars Dungeon}}
+[[Category:Weapons with Special attacks]]
+[[Category:Walk animation modifiers]]
+[[Category:Items subject to Grand Exchange item sink]]

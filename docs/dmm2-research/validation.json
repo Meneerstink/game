@@ -1,0 +1,2684 @@
+{
+  "checks": [
+    {
+      "kind": "wiki-hash",
+      "title": "Corrupted voidwaker",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Corrupted dragon claws",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Corrupted armadyl godsword",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Corrupted twisted bow",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Trinket of fairies",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Trinket of undead",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Corrupted dark bow",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Corrupted Volatile Nightmare staff",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Thunder khopesh",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Trinket of avarice",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Trinket of fortuity",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Amulet of fire",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Nigel",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Financial Wizard",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Blood money",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Deadman starter pack",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Financial Seer",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Transcript:Nigel",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Transcript:Financial Wizard",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Deadman armour",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Starter sword",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Starter bow",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Starter staff",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Transcript:Financial Seer",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Armageddon weapon scroll",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Armageddon cape fabric",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Armageddon teleport scroll",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Armageddon rug",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Annihilation weapon scroll",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Annihilation blueprints",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Deadman's skull",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Deadman's chest (scenery)",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "File:Deadman Tutor icon.png",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Transcript:Trinket of advanced weaponry",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Annihilation teleport scroll",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Transcript:Trinket of fortuity",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Fire ruby",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Dark bow",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Armadyl godsword",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Dragon claws",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Voidwaker",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "The dogsword",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Thunder khopesh (Deadman Mode)",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Chronicle",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Twisted bow",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Scythe of Vitur",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Volatile Nightmare staff",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Tuna (Deadman starter pack)",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Tumeken's shadow",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Deadman: Annihilation",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Starter cape",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Deadman: All Stars Season 3",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Vengeance",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Deadman's chest",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Resurrect Greater Skeleton",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Greater ghostly thrall",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Greater zombified thrall",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Trinket of vengeance",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Deadman's legs",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Deadman's cape",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Bounty Hunter Shop (Deadman Mode)",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Deadman rug",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Trinket dust",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Annihilation exit portal blueprints",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Wilderness (theme)",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Deadman Mode",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Trinket of advanced weaponry",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Trinket (disambiguation)",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Deadman Reward Store",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Infernal Mage",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Corrupted Scythe of Vitur",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Corrupted tumeken's shadow",
+      "ok": true
+    },
+    {
+      "kind": "wiki-hash",
+      "title": "Template:DeadmanAnnihilationBreachDropTable",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/api/cfg/Items.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/api/cfg/Npcs.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/api/cfg/Objs.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/api/cfg/Sfx.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/api/ext/PlayerExt.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/api/WeaponType.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/activity/pest_control/VoidDeflectorMigration.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/activity/toa/ToaSupplies.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/grandexchange/GeHomeHall.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/grandexchange/grandexchange_unlocks.plugin.kts",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/karamja/stiles.plugin.kts",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/poh/PohStorageSets.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/wilderness/MageArenaII.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/cmd/conformance/DeadmanSuite.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/cmd/conformance/EquipmentSuite.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/cmd/conformance/QuestsSuite.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/cmd/conformance/SystemsSuite.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/combat/Animations.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/combat/AttackStyleData.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/combat/CombatConfigs.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/combat/formula/MagicCombatFormula.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/combat/formula/TargetModifiers.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/combat/magic/Autocast.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/combat/scripts/impl/CorporealBeastCombatScript.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons/nightmare_staves.plugin.kts",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/ranged/weapon/BowType.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/RangedCombatStrategy.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/holiday/scythe_drops.plugin.kts",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/items/armor/DragonChainbodyMigration.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/items/casket.plugin.kts",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/items/combine/CombinationData.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/items/osrs/OsrsOrnamentKits.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/items/osrs/OsrsSeq.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/items/osrs/OsrsWeaponLooks.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/items/osrs/PoweredStaves.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/magic/jewelleryenchanting/EnchantmentData.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/magic/TeleportType.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/death.plugin.kts",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/DeathExecutor.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/DeathResolver.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/DeathRules.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/ItemsKeptOnDeath.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/PerduLostProperty.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/PerduReclaim.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/PvpDeathBreakables.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/UntradeableDeathProtection.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/equipment/EquipSounds.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/exchange/GrandExchangeInterface.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/moderation/GearPresets.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/ownership/Possessions.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/prayer/RuinousBookDrops.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/breach/breach_points.plugin.kts",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/breach/breach_shop.plugin.kts",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/breach/BreachContribution.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/breach/BreachIds.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/breach/BreachLoot.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/breach/BreachPoints.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/breach/BreachSim.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/breach/DeadmanBreach.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/chest/DeadmanChest.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/chest/DeadmanChestLoot.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/chest/DeadmanChestWorld.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/DeadmanTrade.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/emblem/DeadmanEmblem.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/KillGrace.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/Killstreaks.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/ValidPkKill.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/removed/removed_items.plugin.kts",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/removed/RemovedItems.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/shops/PointCurrency.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/store/store.plugin.kts",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/store/StoreCatalogue.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/store/StoreUi.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/travel/fairy_rings.plugin.kts",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/travel/FairyRings.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/travel/SpiritTrees.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/travel/ToolLeprechauns.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/travel/trinket_of_fairies.plugin.kts",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/newplayer/NewPlayerConfig.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/objs/web.plugin.kts",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/quests/foundation/TutorIntro.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/quests/tab/CollectionLog.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/quests/tab/CollectionLogPages.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/quests/tab/DeadmanTasks.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/quests/tab/DropSources.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/quests/tab/QuestTabInfo.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/skills/summoning/BeastOfBurden.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/skills/summoning/burden_trinkets.plugin.kts",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/skills/summoning/BurdenTrinketDrops.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/skills/summoning/BurdenTrinkets.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/skills/summoning/familiar.plugin.kts",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/skills/summoning/FamiliarInventoryInterface.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/skills/summoning/PetMorphs.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/skills/summoning/Pets.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/skills/summoning/pets.plugin.kts",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/starter/NewPlayerStart.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/starter/PvpRespawnChest.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/starter/starter_kit.plugin.kts",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/areas/wilderness/WildernessEncounterRewardTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/combat/formula/TwistedBowPassiveTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/combat/strategy/RangedAttackRangeTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/combat/strategy/TwistedBowAmmoIntegrationTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/items/combine/ItemAttachSoundsTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/items/osrs/CrystalEquipmentTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/items/osrs/OsrsAmmo2ImportTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/items/osrs/OsrsBowsImportTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/items/osrs/OsrsItemsAuditTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/items/osrs/OsrsNightmareImportTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/items/osrs/OsrsWeaponLooksTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/items/osrs/OwnerBuglist20260917cTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/items/osrs/PoweredStavesTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/death/DeathExecutorTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/death/DeathItemAuditTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/death/ItemsKeptOnDeathOwnerGearTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/pvp/breach/BreachPerformanceTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/pvp/breach/BreachRewardTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/pvp/breach/DeadmanBreachTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/pvp/chest/DeadmanChestTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/pvp/DeadmanRouteGateTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/pvp/emblem/DeadmanEmblemTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/pvp/KillGraceTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/removed/CorruptRemovedItemsTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/removed/RemovedPotionsExchangeTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/shops/PointShopBalanceTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/shops/ShopPriceLabelTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/store/PointBalanceEdgeTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/travel/FairyRingTravelLogTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/skills/summoning/BeastOfBurdenTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/skills/summoning/BurdenTrinketDropsTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/skills/summoning/BurdenTrinketsTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/skills/summoning/N503PetDeathTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/skills/summoning/PetSoundsTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/skills/summoning/SummoningInterfaceTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/skills/summoning/SummoningTestCache.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/skills/summoning/UpgradedPetItemTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/starter/NewPlayerStartTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/starter/PvpRespawnChestTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/main/kotlin/gg/rsmod/game/fs/NonTransmittedVarbitDefinitionProvider.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/main/kotlin/gg/rsmod/game/model/attr/Attributes.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/main/kotlin/gg/rsmod/game/model/attr/PointBalance.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/main/kotlin/gg/rsmod/game/model/combat/DamageMap.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/main/kotlin/gg/rsmod/game/model/World.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/main/kotlin/gg/rsmod/game/plugin/KotlinPlugin.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/main/kotlin/gg/rsmod/game/service/serializer/json/JsonPlayerSerializer.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/main/kotlin/gg/rsmod/game/tools/importer/BurdenTrinketTool.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/main/kotlin/gg/rsmod/game/tools/importer/ItemDefCodec.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/main/kotlin/gg/rsmod/game/tools/importer/ItemParamProbeTool.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/main/kotlin/gg/rsmod/game/tools/importer/NpcLookCopyTool.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/main/kotlin/gg/rsmod/game/tools/importer/OsrsFxImportTool.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/main/kotlin/gg/rsmod/game/tools/importer/OsrsItemImportTool.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/main/kotlin/gg/rsmod/game/tools/importer/OsrsNpcImportTool.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/main/kotlin/gg/rsmod/game/tools/importer/ShopWindowScriptTool.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/main/kotlin/gg/rsmod/game/tools/importer/TrinketGlowTool.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/test/kotlin/gg/rsmod/game/tools/importer/ItemDefCodecTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/test/kotlin/gg/rsmod/game/tools/importer/ModelConversionTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "game/src/test/kotlin/gg/rsmod/game/tools/importer/ShopWindowScriptToolTests.kt",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "data/cfg/commands.yml",
+      "ok": true
+    },
+    {
+      "kind": "current-code-hash",
+      "path": "data/cfg/new_player.yml",
+      "ok": true
+    },
+    {
+      "kind": "decoder-errors-empty",
+      "path": "cache2686-item-errors.json",
+      "ok": true
+    },
+    {
+      "kind": "decoder-errors-empty",
+      "path": "cache2686-interface-errors.json",
+      "ok": true
+    },
+    {
+      "kind": "decoder-errors-empty",
+      "path": "local-item-errors.json",
+      "ok": true
+    },
+    {
+      "kind": "npc-decode",
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 18,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 44,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 52,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 53,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 55,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 63,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 80,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 82,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 125,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 136,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 176,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 177,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 181,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 202,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 214,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 215,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 217,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 230,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 246,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 248,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 250,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 301,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 320,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 358,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 408,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 417,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 437,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 596,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 2355,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 2423,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 2429,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 2484,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 2485,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 2486,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 2487,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 2488,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 2667,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 2710,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 2742,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 2775,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 2825,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 3189,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 5203,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 5209,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 5212,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 5216,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 5220,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 7685,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 10218,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 10706,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 13704,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 14445,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 14565,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 16980,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 20391,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 20393,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 20395,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 20397,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 20399,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 20402,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 20403,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 20405,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 21899,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 21911,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 21914,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 24602,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 24605,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 24606,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 26630,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 27139,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 27151,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 28285,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 28459,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 28470,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 28471,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 28473,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 28474,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 28476,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 28515,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 28897,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29020,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29473,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29633,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29634,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29635,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29636,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29637,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29638,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29639,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29640,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29663,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29664,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29725,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29743,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29744,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29745,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29748,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29749,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 29752,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 30556,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 31193,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 31194,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 31195,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 31242,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 31245,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 34586,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 35763,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 37019,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 37051,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 37197,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 41576,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49218,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49221,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49222,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49224,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49467,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49468,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49469,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49470,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49471,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49472,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49473,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49474,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49475,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49476,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49477,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49478,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49479,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49480,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49481,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49482,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49483,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49484,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49485,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49486,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49493,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49494,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49495,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49496,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49497,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49498,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49499,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49500,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49501,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49502,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49503,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49504,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 49505,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 54198,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 54201,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 54203,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 54204,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 54205,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 54206,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 54207,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 54208,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 54210,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 54211,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 54212,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 54213,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 54214,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 54215,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 54216,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 55628,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 55637,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 55751,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 55756,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 55757,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 55764,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 56090,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 56139,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 56180,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 56200,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59824,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59930,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59931,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59932,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59933,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59935,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59936,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59938,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59939,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59940,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59941,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59942,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59943,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59944,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59945,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59946,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59947,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59949,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59950,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59952,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59953,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59954,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59955,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59957,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59958,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59959,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59960,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59961,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 59962,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 61875,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 61877,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 61881,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "model",
+      "id": 61884,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 11444,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 11810,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 11811,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 11812,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 11935,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 11936,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 11937,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 13701,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 13702,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 13703,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 13704,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 13705,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 13706,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 13707,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 13708,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 13709,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 13710,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 13711,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 13712,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 13713,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 13714,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "seq",
+      "id": 14497,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "spotanim",
+      "id": 3030,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "spotanim",
+      "id": 3031,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "spotanim",
+      "id": 3032,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "spotanim",
+      "id": 3033,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "spotanim",
+      "id": 3565,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "spotanim",
+      "id": 3566,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "spotanim",
+      "id": 3567,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "spotanim",
+      "id": 3568,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "spotanim",
+      "id": 3569,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "spotanim",
+      "id": 3570,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "spotanim",
+      "id": 3571,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "spotanim",
+      "id": 4020,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "sprite",
+      "id": 170,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "sprite",
+      "id": 828,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "sprite",
+      "id": 829,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "sprite",
+      "id": 830,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "sprite",
+      "id": 1041,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "sprite",
+      "id": 1042,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "sprite",
+      "id": 1524,
+      "ok": true
+    },
+    {
+      "kind": "source-asset-present",
+      "type": "sprite",
+      "id": 1681,
+      "ok": true
+    },
+    {
+      "kind": "local-dependency-errors-empty",
+      "ok": true
+    }
+  ],
+  "passed": 484,
+  "failed": 0,
+  "known_gaps": {
+    "missing_source_item_candidates": [
+      34607
+    ],
+    "unresolved": [
+      "Nigel icon exact binding",
+      "Reward Store interface root",
+      "POH full style dependencies",
+      "AV semantic bindings",
+      "weapon/charge/death source conflicts documented in REPORT V8/V12"
+    ]
+  }
+}

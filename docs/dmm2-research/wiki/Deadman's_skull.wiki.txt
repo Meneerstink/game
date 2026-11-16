@@ -1,0 +1,48 @@
+{{Deadman seasonal}}
+{{Infobox Item
+|name = Deadman's skull
+|image = [[File:Deadman's skull.png]]
+|release = [[21 January]] [[2026]]
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|members = Yes
+|quest = No
+|tradeable = No
+|bankable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Shop, Unlocks, Swap (Prayers, Spellbook), Breach Check, Destroy
+|destroy = You can get another one from the Emblem Trader at the north of Grand Exchange.
+|examine = A Deadman's skull filled with magical power.
+|value = 1
+|alchable = No
+|weight = 0.080
+|id = 33065
+}}
+[[File:Deadman's skull detail.png|130px|left]]
+The '''Deadman's skull''' is an item in [[Deadman: Annihilation]] that players can interact with to purchase sigils and quest lamps from the [[Deadman: Annihilation/Skull shop|skull shop]]. Duplicate sigils can be sold back to the skull shop by using them on the deadman's skull while in your inventory. [[Archaic emblem]]s can also be exchanged for points by using them on the skull.
+
+If lost, it can be reclaimed from the [[Emblem Trader]] at the [[Grand Exchange]].
+
+==Features==
+===Unlocks===
+The "Unlocks" right-click option opens an interface showing all [[Deadman: Annihilation/Skull shop|sigils]] available, showing which have or have not been purchased. Toggleable sigils (such as the [[Sigil of Remote Storage]]) can be turned on and off by clicking them.
+
+===Swap===
+The "Swap" right-click option allows for swapping between different [[spellbook]]s and [[prayer]] books. A spellbook can only be swapped to if the prerequisites have been fulfilled (e.g. completion of [[Lunar Diplomacy]] to use the [[lunar spellbook]]). To swap to the [[Ruinous Powers]] prayer book, a player must buy the [[Ruinous powers (Deadman Mode)|Ruinous Powers tome]] from the skull shop.
+
+Swapping prayers can be done anywhere and while in combat. However, swapping spellbooks can only be done within a [[safezone]] and out of combat.
+
+===Breach check===
+The "Breach Check" right-click option displays the time to the next [[breach]].
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 18 February 2026
+|update = 25th Anniversary Event: 25 Years, 25 Mementos!
+|change = The Deadman's skull countdown timer for the 2am breach now shows the remaining time left correctly.
+}}
+{{Subject changes footer}}
+
+{{Deadman: Annihilation}}

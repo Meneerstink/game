@@ -1,0 +1,23 @@
+{{Deadman permanent}}
+{{Infobox Item
+|name = Trinket dust
+|image = [[File:Trinket dust.png]]
+|release = [[26 March]] [[2025]]
+|update = Poll 83 QoL Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|bankable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Drop
+|examine = Looks like this used to be useful.
+|value = 12
+|weight = 0.056
+|id = 30689
+}}
+[[File:Trinket dust detail.png|130px|left]]
+'''Trinket dust''' is the remains of [[Deadman Mode]] [[Trinket (disambiguation)|trinkets]] upon player death.
+
+{{Deadman Mode}}
