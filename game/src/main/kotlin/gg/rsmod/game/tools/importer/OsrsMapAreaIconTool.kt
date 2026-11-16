@@ -22,10 +22,13 @@ object OsrsMapAreaIconTool {
     const val SPRITE_INDEX = 8
 
     /** OSRS area -> the local loc ids that carry it (from data/cfg/cox/ids.tsv). */
-    val ICONS = linkedMapOf(91 to listOf(66582), 1015 to listOf(66594))
+    // 65762 = the ToA entrance's RAID_ICON 46201 (OSRS 3355,2714 plane 1, square 13354; N618 16-11: our Necropolis import kept it as 65762,
+    // same def as 46201, without the area) - the same raid icon as CoX.
+    val ICONS = linkedMapOf(91 to listOf(66582, 65762), 1015 to listOf(66594))
 
     /** Areas whose OSRS sprite already has a pixel-proven 667 mapelement (OsrsMapIconTable: OSRS sprite 1504 = mapelement 612). */
-    val REUSE = mapOf(1015 to 612)
+    // 91 -> 1149: created by this tool on 15-11 (tx-20261115-212554, sprite 8954) - reused for the next raid-icon locs (ToA, N618).
+    val REUSE = mapOf(1015 to 612, 91 to 1149)
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -54,6 +57,7 @@ object OsrsMapAreaIconTool {
                 locs.forEach { loc ->
                     val current = library.data(FeroxImportTool.LOC_INDEX, loc ushr 8, loc and 0xFF) ?: error("loc $loc missing")
                     val before = Rev667LocType.decode(loc, current)
+                    if (before.mapElement == element) { println("SKIP loc $loc already has mapelement $element"); return@forEach }
                     check(before.mapElement == -1) { "loc $loc already has mapelement ${before.mapElement}" }
                     val after = FeroxMinimapTool.patched(current, null, element)
                     check(Rev667LocType.decode(loc, after).mapElement == element) { "loc $loc patch failed" }
