@@ -22,31 +22,27 @@ import kotlin.test.assertTrue
 
 class NewPlayerStartTests {
     @Test
-    fun `the Deadman starter pack is handed out once and opens into its contents`() {
+    fun `introduction gives one pack and separate one-time cash and tabs`() {
         val config = NewPlayerConfig.DEFAULTS
         val player = newPlayer(isNew = true)
 
         NewPlayerStart.grantStarterPack(player)
         NewPlayerStart.grantStarterPack(player)
         assertEquals(1, player.inventory.getItemCount(config.starterChestItem))
-        assertEquals(1, player.inventory.occupiedSlotCount)
-
-        NewPlayerStart.openStarterPack(player)
-        assertEquals(0, player.inventory.getItemCount(config.starterChestItem))
-        config.starterChestContents.forEach { (item, amount) -> assertEquals(amount, player.inventory.getItemCount(item)) }
+        assertEquals(3, player.inventory.occupiedSlotCount)
+        assertEquals(NewPlayerStart.STARTER_CASH, player.inventory.getItemCount(Items.COINS_995))
+        assertEquals(100, player.inventory.getItemCount(Items.TELEPORT_TO_HOUSE))
     }
 
     @Test
-    fun `the Deadman starter pack opens into 1m coins, 100 house tablets and the skull, nothing in the bank`() {
-        // Owner 2026-10-22 (N173/N179): no tuna or Dramen staff; the 1m starter cash comes out of the pack into the inventory.
+    fun `already opened legacy starter reward cannot be paid a second time`() {
+        // DMM2 V2 (2026-11-16) replaces the old cash-in-every-pack expectation.
         val player = newPlayer(isNew = true)
-
+        player.attr[NewPlayerStart.STARTER_PACK_GIVEN] = true
+        DeadmanStarterPack.migrate(player)
         NewPlayerStart.grantStarterPack(player)
-        NewPlayerStart.openStarterPack(player)
-        assertEquals(NewPlayerStart.STARTER_CASH, player.inventory.getItemCount(Items.COINS_995))
-        assertEquals(100, player.inventory.getItemCount(Items.TELEPORT_TO_HOUSE))
-        assertEquals(1, player.inventory.getItemCount(Items.DEADMANS_SKULL))
-        assertEquals(3, player.inventory.occupiedSlotCount)
+        assertEquals(DeadmanStarterPack.Result.ALREADY_GIVEN, DeadmanStarterPack.grantIntroductionReward(player))
+        assertEquals(0, player.inventory.occupiedSlotCount)
         assertEquals(0, player.bank.occupiedSlotCount)
     }
 

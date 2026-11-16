@@ -83,7 +83,9 @@ object CombatConfigs {
         )
 
     fun getCombatStrategy(pawn: Pawn): CombatStrategy =
-        if (gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn)) {
+        if (gg.rsmod.plugins.content.starter.StarterWeaponCombat.builtInStaff(pawn)) {
+            gg.rsmod.plugins.content.starter.StarterWeaponCombat
+        } else if (gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn)) {
             gg.rsmod.plugins.content.combat.strategy.PoweredStaffCombatStrategy
         } else when (getCombatClass(pawn)) {
             CombatClass.MELEE -> MeleeCombatStrategy
@@ -114,6 +116,7 @@ object CombatConfigs {
         if (pawn is Player) {
             return when {
                 pawn.attr.has(Combat.CASTING_SPELL) -> CombatClass.MAGIC
+                gg.rsmod.plugins.content.starter.DeadmanStarterPack.isStaff(pawn.getEquipment(EquipmentType.WEAPON)?.id) -> CombatClass.MAGIC
                 // Powered staves always attack with their built-in spell (owner decision option a: magic class forced).
                 gg.rsmod.plugins.content.items.osrs.PoweredStaves.wielded(pawn) != null -> CombatClass.MAGIC
                 pawn.hasWeaponType(
@@ -183,7 +186,8 @@ object CombatConfigs {
                 speed -= 1
             }
             // "Powered staff": attack speed 4 for the built-in spell; spellbook casts keep 5 - with any weapon or none.
-            if (magic && !gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn)) {
+            if (magic && !gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn) &&
+                !gg.rsmod.plugins.content.starter.StarterWeaponCombat.builtInStaff(pawn)) {
                 // Spellbook casts: 5 ticks, weapon exceptions from the one table (AutocastWeapons.spellAttackSpeed).
                 speed = gg.rsmod.plugins.content.combat.magic.AutocastWeapons.spellAttackSpeed(
                     weapon?.id, castSpell, autocast = pawn.attr[gg.rsmod.plugins.content.combat.magic.Autocast.AUTO_CAST] == true,

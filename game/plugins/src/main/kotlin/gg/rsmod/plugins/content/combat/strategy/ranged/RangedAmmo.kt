@@ -49,6 +49,7 @@ object RangedAmmo {
             .filterValues { base -> base.any { it in ammo } }.keys
 
     fun fired(player: Player): Fired? {
+        if (gg.rsmod.plugins.content.starter.DeadmanStarterPack.isBow(player.getEquipment(EquipmentType.WEAPON)?.id)) return null
         // Crystal bows and the Bow of Faerdhinen generate their own arrows: worn ammo is never fired or used.
         if (gg.rsmod.plugins.content.items.osrs.CrystalEquipment.isCrystalBow(player.getEquipment(EquipmentType.WEAPON)?.id)) return null
         val slot = player.getEquipment(EquipmentType.AMMO)

@@ -1,9 +1,9 @@
 package gg.rsmod.plugins.content.starter
 
 import gg.rsmod.game.model.attr.AttributeKey
-import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.persistNow
 import gg.rsmod.plugins.content.newplayer.NewPlayerConfig
 
 /** New-account rewards whose values are confirmed product requirements. */
@@ -22,26 +22,20 @@ object NewPlayerStart {
      * here [NewPlayerConfig.starterChestItem]) once the introduction is over - finished, skipped or interrupted.
      */
     fun grantStarterPack(player: Player) {
+        DeadmanStarterPack.migrate(player)
         if (player.attr[STARTER_PACK_GIVEN] == true) return
-        val pack = NewPlayerConfig.current.starterChestItem
-        if (!player.inventory.add(pack).hasSucceeded() && !player.bank.add(pack).hasSucceeded()) return
+        val result = DeadmanStarterPack.reclaim(player)
+        if (result != DeadmanStarterPack.Result.OK && result != DeadmanStarterPack.Result.ALREADY_OWNED) return
         player.attr[STARTER_PACK_GIVEN] = true
+        DeadmanStarterPack.grantIntroductionReward(player)
+        player.persistNow()
     }
 
-    /** "Open": the pack becomes its contents ([NewPlayerConfig.starterChestContents]), all or nothing. */
+    /** DMM2 V2: wiki equipment only; legacy config cash rows are no longer repeatable pack contents. */
     fun openStarterPack(player: Player) {
-        val config = NewPlayerConfig.current
-        if (!player.inventory.contains(config.starterChestItem)) return
-        val slots =
-            config.starterChestContents.sumOf { (item, amount) ->
-                val def = player.world.definitions.get(ItemDef::class.java, item)
-                if (def.stackable || def.noted) 1 else amount
-            }
-        if (player.inventory.freeSlotCount + 1 < slots) {
-            player.message("You need $slots free inventory spaces to open this.")
-            return
+        when (DeadmanStarterPack.open(player)) {
+            DeadmanStarterPack.Result.NO_SPACE -> player.message("You need 11 free inventory spaces to open this.")
+            else -> Unit // NOT_READY deliberately leaves the pack intact until Claude installs the real cache mapping.
         }
-        if (!player.inventory.remove(config.starterChestItem, assureFullRemoval = true).hasSucceeded()) return
-        config.starterChestContents.forEach { (item, amount) -> player.inventory.add(item, amount) }
     }
 }

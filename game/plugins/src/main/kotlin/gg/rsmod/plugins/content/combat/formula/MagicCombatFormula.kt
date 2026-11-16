@@ -121,7 +121,8 @@ object MagicCombatFormula : CombatFormula {
         val spell = if (specialBase != null) null else pawn.attr[Combat.CASTING_SPELL]
         // Powered staff built-in spell (PoweredStaves): max(1, ⌊current Magic/3⌋ + offset) replaces the spell base.
         var hit =
-            specialBase?.toDouble()
+            (if (gg.rsmod.plugins.content.starter.StarterWeaponCombat.builtInStaff(pawn)) 8.0 else null)
+                ?: specialBase?.toDouble()
                 ?: spell?.let { s ->
                     // Players: OSRS level-scaled base (elemental tiers, Magic Dart); npcs cast the fixed base.
                     when {

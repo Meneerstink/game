@@ -127,6 +127,10 @@ object RangedCombatStrategy : CombatStrategy {
         if (pawn is Player) {
             val weapon = pawn.getEquipment(EquipmentType.WEAPON)
             val ammo = pawn.getEquipment(EquipmentType.AMMO)
+            if (gg.rsmod.plugins.content.starter.DeadmanStarterPack.isBow(weapon?.id)) {
+                return target !is Player && weapon != null && gg.rsmod.plugins.content.starter.DeadmanStarterPack.charges(weapon) > 0 &&
+                    gg.rsmod.plugins.content.starter.StarterWeaponCombat.bowAppearance != null
+            }
 
             // An armed special that fires without ammo (SpecialAttacks.registerReach), e.g. the Eclipse atlatl's Eclipse: OSRS Wiki
             // "Atlatl darts do not need to be equipped to perform the special attack."
@@ -195,7 +199,10 @@ object RangedCombatStrategy : CombatStrategy {
     ) {
         val world = pawn.world
 
-        val animation = CombatConfigs.getAttackAnimation(pawn)
+        val starterAppearance = (pawn as? Player)?.getEquipment(EquipmentType.WEAPON)?.takeIf {
+            gg.rsmod.plugins.content.starter.DeadmanStarterPack.isBow(it.id)
+        }?.let { gg.rsmod.plugins.content.starter.StarterWeaponCombat.bowAppearance }
+        val animation = starterAppearance?.animation ?: CombatConfigs.getAttackAnimation(pawn)
 
         /*
          * A list of actions that will be executed upon this hit dealing damage
@@ -265,6 +272,11 @@ object RangedCombatStrategy : CombatStrategy {
                 world.spawn(first)
                 target.graphic(osrs.GLAIVE_01_IMPACT, 0, first.lifespan)
                 if (charged) world.spawn(pawn.createProjectile(target, osrs.GLAIVE_02_TRAVEL, RangedProjectile.DRAGON_THROWNAXE.type))
+            } else if (gg.rsmod.plugins.content.starter.DeadmanStarterPack.isBow(pawn.getEquipment(EquipmentType.WEAPON)?.id)) {
+                gg.rsmod.plugins.content.starter.StarterWeaponCombat.bowAppearance?.let { look ->
+                    pawn.graphic(look.cast, 96)
+                    world.spawn(pawn.createProjectile(target, look.projectile, ProjectileType.ARROW))
+                }
             } else if (gg.rsmod.plugins.content.items.osrs.CrystalEquipment.isCrystalBow(pawn.getEquipment(EquipmentType.WEAPON)?.id) ||
                 pawn.getEquipment(EquipmentType.WEAPON)?.id in gg.rsmod.plugins.content.items.osrs.RevenantBows.ALL
             ) {
@@ -558,6 +570,12 @@ object RangedCombatStrategy : CombatStrategy {
 
         if (damage > 0 && pawn.entityType.isPlayer) {
             addCombatXp(pawn as Player, target, damage)
+        }
+        // Preserve the shot's stance/weapon for its XP, even when this was its final charge.
+        if (pawn is Player) {
+            pawn.getEquipment(EquipmentType.WEAPON)?.takeIf { gg.rsmod.plugins.content.starter.DeadmanStarterPack.isBow(it.id) }?.let {
+                gg.rsmod.plugins.content.starter.StarterWeaponCombat.consume(pawn, it)
+            }
         }
     }
 

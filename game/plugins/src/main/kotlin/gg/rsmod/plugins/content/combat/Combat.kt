@@ -513,6 +513,9 @@ object Combat {
         }
 
         val pvp = pawn.entityType.isPlayer && target.entityType.isPlayer
+        // DMM2: starter weapons cannot attack players, including manual spells and instant specials.
+        if (pawn is Player && target is Player &&
+            gg.rsmod.plugins.content.starter.DeadmanStarterPack.isWeapon(pawn.getEquipment(gg.rsmod.plugins.api.EquipmentType.WEAPON)?.id)) return false
 
         // The low-level gate is also used by instant specials and manual spells, before resources are consumed.
         if (pawn is Player && target is Player && SinglesPlus.contains(pawn.tile) && SinglesPlus.contains(target.tile) &&
