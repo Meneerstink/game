@@ -110,12 +110,32 @@ class VespulaRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, 
                 .filter { t2 -> t2.x in t.x until t.x + size || t2.z in t.z until t.z + size }
                 .minByOrNull { gap(t, it) } ?: return t
             gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.PLUGIN) { "CoX vespula portal at ${t.x},${t.z} nearest accessible ${near.x},${near.z} gap ${gap(t, near)}" }
-            if (gap(t, near) <= 7) return t
+            if (gap(t, near) <= 7) return withSight(t, reach, ::gap)
             val sx = if (near.x < t.x) -1 else if (near.x > t.x + size - 1) 1 else 0
             val sz = if (near.z < t.z) -1 else if (near.z > t.z + size - 1) 1 else 0
             t = Tile(t.x + sx, t.z + sz, t.height)
         }
         return t
+    }
+
+    /**
+     * The combat reach check casts a projectile line to the target's main tile (Combat / PawnPathAction raycast): variant 2 had a low wall
+     * between the ledge and that tile (16-11: 'I can't reach that!' from 7 tiles). Keep the 7-tile rule but make sure some reachable tile
+     * within 7 has a clear line to the portal's main tile - otherwise slide it sideways (up to 4) or one tile closer.
+     */
+    private fun withSight(t: Tile, reach: Set<Tile>, gap: (Tile, Tile) -> Int): Tile {
+        fun sees(c: Tile) = reach.any { a -> gap(c, a) <= 7 && world.collision.raycast(a, c, projectile = true) }
+        if (sees(t)) return t
+        val near = reach.minByOrNull { gap(t, it) } ?: return t
+        val alongX = near.x in t.x until t.x + 4
+        for (off in listOf(1, -1, 2, -2, 3, -3, 4, -4)) {
+            val c = if (alongX) Tile(t.x + off, t.z, t.height) else Tile(t.x, t.z + off, t.height)
+            if (sees(c)) return c
+        }
+        val sx = if (near.x < t.x) -1 else if (near.x > t.x + 3) 1 else 0
+        val sz = if (near.z < t.z) -1 else if (near.z > t.z + 3) 1 else 0
+        val closer = Tile(t.x + sx, t.z + sz, t.height)
+        return if (sees(closer)) closer else t
     }
 
     override fun onTick() {
