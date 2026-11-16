@@ -70,6 +70,16 @@ CommandServerCommands.handlers["teststate"] = { _, a ->
     findPlayer(a)?.let { stateLine(it) } ?: "usage: teststate <name> (player not online)"
 }
 
+// `npcstats <npc index>`: the npc's CURRENT combat levels (attack/strength/defence/magic/ranged) + hp - to prove stat drains (CoX 16-11:
+// Elder maul Pulverize -35% Defence, Dinh's bulwark Shield Bash -5%).
+CommandServerCommands.handlers["npcstats"] = { w, a ->
+    val n = a.getOrNull(0)?.toIntOrNull()?.let { i -> w.npcs.entries.filterNotNull().firstOrNull { it.index == i } }
+    if (n == null) "usage: npcstats <npc index>" else {
+        val s = n.stats
+        "npc ${n.id}#${n.index} att=${s.getCurrentLevel(0)} str=${s.getCurrentLevel(1)} def=${s.getCurrentLevel(2)} mag=${s.getCurrentLevel(3)} rng=${s.getCurrentLevel(4)} hp=${n.getCurrentLifepoints()}"
+    }
+}
+
 CommandServerCommands.handlers["testevents"] = { _, a ->
     val p = findPlayer(a)
     if (p == null) {
