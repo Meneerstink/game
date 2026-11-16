@@ -71,9 +71,33 @@ class VespulaRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, 
             grubs += grub
         }
         BOILS[variant].forEach { b -> placeLoc(30070, tile(b.x, b.z), rotation = 0)?.let { boils += it } }
-        portal = spawn(7533, tile(PORTAL[variant].x, PORTAL[variant].z, 6), speed = 2)
+        portal = spawn(7533, portalTile(tile(PORTAL[variant].x, PORTAL[variant].z, 6)), speed = 2)
         vespula = spawn(7530, tile(VESPULA[variant].x - 2, VESPULA[variant].z - 2, 5), speed = 4, deathSeq = 7459)
         home = Tile(vespula?.tile ?: return)
+    }
+
+    /**
+     * Wiki (Abyssal portal): 'The portal is seven tiles away from the accessible area' (weapons with 7+ range). The tsps tiles are not
+     * verified ('Not on the Wiki (to check against a capture)') and left it ~10 tiles out (16-11: 'I can't reach that!' with ranged).
+     * So the portal (4x4) steps toward the nearest walkable tile of the room until its edge is 7 tiles from it.
+     */
+    private fun portalTile(start: Tile, size: Int = 4): Tile {
+        fun gap(t: Tile, a: Tile): Int {
+            val dx = if (a.x < t.x) t.x - a.x else if (a.x > t.x + size - 1) a.x - (t.x + size - 1) else 0
+            val dz = if (a.z < t.z) t.z - a.z else if (a.z > t.z + size - 1) a.z - (t.z + size - 1) else 0
+            return maxOf(dx, dz)
+        }
+        var t = start
+        repeat(8) {
+            val near = (t.x - 16..t.x + size + 16).flatMap { x -> (t.z - 16..t.z + size + 16).map { z -> Tile(x, z, t.height) } }
+                .filter { contains(it) && !world.collision.isClipped(it) }
+                .minByOrNull { gap(t, it) } ?: return t
+            if (gap(t, near) <= 7) return t
+            val sx = if (near.x < t.x) -1 else if (near.x > t.x + size - 1) 1 else 0
+            val sz = if (near.z < t.z) -1 else if (near.z > t.z + size - 1) 1 else 0
+            t = Tile(t.x + sx, t.z + sz, t.height)
+        }
+        return t
     }
 
     override fun onTick() {
@@ -121,7 +145,8 @@ class VespulaRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, 
         for (r in raiders()) {
             if (portalHitTiles.none { it.x == r.tile.x && it.z == r.tile.z }) continue
             val at = Tile(r.tile)
-            projectile(portalShotFrom, at, 1366, 0, 60, 35, 30, angle = 2, steepness = 128)
+            val from = portal?.let { Tile(it.tile.x + 2, it.tile.z + 2, it.tile.height) } ?: portalShotFrom // from the (placed) portal
+            projectile(from, at, 1366, 0, 60, 35, 30, angle = 2, steepness = 128)
             later(1) {
                 if (r.tile.x != at.x || r.tile.z != at.z) return@later
                 val pray = r.skills.getCurrentLevel(Skills.PRAYER)
