@@ -282,7 +282,7 @@ object MeleeCombatFormula : CombatFormula {
 
     private fun getEquipmentStrengthBonus(pawn: Pawn): Double =
         when (pawn) {
-            is Player -> pawn.getStrengthBonus().toDouble()
+            is Player -> (pawn.getStrengthBonus() + gg.rsmod.plugins.content.activity.cox.DinhsBulwark.pummelBonus(pawn)).toDouble()
             is Npc -> pawn.getStrengthBonus().toDouble()
             else -> throw IllegalArgumentException("Invalid pawn type. $pawn")
         }

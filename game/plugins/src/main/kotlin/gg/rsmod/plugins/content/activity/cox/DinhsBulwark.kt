@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap
  * incoming damage -20% (not in PvP), only 8 ticks after switching to the bulwark; Block -> Pummel = 8 ticks without attacking, even when
  * switching to another weapon; no combat spells: 'Your bulwark gets in the way'.
  * Our client has no 'Bulwark' style set: the bulwark uses the 667 hammer set (Pound / Pummel / Block), the 3rd (defensive) box = Block,
- * the other two = Pummel (dossier COX.txt OPEN: own Pummel/Block set). ONZEKER: the Pummel strength passive (Wiki formula) is not built yet.
+ * the other two = Pummel (dossier COX.txt OPEN: own Pummel/Block set). Pummel strength passive: [pummelBonus] (MeleeCombatFormula).
  */
 object DinhsBulwark {
     const val OSRS = 21015
@@ -39,6 +39,18 @@ object DinhsBulwark {
         val start = since[p.username.lowercase()] ?: return damage
         if (p.world.currentCycle - start < SWITCH_TICKS) return damage
         return damage - damage / 5
+    }
+
+    /**
+     * Wiki 'Strength buff': in the Pummel style the strength bonus rises by max(0, (stab + slash + crush + ranged defence - 800) / 12 - 38)
+     * (no bonus under an average defence of 314). ONZEKER: rounding - floored here (the Wiki writes the plain fraction).
+     */
+    fun pummelBonus(p: Player): Int {
+        if (!wields(p) || blocking(p)) return 0
+        val b = p.equipmentBonuses
+        val sum = b[gg.rsmod.plugins.api.BonusSlot.DEFENCE_STAB.id] + b[gg.rsmod.plugins.api.BonusSlot.DEFENCE_SLASH.id] +
+            b[gg.rsmod.plugins.api.BonusSlot.DEFENCE_CRUSH.id] + b[gg.rsmod.plugins.api.BonusSlot.DEFENCE_RANGED.id]
+        return maxOf(0, Math.floorDiv(sum - 800, 12) - 38)
     }
 
     /** Null = may attack; else the refusal ("" = silently, as the Block style has no attack). */
