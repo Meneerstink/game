@@ -32,6 +32,8 @@ class CrabsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, fl
     private val lit = BooleanArray(4)
     private var dark: GameObject? = null
     private var focus: Npc? = null
+    /** Where the orb set out from on its last step (a step that did not happen ends it). */
+    private var stepFrom: Tile? = null
     private var focusColour = WHITE_FOCUS
     private var direction = 0
     private var sender: Player? = null
@@ -66,7 +68,8 @@ class CrabsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, fl
         val s = FOCUS[variant]
         focus = spawn(WHITE_FOCUS, tile(s.x, s.z))
         focusColour = WHITE_FOCUS
-        direction = (variant + laid.rotation) and 3
+        stepFrom = null
+        direction = (START_DIRECTION[variant] + laid.rotation) and 3
         sender = null
     }
 
@@ -104,21 +107,35 @@ class CrabsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, fl
             val crab = crabAt(x, z)
             if (crab != null) {
                 val colour = colourOf[crab] ?: WHITE_CRAB
-                if (colour != WHITE_CRAB && focusColour != WHITE_FOCUS + (colour - WHITE_CRAB)) {
-                    focusColour = WHITE_FOCUS + (colour - WHITE_CRAB)
+                val crabOrb = WHITE_FOCUS + (colour - WHITE_CRAB)
+                // Wiki (CoX/Strategies, Crab puzzle): 'A coloured orb cannot make contact with a crab of a different colour - if this
+                // happens, the orb disappears.' A white orb takes the colour of a coloured crab (Wiki Energy focus).
+                if (focusColour != WHITE_FOCUS && focusColour != crabOrb) { endFocus("fizzle"); return }
+                if (focusColour == WHITE_FOCUS && colour != WHITE_CRAB) {
+                    focusColour = crabOrb
                     CoxIds.npc(focusColour)?.let { f.setTransmogId(it) }
                     areaSound(here, 3274, radius = 6)
                 }
                 lastHitBy[crab]?.let { sender = it }
                 if (++turns >= 2) { endFocus("fizzle"); return }
+                // 'every time the white orb impacts a crab it is deflected to the right of the orb's perspective' (guide video
+                // 'JEWELLED CRABS - In 90 Seconds or Less', 16-11): east -> south -> west -> north.
                 direction = (direction + 1) and 3
                 continue
             }
             val next = Tile(x, z, here.height)
-            val atCrystal = crystalTiles.any { it.x == x && it.z == z }
-            if (!atCrystal && !world.collision.canTraverse(here, gg.rsmod.game.model.Direction.between(here, next), projectile = false, water = false)) {
-                endFocus("fizzle"); return
-            }
+            // A small crystal is a solid loc (type 10): the orb can never step onto its tile - it hits it from the tile before (16-11:
+            // the orb stood at 6508,13 for ever in front of the crystal at 6508,12).
+            val hitCrystal = crystalTiles.indexOfFirst { it.x == x && it.z == z }
+            if (hitCrystal >= 0) { reachCrystal(hitCrystal); return }
+            // The end of its path (tsps: 'The orb fizzles at the end of its path'): a step out of this tile OR into a shut tile (16-11:
+            // only the way out was checked - at 6505,6 the orb tried the walled 6505,5 for ever and no new orb ever came).
+            val way = gg.rsmod.game.model.Direction.between(here, next)
+            val open = world.collision.canTraverse(here, way, projectile = false, water = false) &&
+                world.collision.canTraverse(next, way.getOpposite(), projectile = false, water = false)
+            // ... and a step that did not happen last tick (the orb still where it set out from) ends it too, never a stuck orb.
+            if (!open || stepFrom?.let { it.x == here.x && it.z == here.z } == true) { endFocus("fizzle"); return }
+            stepFrom = Tile(here)
             f.walkTo(next, detectCollision = false)
             return
         }
@@ -197,6 +214,14 @@ class CrabsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, fl
         const val WHITE_FOCUS = 7580
         /** The orb each small crystal (by index) needs (tsps): white, blue, green, red. */
         val NEEDS = listOf(7580, 7583, 7582, 7581)
+        /**
+         * The orb's way out of the sculpture per version, in template terms (index into [DIRECTIONS]), turned with the room. The orb is
+         * deflected to its RIGHT at every crab (guide video 'JEWELLED CRABS - In 90 Seconds or Less'), so it must leave with the room on
+         * its right: version 0 (focus 3277,5353, every crab/crystal north-east of it) = NORTH - it was east (16-11: along the wall with the
+         * room on its left, every deflection went into the wall, the room could not be solved); 1 (3318,5363, all south-west) = south;
+         * 2 (3346,5358, all west) = west. ONZEKER: derived from the room shape + the right-turn rule, not from a capture.
+         */
+        val START_DIRECTION = listOf(3, 1, 2)
         /** East, south, west, north: clockwise. */
         val DIRECTIONS = listOf(1 to 0, 0 to -1, -1 to 0, 0 to 1)
         val BURST = mapOf(7580 to (119 to 160), 7581 to (128 to 157), 7582 to (119 to 166), 7583 to (122 to 163))
