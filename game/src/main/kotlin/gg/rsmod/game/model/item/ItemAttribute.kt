@@ -107,4 +107,8 @@ enum class ItemAttribute {
     CLUE_TASK_KEY,
     CLUE_TASK_COMPLETE,
 
+    /** Guardian victory uses its own fields: hot/cold target and Falo/Sherlock task state must coexist. */
+    CLUE_GUARD_KEY,
+    CLUE_GUARD_PROGRESS,
+
 }

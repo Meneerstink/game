@@ -89,6 +89,7 @@ class ClueScrollLifecycleTests {
         assertTrue(ClueScrollManager.advance(player, tier)) // easy always requires at least two
         val key = scroll.getAttr(ItemAttribute.CLUE_STEP_KEY)
         player.inventory[0]!!.putAttr(ItemAttribute.CLUE_TASK_KEY, 42).putAttr(ItemAttribute.CLUE_TASK_COMPLETE, 1)
+            .putAttr(ItemAttribute.CLUE_GUARD_KEY, 101).putAttr(ItemAttribute.CLUE_GUARD_PROGRESS, 2)
         val tasked = player.inventory[0]!!
         player.inventory[0] = null
         val restored = Item(tasked) // same path used by container copies/ground attrs
@@ -98,6 +99,8 @@ class ClueScrollLifecycleTests {
         assertEquals(1, ClueScrollManager.progress(player, tier))
         assertEquals(42, restored.getAttr(ItemAttribute.CLUE_TASK_KEY))
         assertEquals(1, restored.getAttr(ItemAttribute.CLUE_TASK_COMPLETE))
+        assertEquals(101, restored.getAttr(ItemAttribute.CLUE_GUARD_KEY))
+        assertEquals(2, restored.getAttr(ItemAttribute.CLUE_GUARD_PROGRESS))
         player.inventory[0] = Item(tier.scrollId)
         ClueScrollManager.prepare(player, player.inventory[0]!!, tier)
         assertEquals(0, ClueScrollManager.progress(player, tier))
@@ -113,11 +116,14 @@ class ClueScrollLifecycleTests {
         val held = player.inventory[0]!!
         held.putAttr(ItemAttribute.CLUE_STEP_KEY, Int.MIN_VALUE)
         held.putAttr(ItemAttribute.CLUE_TASK_KEY, 42).putAttr(ItemAttribute.CLUE_TASK_COMPLETE, 1)
+            .putAttr(ItemAttribute.CLUE_GUARD_KEY, 101).putAttr(ItemAttribute.CLUE_GUARD_PROGRESS, 2)
         ClueScrollManager.prepare(player, held, tier)
         assertNotEquals(Int.MIN_VALUE, held.getAttr(ItemAttribute.CLUE_STEP_KEY))
         assertEquals(1, ClueScrollManager.progress(player, tier))
         assertNull(held.getAttr(ItemAttribute.CLUE_TASK_KEY))
         assertNull(held.getAttr(ItemAttribute.CLUE_TASK_COMPLETE))
+        assertNull(held.getAttr(ItemAttribute.CLUE_GUARD_KEY))
+        assertNull(held.getAttr(ItemAttribute.CLUE_GUARD_PROGRESS))
     }
 
     @Test fun `torn part consumption and progress are atomic and stale NPC responses cannot repeat them`() {
@@ -129,16 +135,21 @@ class ClueScrollLifecycleTests {
         player.inventory[1] = Item(10001)
         player.inventory[2] = Item(10002)
         scroll.putAttr(ItemAttribute.CLUE_TASK_KEY, 42).putAttr(ItemAttribute.CLUE_TASK_COMPLETE, 1)
+            .putAttr(ItemAttribute.CLUE_GUARD_KEY, 101).putAttr(ItemAttribute.CLUE_GUARD_PROGRESS, 2)
         assertFalse(ClueScrollManager.advance(player, tier, scroll, 0, listOf(10001, 10002, 10003)))
         assertEquals(1, player.inventory.getItemCount(10001))
         assertEquals(1, player.inventory.getItemCount(10002))
         assertEquals(0, ClueScrollManager.progress(player, tier))
         assertEquals(42, scroll.getAttr(ItemAttribute.CLUE_TASK_KEY))
+        assertEquals(101, scroll.getAttr(ItemAttribute.CLUE_GUARD_KEY))
+        assertEquals(2, scroll.getAttr(ItemAttribute.CLUE_GUARD_PROGRESS))
         player.inventory[3] = Item(10003)
         assertTrue(ClueScrollManager.advance(player, tier, scroll, 0, listOf(10001, 10002, 10003)))
         assertEquals(1, ClueScrollManager.progress(player, tier))
         assertNull(player.inventory[0]!!.getAttr(ItemAttribute.CLUE_TASK_KEY))
         assertNull(player.inventory[0]!!.getAttr(ItemAttribute.CLUE_TASK_COMPLETE))
+        assertNull(player.inventory[0]!!.getAttr(ItemAttribute.CLUE_GUARD_KEY))
+        assertNull(player.inventory[0]!!.getAttr(ItemAttribute.CLUE_GUARD_PROGRESS))
         assertTrue((10001..10003).all { !player.inventory.contains(it) })
         assertFalse(ClueScrollManager.advance(player, tier, scroll, 0))
         assertEquals(1, ClueScrollManager.progress(player, tier))

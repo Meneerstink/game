@@ -54,3 +54,16 @@ four ticks from candy-throw animation to impact. Observed throws39/52/75/85s do
 not establish a fixed interval or a per-attack probability. Keep both the candy
 choice chance and forward-step chance unresolved. The current encounter only
 has melee/stomp; importing its arena alone must not be reported as full Mimic.
+
+## Promoted continuation, B16-Nov21:54
+
+The controller and its twelve narrow tests are now production source files.
+The backend is not an activation switch: combat/loot/PvP adapters remain open.
+Guardian victory now uses appended CLUE_GUARD_KEY/CLUE_GUARD_PROGRESS fields,
+leaving Falo/Sherlock and future hot/cold targets untouched. Existing enum
+ordinals are preserved. The manager clears both fields only on real step changes
+or donor-key migration; drop/bank/serialization retain them.
+Reentrant spawning is refused; callback validation rejects bank/death/logout,
+foreign-world/dead/despawned actors, and removes unique failed actors once.
+The latest actual-source basic cohort passed117tests including these12 and the
+updated lifecycle tests. Separate Gradle/scripts acceptance still required.
