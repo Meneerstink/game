@@ -70,9 +70,12 @@ object CoxMonsters {
         m("Skeletal Mystic", listOf(7604, 7605, 7606), 160, listOf(140, 140, 187, 1, 140, 85, 0, 40, 0, 0, 155, 155, 75, 140, 115), 0),
         m("Tekton", listOf(7540, 7541, 7542, 7545), 300, listOf(390, 390, 205, 1, 205, 64, 0, 0, 0, 0, 155, 165, 105, 0, 0), 52),
         m("Tekton (enraged)", listOf(7543, 7544), 300, listOf(390, 390, 205, 1, 205, 64, 0, 0, 0, 0, 280, 290, 180, 0, 0), 59),
-        m("Vanguard (magic)", listOf(7529), 180, listOf(150, 150, 160, 150, 150, 0, 0, 40, 0, 0, 315, 340, 400, 110, 50), 22),
-        m("Vanguard (melee)", listOf(7527, 7525, 7526), 180, listOf(150, 150, 160, 150, 150, 20, 0, 0, 0, 0, 150, 150, 150, 20, 400), 18),
-        m("Vanguard (ranged)", listOf(7528), 180, listOf(150, 150, 160, 150, 150, 0, 0, 0, 0, 40, 55, 60, 100, 400, 300), 22),
+        // Vanguards keep their OSRS hitpoints (not the 55% of besluit 3a): their fight is a RATIO rule (Wiki: more than 40% apart -> all heal
+        // to full). At 55% (99 hp solo) one ranged hit already broke the 40% and they healed every ~17 s - unkillable (16-11 measurement,
+        // dossier COX.txt). Eigen advies, the owner may overrule.
+        m("Vanguard (magic)", listOf(7529), 180, listOf(150, 150, 160, 150, 150, 0, 0, 40, 0, 0, 315, 340, 400, 110, 50), 22, boss = false),
+        m("Vanguard (melee)", listOf(7527, 7525, 7526), 180, listOf(150, 150, 160, 150, 150, 20, 0, 0, 0, 0, 150, 150, 150, 20, 400), 18, boss = false),
+        m("Vanguard (ranged)", listOf(7528), 180, listOf(150, 150, 160, 150, 150, 0, 0, 0, 0, 40, 55, 60, 100, 400, 300), 22, boss = false),
         m("Vasa Nistirio", listOf(7565, 7566, 7567), 300, listOf(1, 1, 175, 230, 230, 0, 0, 0, 0, 100, 170, 190, 40, 400, 40), 0),
         m("Vespine soldier", listOf(7538, 7539), 100, listOf(150, 150, 40, 1, 40, 0, 0, 0, 0, 0, 0, 0, 0, 30, 0), 14, boss = false),
         m("Vespula", listOf(7530, 7531, 7532), 200, listOf(150, 150, 88, 150, 88, 0, 0, 0, 0, 0, 0, 0, 0, 70, 60), 14),
