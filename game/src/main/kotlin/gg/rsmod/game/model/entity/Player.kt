@@ -1075,6 +1075,7 @@ abstract class Player(
     ) {
         // DGN (owner 2026-10-11): a removed skill (Dungeoneering) never gains XP, whatever route asks.
         if (SkillSet.isRemovedSkill(skill)) return
+        if (gg.rsmod.game.model.skill.ExperienceLocks.blocks(this, skill)) return
         val oldXp = skills.getCurrentXp(skill)
 
         if (oldXp >= SkillSet.MAX_XP) {

@@ -1509,7 +1509,10 @@ fun essenceTeleport(
 fun Player.hasItem(
     item: Int,
     amount: Int = 1,
-): Boolean = containers.values.firstOrNull { container -> container.getItemCount(item) >= amount } != null
+): Boolean = containers.entries.any { (key, container) ->
+    // Safe-box items are owned (Possessions), but cannot supply tools or usable items.
+    key != gg.rsmod.game.model.container.key.SAFE_DEPOSIT_BOX_KEY && container.getItemCount(item) >= amount
+}
 
 fun Player.isPrivilegeEligible(to: String): Boolean = world.privileges.isEligible(privilege, to)
 
@@ -2118,6 +2121,8 @@ fun Player.hasEntranaRestrictedEquipment(): Boolean {
  *  Returns the boost that was given. Will be 1.0 if no boost given
  */
 fun Player.addXp(skill: Int, xp: Double, checkBrawlingGloves: Boolean = false): Double {
+    // Refuse before a brawling-glove charge can be consumed; Player.addXp also guards every other route.
+    if (gg.rsmod.game.model.skill.ExperienceLocks.blocks(this, skill)) return 1.0
     val type = BrawlingGloves.values().firstOrNull { skill == it.skill }
     val gloves = equipment[EquipmentType.GLOVES.id]
     val inWildy = tile.getWildernessLevel() > 0
