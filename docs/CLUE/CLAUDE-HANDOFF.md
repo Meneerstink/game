@@ -556,3 +556,28 @@ no map should give a free step from Read or another player's interaction. No
 monsters spawn on map digs. Those client/live gates remain Claude's responsibility.
 
 16-Nov00:54: Read/Close test rerun passed3/3 on freshly compiled production classes. Initial verification failure included static extension calls from the prior successful opens; used a separate missing-import account to isolate that assertion. No production change for this test correction. Unique standalone cohort now85 tests. Final Gradle/script integration starts on frozen inputs next.
+
+
+## Latest Uri and puzzle atlas, B16-Nov16:44
+
+Active adapters are now promoted from NEXT-INTEGRATION with SHA proof.94 focused
+actual-source tests and10 codec tests passed; actual native client decoder passed
+all675 map +199 puzzle components. Whole-branch Gradle/scripts must still pass.
+Uri uses existing5141/5142/5143,25 current pinned transcript phrases, refusal,
+gear recheck on Talk-to, medium second-emote ordering and exact held-clue contract.
+No guessed lifetime or spawn/vanish animation: unresolved source points remain
+as documented in uri-source.json. Twelve easy/medium/elite steps; guards separate.
+
+Current puzzle UI command: python tools/clue/verify_interface_port.py then
+python tools/clue/preflight_puzzles.py.371 mutations,tx-20261116-154016,no apply;
+exact IDs in PUZZLE-UI-PREFLIGHT.tsv. Proposed306->1203,models66725..66894,
+sprites8955/8956. Apply reward/text, then rerun maps, then rerun puzzles using the
+SAME VERIFIED interfaces.tsv; allocations overlap until actually applied.
+Never copy proposals into runtime mapping. Client wide-IF3 patch/release first.
+
+Claude: OpenGL compare all seven puzzle pictures and movement cells, Close/hover,
+fixed/resizable/Stretched, both sounds1859/2304. Uri wrong gear/emote/plane,
+medium second emote before/after first, repeat emote, gear switch before Talk,
+other account, clue banking/replacement/progress/death/logout and full inventory.
+Puzzle handover/solve/death/ownership implementation and guard/hotcold work remain
+open; neither the whole card nor client/live acceptance is claimed here.

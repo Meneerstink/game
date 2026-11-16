@@ -298,3 +298,27 @@ Both caches/ledger/runtime mappings unchanged: maps-preflight/read-only-proof.js
 Fullcard remains open (Uri/emotes/guards/puzzles/hotcold/Mimic-Q1/client checks).
 
 16-Nov00:54: Read/Close test rerun passed3/3 on freshly compiled production classes. Initial verification failure included static extension calls from the prior successful opens; used a separate missing-import account to isolate that assertion. No production change for this test correction. Unique standalone cohort now85 tests. Final Gradle/script integration starts on frozen inputs next.
+
+
+## Resumed Uri and puzzle atlas promotion, B16-Nov16:44
+
+Previous integration235508 has no summary or final script/test output and is not
+accepted. No active own build was found. Verified and promoted all nine staged
+adapters; normalized-byte equality in NEXT-INTEGRATION/PROMOTED-SHA256.json.
+Only the perform call was merged into the actual manager.
+
+Actual-source standalone `python tools/clue/check_compile.py HEAD basic-tests`:
+2 core +48 plugin libraries compiled,94 tests green (the prior85 +9 Uri).
+`python tools/clue/verify_interface_port.py`:10 focused codec tests green;
+actual native Component decoder: wide/legacy/absent/cameras/alignment/cache keys,
+675 map components and199 puzzle components all green. Canonical client untouched.
+Production fixture inputs now include both new source files and puzzle pictures.
+
+`python tools/clue/preflight_puzzles.py`: tx-20261116-154016,371 mutations,
+applied=false, both caches/ledger/runtime mappings unchanged. Exact current
+proposal PUZZLE-UI-PREFLIGHT.tsv: interface306->1203,170 models66725..66894,
+sprites539/540->8955/8956. These are not reservations: rerun after reward/maps.
+New narrow Gradle/scripts acceptance is still required. Twelve Uri steps can
+register only with verified native actors/equipment. No hard/master agent bypass.
+Puzzle atlas import alone does not activate puzzle gameplay. Runtime puzzle
+handover work is separate, not included in the94-test acceptance above.

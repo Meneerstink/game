@@ -38,8 +38,8 @@ def main():
     assert installed, 'Existing worktree server libraries are required; this verifier never starts a build'
     cp = [str(ROOT / 'game/build/classes/kotlin/main')] + [str(p) for p in installed]
     sources = [ROOT / 'game/src/main/kotlin/gg/rsmod/game/tools/importer' / (name + '.kt') for name in
-               ['ClueInterfaceImportTool', 'OsrsInterfacePortTool', 'InterfaceHookProbeTool']]
-    print('Compiling only the three changed CLUE server codec files (512m, low priority)', flush=True)
+               ['ClueInterfaceImportTool', 'OsrsInterfacePortTool', 'InterfaceHookProbeTool', 'CluePuzzleInterfaceBake']]
+    print('Compiling only the four changed CLUE server codec files (512m, low priority)', flush=True)
     run([JAVA/'java.exe', '-Xmx512m', '-cp', ';'.join(compiler), 'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler',
          argument_file('server.args', ['-no-stdlib', '-no-reflect', '-jvm-target', '11', '-cp', ';'.join(cp), '-d', OUT/'server'] + sources)])
     cp = [str(OUT/'server')] + cp
@@ -48,9 +48,10 @@ def main():
     run([JAVA/'java.exe', '-Xmx256m', '-cp', ';'.join(compiler), 'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler',
          argument_file('tests.args', ['-no-stdlib', '-no-reflect', '-jvm-target', '11', '-cp', ';'.join(cp+testing),
              '-d', OUT/'tests', ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/ClueInterfaceImportTests.kt',
-             ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/ClueMapInterfaceImportTests.kt'])])
+             ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/ClueMapInterfaceImportTests.kt',
+             ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/CluePuzzleInterfaceTests.kt'])])
     run([JAVA/'java.exe', '-Xmx128m', '-cp', ';'.join([str(OUT/'tests')]+cp+testing),
-         'org.junit.runner.JUnitCore', 'gg.rsmod.game.tools.importer.ClueInterfaceImportTests', 'gg.rsmod.game.tools.importer.ClueMapInterfaceImportTests'], ROOT/'game')
+         '-Drsps.data='+str(ROOT/'data'), 'org.junit.runner.JUnitCore', 'gg.rsmod.game.tools.importer.ClueInterfaceImportTests', 'gg.rsmod.game.tools.importer.ClueMapInterfaceImportTests', 'gg.rsmod.game.tools.importer.CluePuzzleInterfaceTests'], ROOT/'game')
     run([JAVA/'javac.exe', argument_file('fixtures.args', ['-cp', ';'.join(cp), '-d', OUT/'fixtures',
          ROOT/'tools/clue/ClueInterfaceFixtureProbe.java'])])
     run([JAVA/'java.exe', '-Xmx128m', '-cp', ';'.join([str(OUT/'fixtures')]+cp), 'ClueInterfaceFixtureProbe',
@@ -59,10 +60,12 @@ def main():
     client_cp = [str(CLIENT/'runescape/build/classes/java/main'), jar('org.openrs2/openrs2-deob-annotations')]
     run([JAVA/'javac.exe', argument_file('client.args', ['-cp', ';'.join(client_cp+cp), '-d', OUT/'client',
          ROOT/'build/clue/client-patch/Component.java', ROOT/'tools/clue/ClueWideInterfaceRegression.java',
-         ROOT/'tools/clue/ClueMapClientRegression.java'])])
+         ROOT/'tools/clue/ClueMapClientRegression.java', ROOT/'tools/clue/CluePuzzleClientRegression.java'])])
     run([JAVA/'java.exe', '-Xmx128m', '-cp', ';'.join([str(OUT/'client')]+client_cp), 'ClueWideInterfaceRegression', OUT/'fixtures'])
     run([JAVA/'java.exe', '-Xmx128m', '-cp', ';'.join([str(OUT/'client')]+client_cp+cp),
          'ClueMapClientRegression', ROOT/'docs/CLUE/cache/map-interfaces.json'])
+    run([JAVA/'java.exe', '-Xmx128m', '-cp', ';'.join([str(OUT/'client')]+client_cp+cp),
+         'CluePuzzleClientRegression', ROOT/'docs/CLUE/cache/puzzle-interface.json'])
     print('CLUE codec regressions passed; canonical caches/client untouched', flush=True)
 
 

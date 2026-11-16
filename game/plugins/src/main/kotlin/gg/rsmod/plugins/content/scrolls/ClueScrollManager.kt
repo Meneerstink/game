@@ -106,6 +106,7 @@ class ClueScrollManager(
             player: Player,
             emoteComponent: Int,
         ) {
+            if (TreasureTrailEmotes.perform(player, emoteComponent)) return
             for (tier in ClueScrollTier.values()) {
                 val step = activeStep(player, tier) as? EmoteClueStep ?: continue
                 if (step.matches(player, emoteComponent)) {

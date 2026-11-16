@@ -17,9 +17,12 @@ object ClueInterfaceImportTool {
     val MAP_COUNTS = mapOf(86 to 119, 348 to 48, 350 to 49, 351 to 60, 353 to 64,
         354 to 83, 356 to 83, 360 to 84, 362 to 85)
     val MAP_GROUPS = MAP_COUNTS.keys.toList()
+    val PUZZLE_GROUPS = listOf(306)
 
 
-    fun components(group: Int, node: JsonNode, fonts: Map<Int, Int>, models: Map<Int, Int>, sprites: Map<Int, Int>): List<OsrsInterfacePortTool.C> {
+    @JvmOverloads
+    fun components(group: Int, node: JsonNode, fonts: Map<Int, Int>, models: Map<Int, Int>, sprites: Map<Int, Int>, pictures: JsonNode? = null): List<OsrsInterfacePortTool.C> {
+        if (group == 306) return CluePuzzleInterfaceBake.components(node, CluePuzzleInterfaceBake.pictures(requireNotNull(pictures)), models, sprites)
         require(group in GROUPS || group in MAP_GROUPS)
         fun JsonNode.int(key: String, default: Int = 0) = get(key)?.asInt() ?: default
         fun JsonNode.flag(key: String) = get(key)?.asBoolean() ?: false
@@ -67,7 +70,7 @@ object ClueInterfaceImportTool {
         require(args.size >= 3) { "Usage: <source-json> <mapping-tsv> <plan-tsv> [--apply]" }
         val sourceJson = File(args[0]); val mappingFile = File(args[1]); val planFile = File(args[2])
         val apply = "--apply" in args
-        val groups = if ("--maps" in args) MAP_GROUPS else GROUPS
+        val groups = when { "--maps" in args -> MAP_GROUPS; "--puzzles" in args -> PUZZLE_GROUPS; else -> GROUPS }
         val root = ObjectMapper().readTree(sourceJson)
         val old = if (mappingFile.isFile) mappingFile.readLines().filter { it.isNotBlank() && !it.startsWith("#") }
             .map { it.split('\t') }.associate { (it[0] to it[1].toInt()) to it[2].toInt() } else emptyMap()
@@ -105,7 +108,7 @@ object ClueInterfaceImportTool {
             }
             ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE)).use { source ->
                 check(source.file(2, 5, 141)!!.contentEquals(byteArrayOf(2, 0, REWARD_SLOTS.toByte(), 0)))
-                val modelIds = groups.flatMap { group -> root[group.toString()].elements().asSequence().filter { it["type"].asInt() == 6 }.map { it["modelId"].asInt() }.toList() }.distinct()
+                val modelIds = groups.flatMap { group -> root[group.toString()].elements().asSequence().filter { it["type"].asInt() == 6 }.map { it["modelId"].asInt() }.toList() }.let { base -> (base + if ("--puzzles" in args) CluePuzzleInterfaceBake.pictures(root["puzzlePictures"]).flatMap { it.models } else emptyList()).distinct() }
                 val decoded = modelIds.associateWith { id ->
                     val bytes = source.file(7, id, 0) ?: error("Source model $id missing")
                     runCatching { ModernModelDecoder.decode(bytes, false) }.getOrElse { Rev667ModelDecoder.decode(bytes, false) }
@@ -168,7 +171,7 @@ object ClueInterfaceImportTool {
                 val spriteMap = mapping.filterKeys { it.first == "sprite" }.mapKeys { it.key.second }
                 groups.forEach { group ->
                     val target = allocate("interface", group) { nextInterface++ }
-                    components(group, root[group.toString()], fonts, modelMap, spriteMap).forEach { component ->
+                    components(group, root[group.toString()], fonts, modelMap, spriteMap, root["puzzlePictures"]).forEach { component ->
                         add(3, target, component.id, OsrsInterfacePortTool.encode(component), "CLUE OSRS interface $group:${component.id}")
                     }
                 }

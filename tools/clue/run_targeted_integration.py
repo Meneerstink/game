@@ -32,14 +32,14 @@ PLUGINS += ['gg.rsmod.plugins.content.scrolls.' + name for name in
 
 if '--basic' in sys.argv:
     CORE = ['gg.rsmod.game.tools.importer.' + name for name in
-            ['ClueSearchMenuImportTests', 'ClueCoreCacheTests', 'ClueInterfaceImportTests', 'ClueMapInterfaceImportTests']]
+            ['ClueSearchMenuImportTests', 'ClueCoreCacheTests', 'ClueInterfaceImportTests', 'ClueMapInterfaceImportTests', 'CluePuzzleInterfaceTests']]
     PLUGINS = ['gg.rsmod.plugins.content.scrolls.' + name for name in
                ['TreasureTrailNumberChallengeTests', 'TreasureTrailBasicStepsTests',
                 'ClueStepSelectionTests', 'TreasureTrailStepCatalogueTests',
                 'TreasureTrailTornPartsTests', 'TreasureTrailContractTests',
                 'ClueScrollLifecycleTests', 'TreasureTrailFaloTests',
                 'TreasureTrailSherlockTests', 'ClueNpcAssetsTests',
-                'ClueDropOwnershipTests', 'ClueCasketTransactionTests', 'TreasureTrailMapsTests']]
+                'ClueDropOwnershipTests', 'ClueCasketTransactionTests', 'TreasureTrailMapsTests', 'TreasureTrailEmoteTests', 'TreasureTrailUriSourceTests']]
     PLUGINS += ['gg.rsmod.plugins.content.areas.watson.WatsonClueTests']
 
 
@@ -50,7 +50,7 @@ def inputs():
                if p.endswith(('.kt', '.kts', '.gradle')) or p.startswith(('data/cfg/clue/', 'docs/CLUE/sources/Transcript_')) or p in {
                    'data/cfg/objs.yml', 'docs/CLUE/cache/stash-chart-baked.json', 'docs/CLUE/cache/hover.json',
                    'docs/CLUE/cache/interfaces.json', 'docs/CLUE/cache/stash-setting.json',
-                   'docs/CLUE/cache/map-interfaces.json',
+                   'docs/CLUE/cache/map-interfaces.json', 'docs/CLUE/cache/puzzle-interface.json', 'docs/CLUE/cache/puzzle-pictures.json', 'docs/CLUE/cache/uri-source.json',
                    'docs/CLUE/cache/ui-camera-order.json', 'docs/CLUE/cache/search-bucket.json',
                    'docs/CLUE/cache/core-source-items.json', 'docs/CLUE/sources/Clue_scroll_(master).wiki',
                    'docs/CLUE/NPC-DIALOGUE-SOURCES.json'}]

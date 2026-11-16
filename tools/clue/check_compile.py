@@ -131,7 +131,7 @@ if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-
             ['TreasureTrailNumberChallengeTests', 'TreasureTrailBasicStepsTests', 'ClueStepSelectionTests',
              'TreasureTrailStepCatalogueTests', 'TreasureTrailTornPartsTests', 'TreasureTrailContractTests',
              'ClueScrollLifecycleTests', 'TreasureTrailFaloTests', 'TreasureTrailSherlockTests',
-             'ClueNpcAssetsTests', 'ClueDropOwnershipTests', 'ClueCasketTransactionTests', 'TreasureTrailMapsTests']]
+             'ClueNpcAssetsTests', 'ClueDropOwnershipTests', 'ClueCasketTransactionTests', 'TreasureTrailMapsTests', 'TreasureTrailEmoteTests', 'TreasureTrailUriSourceTests']]
         names += ['gg.rsmod.plugins.content.areas.watson.WatsonClueTests',
                   'gg.rsmod.game.tools.importer.ClueSearchMenuImportTests']
     elif selected == 'sherlock-tests':

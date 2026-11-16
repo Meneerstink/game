@@ -1,8 +1,14 @@
+# Promotion on 16 November 2026
+
+These snapshots have now been promoted to production sources; exact normalized hashes are recorded in PROMOTED-SHA256.json. The manager received only the new perform call. The prior integration-20261115-235508 stopped before scripts/tests completed and has no accepted result. Fresh actual-source tests and a new targeted integration are required below.
+
+## Original checkpoint (historical)
+
 # Tested staged adapters awaiting the frozen map integration
 
 B16-Nov01:27. These .txt snapshots are NOT active source files and MUST NOT be
 counted as completed gameplay. They protect this work across a stopped session.
-SHA256s pin exact tested files; source counterparts remain build/clue/next.
+SHA256s record exact tested bytes and normalized-LF content (portable across Git CRLF checkout); source counterparts remain build/clue/next.
 
 1. Wait for integration-20261115-235508 summary.json accepted=true (4core/14plugin,
    4519immutable inputs). No Kotlin/cfg/Gradle edits during it.

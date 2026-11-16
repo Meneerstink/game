@@ -1,0 +1,10 @@
+{
+  "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailUri.kt": "e9aaaa915f8c17e6243cf6f1f841daf3dba5f69264f68312b122dab6b238920c",
+  "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailEmotes.kt": "ce28e892f5c5cc516b0f6a2cdb2643e21711fd6cd4adc9c82eebd60568371242",
+  "game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailEmoteTests.kt": "fa40c3136fb0c0a8da51322ab1e365cbc1cfd82436000ba5b77a3730672dac33",
+  "game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailUriSourceTests.kt": "2c4b7e95e563842aa917047746f5a4ab0b22559d79dc198ba17fd3661ce4281d",
+  "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\treasure_trail_emotes.plugin.kts": "791da0627fc17d788816624f78817b82092c853bd6459cff279944c85f6dd771",
+  "game\\src\\main\\kotlin\\gg\\rsmod\\game\\tools\\importer\\CluePuzzleInterfaceBake.kt": "1b1ec21ca7415618ac85899d7af0540e7ad71d5ce6b784daad2d91b50a9a416d",
+  "game\\src\\test\\kotlin\\gg\\rsmod\\game\\tools\\importer\\CluePuzzleInterfaceTests.kt": "32fdf67bf07e712798c13505d23af85322d1bce4d8e91b6912bdb116eda293ca",
+  "game\\src\\main\\kotlin\\gg\\rsmod\\game\\tools\\importer\\ClueInterfaceImportTool.kt": "9b3903c73169177994fccd8f90ffa01d1bd5acc410f77dcd9ff62a8637f15461"
+}
