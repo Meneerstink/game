@@ -326,8 +326,12 @@ class BFSPathFindingStrategy(
         }
 
         if (touchRadius > 1) {
-            for (x in -touchRadius..touchRadius) {
-                for (z in -touchRadius..touchRadius) {
+            // CoX 16-11 (Vespula's 4x4 portal, 'I can't reach that!' from 7 tiles north of it): the reach is measured from the target's
+            // EDGE (PawnPathAction.inReachWithoutMoving: gap to the nearest tile of its body, as OSRS ranges a large npc) - this ring
+            // was centred on the south-west tile only, so on the north and east side of a 2x2+ target a route stopped (size - 1) tiles
+            // short of a spot the attack itself accepts, and from 7 tiles beyond a 4x4's north edge no end tile existed at all.
+            for (x in -touchRadius until maxOf(1, targetWidth) + touchRadius) {
+                for (z in -touchRadius until maxOf(1, targetLength) + touchRadius) {
                     if (x in 0 until targetWidth && z in 0 until targetLength) {
                         continue
                     }
