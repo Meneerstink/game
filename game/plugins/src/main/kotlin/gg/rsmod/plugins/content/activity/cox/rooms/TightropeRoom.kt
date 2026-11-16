@@ -105,10 +105,10 @@ class TightropeRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid
             p.queue { messageBox("You need an Agility level of $requirement to cross this tightrope.") }
             return
         }
-        val ropeId = rope.id
-        val end = (0 until 32).flatMap { dx -> (0 until 32).map { dz -> dx to dz } }.asSequence()
-            .map { (dx, dz) -> Tile(raid.map.area.bottomLeftX + laid.gridX * 32 + dx, raid.map.area.bottomLeftZ + laid.gridZ * 32 + dz, rope.tile.height) }
-            .mapNotNull { t -> world.getObject(t, gg.rsmod.game.model.collision.ObjectType.INTERACTABLE)?.takeIf { it.id == ropeId && (it.tile.x != rope.tile.x || it.tile.z != rope.tile.z) } }
+        // The rope's two ends are ground decorations (loc type 22; 16-11 testserver: 6472,50 rot 0 and 6472,58 rot 2) - a lookup of
+        // INTERACTABLE locs never found the far end, so 'Cross' did nothing. Every loc of the room with this id, any type.
+        val end = roomLocs(29750).asSequence()
+            .filter { it.id == rope.id && (it.tile.x != rope.tile.x || it.tile.z != rope.tile.z) }
             .filter { it.tile.x == rope.tile.x || it.tile.z == rope.tile.z }
             .minByOrNull { it.tile.getDistance(rope.tile) } ?: return
         val dest = end.tile.transform(Integer.signum(end.tile.x - rope.tile.x), Integer.signum(end.tile.z - rope.tile.z))
