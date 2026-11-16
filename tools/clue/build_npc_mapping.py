@@ -11,7 +11,7 @@ import sys
 import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE_IDS = [6586, 7306, 7312, 6587, 6588, 7307, 7308, 7309, 7310]
+SOURCE_IDS = [306, 6586, 7306, 7312, 6587, 6588, 7307, 7308, 7309, 7310]
 TARGETS = [Path('C:/RSPS/game/game/data/cache'), Path('C:/RSPS/file-server/cache')]
 
 

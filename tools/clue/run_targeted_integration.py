@@ -30,6 +30,14 @@ PLUGINS += ['gg.rsmod.plugins.content.scrolls.' + name for name in
              'TreasureTrailChallengeTests', 'TreasureTrailStepCatalogueTests', 'TreasureTrailTornPartsTests', 'TreasureTrailStashTests', 'TreasureTrailStashChartTests', 'TreasureTrailStashSettingTests',
              'TreasureTrailFaloTests', 'TreasureTrailSherlockTests', 'TreasureTrailContractTests', 'ClueNpcAssetsTests']]
 
+
+# Explicit combined handoff gate: only the card's changed classes and shared decoder regressions.
+CORE += ['gg.rsmod.game.tools.importer.' + name for name in
+         ['ClueSearchMenuImportTests', 'ClueCoreCacheTests', 'ClueMapInterfaceImportTests', 'CluePuzzleInterfaceTests']]
+PLUGINS += ['gg.rsmod.plugins.content.scrolls.' + name for name in
+            ['TreasureTrailNumberChallengeTests', 'TreasureTrailBasicStepsTests', 'ClueStepSelectionTests',
+             'TreasureTrailMapsTests', 'TreasureTrailEmoteTests', 'TreasureTrailUriSourceTests', 'TreasureTrailPuzzleBoxTests']]
+
 if '--basic' in sys.argv:
     CORE = ['gg.rsmod.game.tools.importer.' + name for name in
             ['ClueSearchMenuImportTests', 'ClueCoreCacheTests', 'ClueInterfaceImportTests', 'ClueMapInterfaceImportTests', 'CluePuzzleInterfaceTests']]
@@ -39,7 +47,7 @@ if '--basic' in sys.argv:
                 'TreasureTrailTornPartsTests', 'TreasureTrailContractTests',
                 'ClueScrollLifecycleTests', 'TreasureTrailFaloTests',
                 'TreasureTrailSherlockTests', 'ClueNpcAssetsTests',
-                'ClueDropOwnershipTests', 'ClueCasketTransactionTests', 'TreasureTrailMapsTests', 'TreasureTrailEmoteTests', 'TreasureTrailUriSourceTests']]
+                'ClueDropOwnershipTests', 'ClueCasketTransactionTests', 'TreasureTrailMapsTests', 'TreasureTrailEmoteTests', 'TreasureTrailUriSourceTests', 'TreasureTrailPuzzleBoxTests']]
     PLUGINS += ['gg.rsmod.plugins.content.areas.watson.WatsonClueTests']
 
 
@@ -52,7 +60,9 @@ def inputs():
                    'docs/CLUE/cache/interfaces.json', 'docs/CLUE/cache/stash-setting.json',
                    'docs/CLUE/cache/map-interfaces.json', 'docs/CLUE/cache/puzzle-interface.json', 'docs/CLUE/cache/puzzle-pictures.json', 'docs/CLUE/cache/uri-source.json',
                    'docs/CLUE/cache/ui-camera-order.json', 'docs/CLUE/cache/search-bucket.json',
-                   'docs/CLUE/cache/core-source-items.json', 'docs/CLUE/sources/Clue_scroll_(master).wiki',
+                   'docs/CLUE/cache/core-source-items.json', 'docs/CLUE/cache/puzzle-source-items.json', 'docs/CLUE/cache/puzzle-routes.json',
+                   'docs/CLUE/sources/Puzzle_box.wiki', 'docs/CLUE/sources/Clue_scroll_(hard)_-_BLUE_GRIM_GUIDED.wiki',
+                   'docs/CLUE/sources/Clue_scroll_(hard)_-_IWPPLQTP.wiki', 'docs/CLUE/sources/Clue_scroll_(master).wiki',
                    'docs/CLUE/NPC-DIALOGUE-SOURCES.json'}]
     return {p: sha256((ROOT/p).read_bytes()).hexdigest() for p in allowed if (ROOT/p).is_file()}
 

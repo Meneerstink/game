@@ -1,0 +1,76 @@
+{
+  "routes": [
+    {
+      "key": "Clue scroll (hard) - BLUE GRIM GUIDED",
+      "clue": 19886,
+      "box": 19887,
+      "picture": 2,
+      "clueSymbol": "TRAIL_HARD_ANAGRAM_EXP9",
+      "boxSymbol": "TRAIL_HARD_ANAGRAM_EXP9_PUZZLEBOX",
+      "source": {
+        "file": "Clue_scroll_(hard)_-_BLUE_GRIM_GUIDED.wiki",
+        "url": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_BLUE_GRIM_GUIDED",
+        "sha256": "8b4ef9f7995008abff4efa491e56d3dd2eb64065707af6112bda3a2cb85b26f1",
+        "revision": 15192304
+      }
+    },
+    {
+      "key": "Clue scroll (hard) - IWPPLQTP",
+      "clue": 23172,
+      "box": 23173,
+      "picture": 2,
+      "clueSymbol": "TRAIL_CLUE_HARD_CIPHER009",
+      "boxSymbol": "TRAIL_CLUE_HARD_CIPHER009_PUZZLEBOX",
+      "source": {
+        "file": "Clue_scroll_(hard)_-_IWPPLQTP.wiki",
+        "url": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_IWPPLQTP",
+        "sha256": "f694d1768605675c73363c7badcad824f53dbebbd307939b947a3000e441d0d0",
+        "revision": 15191763
+      }
+    }
+  ],
+  "sources": {
+    "Puzzle box": {
+      "page": "Puzzle box",
+      "revision": 15185934,
+      "revision_time": "2026-04-22T03:15:09Z",
+      "file": "Puzzle_box.wiki",
+      "sha256": "981b6c79b24191f6e45a31034f7b3bc73eeaf2440b5f0bf9ad86aaae491728e2",
+      "url": "https://oldschool.runescape.wiki/w/Puzzle_box"
+    },
+    "Clue scroll (hard) - BLUE GRIM GUIDED": {
+      "file": "Clue_scroll_(hard)_-_BLUE_GRIM_GUIDED.wiki",
+      "url": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_BLUE_GRIM_GUIDED",
+      "sha256": "8b4ef9f7995008abff4efa491e56d3dd2eb64065707af6112bda3a2cb85b26f1",
+      "revision": 15192304
+    },
+    "Clue scroll (hard) - IWPPLQTP": {
+      "file": "Clue_scroll_(hard)_-_IWPPLQTP.wiki",
+      "url": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_IWPPLQTP",
+      "sha256": "f694d1768605675c73363c7badcad824f53dbebbd307939b947a3000e441d0d0",
+      "revision": 15191763
+    },
+    "Transcript:Lumbridge Guide": {
+      "page": "Transcript:Lumbridge Guide",
+      "revision": 15396094,
+      "revision_time": "2026-11-07T11:15:31Z",
+      "file": "Transcript_Lumbridge_Guide.wiki",
+      "sha256": "ef46052ef7b8e69b0b2c3e8e2a97c968bc39fdc99fca0ea16cecbf11ea77effa",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ALumbridge_Guide"
+    },
+    "Transcript:Gunnjorn": {
+      "page": "Transcript:Gunnjorn",
+      "revision": 15095249,
+      "revision_time": "2025-12-27T06:11:31Z",
+      "file": "Transcript_Gunnjorn.wiki",
+      "sha256": "d631c83ff55d34afa2153f43606bf514da1e106f64179a0cdc0a539331976efe",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AGunnjorn"
+    }
+  },
+  "identityReference": {
+    "file": "C:\\RSPS\\reference\\runelite\\gameval\\ItemID.java",
+    "sha256": "0a5644635129a5d57ec54189ecaebafc29c70665213ab8f5b1700f3612387103",
+    "note": "Explicit symbolic companion names, not adjacent-number inference"
+  },
+  "rawItemEvidence": "puzzle-source-items.json"
+}

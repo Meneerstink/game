@@ -41,3 +41,33 @@ NPC dialogue, death/duplicate-box ownership and client acceptance remain open.
 Do not infer an NPC's exact box ID solely from adjacent clue/item numbers.
 No random picture or sliding/light-box split probability is established here.
 Light-box wiring remains a separate unobserved server input; no masks invented.
+
+
+## Two source handover routes, B16-Nov16:55
+
+Both selected hard NPC puzzles are TREE (selector2), not a random picture.
+Clue Wiki pins identify19886=BLUE GRIM GUIDED and23172=IWPPLQTP. Explicit
+reference gameval symbols pair TRAIL_HARD_ANAGRAM_EXP9(_PUZZLEBOX) and
+TRAIL_CLUE_HARD_CIPHER009(_PUZZLEBOX), proving boxes19887/23173 without guessing
+by item adjacency. Puzzle box Wiki id2 independently lists both as tree boxes.
+Five pinned Wiki hashes, extracted symbolic names and the reference SHA are in
+cache/puzzle-routes.json; regenerate tools/clue/build_puzzle_routes.py.
+Actual raw cache2686 definitions+SHA/Base64: cache/puzzle-source-items.json,
+read-only CluePuzzleItemProbe.java. Source box value100, untradeable, Open.
+
+The box supplements the clue. A full inventory refuses issue without replacing
+the clue; repeated Talk does not duplicate a stored box. Solve requires source
+101-legal-slide scramble and actual adjacent moves. Close records success;
+the issuing NPC must still receive the box and held clue in one atomic advance.
+Old answers, other accounts, replaced/banked/dead clues or replaced boxes cannot
+advance. An orphan/duplicate puzzle box in inventory/bank/grave/Death/IRS blocks
+receiving another hard clue. It does NOT masquerade as a carried clue or enter
+Watson's hand-in aliases. Its OSRS value100 and ordinary item death path remain;
+no unproven special clue death exception or hour-long clue floor timer added.
+
+Eight freshly compiled plugin libraries and13 focused tests passed (11 puzzle,
+2 NPC profile). Test checks the actual source Close component5 and exact tree
+atlas positions, plus hidden-interface click rejection. First backend-only pass
+10green; expanded UI/availability/source-proof coverage13green. Actual Gradle
+scripts/whole-branch compilation still required, and client rendering/packet
+cost/death floor behaviour remain Claude's review gates.

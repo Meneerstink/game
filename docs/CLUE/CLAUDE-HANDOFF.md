@@ -581,3 +581,32 @@ medium second emote before/after first, repeat emote, gear switch before Talk,
 other account, clue banking/replacement/progress/death/logout and full inventory.
 Puzzle handover/solve/death/ownership implementation and guard/hotcold work remain
 open; neither the whole card nor client/live acceptance is claimed here.
+
+
+## Exact hard puzzle boxes and Guide import, B16-Nov16:55
+
+Main clue item roster is now247: previous245 plus source19887/23173 (tree boxes).
+Extra-only dry-run: python tools/clue/preflight_items.py --puzzles;
+PREFLIGHT tx-20261116-154712,applied=false finalized=0 recovered=0;
+proposed24940/24941, model4204->66725. No reservation; rerun main247-item roster
+with preflight_items.py after preceding batches. Both caches/ledger/mapping
+fingerprints stayed equal. PUZZLE-ITEM-PREFLIGHT.tsv lists exact extra definitions.
+Do not reuse generic2795/3565/3569 for these two source NPCs.
+
+clue-steps NPC batch now includes source306 (Lumbridge Guide),10NPCs total.
+After applying the batch rerun python tools/clue/build_npc_mapping.py --write
+for the COMPLETE10-profile mapping; an older9-row mapping is incomplete.
+The static profiles+audit were regenerated read-only (0 applied/10 pending).
+Guide spawn3238,3220,0 radius3 is source-pinned. Gunnjorn607 already exists.
+Source identity/picture proof: cache/puzzle-routes.json and puzzle-source-items.json.
+The ordinary Guide transcript contains unresolved quest-advice/goal-condition
+source gaps; this part implements its Treasure Trails branch, not those ordinary
+branches. Keep that N2 review point open before deploying a new Guide service.
+
+Claude checks after UI306 import: both exact tree boxes, Open/Move/Close5/Escape,
+wrong/nonadjacent cells and both sounds1859/2304; solve then NPC hand-in, no
+advance merely on Solve/Close, bank/drop/relog resets unsolved board, solved box
+attributes retained, missing clue/box, wrong NPC, duplicate boxes, full inventory,
+final casket, other account, death value100 vs clue20 and normal box floor timer.
+Boxes are additional inventory items, not replacements for their hard clue.
+Backend/identity tests13green; whole-branch Gradle/scripts acceptance follows.

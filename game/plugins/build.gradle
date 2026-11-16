@@ -27,7 +27,13 @@ test {
     // Ordinary targeted Gradle runs need the same branch data as the clue integration runner.
     systemProperty 'rsps.data', rootProject.file('data').absolutePath
     inputs.dir(rootProject.file('data/cfg/clue')).withPropertyName('clueCatalogues')
-    inputs.files(rootProject.file('docs/CLUE/cache/uri-source.json'),
+    inputs.files(rootProject.file('docs/CLUE/cache/puzzle-routes.json'),
+        rootProject.file('docs/CLUE/cache/puzzle-source-items.json'),
+        rootProject.file('docs/CLUE/sources/Puzzle_box.wiki'),
+        rootProject.file('docs/CLUE/sources/Clue_scroll_(hard)_-_BLUE_GRIM_GUIDED.wiki'),
+        rootProject.file('docs/CLUE/sources/Clue_scroll_(hard)_-_IWPPLQTP.wiki'),
+        rootProject.file('docs/CLUE/cache/interfaces.json'),
+        rootProject.file('docs/CLUE/cache/uri-source.json'),
         rootProject.file('docs/CLUE/NPC-DIALOGUE-SOURCES.json'),
         fileTree(dir: rootProject.file('docs/CLUE/sources'), include: 'Transcript_*.wiki')).withPropertyName('clueNpcDialogueSources')
     // Extra headroom for cache-backed suites; keep a single test worker on the 16 GB host.

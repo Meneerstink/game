@@ -270,7 +270,7 @@ def main():
     # Step objects, from the pinned Challenge scroll / Puzzle box / Light box /
     # Torn clue scroll / Strange device infoboxes. Tier challenge scrolls and
     # puzzle pictures are dynamic server contexts, like the five base clues.
-    extra.extend((2842, 7269, 12128, 12139, 2795, 3565, 3569, 12161,
+    extra.extend((2842, 7269, 12128, 12139, 2795, 3565, 3569, 19887, 23173, 12161,
                   20280, 20281, 20282, 23417, 20355, 20356, 20357,
                   19837, 19838, 19839, 19939))
     mimic_file = OUT / 'mimic-rewards.json'

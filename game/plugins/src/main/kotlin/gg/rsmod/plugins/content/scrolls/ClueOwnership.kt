@@ -22,7 +22,7 @@ object ClueOwnership {
     fun carried(player: Player, tier: ClueScrollTier): Item? = player.inventory.firstOrNull { it != null && ClueOwnership.tier(it.id) == tier }
 
     fun owns(player: Player, tier: ClueScrollTier): Boolean = tier.scrollId >= 0 &&
-        stored(player).any { ClueOwnership.tier(it.id) == tier }
+        stored(player).any { ClueOwnership.tier(it.id) == tier || TreasureTrailPuzzleBoxes.tier(it.id) == tier }
 
     fun mayReceive(player: Player, item: Int): Boolean = tier(item)?.let { !owns(player, it) } ?: true
 }

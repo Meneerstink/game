@@ -322,3 +322,28 @@ New narrow Gradle/scripts acceptance is still required. Twelve Uri steps can
 register only with verified native actors/equipment. No hard/master agent bypass.
 Puzzle atlas import alone does not activate puzzle gameplay. Runtime puzzle
 handover work is separate, not included in the94-test acceptance above.
+
+
+## Source puzzle handover backend, B16-Nov16:55
+
+TreasureTrailPuzzleBoxes/Dialogue + script implement two exact tree box routes,
+source NPC dialogue, 101 legal slides, Move/Close, NPC hand-in, same-item/account
+contract, atomic box consumption, orphan puzzle ownership and safe retry when
+casket unavailable.13 focused actual-source tests green,8 libraries compiled.
+No new core ItemAttribute or general ItemContainer change. Existing fields are
+reused on puzzle items only. Added source306 Lumbridge Guide to clue-steps batch
+(10NPCs) with exact Wiki location/radius; regenerated verified profiles/audit,
+0 applied/10 missing. The regular Lumbridge Guide transcript has pre-existing
+source gaps (quest recommendation and goal condition); this work proves its
+Treasure Trails dialogue only, not all ordinary quest-advice branches.
+
+Read-only item preflight tx-20261116-154712: two additional exact source boxes,
+19887->24940 and23173->24941, shared model4204->66725. No reservations;
+cache/ledger/mapping unchanged. Main roster now247 (previous245 plus these2).
+Exact extra definitions in PUZZLE-ITEM-PREFLIGHT.tsv; rerun the combined roster
+before Claude applies. Puzzle UI proof is independent and also unapplied.
+
+Next: ONE combined targeted Gradle gate (14 core+36 plugin classes), all scripts
+compiled on frozen Kotlin/cfg/Gradle/source fixture inputs. No code changes during
+that run. Remaining guarded/hotcold/lightbox/Mimic-source/client gates stay open;
+this commit must not be reported as whole-card acceptance.

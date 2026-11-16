@@ -1,4 +1,19 @@
 {
+  "306": {
+    "name": "Lumbridge Guide",
+    "level": 0,
+    "options": [
+      "Talk-to",
+      null,
+      null,
+      null,
+      null
+    ],
+    "heads": 2,
+    "cacheSha256": "f3c8bb62f12b940b74cc742fd88774d27fca41e29a25de29230c97431ed2649e",
+    "examine": "He provides new players with useful information.",
+    "wiki": "https://oldschool.runescape.wiki/w/Lumbridge_Guide"
+  },
   "6586": {
     "name": "Sherlock",
     "level": 0,

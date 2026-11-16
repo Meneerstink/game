@@ -3,6 +3,11 @@
   "verified": [],
   "missing": [
     {
+      "source": 306,
+      "name": "Lumbridge Guide",
+      "reason": "No applied ledger-owned NPC import"
+    },
+    {
       "source": 6586,
       "name": "Sherlock",
       "reason": "No applied ledger-owned NPC import"
