@@ -87,11 +87,24 @@ class VespulaRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, 
             val dz = if (a.z < t.z) t.z - a.z else if (a.z > t.z + size - 1) a.z - (t.z + size - 1) else 0
             return maxOf(dx, dz)
         }
+        // The accessible area = what the raiders can walk to from where they stand (flood fill, 4 directions, inside the room): an open
+        // tile cut off from the players (16-11 variant 2: 6439,6) is not where they shoot from.
+        val reach = HashSet<Tile>()
+        val queue = ArrayDeque<Tile>()
+        raiders().forEach { r -> Tile(r.tile.x, r.tile.z, r.tile.height).let { if (reach.add(it)) queue.add(it) } }
+        while (queue.isNotEmpty() && reach.size < 4000) {
+            val c = queue.removeFirst()
+            for (d in DIRS) {
+                if (world.collision.isBlocked(c, d, false)) continue
+                val n = Tile(c.x + d.getDeltaX(), c.z + d.getDeltaZ(), c.height)
+                if (contains(n) && reach.add(n)) queue.add(n)
+            }
+        }
         var t = start
         repeat(8) {
-            val near = (t.x - 16..t.x + size + 16).flatMap { x -> (t.z - 16..t.z + size + 16).map { z -> Tile(x, z, t.height) } }
+            val near = reach.asSequence()
                 // A tile a player can really stand on: open in all four directions (the ledge's edge tiles are half walls).
-                .filter { t2 -> contains(t2) && !world.collision.isClipped(t2) && DIRS.none { d -> world.collision.isBlocked(t2, d, false) } }
+                .filter { t2 -> DIRS.none { d -> world.collision.isBlocked(t2, d, false) } }
                 // Straight in front of the portal (aligned with one of its sides): a stray corner tile measured diagonally is not where
                 // players stand (16-11: 6434,16 counted 7 diagonally while the ledge in front was 8 away).
                 .filter { t2 -> t2.x in t.x until t.x + size || t2.z in t.z until t.z + size }
