@@ -35,16 +35,32 @@ CoxIds.loc(29777)?.let { steps ->
     }
 }
 
-CoxIds.loc(29778)?.let { exit ->
-    on_obj_option(obj = exit, option = "climb") {
-        // tsps (rsprox): the first room's steps ask "You will not be able to rejoin this raid again." (Leave the raid. / Stay.); the exit
-        // steps by the ancient chest in the Olm's chamber ask "You won't be able to re-enter." (Leave. / Stay.).
-        val raid = CoxRaids.raidAt(player.tile)
-        val olmChamber = raid != null && CoxMap.roomAt(raid.map, raid.layout, player.tile) == null
+/** tsps (rsprox): the first room's steps ask "You will not be able to rejoin this raid again." (Leave the raid. / Stay.); the exit steps
+ * by the ancient chest in the Olm's chamber ask "You won't be able to re-enter." (Leave. / Stay.). */
+fun climbSteps(player: gg.rsmod.game.model.entity.Player) {
+    val raid = CoxRaids.raidAt(player.tile)
+    val olmChamber = raid != null && CoxMap.roomAt(raid.map, raid.layout, player.tile) == null
+    player.queue {
+        val leave = if (olmChamber) options("Leave.", "Stay.", title = "You won't be able to re-enter.")
+            else options("Leave the raid.", "Stay.", title = "You will not be able to rejoin this raid again.")
+        if (leave == 1) CoxRaids.leave(player)
+    }
+}
+
+CoxIds.loc(29778)?.let { exit -> on_obj_option(obj = exit, option = "climb") { climbSteps(player) } }
+
+/*
+ * The leader's steps before the start (RAIDS_EXIT_STEPS_RELOAD 50000 'Steps' [Climb, Reload], shown through the multiloc 49999 on
+ * CoxRaids.RELOAD_VARP): tsps (rsprox 2528) 'Reload the raid to generate a new layout?'. ONZEKER: the answer options (no capture text) ->
+ * 'Yes.' / 'No.'.
+ */
+CoxIds.loc(50000)?.let { reload ->
+    on_obj_option(obj = reload, option = "climb") { climbSteps(player) }
+    on_obj_option(obj = reload, option = "reload") {
+        val raid = CoxRaids.raidAt(player.tile) ?: return@on_obj_option
+        if (raid.started || player.username.lowercase() != CoxRaids.leaderOf(raid)) return@on_obj_option
         player.queue {
-            val leave = if (olmChamber) options("Leave.", "Stay.", title = "You won't be able to re-enter.")
-                else options("Leave the raid.", "Stay.", title = "You will not be able to rejoin this raid again.")
-            if (leave == 1) CoxRaids.leave(player)
+            if (options("Yes.", "No.", title = "Reload the raid to generate a new layout?") == 1) CoxRaids.reload(player, raid)
         }
     }
 }

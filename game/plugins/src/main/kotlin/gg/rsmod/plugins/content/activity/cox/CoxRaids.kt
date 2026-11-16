@@ -5,6 +5,7 @@ import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.instance.InstancedMap
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.setVarp
 import mu.KLogging
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.random.Random
@@ -119,16 +120,44 @@ object CoxRaids : KLogging() {
         val raid = CoxRaid(nextId++, layout, map, world, player.username)
         raids[map] = raid
         logger.info { "[cox] raid ${raid.id} ${player.username} base=${map.area.bottomLeftX},${map.area.bottomLeftZ} pattern=${layout.pattern} floors=${layout.floors.map { f -> f.map { "${it.room}@${it.gridX},${it.gridZ}/${it.entry}/v${it.variant}" } }}" }
-        // The first room's steps are RAIDS_EXIT_STEPS_MULTI 49999, a varbit multiloc (RAIDS_EXIT_STEPS 29778, or _RELOAD 50000 for the
-        // leader before the start - tsps 'Reload'); the import dropped its transform (base = invisible, no ops), so the room gets 29778.
-        // ONZEKER/LATER: the leader's 'Reload' (50000) is not built.
+        // The first room's steps are RAIDS_EXIT_STEPS_MULTI 49999, a multiloc (RAIDS_EXIT_STEPS 29778, or _RELOAD 50000 for the leader
+        // before the start - tsps 'Reload'). Imported with its table on varp RELOAD_VARP (OsrsLocImportTool 'cox-reload', 16-11) the room
+        // keeps it and each client shows the right steps; an older cache without the table: plain 29778 for everyone.
         val multi = CoxIds.loc(49999)
         val steps = CoxIds.loc(29778)
-        if (multi != null && steps != null) replaceInRoom(raid, 0, layout.floors[0][0], multi, steps)
+        if (multi != null && steps != null && !reloadReady(world)) replaceInRoom(raid, 0, layout.floors[0][0], multi, steps)
         player.teleportTo(spawnTile(raid))
         CoxMusic.floor(player, 0)
         CoxPartyTab.open(player, raid)
+        syncReload(raid, player)
         return raid
+    }
+
+    /** The varp of the first room's multiloc steps 49999: 1 = the 'Reload' steps 50000 (the leader before the start), 0 = steps 29778. */
+    const val RELOAD_VARP = 2386
+
+    private fun reloadReady(world: World): Boolean = CoxIds.loc(49999)?.let { id ->
+        runCatching { world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, id).transforms != null }.getOrDefault(false)
+    } ?: false
+
+    /** Shows 'Reload' on the first room's steps to the raid's leader until the raid begins (and [extra], who may not be inside yet). */
+    fun syncReload(raid: CoxRaid, extra: Player? = null) {
+        val leader = leaderOf(raid)
+        (raid.world.players.entries.filterNotNull().filter { raid.map.area.contains(it.tile) } + listOfNotNull(extra)).distinct().forEach {
+            it.setVarp(RELOAD_VARP, if (!raid.started && it.username.lowercase() == leader) 1 else 0)
+        }
+    }
+
+    /**
+     * 'Reload' (the leader, before the start): Wiki (update) 'allowing the raid leader to generate a new layout and boot anyone in the
+     * current instance'. Everyone else is put out (they may come back in through the entrance - the party stays), the leader gets a fresh
+     * raid of a new random layout.
+     */
+    fun reload(leader: Player, raid: CoxRaid) {
+        if (raid.started || leader.username.lowercase() != leaderOf(raid)) return
+        raid.world.players.entries.filterNotNull().filter { it !== leader && raid.map.area.contains(it.tile) }.forEach { leave(it) }
+        leave(leader)
+        enter(leader)
     }
 
     /**
@@ -175,6 +204,7 @@ object CoxRaids : KLogging() {
         raid.started = true
         raid.progress = 1
         raid.startCycle = raid.world.currentCycle
+        syncReload(raid)
         // tsps r123 (rsprox): the raid's announcements are friendschatnotification messages (type 11).
         raid.world.players.entries.filterNotNull().filter { raid.map.area.contains(it.tile) }.forEach {
             it.message("The raid has begun!", gg.rsmod.plugins.api.ChatMessageType.FRIENDS_CHAT_NOTIFICATION)
@@ -339,12 +369,13 @@ object CoxRaids : KLogging() {
     fun leave(player: Player) {
         val raid = raidAt(player.tile)
         if (raid != null) dropRaidItems(player, player.tile)
+        player.setVarp(RELOAD_VARP, 0)
         player.moveTo(OUTSIDE)
         CoxPartyTab.close(player)
         CoxPointsOverlay.close(player)
         CoxRewards.dropUnclaimed(player, player.world)
         CoxPotions.clear(player)
-        if (raid != null) releaseIfEmpty(raid)
+        if (raid != null) { releaseIfEmpty(raid); if (!raid.closed) syncReload(raid) }   // a leader who left hands 'Reload' on
     }
 
     /** Called every few ticks (cox_raid.plugin.kts): logouts and leavers free the instance. */

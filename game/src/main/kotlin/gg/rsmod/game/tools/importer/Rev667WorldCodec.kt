@@ -401,6 +401,7 @@ class Rev667LocType(val id: Int) {
          *
          * [multiloc] keeps a varbit transform table instead: the 667 varbit that selects the variant and the local loc id of
          * each variant, the last entry being the default (-1 = none), written as opcode 92 (77 when there is no default).
+         * [multilocVarp]: the selector is a whole VARP instead of a varbit (the 667 client reads either: varbit 0xFFFF + varp).
          */
         fun encodeFromModern(
             src: ModernObjectDef,
@@ -408,6 +409,7 @@ class Rev667LocType(val id: Int) {
             dropped: MutableList<String>,
             multiloc: Pair<Int, IntArray>? = null,
             seqRemap: ((Int) -> Int?)? = null,
+            multilocVarp: Boolean = false,
         ): ByteArray {
             val out = ByteArrayOutputStream()
             fun u8(v: Int) = out.write(v and 0xFF)
@@ -567,8 +569,8 @@ class Rev667LocType(val id: Int) {
                 val (varbit, dest) = multiloc
                 val default = dest.last()
                 u8(if (default != -1) 92 else 77)
-                u16(varbit)
-                u16(0xFFFF)
+                u16(if (multilocVarp) 0xFFFF else varbit)
+                u16(if (multilocVarp) varbit else 0xFFFF)
                 if (default != -1) u16(default)
                 u8(dest.size - 2)
                 for (i in 0 until dest.size - 1) u16(if (dest[i] == -1) 0xFFFF else dest[i])

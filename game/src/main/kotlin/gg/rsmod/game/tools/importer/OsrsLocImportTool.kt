@@ -31,7 +31,8 @@ object OsrsLocImportTool {
             // first room's closed bank chest 47419 (47420 -> 47419 as the raid begins, tsps rsprox).
             "cox-locs" to listOf(30028, 30029, 30030, 47419),
             // CoX first-room steps for the leader before the start (gameval RAIDS_EXIT_STEPS_RELOAD 50000; child of the multiloc 49999, tsps Reload).
-            "cox-reload" to listOf(50000),
+            // 16-11: + the plain steps 29778 and the multiloc 49999 itself (variants first, the multiloc points at them; varp 2386).
+            "cox-reload" to listOf(29778, 50000, 49999),
             // CoX rooms (dossier COX.txt 15-11 23:xx): the locs the rooms' encounters place (not on the cache map), ids from the tsps room
             // units (rsprox captures) = gameval RAIDS_*: crab crystals 29753/29762, guardian blocker 26209, ice-demon lit brazier/storm
             // 29748/29876, muttadile tendrils/rocks/felled tree 29767/30012/30013, mystics' Mark of Power + portals 29741/49996-49998, Olm
@@ -116,6 +117,13 @@ object OsrsLocImportTool {
     private val MULTILOC_VARBITS: Map<Int, Int> = mapOf(29150 to 357)
 
     /**
+     * Multilocs kept on a whole 667 VARP (no fitting varbit): CoX first-room steps RAIDS_EXIT_STEPS_MULTI 49999 -> 29778 steps / 50000
+     * Reload (the leader before the start, tsps). Varp 2386: defined in the 667 cache, used by no clientscript (CS2 scan 16-11), the
+     * client source nor the server (dossier COX.txt 16:3x) - the server sets it to 1 for the raid's leader (CoxRaids).
+     */
+    private val MULTILOC_VARPS: Map<Int, Int> = mapOf(49999 to 2386)
+
+    /**
      * Construction build-mode options a batch drops: the house is furnished, never built, so "Remove"/"Upgrade" would be
      * dead menu entries (the same clean-up [PohObjectOptionTool] does for the rev-667 POH locs).
      */
@@ -185,15 +193,16 @@ object OsrsLocImportTool {
                     val previous = importedSeqs["osrs_loc_loc:$osrsId"]
                     val localId = previous ?: nextLocId++
                     locIdMap[osrsId] = localId
+                    val multilocVarp = osrsId in MULTILOC_VARPS
                     val multiloc =
-                        MULTILOC_VARBITS[osrsId]?.let { varbit ->
+                        (MULTILOC_VARBITS[osrsId] ?: MULTILOC_VARPS[osrsId])?.let { varbit ->
                             val table = def.transforms ?: error("loc $osrsId has no transform table")
                             val default = table.last().let { if (it == -1) -1 else locIdMap[it] ?: error("loc $osrsId: default variant $it not in this batch") }
                             varbit to IntArray(table.size) { i -> if (i == table.size - 1 || table[i] == -1) default else locIdMap[table[i]] ?: default }
                         }
-                    multiloc?.let { (varbit, dest) -> println("PLAN multiloc $osrsId varbit ${def.varbitId}->$varbit transforms=${def.transforms?.toList()}->${dest.toList()}") }
+                    multiloc?.let { (varbit, dest) -> println("PLAN multiloc $osrsId ${if (multilocVarp) "varp" else "varbit"} ${def.varbitId}->$varbit transforms=${def.transforms?.toList()}->${dest.toList()}") }
                     // The loc's idle animation points at the local id OsrsFxImportTool gave the OSRS sequence.
-                    val bytes = Rev667LocType.encodeFromModern(def, { modelIdMap.getValue(it) }, dropped, multiloc) { importedSeqs["seq:$it"] }
+                    val bytes = Rev667LocType.encodeFromModern(def, { modelIdMap.getValue(it) }, dropped, multiloc, { importedSeqs["seq:$it"] }, multilocVarp)
                     check(Rev667LocType.decode(localId, bytes).allModels == def.models.map { modelIdMap.getValue(it) }) { "loc $osrsId model mismatch" }
                     val current = if (previous == null) null else library.data(FeroxImportTool.LOC_INDEX, localId ushr 8, localId and 0xFF)
                     mutations +=
