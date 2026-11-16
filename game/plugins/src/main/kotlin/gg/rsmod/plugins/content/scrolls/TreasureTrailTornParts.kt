@@ -15,7 +15,6 @@ class TreasureTrailThreePartStep(val components: List<TreasureTrailStepCatalogue
     override val tier = ClueScrollTier.MASTER
     override val hint = components.joinToString("<br><br>") { it.hint }
     override val persistenceId = ("master:three-parts:" + components.joinToString("|") { it.key }).hashCode()
-    override fun onAttempt(player: Player): Boolean = false // Only Combine can advance this trail step.
 
     fun digPart(player: Player): Int? = components.indexOfFirst {
         it.action == TreasureTrailStepCatalogue.Action.DIG && it.at(player.tile)

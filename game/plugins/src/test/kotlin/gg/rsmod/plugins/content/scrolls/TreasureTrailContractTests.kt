@@ -15,7 +15,6 @@ class TreasureTrailContractTests {
     private val step = object : ClueStep {
         override val tier = ClueScrollTier.EASY
         override val hint = "contract fixture"
-        override fun onAttempt(player: Player) = false
     }
     private fun player(): Player {
         val defs = mockk<DefinitionSet>()

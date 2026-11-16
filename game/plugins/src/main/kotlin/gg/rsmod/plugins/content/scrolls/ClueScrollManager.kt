@@ -87,15 +87,7 @@ class ClueScrollManager(
          * scrolls of more than one tier at once.
          */
         fun tryDig(player: Player): Boolean {
-            if (TreasureTrailBasicSteps.dig(player)) return true
-            for (tier in ClueScrollTier.values()) {
-                val step = activeStep(player, tier) ?: continue
-                if (step.mapInterfaceId != null && step.onAttempt(player)) {
-                    complete(player, tier)
-                    return true
-                }
-            }
-            return false
+            return TreasureTrailBasicSteps.dig(player)
         }
 
         /**
@@ -106,22 +98,7 @@ class ClueScrollManager(
             player: Player,
             emoteComponent: Int,
         ) {
-            if (TreasureTrailEmotes.perform(player, emoteComponent)) return
-            for (tier in ClueScrollTier.values()) {
-                val step = activeStep(player, tier) as? EmoteClueStep ?: continue
-                if (step.matches(player, emoteComponent)) {
-                    complete(player, tier)
-                    return
-                }
-            }
-        }
-
-        /**
-         * Length is rolled once per trail, with OSRS bounds, rather than an
-         * unbounded donor percentage on every step. Validate replacement before mutation.
-         */
-        private fun complete(player: Player, tier: ClueScrollTier) {
-            advance(player, tier)
+            TreasureTrailEmotes.perform(player, emoteComponent)
         }
 
         /**

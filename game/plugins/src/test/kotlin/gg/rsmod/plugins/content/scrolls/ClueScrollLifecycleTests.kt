@@ -27,12 +27,11 @@ class ClueScrollLifecycleTests {
 
     companion object {
         init {
-            // A successful action exercises the real completion/replacement path.
+            // Transaction fixture; player actions are checked by their subtype tests.
             ClueScrollManager.registerStep(object : ClueStep {
                 override val tier = ClueScrollTier.EASY
                 override val hint = "lifecycle test step"
                 override val mapInterfaceId = 337
-                override fun onAttempt(player: Player) = true
             })
         }
     }
@@ -51,6 +50,19 @@ class ClueScrollLifecycleTests {
         }
     }
 
+    @Test fun `map metadata alone cannot complete a step through dig or emote`() {
+        val player=player()
+        val tier=ClueScrollTier.EASY
+        val scroll=Item(tier.scrollId)
+        player.inventory[0]=scroll
+        ClueScrollManager.prepare(player,scroll,tier)
+        assertFalse(ClueScrollManager.tryDig(player))
+        ClueScrollManager.tryEmote(player,0)
+        assertEquals(0,ClueScrollManager.progress(player,tier))
+        assertSame(scroll,player.inventory[0])
+        assertFalse(player.inventory.contains(tier.casketId))
+    }
+
     @Test fun `full inventory completes within OSRS length and cannot give a second casket`() {
         val player = player()
         val tier = ClueScrollTier.EASY
@@ -60,11 +72,11 @@ class ClueScrollLifecycleTests {
         ClueScrollManager.prepare(player, scroll, tier)
         var completed = 0
         while (player.inventory.contains(tier.scrollId) && completed < 5) {
-            assertTrue(ClueScrollManager.tryDig(player)); completed++
+            assertTrue(ClueScrollManager.advance(player, tier)); completed++
         }
         assertTrue(completed in 2..4)
         assertEquals(1, player.inventory.getItemCount(tier.casketId))
-        assertFalse(ClueScrollManager.tryDig(player))
+        assertFalse(ClueScrollManager.advance(player, tier))
         assertEquals(27, player.inventory.getItemCount(995))
     }
 
@@ -74,7 +86,7 @@ class ClueScrollLifecycleTests {
         val scroll = Item(tier.scrollId)
         player.inventory[0] = scroll
         ClueScrollManager.prepare(player, scroll, tier)
-        assertTrue(ClueScrollManager.tryDig(player)) // easy always requires at least two
+        assertTrue(ClueScrollManager.advance(player, tier)) // easy always requires at least two
         val key = scroll.getAttr(ItemAttribute.CLUE_STEP_KEY)
         player.inventory[0]!!.putAttr(ItemAttribute.CLUE_TASK_KEY, 42).putAttr(ItemAttribute.CLUE_TASK_COMPLETE, 1)
         val tasked = player.inventory[0]!!
@@ -97,7 +109,7 @@ class ClueScrollLifecycleTests {
         val scroll = Item(tier.scrollId)
         player.inventory[0] = scroll
         ClueScrollManager.prepare(player, scroll, tier)
-        assertTrue(ClueScrollManager.tryDig(player))
+        assertTrue(ClueScrollManager.advance(player, tier))
         val held = player.inventory[0]!!
         held.putAttr(ItemAttribute.CLUE_STEP_KEY, Int.MIN_VALUE)
         held.putAttr(ItemAttribute.CLUE_TASK_KEY, 42).putAttr(ItemAttribute.CLUE_TASK_COMPLETE, 1)

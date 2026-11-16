@@ -25,7 +25,6 @@ class TreasureTrailTornPartsTests {
         private val single = object : ClueStep {
             override val tier = ClueScrollTier.MASTER
             override val hint = "single-action test fixture"
-            override fun onAttempt(player: Player) = false
         }
         init { ClueScrollManager.registerStep(step); ClueScrollManager.registerStep(single) }
     }
