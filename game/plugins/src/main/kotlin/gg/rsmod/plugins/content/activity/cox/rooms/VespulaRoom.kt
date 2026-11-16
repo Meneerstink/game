@@ -90,7 +90,8 @@ class VespulaRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, 
         var t = start
         repeat(8) {
             val near = (t.x - 16..t.x + size + 16).flatMap { x -> (t.z - 16..t.z + size + 16).map { z -> Tile(x, z, t.height) } }
-                .filter { contains(it) && !world.collision.isClipped(it) }
+                // A tile a player can really stand on: open in all four directions (the ledge's edge tiles are half walls).
+                .filter { t2 -> contains(t2) && !world.collision.isClipped(t2) && DIRS.none { d -> world.collision.isBlocked(t2, d, false) } }
                 .minByOrNull { gap(t, it) } ?: return t
             if (gap(t, near) <= 7) return t
             val sx = if (near.x < t.x) -1 else if (near.x > t.x + size - 1) 1 else 0
@@ -339,6 +340,7 @@ class VespulaRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, 
         )
         val BOILS = listOf(listOf(Tile(3267, 5295), Tile(3267, 5296)), listOf(Tile(3311, 5308), Tile(3312, 5308)), listOf(Tile(3356, 5296), Tile(3356, 5295)))
         val TENDRILS = listOf(listOf(Tile(3279, 5280), Tile(3280, 5280)), listOf(Tile(3311, 5280), Tile(3312, 5280)), listOf(Tile(3343, 5280), Tile(3344, 5280)))
+        private val DIRS = listOf(gg.rsmod.game.model.Direction.NORTH, gg.rsmod.game.model.Direction.EAST, gg.rsmod.game.model.Direction.SOUTH, gg.rsmod.game.model.Direction.WEST)
         val PORTAL = listOf(Tile(3281, 5300), Tile(3318, 5291), Tile(3339, 5300))
         val VESPULA = listOf(Tile(3281, 5290), Tile(3308, 5292), Tile(3341, 5290))
         val PORTAL_FROM = listOf(Tile(3282, 5302), Tile(3320, 5292), Tile(3341, 5302))
