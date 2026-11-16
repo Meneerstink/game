@@ -22,9 +22,9 @@ import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
  */
 private val tektonHit = java.util.Collections.newSetFromMap(java.util.WeakHashMap<Npc, Boolean>())
 
-private fun isTekton(n: Npc) = world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, n.id).name.equals("Tekton", ignoreCase = true)
+fun isTekton(n: Npc) = world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, n.id).name.equals("Tekton", ignoreCase = true)
 
-private fun lowerDefence(victim: Pawn, percent: Int) {
+fun lowerDefence(victim: Pawn, percent: Int) {
     when (victim) {
         is Player -> { val l = victim.skills.getCurrentLevel(Skills.DEFENCE); victim.skills.setCurrentLevel(Skills.DEFENCE, l - l * percent / 100) }
         is Npc -> { val l = victim.stats.getCurrentLevel(NpcSkills.DEFENCE); victim.stats.setCurrentLevel(NpcSkills.DEFENCE, l - l * percent / 100) }
@@ -53,7 +53,7 @@ CoxLootItems.local(21003)?.let { maul ->
 }
 
 /** Wiki: the highest offensive stat loses 5%; ties drain Attack and Strength, then Ranged, then Magic. */
-private fun drainHighest(victim: Pawn) {
+fun drainHighest(victim: Pawn) {
     if (victim !is Npc) return
     val s = victim.stats
     val melee = maxOf(s.getCurrentLevel(NpcSkills.ATTACK), s.getCurrentLevel(NpcSkills.STRENGTH))

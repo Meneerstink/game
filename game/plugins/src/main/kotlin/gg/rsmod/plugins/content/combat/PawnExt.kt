@@ -264,6 +264,8 @@ fun Pawn.dealHit(
         damage = gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.modifyIncomingDamage(target, hitType, damage.toInt()).toDouble()
         // Elysian / Divine spirit shield passive (SpiritShields).
         damage = SpiritShields.modifyIncomingDamage(target, damage.toInt()).toDouble()
+        // Dinh's bulwark 'Block': -20% from NPCs only (Wiki: not in PvP), 8 ticks after switching (DinhsBulwark).
+        if (this is Npc) damage = gg.rsmod.plugins.content.activity.cox.DinhsBulwark.modifyIncoming(target, damage.toInt()).toDouble()
     }
     // Tormented demons: fire shield and style prayer (see TormentedDemonCombatScript).
     // RCV-012 B7: misses reach the rule too - both donors count every hit, a miss included, toward the prayer switch.

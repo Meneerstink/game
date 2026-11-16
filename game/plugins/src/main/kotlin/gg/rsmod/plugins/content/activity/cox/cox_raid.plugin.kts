@@ -367,3 +367,5 @@ CoxLootItems.local(21015)?.let { bulwark ->
     gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.register(
         gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.Look(intArrayOf(crush, crush, crush, crush), block = CoxIds.seq(7512)), bulwark)
 }
+// DinhsBulwark: equipping the bulwark starts the 8 ticks before Block reduces damage.
+CoxLootItems.local(DinhsBulwark.OSRS)?.let { bulwark -> on_item_equip(bulwark) { DinhsBulwark.changed(player, false, gg.rsmod.game.model.timer.ATTACK_DELAY) } }

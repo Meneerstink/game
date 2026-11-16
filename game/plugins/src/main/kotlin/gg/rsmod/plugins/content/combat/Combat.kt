@@ -149,13 +149,21 @@ object Combat {
         pawn: Pawn,
         target: Pawn,
         combatClass: CombatClass,
-    ): Boolean = canEngage(pawn, target) && getStrategy(combatClass).canAttack(pawn, target)
+    ): Boolean = bulwarkAllows(pawn, combatClass == CombatClass.MAGIC) && canEngage(pawn, target) && getStrategy(combatClass).canAttack(pawn, target)
 
     fun canAttack(
         pawn: Pawn,
         target: Pawn,
         strategy: CombatStrategy,
-    ): Boolean = canEngage(pawn, target) && strategy.canAttack(pawn, target)
+    ): Boolean = bulwarkAllows(pawn, strategy is MagicCombatStrategy) && canEngage(pawn, target) && strategy.canAttack(pawn, target)
+
+    /** Dinh's bulwark (DinhsBulwark): no attack in Block, no combat spells ('Your bulwark gets in the way.'). Others: always true. */
+    private fun bulwarkAllows(pawn: Pawn, magic: Boolean): Boolean {
+        val p = pawn as? Player ?: return true
+        val refusal = gg.rsmod.plugins.content.activity.cox.DinhsBulwark.refusal(p, magic) ?: return true
+        if (refusal.isNotEmpty()) p.message(refusal)
+        return false
+    }
 
     fun isAttackDelayReady(pawn: Pawn): Boolean = !pawn.timers.has(ATTACK_DELAY) &&
         !pawn.timers.has(gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.ICE_ATTACK_LOCK)
