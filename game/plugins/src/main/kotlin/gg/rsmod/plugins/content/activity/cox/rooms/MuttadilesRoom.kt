@@ -156,11 +156,25 @@ class MuttadilesRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(rai
         largeState = 1
         animate(lg, 7423)
         val towards = small?.tile ?: tendrilTiles.first()
-        val dx = towards.x - lg.tile.x; val dz = towards.z - lg.tile.z
-        val step = if (kotlin.math.abs(dx) > kotlin.math.abs(dz)) Integer.signum(dx) to 0 else 0 to Integer.signum(dz)
-        lg.walkTo(lg.tile.transform(step.first * 5, step.second * 5), detectCollision = false)
-        later(5) { if (alive(lg)) { CoxIds.npc(7563)?.let { lg.setTransmogId(it) }; configure(lg, 7563, 4, 7426, keepHp = true) } }
+        // Wiki: 'the larger one emerges from the water and starts attacking' - onto the ground next to where the small one fell. The old
+        // fixed 5-tile step left it in the water in variant 0 (16-11 test: stayed on 6406,4, out of reach): the nearest spot near the
+        // small one's tile where its whole 5x5 body stands on open ground.
+        val land = landFor(lg, towards)
+        lg.walkTo(land, detectCollision = false)
+        later(5) {
+            if (!alive(lg)) return@later
+            if (lg.tile.x != land.x || lg.tile.z != land.z) lg.moveTo(land)
+            CoxIds.npc(7563)?.let { lg.setTransmogId(it) }; configure(lg, 7563, 4, 7426, keepHp = true)
+        }
         later(7) { largeState = 2 }
+    }
+
+    private fun landFor(lg: Npc, near: Tile): Tile {
+        val size = 5
+        fun open(t: Tile) = (0 until size).all { x -> (0 until size).all { z ->
+            val f = Tile(t.x + x, t.z + z, t.height); contains(f) && !world.collision.isClipped(f) } }
+        return (near.x - 8..near.x + 8).flatMap { x -> (near.z - 8..near.z + 8).map { z -> Tile(x, z, near.height) } }
+            .filter { open(it) }.minByOrNull { it.getDistance(near) } ?: Tile(lg.tile)
     }
 
     /** Submerged/emerging it can't be hurt (Wiki: unattackable). */
