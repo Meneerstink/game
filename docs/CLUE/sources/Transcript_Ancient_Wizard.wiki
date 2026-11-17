@@ -1,0 +1,11 @@
+{{Transcript|npc}}
+
+==Overhead dialogue==
+===Upon spawn===
+* {{trandom}}
+* {{topt|Dialogue 1}}
+** '''Ancient Wizard:''' {{overhead|Die!}}
+* {{topt|Dialogue 2}}
+** '''Ancient Wizard:''' {{overhead|For Zaros!}}
+* {{topt|Dialogue 3}}
+** '''Ancient Wizard:''' {{overhead|Perish in agony!}}

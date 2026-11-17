@@ -1,0 +1,5 @@
+{{Transcript|npc}}
+
+==Overhead dialogue==
+===Upon spawn===
+* '''Bandosian guard:''' {{overhead|Gggggrrrrrrrrr!!!}}

@@ -1,0 +1,24 @@
+{{Transcript|NPC}}
+
+==Overhead dialogue==
+===Upon spawn===
+* {{trandom}}
+* {{topt|Dialogue 1}}
+** '''Brassican Mage:''' {{overhead|Vegetate!}}
+* {{topt|Dialogue 2}}
+** '''Brassican Mage:''' {{overhead|Die deliciously!}}
+* {{topt|Dialogue 3}}
+** '''Brassican Mage:''' {{overhead|Rest in cabbage!}}
+* {{topt|Dialogue 4}}
+** '''Brassican Mage:''' {{overhead|Grow up or leave.}}
+
+===When eating a cabbage while fighting the mage===
+* {{trandom}}
+* {{topt|Dialogue 1}}
+** '''Brassican Mage:''' {{overhead|Healing through deliciousness, must be a re-leaf [player name].}}
+* {{topt|Dialogue 2}}
+** '''Brassican Mage:''' {{overhead|Ah, you romaine calm enough for a nutritious meal [player name]. Wise.}}
+* {{topt|Dialogue 3}}
+** '''Brassican Mage:''' {{overhead|Leaf now and I'll spare you [player name]!}}
+* {{topt|Dialogue 4}}
+** '''Brassican Mage:''' {{overhead|Yes! Pray that nutrition can save you [player name]!}}

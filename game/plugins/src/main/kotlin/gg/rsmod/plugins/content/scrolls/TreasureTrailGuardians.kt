@@ -91,6 +91,7 @@ object TreasureTrailGuardians {
                 return Result.UNAVAILABLE
             }
             sessions[player] = Session(player, step, contract, actors.toList())
+            TreasureTrailGuardianDialogue.spawned(player, sources, actors)
             return Result.FIGHTING
         } finally {
             spawning.remove(player)
