@@ -218,11 +218,15 @@ def main():
                                 errors=int(suite.attrib['errors']), skipped=int(suite.attrib.get('skipped', '0')),
                                 modified=path.stat().st_mtime, fresh=path.stat().st_mtime >= started))
     changed = [p for p in sorted(set(before) | set(after)) if before.get(p) != after.get(p)]
-    # Gradle may legitimately reuse an up-to-date test task; a successful task graph
-    # validates that cache entry against its declared inputs. Record freshness separately.
-    accepted = result.returncode == 0 and not changed and not missing and all(r['failures'] == r['errors'] == r['skipped'] == 0 for r in reports)
+    # A local UP-TO-DATE task validates its own reports. Remote success cannot
+    # validate older local XML when the wrapper's report transfer fails or omits
+    # an UP-TO-DATE remote report. Keep that evidence incomplete, never green.
+    remote = '[rgradle] momentopname ' in (out/'gradle.txt').read_text(errors='replace')
+    stale_remote = [r['name'] for r in reports if remote and not r['fresh']]
+    accepted = result.returncode == 0 and not changed and not missing and not stale_remote and all(r['failures'] == r['errors'] == r['skipped'] == 0 for r in reports)
     summary = dict(exit=result.returncode, unchangedInputs=not changed, changed=changed, missing=missing,
-                   accepted=accepted, tests=sum(r['tests'] for r in reports), skipped=sum(r['skipped'] for r in reports), classes=reports)
+                   accepted=accepted, staleRemoteReports=stale_remote,
+                   tests=sum(r['tests'] for r in reports), skipped=sum(r['skipped'] for r in reports), classes=reports)
     (out/'summary.json').write_text(json.dumps(summary, indent=2))
     print('Integration complete:', {k:v for k,v in summary.items() if k != 'classes'}, flush=True)
     if not accepted:

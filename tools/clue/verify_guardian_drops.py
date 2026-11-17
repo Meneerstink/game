@@ -130,7 +130,19 @@ def main():
         tests=[ROOT/'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/areas/watson/ClueMimicSceneryTests.kt']
         inputs=libraries+tests+[ROOT/'data/cfg/clue/mimic-scenery.json']
         names=['gg.rsmod.plugins.content.areas.watson.ClueMimicSceneryTests']
-    frozen={str(p):sha256(p.read_bytes()).hexdigest() for p in inputs}
+    if '--casket-client-runtime' in sys.argv:
+        main=ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls'
+        libraries=[main/(name+'.kt') for name in ['ClueCasketRewards','ClueRewardCatalogue',
+                   'ClueCompletions','TreasureTrailStepCatalogue','ClueRewardView']]
+        cohorts=['ClueCasketTransactionTests','TreasureTrailStepCatalogueTests']
+        tests=[ROOT/'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/scrolls'/(name+'.kt') for name in cohorts]
+        inputs=libraries+tests+list((ROOT/'data/cfg/clue').glob('*'))
+        # Claude's round2 installDist matches the reviewed runtime. Local build/libs
+        # may predate remote builds, so never put those stale jars first here.
+        installed=list((ROOT/'game/build/install/game/lib').glob('*.jar'))
+        inputs += [p for p in installed if p.name in ('game-0.0.4.jar','plugins-0.0.4.jar')]
+        names=['gg.rsmod.plugins.content.scrolls.'+name for name in cohorts]
+    frozen={str(p):sha256(p.read_bytes()).hexdigest() for p in inputs if p.is_file()}
     compiler=[jar(m) for m in ['org.jetbrains.kotlin/kotlin-compiler-embeddable/1.8.0',
         'org.jetbrains.kotlin/kotlin-stdlib/1.8.0','org.jetbrains.kotlin/kotlin-script-runtime/1.8.0',
         'org.jetbrains.kotlin/kotlin-reflect/1.8.0','org.jetbrains.intellij.deps/trove4j','org.jetbrains/annotations']]
@@ -142,6 +154,8 @@ def main():
     plugin=ROOT/'game/plugins/build/libs/plugins-0.0.4.jar'
     cp=[str(OUT/'classes'),str(ROOT/'game/build/libs/game-0.0.4.jar'),str(plugin)]
     cp += [str(p) for p in (ROOT/'game/build/install/game/lib').glob('*.jar')]+deps
+    if '--casket-client-runtime' in sys.argv:
+        cp=[str(OUT/'classes')]+[str(p) for p in installed]+deps
     def run(args): subprocess.run(list(map(str,args)),cwd=ROOT,check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
     args=['-no-stdlib','-no-reflect','-jvm-target','11','-nowarn','-Xfriend-paths='+str(plugin),
           '-cp',';'.join(cp),'-d',str(OUT/'classes')]+list(map(str,libraries+tests))
@@ -156,7 +170,7 @@ def main():
     assert all(sha256(Path(p).read_bytes()).hexdigest()==h for p,h in frozen.items())
     (OUT/'proof.json').write_text(json.dumps(dict(inputs=frozen,unchanged=True,tests=output),indent=2)+'\n')
     (ROOT/'build/clue/guardian-assets/latest-verify.txt').write_text(str(OUT))
-    print('Fresh guardian loot tests passed:',OUT,flush=True)
+    print('Fresh focused tests passed:',OUT,flush=True)
 
 
 if __name__=='__main__': main()
