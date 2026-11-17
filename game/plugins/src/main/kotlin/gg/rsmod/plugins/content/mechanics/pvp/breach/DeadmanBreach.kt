@@ -1016,7 +1016,7 @@ object DeadmanBreach {
                 val item = if (drop.noted && def.noteLinkId > 0) def.noteLinkId else drop.item
                 val reward = gg.rsmod.game.model.item.Item(item, drop.amount)
                 val trinkets = gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets
-                if (!trinkets.collectDrop(player, reward, trinkets.lootValue?.invoke(player, reward) ?: 0)) {
+                if (!trinkets.collectDrop(player, reward, trinkets.valueOfDrop(player, reward))) {
                     world.spawn(GroundItem(item, drop.amount, tile, player))
                 }
                 logged += drop.item to drop.amount

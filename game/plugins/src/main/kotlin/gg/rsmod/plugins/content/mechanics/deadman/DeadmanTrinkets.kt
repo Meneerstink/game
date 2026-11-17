@@ -17,8 +17,11 @@ object DeadmanTrinkets {
     val LOOT_ENABLED = AttributeKey<Int>("dmm2_avarice_enabled")
     val NOTE_LOOT = AttributeKey<Int>("dmm2_avarice_note")
     val LOOT_MIN_VALUE = AttributeKey<Int>("dmm2_avarice_min_value")
-    /** Exact OSRS Value definition is not published by the wiki. Claude installs the verified valuation; default only threshold 0. */
+    /** Optional measured OSRS valuation. Until then use the documented local GE-stack-value advice (PHASE3-SOURCES). */
     @Volatile var lootValue: ((Player, Item) -> Int)? = null
+    fun valueOfDrop(player: Player, item: Item): Int = lootValue?.invoke(player, item) ?:
+        gg.rsmod.plugins.content.mechanics.exchange.GePrice.stack(player.world, item)
+            .coerceIn(0L, Int.MAX_VALUE.toLong()).toInt()
     enum class Result { OK, NOT_READY, ITEM_CHANGED, NO_SPACE, NO_COINS, INVALID_SETTING, COOLDOWN, OBSTRUCTED }
     fun carries(player: Player, item: ItemId): Boolean = item.local?.let { id ->
         player.inventory.filterNotNull().any { it.id == id && it.amount > 0 && !it.getDef(player.world.definitions).noted }

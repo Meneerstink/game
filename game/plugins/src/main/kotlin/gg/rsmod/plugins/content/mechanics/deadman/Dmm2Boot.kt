@@ -14,12 +14,17 @@ object Dmm2Boot {
         val rewards = NigelRewardStore.Reward.values().mapNotNull { reward -> Dmm2Ids.item(reward.sourceId)?.let { reward to it } }.toMap()
         if (rewards.size == NigelRewardStore.Reward.values().size) {
             val file = File(RspsPaths.data("cfg/dmm2/skins.tsv"))
-            val skins = if (!file.isFile) emptyList() else file.readLines().filter { it.isNotBlank() && !it.trimStart().startsWith("#") }.map {
+            val skins = (if (!file.isFile) emptyList() else file.readLines().filter { it.isNotBlank() && !it.trimStart().startsWith("#") }.map {
                 val f = it.split('\t'); require(f.size in 3..4)
                 val base = f[1].toInt()
                 NigelRewardStore.Skin(NigelRewardStore.Reward.valueOf(f[0]), base, f[2].toInt(),
                     if (f.size == 4) f[3].split(',').map(String::toInt).toSet() else setOf(base))
-            }
+            }).toMutableList()
+            // Read-only alias for gameplay/death. NigelRewardStore.convert explicitly refuses this recipe-only cape.
+            val ancient = Dmm2Ids.ItemId.ANCIENT_DEADMAN_CAPE.local
+            val baseAncient = gg.rsmod.plugins.content.items.osrs.AncientCape.assets.cape
+            if (ancient != null && baseAncient != null && skins.none { it.cosmetic == ancient })
+                skins += NigelRewardStore.Skin(NigelRewardStore.Reward.CAPE_FABRIC, baseAncient, ancient)
             NigelRewardStore.install(NigelRewardStore.Contract(rewards, skins, Dmm2Ids.item(33122)))
         }
         ThunderKhopesh.register()

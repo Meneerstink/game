@@ -416,7 +416,7 @@ object DropTableFactory {
         owner: Pawn,
     ) {
         val def = world.definitions.get(ItemDef::class.java, item.id)
-        if (owner is Player && gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets.collectDrop(owner, item, gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets.lootValue?.invoke(owner, item) ?: 0)) return
+        if (owner is Player && gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets.collectDrop(owner, item, gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets.valueOfDrop(owner, item))) return
         if (def.stackable) {
             val ground = GroundItem(item.id, item.amount, tile, owner as Player)
             world.spawn(ground)

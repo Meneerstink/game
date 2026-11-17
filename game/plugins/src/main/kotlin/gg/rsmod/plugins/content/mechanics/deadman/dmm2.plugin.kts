@@ -209,6 +209,17 @@ Dmm2Ids.ItemId.VENGEANCE.local?.let { id -> itemOption(id, "Cast") {
         }
     }
 } }
+gg.rsmod.plugins.content.items.osrs.AncientCape.assets.fabric?.let { fabric ->
+    listOf(29613, 29615, 29617).mapNotNull { Dmm2Ids.item(it) }.forEach { cape ->
+        on_item_on_item(item1 = fabric, item2 = cape) {
+            val slot = player.inventory.getItemIndex(cape, skipAttrItems = false)
+            player.queue {
+                if (options("Yes, I wish to proceed.", "No, I do not wish to proceed.", title = "This process is irreversible. Are you sure you wish to proceed?") == 1)
+                    NigelRewardStore.active?.craftAncientCape(player, slot, cape)
+            }
+        }
+    }
+}
 Dmm2Ids.ItemId.FIRE_RUBY.local?.let { id ->
     on_item_on_obj(obj = Altar.FIRE.altar, item = id) {
         val tile = Tile(player.tile)

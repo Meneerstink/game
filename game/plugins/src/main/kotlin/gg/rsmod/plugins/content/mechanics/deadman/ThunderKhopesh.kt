@@ -17,11 +17,14 @@ import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
 object ThunderKhopesh {
     const val SPECIAL_ENERGY = 60
     val PVP_BOLT_TICKS = listOf(7, 9, 11, 13)
+    // Phase3 advice: use the existing melee launch delay, including dealHit's player-PID adjustment.
+    // The wiki establishes one initial PvP hit; it does not establish its animation/impact offset.
+    const val STANDARD_MELEE_DELAY = 1
     interface Appearance {
         val passiveDelay: Int
         val pvmHitDelays: List<Int>
-        /** Null keeps the ambiguous PvP initial-hit interpretation OFF until OSRS observation/review. */
-        val pvpInitialDelay: Int? get() = null
+        /** Override after OSRS measurement; null explicitly disables the PvP special before energy is spent. */
+        val pvpInitialDelay: Int? get() = STANDARD_MELEE_DELAY
         fun swing(player: Player, special: Boolean)
         fun bolt(player: Player, tile: Tile)
     }

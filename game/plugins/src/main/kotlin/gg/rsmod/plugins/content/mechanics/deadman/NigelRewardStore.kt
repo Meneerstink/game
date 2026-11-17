@@ -134,9 +134,29 @@ class NigelRewardStore(contract: Contract) {
         val item = player.inventory[slot] ?: return Result.ITEM_CHANGED
         if (item.id != expectedId || item.amount != 1) return Result.ITEM_CHANGED
         val skin = contract.skins.firstOrNull { item.id in it.acceptedBases || item.id == it.cosmetic } ?: return Result.UNSUPPORTED
+        // Wiki Imbued ancient cape (Deadman) rev15403804: made with Ancient fabric, never by showing Nigel the plain cape.
+        if (Dmm2Ids.ItemId.ANCIENT_DEADMAN_CAPE.matches(skin.cosmetic)) return Result.UNSUPPORTED
         if (!unlocked(player, skin.unlock)) return Result.LOCKED
         if (item.getDef(player.world.definitions).noted) return Result.NOTED_OR_MODIFIED
         player.inventory[slot] = Item(if (item.id == skin.cosmetic) skin.base else skin.cosmetic).copyAttr(item)
+        player.persistNow()
+        return Result.OK
+    }
+
+    /** Irreversible Ancient fabric + one of the THREE imbued Deadman god capes; no direct Nigel conversion. */
+    fun craftAncientCape(player: Player, slot: Int, expectedId: Int): Result {
+        val result = Dmm2Ids.ItemId.ANCIENT_DEADMAN_CAPE.local ?: return Result.NOT_READY
+        val fabric = gg.rsmod.plugins.content.items.osrs.AncientCape.assets.fabric ?: return Result.NOT_READY
+        val allowed = listOf(29613, 29615, 29617).mapNotNull { Dmm2Ids.item(it) }
+        if (expectedId !in allowed) return Result.UNSUPPORTED
+        if (slot !in 0 until player.inventory.capacity) return Result.INVALID_SLOT
+        val item = player.inventory[slot] ?: return Result.ITEM_CHANGED
+        if (item.id != expectedId || item.amount != 1) return Result.ITEM_CHANGED
+        if (item.hasAnyAttr() || item.getDef(player.world.definitions).noted) return Result.NOTED_OR_MODIFIED
+        val inventory = ItemContainer(player.inventory)
+        if (!inventory.remove(fabric, assureFullRemoval = true).hasSucceeded()) return Result.ITEM_CHANGED
+        inventory[slot] = Item(result)
+        DeadmanInventory.publish(inventory, player.inventory)
         player.persistNow()
         return Result.OK
     }

@@ -1,0 +1,112 @@
+{{Redirect|Zarosian cape|the Treasure Trails reward|ancient cloak}} 
+{{Infobox Item
+|version1 = Normal
+|version2 = Broken
+|version3 = Locked
+|name1 = Imbued ancient cape
+|name2 = Imbued ancient cape (broken)
+|name3 = Imbued ancient cape (l)
+|image1 = [[File:Imbued ancient cape.png]]
+|image2 = [[File:Imbued ancient cape (broken).png]]
+|image3 = [[File:Imbued ancient cape.png]]
+|release = [[7 October]] [[2026]]
+|update = Pete Kayer's Challenges
+|members = Yes
+|quest = No
+|exchange = No
+|tradeable = No
+|bankable = Yes
+|equipable = Yes
+|stackable = No
+|noteable = No
+|options1 = Wear, Drop
+|options2 = Drop
+|options3 = Wear, Drop
+|examine = A cape from an almighty god, imbued with great power.
+|value = 80000
+|alchable = No
+|weight = 0.453
+|id1 = 34633
+|id2 = 34635
+|id3 = 34637
+}}
+{{Synced switch
+|version1 = [[File:Imbued ancient cape detail.png|130px|left]]
+|version2 = [[File:Imbued ancient cape (broken) detail.png|130px|left]]
+|version3 = [[File:Imbued ancient cape detail.png|130px|left]]
+}}
+The '''imbued ancient cape''' is a cosmetic variant of an [[God capes#Imbuing|imbued god cape]]. It is created by using an [[ancient fabric]], a reward from [[Pete Kayer]]'s final challenge, on one of the imbued god capes obtained from [[Mage Arena II]]. This process is irreversible. As a [[Zaros#Affiliated_items|Zarosian item]], it will grant [[god protection]] towards Zarosian NPCs in the [[God Wars Dungeon]].
+
+If the player dies a PvP death and the item is unprotected, it will remain in the player's inventory; however, the item will be in a broken, unusable state and must be repaired by using it on [[Perdu]] and paying him {{NoCoins|96,000}} [[coins]].
+
+The imbued ancient cape can be combined with the [[max cape]] to change its appearance by turning it into the [[imbued ancient max cape]].
+
+{{Costume storage|cape rack}}
+
+==Combat stats==
+{{Infobox Bonuses
+|version1 = Normal
+|version2 = Broken
+|version3 = Locked
+|astab = 0
+|aslash = 0
+|acrush = 0
+|amagic = +15
+|arange = 0
+|dstab = +3
+|dslash = +3
+|dcrush = +3
+|dmagic = +15
+|drange = 0
+|str = 0
+|rstr = 0
+|mdmg = 2
+|prayer = 0
+|slot = cape
+|image = [[File:Imbued ancient cape equipped male.png]]
+|altimage = [[File:Imbued ancient cape equipped female.png]]
+}}
+
+==Creation==
+<tabber>Saradomin = {{Recipe
+|members = Yes
+|ticks = 0
+|mat1 = Imbued Saradomin cape
+|mat2 = Ancient fabric
+|mat2cost = No
+|output1 = Imbued ancient cape
+|output1cost = No
+}}
+|-|
+Zamorak = {{Recipe
+|members = Yes
+|ticks = 0
+|mat1 = Imbued Zamorak cape
+|mat2 = Ancient fabric
+|mat2cost = No
+|output1 = Imbued ancient cape
+|output1cost = No
+}}
+|-|
+Guthix = {{Recipe
+|members = Yes
+|ticks = 0
+|mat1 = Imbued Guthix cape
+|mat2 = Ancient fabric
+|mat2cost = No
+|output1 = Imbued ancient cape
+|output1cost = No
+}}
+</tabber>
+
+==Products==
+{{Uses material list|Imbued ancient cape}}
+
+==Used in recommended equipment==
+''See also [[God capes#Used in recommended equipment]]''
+{{Used in recommended equipment|Imbued ancient cape, Imbued god cape}}
+
+{{Mage Arena II}}
+{{Magic armour}}
+{{Cape}}
+[[Category:Lockable items]]
