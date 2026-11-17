@@ -1,0 +1,55 @@
+{
+  "232": {
+    "0": {
+      "type": 0,
+      "content": 0,
+      "x": 0,
+      "y": 0,
+      "width": 190,
+      "height": 261,
+      "widthMode": 0,
+      "heightMode": 0,
+      "xMode": 0,
+      "yMode": 0,
+      "parent": -1,
+      "hidden": false,
+      "scrollW": 0,
+      "scrollH": 0,
+      "noClickThrough": 0
+    },
+    "1": {
+      "type": 0,
+      "content": 0,
+      "x": 0,
+      "y": 0,
+      "width": 190,
+      "height": 261,
+      "widthMode": 0,
+      "heightMode": 0,
+      "xMode": 0,
+      "yMode": 0,
+      "parent": 0,
+      "hidden": false,
+      "scrollW": 0,
+      "scrollH": 0,
+      "noClickThrough": 0
+    },
+    "2": {
+      "type": 0,
+      "content": 0,
+      "x": 0,
+      "y": 0,
+      "width": 190,
+      "height": 261,
+      "widthMode": 0,
+      "heightMode": 0,
+      "xMode": 0,
+      "yMode": 0,
+      "parent": 1,
+      "hidden": false,
+      "scrollW": 0,
+      "scrollH": 0,
+      "noClickThrough": 0
+    }
+  }
+}

@@ -81,6 +81,23 @@ object OsrsItemImportTool {
      */
     val BATCHES: Map<String, List<Spec>> by lazy {
         mapOf(
+            // DMM2: exact 51-parent order from docs/dmm2-research/preflight-output/bundle-item.txt (cache 2686).
+            // Notes/count forms are imported by their parent; existing trinkets retain their local IDs.
+            "dmm2-items" to listOf(
+                Spec(13307, noted = true), Spec(13317, noted = true), Spec(13318, noted = true), Spec(13319, noted = true),
+                Spec(13660, noted = true), Spec(22331, noted = true), Spec(22333, noted = true), Spec(22335, noted = true),
+                Spec(26149, noted = true), Spec(28531, noted = true), Spec(28534, noted = true), Spec(28537, noted = true),
+                Spec(28540, noted = true), Spec(28543, noted = true), Spec(28545, noted = true), Spec(28547, noted = true),
+                Spec(28549, noted = true), Spec(28561, noted = true), Spec(28567, noted = true), Spec(29599, noted = true),
+                Spec(29602, noted = true), Spec(29605, noted = true), Spec(29607, noted = true), Spec(29609, noted = true),
+                Spec(29611, noted = true), Spec(29613, noted = true), Spec(29615, noted = true), Spec(29617, noted = true),
+                Spec(29619, noted = true), Spec(29622, noted = true), Spec(29625, noted = true), Spec(29628, noted = true),
+                Spec(33012, noted = true), Spec(33015, noted = true), Spec(33018, noted = true), Spec(33021, noted = true),
+                Spec(33023, noted = true), Spec(33025, noted = true), Spec(33027, noted = true), Spec(33029, noted = true),
+                Spec(33031, noted = true), Spec(33033, noted = true), Spec(33035, noted = true), Spec(33036, noted = true),
+                Spec(33041, noted = true), Spec(33050, noted = true), Spec(33063, noted = true), Spec(33122, noted = true),
+                Spec(34422, noted = true), Spec(34425, noted = true), Spec(13658, noted = true),
+            ),
             // N415: OSRS Wiki + cache 2686 MA2 remains/symbol. Local ids come from the importer, never the upstream ids.
             // Ancient fabric/capes are absent in 2686 and intentionally require an isolated newer-source batch.
             "mage-arena" to listOf(Spec(21797), Spec(21798), Spec(21799), Spec(21800)),

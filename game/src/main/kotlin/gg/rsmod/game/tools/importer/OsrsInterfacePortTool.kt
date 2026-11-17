@@ -34,14 +34,24 @@ object OsrsInterfacePortTool {
     val TARGETS = OsrsItemImportTool.TARGETS
     // CoX 15-11: the raid's own decode/report/table ('cox' as the group list) - a CoX run must never read or merge into the ToA files.
     private var raid = "toa"
-    val JSON get() = File(RspsPaths.root(if (raid == "cox") "team/dossiers/COX-notities/cache/interfaces.json" else "team/dossiers/N462-notities/toa/cache/interfaces.json"))
-    val REPORT get() = File(RspsPaths.root(if (raid == "cox") "team/dossiers/COX-notities/94-cox-interfaces-claude.tsv" else "team/dossiers/N462-notities/toa/94-toa-interfaces-claude.tsv"))
+    val JSON get() = File(RspsPaths.root(when (raid) {
+        "dmm2" -> "docs/dmm2-research/dmm2-interfaces.json"
+        "cox" -> "team/dossiers/COX-notities/cache/interfaces.json"
+        else -> "team/dossiers/N462-notities/toa/cache/interfaces.json"
+    }))
+    val REPORT get() = File(RspsPaths.root(when (raid) {
+        "dmm2" -> "docs/dmm2-research/dmm2-interfaces-applied.tsv"
+        "cox" -> "team/dossiers/COX-notities/94-cox-interfaces-claude.tsv"
+        else -> "team/dossiers/N462-notities/toa/94-toa-interfaces-claude.tsv"
+    }))
     private val TABLE get() = File(RspsPaths.data("cfg/$raid/interfaces.tsv"))
     /** CoX (tsps rsprox): 499 recruitment board, 500 party tab, 507 party details, 513 points overlay, 539 rewards. */
     val COX = listOf(499, 500, 507, 513, 539, 271, 550) // + storage units (tsps Storage.ChambersOfXeric.js: private 271, shared 550; the side panel = 667 1125)
     const val INDEX_INTERFACES = 3
     const val INDEX_SPRITES = 8
     const val SPRITE_FLOOR = 8819
+    // UI230 cannot be ported: source font645 has no proven667 mapping. Do not substitute another font.
+    val DMM2 = listOf(232)
     val TOA = listOf(481, 482, 771, 772, 773, 774, 775, 776, 777, 778)
 
     // OSRS sprite groups (RuneLite gameval SpriteID) used by the rebuilt frame scripts.
@@ -683,8 +693,8 @@ object OsrsInterfacePortTool {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        raid = if (args.first() == "cox" || "--cox" in args) "cox" else "toa"
-        val groups = args.first().let { if (it == "toa") TOA else if (it == "cox") COX else it.split(',').map(String::toInt) }
+        raid = if (args.first() == "dmm2") "dmm2" else if (args.first() == "cox" || "--cox" in args) "cox" else "toa"
+        val groups = args.first().let { if (it == "dmm2") DMM2 else if (it == "toa") TOA else if (it == "cox") COX else it.split(',').map(String::toInt) }
         val apply = "--apply" in args
         val root = ObjectMapper().readTree(JSON)
         val library = CacheLibrary(TARGETS[0])

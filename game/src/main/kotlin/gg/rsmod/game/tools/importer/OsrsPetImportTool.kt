@@ -348,6 +348,8 @@ object OsrsPetImportTool {
      */
     val SKELETAL_NPC_BATCHES: Map<String, List<Pair<Int, List<Int>>>> =
         mapOf(
+            // DMM2: Lil Wisp, rig2138, movement10230/10233 from cache2686; real sidecar required after import.
+            "dmm2-wisp" to listOf(15571 to emptyList()),
             // Artio (NpcID CALLISTO_SINGLES 11992, the Callisto rig): NPC_CALLISTO_IDLE01 10011 / WALK01 10009 from the definition, plus
             // ATTACK_MELEE01 10012, ATTACK_RANGED01 10013, ATTACK_MAGIC01 10014, ENRAGED01 10015, SPAWN01 10016, DEATH01 10017.
             "artio" to listOf(11992 to listOf(10012, 10013, 10014, 10015, 10016, 10017)),
