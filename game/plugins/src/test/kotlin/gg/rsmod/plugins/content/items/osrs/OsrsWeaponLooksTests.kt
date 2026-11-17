@@ -42,7 +42,13 @@ class OsrsWeaponLooksTests {
     fun `every imported OSRS weapon plays its OSRS attack sequences`() {
         val weapons = importedWeapons()
         assertTrue(weapons.size >= 130, "the imported weapon set was read (${weapons.size})")
-        val missing = weapons.filterKeys { it !in OsrsWeaponLooks.COVERED && it !in noRowNeeded }
+        // DMM2 (N630, 17-11): the DMM2 weapons get their look at RUNTIME - Dmm2Boot.registerStarterWeaponLooks, CorruptedWeapons
+        // .attackAnimation (scythe/khopesh) and the presentation base (corrupted / (Deadman) / skins -> the base weapon's look, owner
+        // 17-11 23:1x: the 667 attack/defend of a native base is fine). Not visible to this static check; proven by the bot round
+        // work/claude-scripts/grafisch/dmm2_weaponlooks.sh (no HD attack/block) instead.
+        val dmm2 = File("../../data/cfg/dmm2/ids.tsv").takeIf { it.isFile }?.readLines().orEmpty()
+            .mapNotNull { Regex("""^item\t\d+\t(\d+)""").find(it)?.groupValues?.get(1)?.toInt() }.toSet()
+        val missing = weapons.filterKeys { it !in OsrsWeaponLooks.COVERED && it !in noRowNeeded && it !in dmm2 }
         assertEquals(emptyMap(), missing, "imported OSRS weapons without an OSRS look")
     }
 
