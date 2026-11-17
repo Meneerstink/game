@@ -68,7 +68,9 @@ object TreasureTrailNumberDialogue {
                     return@queue
                 }
                 chatNpc(text.correct, npc = npc.id, wrap = true)
-                if (!terminated) TreasureTrailNumberChallenge.answer(player, current, answer)
+                // Claude 18-11: OSRS chat 'You have completed this challenge scroll.' (RuneLite ClueScrollPlugin.onChatMessage matches it).
+                if (!terminated && TreasureTrailNumberChallenge.answer(player, current, answer) == TreasureTrailNumberChallenge.Answer.CORRECT)
+                    player.message("You have completed this challenge scroll.")
             }
         }
         return true

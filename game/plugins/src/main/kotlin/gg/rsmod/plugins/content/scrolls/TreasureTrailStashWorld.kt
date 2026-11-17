@@ -98,7 +98,10 @@ object TreasureTrailStashWorld {
             TreasureTrailStashes.Result.INCOMPLETE_SET -> player.message("You need the complete set of items to fill this STASH unit.")
             TreasureTrailStashes.Result.NO_SPACE -> player.message("You don't have enough inventory space to take all the items.")
             TreasureTrailStashes.Result.CORRUPT -> player.message("This STASH unit is temporarily unavailable.")
-            else -> Unit // Build/search changes the object or actual inventory; no repeated success messages.
+            // Claude 18-11 (client round 3): OSRS chat text per RuneLite ClueScrollPlugin.onChatMessage, which tracks STASH fills by them.
+            TreasureTrailStashes.Result.STORED -> player.message("You deposit your items into the STASH unit.")
+            TreasureTrailStashes.Result.WITHDRAWN -> player.message("You withdraw your items from the STASH unit.")
+            else -> Unit // Building changes the object itself.
         }
     }
 }
