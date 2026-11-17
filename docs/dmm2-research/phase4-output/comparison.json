@@ -1,0 +1,74 @@
+{
+  "items": {
+    "exit": 0,
+    "same_allocations": true,
+    "allocation_lines": 83,
+    "expected": "bundle-item.txt",
+    "added": [],
+    "removed": [],
+    "output_sha256": "bdf42dfb0c502523b2302f0164b228696a46f4d1220bcf4ea91820121ccc7e1c"
+  },
+  "npcs": {
+    "exit": 0,
+    "same_allocations": true,
+    "allocation_lines": 7,
+    "expected": "bundle-npc-classic.txt",
+    "added": [],
+    "removed": [],
+    "output_sha256": "dc9c36e8ba77490e10c7967f1b6d0e59177a54f5f43ace51d49f346c51b0aa1c"
+  },
+  "seqs": {
+    "exit": 0,
+    "same_allocations": true,
+    "allocation_lines": 23,
+    "expected": "bundle-seq.txt",
+    "added": [],
+    "removed": [],
+    "output_sha256": "69b6c080e149674850cd558f2051de124fcfd29f168d3806990292be5e122ce6"
+  },
+  "spots": {
+    "exit": 0,
+    "same_allocations": true,
+    "allocation_lines": 13,
+    "expected": "bundle-spotanim.txt",
+    "added": [],
+    "removed": [],
+    "output_sha256": "61fe96aa2b0a76c5097030f449c0b26bfa5e3d1b240999d92139694cd67f4cbb"
+  },
+  "locs": {
+    "exit": 0,
+    "same_allocations": true,
+    "allocation_lines": 3,
+    "expected": "bundle-loc.txt",
+    "added": [],
+    "removed": [],
+    "output_sha256": "5c1e5c11865b0cfb43bd52797529ac15e03fc0d3e6586e84f9e2dae724582f2d"
+  },
+  "ui232": {
+    "exit": 0,
+    "same_allocations": true,
+    "allocation_lines": 1,
+    "expected": "interface-232.txt",
+    "added": [],
+    "removed": [],
+    "output_sha256": "dfe822b0c216f0f25cce1d9f67853661b573ef9630c601ec77b5ee9e7df6535b"
+  },
+  "wisp": {
+    "exit": 0,
+    "same_allocations": true,
+    "allocation_lines": 1,
+    "expected": "npc-skeletal-15571.txt",
+    "added": [],
+    "removed": [],
+    "output_sha256": "9cef6b27f6332f478e6435c330fab05b17b00f147e2ec3bceed37033996ce5ed"
+  },
+  "wisp-sidecar": {
+    "exit": 0,
+    "same_allocations": true,
+    "allocation_lines": 0,
+    "expected": "wisp-sidecar.txt",
+    "added": [],
+    "removed": [],
+    "output_sha256": "11cebdbe2c6efde3a1c60c445ed996b982367b34663eb055db8d8e3239b21bfa"
+  }
+}

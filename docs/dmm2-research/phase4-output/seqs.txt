@@ -1,0 +1,52 @@
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[07:06:50.717 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS spotanim_model_holes=64591 next spot=3220 seq=16221 frameset=4574 base=3580 synth=10561
+PLAN seq 11444 -> 16221
+PLAN seq 11810 -> 16222
+PLAN seq 11811 -> 16223
+PLAN seq 11812 -> 16224
+PLAN seq 11935 -> 16225
+PLAN seq 11936 -> 16226
+PLAN seq 11937 -> 16227
+PLAN seq 13701 -> 16228
+PLAN seq 13702 -> 16229
+PLAN seq 13703 -> 16230
+PLAN seq 13704 -> 16231
+PLAN seq 13705 -> 16232
+PLAN seq 13706 -> 16233
+PLAN seq 13707 -> 16234
+PLAN seq 13708 -> 16235
+PLAN seq 13709 -> 16236
+PLAN seq 13710 -> 16237
+PLAN seq 13711 -> 16238
+PLAN seq 13712 -> 16239
+PLAN seq 13713 -> 16240
+PLAN seq 13714 -> 16241
+PLAN seq 14497 -> 16242
+DROPPED seq 11444: vertical offset 8
+DROPPED seq 11810: stretches flag (no 667 equivalent)
+DROPPED seq 11811: stretches flag (no 667 equivalent)
+DROPPED seq 11812: vertical offset 8
+DROPPED seq 11812: stretches flag (no 667 equivalent)
+DROPPED seq 11935: vertical offset 8
+DROPPED seq 11936: vertical offset 8
+DROPPED seq 11937: vertical offset 8
+DROPPED seq 13701: vertical offset 8
+DROPPED seq 13702: vertical offset 8
+DROPPED seq 13702: frame sound retain/weight (no 667 fields)
+DROPPED seq 13703: vertical offset 8
+DROPPED seq 13703: frame sound retain/weight (no 667 fields)
+DROPPED seq 13704: vertical offset 8
+DROPPED seq 13704: frame sound retain/weight (no 667 fields)
+DROPPED seq 13705: vertical offset 8
+DROPPED seq 13705: frame sound retain/weight (no 667 fields)
+DROPPED seq 13706: vertical offset 8
+DROPPED seq 13706: frame sound retain/weight (no 667 fields)
+DROPPED seq 13707: vertical offset 8
+DROPPED seq 13707: frame sound retain/weight (no 667 fields)
+PREFLIGHT transaction=tx-20261117-060707 mutations=694 outcomes={NO_OP=124, CREATE=1264}
+DRY_RUN records=48

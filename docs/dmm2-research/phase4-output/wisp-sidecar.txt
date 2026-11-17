@@ -1,0 +1,10 @@
+skin skin_15081: models=[49222, 49218, 49221, 49224] vertices=2289 k=4.0 (upscale 4)
+seq 16221 <- OSRS 10230 animaya 13893632 (clip_212_0, 508674 bytes) rig 2138 ticks 0..120 sounds=0 mask=-
+seq 16222 <- OSRS 10233 animaya 13762560 (clip_210_0, 995270 bytes) rig 2138 ticks 0..120 sounds=0 mask=-
+PREFLIGHT transaction=tx-20261117-060828 mutations=5 outcomes={CREATE=10}
+  idx10_grp2_file0 skel_skin_15081 skeletal skin_15081 (38521 bytes)
+  idx10_grp3_file0 skel_clip_212_0 skeletal clip_212_0 (508674 bytes)
+  idx10_grp4_file0 skel_rig_2138 skeletal rig_2138 (19256 bytes)
+  idx10_grp5_file0 skel_clip_210_0 skeletal clip_210_0 (995270 bytes)
+  idx10_grp6_file0 skel_index skeletal index (2 sequences)
+PLAN_ONLY transaction=tx-20261117-060828 (nothing written)
