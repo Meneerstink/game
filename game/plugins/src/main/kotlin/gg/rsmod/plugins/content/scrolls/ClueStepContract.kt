@@ -18,8 +18,8 @@ class ClueStepContract private constructor(
         ClueScrollManager.activeStep(player, tier) === step && ClueScrollManager.progress(player, tier) == progress
 
     /** Consume auxiliary items and advance only after the same exact clue has been revalidated. */
-    fun advance(player: Player, consume: List<Int> = emptyList()): Boolean = valid(player) &&
-        ClueScrollManager.advance(player, tier, scroll, progress, consume)
+    fun advance(player: Player, consume: List<Int> = emptyList(), messages: Pair<String, String>? = null): Boolean = valid(player) &&
+        ClueScrollManager.advance(player, tier, scroll, progress, consume, messages)
 
     companion object {
         fun capture(player: Player, step: ClueStep): ClueStepContract? {

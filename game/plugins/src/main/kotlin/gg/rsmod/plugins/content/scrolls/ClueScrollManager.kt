@@ -116,6 +116,8 @@ class ClueScrollManager(
             expected: Item? = null,
             expectedProgress: Int? = null,
             consume: List<Int> = emptyList(),
+            // Claude 18-11: a step may name its own lines (Transcript:Uri 'You have been given a new clue!' / '...a casket!').
+            messages: Pair<String, String>? = null,
         ): Boolean {
             val slot = player.inventory.rawItems.indexOfFirst { it != null && ClueOwnership.tier(it.id) == tier }
             if (slot < 0) return false
@@ -149,10 +151,10 @@ class ClueScrollManager(
             if (completed >= length) {
                 player.attr.remove(progressAttrs.getValue(tier))
                 player.attr.remove(lengthAttrs.getValue(tier))
-                player.message("You've found a casket!")
+                player.message(messages?.second ?: "You've found a casket!")
             } else {
                 player.attr[progressAttrs.getValue(tier)] = completed
-                player.message("You've found another clue scroll!")
+                player.message(messages?.first ?: "You've found another clue scroll!")
             }
             return true
         }

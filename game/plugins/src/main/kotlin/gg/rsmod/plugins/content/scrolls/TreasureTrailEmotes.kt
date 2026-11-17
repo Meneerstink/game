@@ -67,7 +67,8 @@ object TreasureTrailEmotes {
         val session = sessions[player] ?: return false
         if (session.uri !== uri || session.settled || !session.secondEmote ||
             !session.contract.valid(player) || !attire(player, session.step.source)) return false
-        if (!session.contract.advance(player)) return false
+        // Transcript:Uri ends with 'You have been given a [new clue/casket]!' (not the dig line).
+        if (!session.contract.advance(player, messages = "You have been given a new clue!" to "You have been given a casket!")) return false
         session.settled = true
         return true
     }
