@@ -283,3 +283,19 @@ mappings en componentaantallen230=41,232=31,819=193,806=83; geen PLAN-ids.
 8. Hele ronde Fixed, Resizable en Stretched; X/Esc herstelt normale inventory. Het huidige serverport gebruikt
    desktop normal-view; optional expanded/mobile/hover branches staan expliciet als grens in PHASE6-WINDOWS.
    Native PLAN en unitproeven zijn geen grafische of A9-aftekening.
+
+### 14b. Laatste controls-aanvulling
+
+Na merge van de nieuwe controls moet Claude `dmm2-ui --reuse` opnieuw plannen/applyen:819=211,
+script7155=layoutbridge en7153=op-caption/graphicbridge, plus4735/4737/8386/8387/788. Kopieer de echte interface-map naar
+`cfg/dmm2/interfaces.tsv` in de testdata;151basisids hoeven niet opnieuw genummerd te worden.
+
+- Open Nigel normaal: footer-DP, grijze `No filters available` met pijl; geen actieve filterkeuzes.
+- View-pijl (Compact): zeven kleine iconen in het compacte raster, namen verborgen, DP-header bovenaan; selecteren
+  opent Item Info in eigen steelframe. Koop1/5/10/50 rekent dezelfde DP-prijzen. Close van Item Info
+  keert terug naar de compacte producten en sluit niet onbedoeld de hele winkel.
+- Help toont de echte Help-tekst; Buy na Help doet niets zolang er geen product is geselecteerd.
+- View terug: portretraster, namen, rechterpaneel en footer hersteld. Vijf keer heen/terug, daarna
+  kopen/refund, hoofd-X/Esc, relog; geen selectie of ander accountsaldo dat doorlekt.
+- Fixed/Resizable/Stretched: borders, dropdown, beide view-iconen en Helphover naast OSRS;
+  controleer geen overlap, afgesneden tekst of onjuiste kliklagen. Core-/breektests vervangen dit niet.

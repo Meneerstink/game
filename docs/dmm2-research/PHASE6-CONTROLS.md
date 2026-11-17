@@ -24,20 +24,32 @@ De bronhint uit Claude's vensterronde 16:1x is hiermee nader bewezen:
   De stand 3871=1 gebruikt andere maten/zichtbaarheid en een modal Item Info/Help-route.
 
 Het bronplaatje `phase5-sources/reward-store.png` toont de disabled dropdown plus de View-pijl
-naast het normale productraster. Alleen de bestaande verborgen controls weer zichtbaar maken
-zou lege controls en verkeerde maten opleveren. De huidige port heeft voor deze controls nog
-geen dynamische grafische kinderen of een volledige expanded-view-uitvoering. Dit blijft een
-expliciete UI-pariteitsgrens, geen beweerde OSRS-aftekening.
+naast het normale productraster. Alleen de oorspronkelijke verborgen controls weer zichtbaar maken
+zou lege controls en verkeerde maten opleveren. De huidige server/importeradapter bouwt daarom de
+bronkinderen, het grijze dropdownframe, beide View-layouts en expanded Help/Item Info met eigen
+steelframe. De bronbijlage bevat inmiddels veertien scripts plus enum4988, inclusief7142/43/44/47 en715.
 
-## PREFLIGHT voor Claude
+## Gebouwd contract en Claude's cache-ronde
 
-Benodigde bron-sprites voor de volgende volledige control-port: **4735, 4737, 8386, 8387, 788**
-(297 en het 715-frame hergebruiken zodra de bestaande sprite-map dat bewijst). Gebruik bestaande
-`OsrsInterfacePortTool dmm2-ui --reuse` met de echte interface-map; die batch moet na toevoeging
-van deze bronkinderen hun sprites verzamelen. Het huidige commando alleen importeert ze nog
-niet vanzelf. Geen lokale sprite-ids kiezen, geen huidige 193-componentenclaim voor een nog
-niet gebouwde uitbreiding. Voor die uitbreiding eerst componentcontract, unit-PLAN en een PLAN
-tegen een cachekopie, daarna Claude's eigen gebundelde apply en testclientronde.
+`Dmm2WindowPort` behoudt de oude transactiewidgets en voegt193..210 toe: View/Help/filter,
+plus de source228-steelframe voor de grote Info/Help-weergave.819 heeft211componenten.
+De normale productcards zijn111x74/tweekolommen; de andere stand gebruikt51x50/achtkolommen,
+3pxgaps en verbergt de productnamen, berekend uit7144. View-caption en icon volgen7153:
+portretstand `Compact`/4735; kleinekaartstand `Expand`/4737. Help wist de selectie en een oude
+koopknop mag daardoor niets kopen. Info-Close keert terug naar het productraster.
 
-Deze bronbijlage lost het brongat op. De huidige servercorrecties voor raw packetops en de
-normale verborgen header 14 werken met de al toegepaste widgets en vereisen geen cachewijziging.
+Benodigde bron-sprites:4735,4737,8386,8387,788;297/frame715 hergebruik via bestaande sprite-map.
+De bestaande `OsrsInterfacePortTool dmm2-ui --reuse` verzamelt deze sprites en alloceert twee
+native667CS2-adapters: bronkey7155=negen-int positie/maatbridge; bronkey7153=drie-int plus string
+op-caption/graphicbridge. Deze helpers zijn een vertaling voor de bestaande667client, geen
+byte-exacte imports van de oorspronkelijke OSRS-scripts. Ze gebruiken bewezen nativeprimitives
+2000/2001/2300/2105 en het bestaande667footerformaat; hun locals,args en stackvolgorde hebben
+aparte binaire contracttests. Er zijn geen verzonnen lokale ids: allocator en `--reuse` publiceren
+werkelijke `script`- en `sprite`-regels in `cfg/dmm2/interfaces.tsv`, dat Boot naast ids.tsv inleest.
+
+Claude: eerst dezelfde bestaande importtool in PLAN op de actuele cache, daarna zijn gebundelde
+apply, nieuwe interface-map naar de testdata en de echte-clientronde uit checklist14b.
+De oude193-componentenimport bevat de nieuwe helpers/kinderen nog niet. Zonder bridge weigert
+View een layoutwissel zonder item-/geldmutatie. Unit/nativePLAN is geen grafische of live-PASS.
+Native PLAN tegen GPT-A's twee immutable fysieke cachekopieen staat in `PREFLIGHT-PHASE6.sh`;
+alleen PLAN, geen originele-cachemutatie. Verse bewijsstatus volgt in PHASE6-VALIDATION.json.

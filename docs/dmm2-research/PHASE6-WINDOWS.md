@@ -72,7 +72,7 @@ De append-contracten zijn:
 |---|---:|---|
 |230|41|title18, close30, stored31..40, bulk9/11|
 |232|31|inventory3..30|
-|819|193|title56, close66, products67..150 stride12, info151..155, buttons26..29|
+|819|211|title56, close66, products67..150 stride12, info151..155, buttons26..29|
 |806|83|inventory14..41, info42..46, Close Info3, buttons8..11|
 
 Exacte source-spritegroepen worden door de bestaande tool verzameld; geen handmatig lokale sprite-ids kiezen.
@@ -153,3 +153,57 @@ exact UiPlan en de zeven eigen plugin-klassen, print die lijst en logt de testui
 Core gebruikt een worker; alleen de zeven klassen met gedeelde installed/cache-statics worden
 apart geisoleerd. De reproduceeropdracht gebruikt `--offline` omdat dependencies niet gewijzigd zijn.
 Een wachtrijregel is geen actieve tweede zware build en wordt niet als testbewijs geteld.
+
+## Laatste fase-6-opdracht: controls gebouwd
+
+De eigenaar heeft via Claude fase 6 expliciet uitgebreid met View/Help/filter; daarna pauze, geen fase 7.
+Commit `1b13f2d61` bouwt die server- en importeradapter. De bronbijlage is uitgebreid tot veertien scripts
+plus enum 4988. Eerdere tekst over ongebouwde controls is daarmee historische context.
+
+De existing `OsrsInterfacePortTool dmm2-ui --reuse` voegt nu toe:
+
+- 819:193 View-graphic,194 Help-graphic,195/196 filterframe,197 filterpijl,198 filterlabel;
+  backing192 wordt voor de correcte draw order gebruikt. Bron-sprites4735/4737/8386/8387/788.
+- Expanded Help/Item Info steelframe199..210, title200 en Close210. **819 heeft nu211componenten**;
+  de overige roots blijven230=41,232=31,806=83. Bestaande product- en transactienummers blijven gelijk.
+- Een negen-int native667CS2-bridge met alleen IF_SETPOSITION2000/IF_SETSIZE2001 en RETURN.
+  Dit is een serverlayoutvertaling van bron7155/7142, uitdrukkelijk geen byte-exacte OSRS-scriptimport.
+  De bestaande tool alloceert het eerstvrije script-id, bewaakt replacementbytes via CacheTransaction
+  en publiceert `script<TAB>7155<TAB><echt lokaal id>` in `cfg/dmm2/interfaces.tsv`.
+  `--reuse` hergebruikt dat werkelijke id. Geen vast lokaal id en geen wijziging van de151basis-mappings.
+
+Boot combineert alleen de echte script-/sprite-assets uit die optionele interface-map met `ids.tsv`;
+conflicten worden geweigerd, identieke dubbele registraties voegen geen tweede mapping toe.
+View gebruikt de bridge en de echte4735/4737-sprites. Zonder die assets weigert de knop de wissel
+zonder geld- of itemmutatie. Het normale venster blijft beschikbaar. Claude importeert de aanvullingen
+na de merge; de15:45-import van193componenten alleen bevat deze nieuwe controls nog niet.
+
+View wisselt het bronraster: normaal231px/tweekolommen/111x74, expanded437px/achtkolommen/51x50,
+3pxgaps en zonder namen; alle zeven producten blijven op dezelfde servertransacties aangesloten.
+Help wist de selectie en toont het Help-paneel. In expanded view opent selectie Item Info met eigen
+steelframe; Close210 keert naar het raster terug. De filterenum heeft geen entries, dus het label/pijl
+zijn grijs en bieden geen filterkeuze. Er wordt geen verzonnen filterlijst aangeboden.
+
+De bronmaten van7142/7144 worden op viewwissel toegepast, inclusief info-/footer-/buttonlayers;
+geen layoutspam per tick. De scriptbridge heeft een byteformaat-/argumentvolgordeproef, de controls
+hebben sprite/parent/color/disabled/geometrytests en de venstertests lopen door View -> product ->
+Help -> Close -> View -> buy. Ontbrekende bridge en stale close zijn eveneens afgedekt.
+Verwacht73proeven in dezelfde8klassen; alleen verse XML na de laatste snapshot is eindbewijs.
+
+CLAUDE PREFLIGHT: dezelfde bestaande tool `dmm2-ui --reuse`, nieuwe211componenten en script7155-bridge,
+plus de vijf bron-sprites. Neem de nieuwe echte `interfaces.tsv` mee naar de testdata zodat Boot het
+script-/spritecontract leest. Geen nieuwe vaste waarden in `ids.tsv` invullen. GPT-A doet geen apply.
+Hover/pressed gedrag en de volledige Fixed/Resizable/Stretched-pariteit blijven echte-clientcontrole;
+unitcode of native PLAN is geen grafische of live-aftekening.
+
+Laatste contractcorrectie: er zijn twee toegewezen native bridges, bronkey7155 voor positie/maat en
+bronkey7153 voor op-caption/graphic. De caption is `Compact` in de portretstand en `Expand` in de
+kleinekaartstand, exact uit7153. De tweede bridge heeft drie int-args plus een string-arg; beide
+binair getoetst tegen de native667primitives/footer. Ze worden beide door de bestaande tool gepland
+en bij Claude's apply in de echte interface-map gepubliceerd. De totale gerichte verwachting is nu
+73tests (UiPlan7,Window18,Interaction2,Safe13,Rewards8,Boot4,Break17,Presentation4).
+
+`PREFLIGHT-PHASE6.sh` gebruikt eveneens rgradle. De fysieke immutable kopieen bestaan alleen lokaal,
+daarom kiest uitsluitend deze PLAN-opdracht expliciet de gedocumenteerde `RGRADLE_LOCAL=1`-route.
+De scriptargumenten accepteren geen apply; voor/na worden alle78cachefiles gehasht en een lege
+journal vereist. Geen cachekopie wordt stilzwijgend vervangen door een actuele originele cache.
