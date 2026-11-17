@@ -54,7 +54,7 @@ class Dmm2WindowTests {
             queues.queue(f.player, Dispatchers.Unconfined, firstArg(), thirdArg())
         }
         Dmm2Ids.install(listOf("interface\t230\t2000", "interface\t232\t2001", "interface\t819\t2002", "interface\t806\t2003",
-            "npc\t6516\t1600", "npc\t6485\t1601", "npc\t8391\t1602"))
+            "npc\t6516\t1600", "npc\t6485\t1601", "npc\t8391\t1602", "script\t7155\t2100", "sprite\t4735\t3100", "sprite\t4737\t3101"))
         listOf(wizard,seer,nigel).forEachIndexed { i,n ->
             every { n.id } returns 1600+i; every { n.tile } returns Tile(3200,3201); every { n.isSpawned() } returns true
         }
@@ -214,6 +214,37 @@ class Dmm2WindowTests {
         val text = sent.filterIsInstance<IfSetTextMessage>()
         assertTrue(text.any { it.parent == 2002 && it.child == 33 && it.text == "2,110" })
         assertTrue(text.any { it.parent == 2002 && it.child == 32 && it.text == "Deadman Points" })
+    }
+
+    @Test fun `View expands source cards Help clears selection and details close returns to expanded grid`() {
+        points(30_000); shop()
+        Dmm2RewardUi.toggleView(f.player)
+        val layouts = sent.filterIsInstance<gg.rsmod.game.message.impl.RunClientScriptMessage>().filter { it.id == 2100 }
+        assertTrue(layouts.any { it.args.toList() == listOf((2002 shl 16) or 15,6,6,12,38,1,1,0,2) })
+        fun hidden(component: Int): Boolean = sent.filterIsInstance<gg.rsmod.game.message.impl.IfSetHideMessage>()
+            .last { it.hash == ((2002 shl 16) or component) }.hidden
+        assertTrue(hidden(9)); assertTrue(hidden(gg.rsmod.game.tools.importer.Dmm2WindowPort.REWARD_FIRST+11))
+        assertFalse(hidden(14))
+        Dmm2RewardUi.product(f.player,3,1)
+        assertFalse(hidden(9)); assertEquals(30_000,points())
+        Dmm2RewardUi.help(f.player)
+        Dmm2RewardUi.buySelected(f.player,0)
+        assertEquals(30_000,points()); assertEquals(0L,count(rug))
+        Dmm2RewardUi.closeDetails(f.player); assertTrue(hidden(9))
+        Dmm2RewardUi.toggleView(f.player)
+        assertFalse(hidden(9)); assertTrue(hidden(14))
+        assertFalse(hidden(gg.rsmod.game.tools.importer.Dmm2WindowPort.REWARD_FIRST+11))
+        Dmm2RewardUi.product(f.player,3,1); Dmm2RewardUi.buySelected(f.player,0)
+        assertEquals(27_000,points()); assertEquals(1L,count(rug))
+        Dmm2RewardUi.close(f.player); Dmm2RewardUi.toggleView(f.player); Dmm2RewardUi.help(f.player)
+        assertFalse(windows.isVisible(2002)); assertEquals(27_000,points())
+    }
+
+    @Test fun `View refuses a missing layout bridge without guessing any clientscript id or changing points`() {
+        points(30_000); shop(); val before = sent.size
+        Dmm2Ids.install(listOf("interface\t819\t2002","interface\t806\t2003"))
+        Dmm2RewardUi.toggleView(f.player)
+        assertEquals(before,sent.size); assertEquals(30_000,points())
     }
 
     @Test fun `all seven products buy and refund through real mapped windows without item or point inflation`() {

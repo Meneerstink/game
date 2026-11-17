@@ -706,11 +706,13 @@ object OsrsInterfacePortTool {
         val fonts: Map<Int, Int>
         val firstInterface: Int
         val firstSprite: Int
+        val firstScript: Int
         try {
             val sprIndex = library.index(INDEX_SPRITES)
             fun fontId(name: String) = sprIndex.archive(name)?.id ?: error("font '$name' missing in target cache")
             fonts = mapOf(494 to fontId("p11_full"), 495 to fontId("p12_full"), 496 to fontId("b12_full"), 497 to fontId("q8_full")) +
                 if (230 in groups) mapOf(645 to fontId("quill_oblique_large")) else emptyMap()
+            firstScript = (library.index(12).archiveIds().maxOrNull() ?: -1) + 1
             firstInterface = (library.index(INDEX_INTERFACES).archiveIds().maxOrNull() ?: -1) + 1
             firstSprite = maxOf((sprIndex.archiveIds().maxOrNull() ?: -1) + 1, SPRITE_FLOOR)
         } finally {
@@ -723,6 +725,9 @@ object OsrsInterfacePortTool {
             ?.filter { it.isNotBlank() && !it.startsWith("#") }?.map { it.split('\t') }.orEmpty() else emptyList()
         val oldInterfaces = previous.filter { it[0] == "interface" }.associate { it[1].toInt() to it[2].toInt() }
         val oldSprites = previous.filter { it[0] == "sprite" }.associate { it[1].toInt() to it[2].toInt() }
+        val layoutBridge = if (args.first() == "dmm2-ui") previous.firstOrNull {
+            it[0] == "script" && it[1] == Dmm2WindowPort.LAYOUT_SOURCE.toString()
+        }?.get(2)?.toInt() ?: firstScript else null
         val spriteMap = LinkedHashMap<Int, Int>()
         var newSprites = 0
         ported.flatMap { it.sprites }.distinct().forEach { s -> spriteMap[s] = oldSprites[s] ?: (firstSprite + newSprites++) }
@@ -739,6 +744,12 @@ object OsrsInterfacePortTool {
         // --reuse replaces a component this tool wrote before: the current bytes are the expected ones (a guarded overwrite, not a conflict).
         val current = CacheLibrary(TARGETS[0])
         try {
+            if (layoutBridge != null) {
+                val bytes = Dmm2WindowPort.layoutScript()
+                val old = if (previous.isNotEmpty()) current.data(12,layoutBridge,0) else null
+                mutations += CacheMutation(12,layoutBridge,0,bytes,"DMM2 server layout bridge for source7155/7142",
+                    expectedCurrentSha1=old?.takeIf { !it.contentEquals(bytes) }?.let { CacheItemProbeTool.sha1(it) })
+            }
             ported.forEach { p ->
                 val iface = interfaceOf.getValue(p.osrsGroup)
                 p.components.forEach { c ->
@@ -761,6 +772,7 @@ object OsrsInterfacePortTool {
             p.reports.forEach { println("  REPORT $it") }
         }
         spriteMap.forEach { (o, l) -> lines += "sprite\t$o\t$l\t\t" }
+        if (layoutBridge != null) println("PLAN script ${Dmm2WindowPort.LAYOUT_SOURCE} (server layout bridge) -> clientscript $layoutBridge")
         val tx = CacheTransaction(targets = TARGETS, mutations = mutations)
         val plan = tx.preflight()
         val errors = tx.blockingErrors(plan)
@@ -783,7 +795,8 @@ object OsrsInterfacePortTool {
         }
         ported.forEach { p -> merged["interface" to p.osrsGroup.toString()] = "interface\t${p.osrsGroup}\t${interfaceOf.getValue(p.osrsGroup)}" }
         spriteMap.forEach { (o, l) -> merged["sprite" to o.toString()] = "sprite\t$o\t$l" }
-        val lines2 = merged.values.filter { it.startsWith("interface") } + merged.values.filter { it.startsWith("sprite") }
+        if (layoutBridge != null) merged["script" to Dmm2WindowPort.LAYOUT_SOURCE.toString()] = "script\t${Dmm2WindowPort.LAYOUT_SOURCE}\t$layoutBridge"
+        val lines2 = merged.values.filter { it.startsWith("interface") } + merged.values.filter { it.startsWith("sprite") } + merged.values.filter { it.startsWith("script") }
         table.writeText(lines2.joinToString("\n", prefix = "# N462 OsrsInterfacePortTool, last transaction ${tx.id} (merged) - generated, do not edit\n",
             postfix = "\n"))
         println("APPLIED transaction=${tx.id} writes=${result.applied} VERIFY_OK report=$REPORT")

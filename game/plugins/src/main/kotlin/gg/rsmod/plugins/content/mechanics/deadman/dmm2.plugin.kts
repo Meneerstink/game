@@ -32,6 +32,11 @@ Dmm2Ids.interfaceId(232)?.let { root ->
 }
 Dmm2Ids.interfaceId(819)?.let { root ->
     on_interface_close(root) { Dmm2RewardUi.close(player) }
+    on_button(root,11) { if (Dmm2Interactions.option(player) == 1) Dmm2RewardUi.toggleView(player) }
+    on_button(root,12) { if (Dmm2Interactions.option(player) == 1) Dmm2RewardUi.help(player) }
+    on_button(root,gg.rsmod.game.tools.importer.Dmm2WindowPort.INFO_FRAME_CLOSE) {
+        if (Dmm2Interactions.option(player) == 1) Dmm2RewardUi.closeDetails(player)
+    }
     on_button(root, gg.rsmod.game.tools.importer.Dmm2WindowPort.REWARD_CLOSE) { Dmm2RewardUi.close(player) }
     Dmm2RewardUi.PRODUCTS.indices.forEach { index ->
         on_button(root, gg.rsmod.game.tools.importer.Dmm2WindowPort.REWARD_FIRST + index*gg.rsmod.game.tools.importer.Dmm2WindowPort.REWARD_STRIDE) {

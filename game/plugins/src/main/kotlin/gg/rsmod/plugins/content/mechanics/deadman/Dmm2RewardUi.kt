@@ -30,6 +30,8 @@ object Dmm2RewardUi : Dmm2Interactions.RewardUi {
     private class View(val main: Int, val side: Int) {
         var selected: NigelRewardStore.Reward? = null
         var selling: Int? = null
+        var expanded = false
+        var details = false
         var carried: List<Item?> = emptyList()
     }
     private val VIEW = AttributeKey<View>(resetOnDeath = true)
@@ -43,6 +45,7 @@ object Dmm2RewardUi : Dmm2Interactions.RewardUi {
         player.openInterface(side, InterfaceDestination.TAB_AREA)
         player.attr[VIEW] = View(main, side)
         player.setInterfaceEvents(main, W.REWARD_CLOSE, -1..-1, 2)
+        listOf(11,12,W.INFO_FRAME_CLOSE).forEach { player.setInterfaceEvents(main,it,-1..-1,2) }
         PRODUCTS.indices.forEach { player.setInterfaceEvents(main, W.REWARD_FIRST + it*W.REWARD_STRIDE, -1..-1, EVENTS) }
         repeat(28) { player.setInterfaceEvents(side, W.SIDE_FIRST + it, -1..-1, EVENTS) }
         (26..29).forEach { player.setInterfaceEvents(main, it, -1..-1, 2) }
@@ -52,13 +55,71 @@ object Dmm2RewardUi : Dmm2Interactions.RewardUi {
         player.setComponentText(main, 32, "Deadman Points")
         // OSRS desktop shows the balance in the footer; the expanded-view header overlaps normal-view help.
         player.setComponentHidden(main, 14, true)
-        // No shop filters exist (enum4988); hide the source's unported view/filter controls.
-        player.setComponentHidden(main, 11, true)
-        player.setComponentHidden(main, 12, true)
+        // Enum4988 is empty: source5771 draws a disabled dropdown, no Expand operation.
+        player.setComponentHidden(main, 11, false)
+        player.setComponentHidden(main, 12, false)
+        player.setComponentHidden(main, 40, true)
+        applyLayout(player)
         scroll(player, main, 38, 39, 311)
         scroll(player, main, 35, 36, 300)
         scroll(player, side, 6, 7, 160)
         refresh(player, store)
+    }
+
+    private fun layout(player: Player, component: Int, x: Int, y: Int, w: Int, h: Int,
+                       wm: Int = 0, hm: Int = 0, xm: Int = 0, ym: Int = 0) {
+        val view = player.attr[VIEW] ?: return
+        val script = Dmm2Ids.script(W.LAYOUT_SOURCE) ?: return
+        player.runClientScript(script,(view.main shl 16) or component,x,y,w,h,wm,hm,xm,ym)
+    }
+
+    private fun applyLayout(player: Player) {
+        val view = player.attr[VIEW] ?: return
+        val expanded = view.expanded
+        // Desktop7142: normal uses V23=200; expanded V23=-6,V26=12,V27=29.
+        layout(player,10,6,6,if (expanded) 12 else 218,20,1,0)
+        layout(player,13,0,0,if (expanded) 200 else 26,0,if (expanded) 0 else 1,1)
+        layout(player,15,6,6,if (expanded) 12 else 218,38,1,1,0,2)
+        if (expanded) layout(player,9,0,0,0,0,1,1)
+        else layout(player,9,12,35,200,53,0,1,2,0)
+        layout(player,21,0,if (expanded) 41 else 0,if (expanded) 24 else 0,if (expanded) 153 else 100,1,1,1,0)
+        layout(player,22,0,if (expanded) 62 else 50,if (expanded) 24 else 0,44,1,0,1,2)
+        layout(player,23,0,if (expanded) 12 else 0,if (expanded) 24 else 0,44,1,0,1,2)
+        layout(player,W.REWARD_INFO_TITLE,10,10,20,32,1,0)
+        layout(player,W.REWARD_INFO_TEXT,10,52,20,300,1,0)
+        layout(player,W.REWARD_INFO_ITEM,if (expanded) 200 else 72,48,36,32)
+        PRODUCTS.indices.forEach { index ->
+            W.cardLayout(expanded,index).forEachIndexed { child, r ->
+                layout(player,W.REWARD_FIRST+index*W.REWARD_STRIDE+child,r.x,r.y,r.w,r.h)
+            }
+            player.setComponentHidden(view.main,W.REWARD_FIRST+index*W.REWARD_STRIDE+11,expanded)
+        }
+        player.setComponentHidden(view.main,14,!expanded)
+        Dmm2Ids.sprite(if (expanded) 4737 else 4735)?.let { player.setComponentSprite(view.main,W.VIEW_ICON,it) }
+        scroll(player,view.main,38,39,if (expanded) 53 else 311)
+    }
+
+    fun toggleView(player: Player) {
+        val view = player.attr[VIEW] ?: return
+        if (!visible(player) || Dmm2Ids.script(W.LAYOUT_SOURCE) == null || Dmm2Ids.sprite(4735) == null || Dmm2Ids.sprite(4737) == null) return
+        view.expanded = !view.expanded
+        view.selected = null; view.selling = null; view.details = false
+        applyLayout(player)
+        NigelRewardStore.active?.let { refresh(player,it) }
+    }
+
+    fun help(player: Player) {
+        val view = player.attr[VIEW] ?: return
+        if (!visible(player)) return
+        view.selected = null; view.details = true
+        player.playSound(gg.rsmod.plugins.api.cfg.Sfx.INTERFACE_SELECT1) // source7154
+        NigelRewardStore.active?.let { refresh(player,it) }
+    }
+
+    fun closeDetails(player: Player) {
+        val view = player.attr[VIEW] ?: return
+        view.selected = null; view.details = false
+        NigelRewardStore.active?.let { refresh(player,it) }
     }
 
     override fun visible(player: Player) = player.attr[VIEW]?.let {
@@ -72,6 +133,9 @@ object Dmm2RewardUi : Dmm2Interactions.RewardUi {
     override fun refresh(player: Player, store: NigelRewardStore) {
         val view = player.attr[VIEW] ?: return
         view.carried = player.inventory.map { it?.let(::Item) }
+        player.setComponentHidden(view.main,9,view.expanded && !view.details)
+        player.setComponentHidden(view.main,20,!view.expanded)
+        player.setComponentText(view.main,W.INFO_FRAME_TITLE,if (view.selected == null) "Help" else "Item Info")
         val points = number(NigelRewardStore.balance(player))
         player.setComponentText(view.main, 33, points)
         player.setComponentText(view.main, 46, points)
@@ -91,7 +155,7 @@ object Dmm2RewardUi : Dmm2Interactions.RewardUi {
         player.setComponentText(view.main, W.REWARD_INFO_TEXT, if (id == null) HELP else "")
         // 7147 skips the icon/stock/cost blocks for Help; its paragraph begins immediately below the title.
         player.setComponentPosition(view.main, W.REWARD_INFO_TEXT,10,if (id == null) 52 else 137)
-        val helpHeight = HELP.split("<br>").sumOf { N108Ui.lines(player.world,"p12_full",it,161) }*16
+        val helpHeight = HELP.split("<br>").sumOf { N108Ui.lines(player.world,"p12_full",it,if (view.expanded) 417 else 161) }*16
         scroll(player,view.main,35,36,if (id == null) 52+helpHeight+10 else 149)
         player.setComponentHidden(view.main, 23, selected == null)
         (26..29).forEach { player.setComponentHidden(view.main, it, selected == null) }
@@ -123,7 +187,7 @@ object Dmm2RewardUi : Dmm2Interactions.RewardUi {
         if (option == 10) { store.contract.rewards[reward]?.let { player.world.sendExamine(player, it, ExamineEntityType.ITEM) }; return }
         if (option == 1) {
             player.playSound(gg.rsmod.plugins.api.cfg.Sfx.INTERFACE_SELECT1) // 9771
-            view.selected = reward; refresh(player, store); return
+            view.selected = reward; view.details = true; refresh(player, store); return
         }
         val amount = when (option) { 2 -> 1; 3 -> 5; 4 -> 10; 5 -> 50; else -> return }
         Dmm2Interactions.buy(player, reward, amount)

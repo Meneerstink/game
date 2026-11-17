@@ -43,7 +43,7 @@ class Dmm2UiPlanTests {
     @Test fun `runtime reward grid and inventory slots use one append only server component contract`() {
         val main = OsrsInterfacePortTool.port(819, root["819"], fonts, runtimeWidgets = true)
         val side = OsrsInterfacePortTool.port(806, root["806"], fonts, runtimeWidgets = true)
-        assertEquals(193, main.components.size); assertEquals(83, side.components.size)
+        assertEquals(211, main.components.size); assertEquals(83, side.components.size)
         assertEquals("Deadman Reward Store", main.components.first { it.id == (Dmm2WindowPort.REWARD_TITLE) }.text)
         assertEquals(listOf("Close"), main.components.first { it.id == (Dmm2WindowPort.REWARD_CLOSE) }.ops)
         repeat(7) { i ->
@@ -62,5 +62,38 @@ class Dmm2UiPlanTests {
                 assertTrue(OsrsInterfacePortTool.encode(component).isNotEmpty())
             }
         }
+    }
+
+    @Test fun `desktop controls and compact card geometry are decoded source equivalents`() {
+        val main = OsrsInterfacePortTool.port(819,root["819"],fonts,runtimeWidgets=true)
+        fun c(id: Int) = main.components.single { it.id == id }
+        assertEquals(4735,c(Dmm2WindowPort.VIEW_ICON).sprite); assertEquals(11,c(Dmm2WindowPort.VIEW_ICON).parent)
+        assertEquals(8386,c(Dmm2WindowPort.HELP_ICON).sprite); assertEquals(12,c(Dmm2WindowPort.HELP_ICON).parent)
+        assertEquals(788,c(Dmm2WindowPort.FILTER_ARROW).sprite); assertEquals(125,c(Dmm2WindowPort.FILTER_ARROW).opacity)
+        assertEquals("No filters available",c(Dmm2WindowPort.FILTER_LABEL).text)
+        assertEquals(0x9f9f9f,c(Dmm2WindowPort.FILTER_LABEL).colour)
+        assertEquals(26,c(13).w); assertEquals(1,c(13).wMode); assertTrue(c(13).ops.isEmpty())
+        assertEquals(218,c(10).w); assertTrue(setOf(4735,4737,8386,8387,788).all { it in main.sprites })
+        assertEquals(listOf("Close"),c(Dmm2WindowPort.INFO_FRAME_CLOSE).ops)
+        repeat(7) { index ->
+            val normal = Dmm2WindowPort.cardLayout(false,index)
+            val expanded = Dmm2WindowPort.cardLayout(true,index)
+            assertEquals(109,normal[0].w); assertEquals(72,normal[0].h)
+            assertEquals(49,expanded[0].w); assertEquals(48,expanded[0].h)
+            assertEquals(4,expanded[0].y); assertTrue(expanded[0].x+expanded[0].w<=437)
+        }
+    }
+
+    @Test fun `layout bridge preserves all nine geometry arguments in native 667 CS2 format`() {
+        val input = java.io.DataInputStream(java.io.ByteArrayInputStream(Dmm2WindowPort.layoutScript()))
+        assertEquals(0,input.readUnsignedByte())
+        listOf(1,2,7,8,0).forEach { assertEquals(33,input.readUnsignedShort()); assertEquals(it,input.readInt()) }
+        assertEquals(2000,input.readUnsignedShort()); assertEquals(0,input.readUnsignedByte())
+        listOf(3,4,5,6,0).forEach { assertEquals(33,input.readUnsignedShort()); assertEquals(it,input.readInt()) }
+        assertEquals(2001,input.readUnsignedShort()); assertEquals(0,input.readUnsignedByte())
+        assertEquals(21,input.readUnsignedShort()); assertEquals(0,input.readUnsignedByte())
+        assertEquals(13,input.readInt())
+        assertEquals(listOf(9,0,0,9,0,0),List(6) { input.readUnsignedShort() })
+        assertEquals(0,input.readUnsignedByte()); assertEquals(1,input.readUnsignedShort()); assertEquals(-1,input.read())
     }
 }

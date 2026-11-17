@@ -10,7 +10,19 @@ object Dmm2Boot {
         // Load the same published mapping for all services before their plugin bindings are registered.
         // In particular, do not retain an earlier lazy lookup after a mapping has been supplied.
         val mapping = File(directory, "ids.tsv")
-        if (mapping.isFile) Dmm2Ids.install(mapping.readLines())
+        if (mapping.isFile) {
+            val uiTable = File(directory,"interfaces.tsv")
+            val uiAssets = if (uiTable.isFile) uiTable.readLines().filter { it.startsWith("script\t") || it.startsWith("sprite\t") } else emptyList()
+            val lines = mapping.readLines()
+            val primary = Dmm2Ids.parse(lines)
+            val extra = uiAssets.filter { row ->
+                val f = row.split('\t'); require(f.size == 3)
+                val existing = primary["${f[0]}:${f[1]}"]
+                require(existing == null || existing == f[2].toInt()) { "Conflicting DMM2 UI asset mapping: $row" }
+                existing == null
+            }
+            Dmm2Ids.install(lines + extra)
+        }
         Dmm2Interactions.safeUi = if (Dmm2SafeDepositUi.ready()) Dmm2SafeDepositUi else null
         Dmm2Interactions.rewardUi = if (Dmm2RewardUi.ready()) Dmm2RewardUi else null
         val sourceIds = listOf(22331, 22333, 22335, 26149, 13660, 13317, 13318, 33063)
