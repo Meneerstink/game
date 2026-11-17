@@ -1,0 +1,600 @@
+{{External|rsc|rs}}
+{{Otheruses|def=no|the organisation|Bank of Gielinor|the list of banks|List of banks}}
+[[File:Bank interface.png|thumb|400px|The bank of a player.]]
+[[File:Bank logo.png|left|120px]]
+A '''bank''' is a facility that allows [[players]] to deposit, store, and withdraw their [[items]]. It is indicated on the [[world map]] with a dollar ([[File:Bank icon.png|($)]]) [[icon]]. It is usually a standalone building, but sometimes takes the form of a [[Bank chest|chest]] or even (rarely) a [[non-player character]].
+
+Within a bank, free-to-play accounts may store up to 400 stacks of items, while members can store up to 900. An additional 20 spaces are given if the player has a [[Bank PIN]], another 20 spaces if they have [[RuneScape Authenticator]] activated on their account, and another 20 spaces if their account is linked to a [[Jagex Account]]. Players may also increase their bank space by buying blocks of 50 bank spaces, up to 9 times, bringing the highest number of spaces a player can have to 910 on [[free-to-play]] worlds or 1,410 on [[members]] worlds.
+
+Banks were once popular locations for [[trading]] as players were right beside where they keep most of their money and items. However, with the introduction of the [[Grand Exchange]] on [[26 February]] [[2015]], most transactions are now conducted there.
+
+[[Ultimate Ironman]] accounts are blocked from storing items in a bank.
+
+==Bankers==
+Players may access their bank account by right-clicking a banker or bank booth or by speaking to a banker and going through their dialogue.
+
+===Bankers===
+[[File:Banker (male).png|right|150x150px]]
+{{main|Banker}}
+
+Bankers are NPCs who operate banks. They are present in nearly every bank, including the Grand Exchange, standing behind a bank booth or desk. Most [[human]] bankers can be identified by their grey suits or by a huge sack on their backs (to represent the banked items that they have stored). Bankers of other races, such as [[ghost]] bankers, [[gnome]] bankers, [[fairy (race)|fairy]] bankers, [[elf|elven]] bankers, or [[dwarf|dwarven]] bankers, can also be found in banks in areas inhabited by those races. Players can speak to them to learn about how to use the bank, set a bank PIN or buy additional bank spaces.
+
+===Bank booths===
+{{Main|Bank booth}}
+A player may left-click a bank booth to directly access their bank account. Players may also use [[Bank note|notes]] on a bank booth to convert them to the items they represent.
+
+Ultimate Ironman accounts may use the un-noting feature of bank booths even though they are otherwise blocked from using banks.
+
+===Bank chests===
+{{main|Bank chest|Bank Chest-wreck}}
+
+Bank chests provide the same functionality as bank booths. They are available in places such as in the [[Lumbridge Castle]] cellar (during and after the [[Recipe for Disaster]] quest), the [[Emir's Arena]], and many [[minigames]] such as [[Blast Furnace]]. They are also available in many safe areas of [[PvP world]]s.
+
+===Bank deposit boxes===
+[[File:Bank Deposit Box.png|right|139x139px]]
+{{main|Bank Deposit Box}}
+[[Bank deposit box]]es allow players to deposit items into their bank without having to enter the Bank PIN; however, players cannot withdraw items or view the contents of their bank account. Players may use items directly on a bank deposit box to deposit them into their bank, or open the bank deposit box and select items from their inventory to store using the interface. They are available in most banks and in other key locations such as in [[Port Khazard]]. They are typically cylindrical in shape.
+
+==Finding a bank==
+
+===Bank locations===
+{{main|List of banks}}
+There are many banks scattered throughout [[Gielinor]], and may be located in the [[world map]] with the dollar sign ([[File:Bank icon.png|($)]]) [[icon]].
+
+Some banking services charge commission. It may be a percentage of what's being deposited, or [[coins]]; an example of this is the [[Dwarven Boatman]] east of [[Arzinian Mine]]'s entrance, who will store players' [[gold ore]] for 20 percent commission (or 10 percent with [[Ring of Charos(a)]]), rounded up.
+
+Several banks have inaccessible areas, such as stairs, doors, fences, and basements. It is unclear what is actually in some of these areas.
+
+=== Fastest bank teleports ===
+{{Main|Fastest bank teleports}}
+It is often desirable to access a bank as fast as possible while performing certain tasks. While skilling a player may desire to deposit items created while skilling (ex. [[Runes]]). Players also often deposit items and restock supplies after combat for example fighting a boss.
+
+==Using a bank==
+
+===Accessing a bank account===
+Players can open their bank account to deposit or withdraw items in several ways:
+
+#The player may talk to the banker and request access to their bank account through dialogue options.
+#The player may left-click a bank booth to skip the banker's dialogue and access their bank account.
+#Players can use the right-click "Bank" option on a banker to access to their bank account without going through dialogue. This is 1 [[tick]] faster than left-clicking the bank booth.
+
+===Deposits===
+When a player has access to their bank, they can deposit items from their [[inventory]]. Players can deposit 1, 5, 10, ''n'' (the last value entered for the "Withdraw-X" option), "All", or "X" (custom amount) items in one menu. The "X" option allows a player to specify the quantity of items to be deposited, and lock in the custom amount as ''n'' until another "X" amount is entered. This feature is useful for players depositing the same number of items repeatedly, such as during [[Runecraft]] and [[Fletching]].
+
+Some banks charge commission for using their services. The [[Dwarven Boatman (ore hauler)|Dwarven Boatman]] and [[Odovacar]] are examples of this.
+
+====Storage limits====
+[[:Category:Unbankable items|Some items]], such as most [[experience items]] and many [[quest items]], cannot be stored in a bank. If a player attempts to do so, they will receive a chatbox message stating, "A magical force prevents you from banking this item!" or another similar message depending on the item. Many [[:Category:Items with charges|items with charge or degradation mechanics]] can be stored in the bank, but storing multiple of the same item will not stack them into a single bank space unless they have the same number of charges. Other items such as [[seed pack]]s cannot be stacked in the bank at all, causing each item to take up a separate bank slot. 
+
+===Withdrawals===
+Players can withdraw their items by either using a bank booth or talking to a [[banker]]. The bank account access procedure is similar to the deposit process. Once players have access to their bank account, they can then withdraw the required items. Similar to the deposit process, the player has several options for withdrawals:
+*'''Withdraw-1''' - Withdraws one item.
+*'''Withdraw-5''' - Withdraws five items.
+*'''Withdraw-10''' - Withdraws ten items.
+*'''Withdraw-''n''''' - Withdraws ''n'' items, where ''n'' is a custom amount based on the amount entered in the last "Withdraw-X" transaction.
+*'''Withdraw-X''' - Withdraws an ''x'' number of items. The "X" option allows a player to specify the quantity of items to be withdrawn, and lock in the custom amount (''n'') for subsequent transactions.
+*'''Withdraw-All''' - Withdraws all items stored in the bank.
+*'''Withdraw-All but one''' - Withdraws all items (except one). This is useful for storing "placeholder" items, as not to disrupt the positioning of the item. If a player attempts to withdraw-all but one of an item that they only have one of, they will get a chatbox message stating, "You only have one of this item, so withdrawing all but one does nothing."
+
+===Collection===
+{{main|Grand Exchange}}
+The "Collect" right-click option on bank booths and bankers opens the player's Grand Exchange collection box, where players can receive the money they earned or items they bought from Grand Exchange transactions. This feature is available on all banks in Gielinor, so players may collect items from any bank in any location without having to make a trip to the Grand Exchange.
+
+The collection box interface shows the status of all of the player's active trades. Completed trades are shown in green. On-going trades (i.e. large quantities or items which are difficult to buy/sell) may be collected bit by bit as the trade goes through.
+
+===Bank space===
+A bank is initially limited to 400 slots for [[free-to-play]] players. [[Members]] get an additional 500 bank slots up to a total of 900.
+
+Any player can unlock 20 extra bank slots for setting a [[Bank PIN]], another 20 bank slots for enabling the [[Authenticator]] for their account, and another 20 bank slots if their account is linked to a [[Jagex Account]]. The 20 bank spaces granted for having a bank PIN will only be available after the bank PIN is officially enabled, one week after it has been requested.
+
+Additional bank slots can be purchased by speaking to a [[Banker]] and selecting, "I'd like to buy more bank slots.".
+
+The table below contains the costs of unlocking additional bank spaces. The cost of unlocking additional bank spaces roughly doubles after each unlock. Note that the total numbers of bank spaces include the additional slots unlocked through the Bank PIN, Authenticator and Jagex Account. This brings the highest number of spaces a player can have to 910 on the [[free-to-play]] worlds or 1,410 on [[members]] worlds, for a total cost of {{plinkp|Coins|pic=Coins 10000}} '''888,000,000'''.
+
+
+{| class="wikitable" style="text-align: center;"
+!rowspan=2 | Block
+! rowspan="2" | Bank spaces
+!colspan=2 | {{plinkp|Coins|pic=Coins 10000}} Cost
+!colspan=2 | {{plinkp|Coins|pic=Coins 1000}} Cost per bank space
+!rowspan=2 | Total bank space (F2P)
+!rowspan=2 | Total bank space (P2P)
+|-
+! This block
+! Total so far
+! This block
+! Total so far
+|-
+!1
+|50
+|1,000,000
+|1,000,000
+|20,000
+|20,000
+|510
+|1,010
+|-
+!2
+|100
+|2,000,000
+|3,000,000
+|40,000
+|30,000
+|560
+|1,060
+|-
+!3
+|150
+|5,000,000
+|8,000,000
+|100,000
+|53,333
+|610
+|1,110
+|-
+!4
+|200
+|10,000,000
+|18,000,000
+|200,000
+|90,000
+|660
+|1,160
+|-
+!5
+|250
+|20,000,000
+|38,000,000
+|400,000
+|152,000
+|710
+|1,210
+|-
+!6
+|300
+|50,000,000
+|88,000,000
+|1,000,000
+|293,333
+|760
+|1,260
+|-
+!7
+|350
+|100,000,000
+|188,000,000
+|2,000,000
+|537,143
+|810
+|1,310
+|-
+!8
+|400
+|200,000,000
+|388,000,000
+|4,000,000
+|970,000
+|860
+|1,360
+|-
+!9
+|450
+|500,000,000
+|888,000,000
+|10,000,000
+|1,973,333
+|910
+|1,410
+|-
+! colspan="2" | Total
+! colspan=2 | 888,000,000
+! colspan=2 | 1,973,333
+! colspan="2" | Total
+|}
+
+==Features==
+[[File:Bank settings menu.png|thumb|400px|The bank settings menu.]]
+===Bank PIN===
+{{main|Bank PIN}}
+The use of a 4-digit [[Bank PIN]] (Personal Identification Number) adds a significant extra layer of security to an [[account]]. It is optional, but recommended. Players may speak to any banker to change their PIN settings, including enabling and disabling it.
+
+When the PIN is active, players must enter the four-digit number the first time they use the bank, the [[Grand Exchange]], or a [[STASH|STASH unit]], after logging in. They need not enter it again for as long as they remain logged in. They can also use a setting in the PIN settings menu to toggle not to require the PIN if the player logs out for less than five minutes.
+
+This means that even if a {{Wp|Hacker (computing)|hacker}} is able to log in with someone else's username and password, the most they will be able to steal is any wielded items and whatever is in the [[inventory]]. They will not be able to access the contents of the bank or any cash or items on the Grand Exchange without knowing the PIN. Therefore, it is essential that the PIN be hard to guess.
+
+===Show worn items===
+Clicking the "Show worn items" icon on the top right corner of the bank interface allows players to equip their armour and weapons without having to exit the bank interface. It can also be accessed by pressing the F-key bound to Worn Equipment.
+
+===Tabs===
+Players can create up to nine tabs in their bank with which to help organise their items. With this feature, players may store items with similar characteristics together, such as placing their items used in the [[Farming]] skill in one tab and their [[Fishing]] items in another tab. Many players have a "Quest" tab, a "Tools" tab, and an "Armour & Weapons" tab, as there are many items that fall within these three categories.
+
+New tabs are created by dragging and dropping items to the "+" icon, creating a new tab with the dragged item as the first item. Each tab is identified with an icon of the first item in it, which changes if the player changes the first item in the bank. By using the bank settings menu (accessed via the button in the upper-right corner of the bank interface), the player can choose to have bank tabs display numbers or Roman numerals instead of the first item in them.
+
+The "All" tab (labelled with the infinity symbol) shows all the items in the player's bank, with items not sorted into tabs shown first and dividing lines separating the bank's tabs.
+
+To remove a bank tab, the tab may be right-clicked and the 'Collapse tab' option selected, putting all items in it back into the main tab. A tab is also automatically removed if it is empty.
+
+===Bank tutorial button===
+The ''Show tutorial'' button is turned on by default and is right next to the ''close'' button in the top right corner. The tutorial is mainly designed for new players, and can be turned off in the bank settings.
+
+===Potion storage===
+[[File:Potion_storage_detail.png|left|50px]]
+Players can purchase the [[Potion storage]] from [[Mastering Mixology]] [[Mixology Rewards|reward shop]] for a combined cost of 7,750 Mox resin, 6,300 Aga resin and 8,950 Lye resin. Potion storage is opened from inside the bank interface. Potions stored here do not count toward used bank space. The bank settings also allow players to always deposit applicable items to the potion storage automatically.
+
+===Item incinerator===
+[[File:Item Incinerator.png|left]]
+The item incinerator destroys stacks of items in the bank. Note that extreme care is advised when using this feature, as it permanently destroys items and there is no way to reverse this.
+
+The incinerator can be turned on by accessing the settings button found in the top right corner of the bank interface, then clicking on the item incinerator option. After this is done there will be a new icon in the bottom left of the interface to indicate the item incinerator is active. Drag the stack of items over the incinerator icon and a confirmation prompt will be given. After confirming this will destroy the selected (stack of) item(s).
+
+The incinerator destroys the entire stack dragged onto it. There is no way to incinerate only a select amount of the items, however, the player can simply withdraw the items in noted form and drop them.
+
+===Rearrange mode===
+With the "Swap" option selected, drag an item on top of another to 'swap' their places in the bank. Thus, item (A) is swapped when another item (B) is dragged and dropped onto the item.
+
+Conversely, the "Insert" option allows players to drag an item in the space before or after another item to "insert" it, moving all other subsequent items along one space. Thus, item (B) will be inserted in between items (before item A), moving all items that follow along one space.
+
+===Item/Note toggle===
+{{main|Bank note}}
+
+The '''Item/Note''' toggle button is used to toggle withdrawals between item form and [[bank note|noted]] form. If this toggle is set to "Note," most unstackable [[Items#Tradeability|tradeable]] items withdrawn from the bank will be withdrawn as notes. Notes are always stackable, allowing large amounts of items to be withdrawn or traded without taking up a large amount of inventory space. Storing a note in a bank, selling it to a shop, or using it on a bank booth or banker will convert the note to its item equivalent.
+
+In ''[[RuneScape Classic]]'', notes did not exist, but instead players would trade in bulk using [[rsw:Certificate (RuneScape Classic)|certificates]], which could only be made for certain items. Certificates were made by bringing the desired items to the "certer" NPCs, instead of simply withdrawing from the bank in certificate form. Every certificate was equivalent to five regular items.
+
+===Quantity toggle===
+The numbered buttons ('''1''', '''5''', '''10''', '''X''' and '''All''') are used to change what quantity of the item is withdrawn or deposited when left-clicking. The X option by default uses the last set custom quantity, which can be set by right-clicking on an item and selecting "Withdraw-X" or by right-clicking the X option in the quantity toggle.
+
+===Placeholders===
+Bank placeholders allow the player to reserve bank slots for specific items, giving them the ability to create a fixed layout for their bank. To create a placeholder, right-click an item in the bank and click the 'Placeholder' option. This will withdraw the items in the bank slot, leaving a placeholder in their place.
+
+Some items, such as amulets, will sometimes share a bank space. Potions of the same kind with different numbers of doses can not share placeholders.
+
+While some items may be allowed in a bank, they will not leave placeholders even if the option is toggled on. 
+
+These items include:
+
+*[[Clue scroll]]s and related items such as [[Clue geode]]s
+*[[Dexterous prayer scroll]]
+*[[Arcane prayer scroll]]
+*[[Awakener's orb]]
+*[[S.t.a.s.h blueprint]]
+*[[Barrel stand]]
+*[[Sailors' amulet (inert)]]
+
+===Search===
+The '''Search''' button is used for finding items in the bank. After pressing the "Search" button, the player can type all or part of the name of the item they are looking for and the bank interface will filter out all items whose names do not contain what the player entered. This provides easy access to rarely used items that need to be found quickly or to items that have many versions that look similar such as herbs. 
+
+You can also use it to find items of a specific value. By typing <code>>10k</code>, you will find every item ''stack'' that is more expensive than {{Coins|10000}}. You can also prefix this with <code>ge</code> or <code>ha</code>, to specifically look for the GE value, or high alch value of the stack respectively. For example, <code>ha>200</code> will show every item stack that high alchs for more than {{Coins|200}} combined. Lastly, adding the prefix <code>i</code>, such that it becomes <code>gei>300</code> will show items where the ''individual'' items go for more than {{Coins|300}} on the GE.
+
+===Deposit inventory===
+Clicking the '''Deposit inventory''' button allows players to quickly dump all the items in their [[inventory]] into their bank. Players can disable this button by unchecking the option in the bank settings menu.
+
+===Deposit worn items===
+Clicking the '''Deposit worn items''' button allows players to deposit the items they are wearing into their bank. Players can disable this button by unchecking the option in the bank settings menu.
+
+===Empty containers===
+Clicking the '''Empty containers''' button allows players to deposit the items that they are currently holding in different types of [[container items|containers]]. Players can disable this button by unchecking the option in the bank settings menu.
+
+===Settings===
+Additional settings can be accessed by clicking the spanner in the top-left corner of the bank interface.
+
+====Bank item options====
+Enables configuring charges on some items, such as [[powered staves]], via a right-click menu entry. In contrast to setting a global charge threshold by speaking to [[Hofuthand]], this option allows the player to set different automatic charging thresholds for each configured item. To do so, enable the bank item options setting, then right-click on the banked item and select [[Configure-Charges]]. On being withdrawn in the future, the item will attempt to automatically refill itself up to the specified number of charges. A game message will inform the player if there were not enough resources in the bank to sufficiently charge a withdrawn item. The automatic charging behaviour will remain enabled even if the bank item options setting is disabled. It can be disabled by setting the configured number of charges on an item to 0.
+
+====Inventory item options====
+Players can right click various items in the inventory, such as food, potions and equipment to interact with them without exiting the bank interface.
+
+====Deposit lock settings====
+Deposit locks allow players to prevent items in specified inventory slots from being deposited in the bank. This can be useful at activities such as training [[Runecraft]] at the [[Ourania altar]], where players can use the ''Deposit inventory'' button to deposit crafted runes in one click without depositing their [[rune pouch]] and [[essence pouch]]. Note that these locks are per-slot, not per-item - an item may still be deposited if moved into an unlocked slot.
+
+====Bank fillers====
+[[File:Bank filler detail.png|left|50px]]
+[[Bank filler]]s can be added to the bank by using the bank settings button in the top right corner of the bank interface. Doing so fills the player's bank with the selected amount of useless fillers. They can be dragged and dropped to be swapped or inserted, as if they were any other item. Bank fillers can be cleared with a right-click option or by using the bank settings menu. One good use of this feature is pre-planning your bank layout for future items that complete a set. For example, if you plan on getting a full adamant armour set but currently only have the breastplate, you can add several bank fillers to the right of the breastplate in your bank, which are to be replaced with remaining set pieces later on. For this, it is advisable to always withdraw the breastplate by using the placeholder option every time, so that it always gets deposited back to its proper place to the left of the bank fillers.
+
+Furthermore, having a bank full of filler items allows players to decide which items they want deposited when using the ''Deposit inventory'' or ''Deposit worn items'' buttons. For example, if players are crafting [[leather]] items, they can remove the needle and thread from their bank, enable the bank fillers, and be able to use the ''Deposit inventory'' button to deposit everything except their needle and thread, as their bank would have no space to hold them because all of the space is taken up by bank fillers. However, this particular use of bank fillers is now redundant, given the existence of Deposit locks.
+
+==Bank withdrawal shortcuts==
+When entering a custom amount to withdraw or deposit, the player can type "k", "m", or "b" for 'thousand', 'million', and 'billion' respectively. A player who wants to withdraw "1,000,000" coins, for instance, may simply type "1m". The shortcuts do not work together, however, so if a player wanted to withdraw 1 billion (1,000,000,000) they would not be able to type '1km' or '1mk'.
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 15 July 2026
+|update = The Blood Moon Rises & Bank Tags Tweaks
+|change =
+* An Import/Export function for bank tags was added, meaning you can copy your tags across other Official Client devices.
+* Fixed a bug showing duplicate items when searching for a Tag icon.
+* Fixed inaccuracies in some message boxes.
+}}
+{{Subject changes
+|date = 17 June 2026
+|update = Bank Tags, Trouver System Rework & More!
+|change =
+* A bank tag system similar to [[RuneLite]]'s "Bank Tag Layouts" plugin was added to the [[Official Client|official]] and [[Old School RuneScape Mobile|mobile]] clients.
+** Up to 20 bank tags can be created at once.
+** Third-party client bank tags are unaffected by this addition.
+** Bank tags do not work with [[potion storage]]; any tags that list potions must have them in the actual bank.
+}}
+{{Subject changes
+|date = 23 April 2026
+|update = Leagues VI Changes
+|change =
+* Using the Wiki button on items in the bank or the Grand Exchange no longer causes a crash on mobile.
+* You can now use the Wiki look-up functionality on items in the bank when the bank interface is open.
+}}
+{{Subject changes
+|date = 18 February 2026
+|update = 25th Anniversary Event: 25 Years, 25 Mementos!
+|change = Hovering over the 10 quantity button in the bank/GIM storage no longer claims that the default quantity would be 5 if you clicked that button.
+}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = The "Empty Containers" button now supports emptying worn containers into the bank, such as the [[log basket]], [[forestry basket]], [[fish sack barrel]].
+}}
+{{Subject changes
+|date = 28 January 2026
+|update = Deadman: Annihilation Drops This Friday!
+|poll = Poll 84 - PvM Improvements, Agility Shortcuts & more!
+|change = 
+* There is now an "Empty Containers" button in the bank interface to empty [[Container_items#List_of_containers|container items]].
+* Text actions, such as swap/insert, note, etc.., have been replaced by icon buttons.
+* The size of the quantity buttons has been increased.
+* The "View worn items" button has been moved to the top-right.
+* The bank tutorial button has been moved to the top-left.
+* The incinerator has been moved to the left, alongside the potion and group storage.
+* Players who have both group and potion storage now have an option to collapse them.
+}}
+{{Subject changes
+|date = 5 November 2025
+|update = Sailing Technical Pre-Release
+|poll = Sailing Poll 3 - Slayer Creatures, Unique Drops & More
+|change = 
+* Members now have 100 more bank spaces.
+* The amount of bank spaces received when buying additional spaces has been increased from 40 per block to 50.
+}}
+{{Subject changes
+|date = 24 September 2025
+|update = Interface Uplift
+|change = The bank settings now include an option for setting how the [[chugging barrel]] loads [[potions]].
+}}
+{{Subject changes
+|date = 27 August 2025
+|update = Summer Sweep Up Slayer & More
+|change = Updated bank action code. Now the "custom" menu entry that is enabled with the auto-charging setting now shows an additional menu, rather than swapping out an existing one.
+}}
+{{Subject changes
+|date = 5 March 2025
+|update = Game Jam: Charges QoL
+|change = The bank settings now include an option for showing bank item options.
+}}
+{{Subject changes
+|date = 22 January 2025
+|update = Bank QoL & Mini Menu Improvements
+|change = Players can now lock individual inventory slots. Items in locked slots will not be banked when using the deposit inventory button.
+}}
+{{Subject changes
+|date = 28 February 2024
+|update = Defender of Varrock Artwork & QoL Updates
+|change = A game message now appears upon attempting to deposit an item with 2,147,483,647 of said item in the bank.
+}}
+{{Subject changes
+|date = 12 July 2023
+|update = Forestry: Part One - Further Changes
+|change = Players who have migrated their account to a [[Jagex Account]] will now receive 20 additional bank slots.
+}}
+{{Subject changes
+|date = 1 June 2023
+|update = Bounty Hunter Changes & Forestry Beta
+|change = The 'Release all placeholders' button in the Bank now has a confirmation warning.
+}}
+{{Subject changes
+|date = 11 January 2023
+|update = Secrets of the North & More!
+|change = *Players can now store over 1,023 items in a single Bank tab.
+*Removing all bank fillers now has a confirmation option.
+}}
+{{Subject changes
+|date = 24 November 2021
+|type = hotfix
+|change = Ultimate Iron accounts can no longer purchase extra bank slots.
+}}
+{{Subject changes
+|date = 24 November 2021
+|update = Android Beta and Gold Sink Changes
+|poll = Nex and Old_School's Economy Poll
+|change = *Additional bank spaces received by setting up the bank PIN and Authenticator were increased from 8 to 20 for a total of 40 additional bank spaces.
+*Players can now increase the bank spaces number 9 times by 40 additional bank spaces each, for a total of 360 additional slots. The total cost is 888,000,000 GP, with the initial unlock costing 1,000,000 GP and roughly doubling after each unlock.
+}}
+{{Subject changes
+|date = 27 February 2020
+|update = Game Improvements and Email Linking for Mobile Accounts
+|type = 
+|change = The bank no longer scrolls up or down when items are dragged towards the incinerator.
+}}
+{{Subject changes
+|date = 9 January 2020
+|update = Eating in the Bank
+|poll = Old School Content Poll 69: Game Improvements
+|change = *Players can now eat food, drink potions and equip items from the inventory while the bank interface is open.
+*A new icon has been added on the top left corner of the bank interface which allows players to left-click equip their equipment without exiting the bank interface.
+}}
+{{Subject changes
+|date = 11 October 2018
+|update = Spellbook Rework, Wise Old Man and, Increased Zoom
+|change = Banks renamed from "Bank of RuneScape" to "Bank of Gielinor".
+}}
+{{Subject changes
+|date = 27 September 2018
+|update = Decanting, Withdraw X, and Bucket Packs
+|change = Buttons along the bottom to determine left-click withdraw quantity were added on the desktop client.
+}}
+{{Subject changes
+|date = 23 August 2018
+|update = Bush Yield Improvements, Nordic Soft Launch and Mobile Changes
+|change = Dragging an item from the inventory to a blank bank tab will no longer move the item in the inventory and cause a loss of the bank interaction.
+}}
+{{Subject changes
+|date = 12 July 2018
+|update = Game Integrity: Pickpocketing
+|change = When searching for items in the bank, the chatbox will now also display a count of how many items have been found meeting the search criteria.
+}}
+{{Subject changes
+|date = 15 March 2018
+|update = QoL, Deadman and the Falador Party Room
+|change = The Bank settings page now has the ability for players to add bank fillers in quantities of 1, 10, 50, X or All.
+}}
+{{Subject changes
+|date = 5 October 2017
+|update = Soundbank, HP bar, and QoL changes
+|change = Bank fillers will now fill only the accessible part of your bank
+}}
+{{Subject changes
+|date = 28 September 2017
+|update = Volcanic Mine Tweaks & Make All Preview
+|change = Players can now get eight bank spaces for enabling bank PIN and another eight for enabling [[authenticator]].
+}}
+{{Subject changes
+|date = 16 March 2017
+|update = Quality of Life & Deadman Prep
+|poll = Quality of Life - General Suggestions
+|change = Right-clicking a bank tab will now give you the option of removing all placeholders within that tab.
+}}
+{{Subject changes
+|date = 22 September 2016
+|update = Reboot incoming...
+|type = hotfix
+|change = Fixed an issue where the bank bottom buttons would occasionally fail to appear at all, regardless of your setting for the 'deposit worn items' button toggle.
+}}
+{{Subject changes
+|date = 22 September 2016
+|update = Poll Content & Deadman
+|change = Deposit worn items button can now be disabled.
+}}
+{{Subject changes
+|date = 11 August 2016
+|update = Elder Chaos Druid Hood & Junk
+|change = [[Bank filler]]s were added.
+}}
+{{Subject changes
+|date = 30 June 2016
+|update = Item Incinerator
+|change = Item incinerator was added.
+}}
+{{Subject changes
+|date = 15 April 2016
+|update = Bank Placeholder Feedback Changes
+|poll = 
+|change = * The Placeholder toggle button has been moved slightly to be by the Search button.
+* The "always placeholder" toggle now persists over logout.
+* Potions of the same kind with different numbers of doses can no longer share placeholders.
+* Placeholders can now be made for unfinished potions.
+}}
+{{Subject changes
+|date = 14 April 2016
+|update = Bank Placeholders & PID
+|change = Bank placeholders were added.
+}}
+{{Subject changes
+|date = 15 December 2015
+|update = Christmas 2015
+|poll = 
+|change = Using an item on any longbow inside a bank now correctly produces the nothing interesting happens message.
+}}
+{{Subject changes
+|date = 3 December 2015
+|update = Skill Cape Perks
+|change = The one tick delay present when you used bank booths rather than bankers in Port Phasmatys has been removed – on top of this, a bank booth in Port Phasmatys was not giving a message for players not using an amulet of ghostspeak; this has been fixed.
+}}
+{{Subject changes
+|date = 22 January 2015
+|update = Zulrah, Bank Space & More
+|poll = Old_School_Content_Poll_29:_Grand_Exchange
+|change = Bank space increased to 800 for members, and 400 for free-to-play.
+}}
+{{Subject changes
+|date = 10 December 2014
+|update = The Trading Post
+|change = The [[poll booth]]s in Seers Village and in Ardougne south bank have been returned.
+}}
+{{Subject changes
+|date = 13 October 2014
+|update = Ironman Mode
+|change = Some bankspace checks have been amended to support [[Ultimate ironman]] accounts.
+}}
+{{Subject changes
+|date = 10 July 2014
+|update = The Game Filter is Here!
+|change = Spam clicking the last item in a bank tab will no longer withdraw the first item from the next tab.
+}}
+{{Subject changes
+|date = 19 June 2014
+|update = Clan Wars is here!
+|change = Bank space increased to 600 for members, and 200 for free-to-play.
+}}
+{{Subject changes
+|date = 15 May 2014
+|update = Coal & gem bags and Attack options
+|change = *The bank scrollbar should now hold its position more reliably when closing the bank.
+*If you are dragging an item upwards the bank now waits a moment before scrolling so you can drag the item to the tab layer.
+*If you aren't using bank tabs, or have all of your items in the All tab, the bank once again shows your empty slots at the bottom.
+*Dragging around and inserting items should feel much more fluent.
+}}
+{{Subject changes
+|date = 8 May 2014
+|update = Your banks, it has tabs!
+|change = 9 new bank tabs were added.
+}}
+{{Subject changes
+|date = 30 January 2014
+|update = Release the Kraken!
+|poll = Old School feature poll 15: Rejuvenating the Wilderness
+|change = Players now have 24 more bank spaces.
+}}
+{{Subject changes
+|date = 17 October 2013
+|update = Patch Notes (17 October 2013)
+|poll = Old School feature poll 11: PvP Worlds and more
+|change = The bank now has a 'Withdraw-All-but-one' option. The various Withdraw and Deposit options have been re-ordered slightly in response to your feedback.
+}}
+{{Subject changes
+|date = 3 October 2013
+|update = Patch Notes (3 October 2013)
+|change = When rearranging your bank, you should no longer see ghostly outlines of items that are no longer there.
+}}
+{{Subject changes
+|date = 17 September 2013
+|update = Patch Notes (17 September 2013)
+|change = The bank scroll now remembers its position when you close the bank interface.
+}}
+{{Subject changes
+|date = 12 September 2013
+|update = Bank update
+|poll = Old School feature poll 9: God Wars & Banks
+|change = * The capacity of the bank has been increased by 3 rows, giving players an extra 24 slots with a total of 424.
+* The bank now remembers how many items are requested when the 'Withdraw-X' or 'Deposit-X' options are used.
+** This number has been added as an extra 'Withdraw' or 'Deposit' option on each item.
+* A 'Search' button has been added to the bank interface which allows the displayed items to be filtered.
+* Two 'Deposit-All' buttons have been added to the bank interface for attempting to deposit all items in the inventory.
+}}
+{{Subject changes
+|date = 26 July 2013
+|update = Patch Notes (26 July 2013)
+|poll = Old School feature poll 7
+|change = Your bank will now remember your Swap/Insert preference over logout.
+}}
+{{Subject changes
+|date = 29 June 2004
+|update = Easier to rearrange bank
+|change = * "Swap" and "Insert" buttons were added to the Bank interface to differentiate between how items behave when moved.
+* Dragging items to the top or bottom of the bank window will cause the window to automatically scroll up or down.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+*If a player tries to use the [[Jagex Moderator]] command "''::bank"'' in a [[chat]], it will not work and they will automatically say: "{{Overhead|Hey, everyone, I just tried to do something very silly!}}"
+* If a player has 2,147,483,647 of an item deposited in the bank and attempts to deposit more, a game message appears stating {{mes|You already have a full stack of that item in the bank.}} This is because the game uses 32-bit signed integers to store values, which are unable to represent a higher number.
+
+{{Banks}}
+[[Category:Bank PIN protection]]
+[[Category:Mechanics]]

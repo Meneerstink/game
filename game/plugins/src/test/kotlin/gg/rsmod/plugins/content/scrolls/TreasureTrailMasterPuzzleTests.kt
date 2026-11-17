@@ -13,6 +13,7 @@ import gg.rsmod.plugins.content.inter.bank.Bank
 import gg.rsmod.plugins.content.inter.bank.BankTabs
 import gg.rsmod.plugins.content.mechanics.pvp.BankSecurity
 import gg.rsmod.plugins.content.mechanics.pvp.LootKeys
+import gg.rsmod.plugins.api.ext.filterableMessage
 import io.mockk.*
 import kotlin.random.Random
 import kotlin.test.*
@@ -95,15 +96,22 @@ class TreasureTrailMasterPuzzleTests {
     }
     @Test fun `public bank deposit rejects gnome child and Mimic from every source container`() {
         val (p, _) = account()
+        mockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
+        val messages = mutableListOf<String>()
+        every { p.filterableMessage(capture(messages)) } just Runs
         for (from in listOf(p.inventory, p.equipment)) for (source in listOf(20282, 23184)) {
+            messages.clear()
             val item = Item(ClueItems.local(source)!!)
             from[2] = item
             assertFalse(Bank.deposit(p, from, 2, 1))
             assertSame(item, from[2]); assertEquals(0, p.bank.occupiedSlotCount)
+            assertEquals(listOf("A magical force prevents you from banking this item!"), messages)
         }
+        messages.clear()
         p.inventory[2] = Item(ClueItems.local(20282)!!)
         Bank.depositAll(p, p.inventory.also { it[0] = null }, "")
         assertNotNull(p.inventory[2]); assertEquals(0, p.bank.occupiedSlotCount)
+        assertTrue("A magical force prevents you from banking this item!" in messages)
     }
     @Test fun `ordinary lightbox bank deposit preserves all network attributes`() {
         val (p, step) = account()

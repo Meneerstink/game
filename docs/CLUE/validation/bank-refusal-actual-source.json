@@ -1,0 +1,24 @@
+{
+  "unchanged": true,
+  "inputs": {
+    "C:\\RSPS\\work\\gpt-b\\game\\src\\main\\kotlin\\gg\\rsmod\\game\\model\\item\\ItemAttribute.kt": "92b8ef45f9987753729b2a8151f2079864918a5834bcc0a0c901251b787fcc65",
+    "C:\\RSPS\\work\\gpt-b\\game\\src\\main\\kotlin\\gg\\rsmod\\game\\tools\\importer\\ClueLightBoxCacheTool.kt": "1c92ed8e2f9828ea669b819e3d805675d9692fea78774df76f1aaa4770ec74d1",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailLightPuzzle.kt": "0bc4043757ac56d19a64358d81aa5369dd5ccf572e05fa6cea9a70daebe3f4ca",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailLightBoxes.kt": "5f3e515d4af1a3001055646fca1f84aca8d18099ebb6bd457331ccb47647e7c2",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailMasterPuzzles.kt": "8963f6041f372a5cfa7aa63280afbd5792328cf8b87c7ecee7760097daa8550b",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailPuzzleBoxes.kt": "fee15c237ef04e70f292b5a4c912388a2ae0f7c50162e7851d1521975adcb9e6",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\inter\\bank\\Bank.kt": "cd7c0088cd20c8b8de2f08666eb5bc500fc78279c04b387b995d68493d055b32",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailLightBoxTests.kt": "d7d780decca56258ff348b800864affc4c3034fb1f3014b8ba8ef01897bacff1",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailMasterPuzzleTests.kt": "7d1c621a0bbe6b7061306af1943433d0be8341c709ee60f24cab04dee32fb12d",
+    "C:\\RSPS\\work\\gpt-b\\tools\\clue\\ClueLightBoxClientRegression.java": "5925cdcbfe339bfb676db1e6a0a31913b569cb9e906527ab6d8f683a042b16a9",
+    "C:\\RSPS\\work\\gpt-b\\docs\\CLUE\\cache\\lightbox-audio-manifest.json": "5ebf77c0ed8d5f59cbfb31088174c6d6d82cb852cc557915b64a04c845ac8b94",
+    "C:\\RSPS\\work\\gpt-b\\docs\\CLUE\\cache\\lightbox-interface.json": "9796cf2d4c4494bb9e6b90879508e0e82adc503d5523fc9f5f9c4831eb6ab9aa",
+    "C:\\RSPS\\work\\gpt-b\\docs\\CLUE\\cache\\lightbox-items.json": "637872d868687ed4a45c935aab7205d6e8d21d3810807d41ccca04ec47426bfc",
+    "C:\\RSPS\\work\\gpt-b\\docs\\CLUE\\cache\\lightbox-layout.json": "20f7aaaa1ad49378776eb263a82423977ba5a70ddff7a7bf5bdfabd939d486b4",
+    "C:\\RSPS\\work\\gpt-b\\docs\\CLUE\\cache\\lightbox-manifest.json": "e8837a599c19cff0c86f1614c90144e2d38209fdc41221e39cebe4471ff3adbc",
+    "C:\\RSPS\\work\\gpt-b\\docs\\CLUE\\cache\\lightbox-scripts.json": "69be03886e09d9823c5db0af6d0dbd708b2b8cbd2c7663175e89aacc63c34b4b"
+  },
+  "tests": "JUnit version 4.13.2\n...PROBLEM CLUE light box has absent/corrupt saved network; item retained\n.......[13:02:05.160 INFO ] AvTrace              | [avtrace] sound player= id=2021 loops=1 delay=0 volume=255 rate=256 cycle=0 from=ItemMoveSounds.kt:39\n[13:02:05.288 INFO ] AvTrace              | [avtrace] PROBLEM sound id=2021 sent to  does not exist in the cache (synth 4 / vorbis 14) - silent\n..PROBLEM CLUE invalid saved master puzzle kind-999; scroll retained\n\nTime: 82,655\n\nOK (12 tests)\n\n",
+  "nativeDecoder": true,
+  "note": "Source/API tests and native decoder/CS2 semantic checks; loaded-client verification remains Claude"
+}

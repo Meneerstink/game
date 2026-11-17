@@ -194,8 +194,10 @@ class Bank {
             val to = player.bank
             val item = from[fromSlot] ?: return DepositResult(0, success = false, bankFull = false)
             if (amt <= 0) return DepositResult(0, success = false, bankFull = false)
-            // Pinned Wiki Puzzle box, Gnome child/master source20282 is not bankable.
+            // OSRS Wiki Puzzle_box: bankable7=No (Gnome child, source20282).
+            // Bank#Storage_limits supplies the standard non-bankable-item refusal.
             if (item.id == gg.rsmod.plugins.content.scrolls.ClueItems.local(20282)) {
+                player.filterableMessage("A magical force prevents you from banking this item!")
                 return DepositResult(0, success = false, bankFull = false)
             }
             // OSRS Wiki Mimic: this casket cannot be banked, including deposit-all/equipment.

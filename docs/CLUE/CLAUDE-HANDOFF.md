@@ -5,7 +5,7 @@ This card is not ready to merge/release. B resumed the entire card on
 Do not interpret a successful cache preflight as a completed gameplay chain.
 All cache application, testserver/client operation, merge and release belong to Claude.
 
-Current continuation/results: `LIGHTBOX-SOURCE-AUDIT.md` and `GUARDIAN-SOURCE-AUDIT.md`; earlier details: `REVIEW-B-16NOV.md` / `REVIEW-B-7.md`.
+Current continuation/results: `COMBAT-SOURCE-AUDIT.md`, `DIG-GUARDIANS-RUNTIME.md`, `NPC-RESOLUTION-AUDIT.md`; earlier results: `LIGHTBOX-SOURCE-AUDIT.md` / `GUARDIAN-SOURCE-AUDIT.md`.
 Cache roster ready as of9e7b09eda:248items/10NPCs/23STASHunits/26maps.
 Claude may apply these prepared batches in order now; rerun each allocator after
 its predecessors. The unfinished guardian/Mimic runtime does not require waiting
@@ -88,6 +88,10 @@ Rerun each batch against the caches produced by preceding batches; commit its
 regenerated runtime mapping before continuing. This refreshes every allocator,
 including sprites after the CoX8954 allocation.
 
+0. Install/release the reviewed `CLIENT-WIDE-INTERFACE.patch` and
+   `CLIENT-WIDE-STASH.patch` **before applying any new wide-model UI or opcode242
+   object definitions**. Old clients cannot decode those definitions. The later
+   loaded-client checks verify the resulting cache and client together.
 1. Combined248-item roster and generated YAML metadata (17-Nov guardian seed); refresh items.tsv and
    reward/log mappings. Then rerun the core-item patch, including source19835/19836
    and the owner's 78 names/Gold-onyx presentation described below.
@@ -96,7 +100,8 @@ including sprites after the CoX8954 allocation.
    per-batch preflights and mappings. Keep the owner's POH Study exclusion.
 4. Reward/text UI first, maps second, puzzle UI third, sharing interfaces.tsv.
    Rerun the allocator before every application; the older ID ranges overlap.
-5. Follow the client codec patch/release and loaded-client checks in this handoff.
+5. Lightbox, STASH chart/setting and supplemental combat batches use the exact
+   sections below. Follow the loaded-client checks with the codecs from step0.
    Keep the Mimic encounter marked unavailable until its full combat/source work
    is complete; arena import/collision checking is only part of that chain.
 
@@ -107,10 +112,11 @@ proofs. NPC-PREFLIGHT.tsv and ITEM-PREFLIGHT.tsv contain the current proposals.
 
 * Source: `C:/RSPS/import-source/openrs2-2686/cache`.
 * Batch: `OsrsItemImportTool clue --clue-roster=<this worktree>/data/cfg/clue/import-items.tsv`.
-* The current roster has **247 source items** (including notes where marked):
-  the reviewed245 plus exact hard puzzle boxes19887/23173. The combined
-  16November17:57 preflight generated **438 definitions**, proposed local IDs
-  **24940..25377**. Every source/local/model row is in `ITEM-PREFLIGHT.tsv`.
+* The current roster has **248 source items** (including notes where marked):
+  the reviewed247 plus source22879 (snape grass seed, required by guardian loot).
+  The latest **tx-20261117-070628** preflight generated **443 definitions**;
+  every source/local/model row is in `ITEM-PREFLIGHT.tsv`. The older247/438
+  reports below are historical and must not be used for application.
   These local IDs are proposals, not reservations: rerun against the current
   canonical caches immediately before applying, then regenerate `items.tsv`.
 * Use the reviewed importer/forearm fix from this branch. The old importer
@@ -123,7 +129,7 @@ proofs. NPC-PREFLIGHT.tsv and ITEM-PREFLIGHT.tsv contain the current proposals.
 * Repeat read-only with `python tools/clue/preflight_items.py` after core compile.
   Plan report: `build/clue/item-preflight-current/result.txt`; proof records both
   cache file fingerprints, ledger SHA, roster and mapping SHA before/after.
-  Latest transaction **`tx-20261116-165714`**, `applied=false`, `finalized=0`, `recovered=0`.
+  Latest combined transaction **`tx-20261117-070628`**, `applied=false`.
   See `DRY-RUN-INCIDENT.md` for the
   corrected ledger-recovery side effect; no cache bytes were applied.
 * Obtain/merge the importer's `--yml-out=<review file>` metadata on Claude's
@@ -158,10 +164,9 @@ local IDs from the mapping. Claude applies the owner's Gold & onyx scroll and
 gold/onyx-banded casket A recolours (`screens/N415-78clue/`). Source master
 mechanics/rewards remain unchanged. No exclusive cosmetic reward is introduced.
 
-The current combined-item preflight proposes **19835 -> 25192** and
-**19836 -> 25193** for that presentation. Numeric elite challenge12139 proposes
-24992; exact tree boxes19887/23173 propose25197/25294. Resolve the final applied
-mapping after rerunning, rather than hard-coding these proposed IDs into runtime.
+For the owner's78presentation use source**19835/19836**, resolved through the
+latest`ITEM-PREFLIGHT.tsv` and then the final applied`items.tsv`. All old numeric
+proposals (including25192/25193) are superseded; do not hard-code them.
 
 The opening effect is the existing OSRS Treasure Trails jingle, index 11/group
 193; the source and local payloads are byte-identical. Test with sound enabled.
@@ -196,7 +201,8 @@ After A records tested commits and all asset gates pass:
    tables. Check upper-floor behaviour as well.
 4. Watson: first/repeat dialogue, partial/all hand-ins, duplicates, stored master
    collection, bank/grave/Death ownership, full inventory, another account,
-   relog, Astral Contact, blueprint payment and menu/head sizing.
+   relog, Astral Contact and menu/head sizing. No blueprint sale or POH Study/chart
+   (owner10October decision, confirmed Q5); use the Watson noticeboard.
 5. Mimic encounter/death/retrieval tests will be detailed when its runtime is
    finished. No fight-ready claim is made by the present prototype/backend.
 6. Dropped clues/boxes/caskets, wrong gear/emotes, STASH, dig monsters and the
@@ -850,3 +856,92 @@ Gradle/scripts acceptance is the next gate; this is not full-card acceptance.
 Claude: inspect elite god-items/main replacement, bones, range quantities,
 nested herbs/seeds/gems, RoW on/off, Legends completed/incomplete and2accounts;
 no cached ring/quest context should leak. No viewer style/layout change.
+
+## 17-Nov: hard wizards, master dig controller and Mimic known mechanics
+
+Commits73997fbd8 (hard wizard/device runtime),5bddd2b61 (master dig controller,
+combat profiles/rules and supplemental assets),01353ee76 (Mimic candy/minions/
+forward/multi lifecycle),414b8d061 (NPC source reconciliation).
+Production-source checks:32guardian tests,33Mimic tests,5acquisition tests;
+source hashes and output in validation/dig-guard-combat-actual-source.json,
+validation/mimic-candy-attack-actual-source.json and
+validation/npc-resolution-actual-source.json. The prior070825run was interrupted
+without a summary and is NOT accepted. New integration083438 freezes4601inputs,
+1core/30pluginclasses, including all script compilation; result pending.
+
+The original item248/NPC10/STASH23/map26rosters remain fixed and may be applied
+in the already documented order. B did NOT apply any cache or publish mappings.
+Additional SEQUENCE-ONLY batch, independent of those identities:
+
+```
+OsrsFxImportTool clue-guard-combat
+```
+
+Source2686sequences:
+376,378,390,424,426,427,727,836,1162,1167,4320,4321,4322,6957,6958,6959.
+B's read-only preflight tx-20261117-082149 succeeded294logical mutations,
+CREATE276/NO_OP312; exact report COMBAT-PREFLIGHT.txt and before/after fingerprints
+validation/combat-preflight-read-only.json. Proposals (not reserved):
+376->17752,378->17753,390->15785,424->16085,426->15799,427->17754,727->15755,
+836->17755,1162->15774,1167->15756,4320->16157,4321->16159,4322->16158,
+6957->17756,6958->17757,6959->17758. Rerun allocation after predecessors.
+After Claude's apply, `python tools/clue/build_combat_mapping.py --write`
+validates all16ledger-owned identities against both caches before publishing
+this worktree's cfg/clue/combat-assets.tsv. No provisional ID enters gameplay.
+Source vertical-offset/stretch omissions are printed in the exact report;
+loaded-client frame/audio checks remain mandatory.
+
+Q8 explicit source gates: generic rig roles do not prove per-guardian attack
+animation/projectile/timing. cfg/clue/combat-visuals.json is intentionally absent;
+ClueGuardianCombat.visuals requires a verified source row and applied sequence
+map before installing these combat types. See COMBAT-SOURCE-AUDIT.md for the
+row contract and observed two-blade Armadylean image/candidate6957 inference.
+An unspecified elite alternative-choice probability is NOT silently50/50.
+Therefore master/elite coordinate/hotcold selection still has source gates,
+although the held-scroll/group/target/kill/second-dig implementation is present.
+This does not block applying the other prepared cache batches or further work.
+
+Q1 remains as the owner's explicit exception: Mimic ENCOUNTER_IMPLEMENTED=false;
+candyAttackChance/forwardStepChance remain null. Four-tick candy impact comes
+from Claude's pinned video measurement. New explicit null candyLandingOffsets
+and candyFlight require the real six landing offsets and launch height/end
+height/slope/steepness/releaseDelay. No donor default is inserted. The complete
+plumbing consumes that measured plan; ready(world) additionally checks minion
+visuals and the existing Mimic candy assets. An unavailable selected Mimic keeps
+the ordinary casket and dry-protection eligibility. No attempt/loot is spent.
+
+Claude client checks after the source gates/assets are actually ready:
+* Hard wizard: first dig spawns once, exact kill then second correct dig; prayer
+  switching/poison, wrong tile, bank/drop/logout/death, two accounts/familiar.
+* Master single/trio: three exact deaths required; saved hot/cold target remains
+  through fight/serialization; Feel3..8damage; wrong plane/outside9x9cannot dig.
+* Elite guard: source selection probability, flying/halberd rule, accurate poison
+  through prayer, source visual/audio; personal loot/viewer unchanged style.
+* Mimic: all six candy colours/projectiles and4tick impacts, dodge, replacement
+  only after next volley, freeze/body collision, minion styles/stats/no loot,
+  all NPCs simultaneous in the private multi instance; exit/plane change/death/
+  logout/re-entry/simultaneous boss-player death settle once,90kdeathbank route.
+* Acquisition:625source routes/587NPCs. Check regular Jelly1/128, Farmer7,
+  Vyrewatch110/120, full-box account versus second account. Native130/140Vyres
+  and absent modern cave Jelly actors were NOT guessed into an OSRS variant.
+
+## 17-Nov: puzzle-box bank refusal and application order
+
+`Bank.deposit` now gives the standard OSRS refusal for the source20282 Gnome
+child puzzle box, including deposit-all and equipment. This is the only changed
+banking behaviour. Puzzle_box revision15030231 (see the source manifest) proves
+`bankable7=No`; `BANK-SOURCE.json` pins Bank revision15388948 and its standard
+storage-limits message: "A magical force prevents you from banking this item!".
+The existing Mimic refusal uses the same message.
+
+Twelve freshly compiled lightbox/master-puzzle tests pass, including exact
+per-attempt messages and unchanged containers. Native lightbox decoder/CS2 checks
+also pass (44components,10programs,52hooks,150item icons). Durable source hashes
+and output: validation/bank-refusal-actual-source.json. The first run's static
+MockK call-history assertion failed and was corrected; that run is not accepted.
+The combined31-class integration115813 is separate and still pending.
+
+The application list above now explicitly puts both reviewed client codec
+patches/releases BEFORE any wide UI models/opcode242 definitions, as required by
+Claude's15November review. Current combined roster248 and tx070628 supersede
+old247/438-definition proposals. No blueprint sale/POH Study is included (Q5).
