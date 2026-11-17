@@ -50,6 +50,30 @@ class TreasureTrailNpcStepsTests {
         p.attr[AttributeKey<Int>(persistenceKey="clue_length_"+row.tier.name.lowercase())] = length
         return p to (ClueScrollManager.activeStep(p,row.tier) as TreasureTrailSourceStep)
     }
+    @Test fun `modern Traiborn cipher uses only the existing native tower actor and leaves ordinary options intact`() {
+        val row = rows.single { it.key == "Clue scroll (medium) - XJABSE USBJCPSO" }
+        val native = NpcDef(881).apply { name = "Traiborn"; options[0] = "Talk-to" }
+        every { definitions.getNullable(NpcDef::class.java, 881) } returns native
+        every { definitions.get(NpcDef::class.java, any()) } answers { native }
+        every { definitions.getNullable(NpcDef::class.java, neq(881)) } returns null
+        every { definitions.getNullable(ItemDef::class.java, any()) } answers { ItemDef(secondArg()) }
+        every { ClueItems.local(2842) } returns 30101
+        assertTrue(TreasureTrailBasicSteps.available(world,row))
+        assertEquals(setOf(881),TreasureTrailNpcSteps.npcs(row))
+        val actor = mockk<Npc>()
+        every { actor.id } returns 881; every { actor.world } returns world
+        every { actor.spawnTile } returns Tile(3112,3162,1)
+        assertTrue(TreasureTrailBasicSteps.matches(actor,row))
+        every { actor.id } returns 8180
+        assertFalse(TreasureTrailBasicSteps.matches(actor,row))
+        every { actor.id } returns 881
+        every { actor.spawnTile } returns Tile(3112,3162,0)
+        assertFalse(TreasureTrailBasicSteps.matches(actor,row))
+        assertFalse(TreasureTrailNpcSteps.matchesName(881,"Traiborn",row.copy(key="other")))
+        assertFalse(TreasureTrailNpcSteps.matchesName(8180,"Traiborn",row))
+        assertEquals("Traiborn",native.name);assertEquals("Talk-to",native.options[0])
+    }
+
     @Test fun `seven easy NPC branches retain their own source text including three silent handovers`() {
         val sources = JsonParser().parse(File(RspsPaths.data("../docs/CLUE/NPC-COMPLETION-SOURCES.json")).readText()).asJsonArray
         assertEquals(7, sources.size())

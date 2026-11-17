@@ -33,6 +33,30 @@
       "otherSameIdSpawns": []
     },
     {
+      "name": "Wizard Traiborn",
+      "localId": 881,
+      "spawn": {
+        "id": 881,
+        "tile": [
+          3112,
+          3162,
+          1
+        ],
+        "file": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/spawns/spawns_12337.plugin.kts",
+        "fileSha256": "dffa3cb2676f85e63d3c35b4e3b2a61acdd895173f92b5cb3ec27c0c5c996502"
+      },
+      "nativeName": "Traiborn",
+      "nativeOptions": [
+        "Talk-to",
+        null,
+        null,
+        null,
+        null
+      ],
+      "nativeDefinitionSha256": "88a06fd988d2051712fe1a71f7a71c35e3858fa4f5a28ce01513ff2e819685d8",
+      "otherSameIdSpawns": []
+    },
+    {
       "name": "Doric",
       "localId": 284,
       "spawn": {
@@ -308,6 +332,6 @@
       "otherSameIdSpawns": []
     }
   ],
-  "importChanges": "none: item247/NPC10/STASH23/UI26map rosters unchanged",
+  "importChanges": "none: item248/NPC10/STASH23/UI26map rosters unchanged",
   "caveat": "Source/identity proof, not active-world or client reachability acceptance."
 }

@@ -23,6 +23,7 @@ object TreasureTrailNpcSteps {
     // Exact own-server spawn identity, not a guessed interaction radius or all same-name variants.
     private val actors = mapOf(
         "Hans" to Actor(0, Tile(3219, 3227, 0)),
+        "Wizard Traiborn" to Actor(881, Tile(3112, 3162, 1)),
         "Doric" to Actor(284, Tile(2953, 3450, 0)),
         "Arhein" to Actor(563, Tile(2803, 3430, 0)),
         "Ellis" to Actor(2824, Tile(3275, 3193, 0)),
@@ -35,6 +36,15 @@ object TreasureTrailNpcSteps {
         "Wise Old Man" to Actor(2253, Tile(3088, 3255, 0)),
         "Otto Godblessed" to Actor(2725, Tile(2502, 3487, 0)),
     )
+    // The source clue changelog dates the Wizard prefix to6July2022. Native881
+    // is still Traiborn at the exact same tower spawn; no duplicate NPC import.
+    private const val TRAIBORN_CIPHER = "Clue scroll (medium) - XJABSE USBJCPSO"
+    fun npcs(row: TreasureTrailStepCatalogue.Step): Set<Int> = row.existingNpcs +
+        if (row.key == TRAIBORN_CIPHER && row.npcName == "Wizard Traiborn") setOf(881) else emptySet()
+    fun matchesName(id: Int, name: String, row: TreasureTrailStepCatalogue.Step): Boolean =
+        name.equals(row.npcName, true) || row.key == TRAIBORN_CIPHER &&
+            row.npcName == "Wizard Traiborn" && id == 881 && name == "Traiborn"
+
     fun matchesActor(npc: Npc, row: TreasureTrailStepCatalogue.Step): Boolean {
         val actor = actors[row.npcName] ?: return true
         return npc.id == actor.id && npc.spawnTile == actor.spawn

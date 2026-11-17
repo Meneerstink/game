@@ -4,9 +4,11 @@ from pathlib import Path
 import json
 import os
 import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT/'build/clue/unique-additions/actual-tests'
+STAGED_ALIAS = '--staged-traiborn' in sys.argv
+OUT = ROOT/('build/clue/traiborn/staged-tests' if STAGED_ALIAS else 'build/clue/unique-additions/actual-tests')
 CACHE = Path(os.environ['USERPROFILE'])/'.gradle/caches/modules-2/files-2.1'
 JAVA = 'C:/Program Files/Eclipse Adoptium/jdk-11.0.32.101-hotspot/bin/java.exe'
 
@@ -28,13 +30,25 @@ def main():
     modules += ['io.mockk/'+name+'/1.13.4' for name in
         ['mockk-agent-api-jvm', 'mockk-agent-jvm', 'mockk-core-jvm', 'mockk-dsl-jvm', 'mockk-jvm']]
     libs = [str(p) for p in (ROOT/'game/build/install/game/lib').glob('*.jar')]
-    cp = [str(OUT/'library'), str(ROOT/'game/build/classes/kotlin/main'),
-          str(ROOT/'game/plugins/build/classes/kotlin/main')] + libs + [jar(m) for m in modules]
+    # Gradle may be compiling a frozen production snapshot while this ignored
+    # staged delta runs. Snapshot the completed jars; mutable class directories
+    # can be temporarily empty and must not fall through to old installDist jars.
+    import shutil
+    snapshots = OUT/'dependencies'
+    snapshots.mkdir(exist_ok=True)
+    for module in ['game', 'plugins']:
+        path = ROOT/('game/build/libs/game-0.0.4.jar' if module == 'game' else 'game/plugins/build/libs/plugins-0.0.4.jar')
+        shutil.copy2(path, snapshots/(module+'.jar'))
+    cp = [str(OUT/'library'), str(snapshots/'game.jar'), str(snapshots/'plugins.jar')] + libs + [jar(m) for m in modules]
     names = ['TreasureTrailNpcStepsTests', 'TreasureTrailNumberChallengeTests',
              'TreasureTrailStepCatalogueTests', 'TreasureTrailBasicStepsTests']
     libraries = [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls'/(name+'.kt') for name in
                  ['TreasureTrailNpcSteps', 'TreasureTrailNumberDialogue', 'TreasureTrailBasicSteps']]
     tests = [ROOT/'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/scrolls'/(name+'.kt') for name in names]
+    if STAGED_ALIAS:
+        stage = ROOT/'build/clue/traiborn/next'
+        libraries = [stage/p.name if (stage/p.name).is_file() else p for p in libraries]
+        tests = [stage/p.name if (stage/p.name).is_file() else p for p in tests]
     frozen = {str(p): sha256(p.read_bytes()).hexdigest() for p in libraries+tests}
     frozen.update({str(p):sha256(p.read_bytes()).hexdigest() for p in (ROOT/'data/cfg/clue').glob('*') if p.is_file()})
 

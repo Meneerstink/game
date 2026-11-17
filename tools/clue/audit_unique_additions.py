@@ -21,7 +21,7 @@ def main():
     runtime = (main/'content/scrolls/TreasureTrailNpcSteps.kt').read_text()
     constants = {name:int(id) for name,id in re.findall(r'const val (\w+) = (\d+)', (main/'api/cfg/Npcs.kt').read_text())}
     actors = re.findall(r'"([^"]+)" to Actor\((\d+), Tile\((\d+), (\d+), (\d+)\)\)', runtime)
-    assert len(actors) == 12
+    assert len(actors) == 13
     spawns = []
     for file in (main/'content/areas/spawns').glob('*.plugin.kts'):
         for block in re.findall(r'spawn_npc\((.*?)\)', file.read_text(), re.S):
@@ -44,7 +44,13 @@ def main():
             assert len(matches)==1,(name,matches)
             raw=cache.file(18,id>>7,id&127)
             definition=decode(raw)
-            assert definition['name'].casefold()==name.casefold(),(name,definition)
+            if name=='Wizard Traiborn':
+                # Same tower actor; the pinned cipher change history dates the prefix to6July2022.
+                pin=json.loads((ROOT/'docs/CLUE/cache/traiborn-native.json').read_text())
+                assert id==881 and tile==[3112,3162,1] and definition['name']=='Traiborn'
+                assert sha256(raw).hexdigest()==pin['native']['881']['sha256']
+            else:
+                assert definition['name'].casefold()==name.casefold(),(name,definition)
             assert not definition.get('stopped_at')
             assert any((option or '').casefold()=='talk-to' for option in definition['ops'])
             proof.append(dict(name=name,localId=id,spawn=matches[0],nativeName=definition['name'],
@@ -59,10 +65,10 @@ def main():
         assert rows==json.loads(staged.read_text()),'Production rows differ from the tested 107-row stage'
     out=dict(source='OSRS Wiki pinned clue/transcript pages; local cache identities; existing own-server spawn code',
         records=107,additionalUniqueSteps=15,tiers={'easy':7,'medium':3,'hard':5},actors=proof,
-        importChanges='none: item247/NPC10/STASH23/UI26map rosters unchanged',
+        importChanges='none: item248/NPC10/STASH23/UI26map rosters unchanged',
         caveat='Source/identity proof, not active-world or client reachability acceptance.')
     (ROOT/'docs/CLUE/UNIQUE-ADDITIONS-AUDIT.json').write_text(json.dumps(out,indent=2)+'\n')
-    print('Verified 15 unique source records and 12 actual native NPC identities/own-server spawns. No cache writes.')
+    print('Verified 15 unique source records and13actual native NPC identities/own-server spawns. No cache writes.')
 
 
 if __name__=='__main__':

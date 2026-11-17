@@ -14,9 +14,9 @@ object TreasureTrailBasicSteps {
         return when (row.action) {
             TreasureTrailStepCatalogue.Action.DIG -> row.challenge == TreasureTrailStepCatalogue.Challenge.NONE
             TreasureTrailStepCatalogue.Action.TALK -> {
-                val npc = row.existingNpcs.any { id ->
+                val npc = TreasureTrailNpcSteps.npcs(row).any { id ->
                     playerWorld.definitions.getNullable(NpcDef::class.java, id)?.let { definition ->
-                        definition.name.equals(row.npcName, true) && definition.options.any { it.equals("Talk-to", true) }
+                        TreasureTrailNpcSteps.matchesName(id, definition.name, row) && definition.options.any { it.equals("Talk-to", true) }
                     } == true
                 }
                 npc && when (row.challenge) {
@@ -58,9 +58,9 @@ object TreasureTrailBasicSteps {
     }
 
     fun matches(npc: Npc, row: TreasureTrailStepCatalogue.Step): Boolean {
-        if (npc.id !in row.existingNpcs || !TreasureTrailNpcSteps.matchesActor(npc, row)) return false
+        if (npc.id !in TreasureTrailNpcSteps.npcs(row) || !TreasureTrailNpcSteps.matchesActor(npc, row)) return false
         val definition = npc.world.definitions.get(NpcDef::class.java, npc.id)
-        return definition.name.equals(row.npcName, ignoreCase = true)
+        return TreasureTrailNpcSteps.matchesName(npc.id, definition.name, row)
     }
 
     fun killed(player: Player, npc: Npc) {
