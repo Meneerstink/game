@@ -54,8 +54,10 @@ class TreasureTrailHotColdTests {
             assertEquals(Tile(packed shr 14 and 16383,packed and 16383,packed ushr 28),target.centre)
             assertEquals(5,clue["columns"].asJsonObject["1"].asJsonObject["values"].asJsonArray[0].asInt)
         }
+        val sourceRoot=generateSequence(File(".").absoluteFile) { it.parentFile }
+            .map { File(it,"docs/CLUE/sources") }.first { it.isDirectory }
         fixture["sources"].asJsonObject.entrySet().forEach { (_,v) ->
-            val pin=v.asJsonObject;val raw=File("docs/CLUE/sources/"+pin["file"].asString).readBytes()
+            val pin=v.asJsonObject;val raw=File(sourceRoot,pin["file"].asString).readBytes()
             assertEquals(pin["sha256"].asString,MessageDigest.getInstance("SHA-256").digest(raw).joinToString("") { "%02x".format(it) })
         }
     }

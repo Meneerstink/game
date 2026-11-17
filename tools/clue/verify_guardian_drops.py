@@ -4,6 +4,7 @@ from hashlib import sha256
 from pathlib import Path
 import json
 import os
+import shutil
 import subprocess
 import sys
 
@@ -19,6 +20,7 @@ def jar(module): return str(sorted((CACHE/module).rglob('*.jar'))[-1])
 
 def main():
     OUT.mkdir(parents=True)
+    data_root=ROOT/'data'
     staged='--staged' in sys.argv
     libraries=[NEXT/'ClueGuardianDrops.kt'] if staged else [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/ClueGuardianDrops.kt']
     tests=[NEXT/'ClueGuardianDropsTests.kt'] if staged else [ROOT/'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/scrolls/ClueGuardianDropsTests.kt']
@@ -115,6 +117,19 @@ def main():
         tests=[ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/ClueMimicArenaImportTests.kt']
         inputs=libraries+tests+[ROOT/'docs/CLUE/cache/mimic-arena-source.json']
         names=['gg.rsmod.game.tools.importer.ClueMimicArenaImportTests']
+    if '--mimic-scenery-staged' in sys.argv:
+        following=ROOT/'build/clue/mimic-arena/next'
+        libraries=[following/'MimicArenaScenery.kt']
+        tests=[following/'ClueMimicSceneryTests.kt']
+        inputs=libraries+tests+[following/'mimic-scenery.json']
+        names=['gg.rsmod.plugins.content.areas.watson.ClueMimicSceneryTests']
+        data_root=OUT/'data';(data_root/'cfg/clue').mkdir(parents=True)
+        shutil.copyfile(following/'mimic-scenery.json',data_root/'cfg/clue/mimic-scenery.json')
+    if '--mimic-scenery-runtime' in sys.argv:
+        libraries=[ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/watson/MimicArenaScenery.kt']
+        tests=[ROOT/'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/areas/watson/ClueMimicSceneryTests.kt']
+        inputs=libraries+tests+[ROOT/'data/cfg/clue/mimic-scenery.json']
+        names=['gg.rsmod.plugins.content.areas.watson.ClueMimicSceneryTests']
     frozen={str(p):sha256(p.read_bytes()).hexdigest() for p in inputs}
     compiler=[jar(m) for m in ['org.jetbrains.kotlin/kotlin-compiler-embeddable/1.8.0',
         'org.jetbrains.kotlin/kotlin-stdlib/1.8.0','org.jetbrains.kotlin/kotlin-script-runtime/1.8.0',
@@ -133,7 +148,7 @@ def main():
     argfile=OUT/'compile.args';argfile.write_text('\n'.join('"'+a.replace('\\','/')+'"' for a in args))
     run([JAVA/'java.exe','-Xmx512m','-cp',';'.join(compiler),'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler','@'+str(argfile)])
     with (OUT/'tests.txt').open('w') as stream:
-        result=subprocess.run([str(JAVA/'java.exe'),'-Xmx256m','-Drsps.data='+str(ROOT/'data'),'-cp',';'.join(cp),
+        result=subprocess.run([str(JAVA/'java.exe'),'-Xmx256m','-Drsps.data='+str(data_root),'-cp',';'.join(cp),
                               'org.junit.runner.JUnitCore']+names,
                              cwd=ROOT,stdout=stream,stderr=subprocess.STDOUT,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
     output=(OUT/'tests.txt').read_text(errors='replace');print(output[-6500:],flush=True)

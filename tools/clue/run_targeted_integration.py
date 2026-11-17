@@ -138,6 +138,13 @@ if '--handoff' in sys.argv:
     PLUGINS = list(dict.fromkeys(CARD_PLUGINS + PLUGINS + ['gg.rsmod.plugins.content.scrolls.' + name for name in
         ['CluePetDigTests','ClueAdminStepsTests']]))
 
+if '--metadata-fix' in sys.argv:
+    # Only the failed path class and classes affected by the new verified arena metadata.
+    CORE=[]
+    PLUGINS=['gg.rsmod.plugins.content.scrolls.TreasureTrailHotColdTests'] + [
+        'gg.rsmod.plugins.content.areas.watson.'+name for name in
+        ['ClueMimicSceneryTests','MimicEncounterTests','MimicChallengeTests','MimicAttackTests']]
+
 
 def inputs():
     tracked = subprocess.check_output(['git', 'ls-files'], cwd=ROOT, text=True).splitlines()
