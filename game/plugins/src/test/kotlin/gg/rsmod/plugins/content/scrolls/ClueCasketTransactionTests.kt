@@ -2,6 +2,10 @@ package gg.rsmod.plugins.content.scrolls
 
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
+import gg.rsmod.game.message.Message
+import gg.rsmod.game.message.impl.MessageGameMessage
+import gg.rsmod.game.message.impl.MusicEffectMessage
+import gg.rsmod.game.model.PawnList
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeMap
@@ -254,5 +258,66 @@ class ClueCasketTransactionTests {
             assertSame(source, player.inventory[0])
             assertEquals(0, ClueCompletions.get(player, medium))
         } finally { unmockkObject(ClueItems, ClueCasketLocation) }
+    }
+
+    @Test fun `real master mega rare roll broadcasts gold to both accounts and opens with one sourced jingle`() {
+        val master = ClueScrollTier.MASTER
+        val catalogue = ClueRewardCatalogue.current
+        val outcomes = catalogue.outcomes.getValue(master)
+        val index = outcomes.indexOfFirst { event -> event.rows.any { it.osrsId == 20011 } }
+        assertTrue(index >= 0)
+        val midpoint = outcomes.take(index).sumOf { it.probability } + outcomes[index].probability / 2
+        val random = object : Random() {
+            override fun nextBits(bitCount: Int) = 0
+            override fun nextDouble() = midpoint
+            override fun nextInt(from: Int, until: Int) = from
+        }
+        val plan = assertNotNull(ClueCasketRewards.plan(master, random, rolls = 5, local = { it }))
+        assertEquals(setOf(20011), plan.megaRare)
+        val witness = mockk<Player>(relaxed = true)
+        every { witness.attr } returns AttributeMap()
+        every { world.players } returns PawnList(arrayOf(player, null, witness))
+        every { player.username } returns "clue_tester"
+        every { definitions.get(ItemDef::class.java, 20011) } returns ItemDef(20011).also { it.name = "3rd age axe" }
+        val ownerPackets = mutableListOf<Message>()
+        val witnessPackets = mutableListOf<Message>()
+        every { player.write(*anyVararg<Message>()) } answers { ownerPackets.addAll(firstArg<Array<Message>>()); Unit }
+        every { witness.write(*anyVararg<Message>()) } answers { witnessPackets.addAll(firstArg<Array<Message>>()); Unit }
+        val source = Item(master.casketId)
+        player.inventory[0] = source
+
+        assertNotNull(ClueCasketRewards.award(player, 0, source, plan))
+        assertNull(ClueCasketRewards.award(player, 0, source, plan))
+        assertEquals(5, player.inventory.getItemCount(20011))
+        assertEquals(1, ClueCompletions.get(player, master))
+        val expected = "<col=ffd700>Clue Tester has received 3rd age axe from a Reward casket (78)!</col>"
+        assertEquals(listOf(expected), ownerPackets.filterIsInstance<MessageGameMessage>().map { it.message }.filter { it.startsWith("<col=ffd700>") })
+        assertEquals(listOf(expected), witnessPackets.filterIsInstance<MessageGameMessage>().map { it.message })
+        assertEquals(listOf(MusicEffectMessage(193)), ownerPackets.filterIsInstance<MusicEffectMessage>())
+        assertTrue(witnessPackets.none { it is MusicEffectMessage })
+        verify(exactly = 1) { CollectionLog.record(player, master.key, plan.rewards.map { it.id to it.amount }) }
+    }
+
+    @Test fun `ordinary 78 reward has no golden announcement and rejected award has no opening effects`() {
+        val master = ClueScrollTier.MASTER
+        val witness = mockk<Player>(relaxed = true)
+        every { witness.attr } returns AttributeMap()
+        every { world.players } returns PawnList(arrayOf(player, witness))
+        val packets = mutableListOf<Message>()
+        every { player.write(*anyVararg<Message>()) } answers { packets.addAll(firstArg<Array<Message>>()); Unit }
+        val source = Item(master.casketId)
+        player.inventory[0] = source
+        val plan = ClueCasketRewards.Plan(master, 5, listOf(Item(995, 100)))
+        every { definitions.getNullable(ItemDef::class.java, 995) } returns null
+        assertNull(ClueCasketRewards.award(player, 0, source, plan))
+        assertSame(source, player.inventory[0])
+        assertTrue(packets.isEmpty())
+        assertEquals(0, ClueCompletions.get(player, master))
+
+        every { definitions.getNullable(ItemDef::class.java, 995) } returns ItemDef(995)
+        assertNotNull(ClueCasketRewards.award(player, 0, source, plan))
+        assertEquals(listOf(MusicEffectMessage(193)), packets.filterIsInstance<MusicEffectMessage>())
+        assertTrue(packets.filterIsInstance<MessageGameMessage>().none { it.message.startsWith("<col=ffd700>") })
+        verify(exactly = 0) { witness.write(*anyVararg<Message>()) }
     }
 }
