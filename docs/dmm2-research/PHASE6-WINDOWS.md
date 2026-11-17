@@ -37,7 +37,9 @@ sluitcallbacks, alle opslag/product/inventoryslots en de koop/sellbackknoppen. B
 De SafeBox hergebruikt de bestaande tien-slotscontainer. X bewaart view-identiteit, refreshrevisie en de
 exacte inventory-itemreferentie; close/reopen of vervangen van de stack maakt een oud antwoord onbruikbaar.
 1/5/10/All loopt over bestaande fysieke exemplaren; iedere verplaatsing behoudt eigen charges.
-Bulk worn-items roept ook de bestaande unequip-item/slot-hooks aan. Geen bankfallback of ontradeable bypass.
+Bulk worn-items controleert de bestaande `canUnequipSlot`-guard voordat iets verplaatst wordt en roept bij
+volledige verwijdering ook de bestaande unequip-item/slot-hooks aan. Een geblokkeerd gedragen item behoudt
+zijn plaats, charges en totaal; gedeeltelijk opgeslagen ammo blijft uitgerust. Geen bankfallback of untradeable bypass.
 
 De Reward Store laat zeven producten zien, vult de twee saldovelden, geselecteerde prijs en onbeperkte voorraad,
 en biedt 1/5/10/50 via kaartmenu en koopknoppen. Inventory Select opent de806-info met Value/Owned,
@@ -59,9 +61,12 @@ SHA256 `aede3e0617d4a9068038d30b636d63a25e3f2f1ff862e3207cc2ab59564462fb`.
 232→1203 was al aanwezig. Dit vervangt de oude143-regels-pin als actuele bootfixture; historische fase5-bewijzen
 zijn niet achteraf aangepast.
 
-De reeds toegepaste ronde had uitsluitend17/3/55/14 componenten. **Na deze merge moet Claude de bestaande
-OsrsInterfacePortTool opnieuw uitvoeren met `dmm2-ui --reuse`**, met zijn echte `cfg/dmm2/interfaces.tsv`.
-De nieuwe append-contracten zijn:
+Claude heeft de nieuwe append-contracten op 17 november om 15:45 al toegepast op de testcache:
+`tx-20261117-144453`, 622 writes, `VERIFY_OK` (dossier 15:4x, integratierapportcommit `d1d87fbcb`).
+De mislukte ronde 14:00 is teruggedraaid; de component-id-correctie uit `6b5be3536` zit in deze geslaagde import.
+De onderstaande aantallen komen uit die overdracht. Dit is Claude's cachebewijs; GPT-A heeft geen apply gedaan.
+De hervatting na16:00 verandert geen importercode en vereist daarvoor geen nieuwe UI-import.
+De append-contracten zijn:
 
 |OSRS-root|Componenten|Servercontract|
 |---|---:|---|
@@ -96,3 +101,44 @@ De volledige97-byte synthpayload is in bron2686 en de eigen667-cache identiek (S
 Hover/pressed scripts blijven een visuele Claude-controle bij UI-pariteit.
 
 Validatie en uiteindelijke commit-/testnummers staan in `PHASE6-VALIDATION.json` en de dossierregels.
+
+## Hervatting na 16:00 en eigen regressie
+
+Claude's twee fixturecorrecties uit `989df32ac` zijn op deze branch overgenomen: MockK-verificatie direct op
+het pluginsobject en de echte scythe 8056-mapping. De productiecorrecties native Fire 721/116 en de
+basiswapencue van Volatile uit `6b5be3536` blijven behouden.
+
+`RUN-PHASE6-TESTS.ps1` gebruikt nu de verplichte `C:/RSPS/tools/remote/rgradle.cmd`-route en normale
+modulecompilatie. `phase6-regression.gradle` beperkt alleen de scripts tot de negen gewijzigde DMM2-bindings
+en isoleert testklassen; er worden geen compiledependencies uitgeschakeld en geen oude phase5-classfiles
+voorgeschoven. De eigen gerichte klassen zijn UiPlan, Window, Interaction, SafeDepositBox, NigelRewardStore,
+Boot, Break en WeaponPresentation. De verse aantallen, XML-hashes en uitvoerstatus volgen in
+`PHASE6-VALIDATION.json`; eerdere Claude-resultaten worden daarin apart gelabeld.
+
+De eerste productieaanvulling van deze hervatting is de bestaande unequip-slotbeveiliging op worn-bulkdeposit.
+Bron voor die integratie is `EquipAction.unequipInner` / `PluginRepository.canUnequipSlot`; geen nieuwe
+OSRS-mechaniek, getal, tekst of donor toegevoegd. Het nieuwe breekgeval controleert de weigering met een
+charged item, geen unequipcallbacks bij weigering, daarna normale overdracht zodra de guard toestaat.
+
+Claude controleert nog zichtbaar in de echte client: alle knoppen en item-/naam-/kaartklikken, skull,
+X-invoer na sluiten/heropenen, gedeelde Wizard/Seer-inhoud, volle inventory, charges en geblokkeerde uitrusting,
+Nigel Trade en dialoog, zeven koop/refundprijzen in DP, sluiten/X/Esc, scrollen en Fixed/Resizable/Stretched.
+Het Reward Store-bronmenu is 1/5/10/50; het SafeBox-menu is 1/5/10/X/All. Die verschillen komen uit de scripts.
+De testclientstappen staan in `TESTCLIENT-CHECKLIST.md` blok 14. Open visuele bronpariteit blijft bij Claude;
+deze serveroverdracht claimt geen grafische of live-aftekening.
+
+## Nieuwe echte-clientbevindingen van Claude om 16:1x
+
+De negen venstercallbacks gebruikten de verkeerde waarde: `getInteractingOption()` is de positie
+in `packets.yml`, geen OSRS-menunummer. Ze roepen nu `Dmm2Interactions.option(player)` aan, dat
+het echte `INTERACTING_OPCODE_ATTR` leest via `getInteractingOpcode()` en de bestaande,
+in de client bewezen `SlayerRewardsUi.opOf` gebruikt. IF_BUTTON1/opcode 61 is operatie 1,
+ook al staat hij als derde in de packetlijst. De nieuwe regressie vult beide packetvelden,
+loopt door Select/Buy-1/Sell en Deposit-1/5 en controleert saldo en itemtotalen. Een tweede
+regressie bewaakt de verborgen expanded-view-header 14 en de twee normale footer-saldovelden.
+Dit neemt Claude's twee clientfixes over; de verse herhaling moet deze nieuwste versie bevatten.
+
+Het brongat voor View/Help/filter is opgelost in `PHASE6-CONTROLS.md` en
+`phase6-sources/controls.json`. De grafische kinderen en volledige expanded-view blijven een
+uitdrukkelijke cache/clientoverdracht aan Claude. Het opnieuw zichtbaar maken van lege controls
+is geen oplossing; bronmaten en disabled dropdown-kleur/pijl zijn nu exact gedocumenteerd.

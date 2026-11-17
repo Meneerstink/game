@@ -178,6 +178,44 @@ class Dmm2WindowTests {
         assertEquals(0,box().occupiedSlotCount); assertEquals(100L,count(995))
     }
 
+    @Test fun `raw packet opcode selects before buying and deposits one before five despite packet list positions`() {
+        val packetOpcodes = listOf(10,64,61,4,52,81,18,25,91,20) // data/packets.yml
+        fun packet(opcode: Int): Int {
+            f.attr[gg.rsmod.game.model.attr.INTERACTING_OPCODE_ATTR] = opcode
+            f.attr[gg.rsmod.game.model.attr.INTERACTING_OPT_ATTR] = packetOpcodes.indexOf(opcode)+1
+            return Dmm2Interactions.option(f.player)
+        }
+        // Real IF_BUTTON1 is third in packets.yml, but its operation is Select / Deposit-1.
+        points(30_000); shop()
+        Dmm2RewardUi.product(f.player,3,packet(61))
+        assertEquals(30_000,points()); assertEquals(0L,count(rug))
+        Dmm2RewardUi.product(f.player,3,packet(64)) // Buy-1
+        assertEquals(27_000,points()); assertEquals(1L,count(rug))
+        val slot = f.inventory.rawItems.indexOfFirst { it?.id == rug }
+        Dmm2RewardUi.inventory(f.player,slot,packet(61),rug) // Select does not refund.
+        assertEquals(27_000,points()); assertEquals(1L,count(rug))
+        Dmm2RewardUi.sellSelected(f.player,0)
+        assertEquals(30_000,points()); assertEquals(0L,count(rug))
+        Dmm2RewardUi.close(f.player)
+        f.inventory[0] = Item(995,100); safe()
+        Dmm2SafeDepositUi.click(f.player,false,0,packet(61),995)
+        assertEquals(1,box().occupiedSlotCount); assertEquals(99,f.inventory[0]!!.amount)
+        Dmm2SafeDepositUi.click(f.player,false,0,packet(64),995)
+        assertEquals(6,box().occupiedSlotCount); assertEquals(94,f.inventory[0]!!.amount)
+        assertEquals(3,packet(4)); assertEquals(4,packet(52)); assertEquals(5,packet(81)); assertEquals(10,packet(25))
+        assertEquals(0,packet(-1))
+        assertEquals(100L,count(995))
+    }
+
+    @Test fun `normal desktop shop hides expanded header and retains both footer balance fields`() {
+        points(2110); shop()
+        val hides = sent.filterIsInstance<gg.rsmod.game.message.impl.IfSetHideMessage>()
+        assertTrue(hides.any { it.hash == (2002 shl 16 or 14) && it.hidden })
+        val text = sent.filterIsInstance<IfSetTextMessage>()
+        assertTrue(text.any { it.parent == 2002 && it.child == 33 && it.text == "2,110" })
+        assertTrue(text.any { it.parent == 2002 && it.child == 46 && it.text == "2,110" })
+    }
+
     @Test fun `all seven products buy and refund through real mapped windows without item or point inflation`() {
         shop()
         for ((index,reward) in Dmm2RewardUi.PRODUCTS.withIndex()) {

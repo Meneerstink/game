@@ -50,6 +50,8 @@ object Dmm2RewardUi : Dmm2Interactions.RewardUi {
         player.setInterfaceEvents(side, 3, -1..-1, 2)
         player.setComponentText(main, 45, "Deadman Points")
         player.setComponentText(main, 32, "Deadman Points")
+        // OSRS desktop shows the balance in the footer; the expanded-view header overlaps normal-view help.
+        player.setComponentHidden(main, 14, true)
         // No shop filters exist (enum4988); hide the source's unported view/filter controls.
         player.setComponentHidden(main, 11, true)
         player.setComponentHidden(main, 12, true)
