@@ -358,7 +358,10 @@ object CombatConfigs {
                 return shieldAnimation.blockAnimation.id
             }
             val weapon = pawn.getEquipment(EquipmentType.WEAPON)?.id ?: -1
-            gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.blockAnimation(weapon)?.let { return it }
+            // N630 (17-11, bot trace screens\N630\looks-2259): the attack looks a DMM2 corrupted / (Deadman) weapon up through its presentation
+            // base, the block did not -> Corrupted voidwaker blocked with the 667 HD sequence 15074. Same base for both.
+            val lookId = if (weapon == -1) weapon else gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.presentationBase(weapon)
+            gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.blockAnimation(lookId)?.let { return it }
             val weaponAnimation = weapon.let { CombatAnimation.getItemAnimation(it, weaponType = pawn.getWeaponType()) }
             if (weaponAnimation != null) {
                 return weaponAnimation.blockAnimation.id
