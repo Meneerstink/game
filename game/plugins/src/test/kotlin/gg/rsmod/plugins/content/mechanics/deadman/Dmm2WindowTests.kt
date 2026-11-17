@@ -257,7 +257,7 @@ class Dmm2WindowTests {
             dto.items.forEach { (slot,item) -> restored[slot] = item }
             f.containers[key] = restored
             if (key.name == "inventory") {
-                f.inventory.clear(); dto.items.forEach { (slot,item) -> f.inventory[slot] = item }
+                f.inventory.removeAll(); dto.items.forEach { (slot,item) -> f.inventory[slot] = item }
                 f.containers[key] = f.inventory
             }
         }

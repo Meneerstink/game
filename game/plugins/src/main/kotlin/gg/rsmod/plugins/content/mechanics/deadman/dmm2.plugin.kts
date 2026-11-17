@@ -271,8 +271,10 @@ Dmm2Ids.ItemId.FIRE_RUBY.local?.let { id ->
         }
         val tile = Tile(player.tile)
         player.queue(TaskPriority.WEAK) {
-            player.animate(Dmm2Ids.seq(FireAmulet.CRAFT_ANIMATION_SOURCE) ?: Anims.LVL_3_ENCHANT)
-            player.graphic(Dmm2Ids.spot(FireAmulet.CRAFT_GRAPHIC_SOURCE) ?: Gfx.LVL_3_ENCHANT, 92)
+            // Claude 17-11: our own 667 seq 721 + spotanim 116 = OSRS 116 byte-identical (model 3103, seq 679); the imported
+            // copies (17752/3470) drew the effect green in the test client, so the native ids are used ('fix first, import where needed').
+            player.animate(Anims.LVL_3_ENCHANT)
+            player.graphic(Gfx.LVL_3_ENCHANT, 92)
             // Same named ruby-amulet enchant sound as the visually identical action. See PHASE5-SUPPLEMENT: inference, not an audio capture.
             player.playSound(Sfx.ENCHANT_RUBY_AMULET)
             wait(FireAmulet.CRAFT_TICKS)

@@ -45,7 +45,8 @@ object CorruptedWeapons {
                 else -> gg.rsmod.plugins.api.cfg.Sfx.SCYTHE_SLASH
             }
             ItemId.VOIDWAKER.matches(id) || ItemId.KHOPESH.matches(id) -> sounds.SWORD.of(style)
-            ItemId.SHADOW.matches(id) || ItemId.SHADOW_EMPTY.matches(id) || ItemId.VOLATILE.matches(id) -> sounds.STAFF.of(style)
+            // Claude 17-11: Volatile uses its base staff's own cue (test client: base 23084 = 2555, STAFF.of gave 2556).
+            ItemId.SHADOW.matches(id) || ItemId.SHADOW_EMPTY.matches(id) -> sounds.STAFF.of(style)
             else -> sounds.melee(presentationBase(id), style)
         }
     }
