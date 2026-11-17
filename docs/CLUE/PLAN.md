@@ -50,7 +50,7 @@ the former rarity heuristic and provide all items in source order.
    before a reward is consumed; never silently remove/reweight missing items.
 3. Preserve source-correct originals alongside a limited source-classified selection (about 70 NEW steps): emotes/Uri/double
    agents/STASH, cryptic/search/talk, anagrams/challenges/ciphers, coordinates and
-   wizards, maps, puzzles, light boxes, hot/cold, Falo, Charlie and Sherlock.
+   wizards, maps, puzzles, light boxes, hot/cold, Falo and Sherlock (Charlie belongs to the excluded beginner tier).
    Record each excluded step and the proven missing map/area in the dossier.
    The donor's every-tier registration, incorrect gear and automatic completion
    cannot be reinstated. ORIGINAL-POOL-AUDIT.json reconciles all41 old locations:
@@ -60,8 +60,10 @@ the former rarity heuristic and provide all items in source order.
    23total STASH units. Fifteen further sourced steps remove the overlap deficit:
    current catalogue107 (29/29/25/12/12),38originals+69unique additions. This is
    NOT an active-pool count; three torn parts form one choice. Three historical
-   originals still have explicit source/modern-area gaps. Guardian combat, hot/cold
-   and master puzzle handlers/assets remain acceptance points.
+   originals still have explicit source/modern-area gaps. Guardian/hotcold and
+   master puzzle backends are implemented; five Q8 guardian selections remain
+   source-gated. Offline applied-asset predicates admit102records/100choices,
+   which is not client/boot acceptance.
 4. Finish and independently review the inherited Watson hand-in/check/NPC Contact,
    Mimic arena/combat/death/rewards. B owns all of these after the 04:2x handoff.
 5. Source-by-source acquisition: NPC drop tables, nests/geodes/bottles, implings,
@@ -78,8 +80,9 @@ the former rarity heuristic and provide all items in source order.
   They are in pinned cache 2686 and therefore belong to the parity work. Quest
   Owner 15 November 00:2x explicitly grants the X Marks the Spot box unlock to
   everyone; no beginner quest or beginner tier is introduced.
-* Bloodhound's Dig option was added after the pinned cache (8 September 2026):
-  runtime option/ID needs a source-compatible import plan, not a guessed slot.
+* Bloodhound's Dig option was added after the pinned cache (8 September 2026).
+  Source2762sequence14498 and the fourth menu option are proven/imported by
+  Claude17-Nov18:5x; pet-dig.tsv names the applied local17769. Client checks remain.
 * Owner 14-11 22:1x keeps kits shop-only. Kit outcomes reroll over the remaining
   weighted table. Source probabilities stay in the evidence; the actual roll and
   viewer use the conditional distribution, which slightly increases other rates.
@@ -105,8 +108,12 @@ window routes. Commits9c15f3b2c/35d37c1ca/aea40c2b5 address those paths. All
 four modal routes use548:9/746:12; loose boxes open a personal playable view
 without a clue-completion token. While Mimic is unavailable, the ordinary table
 and odds remain active without consuming opt-in/RECEIVED/attempt state.
-Fresh13-class/scripts integration20261117-193256 is pending. See the current
-CLAUDE-HANDOFF.md section for exact fixed/resizable and transaction rechecks.
+Integration193256 compiled all scripts and passed89/90tests; its only failure
+was a new test-count assertion corrected in9d0c257e2. Run195429 has no retrieved
+XML/summary after interruption, so remains unaccepted despite remote success.
+Fresh13-class/scripts integration215433, including78broadcast/jingle break
+tests, is pending. Claude clientround2 independently confirmed the four repairs
+in resizable (dossier21:4x). See CLAUDE-HANDOFF.md for remaining checks.
 No cache writes are required for these repairs. Owner Q1/Q5 and source Q8 remain
 explicit exclusions; no primary values are fabricated to remove their gates.
 

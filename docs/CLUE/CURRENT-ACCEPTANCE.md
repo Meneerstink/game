@@ -12,7 +12,8 @@ MIMIC-ARENA.md; neither was applied by B. Baseline integration165044 failed
 before compilation on a duplicate console argument. Corrected integration173604
 selected17core/54plugin classes/scripts with5589frozen inputs:315tests,
 314green/1HotCold-test-path failure/0skip. The whole branch and scripts compile.
-The path is fixed; narrow rerun175915 covers it and the new scenery metadata.
+The path is fixed. Runs175915/195429 have remote success messages but no
+completed local XML/summary retrieval; neither is accepted as a green rerun.
 Claude subsequently applied pet-dig and arena4160 in round2 (dossier18:5x);
 their new mapping/client checks are explicit, not a request to repeat imports.
 
@@ -23,9 +24,14 @@ all20emote editorial prefixes, mounts four modal routes on MAIN_SCREEN
 (548:9/746:12), lets ordinary elite/78caskets open while Mimic is disabled, and
 binds/opens loose hard/master puzzle boxes plus lightboxes without clue credit.
 Drop Viewer odds use the same encounter-readiness gate as actual openings.
-The current focused13-class run is integration20261117-193256 via rgradle;
-no green result is claimed yet. Full fixed/resizable/real-NPC/client break checks
-are in CLAUDE-HANDOFF.md. These source repairs require no cache changes.
+Integration193256 compiled all scripts with5598unchanged inputs:89/90tests
+passed; only the then-new emote-count assertion was wrong (20versus23records).
+Commit9d0c257e2 fixes that assertion. Fresh13-class run215433 also includes two
+78golden-broadcast/jingle transaction break tests; result pending.
+Claude's client round2 (dossier21:4x, screens/CLUE-R2) independently confirms
+all four round1 defects repaired in RESIZABLE: map, loose boxes, ordinary78
+opening, and the reviewed emote data. Full fixed/resizable/real-NPC/client break
+checks remain in CLAUDE-HANDOFF.md. No cache changes for these source repairs.
 
 ## Completed components and evidence
 
@@ -110,8 +116,9 @@ Claude from applying any of the prepared item/NPC/STASH/UI/combat imports.
 * A1-A4/F1-F3: pinned Wiki/cache data and per-adapter/source/asset audits above.
   No donor behaviour or estimated ID is promoted as a source fact.
 * A5/F7: integration173604 compiled everything and passed314of315tests;
-  rerun175915 handles the failed path class plus new scenery metadata. Do not
-  call the original run wholly green; the narrow rerun's result is separate.
+  integration193256 reran the failed path class successfully, but had one new
+  test-count failure (89/90). Corrected13-class rerun215433 is separate and
+  pending. Do not call either original run wholly green.
 * A6-A9/F4/F8: OPEN, assigned to Claude by the task card: compare actual client
   against OSRS, run the requested break cases, then prove the live bundle.
 * A10: component commits plus timestamped ChatGPT-B lines in team/dossiers/CLUE.txt;
