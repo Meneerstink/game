@@ -4855,7 +4855,7 @@
     "tier": "master",
     "kind": "ANAGRAM",
     "action": "TALK",
-    "hint": "This anagram reveals who to speak to next: Dim Tharn",
+    "hint": "This anagram reveals who to speak to next: DIM THARN",
     "points": [],
     "npcName": "Mandrith",
     "npcCandidates": [
@@ -4891,7 +4891,7 @@
     "tier": "master",
     "kind": "ANAGRAM",
     "action": "TALK",
-    "hint": "This anagram reveals who to speak to next: Mus Kil Reader",
+    "hint": "This anagram reveals who to speak to next: MUS KIL READER",
     "points": [],
     "npcName": "Radimus Erkle",
     "npcCandidates": [

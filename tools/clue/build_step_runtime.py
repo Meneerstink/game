@@ -27,9 +27,11 @@ def scroll_text(kind, hint):
     bare instruction. Map clues show their map image; their text is left as is."""
     if not isinstance(hint, str) or kind == 'MAP':
         return hint
-    body = re.sub(r'^The [a-z]+ reveals\s*(?:who to speak to|where to dig|where to search)?\s*:?\s*', '', hint.strip(), flags=re.I).strip()
+    # Idempotent: also strips an already applied in-game lead-in ('This anagram reveals who to speak to next: ').
+    body = re.sub(r'^(?:The|This) [a-z]+ reveals\s*(?:who to speak to|where to dig|where to search)?(?:\s+next)?\s*:?\s*', '', hint.strip(), flags=re.I).strip()
     if kind == 'ANAGRAM':
-        return 'This anagram reveals who to speak to next: ' + body
+        # Anagram letters are upper case on every scroll ('A BAKER'); guide-only master rows carry title case ('Dim Tharn').
+        return 'This anagram reveals who to speak to next: ' + body.upper()
     if kind == 'CIPHER':
         return 'The cipher reveals who to speak to next: ' + body
     if kind == 'COORDINATE':

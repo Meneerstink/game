@@ -25,7 +25,8 @@ class TreasureTrailStepCatalogueTests {
         val text = rows.filter { it.kind != "MAP" }
         assertTrue(text.none { Regex("^The (clue|cryptic|emote|map|coordinate|anagram) reveals", RegexOption.IGNORE_CASE).containsMatchIn(it.hint) },
             text.filter { Regex("^The (clue|cryptic|emote|map|coordinate|anagram) reveals").containsMatchIn(it.hint) }.joinToString { it.key })
-        assertTrue(text.filter { it.kind == "ANAGRAM" }.all { it.hint.startsWith("This anagram reveals who to speak to next: ") })
+        assertTrue(text.filter { it.kind == "ANAGRAM" }.all { it.hint.startsWith("This anagram reveals who to speak to next: ") &&
+            it.hint.removePrefix("This anagram reveals who to speak to next: ").let { letters -> letters == letters.uppercase() } })
         assertTrue(text.filter { it.kind == "CIPHER" }.all { it.hint.startsWith("The cipher reveals who to speak to next: ") })
         val coordinate = Regex("""\d+ degrees \d+ minutes (north|south)<br>\d+ degrees \d+ minutes (east|west)""")
         assertTrue(text.filter { it.kind == "COORDINATE" }.all { coordinate.matches(it.hint) }, text.filter { it.kind == "COORDINATE" }.joinToString { it.hint })
