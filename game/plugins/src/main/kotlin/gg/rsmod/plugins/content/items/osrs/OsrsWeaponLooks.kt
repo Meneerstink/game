@@ -274,8 +274,24 @@ object OsrsWeaponLooks {
                 val crush = gg.rsmod.plugins.content.activity.cox.CoxIds.seq(7507) ?: return@let null
                 id to Look(all(crush), block = gg.rsmod.plugins.content.activity.cox.CoxIds.seq(7512))
             },
-        ).toMap()
+        ).toMap() + kerisLooks()
     }
+
+    /**
+     * N630 Keris partisan + ornaments (ToA ids.tsv: OSRS 25979 / 25981 breaching / 27287 corruption / 27291 the sun / 30891 amascut).
+     * No text source names its attacks (wiki, gameval only TOA_KERIS_PARTISAN_SPECIAL01 9544) -> MEASURED in OSRS video (work\keris-video,
+     * N630 dossier 17-11): Stab and Pound play the SAME motion - partisan held level overhead (~0.3 s hold), swept down, thrust level at
+     * hip height (~0.3 s hold), back; ~1.1 s. Only HUMAN_SPEAR_LUNGE 429 (local 15798, delays 4,4,15,4,4,4,4,15,4 = 1.16 s) and its copy
+     * HUMAN_ZAMORAKSPEAR_LUNGE 1710 have that two-hold shape (the stab seqs 428/1711 = one 18-cycle hold, 0.8 s) - 429 on every style,
+     * spear block 383 (ADVICE, ONZEKER between 429 and 1710; testclient screens\N630\keris2).
+     */
+    private fun kerisLooks(): Map<Int, Look> {
+        val look = Look(all(OsrsSeq.HUMAN_SPEAR_LUNGE), block = OsrsSeq.OSRS_DEFEND_SPEAR)
+        return kerisIds().associateWith { look }
+    }
+
+    /** Local ids of the Keris partisan and its 4 ornament variants (ToA id table). */
+    fun kerisIds(): List<Int> = listOf(25979, 25981, 27287, 27291, 30891).mapNotNull { gg.rsmod.plugins.content.activity.toa.ToaIds.item(it) }
 
     fun attackAnimation(
         weaponId: Int,
