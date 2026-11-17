@@ -1,0 +1,16 @@
+[
+  {
+    "file": "build\\dmm2\\phase7-videos\\chronicle-0IN6OGvoXCE.mp4",
+    "sha256": "0e49d9b920541b6a85486dd0335ae72180cbc363ef58c3a472bcbfdb83869e10",
+    "source": "https://www.youtube.com/watch?v=0IN6OGvoXCE",
+    "download": "yt-dlp --no-playlist -f 134",
+    "fps": 25
+  },
+  {
+    "file": "build\\dmm2\\phase7-videos\\chronicle-qzFlKMFGZOU.mp4",
+    "sha256": "54a58e88cab0e08cfff85ba7d7e5459b341fd3ee93985acb225e6927e71ef9eb",
+    "source": "https://www.youtube.com/watch?v=qzFlKMFGZOU",
+    "download": "yt-dlp --no-playlist -f 134",
+    "fps": 25
+  }
+]

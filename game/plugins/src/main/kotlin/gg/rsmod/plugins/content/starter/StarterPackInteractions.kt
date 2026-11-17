@@ -74,12 +74,12 @@ object StarterPackInteractions {
     }
 
     fun travel(player: Player, used: Item, slot: Int, equipped: Boolean): Result {
-        val appearance = chronicleAppearance ?: return Result.NOT_READY
         if (player.tile.getWildernessLevel() > 0) return Result.WILDERNESS
         if (charges(player) == 0) {
             player.message("Your book does not have any charges. Purchase some Teleport Cards from Diango.")
             return Result.NO_CHARGES
         }
+        val appearance = chronicleAppearance ?: return Result.NOT_READY
         player.canTeleport(appearance) {
             if (spend(player, used, slot, equipped) == Result.OK) {
                 player.teleport(DESTINATION, appearance)
