@@ -1,0 +1,9 @@
+{
+  "inputs": {
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueGuardianDrops.kt": "5ec481b1a439d0421a75df87d5241a80af38f4a1431702709f323dd1c930959f",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueGuardianDropsTests.kt": "1d9434fae1c77623011e0e3f05be2e25692957f9dbe1a031be9f300a951274cd",
+    "C:\\RSPS\\work\\gpt-b\\data\\cfg\\clue\\guardian-drops.json": "ad9f2383a53062c89aa779128ba2c8e1bb8da9f15da6797dc2deafcc8d4ad363"
+  },
+  "unchanged": true,
+  "tests": "JUnit version 4.13.2\n......\nTime: 26,542\n\nOK (6 tests)\n\n"
+}

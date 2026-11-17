@@ -99,6 +99,15 @@ if '--master-puzzles' in sys.argv:
                 'TreasureTrailStepCatalogueTests', 'ClueNpcAssetsTests', 'ClueStepSelectionTests',
                 'ClueCasketTransactionTests']]
 
+if '--guardian-loot' in sys.argv:
+    CORE = []
+    PLUGINS = ['gg.rsmod.plugins.content.scrolls.'+name for name in
+               ['TreasureTrailLightBoxTests', 'TreasureTrailMasterPuzzleTests', 'TreasureTrailPuzzleBoxTests',
+                'TreasureTrailContractTests', 'ClueScrollLifecycleTests', 'ClueDropOwnershipTests',
+                'TreasureTrailStepCatalogueTests', 'ClueNpcAssetsTests', 'ClueStepSelectionTests',
+                'ClueCasketTransactionTests', 'ClueGuardianDropsTests', 'ClueDropIndexTests',
+                'TreasureTrailAgentTests']]
+
 
 def inputs():
     tracked = subprocess.check_output(['git', 'ls-files'], cwd=ROOT, text=True).splitlines()

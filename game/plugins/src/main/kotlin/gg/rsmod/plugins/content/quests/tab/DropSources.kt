@@ -195,6 +195,7 @@ object DropSources {
     private val viewCache = java.util.concurrent.ConcurrentHashMap<String, View>()
 
     private fun playerDependent(npcId: Int): Boolean =
+        gg.rsmod.plugins.content.scrolls.ClueGuardianDropCatalogue.playerDependent(npcId) ||
         gg.rsmod.plugins.content.areas.wilderness.npcs.WildernessNpcDrops.isPlayerDependent(npcId) ||
             gg.rsmod.plugins.content.scrolls.ClueNpcSources.has(npcId) ||
             npcId in gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessBossClues.NPCS

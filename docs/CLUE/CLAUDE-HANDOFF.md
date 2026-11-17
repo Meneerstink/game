@@ -816,3 +816,31 @@ hover/15client-cycle pressed buttons, p12 labels, icon outlines/spacing,
 resizable/fixed, sounds576/580, all four master pictures, both NPCs, full
 inventory, duplicate/stored boxes, close/relog/death and second account.
 Coordinate guard combat, hot/cold and full Mimic remain separate open work.
+
+## 17-Nov: guardian loot continuation
+
+The combined item roster is now248 (247plus Snape grass seed22879). Re-run the
+whole roster, never just the seed. Latest ITEM-PREFLIGHT.tsv:
+tx-20261117-070628,443definitions, applied=false. Both caches, ledger, runtime
+mapping and input roster stayed identical; build/clue/item-preflight-current/read-only-proof.json.
+This supersedes all earlier247-item proposed IDs. Other NPC10/STASH23/map26
+rosters are unchanged. Allocation is a proposal: rerun after any intervening import.
+
+ClueGuardianDropCatalogue supplies all11 guardian variants' exact slot trees
+from seven pinned NPC pages plus shared herb/allotment seed/gem tables. Owner
+excludes Looting bag. God items are one1/1000000elite pre-roll (two equal items),
+which replaces main loot, preserving bones. Ring of wealth removes only shared
+empty gem/mega slots; Legends quest and source talisman geography are personal.
+Drop Viewer bypasses shared cached table data for registered guardians, using
+the unchanged approved row rendering. Clue loot is personal, not LootShare.
+Native double agents use this route already; coordinate encounter adapter follows.
+
+Six fresh actual-source tests passed. Failed preliminary fixture expected the
+bottom robe to include the top and used slot chances for guaranteed bones; the
+source data/loot was correct. Both assertions corrected to the ordinary factory
+semantics. Durable proof validation/guardian-loot-actual-source.json. Whole-branch
+Gradle/scripts acceptance is the next gate; this is not full-card acceptance.
+
+Claude: inspect elite god-items/main replacement, bones, range quantities,
+nested herbs/seeds/gems, RoW on/off, Legends completed/incomplete and2accounts;
+no cached ring/quest context should leak. No viewer style/layout change.

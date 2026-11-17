@@ -272,7 +272,7 @@ def main():
     # puzzle pictures are dynamic server contexts, like the five base clues.
     extra.extend((2842, 7269, 12128, 12139, 2795, 3565, 3569, 19887, 23173, 12161,
                   20280, 20281, 20282, 23417, 20355, 20356, 20357,
-                  19837, 19838, 19839, 19939))
+                  19837, 19838, 19839, 19939, 22879))  # Source guardian shared seed table: snape grass seed.
     mimic_file = OUT / 'mimic-rewards.json'
     if mimic_file.is_file():
         for table in json.loads(mimic_file.read_text(encoding='utf-8')).values():

@@ -1,0 +1,18 @@
+<includeonly>{{#vardefine:herbbase|{{#expr:{{{1}}}/128}}}}{{DropsLine|name=Grimy guam leaf|namenotes={{#if:{{{f2p|}}}|{{(m)}}}}|quantity={{{2|1}}}|rarity=1/{{#expr:1/(32*{{#var:herbbase}}) round 1}}|rolls={{{rolls|{{{Rolls|}}}}}}}}
+{{DropsLine|name=Grimy marrentill|namenotes={{#if:{{{f2p|}}}|{{(m)}}}}|quantity={{{2|1}}}|rarity=1/{{#expr:1/(24*{{#var:herbbase}}) round 1}}|rolls={{{rolls|{{{Rolls|}}}}}}}}
+{{DropsLine|name=Grimy tarromin|namenotes={{#if:{{{f2p|}}}|{{(m)}}}}|quantity={{{2|1}}}|rarity=1/{{#expr:1/(18*{{#var:herbbase}}) round 1}}|rolls={{{rolls|{{{Rolls|}}}}}}}}
+{{DropsLine|name=Grimy harralander|namenotes={{#if:{{{f2p|}}}|{{(m)}}}}|quantity={{{2|1}}}|rarity=1/{{#expr:1/(14*{{#var:herbbase}}) round 1}}|rolls={{{rolls|{{{Rolls|}}}}}}}}
+{{DropsLine|name=Grimy ranarr weed|namenotes={{#if:{{{f2p|}}}|{{(m)}}}}|quantity={{{2|1}}}|rarity=1/{{#expr:1/(11*{{#var:herbbase}}) round 1}}|rolls={{{rolls|{{{Rolls|}}}}}}}}
+{{DropsLine|name=Grimy irit leaf|namenotes={{#if:{{{f2p|}}}|{{(m)}}}}|quantity={{{2|1}}}|rarity=1/{{#expr:1/(8*{{#var:herbbase}}) round 1}}|rolls={{{rolls|{{{Rolls|}}}}}}}}
+{{DropsLine|name=Grimy avantoe|namenotes={{#if:{{{f2p|}}}|{{(m)}}}}|quantity={{{2|1}}}|rarity=1/{{#expr:1/(6*{{#var:herbbase}}) round 1}}|rolls={{{rolls|{{{Rolls|}}}}}}}}
+{{DropsLine|name=Grimy kwuarm|namenotes={{#if:{{{f2p|}}}|{{(m)}}}}|quantity={{{2|1}}}|rarity=1/{{#expr:1/(5*{{#var:herbbase}}) round 1}}|rolls={{{rolls|{{{Rolls|}}}}}}}}
+{{DropsLine|name=Grimy cadantine|namenotes={{#if:{{{f2p|}}}|{{(m)}}}}|quantity={{{2|1}}}|rarity=1/{{#expr:1/(4*{{#var:herbbase}}) round 1}}|rolls={{{rolls|{{{Rolls|}}}}}}}}
+{{DropsLine|name=Grimy lantadyme|namenotes={{#if:{{{f2p|}}}|{{(m)}}}}|quantity={{{2|1}}}|rarity=1/{{#expr:1/(3*{{#var:herbbase}}) round 1}}|rolls={{{rolls|{{{Rolls|}}}}}}}}
+{{DropsLine|name=Grimy dwarf weed|namenotes={{#if:{{{f2p|}}}|{{(m)}}}}|quantity={{{2|1}}}|rarity=1/{{#expr:1/(3*{{#var:herbbase}}) round 1}}|rolls={{{rolls|{{{Rolls|}}}}}}}}{{Set drop table sources
+|Herb drop table
+|quantity={{{2|1}}}
+|rolls={{{rolls|{{{Rolls|}}}}}}
+|rarity={{{1}}}
+|drop_version={{#varexists:_dropversion|{{#var:_dropversion}}|}}
+|bucket={{#var:_bucket}}
+}}</includeonly><noinclude>{{/doc}}[[Category:Drop table templates]]</noinclude>

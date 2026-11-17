@@ -1,0 +1,15 @@
+<noinclude>{{/doc}}</noinclude><includeonly>''{{#if:{{{override|}}}|{{{override}}}|{{#if:{{{1|}}}|There is a {{#if:{{{approx|}}}|~}}{{{1}}} chance of rolling the [[gem drop table]].|This monster rolls the [[gem drop table]].}}}}''{{Mainonly|[[Category:Gem drop table monsters]]}}
+
+{{DropsTableHead|bucket={{{bucket|}}}|leagueRegion={{{leagueRegion|}}}|dropversion={{{dropversion|}}}}}
+{{#invoke:GemDropLines|main}}
+{{DropsTableBottom}}<!--
+
+-->{{Set drop table sources|Gem drop table
+|quantity=1
+|rolls={{{rolls|}}}
+|rarity={{{1|}}}
+|approx={{{approx|}}}
+|drop_type={{#if:{{{reward|}}}|reward|{{#if:{{{skill|}}}|{{{skill}}}|combat}}}}
+|drop_version={{{dropversion|}}}
+|bucket={{{bucket|}}}
+}}</includeonly>

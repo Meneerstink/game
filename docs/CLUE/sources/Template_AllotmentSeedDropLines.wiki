@@ -1,0 +1,8 @@
+<includeonly>{{#vardefine:vasdtbase|{{#expr:{{{1}}}/128}}}}{{DropsLine|name=Potato seed|quantity=1-4|rarity=1/{{#expr:(1/(64*{{#var:vasdtbase}})) round 1}}|rolls={{{rolls|}}}}}
+{{DropsLine|name=Onion seed|quantity=1-3|rarity=1/{{#expr:(1/(32*{{#var:vasdtbase}})) round 1}}|rolls={{{rolls|}}}}}
+{{DropsLine|name=Cabbage seed|quantity=1-3|rarity=1/{{#expr:(1/(16*{{#var:vasdtbase}})) round 1}}|rolls={{{rolls|}}}}}
+{{DropsLine|name=Tomato seed|quantity=1-2|rarity=1/{{#expr:(1/(8*{{#var:vasdtbase}})) round 1}}|rolls={{{rolls|}}}}}
+{{DropsLine|name=Sweetcorn seed|quantity=1-2|rarity=1/{{#expr:(1/(4*{{#var:vasdtbase}})) round 1}}|rolls={{{rolls|}}}}}
+{{DropsLine|name=Strawberry seed|quantity=1|rarity=1/{{#expr:(1/(2*{{#var:vasdtbase}})) round 1}}|rolls={{{rolls|}}}}}
+{{DropsLine|name=Watermelon seed|quantity=1|rarity=1/{{#expr:(1/(1*{{#var:vasdtbase}})) round 1}}|rolls={{{rolls|}}}}}
+{{DropsLine|name=Snape grass seed|quantity=1|rarity=1/{{#expr:(1/(1*{{#var:vasdtbase}})) round 1}}|rolls={{{rolls|}}}}}</includeonly><noinclude>{{/doc}}[[Category:Drop table templates]]</noinclude>

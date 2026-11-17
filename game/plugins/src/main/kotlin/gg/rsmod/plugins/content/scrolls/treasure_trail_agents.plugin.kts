@@ -1,18 +1,16 @@
 package gg.rsmod.plugins.content.scrolls
 
 import gg.rsmod.game.fs.def.NpcDef
-import gg.rsmod.plugins.content.drops.DropTableFactory
 
 TreasureTrailAgents.profiles.forEach { profile ->
     TreasureTrailAgents.actor(world, profile.source)?.let { id ->
         set_combat_def(id, TreasureTrailAgents.definition(profile))
         world.definitions.get(NpcDef::class.java, id).examine = profile.examine
         // Double agent Wiki: bones always. Owner N424/N561 removes the Wilderness looting bag.
-        val drops = DropTableFactory.build { guaranteed { obj(Items.BONES) } }
-        DropTableFactory.register(drops, id)
+        check(ClueGuardianDropCatalogue.register(world, profile.source, id))
         on_npc_pre_death(id) { TreasureTrailAgents.killed(npc) }
         on_npc_death(id) {
-            TreasureTrailAgents.dropOwner(npc)?.let { owner -> DropTableFactory.getDrop(world, owner, id, npc.tile) }
+            TreasureTrailAgents.dropOwner(npc)?.let { owner -> ClueGuardianDropCatalogue.drop(world, owner, id, npc.tile) }
         }
     }
 }
