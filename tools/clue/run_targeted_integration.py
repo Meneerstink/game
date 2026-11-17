@@ -91,6 +91,14 @@ if '--guardian-pvp' in sys.argv:
                 'TreasureTrailEmoteTests', 'TreasureTrailUriSourceTests', 'ClueStepSelectionTests', 'TreasureTrailMapsTests']]
     PLUGINS += ['gg.rsmod.plugins.content.combat.SinglesPlusTests']
 
+if '--master-puzzles' in sys.argv:
+    CORE = []
+    PLUGINS = ['gg.rsmod.plugins.content.scrolls.'+name for name in
+               ['TreasureTrailLightBoxTests', 'TreasureTrailMasterPuzzleTests', 'TreasureTrailPuzzleBoxTests',
+                'TreasureTrailContractTests', 'ClueScrollLifecycleTests', 'ClueDropOwnershipTests',
+                'TreasureTrailStepCatalogueTests', 'ClueNpcAssetsTests', 'ClueStepSelectionTests',
+                'ClueCasketTransactionTests']]
+
 
 def inputs():
     tracked = subprocess.check_output(['git', 'ls-files'], cwd=ROOT, text=True).splitlines()
@@ -104,7 +112,11 @@ def inputs():
                    'docs/CLUE/cache/core-source-items.json', 'docs/CLUE/cache/puzzle-source-items.json', 'docs/CLUE/cache/puzzle-routes.json',
                    'docs/CLUE/sources/Puzzle_box.wiki', 'docs/CLUE/sources/Clue_scroll_(hard)_-_BLUE_GRIM_GUIDED.wiki',
                    'docs/CLUE/sources/Clue_scroll_(hard)_-_IWPPLQTP.wiki', 'docs/CLUE/sources/Clue_scroll_(master).wiki',
-                   'docs/CLUE/NPC-DIALOGUE-SOURCES.json', 'docs/CLUE/NPC-COMPLETION-SOURCES.json'}]
+                   'docs/CLUE/NPC-DIALOGUE-SOURCES.json', 'docs/CLUE/NPC-COMPLETION-SOURCES.json',
+                   'docs/CLUE/cache/lightbox-interface.json', 'docs/CLUE/cache/lightbox-scripts.json',
+                   'docs/CLUE/cache/lightbox-items.json', 'docs/CLUE/cache/lightbox-layout.json',
+                   'docs/CLUE/sources/Light_box.wiki', 'docs/CLUE/sources/Treasure_Trails__Guide__Light_boxes.wiki',
+                   'docs/CLUE/sources/File_Killerwatt_attack.wav.wiki', 'docs/CLUE/sources/File_Killerwatt_death.wav.wiki'}]
     return {p: sha256((ROOT/p).read_bytes()).hexdigest() for p in allowed if (ROOT/p).is_file()}
 
 

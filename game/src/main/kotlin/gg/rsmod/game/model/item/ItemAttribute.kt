@@ -111,4 +111,15 @@ enum class ItemAttribute {
     CLUE_GUARD_KEY,
     CLUE_GUARD_PROGRESS,
 
+    /** Persistent light-box network belongs to this physical item; destroying it discards the puzzle. */
+    CLUE_LIGHT_BITS,
+    CLUE_LIGHT_A,
+    CLUE_LIGHT_B,
+    CLUE_LIGHT_C,
+    CLUE_LIGHT_D,
+    CLUE_LIGHT_E,
+    CLUE_LIGHT_F,
+    CLUE_LIGHT_G,
+    CLUE_LIGHT_H,
+
 }

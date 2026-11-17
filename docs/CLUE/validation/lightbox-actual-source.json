@@ -1,0 +1,24 @@
+{
+  "unchanged": true,
+  "inputs": {
+    "C:\\RSPS\\work\\gpt-b\\build\\clue\\lightbox\\next\\ItemAttribute.kt": "92b8ef45f9987753729b2a8151f2079864918a5834bcc0a0c901251b787fcc65",
+    "C:\\RSPS\\work\\gpt-b\\build\\clue\\lightbox\\next\\ClueLightBoxCacheTool.kt": "1c92ed8e2f9828ea669b819e3d805675d9692fea78774df76f1aaa4770ec74d1",
+    "C:\\RSPS\\work\\gpt-b\\build\\clue\\lightbox\\next\\TreasureTrailLightPuzzle.kt": "0bc4043757ac56d19a64358d81aa5369dd5ccf572e05fa6cea9a70daebe3f4ca",
+    "C:\\RSPS\\work\\gpt-b\\build\\clue\\lightbox\\next\\TreasureTrailLightBoxes.kt": "d42855de1eead790775ac7227a887e76191dcb68e852a8c8da97818e7303375f",
+    "C:\\RSPS\\work\\gpt-b\\build\\clue\\lightbox\\next\\TreasureTrailMasterPuzzles.kt": "8963f6041f372a5cfa7aa63280afbd5792328cf8b87c7ecee7760097daa8550b",
+    "C:\\RSPS\\work\\gpt-b\\build\\clue\\lightbox\\next\\TreasureTrailPuzzleBoxes.kt": "68a284e65cf2ce73a51269bb0eb5f4bfaefdffdc9fda21059607f06897ac88b6",
+    "C:\\RSPS\\work\\gpt-b\\build\\clue\\lightbox\\next\\Bank.kt": "fc30fd78848ce3ce98e1821b7e30945e300fbed710265ce01ea7b4b58787cdda",
+    "C:\\RSPS\\work\\gpt-b\\build\\clue\\lightbox\\next\\TreasureTrailLightBoxTests.kt": "e84d399fa260dd84e26834c1cd67d0bb3e8772abc837d9c6fa42e8c5082b1f57",
+    "C:\\RSPS\\work\\gpt-b\\build\\clue\\lightbox\\next\\TreasureTrailMasterPuzzleTests.kt": "0fff084eaed69b08fb1d53816697e1186458e66a64623e6e624a07a2829c7366",
+    "C:\\RSPS\\work\\gpt-b\\tools\\clue\\ClueLightBoxClientRegression.java": "5925cdcbfe339bfb676db1e6a0a31913b569cb9e906527ab6d8f683a042b16a9",
+    "C:\\RSPS\\work\\gpt-b\\docs\\CLUE\\cache\\lightbox-audio-manifest.json": "5ebf77c0ed8d5f59cbfb31088174c6d6d82cb852cc557915b64a04c845ac8b94",
+    "C:\\RSPS\\work\\gpt-b\\docs\\CLUE\\cache\\lightbox-interface.json": "9796cf2d4c4494bb9e6b90879508e0e82adc503d5523fc9f5f9c4831eb6ab9aa",
+    "C:\\RSPS\\work\\gpt-b\\docs\\CLUE\\cache\\lightbox-items.json": "637872d868687ed4a45c935aab7205d6e8d21d3810807d41ccca04ec47426bfc",
+    "C:\\RSPS\\work\\gpt-b\\docs\\CLUE\\cache\\lightbox-layout.json": "20f7aaaa1ad49378776eb263a82423977ba5a70ddff7a7bf5bdfabd939d486b4",
+    "C:\\RSPS\\work\\gpt-b\\docs\\CLUE\\cache\\lightbox-manifest.json": "e8837a599c19cff0c86f1614c90144e2d38209fdc41221e39cebe4471ff3adbc",
+    "C:\\RSPS\\work\\gpt-b\\docs\\CLUE\\cache\\lightbox-scripts.json": "69be03886e09d9823c5db0af6d0dbd708b2b8cbd2c7663175e89aacc63c34b4b"
+  },
+  "tests": "JUnit version 4.13.2\n...PROBLEM CLUE light box has absent/corrupt saved network; item retained\n.......[04:26:32.939 INFO ] AvTrace              | [avtrace] sound player= id=2021 loops=1 delay=0 volume=255 rate=256 cycle=0 from=ItemMoveSounds.kt:39\n[04:26:33.155 INFO ] AvTrace              | [avtrace] PROBLEM sound id=2021 sent to  does not exist in the cache (synth 4 / vorbis 14) - silent\n..PROBLEM CLUE invalid saved master puzzle kind-999; scroll retained\n\nTime: 81,971\n\nOK (12 tests)\n\n",
+  "nativeDecoder": true,
+  "note": "Source/API tests and native decoder/CS2 semantic checks; loaded-client verification remains Claude"
+}

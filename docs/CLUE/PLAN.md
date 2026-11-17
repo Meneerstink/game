@@ -1,11 +1,11 @@
 # CLUE - OSRS Treasure Trails
 
-ChatGPT-B, branch `gpt-b/clue-scrolls-7`, resumed 16 November 2026 at 21:33.
+ChatGPT-B, branch `gpt-b/clue-scrolls-7`, resumed 17 November 2026 after the interrupted guardian-PvP continuation.
 The latest dossier handoff assigns the entire card to B.
 This is an implementation branch, not evidence of client or live acceptance.
 Claude owns cache application, testclient verification, merge and release.
 
-## Verified starting point
+## Original starting point (14 November; historical, not current runtime)
 
 * Four tiers, 24 map locations and 17 emotes. Every tier currently receives every
   step, taken from Novite. Several coordinates and equipment requirements differ
@@ -56,10 +56,12 @@ the former rarity heuristic and provide all items in source order.
    cannot be reinstated. ORIGINAL-POOL-AUDIT.json reconciles all41 old locations:
    38 now have catalogue records,3 still require source/asset/handler review.
    The initial69 selection overlaps15 originals, leaving54 unique additions.
-   Six other originals have now been restored with source equipment/tiers/Uri
-   and23 total STASH units. Current catalogue92 (22/26/20/12/12) is NOT an
-   active-pool count; three torn parts form one choice. Quantity acceptance
-   remains open until the original pool and69 unique additions are reconciled.
+   Six other original emotes and17original maps have now been restored, with
+   23total STASH units. Fifteen further sourced steps remove the overlap deficit:
+   current catalogue107 (29/29/25/12/12),38originals+69unique additions. This is
+   NOT an active-pool count; three torn parts form one choice. Three historical
+   originals still have explicit source/modern-area gaps. Guardian combat, hot/cold
+   and master puzzle handlers/assets remain acceptance points.
 4. Finish and independently review the inherited Watson hand-in/check/NPC Contact,
    Mimic arena/combat/death/rewards. B owns all of these after the 04:2x handoff.
 5. Source-by-source acquisition: NPC drop tables, nests/geodes/bottles, implings,
@@ -103,8 +105,9 @@ state in its cache. Ten impling clue rolls cover both jars and barehanded loot.
 Woodcutting/mining/fishing use independent tier rolls and visible skill levels;
 RS2-only activities have no guessed OSRS equivalent. The server has no Combat
 Achievements provider, so no reward from that system is assumed unlocked.
-These runtime changes remain uncommitted/unverified until the current targeted
-Gradle run and its regressions finish; source-data checks alone are not acceptance.
+The source/acquisition implementation has subsequent component commits and
+focused integration evidence in validation/. This historical acquisition checkpoint
+is not a claim that the entire card or its cache/client/live chain is accepted.
 
 Every completed step is appended to `C:\RSPS\team\dossiers\CLUE.txt`. Do not mark
 CLUE complete while this plan or the handoff still contains unimplemented work.

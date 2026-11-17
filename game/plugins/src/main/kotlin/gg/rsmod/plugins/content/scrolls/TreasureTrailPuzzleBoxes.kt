@@ -18,6 +18,8 @@ object TreasureTrailPuzzleBoxes {
         Source("Clue scroll (hard) - BLUE GRIM GUIDED", 19887, 2),
         Source("Clue scroll (hard) - IWPPLQTP", 23173, 2),
     )
+    val masterSources = listOf(Source("master", 20280, 4), Source("master", 20281, 5),
+        Source("master", 20282, 6), Source("master", 23417, 9))
     val pictures = listOf(1, 2, 3, 4, 5, 6, 9)
     const val CLICK_FIRST = 6
     const val CLOSE = 5
@@ -28,8 +30,15 @@ object TreasureTrailPuzzleBoxes {
     }
     private val sessions = HashMap<Player, Session>()
     fun session(player: Player): Session? = sessions[player]
-    fun source(step: TreasureTrailSourceStep): Source? = sources.singleOrNull { it.key == step.source.key }
-    fun tier(item: Int): ClueScrollTier? = if (sources.any { ClueItems.local(it.item) == item }) ClueScrollTier.HARD else null
+    fun source(step: TreasureTrailSourceStep, item: Int? = null): Source? =
+        sources.singleOrNull { it.key == step.source.key }?.takeIf { item == null || ClueItems.local(it.item) == item }
+            ?: if (TreasureTrailMasterPuzzles.supports(step.source) && item != null)
+                masterSources.singleOrNull { ClueItems.local(it.item) == item } else null
+    fun tier(item: Int): ClueScrollTier? = when {
+        sources.any { ClueItems.local(it.item) == item } -> ClueScrollTier.HARD
+        masterSources.any { ClueItems.local(it.item) == item } || ClueItems.local(20355) == item -> ClueScrollTier.MASTER
+        else -> null
+    }
 
     fun available(world: World, row: TreasureTrailStepCatalogue.Step): Boolean =
         row.challenge == TreasureTrailStepCatalogue.Challenge.SLIDING_PUZZLE && ClueInterfaces.of(306) != null &&
@@ -45,6 +54,10 @@ object TreasureTrailPuzzleBoxes {
     /** Repeated dialogue cannot issue another held/stored box; no inventory space spends nothing. */
     fun issue(player: Player, step: TreasureTrailSourceStep, random: Random = Random.Default): Item? {
         val source = source(step) ?: return null
+        return issue(player, step, source, random)
+    }
+    fun issue(player: Player, step: TreasureTrailSourceStep, source: Source, random: Random = Random.Default): Item? {
+        if (source !in sources && (source !in masterSources || !TreasureTrailMasterPuzzles.supports(step.source))) return null
         val contract = ClueStepContract.capture(player, step) ?: return null
         val id = ClueItems.local(source.item) ?: return null
         if (player.world.definitions.getNullable(ItemDef::class.java, id) == null) return null
@@ -60,7 +73,7 @@ object TreasureTrailPuzzleBoxes {
     }
 
     fun start(player: Player, step: TreasureTrailSourceStep, box: Item, random: Random = Random.Default): Session? {
-        val source = source(step) ?: return null
+        val source = source(step, box.id) ?: return null
         val contract = ClueStepContract.capture(player, step) ?: return null
         if (box.id != ClueItems.local(source.item) || player.inventory.none { it === box }) return null
         val previous = sessions[player]
@@ -72,7 +85,9 @@ object TreasureTrailPuzzleBoxes {
     }
 
     fun open(player: Player, box: Item): Boolean {
-        val step = ClueScrollManager.activeStep(player, ClueScrollTier.HARD) as? TreasureTrailSourceStep ?: return false
+        val step = listOf(ClueScrollTier.HARD, ClueScrollTier.MASTER).mapNotNull {
+            ClueScrollManager.activeStep(player, it) as? TreasureTrailSourceStep
+        }.firstOrNull { source(it, box.id) != null } ?: return false
         val iface = ClueInterfaces.of(306) ?: return false
         if (player.interfaces.isVisible(iface)) close(player)
         val session = start(player, step, box) ?: return false
@@ -128,7 +143,7 @@ object TreasureTrailPuzzleBoxes {
     }
     fun remove(player: Player) { sessions.remove(player) }
     fun handIn(player: Player, step: TreasureTrailSourceStep, box: Item): Boolean {
-        val source = source(step) ?: return false
+        val source = source(step, box.id) ?: return false
         val contract = ClueStepContract.capture(player, step) ?: return false
         if (box.id != ClueItems.local(source.item) || box.getAttr(ItemAttribute.CLUE_TASK_COMPLETE) != 1 ||
             player.inventory.none { it === box }) return false

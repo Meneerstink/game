@@ -5,7 +5,7 @@ This card is not ready to merge/release. B resumed the entire card on
 Do not interpret a successful cache preflight as a completed gameplay chain.
 All cache application, testserver/client operation, merge and release belong to Claude.
 
-Current continuation/results: `REVIEW-B-16NOV.md`; earlier details: `REVIEW-B-7.md`.
+Current continuation/results: `LIGHTBOX-SOURCE-AUDIT.md` and `GUARDIAN-SOURCE-AUDIT.md`; earlier details: `REVIEW-B-16NOV.md` / `REVIEW-B-7.md`.
 The older checkpoints below are
 historical evidence, with remaining gates explicitly superseded by later entries.
 
@@ -762,3 +762,57 @@ singles use three accounts: guardian -> PKer -> second PKer, including queued
 projectile and familiar. Verify native human block/death animation and sounds.
 Master actor source7312 uses regenerated npcs.tsv after the normal NPC batch;
 missing mapping must never bind the actor to a proposed local ID.
+
+## 17-Nov: master puzzles and source light-box UI
+
+Source/code proof: LIGHTBOX-SOURCE-AUDIT.md.12 fresh actual-source tests pass,
+including public Bank.deposit/all and full item network preservation. Native
+Component/ClientScript checks:44components,10scripts,52hooks,150 item-icon
+states across two sizes/three light patterns. All30old ItemAttribute ordinals
+are unchanged; nine light-box fields appended. Full Gradle/scripts follow.
+The sole shared-bank change rejects source20282 (Gnome-child master puzzle),
+as the pinned Wiki says it cannot be banked; other picture/light boxes retain
+normal banking. Review that4-line boundary separately when merging.
+
+No item/NPC roster change: all four master pictures20280/20281/20282/23417,
+light box20355 and internal lamps20356/20357 are already in247items. Master
+Mandrith/Radimus now have the supplemental box/solve/return-to-NPC handler.
+See source question Q7 in LIGHTBOX-SOURCE-AUDIT.md: public sources do not
+publish the random matrix generator or box-type weights. The compatible
+uniform-type/picture and solvable-network choice is not proof of their hidden
+OSRS distribution; no full parity/CLUE acceptance is claimed.
+
+Cache batch: ClueLightBoxCacheTool, source group322,44static components plus
+source1339 item-icon draw and native ports of134/135/208/98/6388/1335/1336/
+1337/1339/1338. This uses existing native client opcodes/hooks; no additional
+client patch is needed specifically for light boxes. Other clue interfaces
+still need the earlier wide-model patch before the combined cache/client release.
+
+Exact latest PLAN/PREFLIGHT: LIGHTBOX-PREFLIGHT.tsv, tx-20261117-032937,
+92mutations, proposed interface1203, private control2408, scripts5425..5434,
+37sprites8955..8991. Existing source/native sounds576/580 are byte-identical
+in both caches, so no sound replacement. Lamp item proposals25285/25286 belong
+to the combined247-item plan, not a second import. Both caches/ledger/item
+roster/all runtime mappings stayed unchanged (validation/lightbox-preflight.json).
+
+Execute only AFTER the combined item batch and regenerated items.tsv, and
+rerun allocation after STASH/chart or any intervening cache batch. Proposed
+interface1203/control2408/script5425 are not reserved and overlap separate
+historical preflights. The apply path refuses unapplied lamp item proposals
+by checking both source item identities against the durable item ledger.
+Use the compiled class from this branch (main below defaults to PREFLIGHT):
+
+    java -Xmx512m -cp "<checkout>/game/build/classes/kotlin/main;<checkout>/game/build/install/game/lib/*" gg.rsmod.game.tools.importer.ClueLightBoxCacheTool docs/CLUE/cache/lightbox-interface.json docs/CLUE/cache/lightbox-scripts.json data/cfg/clue/items.tsv data/cfg/clue/lightbox.tsv docs/CLUE/LIGHTBOX-PREFLIGHT.tsv
+
+Claude adds the apply flag only in his own cache run. The runtime mapping is
+SEPARATE data/cfg/clue/lightbox.tsv; do not paste this preflight into it or
+replace the other interfaces.tsv. Source322/control1356/script/sprite/item
+rows are all emitted only after transaction verification when applying.
+Read-only reproduction here: python tools/clue/preflight_lightbox.py after
+python tools/clue/verify_lightbox.py (fresh libraries/tests/native decoders).
+
+Client checklist is at the end of LIGHTBOX-SOURCE-AUDIT.md. Include normal/
+hover/15client-cycle pressed buttons, p12 labels, icon outlines/spacing,
+resizable/fixed, sounds576/580, all four master pictures, both NPCs, full
+inventory, duplicate/stored boxes, close/relog/death and second account.
+Coordinate guard combat, hot/cold and full Mimic remain separate open work.
