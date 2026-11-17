@@ -2,3 +2,4 @@
 *.patch text eol=lf
 phase4-output/*.txt -text
 phase4-review-output/*.txt -text
+phase5-output/items.generated.yml -text

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.items.osrs.PoweredStavesTests" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:14:08" hostname="LAPTOP-KLOL515N" time="0.231">
+  <properties/>
+  <testcase name="every trident has the wiki cap, charge cost, refund and max hit offset" classname="gg.rsmod.plugins.content.items.osrs.PoweredStavesTests" time="0.192"/>
+  <testcase name="the built-in spell is routed through the magic formula, strategy, speed and autocast rules" classname="gg.rsmod.plugins.content.items.osrs.PoweredStavesTests" time="0.005"/>
+  <testcase name="the Sanguinesti staff uses 2 blood runes per charge, Magic over 3 and the 1 in 5 life leech" classname="gg.rsmod.plugins.content.items.osrs.PoweredStavesTests" time="0.029"/>
+  <testcase name="ordinary and corrupted shadows retain their own rune costs and magic requirements" classname="gg.rsmod.plugins.content.items.osrs.PoweredStavesTests" time="0.0"/>
+  <testcase name="charges move the item between uncharged, charged and full and refunds follow the cost" classname="gg.rsmod.plugins.content.items.osrs.PoweredStavesTests" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

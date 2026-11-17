@@ -12,7 +12,11 @@ De opnieuw gegenereerde voorstellen in `voorstel-actual/` zijn toegepast op item
 
 ## Boot en regressie
 
-In uitvoering: zestien exacte cosmetic-stateparen in skins.tsv, expliciet laden van ids.tsv v??r bootregistratie, unitproeven met echte data, bestaande gerichte combat/drops/quest-tab-tests. Nog geen test-PASS.
+Afgerond als server-WIP: zestien exacte cosmetic-stateparen in skins.tsv; expliciet laden van ids.tsv voor bootregistratie; vier unitproeven met de echte 143 mappings. Alle zeven rewards kopen/refunden zonder inflatie, alle zestien skins vijfmaal heen/terug met charges behouden, starter/NPC/UI-contracten en Fortuity per bron zijn groen.
+
+Gerichte regressie: 193 pluginproeven + 5 coreproeven; drie aanvankelijke failures waren twee verouderde fixtures. SpecialAttackEnergyRefundTests gebruikte de oude getEnergy/setEnergy-API terwijl de dispatcher de cost/spend/refund-API gebruikt. PoweredStavesTests behandelde ook de gewone Shadow als trident. De fixtures volgen nu de actuele API en de Shadow-familie krijgt een eigen expliciete kosten/levelproef. De drie geraakte klassen zijn daarna alle groen (12 proeven; samen 199 unieke actuele proeven groen); de eerste en gecorrigeerde JUnit-XML zijn bewaard in phase5-output/regression-first en regression-corrected. Actuele gewijzigde Kotlin en negen eigen scripts gecompileerd binnen het centrale Gradle-bouwslot, --priority low. Dit is unit-/compilebewijs, geen runtimeclaim.
+
+DropSources.view, itemIndex en warmUp onderscheiden nu de bracketfactor en Fortuity-bonus per bossbron. De gedeelde index kan de Fortuity-status niet aan een andere speler doorgeven. Fire ruby is aan zijn eigen Infernal Mage Collection Log-pagina gekoppeld; chest-beloningen tellen hiervoor niet. Verwijderde emblemregels verdwijnen uitsluitend achter de definitieve releasevlag.
 
 ## Grenzen
 

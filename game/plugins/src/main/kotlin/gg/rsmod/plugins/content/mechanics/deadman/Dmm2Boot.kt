@@ -6,14 +6,18 @@ import java.io.File
 
 /** Only reads Claude's explicit mapping output. Missing ids leave that service unavailable, never create placeholder items. */
 object Dmm2Boot {
-    fun install() {
+    fun install(directory: File = File(RspsPaths.data("cfg/dmm2"))) {
+        // Load the same published mapping for all services before their plugin bindings are registered.
+        // In particular, do not retain an earlier lazy lookup after a mapping has been supplied.
+        val mapping = File(directory, "ids.tsv")
+        if (mapping.isFile) Dmm2Ids.install(mapping.readLines())
         val sourceIds = listOf(22331, 22333, 22335, 26149, 13660, 13317, 13318, 33063)
         val starter = sourceIds.map { Dmm2Ids.item(it) }
         if (starter.all { it != null }) DeadmanStarterPack.install(DeadmanStarterPack.Ids(
             starter[0]!!, starter[1]!!, starter[2]!!, starter[3]!!, starter[4]!!, starter[5]!!, starter[6]!!, starter[7]!!))
         val rewards = NigelRewardStore.Reward.values().mapNotNull { reward -> Dmm2Ids.item(reward.sourceId)?.let { reward to it } }.toMap()
         if (rewards.size == NigelRewardStore.Reward.values().size) {
-            val file = File(RspsPaths.data("cfg/dmm2/skins.tsv"))
+            val file = File(directory, "skins.tsv")
             val skins = (if (!file.isFile) emptyList() else file.readLines().filter { it.isNotBlank() && !it.trimStart().startsWith("#") }.map {
                 val f = it.split('\t'); require(f.size in 3..4)
                 val base = f[1].toInt()

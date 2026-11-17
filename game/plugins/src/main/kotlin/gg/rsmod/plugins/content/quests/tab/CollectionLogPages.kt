@@ -175,7 +175,7 @@ object CollectionLogPages {
         val breaches = sources.filter { it.kind == DropSources.Kind.BREACH }
         val breachKeys = breaches.map { it.key }
         val breachPets = breaches.flatMap { it.npcs.toList() }.mapNotNull { Pets.dropFor(it)?.pet }.distinct().mapNotNull { Pets.baseItem(it) }.sortedBy { name(it) }
-        val breachItems = (gearFirst(BreachLoot.MEGA_RARE + BreachLoot.RARE.map { it.item } + listOfNotNull(BreachIds.ARCHAIC_EMBLEM_TIER_5.takeIf { it > 0 }) + PrayerScrolls.SCROLLS.toList() + Items.RUINOUS_POWERS) + breachPets).distinct()
+        val breachItems = (gearFirst(BreachLoot.MEGA_RARE + BreachLoot.RARE.map { it.item } + listOfNotNull(BreachIds.ARCHAIC_EMBLEM_TIER_5.takeIf { it > 0 && !gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled }) + PrayerScrolls.SCROLLS.toList() + Items.RUINOUS_POWERS) + breachPets).distinct()
         pages += Page("breach", Category.DEADMAN, "Breaches", breachKeys, breachItems, "Breach monster kills")
         // ---- Clues: the elite casket's uniques.
         val elite = runCatching { EliteCasketTable.itemProbabilities() }.getOrNull()
@@ -211,6 +211,12 @@ object CollectionLogPages {
         pages += Page("burden_trinkets", Category.OTHER, "Burden Trinkets", emptyList(), gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.Tier.values().map { it.item })
         // N490: includes Revenants and the chest guardian, which have no regular boss log page.
         pages += Page("ruinous", Category.OTHER, "Ruinous Powers", sources.filter { DropSources.ruinousSource(world, it) != null }.map { it.key }, listOf(Items.RUINOUS_POWERS))
+        // Fire ruby is an Infernal Mage tertiary, not a Deadman chest/reward-store item.
+        // Source keys come from the existing real drop-table census; no extra kill counter invented.
+        gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.FIRE_RUBY.local?.let { ruby ->
+            val mages = sources.filter { s -> s.npcs.any { DropSources.npcName(world, it).equals("Infernal Mage", true) } }
+            if (mages.isNotEmpty()) pages += Page("fire_ruby", Category.OTHER, "Fire ruby", mages.map { it.key }, listOf(ruby))
+        }
         // ---- Other: every pet.
         val pets = Pets.infos.keys.mapNotNull { Pets.baseItem(it) }.distinct().sortedBy { name(it) }
         if (pets.isNotEmpty()) pages += Page("pets", Category.OTHER, "All Pets", emptyList(), pets)

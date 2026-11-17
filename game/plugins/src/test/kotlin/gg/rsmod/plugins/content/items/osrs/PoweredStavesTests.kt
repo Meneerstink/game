@@ -17,7 +17,7 @@ class PoweredStavesTests {
         assertEquals(2_500, staves.getValue(PoweredStaves.Staff.SWAMP).maxCharges)
         assertEquals(20_000, staves.getValue(PoweredStaves.Staff.SEAS_E).maxCharges)
         assertEquals(20_000, staves.getValue(PoweredStaves.Staff.SWAMP_E).maxCharges)
-        PoweredStaves.Staff.values().filterNot { it.leech || it.revenant }.forEach { staff ->
+        PoweredStaves.Staff.values().filterNot { it.leech || it.revenant || it.shadow }.forEach { staff ->
             val cost = staff.chargeCost.associate { it.id to it.amount }
             assertEquals(1, cost[Items.DEATH_RUNE], "$staff")
             assertEquals(1, cost[Items.CHAOS_RUNE], "$staff")
@@ -43,6 +43,17 @@ class PoweredStavesTests {
         }
         assertEquals(25, PoweredStaves.Staff.THAMMARON.baseMaxHit(99))
         assertEquals(27, PoweredStaves.Staff.ACCURSED.baseMaxHit(99))
+    }
+
+    @Test
+    fun `ordinary and corrupted shadows retain their own rune costs and magic requirements`() {
+        listOf(PoweredStaves.Staff.SHADOW, PoweredStaves.Staff.CORRUPTED_SHADOW).forEach { staff ->
+            assertEquals(mapOf(Items.SOUL_RUNE to 2, Items.CHAOS_RUNE to 5), staff.chargeCost.associate { it.id to it.amount })
+            assertEquals(setOf(Items.SOUL_RUNE, Items.CHAOS_RUNE), staff.refunded)
+            assertEquals(20_000, staff.maxCharges)
+            assertEquals(if (staff.corrupted) 75 else 85, staff.requiredMagic)
+            assertEquals(34, staff.baseMaxHit(99))
+        }
     }
 
     @Test
