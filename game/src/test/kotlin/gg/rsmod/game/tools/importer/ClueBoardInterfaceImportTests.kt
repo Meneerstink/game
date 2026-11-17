@@ -25,6 +25,7 @@ class ClueBoardInterfaceImportTests {
             assertEquals(source["rotationY"].asInt(),model.zan)
         }
         assertEquals(22,count)
+        assertEquals(1396,ClueInterfaceImportTool.components(625,root["625"],fonts,models,sprites).single { it.id==7 }.h)
     }
     @Test fun `a missing final child or self reference to another board cannot be accepted`() {
         val missing=root["221"].deepCopy<com.fasterxml.jackson.databind.node.ObjectNode>();missing.remove("13")

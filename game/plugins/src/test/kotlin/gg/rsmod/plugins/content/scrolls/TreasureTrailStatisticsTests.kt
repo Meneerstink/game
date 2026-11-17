@@ -71,4 +71,16 @@ class TreasureTrailStatisticsTests {
             assertFailsWith<IllegalArgumentException> { TreasureTrailStatistics.contributors(json) }
         }
     }
+    @Test fun `pinboard keeps all87source names reachable including final contributors after scrolling`() {
+        mockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
+        val p=account()
+        assertFalse(TreasureTrailStatistics.openPinboard(p,null))
+        assertTrue(TreasureTrailStatistics.openPinboard(p,1201))
+        val text=slot<String>()
+        verify(exactly=1) { p.setComponentText(1201,7,capture(text)) }
+        val rows=text.captured.split("<br>")
+        assertEquals(87,rows.size);assertEquals("A classy boy",rows.first());assertEquals("Demilancer",rows.last())
+        verify(exactly=1) { p.runClientScript(5377,(1201 shl 16) or 5,(1201 shl 16) or 6,1396) }
+        verify(exactly=1) { p.setInterfaceEvents(1201,2,-1..-1,0x2) }
+    }
 }

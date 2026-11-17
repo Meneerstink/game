@@ -68,7 +68,9 @@ object TreasureTrailStatistics {
     fun contributors(text: String): List<String> = JsonParser().parse(text).asJsonArray.map { it.asString }.also {
         require(it.isNotEmpty() && it.distinct().size == it.size && it.all { name -> name.isNotBlank() && '\n' !in name && '<' !in name })
     }
-    private val names by lazy { contributors(File(RspsPaths.data("cfg/clue/watson-contributors.json")).readText()) }
+    private val names by lazy { contributors(File(RspsPaths.data("cfg/clue/watson-contributors.json")).readText()).also {
+        check(it.size == gg.rsmod.game.tools.importer.ClueInterfaceImportTool.BOARD_CREDIT_NAMES)
+    } }
     fun openPinboard(player: Player, iface: Int? = ClueInterfaces.of(625)): Boolean {
         if (iface == null) {
             println("PROBLEM CLUE contributor paper not imported; account state unchanged")
@@ -80,7 +82,8 @@ object TreasureTrailStatistics {
         player.setInterfaceEvents(iface,2,-1..-1,0x2)
         // Existing reviewed native scroll program; preflight proves its exact bytes in both caches.
         player.runClientScript(gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool.SCROLL_SCRIPT,
-            (iface shl 16) or 5,(iface shl 16) or 6,1200) // source625:7 text height
+            (iface shl 16) or 5,(iface shl 16) or 6,
+            gg.rsmod.game.tools.importer.ClueInterfaceImportTool.BOARD_CREDIT_HEIGHT)
         return true
     }
 }

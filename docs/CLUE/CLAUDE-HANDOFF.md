@@ -13,10 +13,14 @@ to import these identities. Full gameplay/client/release acceptance remains open
 
 Watson statistics/pinboard papers are prepared too: WATSON-BOARDS.md,
 BOARD-PREFLIGHT.tsv and validation/watson-boards-{actual-source,preflight}.json.
-Source221/625 -> proposed1207/1208;31mutations,tx-20261117-123453,applied=false.
+Source221/625 -> proposed1207/1208;31mutations,tx-20261117-124937,applied=false.
 Run verify_boards.py then preflight_boards.py on current production source.
 Uses existing scenery62628/62629 and the SAME interfaces.tsv; rerun after
 preceding UI batches. Wide-IF3 client patch/release precedes UI cache application.
+The pinboard text/scroll height is1396 rather than source1200: actual q8 font
+layout proves this is needed to keep all87names reachable. Seven fresh tests,
+22actualComponent decodes and87nativeFont paragraph rows pass; exact sources,
+font metrics and read-only proofs are in WATSON-BOARDS.md/validation.
 
 The older checkpoints below are
 historical evidence, with remaining gates explicitly superseded by later entries.
@@ -105,7 +109,7 @@ including sprites after the CoX8954 allocation.
 2. Current10-NPC clue-steps batch; regenerate the complete verified npcs.tsv.
 3. Watson/STASH objects, noticeboard, setting and search-menu batches with their
    per-batch preflights and mappings. Keep the owner's POH Study exclusion.
-4. Reward/text UI first, maps second, puzzle UI third, sharing interfaces.tsv.
+4. Reward/text UI first, maps second, puzzle UI third, Watson papers fourth, sharing interfaces.tsv.
    Rerun the allocator before every application; the older ID ranges overlap.
 5. Lightbox, STASH chart/setting and supplemental combat batches use the exact
    sections below. Follow the loaded-client checks with the codecs from step0.

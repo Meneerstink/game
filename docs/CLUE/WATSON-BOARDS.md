@@ -26,14 +26,23 @@ is bound there. Restoring that optional second location needs a separate source
 placement/import review.
 
 python tools/clue/verify_boards.py freshly compiles both changed production
-classes and their two test classes:6tests pass. The real staged Component
+classes and their two test classes:7tests pass. The real staged Component
 decoder reads22/22 components,2wide models, raw cameras, dimensions, parents
 and both close hovers. Source hashes and all87names match the pinned pages.
 Durable proof: validation/watson-boards-actual-source.json.
 
+The source text child has1200pixels of height but87single-line names at its
+source16pixel spacing need1396pixels in the actual native q8 font (top15,bottom5).
+The adapter therefore extends only child625:7 and its scroll extent to1396;
+other source geometry is retained. python tools/clue/verify_board_fonts.py runs
+the real native Font.renderLines/FontMetrics:87rendered rows,maximum name
+width100 versus343available,final ink bottom1396. No names wrap or disappear.
+Proof: validation/watson-board-fonts.json. The earlier1392proposal failed this
+real-font check by4pixels and was corrected before acceptance.
+
 Read-only reproduction: python tools/clue/preflight_boards.py, which requires
 preceding verification against current production inputs. Transaction
-tx-20261117-123453:31mutations, exact BOARD-PREFLIGHT.tsv,applied=false.
+tx-20261117-124937:31mutations, exact BOARD-PREFLIGHT.tsv,applied=false.
 Both caches, ledger and every runtime clue TSV remain unchanged:
 validation/watson-boards-preflight.json. Proposed groups1207/1208,
 models66868/66869,sprites8961..8965,texture1423 are NOT reservations.

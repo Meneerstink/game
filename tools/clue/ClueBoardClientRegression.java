@@ -22,7 +22,8 @@ class ClueBoardClientRegression {
                 check(packet.pos==bytes.length,at+" byte alignment");
                 check(c.type==source.get("type").asInt(),at+" type");
                 check(c.originalX==source.get("originalX").asInt() && c.originalY==source.get("originalY").asInt(),at+" origin");
-                check(c.originalWidth==source.get("originalWidth").asInt() && c.originalHeight==source.get("originalHeight").asInt(),at+" size");
+                int expectedHeight=group==625 && fixture.getId()==7?ClueInterfaceImportTool.BOARD_CREDIT_HEIGHT:source.get("originalHeight").asInt();
+                check(c.originalWidth==source.get("originalWidth").asInt() && c.originalHeight==expectedHeight,at+" size");
                 check(c.layer==source.get("parentId").asInt(),at+" parent");
                 if(c.type==6) {
                     check(c.obj==models.get(source.get("modelId").asInt()),at+" wide model");

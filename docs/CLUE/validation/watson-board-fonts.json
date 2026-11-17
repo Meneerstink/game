@@ -1,0 +1,12 @@
+{
+  "nativeFont": 497,
+  "fontSha256": "1041b00106b45f4961e5d98486cf7cb86b2d0cf33d68ba8b3bdb0a005c658e16",
+  "sourceLineSpacing": 16,
+  "sourceTextWidth": 343,
+  "maxNameWidth": 100,
+  "renderedLines": 87,
+  "glyphRows": 87,
+  "finalInkBottom": 1396,
+  "extendedHeight": 1396,
+  "note": "Native paragraph execution, no toolkit/window/cache writes or loaded-client acceptance"
+}

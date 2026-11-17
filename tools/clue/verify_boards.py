@@ -41,7 +41,8 @@ def main():
     sources=[source('ClueInterfaceImportTool',core),source('TreasureTrailStatistics',plugins)]
     tests=[source('ClueBoardInterfaceImportTests',core.replace('/main/','/test/')),
            source('TreasureTrailStatisticsTests',plugins.replace('/main/','/test/'))]
-    inputs=sources+tests+[ROOT/'docs/CLUE/cache/board-interfaces.json',ROOT/'tools/clue/ClueBoardClientRegression.java']
+    inputs=sources+tests+[ROOT/'docs/CLUE/cache/board-interfaces.json',ROOT/'tools/clue/ClueBoardClientRegression.java',
+                         ROOT/'data/cfg/clue/watson-contributors.json']
     frozen={str(p):sha256(p.read_bytes()).hexdigest() for p in inputs}
     def run(args,stream=None):
         result=subprocess.run(list(map(str,args)),cwd=ROOT,stdout=stream,stderr=subprocess.STDOUT if stream else None,
