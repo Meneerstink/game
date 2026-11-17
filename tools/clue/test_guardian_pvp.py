@@ -4,6 +4,7 @@ from pathlib import Path
 import json
 import os
 import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT/'build/clue/guardian-pvp/actual-tests'
@@ -28,13 +29,20 @@ def main():
     modules += ['io.mockk/'+name+'/1.13.4' for name in
         ['mockk-agent-api-jvm', 'mockk-agent-jvm', 'mockk-core-jvm', 'mockk-dsl-jvm', 'mockk-jvm']]
     libs = [str(p) for p in (ROOT/'game/build/install/game/lib').glob('*.jar')]
+    # Gradle snapshots may move the loose classes after a successful jar build.
+    plugin_jar = ROOT/'game/plugins/build/libs/plugins-0.0.4.jar'
     cp = [str(OUT/'library'), str(ROOT/'game/build/classes/kotlin/main'),
-          str(ROOT/'game/plugins/build/classes/kotlin/main')] + libs + [jar(m) for m in modules]
+          str(plugin_jar), str(ROOT/'game/plugins/build/classes/kotlin/main')] + libs + [jar(m) for m in modules]
     names = ['gg.rsmod.plugins.content.scrolls.ClueGuardianPvpTests',
              'gg.rsmod.plugins.content.scrolls.TreasureTrailGuardianTests',
              'gg.rsmod.plugins.content.combat.SinglesPlusTests']
     libraries = [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content'/p for p in
                  ['scrolls/ClueGuardianPvp.kt', 'scrolls/TreasureTrailGuardians.kt', 'combat/PawnExt.kt']]
+    if '--agents' in sys.argv:
+        names += ['gg.rsmod.plugins.content.scrolls.'+name for name in
+                  ['TreasureTrailAgentTests', 'TreasureTrailEmoteTests']]
+        libraries += [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls'/(name+'.kt') for name in
+                      ['TreasureTrailAgents', 'TreasureTrailEmotes', 'ClueScrollManager']]
     tests = [ROOT/'game/plugins/src/test/kotlin'/(name.replace('.', '/')+'.kt') for name in names]
     frozen = {str(p): sha256(p.read_bytes()).hexdigest() for p in libraries+tests}
     frozen.update({str(p):sha256(p.read_bytes()).hexdigest() for p in (ROOT/'data/cfg/clue').glob('*') if p.is_file()})
@@ -45,7 +53,7 @@ def main():
     def compile(sources, target, file):
         path = OUT/file
         args = ['-no-stdlib', '-no-reflect', '-jvm-target', '11', '-nowarn',
-                '-Xfriend-paths='+str(ROOT/'game/plugins/build/classes/kotlin/main'),
+                '-Xfriend-paths='+str(plugin_jar),
                 '-cp', ';'.join(cp), '-d', str(target)]
         args += list(map(str,sources))
         path.write_text('\n'.join('"'+a.replace('\\','/')+'"' for a in args))

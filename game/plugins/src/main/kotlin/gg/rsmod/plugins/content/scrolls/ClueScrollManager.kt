@@ -99,7 +99,7 @@ class ClueScrollManager(
             player: Player,
             emoteComponent: Int,
         ) {
-            TreasureTrailEmotes.perform(player, emoteComponent)
+            if (!TreasureTrailAgents.emote(player, emoteComponent)) TreasureTrailEmotes.perform(player, emoteComponent)
         }
 
         /**

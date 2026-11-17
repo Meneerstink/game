@@ -86,3 +86,35 @@ compiler invocation needed the existing plugin friend-path for AncientCurses;
 no production change was needed for that harness failure. Inputs were frozen
 and recorded in validation/guardian-pvp-actual-source.json. This completes the
 PvP adapter component; guardian combat/spawn/loot and Gradle acceptance remain.
+
+## Double-agent runtime, B17-Nov03:10
+
+TreasureTrailAgents now joins the existing controller to emote dispatch, the
+ordinary melee strategy, personal targeting, death and Uri. All three sourced
+profiles retain real HP80/120/160, speed4, Wiki stats/bonuses and XP0/2.5/5%.
+Hard Wilderness uses source1777/local5144; other hard uses1778/local5145;
+78 uses7312 via the existing ten-NPC import batch, never a guessed local ID.
+The first trail step posts Uri without an agent. Later steps require that exact
+agent to die; combat gear is allowed, and clue gear at death posts Uri immediately
+even after the player moved from the original emote square. Otherwise the
+original emote/gear/tile must be repeated. Killing never advances by itself.
+Bones are guaranteed through the ordinary DropTableFactory/Drop Viewer path;
+owner N424/N561 excludes looting bags (HOOFDLIJST notes they are out of game).
+Personal actors reject another player or familiar, and never acquire a stranger
+as an aggro target. Existing same-id ordinary NPCs remain ordinary combatants.
+Cleanup removes living actors on stale scroll/bank/logout/death; normal death
+animation/drop processing owns corpses. Loot settlement is repeat-safe.
+
+The native human animation roles are RuneLite gameval HUMAN_UNARMEDPUNCH422,
+HUMAN_UNARMEDBLOCK424 and HUMAN_DEATH836. Attack/death agree with the existing
+native rows. Client visual/audio proof remains required; no claim of a newly
+measured block animation or OSRS spawn/vanish graphic is made.
+
+31 freshly compiled tests passed in one JVM: PvP5, controller12, existing
+SinglesPlus2, agent5 and existing emotes7. Source/input proof is preserved in
+validation/agent-runtime-actual-source.json. A fixture initially failed because
+master scroll had no applied item mapping; its test-only mapping now models
+Claude's import instead of creating an Item(-1). The failed run is not accepted.
+The small runner also now includes the current plugin jar when Gradle snapshots
+move loose classes. Full Gradle/script acceptance follows on frozen inputs.
+Coordinate wizard combat/loot and hot/cold remain separate open work.

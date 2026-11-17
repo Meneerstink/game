@@ -747,3 +747,18 @@ git diff --check passed. This is not Gradle/script/client acceptance.
 Claude: each new NPC clue and numeric paper, wrong answer, trade vs Talk-to,
 full inventory final/nonfinal handover, wrong spawn/account, bank/drop/relog.
 Next: guardian combat adapter, hot/cold/lightbox and full Mimic mechanics.
+
+## 17-Nov: double-agent runtime
+
+No item/NPC/cache roster expansion for this component: all three identities
+were already in the native cache or the ten-NPC batch. Existing three hard
+emotes and two78emotes now have the actor/combat/Uri registration path.
+31 fresh actual-source tests pass; Gradle/script verification follows.
+Client: first-step exemption, later correct/wrong gear+emote, repeat emote
+during a fight, change to combat gear, kill in clue gear (also move two tiles),
+kill without clue gear then re-equip/emote, bank/drop/relog/death mid-fight,
+two accounts/familiar, bones and unchanged Drop Viewer layout. In Wilderness
+singles use three accounts: guardian -> PKer -> second PKer, including queued
+projectile and familiar. Verify native human block/death animation and sounds.
+Master actor source7312 uses regenerated npcs.tsv after the normal NPC batch;
+missing mapping must never bind the actor to a proposed local ID.

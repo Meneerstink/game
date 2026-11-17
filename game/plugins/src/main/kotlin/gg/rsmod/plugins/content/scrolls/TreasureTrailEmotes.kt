@@ -24,6 +24,18 @@ object TreasureTrailEmotes {
     fun attire(player: Player, row: TreasureTrailStepCatalogue.Step): Boolean =
         row.acceptsEquipment(player.equipment.map { it?.id })
 
+    /** The guarded route alone may post Uri after an agent fight (or the first-step exemption). */
+    fun afterGuardian(player: Player, step: TreasureTrailSourceStep,
+                      spawn: (Player, TreasureTrailSourceStep) -> Npc? = ::spawn): Boolean {
+        if (!TreasureTrailGuardians.ready(player, step) || !attire(player, step.source)) return false
+        sessions[player]?.let { if (it.step === step && it.contract.valid(player)) return true }
+        val contract = ClueStepContract.capture(player, step) ?: return false
+        val uri = spawn(player, step) ?: return false
+        remove(player)
+        sessions[player] = Session(player, step, contract, uri)
+        return true
+    }
+
     fun perform(player: Player, component: Int, spawn: (Player, TreasureTrailSourceStep) -> Npc? = ::spawn): Boolean {
         val previous = sessions[player]
         if (previous != null && !previous.contract.valid(player)) remove(player)

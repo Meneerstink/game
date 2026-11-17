@@ -82,6 +82,15 @@ if '--unique' in sys.argv:
                 'TreasureTrailStepCatalogueTests', 'ClueScrollLifecycleTests', 'TreasureTrailContractTests',
                 'TreasureTrailEmoteTests', 'ClueStepSelectionTests', 'TreasureTrailMapsTests']]
 
+if '--guardian-pvp' in sys.argv:
+    CORE = []
+    PLUGINS = ['gg.rsmod.plugins.content.scrolls.' + name for name in
+               ['ClueGuardianPvpTests', 'TreasureTrailGuardianTests', 'TreasureTrailAgentTests', 'TreasureTrailNpcStepsTests',
+                'TreasureTrailNumberChallengeTests', 'TreasureTrailBasicStepsTests',
+                'TreasureTrailStepCatalogueTests', 'ClueScrollLifecycleTests', 'TreasureTrailContractTests',
+                'TreasureTrailEmoteTests', 'TreasureTrailUriSourceTests', 'ClueStepSelectionTests', 'TreasureTrailMapsTests']]
+    PLUGINS += ['gg.rsmod.plugins.content.combat.SinglesPlusTests']
+
 
 def inputs():
     tracked = subprocess.check_output(['git', 'ls-files'], cwd=ROOT, text=True).splitlines()
