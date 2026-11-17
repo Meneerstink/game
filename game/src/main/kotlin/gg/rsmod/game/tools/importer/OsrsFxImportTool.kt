@@ -37,6 +37,11 @@ object OsrsFxImportTool {
             // DMM2: cache 2686 source IDs, same order as the phase-3 bundle plan.
             "dmm2-spots" to listOf(3030, 3031, 3032, 3033, 3565, 3566, 3567, 3568, 3569, 3570, 3571, 4020),
             "dmm2-fire-av" to listOf(116), // ENCHANT_AMULET_LVL3, wiki creating-fire visual (rev15329402).
+            // DMM2 fase 7 (Claude 17-11): undead-trinket thrall projectiles = the greater-thrall ones (wiki Trinket_of_undead: "function the same as greater thralls"): THRALL_RANGED_TRAVEL 1906, THRALL_MAGIC_TRAVEL 1907, THRALL_MAGIC_IMPACT 1908.
+            "dmm2-thrall-av" to listOf(1906, 1907, 1908),
+            // DMM2 fase 7 (Claude 17-11): Armageddon home-teleport effect, OSRS spotanim 2909 (model 54209, seq VFX_DM_ARMAGEDDON_TELEPORT_01 11445,
+            // found by scanning the 2686 spotanims for seq 11445); the player half HUMAN_DEADMAN_ARMAGEDDON_REWARD_TELEPORT_01 11444 is in dmm2-seqs.
+            "dmm2-home-tele-av" to listOf(2909),
             // N415: gameval GUTHIX_CLAW_GREEN, MA2_GUTHIX_PROJ(_SMALL), MA2_ZAMORAK_PROJ,
             // WILD_ZEALOT_SWORD_PROJ and WILD_ZEALOT_LIGHTNING. Includes specials omitted by Breach.
             "mage-arena" to listOf(1511, 1512, 1513, 1514, 1515, 1518),
@@ -255,6 +260,8 @@ object OsrsFxImportTool {
             // DMM2: cache 2686 source IDs, same order as the phase-3 bundle plan.
             "dmm2-seqs" to listOf(11444, 11810, 11811, 11812, 11935, 11936, 11937, 13701, 13702, 13703, 13704, 13705, 13706, 13707, 13708, 13709, 13710, 13711, 13712, 13713, 13714, 14497),
             "dmm2-weapon-av" to listOf(721, 8056, 8057), // HUMAN_ENCHANTAMULETLVL3, SCYTHE_OF_VITUR_ATTACK/READY.
+            // DMM2 fase 7 (Claude 17-11): thrall attack seqs on the pet skeletons of NPC 15569/15570/15571 (ZUKREK_ATTACK 7978, KALPHITE_UPDATE_FLYING_QUEEN_RANGED_ATTACK 6234, ONZEKER: no OSRS video of the trinket thralls; the attack seq of each pet skeleton. The Wisp attack is skeletal: OsrsPetImportTool "dmm2-wisp").
+            "dmm2-thrall-av" to listOf(7978, 6234),
             // Owner 2026-09-21 ("there is no breach"): the loc animations of OSRS "Breach" 49561 and "Boss Spawn"
             // 49563, kept here as the record of a settled question. `OsrsLocImportTool` dropped both animations as
             // "not an imported classic sequence", so the obvious next step was to import the sequences and re-import

@@ -204,7 +204,7 @@ object RangedCombatStrategy : CombatStrategy {
         val starterAppearance = (pawn as? Player)?.getEquipment(EquipmentType.WEAPON)?.takeIf {
             gg.rsmod.plugins.content.starter.DeadmanStarterPack.isBow(it.id)
         }?.let { gg.rsmod.plugins.content.starter.StarterWeaponCombat.bowAppearance }
-        val animation = starterAppearance?.animation ?: CombatConfigs.getAttackAnimation(pawn)
+        val animation = starterAppearance?.animation?.takeIf { it > 0 } ?: CombatConfigs.getAttackAnimation(pawn)
 
         /*
          * A list of actions that will be executed upon this hit dealing damage

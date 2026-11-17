@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.deadman
 
 import gg.rsmod.game.RspsPaths
+import gg.rsmod.plugins.content.combat.createProjectile
 import gg.rsmod.plugins.content.starter.DeadmanStarterPack
 import java.io.File
 
@@ -47,6 +48,117 @@ object Dmm2Boot {
         }
         ThunderKhopesh.appearance = khopeshAppearance()
         ThunderKhopesh.register()
+        UndeadThralls.appearance = thrallAppearance()
+        installHomeTeleports()
+        // DMM2 fase 7 (Claude 17-11): the starter weapons never fired (appearance null -> canAttack false). Wiki Starter_staff: "equipped
+        // with a built-in Fire Strike" -> our Fire Strike AV (OSRS 99/100/101 imports + the staff cast animation, CombatSpell index 1).
+        // Wiki Starter_bow: "fires its own ammunition, much like a crystal bow", Ranged Strength +7 "the same as bronze arrows" -> the
+        // ordinary bow animation (0 = CombatConfigs default) with the bronze arrow drawback/flight gfx. ONZEKER: the bow's arrow look
+        // has no named OSRS source.
+        val strike = gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.FIRE_STRIKE
+        gg.rsmod.plugins.content.starter.StarterWeaponCombat.staffAppearance = gg.rsmod.plugins.content.starter.StarterWeaponCombat.Appearance(
+            strike.castAnimation[1], strike.castGfx!!.id, strike.projectile, strike.impactGfx!!.id)
+        gg.rsmod.plugins.content.starter.StarterWeaponCombat.bowAppearance = gg.rsmod.plugins.content.starter.StarterWeaponCombat.Appearance(
+            0, gg.rsmod.plugins.api.cfg.Gfx.BRONZE_ARROW_DRAWBACK, gg.rsmod.plugins.api.cfg.Gfx.BRONZE_ARROW_IN_FLIGHT, 0)
+    }
+
+    /**
+     * DMM2 fase 7 (Claude 17-11): the undead-trinket thralls were silently NOT_READY - appearance was never set. Sources:
+     *  - NPCs: OSRS DEADMAN_THRALL_ZOMBIE_GREATER_ZUK 15569 / _SKELETAL_GREATER_PRINCESS 15570 / _GHOSTLY_GREATER_WISP 15571 (ids.tsv).
+     *  - Wiki Trinket_of_undead: "These thralls function the same as greater thralls" (melee / ranged / magic).
+     *  - Wiki Thrall: "Skeletal and Ghostly thralls have an attack range of 6"; "The magic thralls' projectiles will hit enemies 1-2 ticks
+     *    earlier (depending on distance) than the ranged thralls"; zombified = melee.
+     *  - Projectiles: the greater-thrall spotanims THRALL_RANGED_TRAVEL 1906, THRALL_MAGIC_TRAVEL 1907, THRALL_MAGIC_IMPACT 1908
+     *    (OsrsFxImportTool batch dmm2-thrall-av).
+     *  - Attack seqs: the attack seq of each pet skeleton, ZUKREK_ATTACK 7978 and KALPHITE_UPDATE_FLYING_QUEEN_RANGED_ATTACK 6234.
+     * ONZEKER (no OSRS video of these thralls): the attack seqs, the ranged delay (player bow formula) and the Wisp attack seq (its skeleton's
+     * NPC_WHISPERER_01_ATTACK_MAGIC_01 10241 is skeletal; a single-seq bake for the already-applied Wisp is open) - a missing seq or
+     * projectile only drops that visual, the attack itself still lands. Missing NPC ids keep the trinket NOT_READY, as before.
+     */
+    private fun thrallAppearance(): UndeadThralls.Appearance? {
+        val npcs = UndeadThralls.Choice.values().associateWith { Dmm2Ids.npc(it.sourceNpc) ?: return null }
+        val attackSeq = mapOf(UndeadThralls.Choice.ZUK to Dmm2Ids.seq(7978), UndeadThralls.Choice.KAL to Dmm2Ids.seq(6234))
+        val rangedTravel = Dmm2Ids.spot(1906)
+        val magicTravel = Dmm2Ids.spot(1907)
+        val magicImpact = Dmm2Ids.spot(1908)
+        return object : UndeadThralls.Appearance {
+            override fun spawn(player: gg.rsmod.game.model.entity.Player, choice: UndeadThralls.Choice): gg.rsmod.game.model.entity.Npc? {
+                val npc = gg.rsmod.game.model.entity.Npc(player, npcs.getValue(choice), player.tile, player.world)
+                npc.ignoresEntityCollision = true
+                player.world.spawn(npc)
+                return npc
+            }
+
+            override fun reach(actor: gg.rsmod.game.model.entity.Npc, target: gg.rsmod.game.model.entity.Npc, choice: UndeadThralls.Choice): Boolean =
+                if (choice.hit == gg.rsmod.plugins.api.HitType.MELEE) {
+                    gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(actor.world.collision, actor.tile, actor.getSize(), actor.getSize(),
+                        target.tile, target.getSize(), target.getSize())
+                } else {
+                    distanceToBody(actor.tile, target) <= RANGE && actor.hasLineOfSightTo(target, projectile = true, maximumDistance = RANGE + target.getSize())
+                }
+
+            override fun follow(actor: gg.rsmod.game.model.entity.Npc, player: gg.rsmod.game.model.entity.Player, target: gg.rsmod.game.model.entity.Npc?) {
+                if (target != null) {
+                    actor.facePawn(target)
+                    if (!reach(actor, target, choiceOf(actor) ?: return)) actor.walkTo(target.tile)
+                    return
+                }
+                actor.resetFacePawn()
+                if (actor.tile.height != player.tile.height || !actor.tile.isWithinRadius(player.tile, 12)) {
+                    actor.moveTo(player.tile)
+                } else if (!actor.tile.isWithinRadius(player.tile, 1)) {
+                    actor.walkTo(player.tile)
+                }
+            }
+
+            override fun attack(actor: gg.rsmod.game.model.entity.Npc, target: gg.rsmod.game.model.entity.Npc, choice: UndeadThralls.Choice): Int {
+                attackSeq[choice]?.let { actor.animate(it) }
+                if (choice.hit == gg.rsmod.plugins.api.HitType.MELEE) return 1
+                val ranged = gg.rsmod.plugins.content.combat.strategy.RangedCombatStrategy.getHitDelay(actor.tile, target.tile)
+                val delay = if (choice.hit == gg.rsmod.plugins.api.HitType.MAGIC) (ranged - 1).coerceAtLeast(1) else ranged
+                val travel = if (choice.hit == gg.rsmod.plugins.api.HitType.MAGIC) magicTravel else rangedTravel
+                travel?.let {
+                    val type = if (choice.hit == gg.rsmod.plugins.api.HitType.MAGIC) gg.rsmod.plugins.api.ProjectileType.MAGIC
+                        else gg.rsmod.plugins.api.ProjectileType.ARROW
+                    actor.world.spawn(actor.createProjectile(target, it, type))
+                }
+                if (choice.hit == gg.rsmod.plugins.api.HitType.MAGIC) magicImpact?.let { target.graphic(it, 100, delay * 30) }
+                return delay
+            }
+
+            private fun choiceOf(actor: gg.rsmod.game.model.entity.Npc): UndeadThralls.Choice? = npcs.entries.firstOrNull { it.value == actor.id }?.key
+        }
+    }
+
+    /**
+     * DMM2 fase 7 (Claude 17-11): Nigel's "Home Teleport animation" choice was stored but never played - DeadmanHomeTeleport.install was
+     * never called, so home_teleport_spells always fell back to the default cast. Sources, OSRS cache 2686 (decoded 17-11):
+     *  - Annihilation: six stages HUMAN_DEADMAN_ANNIHILATION_REWARD_TELEPORT_01.._06 13702..13707 paired with spotanims
+     *    DEADMAN_2026_HOME_TELE_SPOTANIM_01.._06 3566..3571 (their seqs 13709..13714); every stage is 90 client cycles = 3 ticks
+     *    (the _FULL versions 13701 / 3565 are 541 / 540 cycles = the same 18 ticks in one piece).
+     *  - Armageddon: one stage HUMAN_DEADMAN_ARMAGEDDON_REWARD_TELEPORT_01 11444 (690 cycles = 23 ticks) with spotanim 2909, whose seq is
+     *    VFX_DM_ARMAGEDDON_TELEPORT_01 11445 (also 690 cycles). Spotanim 2909 comes in with OsrsFxImportTool batch dmm2-home-tele-av.
+     * A style whose ids are not all imported stays unavailable (the default cast plays), as before.
+     */
+    private fun installHomeTeleports() {
+        val annihilation = (0 until 6).map { i ->
+            DeadmanHomeTeleport.Stage(Dmm2Ids.seq(13702 + i) ?: return@map null, Dmm2Ids.spot(3566 + i) ?: return@map null, 3)
+        }
+        if (annihilation.all { it != null }) DeadmanHomeTeleport.install(NigelRewardStore.Teleport.ANNIHILATION, annihilation.filterNotNull())
+        val armageddonSeq = Dmm2Ids.seq(11444)
+        val armageddonSpot = Dmm2Ids.spot(2909)
+        if (armageddonSeq != null && armageddonSpot != null)
+            DeadmanHomeTeleport.install(NigelRewardStore.Teleport.ARMAGEDDON, listOf(DeadmanHomeTeleport.Stage(armageddonSeq, armageddonSpot, 23)))
+    }
+
+    private const val RANGE = 6
+
+    /** Chebyshev distance from [from] to the nearest tile of [target]'s body. */
+    private fun distanceToBody(from: gg.rsmod.game.model.Tile, target: gg.rsmod.game.model.entity.Npc): Int {
+        val s = target.getSize()
+        val dx = maxOf(0, target.tile.x - from.x, from.x - (target.tile.x + s - 1))
+        val dz = maxOf(0, target.tile.z - from.z, from.z - (target.tile.z + s - 1))
+        return maxOf(dx, dz)
     }
 
     /**
