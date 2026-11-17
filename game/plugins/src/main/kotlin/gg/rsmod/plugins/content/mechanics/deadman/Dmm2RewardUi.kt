@@ -57,7 +57,7 @@ object Dmm2RewardUi : Dmm2Interactions.RewardUi {
         player.setComponentHidden(main, 14, true)
         // Enum4988 is empty: source5771 draws a disabled dropdown, no Expand operation.
         player.setComponentHidden(main, 11, false)
-        player.setComponentHidden(main, 12, false)
+        player.setComponentHidden(main, 12, true)
         player.setComponentHidden(main, 40, true)
         applyLayout(player)
         scroll(player, main, 38, 39, 311)
@@ -95,6 +95,7 @@ object Dmm2RewardUi : Dmm2Interactions.RewardUi {
             player.setComponentHidden(view.main,W.REWARD_FIRST+index*W.REWARD_STRIDE+11,expanded)
         }
         player.setComponentHidden(view.main,14,!expanded)
+        player.setComponentHidden(view.main,12,!expanded) // source7142: Help exists only in the small-card layout
         val control = Dmm2Ids.script(W.CONTROL_SOURCE)
         Dmm2Ids.sprite(if (expanded) 4737 else 4735)?.let { sprite ->
             if (control != null) player.runClientScript(control,(view.main shl 16) or 11,(view.main shl 16) or W.VIEW_ICON,

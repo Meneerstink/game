@@ -224,7 +224,7 @@ class Dmm2WindowTests {
         fun hidden(component: Int): Boolean = sent.filterIsInstance<gg.rsmod.game.message.impl.IfSetHideMessage>()
             .last { it.hash == ((2002 shl 16) or component) }.hidden
         assertTrue(hidden(9)); assertTrue(hidden(gg.rsmod.game.tools.importer.Dmm2WindowPort.REWARD_FIRST+11))
-        assertFalse(hidden(14))
+        assertFalse(hidden(14)); assertFalse(hidden(12))
         assertEquals("Expand",sent.filterIsInstance<gg.rsmod.game.message.impl.RunClientScriptMessage>().last { it.id == 2101 }.args.last())
         Dmm2RewardUi.product(f.player,3,1)
         assertFalse(hidden(9)); assertEquals(30_000,points())
@@ -233,7 +233,7 @@ class Dmm2WindowTests {
         assertEquals(30_000,points()); assertEquals(0L,count(rug))
         Dmm2RewardUi.closeDetails(f.player); assertTrue(hidden(9))
         Dmm2RewardUi.toggleView(f.player)
-        assertFalse(hidden(9)); assertTrue(hidden(14))
+        assertFalse(hidden(9)); assertTrue(hidden(14)); assertTrue(hidden(12))
         assertFalse(hidden(gg.rsmod.game.tools.importer.Dmm2WindowPort.REWARD_FIRST+11))
         Dmm2RewardUi.product(f.player,3,1); Dmm2RewardUi.buySelected(f.player,0)
         assertEquals(27_000,points()); assertEquals(1L,count(rug))

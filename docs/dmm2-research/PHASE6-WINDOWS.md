@@ -207,3 +207,8 @@ en bij Claude's apply in de echte interface-map gepubliceerd. De totale gerichte
 daarom kiest uitsluitend deze PLAN-opdracht expliciet de gedocumenteerde `RGRADLE_LOCAL=1`-route.
 De scriptargumenten accepteren geen apply; voor/na worden alle78cachefiles gehasht en een lege
 journal vereist. Geen cachekopie wordt stilzwijgend vervangen door een actuele originele cache.
+
+Laatste bronreview: Help12 wordt in de portretstand verborgen en in de kleinekaartstand getoond,
+exact7142:194..196/232..234. Dit voorkomt overlap met de disabled dropdown. De bestaande View-test
+controleert beide vlaggen. De eindherhaling forceert alleen de acht gerichte Test-taken opnieuw
+voor verse XML; ongewijzigde compilemodules behouden hun normale up-to-date-controle.

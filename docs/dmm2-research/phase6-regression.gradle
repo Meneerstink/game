@@ -27,5 +27,6 @@ gradle.projectsEvaluated {
         task.forkEvery = name == ':game' ? 0 : 1
         task.doFirst { println '[DMM2] discovered classes restricted to: ' + ownClasses.join(', ') }
         task.testLogging.events('passed', 'failed', 'skipped')
+        task.outputs.upToDateWhen { false } // Fresh XML for the complete eight-class handoff, without recompiling unchanged modules.
     }
 }
