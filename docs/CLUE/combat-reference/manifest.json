@@ -1,0 +1,68 @@
+{
+  "source": "Direct OSRS recordings, not donor servers",
+  "frames": [
+    {
+      "video": "https://www.youtube.com/watch?v=QTaI10QOn2w",
+      "title": "Master Clue step - Brassican Mages",
+      "channel": "Knyph",
+      "upload_date": "20240910",
+      "duration": 65,
+      "download_sha256": "471d919ff7500849c215ef161a16d53b75e655e39a75014a202909a76ed3052f",
+      "sample_start_seconds": 29.4,
+      "sample_interval_seconds": 0.2,
+      "samples": 12,
+      "crop": [
+        250,
+        180,
+        870,
+        700
+      ],
+      "contact_sheet": "QTaI10QOn2w-attack.jpg",
+      "contact_sheet_sha256": "d99ddf91341386f946c5f2c45cdfa3f326fe5a9c94f225e7154e9b148ddcbb70",
+      "status": "OBSERVED_NOT_CERTIFIED",
+      "note": "OSRS combat and source identity observed; these images alone do not establish numeric animation IDs, projectile geometry, or random choice chances. Do not set verified=true based only on this overview."
+    },
+    {
+      "video": "https://www.youtube.com/watch?v=x0W9Wzej-sQ",
+      "title": "OSRS: Master Clue Ancient Wizards",
+      "channel": "Linkazoid",
+      "upload_date": "20170328",
+      "duration": 107,
+      "download_sha256": "e39f4f2a4a85dc33406f34c1c545867d8a14623b7615faf0c24ba2d14e16faad",
+      "sample_start_seconds": 18.0,
+      "sample_interval_seconds": 0.2,
+      "samples": 12,
+      "crop": [
+        200,
+        80,
+        960,
+        570
+      ],
+      "contact_sheet": "x0W9Wzej-sQ-attack.jpg",
+      "contact_sheet_sha256": "75eb9d9a90ac53d3ebb91fd343a07c85daaa47f11a5a57b59e4bab67427dc165",
+      "status": "OBSERVED_NOT_CERTIFIED",
+      "note": "OSRS combat and source identity observed; these images alone do not establish numeric animation IDs, projectile geometry, or random choice chances. Do not set verified=true based only on this overview."
+    },
+    {
+      "video": "https://www.youtube.com/watch?v=T2Xo2_gufTg",
+      "title": "How to kill Armadylean/bandos guard on lvl 3",
+      "channel": "The1337event",
+      "upload_date": "20260214",
+      "duration": 290,
+      "download_sha256": "ddf978b9843892bb4b246f50d3b3fa55da85c64deef6457dc566a6964c78a0fc",
+      "sample_start_seconds": 13.0,
+      "sample_interval_seconds": 0.2,
+      "samples": 12,
+      "crop": [
+        200,
+        70,
+        850,
+        570
+      ],
+      "contact_sheet": "T2Xo2_gufTg-attack.jpg",
+      "contact_sheet_sha256": "d39b31c1377233d42da25a64fa111390943ffd848804e38753257ffd42c0d68c",
+      "status": "OBSERVED_NOT_CERTIFIED",
+      "note": "OSRS combat and source identity observed; these images alone do not establish numeric animation IDs, projectile geometry, or random choice chances. Do not set verified=true based only on this overview."
+    }
+  ]
+}

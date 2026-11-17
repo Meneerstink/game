@@ -1,0 +1,2014 @@
+{
+  "kind": "STATIC_ADAPTER_INVENTORY_NOT_ACTIVE_POOL",
+  "records": 107,
+  "originals": 38,
+  "newSourceRecords": 69,
+  "groupedTrailChoices": 105,
+  "note": "Three master torn parts are one choice. Every import/readiness predicate and loaded-client check still applies.",
+  "tiers": {
+    "easy": {
+      "records": 29,
+      "sourceGated": 0
+    },
+    "medium": {
+      "records": 29,
+      "sourceGated": 0
+    },
+    "hard": {
+      "records": 25,
+      "sourceGated": 0
+    },
+    "elite": {
+      "records": 12,
+      "sourceGated": 2
+    },
+    "master": {
+      "records": 12,
+      "sourceGated": 3
+    }
+  },
+  "sourceHashes": {
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailEmotes.kt": "285c24b16c4dcf4a39713c95f70a0c26fe21386874246b38b861d5a1d51bc422",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailUri.kt": "e9aaaa915f8c17e6243cf6f1f841daf3dba5f69264f68312b122dab6b238920c",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailBasicSteps.kt": "c8f31405943b45db1969329270bcccdcdcbe1b784ae9282ef48d0552fe1604f7",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailMaps.kt": "203baa5113e701571a5c694e95d020948fa70c20c27016b1df431474aaabe698",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailNpcSteps.kt": "a0eb64d3f0c0db94d5c9edce53c973b594bc5cb90c2fc1fb922e27b5c3b805cb",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailSearchTargets.kt": "f338498f5b21d602f7a6ae4511274a4605d76fcba94ea4a635a0f4813c84fa48",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailNumberChallenge.kt": "4c4e7cc6a6299e376a733cae03407aa8e15c79b190bac1bfb75ff3ce5995c25f",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailNumberDialogue.kt": "9efa6d280c0ac3bfb4a6fc012b2d70dcffad73825ffea49119b294cd51760043",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailAgents.kt": "fc0a792b10a473219dc629f1deec2f43caa323d320ed0d71acc25b0d4f68163b",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailGuardians.kt": "71a019ed25a32858750ac197c64cf8ffb35dd4f2b64949f4fcc8cfa365a0ab05",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailWizards.kt": "02bb66f66474f74ade7f02ecd210de3a9c9b082b56a9198e4072789c7f6f10d0",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailPuzzleBoxes.kt": "fee15c237ef04e70f292b5a4c912388a2ae0f7c50162e7851d1521975adcb9e6",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailPuzzleDialogue.kt": "59e6f155bc24f1b07c228771a39c6be8b29240b093e9dd8157c09e8664776955",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailDigGuards.kt": "977ea954b1bd07c1cad0ce1004b02ad43f92a4eea6c813603de8742055574be5",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/ClueGuardianCombat.kt": "7494ef845341cbb2074559e42eea7724dc78c46e3f0145fc81a4d0d9a79b6fce",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailSherlock.kt": "517715abfffc49af73ae478884dd8572dcdc4cd60bf7d98a21e6466d5c7868f5",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailSherlockDialogue.kt": "181e9c7dbdceb5185a7af6af7d6c3cc44a13fa521e4c6b4d9ea9aefe276047b4",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailTornParts.kt": "1fe2cd3bbfed5e28366c894ef5f120474a060aaa8e8cd0f360f272bcfb49756f",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailTornDialogue.kt": "67e701d59ba10f5ed3df653e5a1f61aeab1e906fe6ad70ea3b31d68588d40cf5",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailMasterPuzzles.kt": "8963f6041f372a5cfa7aa63280afbd5792328cf8b87c7ecee7760097daa8550b",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailLightBoxes.kt": "5f3e515d4af1a3001055646fca1f84aca8d18099ebb6bd457331ccb47647e7c2",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailFalo.kt": "389fadbb9b9874074660d89b4cc69d28bf61e9e3129b86d86e97c2cecec7c654",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailFaloDialogue.kt": "8d2aac8071a2604d21aabfb812ebc55a951e23bd327a9a49aea3df0ce401e759",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailHotCold.kt": "ba6ef976a1a2f75ce3c688aef6064344c9c11fa282c1e7e109617db5a2acb8e6",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailHotColdDialogue.kt": "517ede6df1446201218c5c5b6be5041cbfa77ae72f70d5761be367ca4755f040"
+  },
+  "steps": [
+    {
+      "key": "Clue scroll (easy) - Dance at the crossroads north of Draynor",
+      "tier": "easy",
+      "original": true,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "URI",
+      "adapters": [
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "Uri; every required gear group; optional alternatives may be absent"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dance_at_the_crossroads_north_of_Draynor"
+    },
+    {
+      "key": "Clue scroll (easy) - Headbang in the mine north of Al Kharid",
+      "tier": "easy",
+      "original": true,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "URI",
+      "adapters": [
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "Uri; every required gear group; optional alternatives may be absent"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Headbang_in_the_mine_north_of_Al_Kharid"
+    },
+    {
+      "key": "Clue scroll (easy) - Cheer at the Druids' Circle",
+      "tier": "easy",
+      "original": true,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "URI",
+      "adapters": [
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "Uri; every required gear group; optional alternatives may be absent"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Cheer_at_the_Druids%27_Circle"
+    },
+    {
+      "key": "Clue scroll (easy) - Clap on the causeway to the Wizards' Tower",
+      "tier": "easy",
+      "original": true,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "URI",
+      "adapters": [
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "Uri; every required gear group; optional alternatives may be absent"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Clap_on_the_causeway_to_the_Wizards%27_Tower"
+    },
+    {
+      "key": "Clue scroll (easy) - Jump for joy at the beehives",
+      "tier": "easy",
+      "original": true,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "URI",
+      "adapters": [
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "Uri; every required gear group; optional alternatives may be absent"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Jump_for_joy_at_the_beehives"
+    },
+    {
+      "key": "Clue scroll (easy) - At the standing stones north of Falador",
+      "tier": "easy",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_At_the_standing_stones_north_of_Falador"
+    },
+    {
+      "key": "Clue scroll (easy) - Brother Galahad's house",
+      "tier": "easy",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Brother_Galahad%27s_house"
+    },
+    {
+      "key": "Clue scroll (easy) - Directly behind the Wizards' Tower",
+      "tier": "easy",
+      "original": false,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Directly_behind_the_Wizards%27_Tower"
+    },
+    {
+      "key": "Clue scroll (easy) - Dig between some ominous stones in Falador",
+      "tier": "easy",
+      "original": false,
+      "kind": "CRYPTIC",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dig_between_some_ominous_stones_in_Falador"
+    },
+    {
+      "key": "Clue scroll (easy) - Dig near some giant mushrooms",
+      "tier": "easy",
+      "original": false,
+      "kind": "CRYPTIC",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dig_near_some_giant_mushrooms"
+    },
+    {
+      "key": "Clue scroll (easy) - I wonder how many bronze shortswords he has handed out",
+      "tier": "easy",
+      "original": false,
+      "kind": "CRYPTIC",
+      "action": "TALK",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNpcSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact native Talk-to actor and source dialogue"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_I_wonder_how_many_bronze_shortswords_he_has_handed_out"
+    },
+    {
+      "key": "Clue scroll (easy) - One of the sailors in Port Sarim",
+      "tier": "easy",
+      "original": false,
+      "kind": "CRYPTIC",
+      "action": "TALK",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNpcSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact native Talk-to actor and source dialogue"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_One_of_the_sailors_in_Port_Sarim"
+    },
+    {
+      "key": "Clue scroll (easy) - Search the crate in Rommiks crafting shop in Rimmington",
+      "tier": "easy",
+      "original": false,
+      "kind": "CRYPTIC",
+      "action": "SEARCH",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailSearchTargets"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact scenery/menu; bucket Search batch where used"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Search_the_crate_in_Rommiks_crafting_shop_in_Rimmington"
+    },
+    {
+      "key": "Clue scroll (easy) - Search for a crate in Varrock Castle",
+      "tier": "easy",
+      "original": false,
+      "kind": "CRYPTIC",
+      "action": "SEARCH",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailSearchTargets"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact scenery/menu; bucket Search batch where used"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Search_for_a_crate_in_Varrock_Castle"
+    },
+    {
+      "key": "Clue scroll (easy) - Search the bucket in the Port Sarim jail",
+      "tier": "easy",
+      "original": false,
+      "kind": "CRYPTIC",
+      "action": "SEARCH",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailSearchTargets"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact scenery/menu; bucket Search batch where used"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Search_the_bucket_in_the_Port_Sarim_jail"
+    },
+    {
+      "key": "Clue scroll (easy) - Dance a jig by the entrance to the Fishing Guild",
+      "tier": "easy",
+      "original": true,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "URI",
+      "adapters": [
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "Uri; every required gear group; optional alternatives may be absent"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dance_a_jig_by_the_entrance_to_the_Fishing_Guild"
+    },
+    {
+      "key": "Clue scroll (easy) - Dance in the shack in Lumbridge Swamp",
+      "tier": "easy",
+      "original": true,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "URI",
+      "adapters": [
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "Uri; every required gear group; optional alternatives may be absent"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dance_in_the_shack_in_Lumbridge_Swamp"
+    },
+    {
+      "key": "Clue scroll (easy) - Dance in the Party Room",
+      "tier": "easy",
+      "original": true,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "URI",
+      "adapters": [
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "Uri; every required gear group; optional alternatives may be absent"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dance_in_the_Party_Room"
+    },
+    {
+      "key": "Clue scroll (easy) - Cheer for the monks at Port Sarim",
+      "tier": "easy",
+      "original": true,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "URI",
+      "adapters": [
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "Uri; every required gear group; optional alternatives may be absent"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Cheer_for_the_monks_at_Port_Sarim"
+    },
+    {
+      "key": "Clue scroll (easy) - North of Falador.",
+      "tier": "easy",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_North_of_Falador."
+    },
+    {
+      "key": "Clue scroll (easy) - West of the Champions' Guild",
+      "tier": "easy",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_West_of_the_Champions%27_Guild"
+    },
+    {
+      "key": "Clue scroll (easy) - South-east Varrock mine",
+      "tier": "easy",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_South-east_Varrock_mine"
+    },
+    {
+      "key": "Clue scroll (easy) - Speak to Hans to solve the clue",
+      "tier": "easy",
+      "original": false,
+      "kind": "CRYPTIC",
+      "action": "TALK",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNpcSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact native Talk-to actor and source dialogue"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Speak_to_Hans_to_solve_the_clue"
+    },
+    {
+      "key": "Clue scroll (easy) - Speak to Doric, who lives north of Falador",
+      "tier": "easy",
+      "original": false,
+      "kind": "CRYPTIC",
+      "action": "TALK",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNpcSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact native Talk-to actor and source dialogue"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Speak_to_Doric%2C_who_lives_north_of_Falador"
+    },
+    {
+      "key": "Clue scroll (easy) - Speak to Arhein in Catherby",
+      "tier": "easy",
+      "original": false,
+      "kind": "CRYPTIC",
+      "action": "TALK",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNpcSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact native Talk-to actor and source dialogue"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Speak_to_Arhein_in_Catherby"
+    },
+    {
+      "key": "Clue scroll (easy) - Speak to Ellis in Al Kharid",
+      "tier": "easy",
+      "original": false,
+      "kind": "CRYPTIC",
+      "action": "TALK",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNpcSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact native Talk-to actor and source dialogue"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Speak_to_Ellis_in_Al_Kharid"
+    },
+    {
+      "key": "Clue scroll (easy) - Speak to Ned in Draynor Village",
+      "tier": "easy",
+      "original": false,
+      "kind": "CRYPTIC",
+      "action": "TALK",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNpcSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact native Talk-to actor and source dialogue"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Speak_to_Ned_in_Draynor_Village"
+    },
+    {
+      "key": "Clue scroll (easy) - Speak to Gaius in Taverley",
+      "tier": "easy",
+      "original": false,
+      "kind": "CRYPTIC",
+      "action": "TALK",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNpcSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact native Talk-to actor and source dialogue"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Speak_to_Gaius_in_Taverley"
+    },
+    {
+      "key": "Clue scroll (easy) - Talk to Cassie in Falador",
+      "tier": "easy",
+      "original": false,
+      "kind": "CRYPTIC",
+      "action": "TALK",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNpcSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact native Talk-to actor and source dialogue"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Talk_to_Cassie_in_Falador"
+    },
+    {
+      "key": "Clue scroll (medium) - Cheer in the Edgeville general store",
+      "tier": "medium",
+      "original": false,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "URI",
+      "adapters": [
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "Uri; every required gear group; optional alternatives may be absent"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Cheer_in_the_Edgeville_general_store"
+    },
+    {
+      "key": "Clue scroll (medium) - Shrug in Catherby bank",
+      "tier": "medium",
+      "original": false,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "URI",
+      "adapters": [
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "Uri; every required gear group; optional alternatives may be absent"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Shrug_in_Catherby_bank"
+    },
+    {
+      "key": "Clue scroll (medium) - Yawn in the Castle Wars lobby",
+      "tier": "medium",
+      "original": false,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "URI",
+      "adapters": [
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "Uri; every required gear group; optional alternatives may be absent"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Yawn_in_the_Castle_Wars_lobby"
+    },
+    {
+      "key": "Clue scroll (medium) - Spin on the bridge by the Barbarian Village",
+      "tier": "medium",
+      "original": false,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "URI",
+      "adapters": [
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "Uri; every required gear group; optional alternatives may be absent"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Spin_on_the_bridge_by_the_Barbarian_Village"
+    },
+    {
+      "key": "Clue scroll (medium) - 00.13S 13.58E",
+      "tier": "medium",
+      "original": false,
+      "kind": "COORDINATE",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_00.13S_13.58E"
+    },
+    {
+      "key": "Clue scroll (medium) - 00.20S 23.15E",
+      "tier": "medium",
+      "original": false,
+      "kind": "COORDINATE",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_00.20S_23.15E"
+    },
+    {
+      "key": "Clue scroll (medium) - 00.30N 24.16E",
+      "tier": "medium",
+      "original": false,
+      "kind": "COORDINATE",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_00.30N_24.16E"
+    },
+    {
+      "key": "Clue scroll (medium) - A BAKER",
+      "tier": "medium",
+      "original": false,
+      "kind": "ANAGRAM",
+      "action": "TALK",
+      "challenge": "NUMBER",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNumberChallenge",
+        "TreasureTrailNumberDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "tier paper2842/7269/12139; actual named Talk-to actor"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_A_BAKER"
+    },
+    {
+      "key": "Clue scroll (medium) - HALT US",
+      "tier": "medium",
+      "original": false,
+      "kind": "ANAGRAM",
+      "action": "TALK",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNpcSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact native Talk-to actor and source dialogue"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_HALT_US"
+    },
+    {
+      "key": "Clue scroll (medium) - AREA CHEF TREK",
+      "tier": "medium",
+      "original": false,
+      "kind": "ANAGRAM",
+      "action": "TALK",
+      "challenge": "NUMBER",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNumberChallenge",
+        "TreasureTrailNumberDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "tier paper2842/7269/12139; actual named Talk-to actor"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_AREA_CHEF_TREK"
+    },
+    {
+      "key": "Clue scroll (medium) - GUHCHO",
+      "tier": "medium",
+      "original": false,
+      "kind": "CIPHER",
+      "action": "TALK",
+      "challenge": "NUMBER",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNumberChallenge",
+        "TreasureTrailNumberDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "tier paper2842/7269/12139; actual named Talk-to actor"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_GUHCHO"
+    },
+    {
+      "key": "Clue scroll (medium) - XJABSE USBJCPSO",
+      "tier": "medium",
+      "original": false,
+      "kind": "CIPHER",
+      "action": "TALK",
+      "challenge": "NUMBER",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNumberChallenge",
+        "TreasureTrailNumberDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "tier paper2842/7269/12139; actual named Talk-to actor"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_XJABSE_USBJCPSO"
+    },
+    {
+      "key": "Clue scroll (medium) - South of Draynor Village bank",
+      "tier": "medium",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_South_of_Draynor_Village_bank"
+    },
+    {
+      "key": "Clue scroll (medium) - Behind the Chemist's house in Rimmington",
+      "tier": "medium",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Behind_the_Chemist%27s_house_in_Rimmington"
+    },
+    {
+      "key": "Clue scroll (medium) - North of the Tower of Life",
+      "tier": "medium",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_North_of_the_Tower_of_Life"
+    },
+    {
+      "key": "Clue scroll (medium) - Cheer in the Barbarian Agility Arena",
+      "tier": "medium",
+      "original": true,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "URI",
+      "adapters": [
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "Uri; every required gear group; optional alternatives may be absent"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Cheer_in_the_Barbarian_Agility_Arena"
+    },
+    {
+      "key": "Clue scroll (medium) - Jump for joy in Yanille bank",
+      "tier": "medium",
+      "original": true,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "URI",
+      "adapters": [
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "Uri; every required gear group; optional alternatives may be absent"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Jump_for_joy_in_Yanille_bank"
+    },
+    {
+      "key": "Clue scroll (medium) - Miscellania",
+      "tier": "medium",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Miscellania"
+    },
+    {
+      "key": "Clue scroll (medium) - Mort Myre Swamp",
+      "tier": "medium",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Mort_Myre_Swamp"
+    },
+    {
+      "key": "Clue scroll (medium) - At the entrance to the Ourania Cave",
+      "tier": "medium",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_At_the_entrance_to_the_Ourania_Cave"
+    },
+    {
+      "key": "Clue scroll (medium) - South-east of the Lighthouse",
+      "tier": "medium",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_South-east_of_the_Lighthouse"
+    },
+    {
+      "key": "Clue scroll (medium) - Between Seers' Village and Rellekka",
+      "tier": "medium",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Between_Seers%27_Village_and_Rellekka"
+    },
+    {
+      "key": "Clue scroll (medium) - To the east of the Ranging guild",
+      "tier": "medium",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_To_the_east_of_the_Ranging_guild"
+    },
+    {
+      "key": "Clue scroll (medium) - West of the Crafting Guild",
+      "tier": "medium",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_West_of_the_Crafting_Guild"
+    },
+    {
+      "key": "Clue scroll (medium) - The crate in McGrubor's Wood",
+      "tier": "medium",
+      "original": true,
+      "kind": "MAP",
+      "action": "SEARCH",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailSearchTargets",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact scenery/menu; bucket Search batch where used",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_The_crate_in_McGrubor%27s_Wood"
+    },
+    {
+      "key": "Clue scroll (medium) - The crate west of the Clock Tower",
+      "tier": "medium",
+      "original": true,
+      "kind": "MAP",
+      "action": "SEARCH",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailSearchTargets",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact scenery/menu; bucket Search batch where used",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_The_crate_west_of_the_Clock_Tower"
+    },
+    {
+      "key": "Clue scroll (medium) - 00.31S 17.43E",
+      "tier": "medium",
+      "original": false,
+      "kind": "COORDINATE",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_00.31S_17.43E"
+    },
+    {
+      "key": "Clue scroll (medium) - 02.48N 22.30E",
+      "tier": "medium",
+      "original": false,
+      "kind": "COORDINATE",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_02.48N_22.30E"
+    },
+    {
+      "key": "Clue scroll (medium) - 05.43N 23.05E",
+      "tier": "medium",
+      "original": false,
+      "kind": "COORDINATE",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_05.43N_23.05E"
+    },
+    {
+      "key": "Clue scroll (hard) - Salute in the banana plantation",
+      "tier": "hard",
+      "original": true,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "DOUBLE_AGENT",
+      "adapters": [
+        "TreasureTrailAgents",
+        "TreasureTrailGuardians",
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "native5144/5145 or imported source7312; Uri; valid gear"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Salute_in_the_banana_plantation"
+    },
+    {
+      "key": "Clue scroll (hard) - Blow a raspberry in the Fishing Guild bank",
+      "tier": "hard",
+      "original": true,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "DOUBLE_AGENT",
+      "adapters": [
+        "TreasureTrailAgents",
+        "TreasureTrailGuardians",
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "native5144/5145 or imported source7312; Uri; valid gear"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Blow_a_raspberry_in_the_Fishing_Guild_bank"
+    },
+    {
+      "key": "Clue scroll (hard) - Yawn in the rogues' general store",
+      "tier": "hard",
+      "original": true,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "DOUBLE_AGENT",
+      "adapters": [
+        "TreasureTrailAgents",
+        "TreasureTrailGuardians",
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "native5144/5145 or imported source7312; Uri; valid gear"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Yawn_in_the_rogues%27_general_store"
+    },
+    {
+      "key": "Clue scroll (hard) - 01.30N 20.01E",
+      "tier": "hard",
+      "original": false,
+      "kind": "COORDINATE",
+      "action": "DIG",
+      "challenge": "GUARD",
+      "adapters": [
+        "TreasureTrailWizards",
+        "TreasureTrailGuardians"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "guard source IDs 2955"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_01.30N_20.01E"
+    },
+    {
+      "key": "Clue scroll (hard) - 02.39N 29.58E",
+      "tier": "hard",
+      "original": false,
+      "kind": "COORDINATE",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_02.39N_29.58E"
+    },
+    {
+      "key": "Clue scroll (hard) - 02.48N 08.05E",
+      "tier": "hard",
+      "original": false,
+      "kind": "COORDINATE",
+      "action": "DIG",
+      "challenge": "GUARD",
+      "adapters": [
+        "TreasureTrailWizards",
+        "TreasureTrailGuardians"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "guard source IDs 2955"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_02.48N_08.05E"
+    },
+    {
+      "key": "Clue scroll (hard) - BLUE GRIM GUIDED",
+      "tier": "hard",
+      "original": false,
+      "kind": "ANAGRAM",
+      "action": "TALK",
+      "challenge": "SLIDING_PUZZLE",
+      "adapters": [
+        "TreasureTrailPuzzleBoxes",
+        "TreasureTrailPuzzleDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "source306 UI/picture atlas; tree boxes19887/23173; source306 Guide or native Gunnjorn"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_BLUE_GRIM_GUIDED"
+    },
+    {
+      "key": "Clue scroll (hard) - DO SAY MORE",
+      "tier": "hard",
+      "original": false,
+      "kind": "ANAGRAM",
+      "action": "TALK",
+      "challenge": "NUMBER",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNumberChallenge",
+        "TreasureTrailNumberDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "tier paper2842/7269/12139; actual named Talk-to actor"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_DO_SAY_MORE"
+    },
+    {
+      "key": "Clue scroll (hard) - RAT MAT WITHIN",
+      "tier": "hard",
+      "original": false,
+      "kind": "ANAGRAM",
+      "action": "TALK",
+      "challenge": "NUMBER",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNumberChallenge",
+        "TreasureTrailNumberDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "tier paper2842/7269/12139; actual named Talk-to actor"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_RAT_MAT_WITHIN"
+    },
+    {
+      "key": "Clue scroll (hard) - IWPPLQTP",
+      "tier": "hard",
+      "original": false,
+      "kind": "CIPHER",
+      "action": "TALK",
+      "challenge": "SLIDING_PUZZLE",
+      "adapters": [
+        "TreasureTrailPuzzleBoxes",
+        "TreasureTrailPuzzleDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "source306 UI/picture atlas; tree boxes19887/23173; source306 Guide or native Gunnjorn"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_IWPPLQTP"
+    },
+    {
+      "key": "Clue scroll (hard) - ZHLUG ROG PDQ",
+      "tier": "hard",
+      "original": false,
+      "kind": "CIPHER",
+      "action": "TALK",
+      "challenge": "NUMBER",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNumberChallenge",
+        "TreasureTrailNumberDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "tier paper2842/7269/12139; actual named Talk-to actor"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_ZHLUG_ROG_PDQ"
+    },
+    {
+      "key": "Clue scroll (hard) - Yanille anvils",
+      "tier": "hard",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Yanille_anvils"
+    },
+    {
+      "key": "Clue scroll (hard) - A crate in the Lumber Yard",
+      "tier": "hard",
+      "original": true,
+      "kind": "MAP",
+      "action": "SEARCH",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailSearchTargets",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact scenery/menu; bucket Search batch where used",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_A_crate_in_the_Lumber_Yard"
+    },
+    {
+      "key": "Clue scroll (hard) - 46 is my number",
+      "tier": "hard",
+      "original": false,
+      "kind": "CRYPTIC",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_46_is_my_number"
+    },
+    {
+      "key": "Clue scroll (hard) - Aggie I see",
+      "tier": "hard",
+      "original": false,
+      "kind": "CRYPTIC",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Aggie_I_see"
+    },
+    {
+      "key": "Clue scroll (hard) - South-east of the Wilderness Agility Course",
+      "tier": "hard",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_South-east_of_the_Wilderness_Agility_Course"
+    },
+    {
+      "key": "Clue scroll (hard) - South of the Legends' Guild",
+      "tier": "hard",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_South_of_the_Legends%27_Guild"
+    },
+    {
+      "key": "Clue scroll (hard) - In the western section of West Ardougne",
+      "tier": "hard",
+      "original": true,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_In_the_western_section_of_West_Ardougne"
+    },
+    {
+      "key": "Clue scroll (hard) - In a crate by the stairs to the Observatory Dungeon",
+      "tier": "hard",
+      "original": true,
+      "kind": "MAP",
+      "action": "SEARCH",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailSearchTargets",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact scenery/menu; bucket Search batch where used",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_In_a_crate_by_the_stairs_to_the_Observatory_Dungeon"
+    },
+    {
+      "key": "Clue scroll (hard) - In a crate at the Dark Warriors' Fortress",
+      "tier": "hard",
+      "original": true,
+      "kind": "MAP",
+      "action": "SEARCH",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailSearchTargets",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact scenery/menu; bucket Search batch where used",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_In_a_crate_at_the_Dark_Warriors%27_Fortress"
+    },
+    {
+      "key": "Clue scroll (hard) - BY LOOK",
+      "tier": "hard",
+      "original": false,
+      "kind": "ANAGRAM",
+      "action": "TALK",
+      "challenge": "NUMBER",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNumberChallenge",
+        "TreasureTrailNumberDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "tier paper2842/7269/12139; actual named Talk-to actor"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_BY_LOOK"
+    },
+    {
+      "key": "Clue scroll (hard) - C ON GAME HOC",
+      "tier": "hard",
+      "original": false,
+      "kind": "ANAGRAM",
+      "action": "TALK",
+      "challenge": "NUMBER",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNumberChallenge",
+        "TreasureTrailNumberDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "tier paper2842/7269/12139; actual named Talk-to actor"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_C_ON_GAME_HOC"
+    },
+    {
+      "key": "Clue scroll (hard) - MOTHERBOARD",
+      "tier": "hard",
+      "original": false,
+      "kind": "ANAGRAM",
+      "action": "TALK",
+      "challenge": "NUMBER",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNumberChallenge",
+        "TreasureTrailNumberDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "tier paper2842/7269/12139; actual named Talk-to actor"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_MOTHERBOARD"
+    },
+    {
+      "key": "Clue scroll (hard) - SLIDE WOMAN",
+      "tier": "hard",
+      "original": false,
+      "kind": "ANAGRAM",
+      "action": "TALK",
+      "challenge": "NUMBER",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNumberChallenge",
+        "TreasureTrailNumberDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "tier paper2842/7269/12139; actual named Talk-to actor"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_SLIDE_WOMAN"
+    },
+    {
+      "key": "Clue scroll (hard) - UZZU MUJHRKYYKJ",
+      "tier": "hard",
+      "original": false,
+      "kind": "CIPHER",
+      "action": "TALK",
+      "challenge": "NUMBER",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNumberChallenge",
+        "TreasureTrailNumberDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "tier paper2842/7269/12139; actual named Talk-to actor"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_UZZU_MUJHRKYYKJ"
+    },
+    {
+      "key": "Clue scroll (elite) - Bow upstairs in the Edgeville Monastery",
+      "tier": "elite",
+      "original": false,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "URI",
+      "adapters": [
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "Uri; every required gear group; optional alternatives may be absent"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_Bow_upstairs_in_the_Edgeville_Monastery"
+    },
+    {
+      "key": "Clue scroll (elite) - Salute in the Warriors' guild bank",
+      "tier": "elite",
+      "original": false,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "URI",
+      "adapters": [
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "Uri; every required gear group; optional alternatives may be absent"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_Salute_in_the_Warriors%27_guild_bank"
+    },
+    {
+      "key": "Clue scroll (elite) - Laugh in front of the gem store in Ardougne market",
+      "tier": "elite",
+      "original": false,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "URI",
+      "adapters": [
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "Uri; every required gear group; optional alternatives may be absent"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_Laugh_in_front_of_the_gem_store_in_Ardougne_market"
+    },
+    {
+      "key": "Clue scroll (elite) - 02.35S 11.52E",
+      "tier": "elite",
+      "original": false,
+      "kind": "COORDINATE",
+      "action": "DIG",
+      "challenge": "GUARD",
+      "adapters": [
+        "TreasureTrailDigGuards",
+        "TreasureTrailGuardians",
+        "ClueGuardianCombat"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "guard source IDs 6587,6588"
+      ],
+      "sourceGates": [
+        "Q8: per-guardian verified visual rows and applied combat mapping",
+        "Q8: elite alternative choice probability not sourced"
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_02.35S_11.52E"
+    },
+    {
+      "key": "Clue scroll (elite) - 05.07S 13.26E",
+      "tier": "elite",
+      "original": false,
+      "kind": "COORDINATE",
+      "action": "DIG",
+      "challenge": "GUARD",
+      "adapters": [
+        "TreasureTrailDigGuards",
+        "TreasureTrailGuardians",
+        "ClueGuardianCombat"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "guard source IDs 6587,6588"
+      ],
+      "sourceGates": [
+        "Q8: per-guardian verified visual rows and applied combat mapping",
+        "Q8: elite alternative choice probability not sourced"
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_05.07S_13.26E"
+    },
+    {
+      "key": "Clue scroll (elite) - DR HITMAN",
+      "tier": "elite",
+      "original": false,
+      "kind": "ANAGRAM",
+      "action": "TALK",
+      "challenge": "NUMBER",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNumberChallenge",
+        "TreasureTrailNumberDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "tier paper2842/7269/12139; actual named Talk-to actor"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_DR_HITMAN"
+    },
+    {
+      "key": "Clue scroll (elite) - COOL NERD",
+      "tier": "elite",
+      "original": false,
+      "kind": "ANAGRAM",
+      "action": "TALK",
+      "challenge": "NUMBER",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailNumberChallenge",
+        "TreasureTrailNumberDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "tier paper2842/7269/12139; actual named Talk-to actor"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_COOL_NERD"
+    },
+    {
+      "key": "Clue scroll (elite) - W marks the spot",
+      "tier": "elite",
+      "original": false,
+      "kind": "CRYPTIC",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_W_marks_the_spot"
+    },
+    {
+      "key": "Clue scroll (elite) - Three rule below and three sit at top",
+      "tier": "elite",
+      "original": false,
+      "kind": "CRYPTIC",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_Three_rule_below_and_three_sit_at_top"
+    },
+    {
+      "key": "Clue scroll (elite) - South-west of Tree Gnome Village",
+      "tier": "elite",
+      "original": false,
+      "kind": "MAP",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps",
+        "TreasureTrailMaps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact map UI in26-map batch"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_South-west_of_Tree_Gnome_Village"
+    },
+    {
+      "key": "Clue scroll (elite) - Ghostly bones",
+      "tier": "elite",
+      "original": false,
+      "kind": "KILL",
+      "action": "KILL",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailBasicSteps"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "exact source NPC variants; kill notification"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_Ghostly_bones"
+    },
+    {
+      "key": "Clue scroll (elite) - Show this to Sherlock",
+      "tier": "elite",
+      "original": false,
+      "kind": "SHERLOCK",
+      "action": "SHERLOCK",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailSherlock",
+        "TreasureTrailSherlockDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "source6586 Sherlock; actual skill action hooks"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_Show_this_to_Sherlock"
+    },
+    {
+      "key": "Clue scroll (master) - Show your anger at the Wise old man",
+      "tier": "master",
+      "original": false,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "DOUBLE_AGENT",
+      "adapters": [
+        "TreasureTrailAgents",
+        "TreasureTrailGuardians",
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "native5144/5145 or imported source7312; Uri; valid gear"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29_-_Show_your_anger_at_the_Wise_old_man"
+    },
+    {
+      "key": "Clue scroll (master) - Clap in the magic axe hut",
+      "tier": "master",
+      "original": false,
+      "kind": "EMOTE",
+      "action": "EMOTE",
+      "challenge": "DOUBLE_AGENT",
+      "adapters": [
+        "TreasureTrailAgents",
+        "TreasureTrailGuardians",
+        "TreasureTrailEmotes",
+        "TreasureTrailUri"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "native5144/5145 or imported source7312; Uri; valid gear"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29_-_Clap_in_the_magic_axe_hut"
+    },
+    {
+      "key": "Clue scroll (master) - 03.26N 12.18E",
+      "tier": "master",
+      "original": false,
+      "kind": "COORDINATE",
+      "action": "DIG",
+      "challenge": "GUARD",
+      "adapters": [
+        "TreasureTrailDigGuards",
+        "TreasureTrailGuardians",
+        "ClueGuardianCombat"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "guard source IDs 7310"
+      ],
+      "sourceGates": [
+        "Q8: per-guardian verified visual rows and applied combat mapping"
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29_-_03.26N_12.18E"
+    },
+    {
+      "key": "Clue scroll (master) - 03.50N 09.07E",
+      "tier": "master",
+      "original": false,
+      "kind": "COORDINATE",
+      "action": "DIG",
+      "challenge": "GUARD",
+      "adapters": [
+        "TreasureTrailDigGuards",
+        "TreasureTrailGuardians",
+        "ClueGuardianCombat"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "guard source IDs 7310"
+      ],
+      "sourceGates": [
+        "Q8: per-guardian verified visual rows and applied combat mapping"
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29_-_03.50N_09.07E"
+    },
+    {
+      "key": "Clue scroll (master) - Anger Abbot Langley",
+      "tier": "master",
+      "original": false,
+      "kind": "THREE_PART_COMPONENT",
+      "action": "TALK",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailTornParts",
+        "TreasureTrailTornDialogue",
+        "TreasureTrailThreePartStep"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "source19837/19838/19839; one grouped master choice"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29_-_Anger_Abbot_Langley"
+    },
+    {
+      "key": "Clue scroll (master) - Robin wishes to see your finest ranged equipment",
+      "tier": "master",
+      "original": false,
+      "kind": "THREE_PART_COMPONENT",
+      "action": "TALK",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailTornParts",
+        "TreasureTrailTornDialogue",
+        "TreasureTrailThreePartStep"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "source19837/19838/19839; one grouped master choice"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29_-_Robin_wishes_to_see_your_finest_ranged_equipment"
+    },
+    {
+      "key": "master:mandrith",
+      "tier": "master",
+      "original": false,
+      "kind": "ANAGRAM",
+      "action": "TALK",
+      "challenge": "PUZZLE_CHOICE",
+      "adapters": [
+        "TreasureTrailMasterPuzzles",
+        "TreasureTrailPuzzleBoxes",
+        "TreasureTrailLightBoxes"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "source306/322 UI and pictures;5master box types"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Anagrams/Master"
+    },
+    {
+      "key": "master:radimus",
+      "tier": "master",
+      "original": false,
+      "kind": "ANAGRAM",
+      "action": "TALK",
+      "challenge": "PUZZLE_CHOICE",
+      "adapters": [
+        "TreasureTrailMasterPuzzles",
+        "TreasureTrailPuzzleBoxes",
+        "TreasureTrailLightBoxes"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "source306/322 UI and pictures;5master box types"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Anagrams/Master"
+    },
+    {
+      "key": "Clue scroll (master) - Falo the bard wants to see you",
+      "tier": "master",
+      "original": false,
+      "kind": "FALO",
+      "action": "FALO",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailFalo",
+        "TreasureTrailFaloDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "source7306 Falo; source requested-item catalogue"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29_-_Falo_the_bard_wants_to_see_you"
+    },
+    {
+      "key": "Clue scroll (master) - A massive battle rages beneath",
+      "tier": "master",
+      "original": false,
+      "kind": "THREE_PART_COMPONENT",
+      "action": "DIG",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailTornParts",
+        "TreasureTrailTornDialogue",
+        "TreasureTrailThreePartStep"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "source19837/19838/19839; one grouped master choice"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29_-_A_massive_battle_rages_beneath"
+    },
+    {
+      "key": "master:sherlock",
+      "tier": "master",
+      "original": false,
+      "kind": "SHERLOCK",
+      "action": "SHERLOCK",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailSherlock",
+        "TreasureTrailSherlockDialogue"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "source6586 Sherlock; actual skill action hooks"
+      ],
+      "sourceGates": [],
+      "source": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Cryptic_clues/Master"
+    },
+    {
+      "key": "master:jorral",
+      "tier": "master",
+      "original": false,
+      "kind": "HOT_COLD",
+      "action": "HOT_COLD",
+      "challenge": "NONE",
+      "adapters": [
+        "TreasureTrailHotCold",
+        "TreasureTrailHotColdDialogue",
+        "TreasureTrailDigGuards"
+      ],
+      "assetRequirements": [
+        "reward/text UI; final applied item mapping",
+        "source19939 device; verified guardian NPC/combat assets"
+      ],
+      "sourceGates": [
+        "Q8: all possible Brassican/Ancient visual identities required"
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Cryptic_clues/Master"
+    }
+  ]
+}

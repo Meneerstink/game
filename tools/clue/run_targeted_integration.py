@@ -109,14 +109,19 @@ if '--guardian-loot' in sys.argv:
                 'TreasureTrailAgentTests']]
 
 if '--dig-mimic' in sys.argv:
-    CORE = ['gg.rsmod.game.tools.importer.ClueImportDryRunTests']
+    CORE = ['gg.rsmod.game.tools.importer.ClueImportDryRunTests',
+            'gg.rsmod.game.tools.importer.ClueBoardInterfaceImportTests',
+            'gg.rsmod.game.tools.importer.ClueInterfaceImportTests',
+            'gg.rsmod.game.tools.importer.ClueMapInterfaceImportTests',
+            'gg.rsmod.game.tools.importer.CluePuzzleInterfaceTests']
     PLUGINS = ['gg.rsmod.plugins.content.scrolls.'+name for name in
-               ['TreasureTrailHotColdTests','TreasureTrailWizardTests','TreasureTrailDigGuardTests',
+               ['TreasureTrailHotColdTests','TreasureTrailChallengeTests','TreasureTrailWizardTests','TreasureTrailDigGuardTests',
                 'TreasureTrailGuardianTests','ClueGuardianCombatTests','ClueGuardianDropsTests','ClueDropIndexTests',
                 'TreasureTrailLightBoxTests','TreasureTrailMasterPuzzleTests','TreasureTrailPuzzleBoxTests',
                 'TreasureTrailContractTests','ClueScrollLifecycleTests','ClueDropOwnershipTests',
                 'TreasureTrailStepCatalogueTests','ClueNpcAssetsTests','ClueStepSelectionTests',
                 'ClueCasketTransactionTests','TreasureTrailAgentTests','TreasureTrailEmoteTests',
+                'TreasureTrailStatisticsTests','TreasureTrailGuardianDialogueTests','TreasureTrailNpcStepsTests','TreasureTrailBasicStepsTests','TreasureTrailNumberChallengeTests',
                 'TreasureTrailUriSourceTests','ClueGuardianPvpTests','ClueNpcSourcesTests']]
     PLUGINS += ['gg.rsmod.plugins.content.areas.watson.'+name for name in
                 ['MimicCandiesTests','MimicAttackTests','MimicEncounterTests','MimicChallengeTests',
@@ -138,6 +143,9 @@ def inputs():
                    'docs/CLUE/NPC-DIALOGUE-SOURCES.json', 'docs/CLUE/NPC-COMPLETION-SOURCES.json',
                    'docs/CLUE/cache/lightbox-interface.json', 'docs/CLUE/cache/lightbox-scripts.json',
                    'docs/CLUE/cache/lightbox-items.json', 'docs/CLUE/cache/lightbox-layout.json',
+                   'docs/CLUE/cache/board-interfaces.json', 'docs/CLUE/WATSON-BOARDS-SOURCES.json',
+                   'docs/CLUE/GUARDIAN-DIALOGUE-SOURCES.json',
+                   'docs/CLUE/sources/Pinboard.wiki', 'docs/CLUE/sources/Treasure_Trail_Statistics.wiki',
                    'docs/CLUE/sources/Light_box.wiki', 'docs/CLUE/sources/Treasure_Trails__Guide__Light_boxes.wiki',
                    'docs/CLUE/sources/File_Killerwatt_attack.wav.wiki', 'docs/CLUE/sources/File_Killerwatt_death.wav.wiki'}]
     return {p: sha256((ROOT/p).read_bytes()).hexdigest() for p in allowed if (ROOT/p).is_file()}
@@ -150,7 +158,9 @@ def main():
     before = inputs()
     started = datetime.now(timezone.utc).timestamp()
     assert CORE or PLUGINS
-    args = ['cmd.exe', '/d', '/c', str(ROOT/'gradlew.bat'), '-I', 'tools/clue/test-init.gradle']
+    # The owner requires this wrapper for every Gradle run (17 November).
+    # It snapshots this worktree and falls back locally when the build laptop is unavailable.
+    args = ['cmd.exe', '/d', '/c', 'C:/RSPS/tools/remote/rgradle.cmd', '-I', 'tools/clue/test-init.gradle']
     # Never emit an unfiltered test task when a module has no selected classes.
     for task, names in [(':game:test', CORE), (':game:plugins:test', PLUGINS)]:
         if names:

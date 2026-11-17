@@ -1,56 +1,66 @@
 {
   "sourceCache": 2686,
-  "verified": [],
-  "missing": [
+  "verified": [
     {
       "source": 306,
+      "local": 15321,
       "name": "Lumbridge Guide",
-      "reason": "No applied ledger-owned NPC import"
+      "localSha256": "18ce85821eb4438091d9d6e4bd9f98e47d8e4ae6af1338370c7de6285cb58618"
     },
     {
       "source": 6586,
+      "local": 15322,
       "name": "Sherlock",
-      "reason": "No applied ledger-owned NPC import"
+      "localSha256": "d311f58e5111918a9d68339c8f5c7b4a8ca7465575c183ada5fe2b5b471edf7f"
     },
     {
       "source": 7306,
+      "local": 15323,
       "name": "Falo the Bard",
-      "reason": "No applied ledger-owned NPC import"
+      "localSha256": "bfc499f46b731cb76aa6fe7a4df3dc7863a453582b0a47617d5906e98354756f"
     },
     {
       "source": 7312,
+      "local": 15324,
       "name": "Double agent",
-      "reason": "No applied ledger-owned NPC import"
+      "localSha256": "cc0cc9794b2ae29381ea280748d460a0ab19608b939bcaf3f5c88a149a949a22"
     },
     {
       "source": 6587,
+      "local": 15325,
       "name": "Armadylean guard",
-      "reason": "No applied ledger-owned NPC import"
+      "localSha256": "053388639dc4b093f09112f82c2e737cdcd524e6fdcfb21a48865666bdecf787"
     },
     {
       "source": 6588,
+      "local": 15326,
       "name": "Bandosian guard",
-      "reason": "No applied ledger-owned NPC import"
+      "localSha256": "f4f1bd4836ed43762ce19b29e3acab1047ff9f415447e0a1ddabaca72b30bef8"
     },
     {
       "source": 7307,
+      "local": 15327,
       "name": "Ancient Wizard",
-      "reason": "No applied ledger-owned NPC import"
+      "localSha256": "8e770f891517651fc549d75c5deb97a67b41882885993c57e9ff22f6e1bbe6c2"
     },
     {
       "source": 7308,
+      "local": 15328,
       "name": "Ancient Wizard",
-      "reason": "No applied ledger-owned NPC import"
+      "localSha256": "269fe7301cbed562fd91453cf11fe32d3203537a549430edb0e037c2b44fa2be"
     },
     {
       "source": 7309,
+      "local": 15329,
       "name": "Ancient Wizard",
-      "reason": "No applied ledger-owned NPC import"
+      "localSha256": "94f0dd506e78f44243b7457fa14c03584211dd3e2d3d09b9477e38246d8dfb3f"
     },
     {
       "source": 7310,
+      "local": 15330,
       "name": "Brassican Mage",
-      "reason": "No applied ledger-owned NPC import"
+      "localSha256": "8491c247097aaa8ad66fcb9539f7478e1800757f7a63039f3add78c0ae2f411b"
     }
-  ]
+  ],
+  "missing": []
 }
