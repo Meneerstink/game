@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" tests="18" skipped="0" failures="0" errors="0" timestamp="2026-11-17T16:14:48" hostname="KNMI-5CG6051R99" time="4.259">
+  <properties/>
+  <testcase name="both financial NPCs open shared physical slots and bulk roundtrips conserve items" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" time="2.79"/>
+  <testcase name="no money full inventory invalid rows and oversized purchase never debit anything" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" time="0.475"/>
+  <testcase name="closing death relog moving and despawn revoke selected purchases and refunds" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" time="0.361"/>
+  <testcase name="simultaneous accounts never share a view selection balance or safe items" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" time="0.037"/>
+  <testcase name="refund rejects stale modified unsupported and overflow items and accepts noted original rewards" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" time="0.043"/>
+  <testcase name="full inventory skull movement death and close invalidate withdrawals without losing safe contents" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" time="0.027"/>
+  <testcase name="deposit five spans physical copies while stale item packets and empty slots do nothing" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" time="0.014"/>
+  <testcase name="missing mapped windows stay unavailable without fixed local id guesses" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" time="0.01"/>
+  <testcase name="normal desktop shop hides expanded header and retains footer currency and balance" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" time="0.017"/>
+  <testcase name="View expands source cards Help clears selection and details close returns to expanded grid" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" time="0.05"/>
+  <testcase name="bulk worn deposit respects equipment locks before moving any charged item" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" time="0.035"/>
+  <testcase name="pending deposit X cannot continue into a reopened session or changed item" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" time="0.051"/>
+  <testcase name="logout save reload keeps box charges and purchased rewards but discards both UI sessions" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" time="0.086"/>
+  <testcase name="partial worn ammo deposit keeps equipped stack active and does not fire unequip hooks" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" time="0.014"/>
+  <testcase name="bulk worn deposits preserve charges invoke unequip and leave untradeables" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" time="0.01"/>
+  <testcase name="raw packet opcode selects before buying and deposits one before five despite packet list positions" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" time="0.05"/>
+  <testcase name="all seven products buy and refund through real mapped windows without item or point inflation" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" time="0.17"/>
+  <testcase name="View refuses a missing layout bridge without guessing any clientscript id or changing points" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests" time="0.016"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/a/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+]]></system-err>
+</testsuite>

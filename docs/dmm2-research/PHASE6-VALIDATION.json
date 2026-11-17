@@ -1,0 +1,177 @@
+{
+  "status": "PASS",
+  "snapshot": "bf887b23175b9c19eb78543aebd279ad64fc96aa",
+  "total_tests": 73,
+  "classes": 8,
+  "mapping_count": 151,
+  "original_143_unchanged": true,
+  "interface_mappings": {
+    "230": 1204,
+    "232": 1203,
+    "819": 1205,
+    "806": 1206
+  },
+  "currency": "Deadman Points (V3; source row1206)",
+  "reports": {
+    "gg.rsmod.game.tools.importer.Dmm2UiPlanTests": {
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": "2026-11-17T16:17:09",
+      "file": "docs/dmm2-research/phase6-output/regression-final/TEST-gg.rsmod.game.tools.importer.Dmm2UiPlanTests.xml",
+      "sha256": "803c2fe448e70537259f81e1c084bd15cf2f9455aa859d385bfef9901c416855"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests": {
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": "2026-11-17T16:27:19",
+      "file": "docs/dmm2-research/phase6-output/regression-final/TEST-gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests.xml",
+      "sha256": "0da92d1de2ae770459188a86afee2a9922b426c77c89cd47f1f43a1b47d83202"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.Dmm2InteractionTests": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": "2026-11-17T16:26:57",
+      "file": "docs/dmm2-research/phase6-output/regression-final/TEST-gg.rsmod.plugins.content.mechanics.deadman.Dmm2InteractionTests.xml",
+      "sha256": "2cee157f61d62254b7810662f307b342f97be7864c0df1fe24cfa0fdfd0d7633"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests": {
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": "2026-11-17T16:26:23",
+      "file": "docs/dmm2-research/phase6-output/regression-final/TEST-gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests.xml",
+      "sha256": "5cd7bf1df40c67fe196c31255201e843626db323cf838c6102174d8d604f6415"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStoreTests": {
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": "2026-11-17T16:27:32",
+      "file": "docs/dmm2-research/phase6-output/regression-final/TEST-gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStoreTests.xml",
+      "sha256": "e7df73aa478ae7be32525cc06c026f9c3a00e42250f7bb3a37cd3a1b332a34a3"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.Dmm2BootTests": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": "2026-11-17T16:26:34",
+      "file": "docs/dmm2-research/phase6-output/regression-final/TEST-gg.rsmod.plugins.content.mechanics.deadman.Dmm2BootTests.xml",
+      "sha256": "327f0cf52b7b235a73e03aab0d0a43efdbcc169e671bc2ad211976943dc1a97b"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests": {
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": "2026-11-17T16:26:45",
+      "file": "docs/dmm2-research/phase6-output/regression-final/TEST-gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests.xml",
+      "sha256": "6b553f276168b4900594bded119b60556777c699eb6143105b1f139e2436fd68"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.Dmm2WeaponPresentationTests": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": "2026-11-17T16:27:08",
+      "file": "docs/dmm2-research/phase6-output/regression-final/TEST-gg.rsmod.plugins.content.mechanics.deadman.Dmm2WeaponPresentationTests.xml",
+      "sha256": "b0b182998654d84c81dfa106ec7e20f896a5b3c9db75853617d049859e2556f8"
+    }
+  },
+  "source_sha256": {
+    "docs/dmm2-research/dmm2-interfaces.json": "4970e41bb33cc5e52defa680ae0f36f231cb68258acf454ba07933d39db2b605",
+    "docs/dmm2-research/phase5-sources/shop-reward-rows.json": "80e46e8936f61fe14d29a17be96fa571b61c539e5849a252c895dda1cc331ea4",
+    "docs/dmm2-research/phase5-sources/ui-scripts.json": "56376f1713f673e4648c938d68dc68a07f100ec736ff75a71edf92b24f4347a4",
+    "docs/dmm2-research/phase5-sources/omnishop-scripts.json": "d7bd9d54a1f9d24f1dc85a35f0c0645930f9a0b6b20d20ea73d388980044d43f",
+    "docs/dmm2-research/phase6-sources/scripts.json": "87fc70f9756cd549cdd6249425718c37ae5adee10976bbf43991218d39abcd34",
+    "docs/dmm2-research/phase6-sources/structs.json": "2d7ebd5bc5713f7c888b89fcf0dc48bbfa82ef684368e525c8f814d75ea7e722",
+    "docs/dmm2-research/phase6-sources/button-sound.json": "1e85c0dd79973fd897477a1326e98d25a3d558187af520443733fe2a37901f27",
+    "docs/dmm2-research/phase6-sources/controls.json": "6173c6b6cedfd0356ab48c3f23a38a7e84682a06e2a8403f58d8373eda60fcc2"
+  },
+  "code_sha256": {
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/deadman/Dmm2Boot.kt": "7a9f38bf8759c90f36da69556205cc41f69c5a4549088de85ff06fbf480998e9",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/deadman/Dmm2Interactions.kt": "c1f3efc72ab6506c18a69abb1b006692210eb1440070680d5dcd856ad9a5c3b2",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/deadman/Dmm2RewardUi.kt": "81da72d0b3164beec345ab73141c9dc06c54dc8eb08645022d8178120aa7bc6b",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/deadman/Dmm2SafeDepositUi.kt": "42ea8c959358596888b1974a2b5bbaa67bb6064bc233ab00767b78b0beba6d36",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/deadman/SafeDepositBox.kt": "94ba27ac8e0cbfb949194bfc34f8251c861e1fe737d76eddfe1d161c972d3d62",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/deadman/NigelRewardStore.kt": "5c876243955f9278714e3884805f5e663f019f16677726b3c9ddfe4649d1372a",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/deadman/dmm2.plugin.kts": "0202c204d738acc8106761056ce4c2ae0981fca8d319ec24ba802dac2ba1bd3d",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/deadman/Dmm2Ids.kt": "43da36c3a9dd88183cfc6c576bbf8c4e92df41e10626da919cc78f0c3d950130",
+    "game/src/main/kotlin/gg/rsmod/game/tools/importer/OsrsInterfacePortTool.kt": "4274e1da9db45fbedc5ddd9e759a8ab2e5333182fdb7a08e9d1922b230c34bcb",
+    "game/src/main/kotlin/gg/rsmod/game/tools/importer/Dmm2WindowPort.kt": "d416dfb9a9b9f587d833d091e28b870cda9711205756167cee7be72eaeae6212",
+    "game/src/test/kotlin/gg/rsmod/game/tools/importer/Dmm2UiPlanTests.kt": "f3d546b4f2add33af7879cb559906f03abaa3a8ddc0a4679f3352deac7388b6c",
+    "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/deadman/Dmm2WindowTests.kt": "aec381e6c12cb93e18e0144610ddff4e54e4635774bfad27afe703766c7f0cad",
+    "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/deadman/Dmm2InteractionTests.kt": "120410240ee372a6c6818dd35526a0974f50c36f38242fd55b55952dc5abf5b0",
+    "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/deadman/SafeDepositBoxTests.kt": "f14769e03ca88df7db42cf28f562ac6a08e7c0db1778e197436b4eeeca03db49",
+    "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/deadman/NigelRewardStoreTests.kt": "a2741ecab240f185e842baa3b468820106f0e8faac2d1c68da5de3d1b56f6c7f",
+    "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/deadman/Dmm2BootTests.kt": "2d9e43d1df81d04bc5f3194a3a879e017ba4db91ba242dd7f8deb3258ec1c529",
+    "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/deadman/Dmm2BreakTests.kt": "ad3e339daf1b3f9da79a8cbe0a1ce44d0e997034ff0e6f9e64da5999d72d4e70",
+    "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/deadman/Dmm2WeaponPresentationTests.kt": "756de3cf5f5e7991b1c2cea82b49d99a5bc87b1727676581ec0296494ddb9fba",
+    "docs/dmm2-research/RUN-PHASE6-TESTS.ps1": "c483e42bf0b2dbff0ef5efd9386a96b0a50962d6637a0d200d082d318e35e3e6",
+    "docs/dmm2-research/phase6-regression.gradle": "ed79ba19bc12857802c6ed2baff29b04d0b77f74be1ed18ac1238a12f6d97300"
+  },
+  "command": "powershell -NoProfile -ExecutionPolicy Bypass -File docs/dmm2-research/RUN-PHASE6-TESTS.ps1",
+  "compile": "Standard Gradle module dependencies + nine selected DMM2 scripts; no old class snapshot prepended.",
+  "discovery": "One core + seven plugin class-file includes and matching CLI --tests filters.",
+  "client_or_live_pass": false,
+  "cache_apply_by_gpt_a": false,
+  "claude_cache_evidence": "Dossier15:4x: tx-20261117-144453,622writes,VERIFY_OK; reportcommit d1d87fbcb (not GPT-A evidence).",
+  "superseded_run": "22571: no green claim; excessive empty forks before explicit class-file discovery restriction.",
+  "native_plan": {
+    "files": 78,
+    "unchanged": true,
+    "journal_empty": true,
+    "results": {
+      "interfaces-command.json": 0,
+      "tests-command.json": 0
+    },
+    "unique_tests_already_counted": 7,
+    "component_counts": {
+      "230": 41,
+      "232": 31,
+      "819": 211,
+      "806": 83
+    },
+    "baseline_plan_only": {
+      "interfaces": {
+        "230": 1185,
+        "232": 1186,
+        "819": 1187,
+        "806": 1188
+      },
+      "scripts": {
+        "7155": 5402,
+        "7153": 5403
+      },
+      "sprites": "8819..8867"
+    },
+    "mutations": 417,
+    "two_target_outcomes": {
+      "CREATE": 834
+    },
+    "warning": "These are allocation results on the immutable phase4 copies, not published runtime ids. Claude must PLAN --reuse against the actual cache; never copy these ids into ids.tsv.",
+    "command": "bash docs/dmm2-research/PREFLIGHT-PHASE6.sh (rgradle explicit local route; no apply arguments accepted)",
+    "evidence_sha256": {
+      "docs/dmm2-research/phase6-ui-output/interfaces.txt": "b4db347905369b584df7b81b99bd93c122630bbd7cfe0d33375e6c64f0590b26",
+      "docs/dmm2-research/phase6-ui-output/tests.txt": "977ccc4d7980c474ba854f15241308564f51344b4fb458aa63889e7f9945fbe9",
+      "docs/dmm2-research/phase6-ui-output/verification.json": "dbe1fa9d091da5590b7a66975c9052b79845898bfb8173a22ad1e3c927520b91",
+      "docs/dmm2-research/phase6-ui-output/interfaces-command.json": "616b96c85f53d593bf6c3df1186b1c10542a34449d30a5fb9265d261abdd2355",
+      "docs/dmm2-research/phase6-ui-output/tests-command.json": "789d38f0b80aea5c7e3bc3f2a86cece1811cbb259fd1cd915ba3869393912821",
+      "docs/dmm2-research/phase6-ui-output/before.json": "74a89f49664525fafd403bf4b1051fb327f9def560f5874af4bae5fdd30191a2"
+    }
+  },
+  "first_full_snapshot": {
+    "snapshot": "542fc66c2",
+    "tests": 73,
+    "failures": 9,
+    "cause": "Strict inventory-only fixtures exposed an unnecessary getEquipment dependency; explicit worn route fixes it. First raw reports preserved separately."
+  }
+}

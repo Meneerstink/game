@@ -6,3 +6,4 @@ phase5-output/items.generated.yml -text
 phase5-ui-output/*.txt -text -diff
 phase5-output/regression-*/*.xml -text whitespace=cr-at-eol
 phase6-output/**/*.xml -text whitespace=cr-at-eol
+phase6-ui-output/*.txt -text -diff

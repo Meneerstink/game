@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.game.tools.importer.Dmm2UiPlanTests" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-17T16:17:09" hostname="KNMI-5CG6051R99" time="0.329">
+  <properties/>
+  <testcase name="runtime safebox builds the stoneframe and all physical slots with cache script geometry" classname="gg.rsmod.game.tools.importer.Dmm2UiPlanTests" time="0.244"/>
+  <testcase name="reward store uses the proven omnishop layout and reports dynamic scripts rather than claiming a complete UI" classname="gg.rsmod.game.tools.importer.Dmm2UiPlanTests" time="0.022"/>
+  <testcase name="runtime reward grid and inventory slots use one append only server component contract" classname="gg.rsmod.game.tools.importer.Dmm2UiPlanTests" time="0.011"/>
+  <testcase name="layout bridge preserves all nine geometry arguments in native 667 CS2 format" classname="gg.rsmod.game.tools.importer.Dmm2UiPlanTests" time="0.002"/>
+  <testcase name="safebox preserves the proven quill font and never substitutes an unrelated font" classname="gg.rsmod.game.tools.importer.Dmm2UiPlanTests" time="0.043"/>
+  <testcase name="desktop controls and compact card geometry are decoded source equivalents" classname="gg.rsmod.game.tools.importer.Dmm2UiPlanTests" time="0.005"/>
+  <testcase name="control bridge updates the source View caption and graphic without a fixed local id" classname="gg.rsmod.game.tools.importer.Dmm2UiPlanTests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

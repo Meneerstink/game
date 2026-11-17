@@ -1,0 +1,29 @@
+PLAN osrs 230 -> interface 1185: 41 components
+  EXTRA DMM2 stoneframe17..30 title18 close30; safe slots31..40 from1151/1156 (5x2,39x38)
+  REPORT 230:0 onLoad script 1151 15073285 NOT RUN (server fills this part)
+  REPORT 230:4 onLoad script 703 -2147483645,"Safe Deposit Box",0 NOT RUN (server fills this part)
+  REPORT 230:9 onMouseOver script 273 15073290,75 NOT RUN (server fills this part)
+  REPORT 230:9 onMouseLeave script 273 15073290,0 NOT RUN (server fills this part)
+  REPORT 230:9 onOp script 1152 -2147483645,179,170,-2147483644 NOT RUN (server fills this part)
+  REPORT 230:11 onMouseOver script 273 15073292,75 NOT RUN (server fills this part)
+  REPORT 230:11 onMouseLeave script 273 15073292,0 NOT RUN (server fills this part)
+  REPORT 230:11 onOp script 1152 -2147483645,179,170,-2147483644 NOT RUN (server fills this part)
+PLAN osrs 232 -> interface 1186: 31 components
+  EXTRA DMM2 inventory slots3..30 from1158/1161 (4x7,42x36,offset16/4)
+  REPORT 232:0 onLoad script 1158 15204354 NOT RUN (server fills this part)
+PLAN osrs 819 -> interface 1187: 211 components
+  EXTRA thinbox parent=31 components=47..48
+  EXTRA thinbox parent=34 components=49..50
+  EXTRA thinbox parent=37 components=51..52
+  EXTRA thinbox parent=44 components=53..54
+  EXTRA DMM2 OMNISHOP title56 close66 products67..150 stride12 info151..155; DBrow929/table39/currency1206=Deadman Points
+  EXTRA DMM2 OMNISHOP buttons156..191 filterbacking192 controls193..198 expandedframe199..210; layout bridge source7155
+  REPORT 819:18 onClick script 7148  NOT RUN (server fills this part)
+PLAN osrs 806 -> interface 1188: 83 components
+  EXTRA thinbox parent=5 components=12..13
+  EXTRA DMM2 OMNISHOP_SIDE inventory14..41 info42..46 buttons47..82
+  REPORT 806:3 onOp script 7256  NOT RUN (server fills this part)
+PLAN script 7155 (server UI bridge) -> clientscript 5402
+PLAN script 7153 (server UI bridge) -> clientscript 5403
+PREFLIGHT transaction=tx-20261117-162909 mutations=417 outcomes={CREATE=834}
+DRY_RUN interfaces 1185..1188 sprites 8819..8867

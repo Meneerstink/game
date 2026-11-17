@@ -212,3 +212,16 @@ Laatste bronreview: Help12 wordt in de portretstand verborgen en in de kleinekaa
 exact7142:194..196/232..234. Dit voorkomt overlap met de disabled dropdown. De bestaande View-test
 controleert beide vlaggen. De eindherhaling forceert alleen de acht gerichte Test-taken opnieuw
 voor verse XML; ongewijzigde compilemodules behouden hun normale up-to-date-controle.
+
+## Definitief bewijs en overdracht
+
+Eindrun53515/snapshotbf887b231: **73/73 groen**,0failures/errors/skips in acht eigen klassen,
+normale module/testcompilatie en negen bindingscripts groen via rgradle. Native PLAN daarna exit0,
+zeven herhaalde contractproeven groen,78/78 cachekopiebestanden bytegelijk en journal leeg.
+De native baseline alloceert1185..1188/5402..5403/8819..8867; dit zijn geen runtime-id's.
+Werkelijke runtime-roots blijven1204/1203/1205/1206. De nieuwe scripts/sprites komen uitsluitend
+uit Claude's volgende echte `interfaces.tsv`, geen overname van PLAN-waarden.
+
+`PHASE6-VALIDATION.json` bewaart de verse XML's, snapshot/source-hashes en native bewijs-hashes.
+Het volledige eindverslag staat in `PHASE6-EINDVERSLAG.md`, Claude's ronde in checklist14b.
+GPT-A pauzeert na de bewijscommit zoals opgedragen en begint niet aan fase7.
