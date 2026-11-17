@@ -135,10 +135,21 @@ het echte `INTERACTING_OPCODE_ATTR` leest via `getInteractingOpcode()` en de bes
 in de client bewezen `SlayerRewardsUi.opOf` gebruikt. IF_BUTTON1/opcode 61 is operatie 1,
 ook al staat hij als derde in de packetlijst. De nieuwe regressie vult beide packetvelden,
 loopt door Select/Buy-1/Sell en Deposit-1/5 en controleert saldo en itemtotalen. Een tweede
-regressie bewaakt de verborgen expanded-view-header 14 en de twee normale footer-saldovelden.
+regressie bewaakt de verborgen expanded-view-header 14 en de normale footer met valuta en saldo.
 Dit neemt Claude's twee clientfixes over; de verse herhaling moet deze nieuwste versie bevatten.
 
 Het brongat voor View/Help/filter is opgelost in `PHASE6-CONTROLS.md` en
 `phase6-sources/controls.json`. De grafische kinderen en volledige expanded-view blijven een
 uitdrukkelijke cache/clientoverdracht aan Claude. Het opnieuw zichtbaar maken van lege controls
 is geen oplossing; bronmaten en disabled dropdown-kleur/pijl zijn nu exact gedocumenteerd.
+
+## Testdiscovery-les van deze hervatting
+
+De eerste normale remote-run is afgebroken zonder groene claim. `--tests` filterde JUnit-uitvoering,
+maar `forkEvery=1` kon nog lege workers starten voor alle ontdekte kandidaten (180 core- en
+715 plugin-testbronnen). Claude bevestigde voortgang van executor 146 naar 147; het was geen
+vastgelopen productietest. De gerichte init zet nu daarnaast expliciete `.class`-includes voor
+exact UiPlan en de zeven eigen plugin-klassen, print die lijst en logt de testuitkomsten.
+Core gebruikt een worker; alleen de zeven klassen met gedeelde installed/cache-statics worden
+apart geisoleerd. De reproduceeropdracht gebruikt `--offline` omdat dependencies niet gewijzigd zijn.
+Een wachtrijregel is geen actieve tweede zware build en wordt niet als testbewijs geteld.

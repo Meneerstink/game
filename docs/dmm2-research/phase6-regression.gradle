@@ -17,6 +17,15 @@ gradle.projectsEvaluated {
     [':game', ':game:plugins'].each { name ->
         def task = root.project(name).tasks.getByName('test')
         task.systemProperty 'rsps.data', root.file('data').absolutePath
-        task.forkEvery = 1 // Contracts/cache-backed statics are isolated between test classes.
+        // --tests filters JUnit execution after Gradle discovers candidates. Limit class discovery too:
+        // otherwise forkEvery=1 can start an empty JVM for every unrelated test class.
+        def ownClasses = name == ':game' ? ['Dmm2UiPlanTests'] : [
+            'Dmm2WindowTests', 'Dmm2InteractionTests', 'SafeDepositBoxTests', 'NigelRewardStoreTests',
+            'Dmm2BootTests', 'Dmm2BreakTests', 'Dmm2WeaponPresentationTests'
+        ]
+        task.setIncludes(ownClasses.collect { '**/' + it + '.class' } as Set)
+        task.forkEvery = name == ':game' ? 0 : 1
+        task.doFirst { println '[DMM2] discovered classes restricted to: ' + ownClasses.join(', ') }
+        task.testLogging.events('passed', 'failed', 'skipped')
     }
 }

@@ -207,13 +207,13 @@ class Dmm2WindowTests {
         assertEquals(100L,count(995))
     }
 
-    @Test fun `normal desktop shop hides expanded header and retains both footer balance fields`() {
+    @Test fun `normal desktop shop hides expanded header and retains footer currency and balance`() {
         points(2110); shop()
         val hides = sent.filterIsInstance<gg.rsmod.game.message.impl.IfSetHideMessage>()
         assertTrue(hides.any { it.hash == (2002 shl 16 or 14) && it.hidden })
         val text = sent.filterIsInstance<IfSetTextMessage>()
         assertTrue(text.any { it.parent == 2002 && it.child == 33 && it.text == "2,110" })
-        assertTrue(text.any { it.parent == 2002 && it.child == 46 && it.text == "2,110" })
+        assertTrue(text.any { it.parent == 2002 && it.child == 32 && it.text == "Deadman Points" })
     }
 
     @Test fun `all seven products buy and refund through real mapped windows without item or point inflation`() {
