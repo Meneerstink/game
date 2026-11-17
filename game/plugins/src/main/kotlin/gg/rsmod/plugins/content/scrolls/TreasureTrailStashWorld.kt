@@ -45,7 +45,17 @@ object TreasureTrailStashWorld {
             val occupant = chunk.getEntities<GameObject>(unit.tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT)
                 .firstOrNull { world.locLayer(it.type) == world.locLayer(unit.type) }
             if (occupant != null && occupant.id != id) {
-                println("PROBLEM CLUE STASH ${unit.sourceId} placement blocked by ${occupant.id} at ${unit.tile}; existing scenery retained")
+                // Claude 17-11 23:4x (clue-testserver: 3 of 23 units missing): OSRS Wiki STASH units - a STASH IS the bush / crate /
+                // hole / rock on its tile ('Outside the Catherby bank' = the bush there). Our 2011 map still carries the plain scenery
+                // (Bush 1124, Barrel 49047, Crate 14739) in the same layer, which OSRS cannot have next to the unit. Pure scenery (no
+                // options) gives way to the OSRS unit; anything interactive stays and is reported.
+                val sceneryOnly = world.definitions.get(ObjectDef::class.java, occupant.id).options.all { it.isNullOrBlank() || it == "hidden" }
+                if (!sceneryOnly) {
+                    println("PROBLEM CLUE STASH ${unit.sourceId} placement blocked by ${occupant.id} at ${unit.tile}; existing scenery retained")
+                    continue
+                }
+                world.remove(occupant)
+                world.spawn(DynamicObject(id, unit.type, unit.rotation, unit.tile))
                 continue
             }
             if (occupant == null) world.spawn(DynamicObject(id, unit.type, unit.rotation, unit.tile))
