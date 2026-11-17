@@ -50,6 +50,7 @@ object Dmm2Boot {
         ThunderKhopesh.register()
         UndeadThralls.appearance = thrallAppearance()
         registerStarterWeaponLooks()
+        registerCorruptedLooks()
         installHomeTeleports()
         // DMM2 fase 7 (Claude 17-11): the starter weapons never fired (appearance null -> canAttack false). Wiki Starter_staff: "equipped
         // with a built-in Fire Strike" -> our Fire Strike AV (OSRS 99/100/101 imports + the staff cast animation, CombatSpell index 1).
@@ -172,6 +173,32 @@ object Dmm2Boot {
         }
         Dmm2Ids.item(22333)?.let { bow ->
             looks.register(gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.Look(IntArray(4) { seq.HUMAN_BOW }, block = seq.OSRS_DEFEND_RANGED), bow)
+        }
+    }
+
+    /**
+     * N630 (17-11 23:1x, bot trace screens\N630\looks-2259): the corrupted and (Deadman) Armadyl godsword and dragon claws are OSRS imports
+     * but presented through the NATIVE 667 AGS / claws, so they swung the 667 2h set (407/406, block 7050) and the 667 claws block 397.
+     * OSRS observed (RuneLite weapon-animation-replacer data): Godsword (Armadyl) slash 7045 / crush 7054 / defend 7056 + the
+     * DH_SWORD_UPDATE pose set (= the OsrsWeaponLooks godsword row + OsrsBas.GODSWORD); Claws stab 1067 / slash 393 / defend 424.
+     * Registered on the physical ids; CombatConfigs looks the physical id up before the presentation base.
+     */
+    private fun registerCorruptedLooks() {
+        val looks = gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks
+        val seq = gg.rsmod.plugins.content.items.osrs.OsrsSeq
+        val skins = NigelRewardStore.active?.contract?.skins.orEmpty()
+        fun ids(item: Dmm2Ids.ItemId, base: Int) = (listOfNotNull(item.local) + skins.filter { it.base == base }.map { it.cosmetic }).distinct()
+        val godswords = ids(Dmm2Ids.ItemId.GODSWORD, gg.rsmod.plugins.api.cfg.Items.ARMADYL_GODSWORD)
+        if (godswords.isNotEmpty()) {
+            looks.register(gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.Look(
+                intArrayOf(seq.DH_SWORD_UPDATE_SLASH, seq.DH_SWORD_UPDATE_SLASH, seq.DH_SWORD_UPDATE_SMASH, seq.DH_SWORD_UPDATE_BLOCK),
+                block = seq.DH_SWORD_UPDATE_DEFEND), *godswords.toIntArray())
+            gg.rsmod.game.model.RenderAnimations.register(gg.rsmod.plugins.content.items.osrs.OsrsBas.GODSWORD, *godswords.toIntArray())
+        }
+        val claws = ids(Dmm2Ids.ItemId.CLAWS, gg.rsmod.plugins.api.cfg.Items.DRAGON_CLAWS)
+        if (claws.isNotEmpty()) {
+            looks.register(gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.Look(
+                intArrayOf(seq.HUMAN_AXE_CHOP, seq.HUMAN_AXE_CHOP, seq.D_CLAWS_PUNCH, seq.HUMAN_AXE_CHOP), block = 424), *claws.toIntArray())
         }
     }
 
