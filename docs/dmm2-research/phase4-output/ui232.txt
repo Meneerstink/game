@@ -1,0 +1,3 @@
+PLAN osrs 232 -> interface 1185: 3 components
+PREFLIGHT transaction=tx-20261117-060754 mutations=3 outcomes={CREATE=6}
+DRY_RUN interfaces 1185..1185 sprites null..null

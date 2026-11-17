@@ -1,0 +1,12 @@
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[07:08:11.861 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+BAKED npc 15571 null
+PLAN skeletal npc 15571 -> 15081 bas=2398 models=[49222, 49218, 49221, 49224]->[65536, 65537, 65538, 65539] heads=[] seqs={10230=16221, 10233=16222} vertices=2289 clusters=352->107 error max=105,6 mean=4,53 far=3207/274680 (667 units)
+DROPPED npc 15571: category 1540
+DROPPED npc 15571: params (2)
+PREFLIGHT transaction=tx-20261117-060826 mutations=129 outcomes={CREATE=258}
+DRY_RUN records=11

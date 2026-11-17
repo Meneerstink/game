@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.starter.StarterPackInteractionsTests" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-17T05:22:39" hostname="LAPTOP-KLOL515N" time="0.312">
+  <properties/>
+  <testcase name="Chronicle teleport rechecks book identity wilderness and account charges after the countdown" classname="gg.rsmod.plugins.content.starter.StarterPackInteractionsTests" time="0.015"/>
+  <testcase name="starter tuna observes the existing food cooldown and consumes only the selected special fish" classname="gg.rsmod.plugins.content.starter.StarterPackInteractionsTests" time="0.246"/>
+  <testcase name="Entrana rejects a closed starter pack even though it is not equipment" classname="gg.rsmod.plugins.content.starter.StarterPackInteractionsTests" time="0.021"/>
+  <testcase name="Chronicle card charging caps at one thousand and preserves remaining cards and the book" classname="gg.rsmod.plugins.content.starter.StarterPackInteractionsTests" time="0.03"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

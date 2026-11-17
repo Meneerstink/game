@@ -1,0 +1,24 @@
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[07:07:22.905 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS spotanim_model_holes=64591 next spot=3220 seq=16221 frameset=4574 base=3580 synth=10561
+PLAN spotanim 3030 -> 3220 model 44174->2870 seq 11463->15388
+PLAN spotanim 3031 -> 3221 model 44174->2870 seq 11810->16221
+PLAN spotanim 3032 -> 3222 model 44174->2870 seq 11810->16221
+PLAN spotanim 3033 -> 3223 model 44174->2870 seq 11811->16222
+PLAN spotanim 3565 -> 3224 model 28458->12089 seq 13708->16223
+PLAN spotanim 3566 -> 3225 model 28458->12089 seq 13709->16224
+PLAN spotanim 3567 -> 3226 model 28458->12089 seq 13710->16225
+PLAN spotanim 3568 -> 3227 model 28458->12089 seq 13711->16226
+PLAN spotanim 3569 -> 3228 model 28458->12089 seq 13712->16227
+PLAN spotanim 3570 -> 3229 model 28458->12089 seq 13713->16228
+PLAN spotanim 3571 -> 3230 model 28458->12089 seq 13714->16229
+PLAN spotanim 4020 -> 3231 model 3123->4108 seq 699->15740
+DROPPED seq 11463: stretches flag (no 667 equivalent)
+DROPPED seq 11810: stretches flag (no 667 equivalent)
+DROPPED seq 11811: stretches flag (no 667 equivalent)
+PREFLIGHT transaction=tx-20261117-060730 mutations=221 outcomes={NO_OP=164, CREATE=278}
+DRY_RUN records=24

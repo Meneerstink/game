@@ -21,6 +21,8 @@ object OsrsLocImportTool {
 
     val BATCHES: Map<String, List<Int>> =
         mapOf(
+            // DMM2: three OSRS Armageddon rug pieces (cache 2686); no custom POH assets.
+            "dmm2-locs" to listOf(54114, 54115, 54116),
             // Apply OsrsFxImportTool toa-akkha-marker-seq first; reuses these four existing loc/model ids and restores seq9759.
             "toa-akkha-markers" to listOf(45868, 45869, 45870, 45871),
             // N462 07-11: the empty rocks of the OSRS ore rocks imported with the Necropolis (RuneLite gameval ObjectID ROCKS1 11390 /

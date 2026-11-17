@@ -1,0 +1,66 @@
+// Compile only the six changed native tools + their own contract tests; execute named PLANs inside the global build slot.
+gradle.projectsEvaluated {
+    def root = gradle.rootProject
+    root.tasks.register('dmm2Phase4Plans') {
+        doLast {
+            def cache = new File(gradle.gradleUserHomeDir, 'caches/modules-2/files-2.1')
+            def jars = { String p -> root.fileTree(new File(cache, p)).matching { include '**/*.jar' }.files.toList() }
+            def compiler = ['kotlin-compiler-embeddable', 'kotlin-stdlib', 'kotlin-stdlib-common', 'kotlin-script-runtime', 'kotlin-reflect', 'kotlin-daemon-embeddable'].collectMany { jars('org.jetbrains.kotlin/' + it + '/1.8.0') } + jars('org.jetbrains.intellij.deps/trove4j') + jars('org.jetbrains/annotations/13.0')
+            def libs = root.fileTree('game/build/install/game/lib').matching { include '*.jar' }.files.toList() + jars('junit/junit') + jars('org.hamcrest') + jars('org.jetbrains.kotlin/kotlin-test/1.8.0') + jars('org.jetbrains.kotlin/kotlin-test-junit/1.8.0')
+            def existing = root.files('game/build/classes/kotlin/main', 'util/build/classes/kotlin/main', libs)
+            def output = root.file('build/dmm2/phase4-classes'); output.mkdirs()
+            def sources = ['OsrsItemImportTool', 'OsrsNpcImportTool', 'OsrsFxImportTool', 'OsrsLocImportTool', 'OsrsPetImportTool', 'OsrsInterfacePortTool'].collect { root.file('game/src/main/kotlin/gg/rsmod/game/tools/importer/' + it + '.kt').path }
+            sources.add(root.file('game/src/test/kotlin/gg/rsmod/game/tools/importer/Dmm2ImportBatchTests.kt').path)
+            root.exec {
+                commandLine([new File(System.getProperty('java.home'), 'bin/java.exe').path, '-Xmx768m', '-cp', root.files(compiler).asPath,
+                    'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler', '-no-stdlib', '-no-reflect', '-jvm-target', '11', '-nowarn', '-module-name', 'game',
+                    '-Xfriend-paths=' + root.file('game/build/classes/kotlin/main').path, '-cp', existing.asPath, '-d', output.path] + sources)
+            }
+            def box = root.file('build/dmm2/phase4-plan')
+            def out = root.file('docs/dmm2-research/phase4-output'); out.mkdirs()
+            def cp = root.files(output, existing).asPath
+            def jobs = [
+                // --yml-only emits a review file, never writes cache/config. Appearance ranks need pending-item correction (see proposals).
+                ['items', 'OsrsItemImportTool', 'dmm2-items', '--yml-only', '--yml-out=' + new File(out, 'items.plan.raw.yml').path],
+                ['npcs', 'OsrsNpcImportTool', 'dmm2-npcs'],
+                ['seqs', 'OsrsFxImportTool', 'dmm2-seqs'],
+                ['spots', 'OsrsFxImportTool', 'dmm2-spots'],
+                ['locs', 'OsrsLocImportTool', 'dmm2-locs'],
+                ['ui232', 'OsrsInterfacePortTool', 'dmm2'],
+                ['wisp', 'OsrsPetImportTool', 'skeletal-npc', 'dmm2-wisp'],
+            ]
+            def run = { String name, String main, List args ->
+                if (root.hasProperty('dmm2Resume') && new File(out, name + '-command.json').exists() &&
+                    new groovy.json.JsonSlurper().parse(new File(out, name + '-command.json')).exit == 0 &&
+                    new File(out, name + '.txt').exists() &&
+                    (name != 'items' || new File(out, 'items.plan.raw.yml').exists())) {
+                    println '[DMM2 named PLAN] ' + name + ' retained from identical hashed snapshot'
+                    return
+                }
+                def argv = [new File(System.getProperty('java.home'), 'bin/java.exe').path, '-Xmx768m', '-Drsps.root=' + box.path,
+                    '-Drsps.data=' + new File(box, 'game/game/data').path, '-cp', cp, main] + args
+                def rc
+                new File(out, name + '.txt').withOutputStream { stream ->
+                    rc = root.exec {
+                        commandLine argv
+                        environment 'RSPS_OSRS_SOURCE_CACHE', 'C:/RSPS/import-source/openrs2-2686/cache'
+                        environment 'RSPS_OSRS_SOURCE_TAG', ''
+                        standardOutput = stream; errorOutput = stream; ignoreExitValue = true
+                    }.exitValue
+                }
+                println '[DMM2 named PLAN] ' + name + ' exit=' + rc
+                new File(out, name + '-command.json').text = groovy.json.JsonOutput.toJson([argv:argv, exit:rc])
+                if (rc != 0) throw new GradleException(name + ' failed; inspect phase4-output/' + name + '.txt')
+            }
+            run('batch-tests', 'org.junit.runner.JUnitCore', ['gg.rsmod.game.tools.importer.Dmm2ImportBatchTests'])
+            jobs.each { job -> run(job[0], 'gg.rsmod.game.tools.importer.' + job[1], job.drop(2)) }
+            // Derive sidecar arguments from this run's Wisp plan, never from committed temporary IDs.
+            def line = new File(out, 'wisp.txt').text
+            def match = line =~ /PLAN skeletal npc 15571 -> (\d+).*models=\[([^]]+)\].*seqs=\{([^}]+)\}/
+            if (!match.find()) throw new GradleException('Missing Wisp mapping')
+            def owner = match.group(1); def models = match.group(2).replace(' ', '')
+            def seqs = (match.group(3) =~ /(\d+)=(\d+)/).collect { it[2] + '=' + it[1] }
+            run('wisp-sidecar', 'gg.rsmod.game.tools.importer.SkeletalSidecarExportTool', ['cache', 'plan', owner, models] + seqs)
+        }
+    }
+}

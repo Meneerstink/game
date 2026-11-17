@@ -1,0 +1,13 @@
+// Entry point for Claude's explicit apply only. GPT-A never invokes this task.
+// The installed init.d/rsps-buildslot.gradle holds the machine-wide lock for this task and every child tool.
+gradle.projectsEvaluated {
+    def root = gradle.rootProject
+    root.tasks.register('dmm2ClaudeApply') {
+        doLast {
+            root.exec {
+                environment 'DMM2_IN_BUILDSLOT', '1'
+                commandLine 'C:/Program Files/Git/bin/bash.exe', root.file('docs/dmm2-research/DMM2-APPLY.sh').path
+            }
+        }
+    }
+}

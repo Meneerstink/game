@@ -57,6 +57,9 @@ object OsrsNpcImportTool {
      */
     val BATCHES: Map<String, List<Int>> by lazy {
         mapOf(
+            // DMM2 cache 2686: six classic actors, preserving bundle-npc-classic allocation order.
+            // Lil Wisp 15571 is skeletal (animaya), exclusively in OsrsPetImportTool dmm2-wisp.
+            "dmm2-npcs" to listOf(6516, 6485, 8391, 8390, 15569, 15570),
             // N415: regular MA1/MA2 actors, deliberately separate from the Deadman breach definitions below.
             // RuneLite gameval KOLHUMAN/KOLOGRE/KOLSPIDER/KOLETHEREAL/KOLDEMON; MA2_BOSS_* and MA2_GUTHIX_HEALER.
             // This batch only plans imports unless Claude explicitly runs --apply through CacheTransaction.
