@@ -118,3 +118,11 @@ Claude's import instead of creating an Item(-1). The failed run is not accepted.
 The small runner also now includes the current plugin jar when Gradle snapshots
 move loose classes. Full Gradle/script acceptance follows on frozen inputs.
 Coordinate wizard combat/loot and hot/cold remain separate open work.
+
+## Accepted Gradle integration, B17-Nov03:44
+
+integration-20261117-021033 passed75tests in14fresh classes, no failures/errors/
+skips/missing;4563inputs unchanged. Core/plugins/all scripts compile;
+BUILD SUCCESSFUL32m47s. Durable proof validation/integration-20261117-021033.json.
+This accepts the double-agent component and previous fifteen unique additions;
+it does not accept still-open coordinate combat/lightbox/hotcold/Mimic/client.
