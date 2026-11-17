@@ -93,8 +93,11 @@ class Dmm2WeaponPresentationTests {
             assertEquals(Sfx.SCYTHE_SLASH, CorruptedWeapons.swingSound(family.local!!, StyleType.SLASH))
             assertEquals(Sfx.SCYTHE_DOUBLE, CorruptedWeapons.swingSound(family.local!!, StyleType.CRUSH))
         }
-        for (family in listOf(Dmm2Ids.ItemId.SHADOW, Dmm2Ids.ItemId.SHADOW_EMPTY, Dmm2Ids.ItemId.VOLATILE))
+        for (family in listOf(Dmm2Ids.ItemId.SHADOW, Dmm2Ids.ItemId.SHADOW_EMPTY))
             assertEquals(Sfx.STAFF_CRUSH, CorruptedWeapons.swingSound(family.local!!, StyleType.CRUSH))
+        // Claude 17-11 testclient: the corrupted Volatile must sound like its base staff (23084 swung 2555, STAFF_CRUSH was 2556).
+        assertEquals(CorruptedWeapons.swingSound(Items.VOLATILE_NIGHTMARE_STAFF, StyleType.CRUSH),
+            CorruptedWeapons.swingSound(Dmm2Ids.ItemId.VOLATILE.local!!, StyleType.CRUSH))
         for ((family, base) in listOf(Dmm2Ids.ItemId.GODSWORD to Items.ARMADYL_GODSWORD,
                 Dmm2Ids.ItemId.TWISTED_BOW to Items.TWISTED_BOW, Dmm2Ids.ItemId.DARK_BOW to Items.DARK_BOW,
                 Dmm2Ids.ItemId.VOLATILE to Items.VOLATILE_NIGHTMARE_STAFF))

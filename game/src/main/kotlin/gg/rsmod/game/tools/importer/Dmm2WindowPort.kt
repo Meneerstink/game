@@ -32,8 +32,11 @@ object Dmm2WindowPort {
                 alignX = 1, alignY = 1, shadow = true, colour = colour, ops = ops)
             return id
         }
+        // Claude 17-11: look components up by id - an inserted thinbox (ids appended mid-list) makes list position != id
+        // (806: list[8..11] overwrote ids 6..9 and duplicated 10/11 -> CacheTransaction verify failed, tx-20261117-130041 rolled back).
+        fun byId(id: Int): C = list.first { it.id == id }
         fun layer(id: Int, x: Int, y: Int, w: Int, h: Int) {
-            list[id].apply { this.x = x; this.y = y; this.w = w; this.h = h }
+            byId(id).apply { this.x = x; this.y = y; this.w = w; this.h = h }
         }
         fun button(parent: Int, width: Int, height: Int, label: String) {
             // 7139 -> 486 (enabled, not pressed): eight desktop slices913..920, then centred p11 text.
@@ -109,8 +112,8 @@ object Dmm2WindowPort {
                 add(4,0,85,50,18,35,wm=1)
                 add(4,0,107,50,36,35,wm=1,font=495)
                 add(4,10,52,161,300,35,font=495)
-                list[35].scrollH = 300
-                list[38].scrollH = 311
+                byId(35).scrollH = 300
+                byId(38).scrollH = 311
                 // Desktop7245: (225-18)/4=51px buttons,4px gaps, in native225x44 parent24.
                 (26..29).forEach { id -> layer(id, 4+(id-26)*55,26,51,18) }
                 extras += "DMM2 OMNISHOP title56 close66 products67..150 stride12 info151..155; DBrow929/table39/currency1206=Deadman Points"
@@ -124,10 +127,11 @@ object Dmm2WindowPort {
                 add(4,0,79,50,18,6,wm=1,font=495)
                 add(4,0,117,50,36,6,wm=1,font=494)
                 check(add(4,0,0,0,0,3,text="Close Info",wm=1,hm=1) == SIDE_CLOSE_TEXT)
-                list[6].scrollH = 160
+                byId(6).scrollH = 160
                 // Labels are children of the native operation layers; the layers remain the callback targets.
                 (8..11).forEach { id ->
-                    list[id] = C(id,0,listOf(0,41,81,122)[id-8],0,34,17,2,0,0,0,2,false,ops=list[id].ops)
+                    val pos = list.indexOfFirst { it.id == id }
+                    list[pos] = C(id,0,listOf(0,41,81,122)[id-8],0,34,17,2,0,0,0,2,false,ops=list[pos].ops)
                     button(id,34,17,listOf("1","5","10","50")[id-8])
                 }
                 extras += "DMM2 OMNISHOP_SIDE inventory14..41 info42..46 buttons47..82"

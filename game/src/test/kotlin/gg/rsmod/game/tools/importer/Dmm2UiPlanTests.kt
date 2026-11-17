@@ -31,8 +31,8 @@ class Dmm2UiPlanTests {
         val main = OsrsInterfacePortTool.port(230, root["230"], fonts, runtimeWidgets = true)
         val side = OsrsInterfacePortTool.port(232, root["232"], fonts, runtimeWidgets = true)
         assertEquals(41, main.components.size); assertEquals(31, side.components.size)
-        assertEquals("Safe Deposit Box", main.components[18].text)
-        assertEquals(listOf("Close"), main.components[30].ops)
+        assertEquals("Safe Deposit Box", main.components.first { it.id == (18) }.text)
+        assertEquals(listOf("Close"), main.components.first { it.id == (30) }.ops)
         assertEquals((0 until 10).map { it%5*39 to it/5*38 }, main.components.drop(31).map { it.x to it.y })
         assertEquals((0 until 28).map { 16+it%4*42 to 4+it/4*36 }, side.components.drop(3).map { it.x to it.y })
         assertTrue(main.components.drop(31).all { it.ops.take(5) == listOf("Withdraw-1","Withdraw-5","Withdraw-10","Withdraw-X","Withdraw-All") })
@@ -44,19 +44,19 @@ class Dmm2UiPlanTests {
         val main = OsrsInterfacePortTool.port(819, root["819"], fonts, runtimeWidgets = true)
         val side = OsrsInterfacePortTool.port(806, root["806"], fonts, runtimeWidgets = true)
         assertEquals(193, main.components.size); assertEquals(83, side.components.size)
-        assertEquals("Deadman Reward Store", main.components[Dmm2WindowPort.REWARD_TITLE].text)
-        assertEquals(listOf("Close"), main.components[Dmm2WindowPort.REWARD_CLOSE].ops)
+        assertEquals("Deadman Reward Store", main.components.first { it.id == (Dmm2WindowPort.REWARD_TITLE) }.text)
+        assertEquals(listOf("Close"), main.components.first { it.id == (Dmm2WindowPort.REWARD_CLOSE) }.ops)
         repeat(7) { i ->
             val first = Dmm2WindowPort.REWARD_FIRST+i*Dmm2WindowPort.REWARD_STRIDE
-            assertEquals(listOf("Select","Buy-1","Buy-5","Buy-10","Buy-50"), main.components[first].ops.take(5))
-            assertEquals(5,main.components[first+10].type)
-            assertEquals(4,main.components[first+11].type)
+            assertEquals(listOf("Select","Buy-1","Buy-5","Buy-10","Buy-50"), main.components.first { it.id == (first) }.ops.take(5))
+            assertEquals(5,main.components.first { it.id == (first+10) }.type)
+            assertEquals(4,main.components.first { it.id == (first+11) }.type)
         }
         assertTrue(side.components.slice(14..41).all { it.ops.take(5) == listOf("Select","Sell-1","Sell-5","Sell-10","Sell-50") })
-        assertEquals(311, main.components[38].scrollH)
+        assertEquals(311, main.components.first { it.id == (38) }.scrollH)
         assertTrue((3524..3531).all { it in main.sprites })
         listOf(main,side).forEach { port ->
-            assertEquals(port.components.indices.toList(), port.components.map { it.id })
+            assertEquals(port.components.indices.toList(), port.components.map { it.id }.sorted())
             port.components.forEach { component ->
                 assertTrue(component.parent == -1 || component.parent in port.components.indices)
                 assertTrue(OsrsInterfacePortTool.encode(component).isNotEmpty())
