@@ -4,6 +4,7 @@ import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.plugins.api.ext.closeMainInterface
 import java.lang.ref.WeakReference
 
 /** Server-side ports for Claude's imported UI. No widget root/component number is guessed here. */
@@ -20,8 +21,8 @@ object Dmm2Interactions {
     }
     @Volatile var safeUi: SafeUi? = null
     @Volatile var rewardUi: RewardUi? = null
-    private val SAFE_NPC = AttributeKey<WeakReference<Npc>>()
-    private val REWARD_NPC = AttributeKey<WeakReference<Npc>>()
+    private val SAFE_NPC = AttributeKey<WeakReference<Npc>>(resetOnDeath = true)
+    private val REWARD_NPC = AttributeKey<WeakReference<Npc>>(resetOnDeath = true)
     fun near(player: Player, npc: Npc): Boolean = npc.isSpawned() && !player.isDead() && npc.tile.height == player.tile.height &&
         player.tile.isWithinRadius(npc.tile, 2)
     fun isFinancial(npc: Npc): Boolean = npc.id in listOfNotNull(Dmm2Ids.npc(6516), Dmm2Ids.npc(6485))
@@ -29,6 +30,7 @@ object Dmm2Interactions {
     fun openSafe(player: Player, npc: Npc): Boolean {
         closeSafe(player)
         val ui = safeUi ?: return false
+        player.closeMainInterface()
         if (!isFinancial(npc) || !near(player, npc) || SafeDepositBox.beginAccess(player) != SafeDepositBox.Status.OK) return false
         player.attr[SAFE_NPC] = WeakReference(npc)
         ui.open(player, SafeDepositBox.contents(player) ?: return false)
@@ -42,6 +44,10 @@ object Dmm2Interactions {
         if (!safeSession(player)) { closeSafe(player); return SafeDepositBox.Transfer(SafeDepositBox.Status.NOT_OPEN) }
         return SafeDepositBox.deposit(player, slot, expectedId, amount).also { SafeDepositBox.contents(player)?.let { safeUi?.refresh(player, it) } }
     }
+    fun depositWorn(player: Player, slot: Int, expectedId: Int, amount: Int): SafeDepositBox.Transfer {
+        if (!safeSession(player)) { closeSafe(player); return SafeDepositBox.Transfer(SafeDepositBox.Status.NOT_OPEN) }
+        return SafeDepositBox.depositWorn(player, slot, expectedId, amount).also { SafeDepositBox.contents(player)?.let { safeUi?.refresh(player, it) } }
+    }
     fun withdraw(player: Player, slot: Int, expectedId: Int): SafeDepositBox.Transfer {
         if (!safeSession(player)) { closeSafe(player); return SafeDepositBox.Transfer(SafeDepositBox.Status.NOT_OPEN) }
         return SafeDepositBox.withdraw(player, slot, expectedId).also { SafeDepositBox.contents(player)?.let { safeUi?.refresh(player, it) } }
@@ -51,6 +57,7 @@ object Dmm2Interactions {
         val ui = rewardUi ?: return false
         val store = NigelRewardStore.active ?: return false
         if (!isNigel(npc) || !near(player, npc)) return false
+        player.closeMainInterface()
         player.attr[REWARD_NPC] = WeakReference(npc); ui.open(player, store)
         return true
     }

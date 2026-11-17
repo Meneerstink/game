@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.deadman
 
 import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.action.EquipAction
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.key.SAFE_DEPOSIT_BOX_KEY
 import gg.rsmod.game.model.entity.Player
@@ -63,10 +64,20 @@ object SafeDepositBox {
 
     /** Amounts refer to physical units, including coins and banknotes: ten coins use all ten slots. */
     fun deposit(player: Player, slot: Int, expectedId: Int, amount: Int = 1): Transfer {
+        return depositFrom(player, player.inventory, slot, expectedId, amount)
+    }
+
+    /** UI230:11 is Deposit worn items, not a second inventory button (cache script1152). */
+    fun depositWorn(player: Player, slot: Int, expectedId: Int, amount: Int): Transfer {
+        val result = depositFrom(player, player.equipment, slot, expectedId, amount)
+        if (result.moved > 0 && player.equipment[slot] == null) EquipAction.onItemUnequip(player, expectedId, slot)
+        return result
+    }
+
+    private fun depositFrom(player: Player, inventory: ItemContainer, slot: Int, expectedId: Int, amount: Int): Transfer {
         val access = accessStatus(player)
         if (access != Status.OK) return Transfer(access)
         if (amount <= 0) return Transfer(Status.INVALID_AMOUNT)
-        val inventory = player.inventory
         if (slot !in 0 until inventory.capacity) return Transfer(Status.INVALID_SLOT)
         val item = inventory[slot] ?: return Transfer(Status.ITEM_CHANGED)
         if (item.id != expectedId || item.amount <= 0) return Transfer(Status.ITEM_CHANGED)

@@ -11,6 +11,8 @@ object Dmm2Boot {
         // In particular, do not retain an earlier lazy lookup after a mapping has been supplied.
         val mapping = File(directory, "ids.tsv")
         if (mapping.isFile) Dmm2Ids.install(mapping.readLines())
+        Dmm2Interactions.safeUi = if (Dmm2SafeDepositUi.ready()) Dmm2SafeDepositUi else null
+        Dmm2Interactions.rewardUi = if (Dmm2RewardUi.ready()) Dmm2RewardUi else null
         val sourceIds = listOf(22331, 22333, 22335, 26149, 13660, 13317, 13318, 33063)
         val starter = sourceIds.map { Dmm2Ids.item(it) }
         if (starter.all { it != null }) DeadmanStarterPack.install(DeadmanStarterPack.Ids(

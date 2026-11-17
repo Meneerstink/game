@@ -74,7 +74,7 @@ object OsrsInterfacePortTool {
     const val ORB_FILLER_PRIMARY = 3576
 
     class C(
-        val id: Int, var type: Int, val x: Int, val y: Int, val w: Int, val h: Int, val parent: Int,
+        val id: Int, var type: Int, var x: Int, var y: Int, var w: Int, var h: Int, val parent: Int,
         val wMode: Int, val hMode: Int, val xMode: Int, val yMode: Int, val hidden: Boolean,
         val scrollW: Int = 0, var scrollH: Int = 0, val noClickThrough: Boolean = false,
         var sprite: Int = -1, val tiling: Boolean = false, val opacity: Int = 0,
@@ -159,7 +159,7 @@ object OsrsInterfacePortTool {
         }.sortedBy { it.order }.filter { it.category != 15 }
     }
 
-    fun port(group: Int, node: JsonNode, fonts: Map<Int, Int>): Ported {
+    fun port(group: Int, node: JsonNode, fonts: Map<Int, Int>, runtimeWidgets: Boolean = false): Ported {
         val list = ArrayList<C>()
         val extras = ArrayList<String>()
         val reports = ArrayList<String>()
@@ -690,6 +690,9 @@ object OsrsInterfacePortTool {
             extras += "mode set rect=$modeSet"
             extras += "back=$back"
         }
+        if (runtimeWidgets && group in setOf(230, 232, 819, 806)) {
+            Dmm2WindowPort.append(group, list, sprites, extras, fonts)
+        }
         return Ported(group, list, extras, reports, sprites)
     }
 
@@ -713,7 +716,7 @@ object OsrsInterfacePortTool {
         } finally {
             library.close()
         }
-        val ported = groups.map { g -> port(g, root[g.toString()] ?: error("group $g not in $JSON"), fonts) }
+        val ported = groups.map { g -> port(g, root[g.toString()] ?: error("group $g not in $JSON"), fonts, args.first() == "dmm2-ui") }
         // --reuse (07-11): re-port onto the interface/sprite ids of the previous run (data/cfg/toa/interfaces.tsv) - the server and the
         // ported scripts already point at them; only groups/sprites not in that table get new ids.
         val previous = if ("--reuse" in args) TABLE.takeIf { it.isFile }?.readLines()
