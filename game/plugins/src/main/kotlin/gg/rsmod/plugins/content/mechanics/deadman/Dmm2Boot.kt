@@ -59,7 +59,9 @@ object Dmm2Boot {
         gg.rsmod.plugins.content.starter.StarterWeaponCombat.staffAppearance = gg.rsmod.plugins.content.starter.StarterWeaponCombat.Appearance(
             strike.castAnimation[1], strike.castGfx!!.id, strike.projectile, strike.impactGfx!!.id)
         gg.rsmod.plugins.content.starter.StarterWeaponCombat.bowAppearance = gg.rsmod.plugins.content.starter.StarterWeaponCombat.Appearance(
-            0, gg.rsmod.plugins.api.cfg.Gfx.BRONZE_ARROW_DRAWBACK, gg.rsmod.plugins.api.cfg.Gfx.BRONZE_ARROW_IN_FLIGHT, 0)
+            // N629 (owner 17-11 testclient: the bow floated loose from the hand): an OSRS-imported bow needs the imported OSRS bow
+            // sequence HUMAN_BOW (OSRS 426), as every other imported bow in OsrsWeaponLooks - the 667 426 fallback does not fit its model.
+            gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_BOW, gg.rsmod.plugins.api.cfg.Gfx.BRONZE_ARROW_DRAWBACK, gg.rsmod.plugins.api.cfg.Gfx.BRONZE_ARROW_IN_FLIGHT, 0)
     }
 
     /**
