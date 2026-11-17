@@ -929,7 +929,7 @@ Claude client checks after the source gates/assets are actually ready:
 
 `Bank.deposit` now gives the standard OSRS refusal for the source20282 Gnome
 child puzzle box, including deposit-all and equipment. This is the only changed
-banking behaviour. Puzzle_box revision15030231 (see the source manifest) proves
+banking behaviour. Puzzle_box revision15185934 (see the source manifest) proves
 `bankable7=No`; `BANK-SOURCE.json` pins Bank revision15388948 and its standard
 storage-limits message: "A magical force prevents you from banking this item!".
 The existing Mimic refusal uses the same message.
