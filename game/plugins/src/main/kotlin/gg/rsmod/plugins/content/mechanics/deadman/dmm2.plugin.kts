@@ -15,19 +15,24 @@ import gg.rsmod.plugins.content.skills.runecrafting.Altar
 
 // No spawns here: Claude alone changes world_edits. Native bank Collect is already bound by banker_collect.plugin.kts.
 Dmm2Boot.install()
+
+/** OSRS op number (1..10) of the clicked component op. getInteractingOption() is the packets.yml list position (the client's
+ * IF_BUTTON1 = opcode 61 arrives as option 3), so every DMM2 window click was mis-read (testclient 17-11 16:07: Select bought,
+ * left-click did nothing). Same mapping as the ToA/CoX ports. */
+fun dmm2Op(player: Player): Int = gg.rsmod.plugins.content.inter.slayer.SlayerRewardsUi.opOf(player.getInteractingOpcode())
 Dmm2Ids.interfaceId(230)?.let { root ->
     on_interface_close(root) { Dmm2SafeDepositUi.close(player) }
     on_button(root, Dmm2SafeDepositUi.CLOSE) { player.closeInterface(root) }
-    on_button(root, Dmm2SafeDepositUi.DEPOSIT_INVENTORY) { if (player.getInteractingOption() == 1) Dmm2SafeDepositUi.depositAll(player, false) }
-    on_button(root, Dmm2SafeDepositUi.DEPOSIT_WORN) { if (player.getInteractingOption() == 1) Dmm2SafeDepositUi.depositAll(player, true) }
+    on_button(root, Dmm2SafeDepositUi.DEPOSIT_INVENTORY) { if (dmm2Op(player) == 1) Dmm2SafeDepositUi.depositAll(player, false) }
+    on_button(root, Dmm2SafeDepositUi.DEPOSIT_WORN) { if (dmm2Op(player) == 1) Dmm2SafeDepositUi.depositAll(player, true) }
     repeat(10) { slot -> on_button(root, Dmm2SafeDepositUi.FIRST_SLOT + slot) {
-        Dmm2SafeDepositUi.click(player, true, slot, player.getInteractingOption(), player.getInteractingItemId())
+        Dmm2SafeDepositUi.click(player, true, slot, dmm2Op(player), player.getInteractingItemId())
     } }
 }
 Dmm2Ids.interfaceId(232)?.let { root ->
     on_interface_close(root) { Dmm2SafeDepositUi.close(player) }
     repeat(28) { slot -> on_button(root, Dmm2SafeDepositUi.SIDE_FIRST_SLOT + slot) {
-        Dmm2SafeDepositUi.click(player, false, slot, player.getInteractingOption(), player.getInteractingItemId())
+        Dmm2SafeDepositUi.click(player, false, slot, dmm2Op(player), player.getInteractingItemId())
     } }
 }
 Dmm2Ids.interfaceId(819)?.let { root ->
@@ -35,21 +40,21 @@ Dmm2Ids.interfaceId(819)?.let { root ->
     on_button(root, gg.rsmod.game.tools.importer.Dmm2WindowPort.REWARD_CLOSE) { Dmm2RewardUi.close(player) }
     Dmm2RewardUi.PRODUCTS.indices.forEach { index ->
         on_button(root, gg.rsmod.game.tools.importer.Dmm2WindowPort.REWARD_FIRST + index*gg.rsmod.game.tools.importer.Dmm2WindowPort.REWARD_STRIDE) {
-            Dmm2RewardUi.product(player, index, player.getInteractingOption())
+            Dmm2RewardUi.product(player, index, dmm2Op(player))
         }
     }
     repeat(4) { index -> on_button(root, 26+index) {
-        if (player.getInteractingOption() == 1) Dmm2RewardUi.buySelected(player, index)
+        if (dmm2Op(player) == 1) Dmm2RewardUi.buySelected(player, index)
     } }
 }
 Dmm2Ids.interfaceId(806)?.let { root ->
     on_interface_close(root) { Dmm2RewardUi.close(player) }
-    on_button(root, 3) { if (player.getInteractingOption() == 1) Dmm2RewardUi.closeInfo(player) }
+    on_button(root, 3) { if (dmm2Op(player) == 1) Dmm2RewardUi.closeInfo(player) }
     repeat(28) { slot -> on_button(root, gg.rsmod.game.tools.importer.Dmm2WindowPort.SIDE_FIRST + slot) {
-        Dmm2RewardUi.inventory(player, slot, player.getInteractingOption(), player.getInteractingItemId())
+        Dmm2RewardUi.inventory(player, slot, dmm2Op(player), player.getInteractingItemId())
     } }
     repeat(4) { index -> on_button(root, 8+index) {
-        if (player.getInteractingOption() == 1) Dmm2RewardUi.sellSelected(player, index)
+        if (dmm2Op(player) == 1) Dmm2RewardUi.sellSelected(player, index)
     } }
 }
 on_login {

@@ -53,6 +53,9 @@ object Dmm2RewardUi : Dmm2Interactions.RewardUi {
         // No shop filters exist (enum4988); hide the source's unported view/filter controls.
         player.setComponentHidden(main, 11, true)
         player.setComponentHidden(main, 12, true)
+        // 14 = the header currency bar (x206 in the filter row). OSRS desktop shows the balance only in the info pane (22/31..33,
+        // reward-store.png); 7142 hides 14 there. Visible it overlapped "Welcome to the Deadman Reward Store." (testclient 17-11).
+        player.setComponentHidden(main, 14, true)
         scroll(player, main, 38, 39, 311)
         scroll(player, main, 35, 36, 300)
         scroll(player, side, 6, 7, 160)
