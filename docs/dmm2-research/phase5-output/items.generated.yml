@@ -1,0 +1,1433 @@
+- id: 24949
+  name: "Blood money"
+  examine: "These can be taken to Deadman Nigel in Lumbridge."
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 24950
+  name: "Deadman's chest"
+  examine: "15 men may jump on you, but only to steal the contents of your bank."
+  tradeable: false
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6789
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 21
+    defence_slash: 20
+    defence_crush: 12
+    defence_magic: 3
+    defence_ranged: 20
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24951
+  name: "Deadman's legs"
+  examine: "That numb feeling."
+  tradeable: false
+  weight: 9.071
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6790
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 11
+    defence_slash: 10
+    defence_crush: 10
+    defence_magic: 2
+    defence_ranged: 10
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24952
+  name: "Deadman's cape"
+  examine: "Dark and sinister, just like a deadman."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6791
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 1
+    defence_magic: 0
+    defence_ranged: 2
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24953
+  name: "Chronicle"
+  examine: "The legends of RuneScape."
+  tradeable: false
+  weight: 1.0
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6792
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24954
+  name: "Starter sword"
+  examine: "A sword from a starter pack."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6793
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 5
+    attack_slash: 21
+    attack_crush: -2
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 20
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24955
+  name: "Starter bow"
+  examine: "A bow from a starter pack."
+  tradeable: false
+  weight: 1.36
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6794
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 20
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 7
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24956
+  name: "Starter staff"
+  examine: "A staff from a starter pack."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6795
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 10
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 10
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24957
+  name: "Tuna"
+  examine: "Wow, this is a big fish."
+  tradeable: false
+  weight: 0.4
+  equipment: null
+- id: 24958
+  name: "Corrupted voidwaker"
+  examine: "A truly fearsome weapon."
+  tradeable: true
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6796
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 70
+    attack_slash: 80
+    attack_crush: -2
+    attack_magic: 5
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 2
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 68
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 65}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24959
+  name: "Corrupted voidwaker"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24960
+  name: "Corrupted dragon claws"
+  examine: "A set of fighting claws."
+  tradeable: true
+  weight: 0.907
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6797
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 41
+    attack_slash: 57
+    attack_crush: -4
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 13
+    defence_slash: 26
+    defence_crush: 7
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 48
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24961
+  name: "Corrupted dragon claws"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24962
+  name: "Corrupted armadyl godsword"
+  examine: "A beautiful, heavy sword."
+  tradeable: true
+  weight: 10.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6798
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 6
+    attack_stab: 0
+    attack_slash: 132
+    attack_crush: 80
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 112
+    prayer: 7
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 65}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24963
+  name: "Corrupted armadyl godsword"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24964
+  name: "Corrupted twisted bow"
+  examine: "A mystical bow carved from the twisted remains of the Great Olm."
+  tradeable: true
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6799
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 6
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 70
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 5
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 70}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24965
+  name: "Corrupted twisted bow"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24966
+  name: "Corrupted scythe of vitur"
+  examine: "A powerful scythe."
+  tradeable: false
+  weight: 3.175
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6800
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 70
+    attack_slash: 125
+    attack_crush: 30
+    attack_magic: -6
+    attack_ranged: 0
+    defence_stab: -2
+    defence_slash: 8
+    defence_crush: 10
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 64
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 60}, {'skill': 2, 'level': 70}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24967
+  name: "Corrupted scythe of vitur (uncharged)"
+  examine: "A powerful scythe. It is currently uncharged."
+  tradeable: true
+  weight: 3.175
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6801
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 50
+    attack_slash: 75
+    attack_crush: 10
+    attack_magic: -6
+    attack_ranged: 0
+    defence_stab: -2
+    defence_slash: 6
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 43
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24968
+  name: "Corrupted scythe of vitur (uncharged)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24969
+  name: "Corrupted tumeken's shadow"
+  examine: "An ancient staff created using a higher power."
+  tradeable: false
+  weight: 5.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6802
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 35
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 20
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24970
+  name: "Corrupted tumeken's shadow (uncharged)"
+  examine: "An ancient staff created using a higher power."
+  tradeable: true
+  weight: 4.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6803
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 35
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 20
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24971
+  name: "Corrupted tumeken's shadow (uncharged)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24972
+  name: "Trinket of vengeance"
+  examine: "A magic rock! This one casts the Vengeance spell."
+  tradeable: true
+  weight: 1.0
+  equipment: null
+- id: 24973
+  name: "Trinket of vengeance"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24974
+  name: "Trinket of advanced weaponry"
+  examine: "A magic rock! This one gives you a random corrupted weapon instead."
+  tradeable: true
+  weight: 1.0
+  equipment: null
+- id: 24975
+  name: "Trinket of advanced weaponry"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24976
+  name: "Corrupted dark bow"
+  examine: "A bow from an even darker dimension."
+  tradeable: true
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6804
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 7
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 89
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24977
+  name: "Corrupted dark bow"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24978
+  name: "Corrupted Volatile Nightmare staff"
+  examine: "An ancient staff corrupted by darkness. A volatile orb has been added to it."
+  tradeable: true
+  weight: 1.6
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6805
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 16
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 14
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 15.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}, {'skill': 3, 'level': 20}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24979
+  name: "Corrupted Volatile Nightmare staff"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24980
+  name: "Armadyl godsword (Deadman)"
+  examine: "A beautiful, heavy sword."
+  tradeable: false
+  weight: 10.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6806
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 6
+    attack_stab: 0
+    attack_slash: 132
+    attack_crush: 80
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 132
+    prayer: 8
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24981
+  name: "Voidwaker (Deadman)"
+  examine: "A truly fearsome weapon."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6807
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 70
+    attack_slash: 80
+    attack_crush: -2
+    attack_magic: 5
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 2
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 80
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24982
+  name: "Volatile Nightmare staff (Deadman)"
+  examine: "An ancient staff corrupted by darkness. A volatile orb has been added to it."
+  tradeable: false
+  weight: 1.6
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6808
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 16
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 14
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 15.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 82}, {'skill': 3, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24983
+  name: "Dark bow (Deadman)"
+  examine: "A bow from a darker dimension."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6809
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 9
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 95
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24984
+  name: "Imbued Zamorak cape (Deadman)"
+  examine: "A cape from the almighty god Zamorak, imbued with great power."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6810
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 2.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24985
+  name: "Imbued Guthix cape (Deadman)"
+  examine: "A cape from the almighty god Guthix, imbued with great power."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6811
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 2.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24986
+  name: "Imbued Saradomin cape (Deadman)"
+  examine: "A cape from the almighty god Saradomin, imbued with great power."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6812
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 2.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24987
+  name: "Armageddon rug"
+  examine: "A fearsome yet stylish souvenir from Deadman: Armageddon."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 24988
+  name: "Armageddon rug"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24989
+  name: "Armageddon teleport scroll"
+  examine: "A scroll which unlocks the Deadman: Armageddon home teleport animation."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 24990
+  name: "Armageddon teleport scroll"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24991
+  name: "Armageddon weapon scroll"
+  examine: "Take this to Nigel to give the Armadyl Godsword, Volatile Nightmare Staff, Dark Bow or Voidwaker a cosmetic theme from Deadman: Armageddon."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 24992
+  name: "Armageddon weapon scroll"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24993
+  name: "Armageddon cape fabric"
+  examine: "Take this to Nigel to give the imbued Saradomin, Guthix or Zamorak Cape a cosmetic theme from Deadman: Armageddon."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 24994
+  name: "Armageddon cape fabric"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24995
+  name: "Annihilation weapon scroll"
+  examine: "Take this to Nigel to give the Toxic Staff of the Dead, Bow of Faerdhinen (c) or Crystal armour a cosmetic theme from Deadman: Annihilation."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 24996
+  name: "Annihilation weapon scroll"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24997
+  name: "Annihilation blueprints"
+  examine: "Take this to an estate agent and ask them to redecorate your player-owned house for a Wilderness theme."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 24998
+  name: "Annihilation blueprints"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24999
+  name: "Annihilation teleport scroll"
+  examine: "A scroll which unlocks the Deadman: Annihilation home teleport animation."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25000
+  name: "Annihilation teleport scroll"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25001
+  name: "Bow of Faerdhinen (c)"
+  examine: "A magical elven bow, corrupted through the addition of too many shards."
+  tradeable: false
+  weight: 1.5
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6815
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 128
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 106
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 16, 'level': 70}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25002
+  name: "Crystal body"
+  examine: "Sturdier than it looks."
+  tradeable: false
+  weight: 2.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6816
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -18
+    attack_ranged: 31
+    defence_stab: 46
+    defence_slash: 38
+    defence_crush: 48
+    defence_magic: 44
+    defence_ranged: 68
+    summoning: 0
+    melee_strength: 0
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 16, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25003
+  name: "Crystal body (inactive)"
+  examine: "Sturdier than it looks."
+  tradeable: false
+  weight: 2.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6817
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25004
+  name: "Crystal legs"
+  examine: "A bright, shiny set of leg armour."
+  tradeable: false
+  weight: 1.0
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6818
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -12
+    attack_ranged: 18
+    defence_stab: 26
+    defence_slash: 21
+    defence_crush: 30
+    defence_magic: 34
+    defence_ranged: 38
+    summoning: 0
+    melee_strength: 0
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 16, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25005
+  name: "Crystal legs (inactive)"
+  examine: "A bright, shiny set of leg armour."
+  tradeable: false
+  weight: 1.0
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6819
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25006
+  name: "Crystal helm"
+  examine: "This helmet shines bright, like a diamond."
+  tradeable: false
+  weight: 0.5
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6820
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 9
+    defence_stab: 12
+    defence_slash: 8
+    defence_crush: 14
+    defence_magic: 10
+    defence_ranged: 18
+    summoning: 0
+    melee_strength: 0
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 70}, {'skill': 16, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25007
+  name: "Crystal helm (inactive)"
+  examine: "This helmet shines bright, like a diamond."
+  tradeable: false
+  weight: 0.5
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6821
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25008
+  name: "Toxic staff (uncharged)"
+  examine: "It needs to be charged with Zulrah's scales."
+  tradeable: false
+  weight: 1.5
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6822
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 55
+    attack_slash: 70
+    attack_crush: 0
+    attack_magic: 17
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 17
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 72
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 15.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 75}, {'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25009
+  name: "Toxic staff (Deadman)"
+  examine: "A ghastly weapon with evil origins, with a toxic fang attached."
+  tradeable: false
+  weight: 1.5
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6823
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 55
+    attack_slash: 70
+    attack_crush: 0
+    attack_magic: 25
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 17
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 72
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 15.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 75}, {'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25010
+  name: "Thunder khopesh"
+  examine: "A powerful Khopesh, imbued with the power of thunder and lightning."
+  tradeable: true
+  weight: 1.36
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6824
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 65
+    attack_slash: 110
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 100
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25011
+  name: "Thunder khopesh"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25012
+  name: "Trinket of fortuity (active)"
+  examine: "A magic rock! This one increases the chance of obtaining rare items. Teleportation will behave as if you were skulled."
+  tradeable: true
+  weight: 1.0
+  equipment: null
+- id: 25013
+  name: "Trinket of fortuity (active)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25014
+  name: "Starter cape"
+  examine: "Lets the person behind you know that you mean business."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6825
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 5
+    attack_slash: 5
+    attack_crush: 5
+    attack_magic: 5
+    attack_ranged: 5
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25015
+  name: "Annihilation exit portal blueprints"
+  examine: "Blueprints used to build an exit portal in your player-owned house."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25016
+  name: "Fire ruby"
+  examine: "Rather hot to the touch, maybe I could start a fire with this."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25017
+  name: "Fire ruby"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25018
+  name: "Amulet of fire"
+  examine: "I hope my clothes don't catch on fire."
+  tradeable: true
+  weight: 0.107
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 6826
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 10
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25019
+  name: "Amulet of fire"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25020
+  name: "Teleport card"
+  examine: "A card which has magical properties."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 25021
+  name: "Teleport card"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

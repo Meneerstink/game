@@ -1,0 +1,178 @@
+{
+  "plan_only": false,
+  "source_stat_overrides": [
+    {
+      "source": 28531,
+      "field": "attack_stab",
+      "cache2686": 70,
+      "wiki": 56
+    },
+    {
+      "source": 28531,
+      "field": "attack_slash",
+      "cache2686": 80,
+      "wiki": 64
+    },
+    {
+      "source": 28531,
+      "field": "attack_magic",
+      "cache2686": 5,
+      "wiki": 4
+    },
+    {
+      "source": 28531,
+      "field": "melee_strength",
+      "cache2686": 68,
+      "wiki": 64
+    },
+    {
+      "source": 28534,
+      "field": "attack_stab",
+      "cache2686": 41,
+      "wiki": 33
+    },
+    {
+      "source": 28534,
+      "field": "attack_slash",
+      "cache2686": 57,
+      "wiki": 46
+    },
+    {
+      "source": 28534,
+      "field": "defence_stab",
+      "cache2686": 13,
+      "wiki": 11
+    },
+    {
+      "source": 28534,
+      "field": "defence_slash",
+      "cache2686": 26,
+      "wiki": 21
+    },
+    {
+      "source": 28534,
+      "field": "defence_crush",
+      "cache2686": 7,
+      "wiki": 6
+    },
+    {
+      "source": 28537,
+      "field": "attack_slash",
+      "cache2686": 132,
+      "wiki": 106
+    },
+    {
+      "source": 28537,
+      "field": "attack_crush",
+      "cache2686": 80,
+      "wiki": 64
+    },
+    {
+      "source": 28537,
+      "field": "melee_strength",
+      "cache2686": 112,
+      "wiki": 106
+    },
+    {
+      "source": 28540,
+      "field": "attack_ranged",
+      "cache2686": 70,
+      "wiki": 56
+    },
+    {
+      "source": 28540,
+      "field": "ranged_strength",
+      "cache2686": 5,
+      "wiki": 2
+    },
+    {
+      "source": 28543,
+      "field": "attack_audio",
+      "status": "Native -1 retained; Claude must prove/install AV before release"
+    },
+    {
+      "source": 28543,
+      "field": "attack_stab",
+      "cache2686": 70,
+      "wiki": 56
+    },
+    {
+      "source": 28543,
+      "field": "attack_slash",
+      "cache2686": 125,
+      "wiki": 88
+    },
+    {
+      "source": 28543,
+      "field": "attack_crush",
+      "cache2686": 30,
+      "wiki": 24
+    },
+    {
+      "source": 28543,
+      "field": "defence_slash",
+      "cache2686": 8,
+      "wiki": 7
+    },
+    {
+      "source": 28543,
+      "field": "defence_crush",
+      "cache2686": 10,
+      "wiki": 8
+    },
+    {
+      "source": 28543,
+      "field": "melee_strength",
+      "cache2686": 64,
+      "wiki": 60
+    },
+    {
+      "source": 28545,
+      "field": "attack_audio",
+      "status": "Native -1 retained; Claude must prove/install AV before release"
+    },
+    {
+      "source": 28545,
+      "field": "attack_stab",
+      "cache2686": 50,
+      "wiki": 40
+    },
+    {
+      "source": 28545,
+      "field": "attack_slash",
+      "cache2686": 75,
+      "wiki": 60
+    },
+    {
+      "source": 28545,
+      "field": "attack_crush",
+      "cache2686": 10,
+      "wiki": 8
+    },
+    {
+      "source": 28545,
+      "field": "defence_slash",
+      "cache2686": 6,
+      "wiki": 5
+    },
+    {
+      "source": 28545,
+      "field": "melee_strength",
+      "cache2686": 43,
+      "wiki": 40
+    },
+    {
+      "source": 29599,
+      "field": "attack_ranged",
+      "cache2686": 89,
+      "wiki": 95
+    }
+  ],
+  "plan_metadata_collisions": [],
+  "note": "PLAN patches are for review only; regenerate using actual ids.tsv AND native items.generated.yml after apply.",
+  "reserved_sha256": {
+    "data/cfg/items.yml": "0eac485d6a53106f80b386a9107ccd0169a5a2402a50201d0c09ca22be99a64b",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/api/cfg/Items.kt": "a6c343d115f72c2b2773bd1364c747628b0db8efeacd63dfbc2cbb64efea8c92",
+    "data/world_edits.json": "1aa325836290da624fa2eaa44aff897005fb8bb1641bfd914c4bc85b2b78f393"
+  }
+}
