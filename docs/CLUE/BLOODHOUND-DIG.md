@@ -51,9 +51,9 @@ and loaded-client checks remain separate gates.
    Talk-to, Store, Pick-up and all original bytes. Applied=true is written only
    after verification. Restart the server with mappings and cache together.
 
-Read-only preflight171452:23logical mutations,44CREATE/2NO_OP across both caches;
+Production-source read-only preflight174043:23logical mutations,44CREATE/2NO_OP across both caches;
 proposals seq14498->17769,frameset14566->6012,synth12114..12116->10843..10845.
-The existing base is reused. Menu preflight171507 has two mutations, one per pet.
+The existing base is reused. Menu preflight174059 has two mutations, one per pet.
 Both target caches and ledger were unchanged. These ids are **not reservations**;
 rerun after preceding imports. Earlier preflights170237/170613 overlapped Claude's
 item/recolour application and are rejected by the before/after guard.
@@ -63,3 +63,9 @@ wrong tile, second account, logout, dead/dismissed follower; hard wizard dig mus
 still require the exact kill and second dig. Compare the clip against the updated
 OSRS Bloodhound and hear all three embedded digging sounds. Preserve the
 existing pet pickup, upgraded Store and ownership behaviour.
+
+Claude applied this batch17-Nov18:5x: tx175755 sequence14498->17769,
+tx175836 two Dig menus; pet-dig.tsv was published in363749298. Do not repeat
+these CREATE plans. The staged6-test result was also repeated against promoted
+production source (validation/pet-dig-actual-source.json, matching all5source
+hashes on resume). Actual loaded-client checks above remain required.

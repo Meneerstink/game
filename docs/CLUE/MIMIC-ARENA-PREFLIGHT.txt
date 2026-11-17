@@ -4,7 +4,7 @@ WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 
 WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
 WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
 WARNING: All illegal access operations will be denied in a future release
-[18:22:36.265 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+[18:39:17.646 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
 LOC osrs=2239 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66961
 LOC osrs=6926 'null' ops=[null, null, null, null, null] size=1x1 anim=-1->-1 -> 66962
 LOC osrs=16416 'null' ops=[null, null, null, null, null] size=1x1 anim=-1->-1 -> 66963
@@ -56,6 +56,52 @@ DROPPED model 37132: face z-offsets (not representable in 667)
 DROPPED model 37134: face z-offsets (not representable in 667)
 DROPPED model 37135: face z-offsets (not representable in 667)
 FLOOR overlay osrs=41 tiles=320 rgb=ff00ff tex=-1 -> local 41 rgb=ff00ff tex=-1
+MODEL osrs=1105 -> 67448
+MODEL osrs=6932 -> 67449
+MODEL osrs=15553 -> 67450
+MODEL osrs=15554 -> 67451
+MODEL osrs=15555 -> 67452
+MODEL osrs=15556 -> 67453
+MODEL osrs=29542 -> 67454
+MODEL osrs=30742 -> 67455
+MODEL osrs=37099 -> 67456
+MODEL osrs=37100 -> 67457
+MODEL osrs=37101 -> 67458
+MODEL osrs=37102 -> 67459
+MODEL osrs=37103 -> 67460
+MODEL osrs=37104 -> 67461
+MODEL osrs=37105 -> 67462
+MODEL osrs=37106 -> 67463
+MODEL osrs=37107 -> 67464
+MODEL osrs=37108 -> 67465
+MODEL osrs=37109 -> 67466
+MODEL osrs=37110 -> 67467
+MODEL osrs=37111 -> 67468
+MODEL osrs=37112 -> 67469
+MODEL osrs=37113 -> 67470
+MODEL osrs=37114 -> 67471
+MODEL osrs=37115 -> 67472
+MODEL osrs=37116 -> 67473
+MODEL osrs=37117 -> 67474
+MODEL osrs=37118 -> 67475
+MODEL osrs=37119 -> 67476
+MODEL osrs=37120 -> 67477
+MODEL osrs=37121 -> 67478
+MODEL osrs=37122 -> 67479
+MODEL osrs=37123 -> 67480
+MODEL osrs=37124 -> 67481
+MODEL osrs=37125 -> 67482
+MODEL osrs=37126 -> 67483
+MODEL osrs=37127 -> 67484
+MODEL osrs=37128 -> 67485
+MODEL osrs=37129 -> 67486
+MODEL osrs=37130 -> 67487
+MODEL osrs=37131 -> 67488
+MODEL osrs=37132 -> 67489
+MODEL osrs=37133 -> 67490
+MODEL osrs=37134 -> 67491
+MODEL osrs=37135 -> 67492
+MODEL osrs=37136 -> 67493
 PLAN clue-mimic-arena squares=[10819] types=43 models=46 floors underlay=0 overlay=1 mutations=91
-PREFLIGHT transaction=tx-20261117-172241 mutations=91 outcomes={CREATE=182}
-DRY_RUN transaction=tx-20261117-172241 (nothing written)
+PREFLIGHT transaction=tx-20261117-173926 mutations=91 outcomes={CREATE=182}
+DRY_RUN transaction=tx-20261117-173926 (nothing written)

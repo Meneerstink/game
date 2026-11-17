@@ -1,0 +1,11 @@
+{
+  "inputs": {
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\CluePetDig.kt": "03c8bb13666fbb6a8e5765da4a5264ecbd7497f1297a26cec2c815290b51e905",
+    "C:\\RSPS\\work\\gpt-b\\game\\src\\main\\kotlin\\gg\\rsmod\\game\\tools\\importer\\CluePetDigCacheTool.kt": "8a8fdde9ca5891fa14a805ae418080efedb2edb1d4f3b86195e51d3ac2316d9f",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\skills\\summoning\\Pets.kt": "62dcb2d505bac660f3828da3a355ddd7eddad7f2398f059fe8442f6d36203384",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\CluePetDigTests.kt": "554df0795dfdb3205ac72c61cf60690e53b5a8c4af51d9b2cb59da6899e98a0d",
+    "C:\\RSPS\\work\\gpt-b\\game\\src\\test\\kotlin\\gg\\rsmod\\game\\tools\\importer\\CluePetDigCacheTests.kt": "0864aa0b65ade2676e0468fa24c6f459f022d410620ea5387f37b9144f655365"
+  },
+  "unchanged": true,
+  "tests": "JUnit version 4.13.2\n..PROBLEM CLUE Bloodhound dig source14498 unavailable; clue retained\n...WARNING: An illegal reflective access operation has occurred\nWARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-b/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address\nWARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0\nWARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations\nWARNING: All illegal access operations will be denied in a future release\n[18:35:05.200 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.\n.\nTime: 85,687\n\nOK (6 tests)\n\n"
+}

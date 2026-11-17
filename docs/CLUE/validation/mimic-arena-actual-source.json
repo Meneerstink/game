@@ -1,0 +1,12 @@
+{
+  "inputs": {
+    "C:\\RSPS\\work\\gpt-b\\game\\src\\main\\kotlin\\gg\\rsmod\\game\\tools\\importer\\ModernRegionProbeTool.kt": "9e95e41bcc2352cb0e591bca408644f9c89f5b5787851cc79d73c642f0e2ead3",
+    "C:\\RSPS\\work\\gpt-b\\game\\src\\main\\kotlin\\gg\\rsmod\\game\\tools\\importer\\ClueMimicArenaAssets.kt": "3d43a3bf6a97536b6033a9c05dc80d6e7c0cce38143080db648cafaf0c851f6a",
+    "C:\\RSPS\\work\\gpt-b\\game\\src\\main\\kotlin\\gg\\rsmod\\game\\tools\\importer\\OsrsRegionImportTool.kt": "ee56c4bd41c4a1c5b6d88ffa92a5cfa5e9556d3e10a35f3c0b07d26b716d6189",
+    "C:\\RSPS\\work\\gpt-b\\game\\src\\main\\kotlin\\gg\\rsmod\\game\\tools\\importer\\Rev667WorldCodec.kt": "fc03826d179fab9c2e4e46dd67c6681301c41a41c1427d71499f9c95c4c96a74",
+    "C:\\RSPS\\work\\gpt-b\\game\\src\\test\\kotlin\\gg\\rsmod\\game\\tools\\importer\\ClueMimicArenaImportTests.kt": "7c6f1ad4c5f2743aa12824f92250e7f21592841d48a48a83eaf0ad75f5848409",
+    "C:\\RSPS\\work\\gpt-b\\docs\\CLUE\\cache\\mimic-arena-source.json": "8e3e711cb2c249f82b91dad72cf58df3462d3a5b660929a3d0ca4f68c9dbc7a0"
+  },
+  "unchanged": true,
+  "tests": "JUnit version 4.13.2\n..WARNING: An illegal reflective access operation has occurred\nWARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-b/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address\nWARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0\nWARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations\nWARNING: All illegal access operations will be denied in a future release\n[18:35:58.226 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.\n\nTime: 12,874\n\nOK (2 tests)\n\n"
+}

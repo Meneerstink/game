@@ -13,3 +13,17 @@ worktree. integration-20261116-170010.json preserves the separate accepted conti
 and guardian stat fixes.
 These files do not accept client rendering/audio, live behaviour or the entire
 CLUE card. See ../REVIEW-B-16NOV.md and ../CLAUDE-HANDOFF.md.
+
+17-Nov resumed checkpoints:
+
+* pet-dig-actual-source.json:6production-source tests; all5hashes matched on
+  resume. mimic-arena-actual-source.json:2core tests; all6hashes matched.
+* clue-admin-actual-source.json:4historical tests. Its ClueScrollManager hash
+  predates the MAIN_SCREEN fix; it is not new evidence for that modification.
+* pet-dig-preflight.json and mimic-arena-preflight.json: preserved read-only
+  preflights before Claude applied the batches. Do not rerun CREATE plans.
+* mimic-arena-installed.json:17-Nov20:34 read-only post-apply check, both250-
+  placement rooms and6named scenery definitions; no runtime publication.
+
+Client fixes are validated separately in the current focused integration; a
+historical standalone result does not validate subsequently edited sources.

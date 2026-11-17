@@ -41,16 +41,30 @@ After the tested source changes are committed:
 2. Fresh `OsrsRegionImportTool clue-mimic-arena` preflight; verify source2686,
    target4160, CREATE-only map groups and unchanged10819. Claude alone adds
    `--apply`. The tool publishes source loc/model mappings and target zero XTEA.
-3. Read the **applied** Keyhole34727 identity from that transaction, then set
-   cfg/clue/mimic-encounter.json arenaRegionId=4160, keyholeLocalId=<verified id>
-   and arenaImported=true only after dual-cache verification/client collision.
+3. Run `python tools/clue/build_mimic_arena_mapping.py --write` (Claude only).
+   It verifies all250 mapped placements and the six named definitions/options
+   in BOTH caches, then publishes cfg/clue/mimic-arena.tsv from the finalized
+   ledger record. Runtime derives the region and Keyhole34727 identity from it;
+   legacy arenaRegionId/keyholeLocalId JSON placeholders stay null. Set
+   arenaImported=true only after dual-cache verification/client collision.
 4. Retain ENCOUNTER_IMPLEMENTED=false and all unknown attack parameters. Arena
    application cannot enable the encounter by itself. Owner15-Nov1A and
    Claude17-Nov18:2x explicitly leave it disabled; two montage videos did not
    prove the remaining attack choices or landing distribution.
 
-PREFLIGHT172241 succeeds:91logical mutations,182CREATE across both caches;
-loc proposals66961..67003 (Keyhole34727->66998),new map groups6946/6947,
+MimicArenaScenery installs the six exact examines at world init after validating
+every name/option first. Pins: Keyhole (The Mimic)rev15334464, Coins (The Mimic)
+14914004, Sweets15334486 (two objects), Sweet15344088 and Amulet of Glory
+(scenery)15330215. A wrong actor publishes no partial set. Two focused tests
+cover malformed/duplicate/unapplied mappings and atomic examine installation.
+
+Claude's round2 applied the arena in tx175928 (dossier18:5x): region4160,
+Keyhole66998, both caches equal. Do NOT rerun the CREATE-only room batch or
+the unused-square assertion after this application. The remaining step is the
+read-only verifier above, then Claude's --write/runtime/client collision checks.
+
+Production-source PREFLIGHT173926 succeeds:91logical mutations,182CREATE across both caches;
+loc proposals66961..67003 (Keyhole34727->66998),model proposals67448..67493,new map groups6946/6947,
 43source locs/46models/250placements. Full source list and allocation output:
 MIMIC-ARENA-PREFLIGHT.txt. Replan after predecessors; proposals are not reserved.
 Both target caches and ledger were unchanged. Model37128/37129/37130/37132/
@@ -62,3 +76,9 @@ against OSRS; source plane1, clipping of the whole5x5boss and doorway, two priva
 instances with no shared NPCs, Exit keyhole path, ambience2124, death/logout/return.
 Do not enable an incomplete fight to test the room; use the existing admin
 teleport/inspection facilities. Q1 still gates fight acceptance separately.
+
+B read-only verification17-Nov20:34 passed after Claude's application: both
+installed250-placement rooms and all6named scenery definitions match, including
+identical terrain/loc payloads and per-definition hashes. Durable proof:
+validation/mimic-arena-installed.json. No runtime TSV was published by B;
+--write and loaded-client collision/render/audio remain Claude's steps.

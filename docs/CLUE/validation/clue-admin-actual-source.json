@@ -1,0 +1,9 @@
+{
+  "inputs": {
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueAdminSteps.kt": "803bb6902e9a05de99aa8f19b2b2eb42b6e72f92f1253bd8e2a7b0e5334300e6",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueScrollManager.kt": "7ce06b1321f0e5e832b3d579d8bc4a06f603d3a644e6f3416beb0e8712f5de08",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueAdminStepsTests.kt": "5b43768462df483599d19726837cf3b84d759ab938748c761e953af5d56ea8b6"
+  },
+  "unchanged": true,
+  "tests": "JUnit version 4.13.2\n....\nTime: 83,656\n\nOK (4 tests)\n\n"
+}
