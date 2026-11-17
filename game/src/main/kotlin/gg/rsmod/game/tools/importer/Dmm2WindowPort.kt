@@ -30,19 +30,20 @@ object Dmm2WindowPort {
     const val INFO_FRAME_CLOSE = 210
     /** Server translation of 7155/7142 layout, allocated by the existing importer; never a guessed local script id. */
     const val LAYOUT_SOURCE = 7155
+    const val CONTROL_SOURCE = 7153
     data class Rect(val x: Int, val y: Int, val w: Int, val h: Int)
     fun cardLayout(expanded: Boolean, index: Int): List<Rect> {
         require(index in 0..6)
         // Cache7144: grid width / nominal card width,3px gaps; expanded cards omit the name and are50px high.
         val grid = if (expanded) 437 else 231
-        val columns = grid / if (expanded) 54 else 110
+        val columns = grid / (if (expanded) 54 else 110)
         val width = (grid - (columns + 1)*3) / columns
         val height = if (expanded) 50 else 74
         val x = index%columns*(width+3)+3; val y = index/columns*(height+3)+3
         return listOf(Rect(x+1,y+1,width-2,height-2),Rect(x+4,y+4,width-8,height-8),
             Rect(x+4,y,width-8,4),Rect(x+4,y+height-4,width-8,4),Rect(x,y+4,4,height-8),Rect(x+width-4,y+4,4,height-8),
             Rect(x,y,4,4),Rect(x+width-4,y,4,4),Rect(x,y+height-4,4,4),Rect(x+width-4,y+height-4,4,4),
-            Rect(x+width/2-18+2,y+7+if (expanded) 2 else 0,36,32),Rect(x+7,y+34,width-14,40))
+            Rect(x+width/2-18+2,y+7+(if (expanded) 2 else 0),36,32),Rect(x+7,y+34,width-14,40))
     }
 
     /** 667 IF_SETPOSITION/IF_SETSIZE bridge; same footer/primitive format as DeathsOffice.scrollScript.
@@ -57,6 +58,19 @@ object Dmm2WindowPort {
         listOf(3,4,5,6,0).forEach(::local); out.writeShort(2001); out.writeByte(0)
         out.writeShort(21); out.writeByte(0)
         out.writeInt(13); listOf(9,0,0,9,0,0).forEach(out::writeShort)
+        out.writeByte(0); out.writeShort(1)
+        return bytes.toByteArray()
+    }
+
+    /** Args: operation-layer,graphic-child,local-sprite + source7153 caption (Compact/Expand). */
+    fun controlScript(): ByteArray {
+        val bytes = java.io.ByteArrayOutputStream(); val out = java.io.DataOutputStream(bytes)
+        out.writeByte(0)
+        fun op(code: Int, value: Int) { out.writeShort(code); out.writeInt(value) }
+        op(0,1); op(35,0); op(33,0); out.writeShort(2300); out.writeByte(0)
+        op(33,2); op(33,1); out.writeShort(2105); out.writeByte(0)
+        out.writeShort(21); out.writeByte(0)
+        out.writeInt(8); listOf(3,1,0,3,1,0).forEach(out::writeShort)
         out.writeByte(0); out.writeShort(1)
         return bytes.toByteArray()
     }

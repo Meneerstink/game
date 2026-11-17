@@ -54,7 +54,7 @@ class Dmm2WindowTests {
             queues.queue(f.player, Dispatchers.Unconfined, firstArg(), thirdArg())
         }
         Dmm2Ids.install(listOf("interface\t230\t2000", "interface\t232\t2001", "interface\t819\t2002", "interface\t806\t2003",
-            "npc\t6516\t1600", "npc\t6485\t1601", "npc\t8391\t1602", "script\t7155\t2100", "sprite\t4735\t3100", "sprite\t4737\t3101"))
+            "npc\t6516\t1600", "npc\t6485\t1601", "npc\t8391\t1602", "script\t7155\t2100", "script\t7153\t2101", "sprite\t4735\t3100", "sprite\t4737\t3101"))
         listOf(wizard,seer,nigel).forEachIndexed { i,n ->
             every { n.id } returns 1600+i; every { n.tile } returns Tile(3200,3201); every { n.isSpawned() } returns true
         }
@@ -225,6 +225,7 @@ class Dmm2WindowTests {
             .last { it.hash == ((2002 shl 16) or component) }.hidden
         assertTrue(hidden(9)); assertTrue(hidden(gg.rsmod.game.tools.importer.Dmm2WindowPort.REWARD_FIRST+11))
         assertFalse(hidden(14))
+        assertEquals("Expand",sent.filterIsInstance<gg.rsmod.game.message.impl.RunClientScriptMessage>().last { it.id == 2101 }.args.last())
         Dmm2RewardUi.product(f.player,3,1)
         assertFalse(hidden(9)); assertEquals(30_000,points())
         Dmm2RewardUi.help(f.player)

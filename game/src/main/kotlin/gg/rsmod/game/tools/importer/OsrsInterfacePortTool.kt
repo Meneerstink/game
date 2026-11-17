@@ -725,9 +725,13 @@ object OsrsInterfacePortTool {
             ?.filter { it.isNotBlank() && !it.startsWith("#") }?.map { it.split('\t') }.orEmpty() else emptyList()
         val oldInterfaces = previous.filter { it[0] == "interface" }.associate { it[1].toInt() to it[2].toInt() }
         val oldSprites = previous.filter { it[0] == "sprite" }.associate { it[1].toInt() to it[2].toInt() }
-        val layoutBridge = if (args.first() == "dmm2-ui") previous.firstOrNull {
-            it[0] == "script" && it[1] == Dmm2WindowPort.LAYOUT_SOURCE.toString()
-        }?.get(2)?.toInt() ?: firstScript else null
+        val bridgeBytes = if (args.first() == "dmm2-ui") linkedMapOf(
+            Dmm2WindowPort.LAYOUT_SOURCE to Dmm2WindowPort.layoutScript(),
+            Dmm2WindowPort.CONTROL_SOURCE to Dmm2WindowPort.controlScript()) else emptyMap()
+        var newScripts = 0
+        val bridgeIds = bridgeBytes.keys.associateWith { source ->
+            previous.firstOrNull { it[0] == "script" && it[1] == source.toString() }?.get(2)?.toInt() ?: (firstScript + newScripts++)
+        }
         val spriteMap = LinkedHashMap<Int, Int>()
         var newSprites = 0
         ported.flatMap { it.sprites }.distinct().forEach { s -> spriteMap[s] = oldSprites[s] ?: (firstSprite + newSprites++) }
@@ -744,10 +748,10 @@ object OsrsInterfacePortTool {
         // --reuse replaces a component this tool wrote before: the current bytes are the expected ones (a guarded overwrite, not a conflict).
         val current = CacheLibrary(TARGETS[0])
         try {
-            if (layoutBridge != null) {
-                val bytes = Dmm2WindowPort.layoutScript()
-                val old = if (previous.isNotEmpty()) current.data(12,layoutBridge,0) else null
-                mutations += CacheMutation(12,layoutBridge,0,bytes,"DMM2 server layout bridge for source7155/7142",
+            bridgeIds.forEach { (source,local) ->
+                val bytes = bridgeBytes.getValue(source)
+                val old = if (previous.isNotEmpty()) current.data(12,local,0) else null
+                mutations += CacheMutation(12,local,0,bytes,"DMM2 server UI bridge for source$source",
                     expectedCurrentSha1=old?.takeIf { !it.contentEquals(bytes) }?.let { CacheItemProbeTool.sha1(it) })
             }
             ported.forEach { p ->
@@ -772,7 +776,7 @@ object OsrsInterfacePortTool {
             p.reports.forEach { println("  REPORT $it") }
         }
         spriteMap.forEach { (o, l) -> lines += "sprite\t$o\t$l\t\t" }
-        if (layoutBridge != null) println("PLAN script ${Dmm2WindowPort.LAYOUT_SOURCE} (server layout bridge) -> clientscript $layoutBridge")
+        bridgeIds.forEach { (source,local) -> println("PLAN script $source (server UI bridge) -> clientscript $local") }
         val tx = CacheTransaction(targets = TARGETS, mutations = mutations)
         val plan = tx.preflight()
         val errors = tx.blockingErrors(plan)
@@ -795,7 +799,7 @@ object OsrsInterfacePortTool {
         }
         ported.forEach { p -> merged["interface" to p.osrsGroup.toString()] = "interface\t${p.osrsGroup}\t${interfaceOf.getValue(p.osrsGroup)}" }
         spriteMap.forEach { (o, l) -> merged["sprite" to o.toString()] = "sprite\t$o\t$l" }
-        if (layoutBridge != null) merged["script" to Dmm2WindowPort.LAYOUT_SOURCE.toString()] = "script\t${Dmm2WindowPort.LAYOUT_SOURCE}\t$layoutBridge"
+        bridgeIds.forEach { (source,local) -> merged["script" to source.toString()] = "script\t$source\t$local" }
         val lines2 = merged.values.filter { it.startsWith("interface") } + merged.values.filter { it.startsWith("sprite") } + merged.values.filter { it.startsWith("script") }
         table.writeText(lines2.joinToString("\n", prefix = "# N462 OsrsInterfacePortTool, last transaction ${tx.id} (merged) - generated, do not edit\n",
             postfix = "\n"))

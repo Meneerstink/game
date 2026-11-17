@@ -95,13 +95,17 @@ object Dmm2RewardUi : Dmm2Interactions.RewardUi {
             player.setComponentHidden(view.main,W.REWARD_FIRST+index*W.REWARD_STRIDE+11,expanded)
         }
         player.setComponentHidden(view.main,14,!expanded)
-        Dmm2Ids.sprite(if (expanded) 4737 else 4735)?.let { player.setComponentSprite(view.main,W.VIEW_ICON,it) }
+        val control = Dmm2Ids.script(W.CONTROL_SOURCE)
+        Dmm2Ids.sprite(if (expanded) 4737 else 4735)?.let { sprite ->
+            if (control != null) player.runClientScript(control,(view.main shl 16) or 11,(view.main shl 16) or W.VIEW_ICON,
+                sprite,if (expanded) "Expand" else "Compact")
+        }
         scroll(player,view.main,38,39,if (expanded) 53 else 311)
     }
 
     fun toggleView(player: Player) {
         val view = player.attr[VIEW] ?: return
-        if (!visible(player) || Dmm2Ids.script(W.LAYOUT_SOURCE) == null || Dmm2Ids.sprite(4735) == null || Dmm2Ids.sprite(4737) == null) return
+        if (!visible(player) || Dmm2Ids.script(W.LAYOUT_SOURCE) == null || Dmm2Ids.script(W.CONTROL_SOURCE) == null || Dmm2Ids.sprite(4735) == null || Dmm2Ids.sprite(4737) == null) return
         view.expanded = !view.expanded
         view.selected = null; view.selling = null; view.details = false
         applyLayout(player)

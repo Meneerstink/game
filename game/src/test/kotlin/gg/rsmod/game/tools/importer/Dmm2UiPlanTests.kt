@@ -96,4 +96,16 @@ class Dmm2UiPlanTests {
         assertEquals(listOf(9,0,0,9,0,0),List(6) { input.readUnsignedShort() })
         assertEquals(0,input.readUnsignedByte()); assertEquals(1,input.readUnsignedShort()); assertEquals(-1,input.read())
     }
+
+    @Test fun `control bridge updates the source View caption and graphic without a fixed local id`() {
+        val input = java.io.DataInputStream(java.io.ByteArrayInputStream(Dmm2WindowPort.controlScript()))
+        assertEquals(0,input.readUnsignedByte())
+        listOf(0 to 1,35 to 0,33 to 0).forEach { (op,value) -> assertEquals(op,input.readUnsignedShort()); assertEquals(value,input.readInt()) }
+        assertEquals(2300,input.readUnsignedShort()); assertEquals(0,input.readUnsignedByte())
+        listOf(2,1).forEach { assertEquals(33,input.readUnsignedShort()); assertEquals(it,input.readInt()) }
+        assertEquals(2105,input.readUnsignedShort()); assertEquals(0,input.readUnsignedByte())
+        assertEquals(21,input.readUnsignedShort()); assertEquals(0,input.readUnsignedByte())
+        assertEquals(8,input.readInt()); assertEquals(listOf(3,1,0,3,1,0),List(6) { input.readUnsignedShort() })
+        assertEquals(0,input.readUnsignedByte()); assertEquals(1,input.readUnsignedShort()); assertEquals(-1,input.read())
+    }
 }
