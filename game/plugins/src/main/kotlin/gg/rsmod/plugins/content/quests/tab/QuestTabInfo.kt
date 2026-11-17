@@ -205,14 +205,17 @@ object QuestTabInfo {
         }
         return Page(
             "Monsters break through on $days",
-            listOf(
+            listOfNotNull(
                 Fact("Opens at (UTC)", "$hours:00"),
                 Fact("Monsters appear", "for about 15 minutes"),
                 Fact("Left alive", "gone about 30 minutes later"),
-                Fact("${BreachLoot.EMBLEM_DAMAGE}+ damage", col(GOLD, "Archaic emblem (tier 5)") + ", once"),
+                if (!gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled) Fact("${BreachLoot.EMBLEM_DAMAGE}+ damage", col(GOLD, "Archaic emblem (tier 5)") + ", once") else null,
                 Fact("PvP protection", col(RED, "cannot attack them")),
             ),
-            text = "Monsters you help kill drop loot and give Breach Points for your damage - spend them with the Breach Trader, " +
+            text = if (gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled)
+                "Monsters you help kill drop loot. Nigel at the Grand Exchange offers Deadman rewards for Deadman Points. " +
+                    "Blood money is earned from valid player kills. Perdu at the Grand Exchange tells you where the breach is."
+            else "Monsters you help kill drop loot and give Breach Points for your damage - spend them with the Breach Trader, " +
                 "$STORES. Perdu at the Grand Exchange tells you where the breach is.",
             bar = bar,
             map = map,

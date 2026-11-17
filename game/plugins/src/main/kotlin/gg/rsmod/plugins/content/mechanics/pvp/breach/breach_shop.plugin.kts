@@ -60,6 +60,7 @@ val STOCK: List<Pair<Int, Int>> =
         23862 to 500_000,
     )
 
+if (!gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled) {
 create_shop(
     BREACH_SHOP,
     currency = PointCurrency("breach point", "breach points", BreachPoints.BALANCE),
@@ -91,3 +92,5 @@ on_npc_option(npc = BREACH_TRADER, option = "rewards") {
 
 // Owner 2026-09-30: no "Skull" option on this npc (cache option slot 5 cleared with NpcOptionsTool; PK skulls still come from
 // attacking and the other skull sources - PvpSkull is unchanged).
+
+} // DMM2 release: no Breach shop or NPC handlers registered.

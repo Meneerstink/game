@@ -614,6 +614,8 @@ object DeadmanChestWorld {
         world: World,
         npc: Npc,
     ): GroundItem? {
+        // DMM2 retires the only use of this legacy currency source; held copies are not purged or silently exchanged.
+        if (gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled) return null
         if (npc.attr[DeadmanChest.GUARDIAN_ATTR] != true) return null
         val top = npc.damageMap.getMostDamage() as? Player ?: return null  // players are Clients (EntityType.CLIENT), so no type filter
         if (BreachIds.ARCHAIC_EMBLEM_TIER_5 <= 0) return null

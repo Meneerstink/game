@@ -1022,7 +1022,7 @@ object DeadmanBreach {
                 logged += drop.item to drop.amount
             }
             // Audit D-14: at most one Archaic emblem per account per breach event, however many monsters it helps kill.
-            if (ledger.damageOf(name) >= BreachLoot.EMBLEM_DAMAGE && BreachIds.ARCHAIC_EMBLEM_TIER_5 > 0 &&
+            if (!gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled && ledger.damageOf(name) >= BreachLoot.EMBLEM_DAMAGE && BreachIds.ARCHAIC_EMBLEM_TIER_5 > 0 &&
                 world.definitions.getNullable(ItemDef::class.java, BreachIds.ARCHAIC_EMBLEM_TIER_5) != null &&
                 claimArchaicEmblem(npc.attr[BREACH_EVENT_ATTR] ?: lastEventId, name)
             ) {
@@ -1042,7 +1042,7 @@ object DeadmanBreach {
             runCatching { gg.rsmod.plugins.content.quests.tab.DeadmanTasks.onBreachLoot(player, ledger.damageOf(name)) }
         }
         var paid = 0
-        ledger.pointEarners().forEach { (name, damage) ->
+        if (!gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled) ledger.pointEarners().forEach { (name, damage) ->
             val player = online[name.lowercase()] ?: return@forEach
             if (BreachPoints.award(player, damage) > 0) paid++
         }
