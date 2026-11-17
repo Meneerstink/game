@@ -6,7 +6,7 @@ import kotlin.random.Random
 import kotlin.test.*
 
 class MimicRewardsTests {
-    private val rewards = MimicRewards.load(File("../../data/cfg/clue/mimic-rewards.json"))
+    private val rewards = MimicRewards.load(File(gg.rsmod.game.RspsPaths.data("cfg/clue/mimic-rewards.json")))
     private fun at(value: Double) = object : Random() {
         override fun nextBits(bitCount: Int) = 0
         override fun nextDouble() = value

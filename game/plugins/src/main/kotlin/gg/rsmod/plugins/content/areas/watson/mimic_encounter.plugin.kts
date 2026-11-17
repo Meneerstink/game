@@ -4,7 +4,10 @@ import gg.rsmod.plugins.content.scrolls.ClueCasketRewards
 import gg.rsmod.plugins.content.scrolls.ClueInterfaces
 
 val mimicTimer = TimerKey()
-on_world_init { world.timers[mimicTimer] = 1 }
+on_world_init {
+    world.timers[mimicTimer] = 1
+    world.plugins.bindCanAttack { attacker,target -> MimicMinions.canAttack(attacker,target) }
+}
 on_timer(mimicTimer) { MimicEncounter.cycle(world); world.timers[mimicTimer] = 1 }
 on_npc_option(Npcs.THE_MIMIC, "challenge") { MimicEncounter.challenge(player, player.getInteractingNpc()) }
 on_npc_pre_death(Npcs.THE_MIMIC_14402) { MimicEncounter.victory(npc) }

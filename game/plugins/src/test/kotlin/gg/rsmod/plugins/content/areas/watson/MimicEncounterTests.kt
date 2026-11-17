@@ -153,4 +153,27 @@ class MimicEncounterTests {
         assertNull(MimicEncounter.session(other.player))
         verify(exactly=0) { other.allocator.allocate(any(),any(),any()) }
     }
+    @Test fun `instance multi registration is private repeat safe and removed on a plane escape`() {
+        val a=account()
+        assertTrue(MimicEncounter.enter(a.player,a.casket,cacheReady){_,_->a.idle})
+        val plugins=a.world.plugins
+        verify(exactly=1) { plugins.addMultiCombatRegion((100 shl 8) or 100) }
+        every { a.player.tile } returns Tile(6410,6410,1)
+        assertTrue(MimicEncounter.inArena(a.player));assertTrue(MimicEncounter.contains(a.player.tile))
+        every { a.player.tile } returns Tile(6410,6410,0)
+        assertFalse(MimicEncounter.inArena(a.player));assertFalse(MimicEncounter.contains(a.player.tile))
+        MimicEncounter.cycle(a.world);MimicEncounter.cycle(a.world)
+        assertNull(MimicEncounter.session(a.player));assertEquals(1,MimicChallenge.failures(a.casket))
+        verify(exactly=1) { plugins.removeMultiCombatRegion((100 shl 8) or 100) }
+        verify(exactly=1) { a.allocator.release(a.world,a.map) }
+    }
+    @Test fun `leaving does not remove a preexisting multi mark`() {
+        val a=account();val region=(100 shl 8) or 100
+        every { a.world.getMultiCombatRegions() } returns setOf(region)
+        assertTrue(MimicEncounter.enter(a.player,a.casket,cacheReady){_,_->a.idle})
+        MimicEncounter.leave(a.player,moveOutside=false)
+        val plugins=a.world.plugins
+        verify(exactly=0) { plugins.addMultiCombatRegion(region) }
+        verify(exactly=0) { plugins.removeMultiCombatRegion(region) }
+    }
 }

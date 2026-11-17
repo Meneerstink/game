@@ -25,6 +25,7 @@ object MimicEncounter {
         var won = false
         var finished = false
         val minions = mutableListOf<Npc>()
+        val addedMultiRegions = mutableSetOf<Int>()
         fun tile(x: Int, z: Int) = arenaTile(map, x, z)
     }
 
@@ -32,7 +33,7 @@ object MimicEncounter {
                       val combatImplemented: Boolean = false) {
         val timingsReady: Boolean get() = candyChance != null && candyChance.isFinite() && candyChance in 0.0..1.0 &&
             impactDelay != null && impactDelay > 0 &&
-            stepChance != null && stepChance.isFinite() && stepChance in 0.0..1.0
+            stepChance != null && stepChance.isFinite() && stepChance in 0.0..1.0 && candyChance+stepChance<=1.0
         val ready: Boolean get() = imported && keyhole != null && combatImplemented && timingsReady
     }
     val assets by lazy {
@@ -45,8 +46,9 @@ object MimicEncounter {
 
     fun session(player: Player) = sessions[player]
     fun session(npc: Npc) = sessions.values.firstOrNull { it.boss === npc || it.minions.any { minion -> minion === npc } }
-    fun inArena(player: Player) = sessions[player]?.map?.area?.contains(player.tile) == true
-    fun contains(tile: Tile) = sessions.values.any { it.map.area.contains(tile) }
+    fun inArena(player: Player) = player.tile.height==1 && sessions[player]?.map?.area?.contains(player.tile) == true
+    fun contains(tile: Tile) = tile.height==1 && sessions.values.any { it.map.area.contains(tile) }
+    fun ready(world: World) = assets.ready && MimicAttacks.available(world)
 
     fun enter(player: Player, casket: Item, assets: Assets = MimicEncounter.assets,
               spawn: (Player, InstancedMap) -> Npc? = ::spawnIdle): Boolean {
@@ -58,7 +60,7 @@ object MimicEncounter {
                           spawn: (Player, InstancedMap) -> Npc?): Boolean {
         if (player.isDead() || sessions.containsKey(player) || !player.inventory.any { it === casket } ||
             MimicChallenge.tier(casket) == null || MimicChallenge.defeated(casket) || MimicChallenge.remaining(casket) == 0 || MimicChallenge.active(casket)) return false
-        if (!assets.ready) {
+        if (!assets.ready || (assets === MimicEncounter.assets && !ready(player.world))) {
             println("PROBLEM CLUE Mimic arena/combat not implemented or verified; attempt retained")
             player.message("This challenge is temporarily unavailable.")
             return false
@@ -88,6 +90,14 @@ object MimicEncounter {
         val session = Session(player, map, casket, token)
         session.boss = boss
         sessions[player] = session
+        val area=map.area
+        for(x in (area.bottomLeftX shr 6)..(area.topRightX shr 6))for(z in (area.bottomLeftZ shr 6)..(area.topRightZ shr 6)) {
+            val region=(x shl 8) or z
+            if(region !in player.world.getMultiCombatRegions()) {
+                player.world.plugins.addMultiCombatRegion(region)
+                session.addedMultiRegions+=region
+            }
+        }
         player.attr[SAVED_INSIDE] = true
         player.inventory.dirty = true
         // Plane 1 is established by the actual keyhole/coins placements in cache 2686.
@@ -132,6 +142,7 @@ object MimicEncounter {
         if (session.boss !== npc || session.won || session.finished) return
         if (!MimicChallenge.settle(session.casket, session.token, won = true)) return
         session.won = true
+        MimicCandies.cancel(session)
         session.player.inventory.dirty = true
         session.minions.forEach { if (it.isSpawned()) it.world.remove(it) }
         session.minions.clear()
@@ -150,26 +161,29 @@ object MimicEncounter {
         if (session.finished) return
         settleDeath(player)
         session.finished = true
+        MimicCandies.cancel(session)
         sessions.remove(player)
         player.attr.remove(SAVED_INSIDE)
         session.boss?.let { if (it.isSpawned()) it.world.remove(it) }
         session.minions.forEach { if (it.isSpawned()) it.world.remove(it) }
         if (moveOutside) player.teleportTo(OUTSIDE)
+        session.addedMultiRegions.forEach { player.world.plugins.removeMultiCombatRegion(it) }
         player.world.instanceAllocator.release(player.world, session.map)
         player.persistNow()
     }
 
-    fun cycle(@Suppress("UNUSED_PARAMETER") world: World) {
+    fun cycle(world: World) {
+        MimicCandies.cycle(world)
         for (session in sessions.values.toList()) {
             val player = session.player
-            if (!player.isOnline || !session.map.area.contains(player.tile)) { leave(player, moveOutside = false); continue }
+            if (player.world !== world) continue
+            if (!player.isOnline || player.tile.height!=1 || !session.map.area.contains(player.tile)) { leave(player, moveOutside = false); continue }
             val boss = session.boss ?: continue
             if (session.won || boss.id != Npcs.THE_MIMIC_14402 || boss.isDead() || player.isDead()) continue
             val under = player.tile.height == boss.tile.height && player.tile.x in boss.tile.x until boss.tile.x + boss.getSize() &&
                 player.tile.z in boss.tile.z until boss.tile.z + boss.getSize()
             if (under) player.hit(MimicChallenge.stompDamage(++session.stompTicks)) else session.stompTicks = 0
-            // TODO-BRON (owner Q1): candy cycle/projectile impact delay and random forward-step chance.
-            // Never substitute donor constants. Claude supplies OSRS tick/video evidence in the handoff.
+            // The custom combat loop owns candy/forward choices; this independent tick owns standing-under damage.
         }
     }
 

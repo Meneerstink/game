@@ -18,5 +18,8 @@
     ],
     "note": "Throws at about39,52,75,85 seconds do not prove a fixed cycle or attack probability. No value invented."
   },
-  "candyAttackChance": null
+  "candyAttackChance": null,
+  "candyLandingOffsets": null,
+  "candyFlight": null,
+  "sourceGateNote": "Owner Q1: exact candy distribution/ballistics and random choices await OSRS measurement, never donor defaults. Code retains the ordinary casket until ready."
 }

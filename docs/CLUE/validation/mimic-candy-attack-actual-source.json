@@ -1,0 +1,21 @@
+{
+  "inputs": {
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\areas\\watson\\MimicCandies.kt": "eefb65d8db1958e706433361e5c10ee74a43cb9f04684af5e48c2ad5609b147b",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\areas\\watson\\MimicEncounter.kt": "4d28f3841af03e069be56f96f8982ab4b28e0d92c5052ad8849ac9dc45a1e98b",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\areas\\watson\\MimicMinions.kt": "5c468b857b1c15de3dcd0e374e68eba27ae641ae881d334499290333aeec73a6",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\areas\\watson\\MimicAttacks.kt": "4de43676b1167f3087c14b075a785fbd2d17aa621894199ed10e1054c312bfd0",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\areas\\watson\\MimicCaskets.kt": "a922def7c8d37bd4ece1ae9fb08975795b886220f7602572a06897c0e4034989",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueGuardianProfiles.kt": "1075e9add192e2d3a1470cce5f56942ed0b03fe1f3111f01948cd5f2a48cf845",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueGuardianCombat.kt": "7494ef845341cbb2074559e42eea7724dc78c46e3f0145fc81a4d0d9a79b6fce",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueCombatAssets.kt": "bb1365bac7b9abec621457688057764f48eccd4d827c22d2dce31844a3882fcb",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\areas\\watson\\MimicCandiesTests.kt": "869de638aa6ce87f946baed47590f1b978eae09863046758a107bb1bf61978c7",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\areas\\watson\\MimicAttackTests.kt": "eaca3b8a9723a43bb470de0e6a301f596a9210ac10ee0cdf30bf2697a9cd6508",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\areas\\watson\\MimicEncounterTests.kt": "fe9267800177092f2ae9c547fabd9ec783e033b0fff686dc9023c020f840e9b8",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\areas\\watson\\MimicChallengeTests.kt": "fb0f17ed465c46a6ae8953753edb10a6691450d8e6187f9b3d826a8e17293b20",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\areas\\watson\\MimicRewardsTests.kt": "5e54cb7d1bf5a227d8dca654f11fe6367cae313a59201b3a5c4f8e73ec385f2e",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\areas\\watson\\TheMimicCombatDefTests.kt": "4d1a0198d15a2d9ce04e3e140de3bf19029a21166bf781fda3cc87b2c0ed62af",
+    "C:\\RSPS\\work\\gpt-b\\data\\cfg\\clue\\mimic-encounter.json": "18b1e32e3f42d07b046ac6cea8966262a04014ab5fc6ac132615d93e272f2bd4"
+  },
+  "unchanged": true,
+  "tests": "JUnit version 4.13.2\n..................PROBLEM CLUE Mimic arena/combat not implemented or verified; attempt retained\nPROBLEM CLUE Mimic arena/combat not implemented or verified; attempt retained\nPROBLEM CLUE Mimic arena/combat not implemented or verified; attempt retained\nPROBLEM CLUE Mimic arena/combat not implemented or verified; attempt retained\nPROBLEM CLUE Mimic arena/combat not implemented or verified; attempt retained\n...PROBLEM CLUE Mimic arena/combat not implemented or verified; attempt retained\n............\nTime: 16,133\n\nOK (33 tests)\n\n"
+}
