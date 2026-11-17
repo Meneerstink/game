@@ -4,12 +4,12 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.ext.*
 
-/** V9 selected OSRS transcript services. No OSRS account reset, bank raids or event teleport is advertised. */
+/** V9 selected OSRS transcript services; option texts = Transcript:Nigel where OSRS has one (Claude 18-11: rewards / XP / blueprints). No OSRS account reset, bank raids or event teleport is advertised. */
 object NigelDialogue {
     suspend fun talk(task: QueueTask, npc: Npc) = with(task) {
         if (!Dmm2Interactions.near(player, npc) || !Dmm2Interactions.isNigel(npc)) return@with
         chatNpc("I'm Nigel. It is my job to tell you about Deadman Mode.", npc = npc.id)
-        when (options("I'd like to access the Reward Store.", "I'd like to adjust experience gains.", "Deadman armour.", "Cosmetic rewards.", "Goodbye.")) {
+        when (options("Can I purchase some Deadman rewards?", "Could you stop me from gaining XP?", "Deadman armour.", "Cosmetic rewards.", "Goodbye.")) {
             1 -> Dmm2Interactions.openRewards(player, npc)
             2 -> NigelExperience.adjust(this, npc.id)
             3 -> {
@@ -21,7 +21,7 @@ object NigelDialogue {
             }
             4 -> {
                 val store = NigelRewardStore.active ?: return@with
-                when (options("Annihilation exit portal blueprints.", "Home Teleport animation.", "Never mind.")) {
+                when (options("Do you have any spare exit portal blueprints?", "Home Teleport animation.", "Never mind.")) {
                     1 -> if (Dmm2Interactions.near(player, npc)) store.reclaimExitBlueprints(player)
                     2 -> {
                         val choice = options("Default.", "Armageddon.", "Annihilation.") - 1
