@@ -76,7 +76,7 @@ object StaffCommandsInterfaceImportTool {
     val ROW_OPS = listOf("Run", "Info")
 
     /** Every command with room to grow (235 on 2026-10-10; guarded by a test). */
-    const val ROWS = 300
+    const val ROWS = 400 // GRAFISCH 16-11: 301 commands (::camat) > 300; DMM2 + clues add more
     val COUNT = ROW_FIRST + ROWS * ROW_STRIDE
 
     // ---- geometry (inside CONTENT) ----
@@ -167,10 +167,19 @@ object StaffCommandsInterfaceImportTool {
     @JvmStatic
     fun main(args: Array<String>) {
         val apply = "--apply" in args
-        val previous = args.firstOrNull { it.startsWith("--replace-from-journal=") }?.substringAfter('=')?.let(LootKeyInterfaceImportTool::journalIntendedSha1s) ?: emptyMap()
+        var previous = args.firstOrNull { it.startsWith("--replace-from-journal=") }?.substringAfter('=')?.let(LootKeyInterfaceImportTool::journalIntendedSha1s) ?: emptyMap()
         val fonts: LootKeyInterfaceImportTool.Fonts
         val library = CacheLibrary(OsrsItemImportTool.TARGETS[0])
         try {
+            // GRAFISCH 16-11 (ROWS 300 -> 400, the 10-10 journal was pruned): pin every existing component to its CURRENT bytes, so
+            // only this tool's own interface is replaced and a changed cache still blocks the preflight.
+            if ("--replace-current" in args) {
+                val archive = library.index(INDEX_INTERFACES).archive(INTERFACE_ID) ?: error("interface $INTERFACE_ID missing")
+                previous = archive.fileIds().associate { file ->
+                    "idx${INDEX_INTERFACES}_grp${INTERFACE_ID}_file$file" to
+                        CacheItemProbeTool.sha1(library.data(INDEX_INTERFACES, INTERFACE_ID, file) ?: error("component $file unreadable"))
+                }
+            }
             fonts = LootKeyInterfaceImportTool.fonts(library)
             require(library.index(12).archive(PohTeleportInterfaceImportTool.COLOUR_SCRIPT) != null) {
                 "clientscript ${PohTeleportInterfaceImportTool.COLOUR_SCRIPT} (row highlight) missing - run PohTeleportInterfaceImportTool first"

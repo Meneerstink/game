@@ -136,6 +136,11 @@
   usage: "::camangle <pitch> <yaw>"
   description: "Dev tool: force your camera angle."
   example: "::camangle 300 0"
+- name: camat
+  rank: admin
+  usage: "::camat [@x,z] <dx> <dz> <height> <ldx> <ldz> <lheight>"
+  description: "Dev tool: fixed camera relative to your tile (or the @x,z anchor), looking at an offset point (graphics photo points)."
+  example: "::camat 0 -10 2600 0 0 0"
 - name: camlookat
   rank: admin
   usage: "::camlookat <x> <z> <height> <step> <speed>"
@@ -974,7 +979,7 @@
   example: "::deadmantasks"
 - name: dvzoom
   rank: admin
-  usage: "::dvzoom <thumb base> <thumb per tile> <head base> <head per tile>"
+  usage: "::dvzoom <thumb base> <thumb per tile> <head base> <head per tile> [cox zoom] [cox xan] [cox yan]"
   description: "Tune the camera distance of the Drop Viewer's npc models (the client fits them to their box)."
   example: "::dvzoom 1500 1100 1500 1100"
 - name: uisearch

@@ -98,13 +98,19 @@ on_command("drops") { DropViewer.open(player) }
 /** `::dvzoom <thumb base> <thumb per tile> <head base> <head per tile>`: tunes the npc model zoom of the Drop Viewer live. */
 on_command("dvzoom", Privilege.ADMIN_POWER) {
     val a = player.attr[gg.rsmod.game.model.attr.COMMAND_ARGS_ATTR]?.mapNotNull { it.toIntOrNull() } ?: emptyList()
-    if (a.size == 4) {
+    if (a.size == 4 || a.size == 7) {
         DropViewer.THUMB_BASE = a[0]
         DropViewer.THUMB_PER = a[1]
         DropViewer.HEAD_BASE = a[2]
         DropViewer.HEAD_PER = a[3]
     }
-    player.message("Drop Viewer zoom: thumb ${DropViewer.THUMB_BASE}+${DropViewer.THUMB_PER}/tile, head ${DropViewer.HEAD_BASE}+${DropViewer.HEAD_PER}/tile")
+    // 16-11: 7 numbers = also the CoX Olm-head picture (zoom, xan, yan).
+    if (a.size == 7) {
+        DropViewer.COX_ZOOM = a[4]
+        DropViewer.COX_XAN = a[5]
+        DropViewer.COX_YAN = a[6]
+    }
+    player.message("Drop Viewer zoom: thumb ${DropViewer.THUMB_BASE}+${DropViewer.THUMB_PER}/tile, head ${DropViewer.HEAD_BASE}+${DropViewer.HEAD_PER}/tile, cox ${DropViewer.COX_ZOOM}/${DropViewer.COX_XAN}/${DropViewer.COX_YAN}")
     if (DropViewer.isOpen(player)) DropViewer.open(player)
 }
 /** N279: `::dvaudit` checks every Drop Viewer entry (groups, order, open tables, fits, overlaps) - logs/dropviewer-audit.txt. */

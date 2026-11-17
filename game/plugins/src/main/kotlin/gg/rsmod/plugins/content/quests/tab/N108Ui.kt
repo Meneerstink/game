@@ -210,6 +210,9 @@ object N108Ui {
                 val op = data[0].toInt() and 0xFF
                 if ((op == 1 || op == 5) && (data[1].toInt() and 0xFF) > 0 && (data[3].toInt() and 0xFF) > 0) {
                     ((data[4].toInt() and 0xFF) shl 8) or (data[5].toInt() and 0xFF)
+                } else if (op == 241 && (data[1].toInt() and 0xFF) > 0 && (data[3].toInt() and 0xFF) > 0) {
+                    // 78legacy wide model ids (> 65535, client LocType 241): like opcode 1 with 4-byte ids (16-11: the CoX Olm head 66680).
+                    ((data[4].toInt() and 0xFF) shl 24) or ((data[5].toInt() and 0xFF) shl 16) or ((data[6].toInt() and 0xFF) shl 8) or (data[7].toInt() and 0xFF)
                 } else {
                     -1
                 }

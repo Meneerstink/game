@@ -300,6 +300,15 @@ object DropViewer {
      */
     @Volatile var CHEST_YAN = 1140
 
+    /**
+     * CoX (16-11): the Great Olm npc (OSRS 7554) is an invisible 8-vertex box (model 27997, alpha 254) - the head players see is the loc
+     * OLM_HEAD 29881 (gameval ObjectID; its first model = the head). So the CoX entry shows that loc's model. `::dvzoom` with 7 numbers
+     * tunes zoom / xan / yan live (values ONZEKER until checked in a client next to the wiki picture).
+     */
+    @Volatile var COX_ZOOM = 4200
+    @Volatile var COX_XAN = 160
+    @Volatile var COX_YAN = 0
+
     /** Model camera distance (client zoom2d: bigger = further away): base + per extra tile of npc size. `::dvzoom` tunes it live. */
     @Volatile var THUMB_BASE = 1500
     @Volatile var THUMB_PER = 1100
@@ -347,7 +356,14 @@ object DropViewer {
         // Model: the npc; the Deadman's Chest its own loc model (N277, owner 2026-10-24 - it showed Zemouregal before).
         val chestModel = if (source.kind == DropSources.Kind.CHEST) chestModel(player) else -1
         val modelNpc = if (source.kind == DropSources.Kind.CHEST && chestModel < 0) DeadmanChestIds.guardianNpc else source.modelNpc
-        if (chestModel >= 0) {
+        val coxModel = if (source.kind == DropSources.Kind.COX) {
+            gg.rsmod.plugins.content.activity.cox.CoxIds.loc(29881)?.let { N108Ui.locModel(world, it) } ?: -1
+        } else -1
+        if (coxModel >= 0) {
+            N108Ui.plainModel(player, N108Ui.hash(i, V.MODEL), coxModel, COX_ZOOM, COX_XAN, false, COX_YAN)
+            N108Ui.anim(player, i, V.MODEL, -1)
+            N108Ui.hidden(player, i, V.MODEL, false)
+        } else if (chestModel >= 0) {
             // N283 (owner 2026-10-24): the model stands still.
             N108Ui.plainModel(player, N108Ui.hash(i, V.MODEL), chestModel, CHEST_ZOOM, CHEST_XAN, false, CHEST_YAN)
             N108Ui.anim(player, i, V.MODEL, -1)
