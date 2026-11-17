@@ -36,6 +36,7 @@ object OsrsFxImportTool {
         mapOf(
             // DMM2: cache 2686 source IDs, same order as the phase-3 bundle plan.
             "dmm2-spots" to listOf(3030, 3031, 3032, 3033, 3565, 3566, 3567, 3568, 3569, 3570, 3571, 4020),
+            "dmm2-fire-av" to listOf(116), // ENCHANT_AMULET_LVL3, wiki creating-fire visual (rev15329402).
             // N415: gameval GUTHIX_CLAW_GREEN, MA2_GUTHIX_PROJ(_SMALL), MA2_ZAMORAK_PROJ,
             // WILD_ZEALOT_SWORD_PROJ and WILD_ZEALOT_LIGHTNING. Includes specials omitted by Breach.
             "mage-arena" to listOf(1511, 1512, 1513, 1514, 1515, 1518),
@@ -253,6 +254,7 @@ object OsrsFxImportTool {
         mapOf(
             // DMM2: cache 2686 source IDs, same order as the phase-3 bundle plan.
             "dmm2-seqs" to listOf(11444, 11810, 11811, 11812, 11935, 11936, 11937, 13701, 13702, 13703, 13704, 13705, 13706, 13707, 13708, 13709, 13710, 13711, 13712, 13713, 13714, 14497),
+            "dmm2-weapon-av" to listOf(721, 8056, 8057), // HUMAN_ENCHANTAMULETLVL3, SCYTHE_OF_VITUR_ATTACK/READY.
             // Owner 2026-09-21 ("there is no breach"): the loc animations of OSRS "Breach" 49561 and "Boss Spawn"
             // 49563, kept here as the record of a settled question. `OsrsLocImportTool` dropped both animations as
             // "not an imported classic sequence", so the obvious next step was to import the sequences and re-import

@@ -1,0 +1,10 @@
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[11:22:12.894 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS spotanim_model_holes=64591 next spot=3220 seq=16221 frameset=4574 base=3580 synth=10561
+PLAN spotanim 116 -> 3220 model 3103->12089 seq 679->16221
+PREFLIGHT transaction=tx-20261117-102219 mutations=15 outcomes={CREATE=30}
+DRY_RUN records=5

@@ -1,0 +1,3 @@
+# Preserve Claude's published transaction output byte for byte, including its line endings.
+ids.tsv -text whitespace=cr-at-eol
+skins.tsv -text

@@ -1,0 +1,23 @@
+[
+  {
+    "url": "https://raw.githubusercontent.com/runelite/runelite/master/runelite-api/src/main/java/net/runelite/api/gameval/InterfaceID.java",
+    "sha256": "afbcf6059ebb09b5a79bf5aa53c536b687ce4c068101fb133d645bde67ea4f3d",
+    "bytes": 1569915,
+    "retrieved": "2026-11-17T10:21:35.924442+00:00",
+    "facts": "OMNISHOP_MAIN=819, OMNISHOP_SIDE=806, DEADMAN_SAFEBOX=230, DEADMAN_SAFEBOX_SIDE=232; BR_REWARD_SHOP=645 is LMS"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/runelite/runelite/master/cache/src/main/java/net/runelite/cache/definitions/loaders/InterfaceLoader.java",
+    "sha256": "c6d33dc091b453e3f4ac959c1e7b4782f0e2b5fa385d89517ed9169cef5b848c",
+    "bytes": 15079,
+    "retrieved": "2026-11-17T10:21:35.926446+00:00",
+    "facts": "IF3 header/types/listeners: strict full decode in phase5_supplement_sources.py"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/runelite/runelite/master/cache/src/main/java/net/runelite/cache/definitions/loaders/ScriptLoader.java",
+    "sha256": "b48b35ebd2dca21ff1fd9ccb375ebbf746ca00d19db7759cfac37fc01fe7705c",
+    "bytes": 4716,
+    "retrieved": "2026-11-17T10:21:35.926446+00:00",
+    "facts": "Script opcode count + strict 12/16 byte footer validation"
+  }
+]
