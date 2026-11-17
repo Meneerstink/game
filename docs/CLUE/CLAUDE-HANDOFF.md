@@ -1,9 +1,129 @@
 # CLUE — Claude cache/client handoff (in progress)
 
-This card is not ready to merge/release. B resumed the entire card on
-`gpt-b/clue-scrolls-7` from `bfbc07b8e` (dossier 15 November 14:3x).
+B resumed the entire card on `gpt-b/clue-scrolls-7` from363749298 on17November.
+This document distinguishes completed source components from Claude's remaining
+loaded-client/live checks and explicit source-gated exclusions.
 Do not interpret a successful cache preflight as a completed gameplay chain.
 All cache application, testserver/client operation, merge and release belong to Claude.
+
+## Client fixes, 17-Nov20:33 (current)
+
+Current repairs:9c15f3b2c (emote),35d37c1ca (caskets/viewer),aea40c2b5
+(modal/loose boxes); retained evidence:b4da4ccfc.
+Latest base: Claude's363749298 applied Bloodhound sequence17769/menu and Mimic
+room4160/Keyhole66998. Those imports are complete; do not rerun their CREATE
+plans. The arena verifier is read-only unless Claude explicitly supplies --write;
+Q1/ENCOUNTER_IMPLEMENTED=false and the collision gate stay in force.
+
+Claude's19:0x/19:1x client findings are now addressed in source:
+
+* Remove the Wiki editorial prefix from all20emote hints and the generator.
+* Use MAIN_SCREEN (fixed548:9, resizable746:12) for map/fallback-map, sliding
+  puzzle and lightbox windows, matching the already visible text/reward screens.
+* While Mimic is unavailable, ordinary elite/78caskets bypass its opt-in prompt,
+  held-Mimic warning, selection and conversion. The same readiness gate prevents
+  the Drop Viewer from suppressing ordinary odds. Stored opt-in/RECEIVED and
+  attempts are not changed. The existing OSRS reward transaction, jingle193,
+  completion count/log and golden78mega-rare broadcast remain the opening route.
+* Bind Open for every mapped hard puzzle identity in pinned Puzzle_box.wiki,
+  including2795->25022 (castle). All four master pictures were already bound.
+  An inventory-held loose hard/master box or lightbox opens a personal playable
+  view without requiring a clue; a view without a clue contract cannot write a
+  completion token or advance/hand in a clue. Dead/replaced/banked items and
+  another account cannot move that view. Active clue sessions keep their strict
+  scroll/progress/hand-in contract.
+
+Source for item Open/pictures/drop-tricked leftovers: pinned Puzzle_box.wiki and
+Light_box.wiki/cache2686. Independent loose-box presentation follows their item
+Open option; the Wiki does not specify an orphan board's server-side lifetime.
+That detail is an explicit compatibility choice, not a claim of OSRS persistence.
+No new assets or cache application are required for these four repairs.
+
+Fresh focused run: build/clue/integration-20261117-193256,13explicit plugin test
+classes via rgradle plus whole-branch script compilation. Inputs are frozen;
+result pending. Previous175915 has remote BUILD SUCCESSFUL but no completed
+local summary/report retrieval, so it is not accepted as a new green result.
+173604 remains315tests/314green/1HotCold-source-path failure/0skip; its failed
+path class is included again here. The new test checks both disabled-Mimic
+ordinary odds and the explicitly simulated enabled-Mimic conversion odds.
+
+Claude client recheck after this build:
+
+1. Fixed AND resizable: Read26map variants (especially medium1601995543), Close,
+   hard BLUE GRIM/Gunnjorn boxes, master picture variants and lightbox switches.
+2. Read all20emotes: instruction begins immediately, with no editorial prefix.
+3. Elite19039 and78casket25275: open normally on a fresh and opted-in account,
+   full inventory/stacked caskets/double click; rewards1207, count/log/jingle193;
+   no unavailable-Mimic referral. Verify golden broadcast with a rare78award.
+4. Loose25022/25279/25381/25363..25365/25448 and25366: Open/Move/Close visible;
+   no reward or clue progress. Then issue a REAL box via its NPC and complete,
+   close, hand it back; wrong clue/gear, relog, bank, death and second account.
+5. Existing Bloodhound Dig/Call-follower and arena collision/render/audio checks
+   remain as listed in BLOODHOUND-DIG.md/MIMIC-ARENA.md. Q1 leaves combat OFF.
+
+## Earlier checkpoint,17-Nov18:36
+
+Claude applied cache steps0-5 in e71b17b93/3b0814176/ea9eb6e19/00b9d919b/
+cb3fcbcd2. Items were repaired with a944dfc8f, then Claude verified252/252
+models and applied the78gold/onyx presentation (dossier18:0x). Existing generated
+item/NPC/STASH/UI mappings are the applied identities, not the older proposals
+below. Actual freshly compiled source predicates plus72decoded definitions
+admit102/107records (100grouped choices); only the five explicit Q8 records
+remain excluded. This is an offline asset check, not boot/client acceptance.
+
+New component commits:
+
+* 34ddd7ba8: Bloodhound Dig and Call follower. Exact additional sequence/menu
+  batches, source2762fixture, proposed ids and apply order: **BLOODHOUND-DIG.md**.
+  Existing pet NPCs14631/14844 only; no new pet/model/item identities.
+* 071817b6d: Mimic arena source10819 is occupied native667 content. The old
+  in-place proposal is superseded by verified-empty4160 with offset(-26,-3).
+  **MIMIC-ARENA.md** and MIMIC-ARENA-PREFLIGHT.txt give the complete batch,
+  loc/model ids, keyhole34727, ambient2124 and loaded-client checks. Never
+  overwrite10819. arenaRegionId remains null until actual verified application.
+* 44b896da5: ADMIN `::cluestep <tier> [list|id|unique text]`, documented in
+  commands.yml. Carry one ordinary clue, without pending challenge/puzzle/fight.
+  `::cluestep hard BLUE GRIM`, `::cluestep 78 list`. Only the installed pool can
+  be selected; no item/reward/teleport is granted. Normal trail length and every
+  step requirement remain. This enables the client round without random rerolls.
+
+All three components have focused staged evidence (6pet,35Mimic,2arena,4admin
+tests); production-source reruns and the combined17core/54plugin Gradle/script
+run are being recorded separately. integration165044 was rejected: remote
+rbuild already adds --console=plain and Gradle rejected the runner's duplicate
+option before compilation. The corrected integration173604 uses only --priority
+low, with frozen5589inputs and explicit class filters; check its final summary.
+No old XML or interrupted run constitutes acceptance of these new components.
+
+The requested242tool decoder already exists in this branch as
+ModelArchive.LOC_WIDE_TRANSFORMS. Freshly compiling Rev667WorldCodec with the
+arena preflight traversed66953loc definitions with **0failures**, including
+applied STASH wide definitions. Do not add a duplicate242branch from an older
+installed jar's error. The existing multiloc farming/door/traversal/boot checks
+remain required when Claude merges the shared decoder changes.
+
+Owner15-Nov1A and Claude17-Nov18:2x keep Mimic **disabled**: neither montage
+proved candy/forward chances or landing distribution. Q8 also remains explicit:
+no fabricated elite choice chance or guardian projectile/visual row. POH Study
+and blueprint sales remain excluded by Q5. Client/live gates remain Claude's.
+
+integration173604 completed: whole branch/all scripts compile,315tests,
+314green/1failure/0skip and5589unchanged inputs. Only the HotCold test's
+root-relative Wiki path failed; 8fa5dcc08 fixes it. ed1a7406e adds six exact
+scenery examines and generated applied-room mappings. Narrow rerun175915
+covers the failed class and four classes affected by the new metadata.
+
+Claude round2 (dossier18:5x) APPLIED pet sequence/menu (tx175755/175836,
+pet-dig.tsv published) and relocated arena4160 (tx175928,Keyhole66998).
+Do NOT repeat their CREATE-only imports. Run
+`python tools/clue/build_mimic_arena_mapping.py --write` after reading
+MIMIC-ARENA.md: this is the new Claude-only metadata publication step. Runtime
+then derives source region/keyhole from its verified TSV; keep the legacy JSON
+identity placeholders null. arenaImported/client collision and Q1 remain gates.
+PET-DIG menu means NPC14631/14844 option4 Dig, NOT bucket9568 Search (step3).
+
+The paragraphs below preserve historical allocations and are superseded where
+the current applied state or component notes above differ.
 
 Current continuation/results: `COMBAT-SOURCE-AUDIT.md`, `DIG-GUARDIANS-RUNTIME.md`, `NPC-RESOLUTION-AUDIT.md`; earlier results: `LIGHTBOX-SOURCE-AUDIT.md` / `GUARDIAN-SOURCE-AUDIT.md`.
 Cache roster ready as of9e7b09eda:248items/10NPCs/23STASHunits/26maps.

@@ -87,30 +87,28 @@ the former rarity heuristic and provide all items in source order.
 * No client layout, runtime sound, arena collision or death recovery claim is
   accepted from source tests alone. Those checks remain Claude's assigned gate.
 
-## Current acquisition implementation (15 November, A)
+## Current acquisition implementation (17 November)
 
-Source commit `0ef8878ea` contains 564 combat clue routes for 526 current cache
-NPC definitions and 46 source base rates for supported skilling activities.
-Kill, thieving and reward sources are distinguished by the Wiki HTML's actual
-method icon. Runtime NPC matches require both name and combat level; a named
-Deadman breach boss is not presumed to be its ordinary OSRS counterpart.
-Eleven conflicting Jelly variants and 235 unmatched source rows are fully listed
-in `NPC-SOURCE-CONFLICTS.json` and `NPC-SOURCE-GAPS.json`. Missing NPCs, different
-variants and differing levels are review gates, not invented drop rates.
+NPC-RESOLUTION-AUDIT.md records625combat tier routes for587current native NPC
+identities (easy240/medium130/hard191/elite64), with46source skill base rates.
+Farmer/Vyrewatch infobox levels and11byte-pinned native Jelly variants resolve
+all earlier conflicts; NPC-SOURCE-CONFLICTS.json is empty. NPC-SOURCE-GAPS.json
+retains absent or incompatible variants, including differently levelled Deadman
+breach bosses. Kill/thieving/reward icons remain separate source methods.
+The same per-player provider feeds rolls and Drop Viewer without format changes.
 
-The runtime replaces a verified tier's legacy clue slots with nothing at their
-original weights, then rolls its sourced clue independently of bracket boosts.
-The viewer reads the same source rows without sharing account capacity/ring
-state in its cache. Ten impling clue rolls cover both jars and barehanded loot.
-Woodcutting/mining/fishing use independent tier rolls and visible skill levels;
-RS2-only activities have no guessed OSRS equivalent. The server has no Combat
-Achievements provider, so no reward from that system is assumed unlocked.
-The source/acquisition implementation has subsequent component commits and
-focused integration evidence in validation/. This historical acquisition checkpoint
-is not a claim that the entire card or its cache/client/live chain is accepted.
+## Current client repair pass (17 November)
 
-Every completed step is appended to `C:\RSPS\team\dossiers\CLUE.txt`. Do not mark
-CLUE complete while this plan or the handoff still contains unimplemented work.
+Claude reported20emote editorial prefixes, unavailable-Mimic referral blocking
+78caskets, an unbound loose2795castle puzzle, and four invisible resizable
+window routes. Commits9c15f3b2c/35d37c1ca/aea40c2b5 address those paths. All
+four modal routes use548:9/746:12; loose boxes open a personal playable view
+without a clue-completion token. While Mimic is unavailable, the ordinary table
+and odds remain active without consuming opt-in/RECEIVED/attempt state.
+Fresh13-class/scripts integration20261117-193256 is pending. See the current
+CLAUDE-HANDOFF.md section for exact fixed/resizable and transaction rechecks.
+No cache writes are required for these repairs. Owner Q1/Q5 and source Q8 remain
+explicit exclusions; no primary values are fabricated to remove their gates.
 
 ## Historical scope decisions (current ownership: B, dossier 15-Nov 04:2x)
 

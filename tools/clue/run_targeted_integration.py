@@ -145,6 +145,15 @@ if '--metadata-fix' in sys.argv:
         'gg.rsmod.plugins.content.areas.watson.'+name for name in
         ['ClueMimicSceneryTests','MimicEncounterTests','MimicChallengeTests','MimicAttackTests']]
 
+if '--client-fixes' in sys.argv:
+    CORE = []
+    PLUGINS = ['gg.rsmod.plugins.content.scrolls.' + name for name in
+               ['ClueCasketTransactionTests', 'ClueInterfacesTests', 'ClueScrollLifecycleTests',
+                'TreasureTrailStepCatalogueTests', 'TreasureTrailMapsTests', 'TreasureTrailPuzzleBoxTests',
+                'TreasureTrailLightBoxTests', 'TreasureTrailMasterPuzzleTests', 'TreasureTrailContractTests',
+                'TreasureTrailHotColdTests']] + ['gg.rsmod.plugins.content.areas.watson.' + name for name in
+               ['MimicChallengeTests', 'MimicEncounterTests', 'ClueMimicSceneryTests']]
+
 
 def inputs():
     tracked = subprocess.check_output(['git', 'ls-files'], cwd=ROOT, text=True).splitlines()

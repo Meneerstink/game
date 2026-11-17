@@ -4,21 +4,44 @@ This is the current implementation/evidence index. Older dated handoff sections
 are historical checkpoints. No cache/client/live acceptance is asserted here.
 Only Claude applies caches, operates the testclient, merges and releases.
 
+Cache steps0-5 were applied by Claude17November; generated runtime mappings now
+carry their verified identities. The item model repair and78gold/onyx recolour
+are recorded in the dossier18:0x (252/252models checked by Claude). Extra pet-dig
+and relocated Mimic arena batches are prepared in BLOODHOUND-DIG.md and
+MIMIC-ARENA.md; neither was applied by B. Baseline integration165044 failed
+before compilation on a duplicate console argument. Corrected integration173604
+selected17core/54plugin classes/scripts with5589frozen inputs:315tests,
+314green/1HotCold-test-path failure/0skip. The whole branch and scripts compile.
+The path is fixed; narrow rerun175915 covers it and the new scenery metadata.
+Claude subsequently applied pet-dig and arena4160 in round2 (dossier18:5x);
+their new mapping/client checks are explicit, not a request to repeat imports.
+
+## Client findings addressed in this continuation
+
+Claude's17-Nov19:0x/19:1x reports found four concrete defects. Source now strips
+all20emote editorial prefixes, mounts four modal routes on MAIN_SCREEN
+(548:9/746:12), lets ordinary elite/78caskets open while Mimic is disabled, and
+binds/opens loose hard/master puzzle boxes plus lightboxes without clue credit.
+Drop Viewer odds use the same encounter-readiness gate as actual openings.
+The current focused13-class run is integration20261117-193256 via rgradle;
+no green result is claimed yet. Full fixed/resizable/real-NPC/client break checks
+are in CLAUDE-HANDOFF.md. These source repairs require no cache changes.
+
 ## Completed components and evidence
 
 | Component | Runtime/evidence | Remaining gate |
 |---|---|---|
-| Five tiers, master labelled78, no beginner | ClueScrollTier; lifecycle/contract tests | Applied source19835/19836 names/Gold-onyx and visual check |
-| OSRS casket tables, grouped outcomes, roll counts | ClueRewardCatalogue/ClueCasketRewards; catalogue/transaction tests | All item/UI imports and loaded-client full-inventory/duplicate-click checks |
+| Five tiers, master labelled78, no beginner | ClueScrollTier; lifecycle/contract tests; Claude applied names/Gold-onyx | Loaded-client visual check |
+| OSRS casket tables, grouped outcomes, roll counts | ClueRewardCatalogue/ClueCasketRewards; catalogue/transaction tests; item/UI imports applied | Loaded-client full-inventory/duplicate-click checks |
 | Shop-only kit rerolls; 3rdAge/gilded included | Source versus conditional runtime probabilities retained in catalogue | Verify real viewer rows and store offers |
-| Collection Log including cases and completion counts | ClueLogCatalogue; complete pinned cache enums and log tests | Applied items, every page/scrollbar/counter in client |
+| Collection Log including cases and completion counts | ClueLogCatalogue; complete pinned cache enums and log tests; items applied | Every page/scrollbar/counter in client |
 | Drop Viewer, personal clue/guardian state | ClueDropIndex/ClueGuardianDropCatalogue; index/source tests | Preserve approved row layout; two-account checks |
 | Same-tier capacity, dropped/banked/relogged clues | ClueOwnership, ClueContainers, ClueStepContract; lifecycle/ownership tests | Ground pickup, graves/Death and second account in client |
 | Scroll boxes/cases | ClueContainers; universal unlock per owner15-NovQ2 | Check all five tiers/caps and consumed cases |
 | Death and GE/trade metadata | ClueDeathItems/PvpDeathBreakables, generated item metadata | D1-D20 routes, Items Kept on Death, trade/GE, dupe census |
 | Watson hand-in/check/NPC Contact, personal storage | WatsonClues/Dialogue; WatsonClueTests | Dialogue and all routes in actual client |
 | Watson NPC/noticeboard/STASH settings | Watson appearance and chart/setting tools/tests | Applied mappings and loaded-client options; POH Study excluded by Q5 |
-| Watson statistics and pinboard | WATSON-BOARDS.md; real Component and q8 paragraph tests | Refreshed board preflight, apply, loaded-client scrollbar/last name |
+| Watson statistics and pinboard | WATSON-BOARDS.md; real Component and q8 paragraph tests; imports applied | Loaded-client scrollbar/last name |
 | Maps, text, numerical challenges | Native UI ports; map/basic/NPC/challenge tests | Applied source interfaces, real scene traversal |
 | Emotes, Uri, double agents, STASH | Emote/Uri/Agent/Stash tests; personal fight controller | Applied gear/Uri/master-agent/STASH identities; client gear/second-emote checks |
 | Hard-coordinate wizards | TreasureTrailWizards; wizard/guardian/PvP/drop tests | Verify existing spell assets and all combat/death/audio routes |
@@ -31,6 +54,10 @@ Only Claude applies caches, operates the testclient, merges and releases.
 | Acquisition |625combat routes/587matched NPCs; skilling/impling source catalogues | Missing/different NPC variants remain excluded, not assigned guessed odds |
 | Mimic opt-in, attempts, reward/deathbank model | Mimic lifecycle/reward tests | Q1, applied arena/minion visuals, full combat/client chain |
 | Mimic candy/minion/forward/stomp backend | MimicCandies/Attacks/Minions/Encounter; dedicated break tests | Q1 measured plan and Q8 minion visual rows; ENCOUNTER_IMPLEMENTED=false |
+| Bloodhound Dig/menu/Call follower | CluePetDig;6production-source tests; sequence17769/menus applied by Claude | Loaded-client menu/call/embedded-audio checks |
+| Mimic source relocation and ambience | Native10819 retained;4160applied by Claude; both250-placement rooms read-only verified | Runtime mapping publication/collision/render/audio; Q1 remains disabled |
+| Six named Mimic scenery examines | Five exact Wiki pins; both installed rooms/6definitions verified;2atomic/source tests | Mapping publication and loaded-client examines |
+| ADMIN client step selection | ClueAdminSteps;4focused tests; ADMIN binding/commands.yml | Script compilation and client use of installed pool |
 
 ## Source-limited selections
 
@@ -38,7 +65,11 @@ STEP-HANDLER-AUDIT.json traces107source records to their adapters:38supported
 originals plus69unique additions,29easy/29medium/25hard/12elite/12master. Three
 master torn parts are one choice, hence105grouped choices before predicates.
 This is NOT a claim of active-world counts. All applied-asset/readiness checks
-still apply. Five records additionally require unresolved primary evidence:
+still apply. The new offline execution of14freshly compiled predicate classes
+against72actual target definitions admits102records/100grouped choices
+(validation/applied-step-predicates.json). It does not prove spawn registration,
+scene traversal or boot. The first84/101results used wrong item paging/older
+jars and were discarded. Five records require unresolved primary evidence:
 
 * Elite02.35S11.52E and05.07S13.26E: both guardian visuals plus their choice odds.
 * Master03.26N12.18E and03.50N09.07E: Brassican visual/projectile identities.
@@ -62,8 +93,9 @@ Q1 (owner15-Nov00:2x): do not invent Mimic candy/forward probabilities. The
 four-tick impact has a pinned Claude video measurement; candyAttackChance,
 forwardStepChance, six landing offsets and the launch geometry/release parameters
 remain explicit nulls. The full backend is present, but the encounter code gate
-stays false. An unavailable selected Mimic retains the ordinary casket,
-dry-protection eligibility and attempts. No donor constants fill these fields.
+stays false. While unavailable, Mimic prompts, rolls and conversion are bypassed, so the
+ordinary casket opens normally with the OSRS table. Opt-in, RECEIVED and attempts
+are untouched; first-encounter eligibility is not spent on conversion. No donor constants fill these fields.
 
 Q8: source sequences/models identify rig roles, not per-NPC server scripts.
 COMBAT-SOURCE-AUDIT.md and combat-reference/manifest.json preserve actual OSRS
@@ -77,9 +109,9 @@ Claude from applying any of the prepared item/NPC/STASH/UI/combat imports.
 
 * A1-A4/F1-F3: pinned Wiki/cache data and per-adapter/source/asset audits above.
   No donor behaviour or estimated ID is promoted as a source fact.
-* A5/F7: narrow component results in validation/. The new frozen integration
-  integration-20261117-124448 selects5core/36plugin classes and script compilation;
-  its final summary must be checked before claiming Gradle acceptance.
+* A5/F7: integration173604 compiled everything and passed314of315tests;
+  rerun175915 handles the failed path class plus new scenery metadata. Do not
+  call the original run wholly green; the narrow rerun's result is separate.
 * A6-A9/F4/F8: OPEN, assigned to Claude by the task card: compare actual client
   against OSRS, run the requested break cases, then prove the live bundle.
 * A10: component commits plus timestamped ChatGPT-B lines in team/dossiers/CLUE.txt;
@@ -89,6 +121,8 @@ Claude from applying any of the prepared item/NPC/STASH/UI/combat imports.
   D1-D20 accounting and real transaction totals remain OPEN for Claude.
 
 The fixed roster remains248items/10NPCs/23STASHunits/26maps plus the documented
-UI and16supplemental combat sequences. Claude may rerun/apply the batches now,
-in the handoff order, with the reviewed client codecs installed/released first.
+UI and16supplemental combat sequences, already applied by Claude. Additional
+pet14498/two-existing-menu and relocated arena43loc/46model/one-square batches
+were independently applied by Claude in363749298; they change no clue-item/NPC/STASH/map-clue
+roster. Both use fresh allocation/preflight and Claude-only application.
 No permission, review or cache-ID wait is required to continue this source work.
