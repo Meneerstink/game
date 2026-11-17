@@ -77,12 +77,12 @@ object Dmm2WindowPort {
 
     fun append(group: Int, list: MutableList<C>, sprites: MutableSet<Int>, extras: MutableList<String>, fonts: Map<Int, Int>) {
         fun add(type: Int, x: Int, y: Int, w: Int, h: Int, parent: Int, sprite: Int = -1, text: String = "", ops: List<String> = emptyList(),
-                font: Int = 496, colour: Int = 0xff981f, wm: Int = 0, hm: Int = 0, xm: Int = 0, ym: Int = 0): Int {
+                font: Int = 496, colour: Int = 0xff981f, wm: Int = 0, hm: Int = 0, xm: Int = 0, ym: Int = 0, ax: Int = 1, ay: Int = 1): Int {
             val id = list.size
             if (sprite >= 0) sprites += sprite
             list += C(id, type, x, y, w, h, parent, wm, hm, xm, ym, false, sprite = sprite, tiling = sprite >= 0,
                 font = if (type == 4) fonts.getValue(font) else -1, text = text, lineHeight = if (type == 4) 16 else 0,
-                alignX = 1, alignY = 1, shadow = true, colour = colour, ops = ops)
+                alignX = ax, alignY = ay, shadow = true, colour = colour, ops = ops)
             return id
         }
         // Claude 17-11: look components up by id - an inserted thinbox (ids appended mid-list) makes list position != id
@@ -167,7 +167,9 @@ object Dmm2WindowPort {
                 add(5,72,48,36,32,35)
                 add(4,0,85,50,18,35,wm=1)
                 add(4,0,107,50,36,35,wm=1,font=495)
-                add(4,10,52,161,300,35,font=495)
+                // 7147:803 cc_settextalign(0,0,16): the Help/description paragraph is LEFT and TOP aligned (reward-store.png); centred it
+                // sank to the middle of its 300 px box (testclient 17-11 vr2-03).
+                add(4,10,52,161,300,35,font=495,ax=0,ay=0)
                 byId(35).scrollH = 300
                 byId(38).scrollH = 311
                 // Desktop7245: (225-18)/4=51px buttons,4px gaps, in native225x44 parent24.
