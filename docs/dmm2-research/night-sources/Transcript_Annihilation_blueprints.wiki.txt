@@ -1,0 +1,5 @@
+{{Transcript|item}}
+
+==Reading the blueprints==
+* {{tbox|pic=Annihilation blueprints detail.png|You can hand this in to an Estate Agent to unlock the Wilderness theme for your player-owned house.}}
+* {{Tact|end}}

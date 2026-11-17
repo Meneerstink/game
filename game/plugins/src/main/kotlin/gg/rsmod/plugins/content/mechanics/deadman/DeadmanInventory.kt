@@ -8,6 +8,8 @@ internal object DeadmanInventory {
     fun add(container: ItemContainer, item: Item): Boolean {
         if (item.amount <= 0) return false
         if (!item.hasAnyAttr()) {
+            if (item.getDef(container.definitions).stackable &&
+                container.filterNotNull().filter { it.id == item.id }.sumOf { it.amount.toLong() } + item.amount > Int.MAX_VALUE) return false
             return container.add(item, applyCreationRedirect = false).hasSucceeded()
         }
         // Container.add(Item) discards attributes. Charged items must retain separate slots.

@@ -1,0 +1,5 @@
+{{Transcript|item}}
+
+==Reading the fabric==
+* {{tbox|pic=Armageddon_cape_fabric_detail.png|You can use this on Nigel in Lumbridge to unlock the Deadman: Armageddon ornament theme for your capes.}}
+* {{tact|end}}

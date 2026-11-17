@@ -39,6 +39,15 @@ object MeleeCombatStrategy : CombatStrategy {
         pawn: Pawn,
         target: Pawn,
     ): Boolean {
+        if (pawn is Player && gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.isScythe(pawn.equipment[3]?.id)) {
+            val weapon = pawn.equipment[3]!!
+            val empty = gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SCYTHE_EMPTY.local ?: return false
+            if (gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SCYTHE.matches(weapon.id) &&
+                gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.scytheCharges(weapon) <= 0) {
+                pawn.equipment[3] = gg.rsmod.game.model.item.Item(empty).copyAttr(weapon).also { it.attr.remove(gg.rsmod.game.model.item.ItemAttribute.CHARGES) }
+                return false // Recompute the empty weapon's bonuses before permitting the next swing.
+            }
+        }
         if (pawn is Player && RangedAmmo.isSalamander(pawn.getEquipment(gg.rsmod.plugins.api.EquipmentType.WEAPON)?.id)) {
             return RangedCombatStrategy.canAttack(pawn, target)
         }
@@ -85,6 +94,19 @@ object MeleeCombatStrategy : CombatStrategy {
         target.animate(blockAnimation, priority = false)
 
         val formula = MeleeCombatFormula
+        if (pawn is Player && gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.isScythe(pawn.equipment[3]?.id)) {
+            val weapon = pawn.equipment[3]!!
+            var total = 0
+            gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.scytheTargets(pawn, target).forEachIndexed { index, victim ->
+                val maximum = formula.getMaxHit(pawn, victim).toInt().coerceAtLeast(0) shr index
+                val land = formula.getAccuracy(pawn, victim) >= world.randomDouble()
+                val damage = pawn.dealHit(target = victim, maxHit = maximum.toDouble(), landHit = land, delay = 1, hitType = HitType.MELEE).hit.hitmarks.sumOf { it.damage }
+                total += damage
+                if (damage > 0) addCombatXp(pawn, victim, damage)
+            }
+            if (total > 0) pawn.equipment[3] = gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.consumeScythe(weapon)
+            return
+        }
         // Dual macuahuitl: two hits one tick apart with halved max hits; the second accuracy check only follows a successful first (MoonSets).
         if (pawn is Player && pawn.equipment[gg.rsmod.plugins.api.EquipmentType.WEAPON.id]?.id == gg.rsmod.plugins.api.cfg.Items.DUAL_MACUAHUITL) {
             val (firstMax, secondMax) = gg.rsmod.plugins.content.items.osrs.MoonSets.macuahuitlSplit(formula.getMaxHit(pawn, target).toInt())
@@ -144,6 +166,7 @@ object MeleeCombatStrategy : CombatStrategy {
                 }.hit.hitmarks
                 .sumOf { it.damage }
 
+        if (pawn is Player) gg.rsmod.plugins.content.mechanics.deadman.ThunderKhopesh.passive(pawn, target, landHit)
         // Revenant chainmaces: "1 ether per attack whether the player hits or not" (after the formula read the passive).
         if (pawn is Player) gg.rsmod.plugins.content.items.osrs.RevenantWeapons.afterAttack(pawn)
         // Abyssal tentacle: "the weapon will degrade after 10,000 attacks, including misses".

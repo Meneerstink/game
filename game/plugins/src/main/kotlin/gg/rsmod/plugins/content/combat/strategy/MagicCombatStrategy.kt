@@ -80,7 +80,7 @@ object MagicCombatStrategy : CombatStrategy {
             val required = gg.rsmod.plugins.content.combat.magic.AutocastWeapons.requiredWeapons(spell)
             if (required.isNotEmpty()) {
                 val weapon = pawn.getEquipment(EquipmentType.WEAPON)
-                if (weapon == null || weapon.id !in required) {
+                if (weapon == null || gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(weapon.id) !in required) {
                     pawn.message(gg.rsmod.plugins.content.combat.magic.AutocastWeapons.requiredWeaponMessage(spell))
                     return failCast(pawn)
                 }

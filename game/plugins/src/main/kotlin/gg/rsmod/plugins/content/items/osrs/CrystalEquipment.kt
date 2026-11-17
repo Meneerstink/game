@@ -85,11 +85,11 @@ object CrystalEquipment {
     val REVERT_SEED: Map<Int, Int> =
         ARMOUR.flatMap { listOf(it.active to Items.CRYSTAL_ARMOUR_SEED, it.inactive to Items.CRYSTAL_ARMOUR_SEED) }.toMap()
 
-    fun isCrystalBow(weaponId: Int?): Boolean = weaponId != null && (weaponId in Bows.CRYSTAL_BOWS || weaponId in BOWFA)
+    fun isCrystalBow(weaponId: Int?): Boolean = gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(weaponId)?.let { it in Bows.CRYSTAL_BOWS || it in BOWFA } == true
 
     /** Sum of the worn active crystal armour weights (0..6). */
     fun armourWeight(player: Player): Int {
-        val worn = EquipmentType.values().mapNotNull { player.getEquipment(it)?.id }.toSet()
+        val worn = EquipmentType.values().mapNotNull { gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(player.getEquipment(it)?.id) }.toSet()
         return ARMOUR.filter { it.active in worn }.sumOf { it.weight }
     }
 
@@ -121,8 +121,8 @@ object CrystalEquipment {
      * An inactive item that still carries charges (seen in the owner's bank) counts them, so the next charge action wakes it.
      */
     fun charges(item: Item): Int =
-        when (item.id) {
-            in INACTIVE_FOR -> item.attr[ItemAttribute.CHARGES] ?: startCharges(item.id)
+        when (gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(item.id)) {
+            in INACTIVE_FOR -> item.attr[ItemAttribute.CHARGES] ?: startCharges(gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(item.id)!!)
             in CHARGED_FOR -> item.attr[ItemAttribute.CHARGES] ?: 0
             else -> 0
         }
@@ -141,11 +141,12 @@ object CrystalEquipment {
         item: Item,
         charges: Int,
     ): Item {
-        val charged = CHARGED_FOR[item.id] ?: item.id.takeIf { it in INACTIVE_FOR } ?: return item
+        val base = gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(item.id)!!
+        val charged = CHARGED_FOR[base] ?: base.takeIf { it in INACTIVE_FOR } ?: return item
         val id = if (charges > 0) charged else INACTIVE_FOR.getValue(charged)
         return Item(id, item.amount).copyAttr(item).also {
             if (charges > 0) it.attr[ItemAttribute.CHARGES] = charges.coerceAtMost(MAX_CHARGES) else it.attr.remove(ItemAttribute.CHARGES)
-        }
+        }.let { gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.state(item, it) }
     }
 
     /** Shards [available] add to [item] (100 charges each, never above 20,000). */
@@ -198,7 +199,7 @@ object CrystalEquipment {
     fun onHitReceived(player: Player) {
         EquipmentType.values().forEach { type ->
             val item = player.getEquipment(type) ?: return@forEach
-            if (ARMOUR.none { it.active == item.id }) return@forEach
+            if (ARMOUR.none { it.active == gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(item.id) }) return@forEach
             player.equipment[type.id] = withCharges(item, charges(item) - 1)
         }
     }

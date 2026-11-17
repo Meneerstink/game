@@ -52,6 +52,10 @@ val infernalMage =
             // NOTHING
             nothing(slots = 190)
         }
+        // DMM2: OSRS Infernal Mage rev15403365, Fire ruby is a separate tertiary 1/64 roll.
+        gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.FIRE_RUBY.local?.let { ruby ->
+            table("fire_ruby") { total(64); obj(ruby, slots = 1); nothing(slots = 63) }
+        }
         table("Charms") {
             total(1000)
             obj(Items.GOLD_CHARM, quantity = 1, slots = 333)

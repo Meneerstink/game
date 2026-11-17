@@ -118,6 +118,8 @@ object UntradeableDeathProtection {
         definitions: DefinitionSet,
         itemId: Int,
     ): Boolean {
+        val base = gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(itemId)!!
+        if (base != itemId) return handles(definitions, base)
         if (LootKeys.isKey(itemId) || DeathRules.isEmblem(itemId)) return false
         if (PvpDeathBreakables.converts(itemId)) return false
         if (RunePouch.isPouch(itemId) || TrouverRegistry.isLockedAnyState(itemId) || PvpDeathBreakables.breakableFor(itemId) != null) return true
@@ -141,6 +143,7 @@ object UntradeableDeathProtection {
         item: Item,
         deepWilderness: Boolean,
     ): UntradeableOutcomeFate {
+        gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStore.active?.baseItem(item)?.let { return fateOf(definitions, it, deepWilderness) }
         if (item.id in ALWAYS_KEPT_PVP) return UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
         // A pet stays with its owner (owner confirmed 2026-10-04: "pet kept" on a PvP death; OSRS 2026: pets respawn with you).
         if (gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(item.id)) return UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
@@ -243,6 +246,7 @@ object UntradeableDeathProtection {
                     DeathContainerSource.EQUIPMENT -> victim.equipment
                 }
             val current = container[slotItem.slot] ?: continue
+            val reclaimItem = gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStore.active?.baseItem(current) ?: current
             if (current.id != slotItem.item.id) continue
             applied += outcome
             val replacement: Item? =
@@ -256,13 +260,13 @@ object UntradeableDeathProtection {
             if (outcome.fate == UntradeableFate.BROKEN || outcome.fate == UntradeableFate.MANGLED) damaged = true
             if (outcome.fate == UntradeableFate.DESTROYED) {
                 // Perdu's Lost Property keeps what was destroyed, at its repair price (PerduReclaim).
-                PerduReclaim.record(victim, current, RepairPrices.repairPrice(victim.world.definitions, current.id) * current.amount)
+                PerduReclaim.record(victim, reclaimItem, RepairPrices.repairPrice(victim.world.definitions, reclaimItem.id) * reclaimItem.amount)
                 destroyed = true
             }
             // Owner 2026-10-24 (B, "alle 1078 items terugkopen bij perdu, alleen als je ermee dood gaat"): every other lost untradeable
             // too, at its store value - the Lost Property items (Colossal blade, god books ...) Perdu sells back on his own list.
             if (outcome.fate == UntradeableFate.LOST_FOR_COINS && !PerduLostProperty.isLostPropertyItem(current.id)) {
-                PerduReclaim.record(victim, current, reclaimPrice(victim.world.definitions, current.id) * current.amount)
+                PerduReclaim.record(victim, reclaimItem, reclaimPrice(victim.world.definitions, reclaimItem.id) * reclaimItem.amount)
                 destroyed = true
             }
             if (slotItem.source == DeathContainerSource.INVENTORY || replacement == null) {

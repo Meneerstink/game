@@ -499,6 +499,7 @@ object Combat {
         pawn: Pawn,
         target: Pawn,
     ): Boolean {
+        if (target.attr[gg.rsmod.plugins.content.mechanics.deadman.UndeadThralls.THRALL] == true) return false
         if (pawn.isDead() || target.isDead() || pawn.invisible || target.invisible) {
             return false
         }

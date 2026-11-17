@@ -54,7 +54,7 @@ object StaffOfTheDead {
 
     val POWER_OF_DEATH_STAVES = DEAD_STAVES + STAFFS_OF_LIGHT
 
-    fun scales(item: Item): Int = if (item.id == Items.TOXIC_STAFF_OF_THE_DEAD) item.attr[ItemAttribute.CHARGES] ?: 0 else 0
+    fun scales(item: Item): Int = if (gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(item.id) == Items.TOXIC_STAFF_OF_THE_DEAD) item.attr[ItemAttribute.CHARGES] ?: 0 else 0
 
     fun withScales(
         item: Item,
@@ -63,7 +63,7 @@ object StaffOfTheDead {
         val id = if (scales > 0) Items.TOXIC_STAFF_OF_THE_DEAD else Items.TOXIC_STAFF_UNCHARGED
         return Item(id, item.amount).copyAttr(item).also {
             if (scales > 0) it.attr[ItemAttribute.CHARGES] = scales.coerceAtMost(MAX_SCALES) else it.attr.remove(ItemAttribute.CHARGES)
-        }
+        }.let { gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.state(item, it) }
     }
 
     /** Scales from a stack of [available] that fit into [item]. */
@@ -72,9 +72,9 @@ object StaffOfTheDead {
         available: Int,
     ): Int = minOf(available, MAX_SCALES - scales(item)).coerceAtLeast(0)
 
-    fun isWieldingDeadStaff(player: Player): Boolean = player.getEquipment(EquipmentType.WEAPON)?.id in DEAD_STAVES
+    fun isWieldingDeadStaff(player: Player): Boolean = gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(player.getEquipment(EquipmentType.WEAPON)?.id) in DEAD_STAVES
 
-    fun isWieldingPowerOfDeathStaff(player: Player): Boolean = player.getEquipment(EquipmentType.WEAPON)?.id in POWER_OF_DEATH_STAVES
+    fun isWieldingPowerOfDeathStaff(player: Player): Boolean = gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(player.getEquipment(EquipmentType.WEAPON)?.id) in POWER_OF_DEATH_STAVES
 
     /** A combat spell cast with a dead staff uses no runes 1 time in 7. */
     fun savesRunes(player: Player): Boolean = isWieldingDeadStaff(player) && player.world.random(RUNE_SAVE_CHANCE - 1) == 0
@@ -82,7 +82,7 @@ object StaffOfTheDead {
     /** Called for the attacker and the target of every attack: uses 10 scales on entering combat and again after each minute. */
     fun onCombat(player: Player) {
         val weapon = player.getEquipment(EquipmentType.WEAPON) ?: return
-        if (weapon.id != Items.TOXIC_STAFF_OF_THE_DEAD || player.timers.has(TOXIC_STAFF_SCALE_TIMER)) return
+        if (gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(weapon.id) != Items.TOXIC_STAFF_OF_THE_DEAD || player.timers.has(TOXIC_STAFF_SCALE_TIMER)) return
         player.equipment[EquipmentType.WEAPON.id] = withScales(weapon, scales(weapon) - SCALES_PER_USE)
         player.timers[TOXIC_STAFF_SCALE_TIMER] = SCALE_USE_TICKS
     }
@@ -92,7 +92,7 @@ object StaffOfTheDead {
         player: Player,
         target: Pawn,
     ) {
-        if (player.getEquipment(EquipmentType.WEAPON)?.id != Items.TOXIC_STAFF_OF_THE_DEAD) return
+        if (gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(player.getEquipment(EquipmentType.WEAPON)?.id) != Items.TOXIC_STAFF_OF_THE_DEAD) return
         if (player.world.randomDouble() < VENOM_CHANCE) target.venom()
     }
 

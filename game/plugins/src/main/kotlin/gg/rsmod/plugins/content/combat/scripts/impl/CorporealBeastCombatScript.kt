@@ -203,7 +203,9 @@ object CorporealBeastCombatScript : CombatScript() {
         damage: Int,
     ): Int {
         if (damage <= 0) return damage
-        val corpbaneOnStab = attacker is Player && isCorpbaneWeapon(attacker) && CombatConfigs.getCombatStyle(attacker) == StyleType.STAB
+        val corpbaneOnStab = attacker is Player && (
+            gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.KHOPESH.matches(attacker.equipment[3]?.id) ||
+            (isCorpbaneWeapon(attacker) && CombatConfigs.getCombatStyle(attacker) == StyleType.STAB))
         return if (halvesDamage(hitType, corpbaneOnStab)) damage / 2 else damage
     }
 

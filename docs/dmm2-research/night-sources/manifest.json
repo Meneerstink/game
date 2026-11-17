@@ -1,0 +1,83 @@
+[
+  {
+    "page": "Greater ghostly thrall",
+    "revision": 15350895,
+    "timestamp": "2026-09-19T12:28:48Z",
+    "file": "Greater_ghostly_thrall.wiki.txt",
+    "sha256": "d23d2f48d2050c6c0915a8fbf407ad44f0a18beed460c53c7b6724623e77b6f4",
+    "sha256_file": "133647346a52b879b79e73fdba81d781dd342ee4937375ec4cf932a4a6cd8da8",
+    "sha256_text_lf": "d23d2f48d2050c6c0915a8fbf407ad44f0a18beed460c53c7b6724623e77b6f4"
+  },
+  {
+    "page": "Greater skeletal thrall",
+    "revision": 15350896,
+    "timestamp": "2026-09-19T12:29:36Z",
+    "file": "Greater_skeletal_thrall.wiki.txt",
+    "sha256": "ce62b35994fa7cc91b902bd63219bada5e0050bd9bfe5a3158964a157748d0e9",
+    "sha256_file": "81a33c80e2720217b7c1859e7fe364a21e02d3ddd2a4f3274679e7615fd590dd",
+    "sha256_text_lf": "ce62b35994fa7cc91b902bd63219bada5e0050bd9bfe5a3158964a157748d0e9"
+  },
+  {
+    "page": "Greater zombified thrall",
+    "revision": 15350897,
+    "timestamp": "2026-09-19T12:29:51Z",
+    "file": "Greater_zombified_thrall.wiki.txt",
+    "sha256": "5ece10fc386bd52945239725b8e1e9eb5179742b0fdda8193975c9c635720a99",
+    "sha256_file": "ebad16ee8c42025cc50f81cb886483bca136a832da9f8cc54570b0070321aa46",
+    "sha256_text_lf": "5ece10fc386bd52945239725b8e1e9eb5179742b0fdda8193975c9c635720a99"
+  },
+  {
+    "page": "Corrupted dark bow",
+    "revision": 15192587,
+    "timestamp": "2026-04-22T04:51:40Z",
+    "file": "Corrupted_dark_bow.wiki.txt",
+    "sha256": "bc8da8f0cafb33a48acd9c27a9c1e2c08990cfe8e875ff0e8385fa03554c7fbe",
+    "sha256_file": "8d6bfc6b70296d178be1ef1a4ee82de16056a327f112243d3c18d3ef4ca2fabd",
+    "sha256_text_lf": "bc8da8f0cafb33a48acd9c27a9c1e2c08990cfe8e875ff0e8385fa03554c7fbe"
+  },
+  {
+    "page": "Thunder khopesh (Deadman Mode)",
+    "revision": 15262511,
+    "timestamp": "2026-07-13T15:38:51Z",
+    "file": "Thunder_khopesh_(Deadman_Mode).wiki.txt",
+    "sha256": "7f53143dfcd21fd931ce08cca0172a5e38c5cda70f72b6989f8b08b22eb7baea",
+    "sha256_file": "c101f72f71f792a19132e115b7fbb121476ef6a66d808e8a00dfc25677759431",
+    "sha256_text_lf": "7f53143dfcd21fd931ce08cca0172a5e38c5cda70f72b6989f8b08b22eb7baea"
+  },
+  {
+    "page": "Trinket of avarice",
+    "revision": 15286577,
+    "timestamp": "2026-08-03T18:19:52Z",
+    "file": "Trinket_of_avarice.wiki.txt",
+    "sha256": "e671a43273aa51cf03be35d08e8693866adda4b011777fa38ecfeddf60aa95db",
+    "sha256_file": "5a2155839db5d479df817101784c4c762ba06657865642779dc60f572db3345e",
+    "sha256_text_lf": "e671a43273aa51cf03be35d08e8693866adda4b011777fa38ecfeddf60aa95db"
+  },
+  {
+    "page": "Corrupted tumeken's shadow",
+    "revision": 15191600,
+    "timestamp": "2026-04-22T04:45:43Z",
+    "file": "Corrupted_tumeken's_shadow.wiki.txt",
+    "sha256": "6bedc46be51807a165d3d4a76e7569298a54c8697d56dd8c2460584d18ea9a5b",
+    "sha256_file": "0722ac63f475e7031f394371c76afb8ce08ee250878ef5ed2345f23ec9de74d6",
+    "sha256_text_lf": "6bedc46be51807a165d3d4a76e7569298a54c8697d56dd8c2460584d18ea9a5b"
+  },
+  {
+    "page": "Corrupted Scythe of Vitur",
+    "revision": 15350112,
+    "timestamp": "2026-09-18T00:40:02Z",
+    "file": "Corrupted_Scythe_of_Vitur.wiki.txt",
+    "sha256": "4809f5b5ed704b040a187506bda8cd47d2f57d203df6f5347fde0c01067060d4",
+    "sha256_file": "157c70f95e8f88d9945c2b841c76c501d97f51a245a1a1f02b3f0c421e08d552",
+    "sha256_text_lf": "4809f5b5ed704b040a187506bda8cd47d2f57d203df6f5347fde0c01067060d4"
+  },
+  {
+    "page": "Deadman: Apocalypse/Global loot table",
+    "revision": 15293992,
+    "timestamp": "2026-08-12T18:23:04Z",
+    "file": "Deadman_Apocalypse_Global_loot_table.wiki.txt",
+    "sha256": "25c21c5ebba4f858cdfd621b1996135d0f8478004815fe93541eee06db2abc9b",
+    "sha256_file": "25c21c5ebba4f858cdfd621b1996135d0f8478004815fe93541eee06db2abc9b",
+    "sha256_text_lf": "ff3767f5326ebee64f1400cc1dfec0ffeceb8c984d158a7df622fa4d4732557f"
+  }
+]

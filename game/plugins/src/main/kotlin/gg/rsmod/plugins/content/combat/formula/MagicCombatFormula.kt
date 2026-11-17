@@ -38,7 +38,7 @@ object MagicCombatFormula : CombatFormula {
     fun chargeApplies(
         spell: CombatSpell,
         capeId: Int?,
-    ): Boolean = capeId != null && CHARGE_CAPES[spell]?.contains(capeId) == true
+    ): Boolean = capeId != null && CHARGE_CAPES[spell]?.contains(gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(capeId)) == true
 
     private val BOLT_SPELLS =
         enumSetOf(CombatSpell.WIND_BOLT, CombatSpell.WATER_BOLT, CombatSpell.EARTH_BOLT, CombatSpell.FIRE_BOLT)
@@ -144,6 +144,8 @@ object MagicCombatFormula : CombatFormula {
             ) {
                 hit += 3
             }
+
+            hit += gg.rsmod.plugins.content.mechanics.deadman.FireAmulet.bonus(pawn, spell)
 
             // Charge spell: god spells hit up to 30 while charged and wearing the matching cape.
             if (spell != null && pawn.attr[gg.rsmod.game.model.attr.GOD_SPELL_CHARGE_ATTR] == true) {

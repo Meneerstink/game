@@ -1001,7 +1001,7 @@ object DeadmanBreach {
             // N104: what this player got from this kill, for the Collection Log (pets go through Pets.award with the same entry).
             val logged = ArrayList<Pair<Int, Int>>()
             val source = "breach:${npc.id}"
-            BreachLoot.roll(world.random, DropTableFactory.killRate(player)).forEach drops@{ drop ->
+            BreachLoot.roll(world.random, DropTableFactory.killRate(player, npcId = npc.id)).forEach drops@{ drop ->
                 val def = world.definitions.getNullable(ItemDef::class.java, drop.item) ?: return@drops
                 // N243 (owner 2026-10-23): a breach pet arrives like every pet (Pets.award: follower / backpack / bank, the OSRS message,
                 // the "Getting pet" sound); only one nobody has room for lands on the ground, like the Deadman's chest.
@@ -1014,7 +1014,11 @@ object DeadmanBreach {
                     }
                 }
                 val item = if (drop.noted && def.noteLinkId > 0) def.noteLinkId else drop.item
-                world.spawn(GroundItem(item, drop.amount, tile, player))
+                val reward = gg.rsmod.game.model.item.Item(item, drop.amount)
+                val trinkets = gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets
+                if (!trinkets.collectDrop(player, reward, trinkets.lootValue?.invoke(player, reward) ?: 0)) {
+                    world.spawn(GroundItem(item, drop.amount, tile, player))
+                }
                 logged += drop.item to drop.amount
             }
             // Audit D-14: at most one Archaic emblem per account per breach event, however many monsters it helps kill.

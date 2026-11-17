@@ -58,7 +58,7 @@ object DeadmanChestLoot {
     )
 
     /** Morrigan's javelin / throwing axe are ONE stack of 100 (as BreachLoot.RARE), never noted. */
-    val FIXED: List<Entry> =
+    val FIXED: List<Entry> get() =
         listOf(
             // Ancient Warriors, 17 pieces (Vesta, Statius, Morrigan, Zuriel).
             Entry(Items.VESTAS_CHAINBODY, 1, 10), Entry(Items.VESTAS_PLATESKIRT, 1, 10),
@@ -76,13 +76,13 @@ object DeadmanChestLoot {
             Entry(Items.ELDER_CHAOS_HOOD, 1, 8), Entry(Items.ELDER_CHAOS_TOP, 1, 8), Entry(Items.ELDER_CHAOS_ROBE, 1, 8),
             Entry(Items.HEAVY_BALLISTA, 1, 3),
             Entry(Items.VOIDWAKER_BLADE, 1, 2), Entry(Items.VOIDWAKER_GEM, 1, 2), Entry(Items.VOIDWAKER_HILT, 1, 2),
-        )
+        ) + gg.rsmod.plugins.content.mechanics.deadman.Dmm2ChestRewards.entries()
 
     /** Weight of one pet: PROVISIONAL, every chest pet equal. */
     const val PET_WEIGHT = 5
 
     /** Pets are untradeable and read from [pets] at load; the fixed items are what the shop filter and the GE house exclude. */
-    val FIXED_IDS: Set<Int> = FIXED.map { it.item }.toSet()
+    val FIXED_IDS: Set<Int> get() = FIXED.map { it.item }.toSet()
 
     /** The 17 Ancient Warriors pieces the owner named (count guard). */
     val ANCIENT_WARRIORS: Set<Int> =

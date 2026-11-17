@@ -94,7 +94,7 @@ object DropTableFactory {
         type: DropTableType = DropTableType.KILL,
     ) {
         try {
-            val items = getDrop(player, npcId, type, killRate(player, type)) ?: run {
+            val items = getDrop(player, npcId, type, killRate(player, type, npcId)) ?: run {
                 gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "drop $type table $npcId for ${player.username}: no table" }
                 return
             }
@@ -157,7 +157,14 @@ object DropTableFactory {
     fun killRate(
         player: Player,
         type: DropTableType = DropTableType.KILL,
-    ): Double = if (type == DropTableType.KILL) gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationTier.dropRate(player) else 1.0
+        /** Null is the existing boss/Barrows/custom-table API. Generic NPC kills must pass their actual id. */
+        npcId: Int? = null,
+    ): Double {
+        if (type != DropTableType.KILL) return 1.0
+        val tier = gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationTier.of(player).dropRate
+        val trinkets = gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets
+        return tier + if (npcId == null || trinkets.fortuityBoss(player, npcId)) trinkets.bonus(player) else 0.0
+    }
 
     /**
      * The chance of every line of [table] for one roll at [rate] (N100, owner 2026-10-18 VRAGEN 34 a = A, "zeldzaam eerst"): the
@@ -409,6 +416,7 @@ object DropTableFactory {
         owner: Pawn,
     ) {
         val def = world.definitions.get(ItemDef::class.java, item.id)
+        if (owner is Player && gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets.collectDrop(owner, item, gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets.lootValue?.invoke(owner, item) ?: 0)) return
         if (def.stackable) {
             val ground = GroundItem(item.id, item.amount, tile, owner as Player)
             world.spawn(ground)

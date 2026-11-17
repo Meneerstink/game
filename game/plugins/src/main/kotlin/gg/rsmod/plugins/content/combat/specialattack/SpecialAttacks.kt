@@ -58,8 +58,9 @@ object SpecialAttacks {
     fun armedReach(player: Player): SpecialReach? {
         if (!AttackTab.isSpecialEnabled(player)) return null
         val weaponId = player.getEquipment(EquipmentType.WEAPON)?.id ?: return null
-        val reach = reaches[weaponId] ?: return null
-        val special = attacks[weaponId] ?: return null
+        val reach = if (gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.VOLATILE.matches(weaponId)) SpecialReach(6, false) { true }
+            else reaches[weaponId] ?: reaches[gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.specialBase(weaponId)] ?: return null
+        val special = attacks[weaponId] ?: attacks[gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.specialBase(weaponId)] ?: return null
         if (!AttackTab.canAffordSpecial(player, special.energyRequired) || !reach.requirement(player)) return null
         return reach
     }
@@ -68,7 +69,7 @@ object SpecialAttacks {
      * Whether [itemId] has a registered special attack. Used to hide the special attack bar
      * (interface 884, component 4) for weapons with no special attack, e.g. Twisted bow.
      */
-    fun hasSpecialAttack(itemId: Int): Boolean = attacks.containsKey(itemId) || instantAttacks.containsKey(itemId)
+    fun hasSpecialAttack(itemId: Int): Boolean = attacks.containsKey(gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.specialBase(itemId)) || instantAttacks.containsKey(itemId)
 
     /** Whether [itemId]'s special fires from the special bar itself ([executeInstant]) rather than on the next attack. */
     fun hasInstantSpecial(itemId: Int): Boolean = instantAttacks.containsKey(itemId)
@@ -131,7 +132,7 @@ object SpecialAttacks {
         world: World,
     ): Outcome {
         val weaponItem = player.getEquipment(EquipmentType.WEAPON) ?: return Outcome.NOT_USED
-        val special = attacks[weaponItem.id] ?: return Outcome.NOT_USED
+        val special = attacks[weaponItem.id] ?: attacks[gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.specialBase(weaponItem.id)] ?: return Outcome.NOT_USED
 
         if (!AttackTab.canAffordSpecial(player, special.energyRequired)) {
             player.message("You don't have enough power left.")

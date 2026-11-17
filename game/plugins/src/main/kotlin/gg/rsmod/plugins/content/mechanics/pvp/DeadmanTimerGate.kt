@@ -53,7 +53,7 @@ object DeadmanTimerGate {
 
     fun teleportDecision(player: Player): Teleport =
         when {
-            PvpSkull.isSkulled(player) -> Teleport.COUNTDOWN
+            PvpSkull.isSkulled(player) || gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets.fortuity(player) -> Teleport.COUNTDOWN
             recentlyHitByPlayer(player) -> Teleport.BLOCKED_IN_COMBAT
             BossAreas.isBossArea(player.world, player.tile) -> Teleport.INSTANT
             inMinigame(player) -> Teleport.INSTANT

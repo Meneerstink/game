@@ -13,7 +13,7 @@ import java.util.Random
  * The permanent world matches ("Each breach monster now drops 1 Chitin per kill. There's a 50% chance to receive a second regular
  * supply drop instead of a Chitin.", runescapeguides.com World 345 breaches).
  *
- * Owner exclusions (Deadman product decision): no trinkets at all (see [RARE]). Owner 2026-09-23: the Archaic emblem (tier 5)
+ * DMM2 (owner 2026-11-16) restores the five OSRS trinket entries in [RARE]. Owner 2026-09-23: the Archaic emblem (tier 5)
  * drops for eligible players with [EMBLEM_DAMAGE]+ damage and trades in for [BreachPoints] ([DeadmanBreach.dropLoot]). [ItemIds] holds the ids of the items imported for this table.
  */
 object BreachLoot {
@@ -50,16 +50,12 @@ object BreachLoot {
 
     /**
      * OSRS rare roll: "the listed x/9576 weights sum to 133" (trinkets 60/20/10/10/1 + weapons 32). The roll keeps its OSRS
-     * trigger chance of 133/9576 even though the trinkets are gone (below).
+     * trigger chance of 133/9576; a missing cache mapping reserves its weight as no reward.
      */
     const val RARE_TRIGGER = 133
 
-    /**
-     * Owner 2026-09-19: "we dont want trinkets in our rsps please" - asked how, the owner chose to drop the trinket slots
-     * (advanced weaponry, fairies, avarice, undead, fortuity) from the table entirely. The rare roll still triggers at
-     * [RARE_TRIGGER]/9576, so these weapons fill the whole table: each drops 133/32 (~4.2x) as often as in OSRS.
-     */
-    val RARE: List<Line> =
+    /** DMM2 restores source weights 60/20/10/10/1 plus the existing 32 weapon weights. */
+    val RARE: List<Line> get() =
         listOf(
             Line(Items.MORRIGANS_THROWING_AXE, 100, 100, 10),
             Line(Items.MORRIGANS_JAVELIN, 100, 100, 10),
@@ -67,14 +63,14 @@ object BreachLoot {
             Line(Items.ZURIELS_STAFF, 1, 1, 3),
             Line(Items.VESTAS_SPEAR, 1, 1, 3),
             Line(Items.VESTAS_LONGSWORD, 1, 1, 3),
-        )
+            Line(ItemIds.TRINKET_OF_FAIRIES, 1, 1, 20),
+            Line(ItemIds.TRINKET_OF_AVARICE, 1, 1, 10),
+            Line(ItemIds.TRINKET_OF_UNDEAD, 1, 1, 10),
+            Line(ItemIds.TRINKET_OF_FORTUITY_INACTIVE, 1, 1, 1),
+        ) + listOfNotNull(gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.ADVANCED_WEAPONRY.local?.let { Line(it, 1, 1, 60) })
 
-    /**
-     * The trinket items imported earlier; they must never drop (owner exclusion 2026-09-19). Owner 2026-10-17 (N101) lifted it for the
-     * Trinket of fairies only: it is part of the chest list, which breach monsters roll on top of their own table ([roll]).
-     */
-    val EXCLUDED_TRINKETS =
-        setOf(ItemIds.TRINKET_OF_AVARICE, ItemIds.TRINKET_OF_UNDEAD, ItemIds.TRINKET_OF_FORTUITY_INACTIVE)
+    /** DMM2 supersedes the historical removal policy, including the login purge. */
+    val EXCLUDED_TRINKETS: Set<Int> = emptySet() // DMM2 V10 supersedes the old exclusion; existing copies remain.
 
     /** Equal 1/145728 each. OSRS d'hide bodies are the rev-667 "Armadyl body" / "Saradomin body" / "Zamorak body". */
     val MEGA_RARE: List<Int> =
@@ -154,7 +150,7 @@ object BreachLoot {
             Line(Items.UNCUT_SAPPHIRE, 15, 30, 2, noted = true),
         )
 
-    val RARE_TOTAL: Int = RARE.sumOf { it.weight }
+    const val RARE_TOTAL: Int = RARE_TRIGGER // Includes the reserved, unavailable mapping weight for the viewer too.
 
     private fun pick(
         lines: List<Line>,
@@ -215,7 +211,11 @@ object BreachLoot {
             if (random.nextInt(MEGA_RARE_CHANCE) == 0) {
                 out += Drop(MEGA_RARE[random.nextInt(MEGA_RARE.size)], 1)
             } else {
-                out += pick(RARE, random).drop(random)
+                var roll = random.nextInt(RARE_TRIGGER)
+                for (line in RARE) {
+                    roll -= line.weight
+                    if (roll < 0) { out += line.drop(random); break }
+                } // Unimported advanced-weaponry weight remains empty; never redistribute it onto weapons.
             }
         }
         // N98 (owner 2026-10-22): 1 in 200 a Dexterous or Arcane prayer scroll (Rigour / Augury).
