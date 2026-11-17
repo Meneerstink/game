@@ -10,6 +10,12 @@ class TreasureTrailStepCatalogueTests {
     private val raw get() = File(RspsPaths.data("cfg/clue/steps.json")).readText()
     private val rows get() = TreasureTrailStepCatalogue.parse(raw).rows
 
+    @Test fun `all20emote scrolls show the source instruction without the Wiki editorial prefix`() {
+        assertEquals(20,rows.count { it.action==TreasureTrailStepCatalogue.Action.EMOTE })
+        assertTrue(rows.none { "The emote reveals" in it.hint })
+        assertTrue(rows.filter { it.action==TreasureTrailStepCatalogue.Action.EMOTE }.all { it.hint==it.hint.trim() })
+    }
+
     @Test fun `historical Jarvis event answer is not an unconditional ordinary challenge answer`() {
         val step = rows.single { it.key.endsWith("AREA CHEF TREK") }
         assertEquals(TreasureTrailStepCatalogue.Challenge.NUMBER, step.challenge)

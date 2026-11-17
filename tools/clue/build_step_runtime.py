@@ -150,6 +150,9 @@ def main():
             requirements_source = dict(file=guide, sha256=sha256((SOURCES/guide).read_bytes()).hexdigest())
         challenge = dict(row.get('challenge', {}))
         hint = row.get('hint')
+        if kind == 'EMOTE':
+            # Wiki's editorial label is not part of the actual scroll (Claude client proof17-Nov).
+            hint = re.sub(r'^The emote reveals\s*', '', hint).strip()
         if row.get('challenges'):
             # Guide-only master anagrams have no Clue-info template. Losing
             # these fields turned both into a plain talk-to completion.
