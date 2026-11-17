@@ -24,6 +24,17 @@ import kotlin.math.min
  * @author Tom <rspsmods@gmail.com>
  */
 object MeleeCombatStrategy : CombatStrategy {
+    /** Use the same presentation/audio definition as the base weapon while leaving the actual equipment untouched. */
+    internal fun attackSound(player: Player, animation: Int): Int? {
+        val weapon = player.equipment[3] ?: return null
+        val source = gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.presentationBase(weapon.id)
+        gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.attackSound(source, animation)?.let { return it }
+        if (player.world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, animation)?.hasFrameSounds == true) return null
+        val cue = gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.swingSound(
+            weapon.id, runCatching { CombatConfigs.getCombatStyle(player) }.getOrDefault(gg.rsmod.game.model.combat.StyleType.SLASH))
+            ?: player.world.definitions.get(ItemDef::class.java, source).attackAudio
+        return cue.takeIf { it >= 0 }
+    }
     override fun getAttackRange(pawn: Pawn): Int {
         var baseDistance = 1
 
@@ -70,24 +81,8 @@ object MeleeCombatStrategy : CombatStrategy {
         pawn.animate(animation)
 
         if (pawn is Player) {
-            val weapon = pawn.equipment[3]
-            val osrsSound = weapon?.let { gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.attackSound(it.id, animation) }
-            if (osrsSound != null) {
-                pawn.playSound(osrsSound)
-            } else if (weapon != null &&
-                // The 667 attack sequence usually carries its own swing sound (cache frame sounds); only a silent one needs the
-                // item's attack audio, otherwise every hit sounded twice.
-                world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, animation)?.hasFrameSounds != true
-            ) {
-                // Imported OSRS weapons without attack audio take their OSRS category swing sound (owner 2026-09-25).
-                val sound =
-                    gg.rsmod.plugins.content.items.osrs.OsrsWeaponSounds.melee(
-                        weapon.id,
-                        runCatching { CombatConfigs.getCombatStyle(pawn) }.getOrDefault(gg.rsmod.game.model.combat.StyleType.SLASH),
-                    )
-                        ?: world.definitions.get(ItemDef::class.java, weapon.id).attackAudio
-                if (sound > -1) pawn.playSound(sound)
-            }
+            // Frame sounds already play on the client; the resolver only returns a needed server cue.
+            attackSound(pawn, animation)?.let { pawn.playSound(it) }
         }
 
         val blockAnimation = CombatConfigs.getBlockAnimation(target)

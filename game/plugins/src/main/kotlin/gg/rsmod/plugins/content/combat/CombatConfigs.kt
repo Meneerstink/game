@@ -233,7 +233,9 @@ object CombatConfigs {
         if (pawn is Player) {
             val style = pawn.getAttackStyle()
             val option = getCombatStyle(style)
-            var weaponId = gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(pawn.getEquipment(EquipmentType.WEAPON)?.id)
+            val physicalId = pawn.getEquipment(EquipmentType.WEAPON)?.id
+            if (physicalId != null) gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.attackAnimation(physicalId, style)?.let { return it }
+            val weaponId = physicalId?.let { gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.presentationBase(it) }
             // Void's revision-667 salamander animation table uses the same scorch sequence
             // for the weapon's three hybrid style buttons. The local cache contains that exact
             // sequence (5247); do this before the generic weapon-type fallbacks below.
