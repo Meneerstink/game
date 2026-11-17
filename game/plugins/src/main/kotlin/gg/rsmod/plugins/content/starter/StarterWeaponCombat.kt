@@ -40,7 +40,7 @@ object StarterWeaponCombat : CombatStrategy {
         val look = staffAppearance ?: return
         player.stopMovement()
         player.animate(look.animation)
-        player.graphic(look.cast, 22)
+        player.graphic(look.cast, 96) // N628: hand height, like CombatSpell.FIRE_STRIKE (22 = knees, owner 17-11)
         val projectile = player.createProjectile(target, look.projectile, ProjectileType.MAGIC)
         player.world.spawn(projectile)
         val landed = gg.rsmod.plugins.content.items.osrs.ConflictionGauntlets.roll(

@@ -194,6 +194,9 @@ object CombatConfigs {
                     weapon?.id, castSpell, autocast = pawn.attr[gg.rsmod.plugins.content.combat.magic.Autocast.AUTO_CAST] == true,
                 )
             }
+            // Wiki Starter_staff: "Attack speed 4 ticks (2.4s)" for its built-in Fire Strike (cache param 14 = 5 is the staff itself,
+            // testclient 17-11 measured 5 ticks between casts).
+            if (gg.rsmod.plugins.content.starter.StarterWeaponCombat.builtInStaff(pawn)) speed = 4
             if (gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SHADOW.matches(weapon?.id) &&
                 gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn)) speed = 5
             // Miasmic spells: melee and ranged attack speed is halved (doubled delay) for the effect duration. Magic is not
