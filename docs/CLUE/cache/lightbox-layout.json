@@ -1,0 +1,47 @@
+{
+  "sourceGroup": 322,
+  "components": 44,
+  "close": 35,
+  "buttons": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "labels": [
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43
+  ],
+  "viewport": [
+    512,
+    334
+  ],
+  "sourceScripts": [
+    228,
+    93,
+    134,
+    1333,
+    1334,
+    1339
+  ],
+  "sourceHashes": {
+    "interfaces.json": "dcfdd734e120bb8a0f9e0bee1aa403bc79aa8effd42365ad2baac711fad7ca40",
+    "scripts.json": "855d6b0d060bb804b1d83094b9680696aaa4c04a4b077ba305afd7623b78c148",
+    "lightbox-scripts.json": "69be03886e09d9823c5db0af6d0dbd708b2b8cbd2c7663175e89aacc63c34b4b",
+    "lightbox-items.json": "637872d868687ed4a45c935aab7205d6e8d21d3810807d41ccca04ec47426bfc"
+  },
+  "dynamic": "Port1339 draws25 actual item icons with source1205/outline1;134/135/208 draw button states;1336/1337 retain15client-cycle press timing",
+  "pending": [
+    "Native loaded-client verification after cache apply"
+  ]
+}
