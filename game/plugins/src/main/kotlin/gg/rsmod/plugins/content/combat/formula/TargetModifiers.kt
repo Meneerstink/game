@@ -159,7 +159,8 @@ object TargetModifiers {
     // target Magic input is always capped at the outside-raids value.
     private const val TWISTED_BOW_MAGIC_INPUT_CAP = 250
 
-    fun isWieldingTwistedBow(player: Player): Boolean = player.hasEquipped(EquipmentType.WEAPON, Items.TWISTED_BOW)
+    fun isWieldingTwistedBow(player: Player): Boolean =
+        player.hasEquipped(EquipmentType.WEAPON, Items.TWISTED_BOW) || gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.TWISTED_BOW.matches(player.equipment[EquipmentType.WEAPON.id]?.id)
 
     /**
      * The target Magic value the Twisted bow's passive scales against: the higher of the

@@ -1,0 +1,288 @@
+{{Transcript|npc}}
+{{Incomplete|Annihilation weapon scroll related dialogue}}
+
+==Standard dialogue==
+* '''Player:''' Hey, who are you?
+* '''Nigel:''' I'm Nigel. It is my job to tell you about Deadman Mode.
+* {{tselect|Select an option}}
+* {{topt|cond=Prior to the release of Deadman: Annihilation:|Could you grant me access to Deadman: Annihilation?}}
+** '''Player:''' Could you grant me access to Deadman: Annihilation?
+** '''Nigel:''' Well, yes, but there's some information you're going to want first.
+** {{tbox|Deadman: Annihilation is a temporary event. All progress made will be transferred to Permanent Deadman Mode upon its conclusion.}}
+** {{tbox|To use this account in Deadman: Annihilation, you will need to forfeit ALL progress associated with it in Permanent Deadman.}}
+** {{tbox|This includes {{Colour|#ef1020|all of your stats and items}} and {{Colour|#ef1020|this process is irreversible}}. Your main save will be unaffected.}}
+** {{tbox|Afterwards, you will be able to play on Deadman: Annihilation worlds until their conclusion on the 21st of February, at which point your progress will be converted for use in Permanent Deadman.}}
+** '''Nigel:''' Now, if you wouldn't mind signing a few waivers...
+** {{topt|Yes.}}
+*** {{tselect|To do so, I accept the fact that I will lose all my stats and items.}}
+*** {{topt|Yes.}}
+**** {{tselect|I know that I will be unable to get those stats and items back.}}
+**** {{topt|Yes.}}
+***** {{tselect|I accept the fact that I will lose any HiScores I have set.}}
+***** {{topt|Yes.}}
+****** {{tselect|I am fine with losing access to Permanent Deadman worlds for now.}}
+****** {{topt|Yes.}}
+******* '''Nigel:''' Very well. To complete your conversion, you will need to switch to a Deadman: Annihilation world.
+******* '''Nigel:''' If you leave Lumbridge, speak to me again, or log back in to a Permanent Deadman world, your account conversion will be cancelled.
+******* '''Nigel:''' And yes, I'm making you choose a world yourself. This is a big decision, you know!
+******* {{tact|end}}
+****** {{topt|No.}}
+******* {{tact|end}}
+***** {{topt|No.}}
+****** {{tact|end}}
+**** {{topt|No.}}
+***** {{tact|end}}
+*** {{topt|No.}}
+**** {{tact|end}}
+** {{topt|No.}}
+*** {{tact|end}}
+* {{topt|I have a question about Deadman mode.}}
+** '''Player:''' I have a question about Deadman mode.
+** '''Nigel:''' What would you like to know?
+** {{topt|What is Deadman mode?}}
+*** '''Player:''' What is Deadman mode?
+*** '''Nigel:''' Deadman mode is an incredibly dangerous survival game mode. Anyone can attack anyone, anywhere. Death comes at a huge cost and killing other players can be extremely lucrative.
+*** '''Player:''' Lucrative, you say?
+*** '''Nigel:''' Killing a player will earn you all of the items they had on them, plus the 10 most valuable items from their bank. The unfortunate soul will also lose half of their experience in most skills, or a quarter if they were not skulled. Regardless, it's quite the set-back.
+*** '''Player:''' Wow, that is brutal!
+*** '''Nigel:''' It is, but it is no simple task to kill someone in Deadman mode.
+*** '''Nigel:''' Very high level guards patrol every major city and bank. They will kill anyone who has a skull. Getting yourself a kill is only half the battle.
+*** {{tact|initial}}
+** {{topt|How do I play Deadman mode?}}
+*** '''Player:''' How do I play Deadman mode?
+*** '''Nigel:''' You can log into Deadman mode by selecting a Deadman mode world from the world list before you log in.
+*** '''Player:''' So I don't need a new account to play Deadman mode?
+*** '''Nigel:''' Nope! You can use your existing account on a Deadman world, providing you have membership.
+*** '''Player:''' Do my stats and items transfer over to Deadman mode?
+*** '''Nigel:''' No, they do not. Your Deadman mode progress is completely separate from normal Old School worlds.
+*** {{tact|initial}}
+** {{topt|What happens when I die in Deadman mode?}}
+*** '''Player:''' What happens when I die in Deadman mode?
+*** '''Nigel:''' If you die to a player you will lose the 10 most valuable stacks of items from your bank, all items that you have on your person and half of the experience you have gained in any unprotected skills.
+*** '''Nigel:''' If you die to a monster when you have a PK skull you will lose the 10 most valuable stacks of items from your bank, all items that you have on your person and half of the experience you have gained in any unprotected skills.
+*** '''Nigel:''' If you die to a monster when you do not have a PK skull you will lose all of the items on your person except for the 3 most valuable. You will not lose experience or any items from your bank.
+*** {{tact|initial}}
+** {{topt|What happens when I kill a player in Deadman mode?}}
+*** '''Player:''' What happens when I kill a player in Deadman mode?
+*** '''Nigel:''' When you kill a player you will receive any items they have on their person and you will also be given a key. You can use this key on Deadman chests found in various banks across the map. Within the chest you will
+*** '''Nigel:''' find the 10 most valuable stacks of items from the bank of the player you struck down. From here you will be able to choose the items you would like to keep.
+*** {{tact|initial}}
+** {{topt|More options...}}
+*** {{topt|How can I protect my items in Deadman mode?}}
+**** '''Player:''' How can I protect my items in Deadman mode?
+**** '''Nigel:''' You can protect up to 10 items by placing them in your safe deposit box. Items in your safe deposit box will not be lost to a player who kills you, unlike those found in your bank. Remember that you can only place 10 single items into your safe deposit box, no stacks.
+**** {{tact|initial}}
+*** {{topt|cond=Historical dialogue:|How can I protect my stats in Deadman mode?}}
+**** '''Player:''' How can I protect my stats in Deadman mode?
+**** '''Nigel:''' You can protect your levels in up to 2 combat skills and 3 non-combat skills. You can choose which by opening your items lost on death interface found in your equipment tab. Choose wisely!
+**** '''Nigel:''' You should be warned however. If you get killed by a guard, you will lose a tenth of your experience in those skills too!
+**** '''Nigel:''' Gelin over there also has some deals on insuring your hitpoints, speak to her to find out more about that.
+**** {{tact|initial}}
+*** {{topt|What are safe zones in Deadman mode?}}
+**** '''Player:''' What are safe zones in Deadman mode?
+**** '''Nigel:''' Safe zones are areas patrolled by very high level guards which can be found in various places across the map. The guards watch out for any player with a PK skull and will attack them if they're spotted. It is still possible to be attacked inside safe zones but the person doing the attacking will not stand a chance of making it out alive.
+**** {{tact|initial}}
+*** {{topt|Previous options...}}
+**** {{tact|previous}}
+* {{topt|Could you stop me from gaining XP?}}
+** {{tselect|Would you like to adjust earning combat experience or hitpoints experience?}}
+** {{topt|Combat experience.}}
+*** {{tcond|If the player has combat experience enabled:}}
+**** '''Nigel:''' Yes, I can help with that.
+**** {{tselect|Disable combat experience gains?}}
+**** {{topt|Yes.}}
+***** '''Nigel:''' You will no longer gain combat experience. Talk to me again if you change your mind.
+***** {{tact|end}}
+**** {{topt|No.}}
+***** {{tact|end}}
+*** {{tcond|If the player has combat experience disabled:}}
+**** '''Nigel:''' I've already stopped you from gaining combat experience, do you want to gain it again?
+**** {{tselect|Enable combat experience gains?}}
+**** {{topt|Yes.}}
+***** '''Nigel:''' You will now gain combat experience again. Talk to me again if you change your mind.
+***** {{tact|end}}
+**** {{topt|No.}}
+**** {{tact|end}}
+** {{topt|Hitpoints experience.}}
+*** {{tcond|If the player has hitpoints experience enabled:}}
+**** '''Nigel:''' Yes, I can help with that.
+**** {{tselect|Disable hitpoints experience gains?}}
+**** {{topt|Yes.}}
+***** '''Nigel:''' You will no longer gain hitpoints experience. Talk to me again if you change your mind.
+***** {{tact|end}}
+**** {{topt|No.}}
+***** {{tact|end}}
+*** {{tcond|If the player has hitpoints experience disabled:}}
+**** '''Nigel:''' I've already stopped you from gaining hitpoints experience, do you want to gain it again?
+**** {{tselect|Enable hitpoints experience gains?}}
+**** {{topt|Yes.}}
+***** '''Nigel:''' You will now gain hitpoints experience again. Talk to me again if you change your mind.
+***** {{tact|end}}
+* {{topt|Can I purchase some Deadman rewards?}}
+** {{Tcond|If the store is open:}}
+*** '''Player:''' Can I purchase some Deadman rewards?
+*** '''Nigel:''' Certainly! I have a number of unique rewards which you might be interested in.
+*** {{tact|opens=Deadman Reward Store}}
+** {{Tcond|If the store is closed:}}
+*** '''Nigel:''' Unfortunately the store is not currently available.
+*** {{tact|end}}
+* {{topt|cond=If the Wilderness house theme has been unlocked:|Do you have any spare exit portal blueprints?}}
+** '''Player:''' Do you have any spare blueprints to recolour my exit portal in my player-owned house?
+** '''Nigel:''' Of course, here you go.
+** '''Player:''' Thank you, Nigel.
+** {{tact|end}}
+* {{topt|Goodbye.}}
+** '''Player:''' Goodbye.
+** {{tact|end}}
+
+==Standard dialogue (temporary Deadman)==
+* '''Player:''' Hey, who are you?
+* '''Nigel:''' I'm Nigel. It is my job to tell you about Deadman Mode.
+* {{tselect|Select an option}}
+* {{topt|I have a question about Deadman Mode.}}
+** {{tact|above}}
+* {{topt|Can you teleport me somewhere?}}
+** '''Player:''' Can you teleport me somewhere?
+** {{tcond|If the player has not used their daily teleport:}}
+*** '''Nigel:''' Sure, but I can only do so once per day. Where would you like to go?
+*** {{tact|opens2=Where would you like to go?}}
+*** {{tcond|If the player selects a location:}}
+**** {{tact|Player is teleported to the selected location.}}
+**** {{tact|end}}
+*** {{tcond|If the player selects the Cancel option:}}
+**** '''Player:''' Actually, I don't want to go anywhere.
+**** {{tact|end}}
+** {{tcond|If the player has used their daily teleport:}}
+*** '''Nigel:''' I can only do that once per day, [player name]. You've used your daily teleport already.
+*** {{tact|end}}
+* {{topt|Could you stop me from gaining XP?}}
+** {{tact|above}}
+* {{topt|Goodbye.}}
+** {{tact|above}}
+
+==Talking to Nigel after agreeing to convert==
+* '''Nigel:''' Ah, I see you've changed your mind about transferring your account. Not to worry, I've cancelled that now. Can I help you with anything else?
+* {{tselect|Select an option}}
+* {{topt|Could you grant me access to Deadman: Annihilation?}}
+** {{tact|above}}
+* {{topt|I have a question about Deadman Mode.}}
+** {{tact|above}}
+* {{topt|Could you stop me from gaining XP?}}
+** {{tact|above}}
+* {{topt|Can I purchase some Deadman rewards?}}
+** {{tact|above}}
+* {{topt|Goodbye.}}
+** {{tact|above}}
+
+==Using blood money on Nigel==
+===If all 3 items are available===
+* '''Nigel:''' Aha, blood money, the currency of a warrior! You must be rewarded! What would you like?
+* {{tselect|Select an Option}}
+* {{topt|Deadman's chest}}
+** {{tbox|pic=Deadman's chest (Deadman Mode) detail.png|Nigel rewards you with the Deadman's chest armour.}}
+** {{tact|end}}
+* {{topt|Deadman's legs}}
+** {{tbox|pic=Deadman's legs (Deadman Mode) detail.png|Nigel rewards you with the Deadman's leg armour.}}
+** {{tact|end}}
+* {{topt|Deadman's cape}}
+** {{tbox|pic=Deadman's cape (Deadman Mode) detail.png|Nigel rewards you with the Deadman's cape.}}
+** {{tact|end}}
+
+===If 2 items are available===
+* '''Nigel:''' More blood money! I commend you on your strength. What item would you like this time?
+* {{tselect|Select an Option}}
+* {{topt|cond=If the chest is still available:|Deadman's chest}}
+** {{tbox|pic=Deadman's chest (Deadman Mode) detail.png|Nigel rewards you with the Deadman's chest armour.}}
+** {{tact|end}}
+* {{topt|cond=If the legs are still available:|Deadman's legs}}
+** {{tbox|pic=Deadman's legs (Deadman Mode) detail.png|Nigel rewards you with the Deadman's leg armour.}}
+** {{tact|end}}
+* {{topt|cond=If the cape is still available:|Deadman's cape}}
+** {{tbox|pic=Deadman's cape (Deadman Mode) detail.png|Nigel rewards you with the Deadman's cape.}}
+** {{tact|end}}
+
+===If only 1 item is available===
+* '''Nigel:''' More blood money! Truly the blood lust is strong in you. Here, take this final item. You deserve it!
+* {{tcond|If the last item is the chest:}}
+** {{tbox|pic=Deadman's chest (Deadman Mode) detail.png|Nigel rewards you with the Deadman's chest armour.}}
+* {{tcond|If the last item is the leg armour:}}
+** {{tbox|pic=Deadman's legs (Deadman Mode) detail.png|Nigel rewards you with the Deadman's leg armour.}}
+* {{tcond|If the last item is the cape:}}
+** {{tbox|pic=Deadman's cape (Deadman Mode) detail.png|Nigel rewards you with the Deadman's cape.}}
+* {{tact|end}}
+
+===If no items are available===
+* '''Nigel:''' More blood money! I can only commend you on your prowess. Alas, I have no more armour to give to you at this time. 
+* {{tact|end}}
+
+==Using Armageddon cape fabric on Nigel==
+* {{tselect|This will consume the scroll.}}
+* {{topt|Unlock Deadman: Armageddon cape ornaments.}}
+** '''Nigel:''' Bring me an imbued Zamorak, Guthix or Saradomin Cape and I'll give it a trim.
+** {{tact|end}}
+* {{topt|Cancel.}}
+** {{tact|end}}
+
+==Using Annihilation weapon scroll on Nigel==
+* {{tselect|This will consume the scroll.}}
+* {{topt|Unlock Deadman: Annihilation weapon ornaments.}}
+** '''Nigel:''' Bring me a Toxic Staff of the Dead, Bow of Faerdhinen (c) or Crystal armour and I'll give it a trim.
+** {{tact|end}}
+* {{topt|Cancel.}}
+** {{tact|end}}
+
+==Using Imbued godcapes on Nigel after having unlocked Deadman: Armageddon cape ornaments==
+===Using Imbued Zamorak cape===
+* {{tbox|pic=Imbued Zamorak cape detail.png|Nigel adds a trim to your Imbued Zamorak cape.}}
+* {{tact|end}}
+===Using Imbued Zamorak cape (Deadman)===
+* {{tbox|pic=Imbued Zamorak cape (Deadman) detail.png|Nigel removes the trim from your Imbued Zamorak cape (Deadman).}}
+* {{tact|end}}
+===Using Imbued Saradomin cape===
+* {{tbox|pic=Imbued Saradomin cape detail.png|Nigel adds a trim to your Imbued Saradomin cape.}}
+* {{tact|end}}
+===Using Imbued Saradomin cape (Deadman)===
+* {{tbox|pic=Imbued Saradomin cape (Deadman) detail.png|Nigel removes the trim from your Imbued Saradomin cape (Deadman).}}
+* {{tact|end}}
+===Using Imbued Guthix cape===
+* {{tbox|pic=Imbued Guthix cape detail.png|Nigel adds a trim to your Imbued Guthix cape.}}
+* {{tact|end}}
+===Using Imbued Guthix cape (Deadman)===
+* {{tbox|pic=Imbued Guthix cape (Deadman) detail.png|Nigel removes the trim from your Imbued Guthix cape (Deadman).}}
+* {{tact|end}}
+===Using Imbued ancient cape===
+* {{tbox|pic=Imbued ancient cape detail.png|Nigel adds a trim to your Imbued ancient cape.}}
+* {{tact|end}}
+===Using Imbued ancient cape (Deadman)===
+* {{tbox|pic=Imbued ancient cape (Deadman) detail.png|Nigel removes the trim from your Imbued ancient cape (Deadman).}}
+* {{tact|end}}
+
+==Using weapons on Nigel after having unlocked Deadman: Armageddon weapon ornaments==
+===Using Armadyl godsword===
+* {{tbox|pic=Armadyl godsword detail.png|Nigel adds a trim to your Armadyl godsword.}}
+* {{tact|end}}
+===Using Armadyl godsword (Deadman)===
+* {{tbox|pic=Armadyl godsword (Deadman) detail.png|Nigel removes the trim from your Armadyl godsword (Deadman).}}
+* {{tact|end}}
+===Using Dark bow===
+* {{tbox|pic=Dark bow detail.png|Nigel adds a trim to your Dark bow.}}
+* {{tact|end}}
+===Using Dark bow (Deadman)===
+* {{tbox|pic=Dark bow (Deadman) detail.png|Nigel removes the trim from your Dark bow (Deadman).}}
+* {{tact|end}}
+===Using Voidwaker===
+* {{tbox|pic=Voidwaker detail.png|Nigel adds a trim to your Voidwaker.}}
+* {{tact|end}}
+===Using Voidwaker (Deadman)===
+* {{tbox|pic=Voidwaker (Deadman) detail.png|Nigel removes the trim from your Voidwaker (Deadman).}}
+* {{tact|end}}
+===Using Volatile Nightmare staff===
+* {{tbox|pic=Volatile Nightmare staff detail.png|Nigel adds a trim to your Volatile Nightmare staff.}}
+* {{tact|end}}
+===Using Volatile Nightmare staff (Deadman)===
+* {{tbox|pic=Volatile Nightmare staff (Deadman) detail.png|Nigel removes the trim from your Volatile Nightmare staff (Deadman).}}
+* {{tact|end}}
+
+==Using Teleport option in Permanent Deadman worlds==
+* '''Nigel:''' I cannot teleport you in this version of Deadman.
+* {{tact|end}}

@@ -1,0 +1,116 @@
+{{Gone}}
+{{Otheruses|def=no|the weapon in Deadman: Annihilation|The dogsword (Deadman Mode)}}
+{{Infobox Item
+|name = The dogsword
+|image = [[File:The dogsword.png]]
+|release = [[27 November]] [[2024]]
+|update = Leagues V: Raging Echoes OUT NOW!
+|removal = [[12 November]] [[2025]]
+|removalupdate = No
+|members = Yes
+|quest = No
+|tradeable = No
+|bankable = Yes
+|equipable = Yes
+|stackable = No
+|noteable = No
+|options = Wield, Drop
+|examine = Is this the true god sword? Or simply a joke replica?
+|value = 50000
+|weight = 10.000
+|id = 30367
+|leagueRegion = Asgarnia
+}}
+[[File:The dogsword detail.png|130px|left]]
+'''The dogsword''' was a [[Godsword]] combining the effects of all 5 godswords. It was an unlock in the [[Grid Master]] [[community event]], unlocked by completing all tasks in column 1. As with all godsword variants, it requires level 75 [[Attack]] to wield.
+
+It counts as a god item towards all factions in the [[God Wars Dungeon]].
+
+==Combat stats==
+
+{{Infobox Bonuses
+|astab = 0
+|aslash = +132
+|acrush = +80
+|amagic = +0
+|arange = +0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|drange = 0
+|str = +132
+|rstr = 0
+|mdmg = 0
+|prayer = +8
+|slot = 2h
+|speed = 6
+|attackrange = 1
+|combatstyle = 2h Sword
+|image = [[File:The dogsword equipped male.png|150px]]
+|altimage = [[File:The dogsword equipped female.png|140px]]
+}}{{CombatStyles|2h Sword|speed=6|attackrange=1}}
+
+==Special attack==
+[[File:Echo slash.webm|thumb|440x440px|A player performing the dogsword's special attack, ''Echo slash''.]]The dogsword has a [[special attack]], ''Echo slash'', which consumes 50% of the wielder's special attack energy. The special attack applies all of the [[godsword]]s' special attacks at once. There's also a chance on rare occasions that when performing its special attack the player will shout {{Overhead|Woof!}} and a different special attack sound will play instead.
+{| class="wikitable"
+!Godsword
+!Special Attack
+|-
+|{{plink|Armadyl godsword}}
+|Increased damage by 37.5% and accuracy by 100%.
+|-
+|{{plink|Bandos godsword}}
+|Stat reduction based on damage dealt.
+|-
+|{{plink|Zamorak godsword}}
+|Freeze target for 20 seconds.
+|-
+|{{plink|Saradomin godsword}}
+|Restore Hitpoints by 50% and Prayer by 25% of damage dealt.
+|-
+|{{plink|Ancient godsword}}
+|Marks target. After 4.8 seconds in close proximity, deals 25 magic damage and heals up to 25 hitpoints.
+|}
+
+==Past appearances==
+This item has appeared in a previous [[temporary event]]:
+*[[Raging Echoes League]]
+**The dogsword was dropped by the [[Echo Cerberus]] at a rate of 1/25.
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 12 November 2025
+|change = The dogsword was removed at the conclusion of [[Grid Master]].
+}}
+{{Subject changes
+|date = 15 October 2025
+|update = Grid Master - Out Today!
+|change = The dogsword was re-added at the start of [[Grid Master]].
+}}
+{{Subject changes
+|date = 22 January 2025
+|update = Bank QoL & Mini Menu Improvements
+|change = The dogsword was removed at the conclusion of [[Raging Echoes League]].
+}}
+{{Subject changes
+|date = 27 November 2024
+|update = Leagues V: Raging Echoes OUT NOW!
+|change = The dogsword was added with the start of [[Raging Echoes League]].
+}}
+{{Subject changes footer}}
+
+==Gallery==
+<gallery mode="packed" heights="200" style="text-align:left">
+File:Raging Echoes League - echo gear concept art.png|Concept art of the Raging Echo equipment, by [[Mod Jerv]].
+File:Echo slash woof.webm|A player performing the rare Woof! attack.
+File:Echo slash.gif|A player performing echo slash ''Echo slash'' on an npc.
+</gallery>
+
+== Trivia ==
+* The dogsword can be used as one of the three items for the [[Clue scroll (master)|master]] [[Treasure Trails/Guide/Cryptic clues/Master|cryptic clue]] step "''Here, there are tears, but nobody is crying. Speak to the guardian and show off your alignment to balance.''", requiring the player to talk to [[Juna]] while wearing three [[Guthix items|Guthix-affiliated items]]. Despite no direct reference to [[Guthix]] on the hilt, Juna's dialogue compliments the player's dedication to balance.
+* Equipping the dogsword does not count towards the task to equip a godsword.
+
+{{Grid Master}}
+{{Raging Echoes League}}

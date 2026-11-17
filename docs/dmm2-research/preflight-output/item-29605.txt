@@ -1,0 +1,13 @@
+DRY_RUN_ONLY kind=item upstream=[29605] targets=[C:\RSPS\work\gpt-a\build\dmm2\cache-plan\game\game\data/cache, C:\RSPS\work\gpt-a\build\dmm2\cache-plan/file-server/cache]
+NOTE Armadyl godsword (Deadman) (29605) has no upstream noted variant; only the item is imported
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[06:05:21.920 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS proven_free_holes=752 item_candidates=65100 safe_free=64348
+PLAN item 24634 'Armadyl godsword (Deadman)' <- upstream_item:29605 bytes=87 models=[upstream_model:49502->65536, upstream_model:49469->65537, upstream_model:49470->65538]
+  OPCODES 1=65536 2="Armadyl godsword (Deadman)" 4=1957 5=498 6=484 7=65535 8=65535 12=0x001312d0 16=FLAG 23=65537 25=65538 36="Wield" 125=0x000200 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {0=0, 1=132, 2=80, 3=0, 4=0, 5=0, 6=0, 7=0, 8=0, 9=0, 10=132, 11=8, 13=0, 14=6, 434=0, 436=75, 1564=3}
+TRANSACTION tx-20261117-050530 applied=false finalized=0 recovered=0

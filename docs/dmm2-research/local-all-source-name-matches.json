@@ -1,0 +1,552 @@
+{
+  "361": {
+    "name": "Tuna",
+    "inv": [
+      "Eat",
+      null,
+      null,
+      null,
+      null
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 2355,
+    "cost": 120,
+    "97": 362,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "772": {
+    "name": "Dramen staff",
+    "inv": [
+      null,
+      "Wield",
+      null,
+      null,
+      null
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {
+      "644": 28,
+      "686": 1
+    },
+    "cost": 15,
+    "model": 2648,
+    "wear23": 534,
+    "wear25": 534,
+    "126": [
+      3,
+      -11,
+      6
+    ],
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "22736": {
+    "name": "Bow of Faerdhinen (c)",
+    "inv": [
+      null,
+      "Wield",
+      null,
+      "Uncharge",
+      null
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {
+      "686": 16,
+      "23": 80,
+      "749": 4,
+      "750": 80,
+      "751": 16,
+      "752": 70
+    },
+    "model": 36842,
+    "cost": 5000000,
+    "wear23": 36848,
+    "wear25": 36848,
+    "126": [
+      0,
+      6,
+      0
+    ],
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "22737": {
+    "name": "Crystal helm",
+    "inv": [
+      null,
+      "Wear",
+      "Check",
+      "Revert",
+      null
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {
+      "749": 1,
+      "750": 70,
+      "751": 16,
+      "752": 50,
+      "528": "Check"
+    },
+    "model": 36849,
+    "cost": 500000,
+    "wear23": 36850,
+    "wear25": 36852,
+    "head90": 36853,
+    "head91": 36854,
+    "worn": [
+      "Check",
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "22738": {
+    "name": "Crystal helm (inactive)",
+    "inv": [
+      null,
+      "Wear",
+      null,
+      "Revert",
+      null
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 36849,
+    "cost": 500000,
+    "wear23": 36856,
+    "wear25": 36857,
+    "head90": 36859,
+    "head91": 36863,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "22739": {
+    "name": "Crystal body",
+    "inv": [
+      null,
+      "Wear",
+      "Check",
+      "Revert",
+      null
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {
+      "749": 1,
+      "750": 70,
+      "751": 16,
+      "752": 50,
+      "528": "Check"
+    },
+    "model": 36864,
+    "cost": 1500000,
+    "wear23": 36873,
+    "wear25": 36875,
+    "worn": [
+      "Check",
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "22740": {
+    "name": "Crystal body (inactive)",
+    "inv": [
+      null,
+      "Wear",
+      null,
+      "Revert",
+      null
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 36864,
+    "cost": 1500000,
+    "wear23": 36882,
+    "wear25": 36888,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "22741": {
+    "name": "Crystal legs",
+    "inv": [
+      null,
+      "Wear",
+      "Check",
+      "Revert",
+      null
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {
+      "749": 1,
+      "750": 70,
+      "751": 16,
+      "752": 50,
+      "528": "Check"
+    },
+    "model": 36894,
+    "cost": 1000000,
+    "wear23": 36897,
+    "wear25": 36902,
+    "worn": [
+      "Check",
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "22742": {
+    "name": "Crystal legs (inactive)",
+    "inv": [
+      null,
+      "Wear",
+      null,
+      "Revert",
+      null
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 36894,
+    "cost": 1000000,
+    "wear23": 36904,
+    "wear25": 36906,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "22761": {
+    "name": "Toxic staff (uncharged)",
+    "inv": [
+      null,
+      "Wield",
+      null,
+      "Dismantle",
+      null
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {
+      "644": 28,
+      "686": 26,
+      "687": 1,
+      "749": 0,
+      "750": 75,
+      "751": 6,
+      "752": 75
+    },
+    "model": 37222,
+    "cost": 1000006,
+    "wear23": 37227,
+    "wear25": 37261,
+    "97": 22762,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "23822": {
+    "name": "Trinket of fairies",
+    "inv": [
+      "Fairy-ring",
+      "Spirit-tree",
+      "Tool-leprechauns",
+      "Last-destination",
+      null
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 63897,
+    "cost": 100000,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "23823": {
+    "name": "Trinket of avarice",
+    "inv": [
+      "Note/Unnote",
+      "Value",
+      null,
+      null,
+      null
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 63900,
+    "cost": 100000,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "23824": {
+    "name": "Trinket of undead",
+    "inv": [
+      "Summon Lil Zuk",
+      "Summon Lil Kal",
+      "Summon Lil Wisp",
+      null,
+      null
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 63903,
+    "cost": 100000,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "23825": {
+    "name": "Trinket of fortuity (inactive)",
+    "inv": [
+      "Charge",
+      null,
+      null,
+      null,
+      null
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 63911,
+    "cost": 100000,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "23856": {
+    "name": "Deadman's skull",
+    "inv": [
+      "Shop",
+      "Unlocks",
+      null,
+      "Breach Check",
+      "Destroy"
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 64063,
+    "cost": 1,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "23881": {
+    "name": "Deadman starter pack",
+    "inv": [
+      "Open",
+      null,
+      null,
+      null,
+      "Destroy"
+    ],
+    "ground": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "params": {},
+    "model": 64647,
+    "cost": 1,
+    "worn": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  }
+}

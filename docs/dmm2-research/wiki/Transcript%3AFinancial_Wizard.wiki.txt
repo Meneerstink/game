@@ -1,0 +1,43 @@
+{{Transcript|npc}}
+{{Incomplete|Missing 'You already have one of those.', 'And what can the Sophanem Bank do for you today?', 'Hand me a banknote, and I'll try to convert it to an item.' non-standard dialogue conditions may be wrong }}
+
+==Standard dialogue==
+* '''Financial Wizard:''' Good day, how may I help you?
+* {{topt|I'd like to access my bank account, please.}}
+** {{tact|(Bank interface opens.)}}
+* {{topt|I'd like to check my PIN settings.}}
+** {{tact|(PIN interface opens.)}}
+* {{topt|I'd like to collect items.}}
+** {{tact|(Collection interface opens.)}}
+* {{topt|What is this place?}}
+** '''Player:''' What is this place?
+** '''Financial Wizard:''' This is a branch of the Bank of Gielinor. We have branches in many towns.
+** '''Player:''' And what do you do?
+** '''Financial Wizard:''' We will look after your items and money for you. Leave your valuables with us if you want to keep them safe.
+** {{tact|end}}
+* {{topt|What's a Financial Wizard?}}
+** '''Player:''' What's a Financial Wizard?
+** '''Financial Wizard:''' Ah, we're special bankers who can access your safe deposit box on Deadman Worlds. Would you like to do that now?
+** {{topt|Yes, please.}}
+*** '''Player:''' Yes, please.
+*** {{tact|opens=Safe deposit box}}
+** {{topt|No, thank you.}}
+*** '''Player:''' No, thank you.
+*** {{tact|end}}
+
+==Unnoting banknotes==
+* {{topt|Yes}}
+** {{tcond|If the there is no inventory space:}}
+*** '''Financial Wizard:''' You don't have any inventory space.
+*** {{tact|end}}
+** {{tcond|If the there is inventory space:}}
+*** {{tact|receives=un-noted items}}
+* {{topt|No}}
+** {{tact|end}}
+
+==Depositing at the Port Phasmatys ghost Financial Wizard without a ghostspeak item equipped==
+* '''Financial Wizard:''' Woooo wooo wooooo woooo
+* {{tact|end}}
+
+==Attempting to access deposit-box while skulled==
+{{mes|You cannot access your safe deposit box whilst you are skulled!}}

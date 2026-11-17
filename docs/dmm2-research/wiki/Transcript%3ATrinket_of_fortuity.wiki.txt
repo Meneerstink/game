@@ -1,0 +1,5 @@
+{{Transcript|item}}
+{{incomplete|likely missing other things}}
+
+==Charging the trinket==
+* {{tbox|pic=Trinket of fortuity detail.png|You charge your trinket with 10,000,000 coins.}}

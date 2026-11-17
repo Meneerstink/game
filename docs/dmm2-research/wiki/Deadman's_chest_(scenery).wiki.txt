@@ -1,0 +1,248 @@
+{{Deadman permanent|content=yes}}
+{{Otheruses|def=no|the platebody item|Deadman's chest|the supply chest version from seasonals|Deadman Supply Chest}}
+{{Infobox Scenery
+|version1 = Closed
+|version2 = Open
+|name = Deadman's chest
+|image1 = [[File:Deadman's chest (scenery).png|250x250px]]
+|image2 = [[File:Deadman's chest (scenery, open).png|250x250px]]
+|release = [[21 January]] [[2026]]
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|members = Yes
+|quest = No
+|location = Varies
+|options1 = Loot
+|options2 = None
+|examine1 = Takes a while to open.
+|examine2 = Took a while to open.
+|map = No
+|id1 = 60246,60248
+|id2 = 60250
+|leagueRegion = No
+}}
+The '''Deadman's chest''' is a chest that can appear upon killing any NPC that has at least 30 Hitpoints. Additionally, every 30 minutes, a chest will spawn in a random location, with its location broadcast in the chatbox to all players on the world: {{mes|A Deadman's Chest has spawned at [location]!|colour=#a53fff}} Chests that spawn from killing an NPC do not broadcast their presence. On permanent Deadman worlds, the chest will spawn once per hour.
+
+If the chest attempts to spawn in an area where it would likely be impossible to open (e.g. the [[Dagannoth Kings]]), it will instead spawn outside of the area where the NPC is located. If the player is standing in the area that the chest would spawn in, they will be knocked away when it appears.
+
+[[Zemouregal (Deadman's chest)|Zemouregal]] spawns alongside the chest and roams the surrounding area, occasionally summoning [[Zemouregal Summon|minions]]. It is not strictly required to kill them to loot the chest, but they can interrupt players trying to open it by initiating combat.
+
+The chest contains a variety of powerful items, but takes 60 seconds without interruption to open, or 30 seconds in a multi-combat area. Any form of combat or inventory action (e.g., eating food or drinking a potion) will reset the opening timer. Additionally, the following conditions must be met in order to attempt opening it:
+* The player is not in an instance
+* The player is risking at least 100,000 coins (250,000 on permanent Deadman mode)
+* The player does not have immunity or PvP protection
+
+==Locations==
+The chests that spawn on a timer can appear in the following places:
+{|class="wikitable align-center-2 align-center-3"
+!Location
+!{{plinkp|Multicombat area|pic=Multicombat}}
+!Map
+|-
+|East of the [[Wilderness Bandit Camp]] || Multi
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|3052,3671}}
+|-
+|Outside the [[Al Kharid bank]] || Multi
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|3273,3160}}
+|-
+|At the [[Tasakaal]] entrance ([[Karuulm Slayer Dungeon]]) || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|1312,10199}}
+|-
+|By the [[Iorwerth Warrior|elves]] within the Prifddinas underground ([[Iorwerth Dungeon]]) || Single
+|?
+|-
+|By the [[Moss Giant (Iorwerth Dungeon)|moss giants]] within the Prifddinas underground ([[Iorwerth Dungeon]]) || Single
+|?
+|-
+|Down a [[Mudskipper Point|ladder]], far south of [[Port Sarim]] ([[Asgarnian Ice Dungeon]]) || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|2994,9544}}
+|-
+|East of [[Castle Wars]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|2455,3086}}
+|-
+|East of the [[Heroes' Guild]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|2912,3503}}
+|-
+|East of the [[Hunter Guild]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|1591,3038}}
+|-
+|East of the [[Myths' Guild]] || Single
+|?
+|-
+|East of the [[Rimmington Mine]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|2994,3240}}
+|-
+|Far south-east of the [[Silk Chasm]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|3360,3744}}
+|-
+|Far west of the [[Dark Warriors' Fortress]] || Single
+|?
+|-
+|North of the [[Edgeville Monastery]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|3045,3512}}
+|-
+|North of the [[Troll_Stronghold_(location)#Lowest_level|jail]] within the [[Troll Stronghold (location)|Troll Stronghold]] || Single
+|?
+|-
+|North of the [[Mage Arena]] || Single
+|?
+|-
+|North of the [[Warriors' Guild]] || Single
+|?
+|-
+|North-east of [[River Amja]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|2935,3073}}
+|-
+|North-east of the [[Sorcerer's Tower]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|2729,3436}}
+|-
+|North-west of the [[Al Kharid mine]] || Single
+|?
+|-
+|North-west of [[Barrows]] || Single
+|?
+|-
+|North-west within [[Mort'ton]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|3468,3304}}
+|-
+|On the [[Catherby]] Beach || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|2848,3431}}
+|-
+|South of the [[Forgotten Cemetery]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|2974,3731}}
+|-
+|South of the [[Lumbridge Swamp]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|3169,3147}}
+|-
+|South of the [[Resource Area]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|3171,3905}}
+|-
+|South-east of [[Outer Fortis]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|1746,3037}}
+|-
+|South-east of [[Pyre Cove]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|3361,3601}}
+|-
+|South-east of [[Taverley]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|2927,3429}}
+|-
+|South-west of [[Hunter's End]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|3088,3648}}
+|-
+|South-west of the [[Combat Training Camp]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|2482,3352}}
+|-
+|South-west of the [[Fight Arena (location)|Fight Arena]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|2482,3352}}
+|-
+|Top floor within the [[Slayer Tower]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|3421,3547|plane=2}}
+|-
+|West of [[Catherby]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|2790,3461}}
+|-
+|West of [[Draynor Manor]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|3068,3342}}
+|-
+|West of [[Port Khazard]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|2621,3161}}
+|-
+|West of [[Silvarea]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|3338,3481}}
+|-
+|West of the [[Mage Arena]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|3072,3936}}
+|-
+|Within [[Canifis]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|3494,3484}}
+|-
+|Within [[Shilo Village]] || Single
+|?
+|-
+|Within the [[blue dragons]] within Taverley underground ([[Taverley Dungeon]]) || Single
+|?
+|-
+|Within the [[Chicken Shrine]] ([[Evil Chicken's Lair]]) || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|2482,4371}}
+|-
+|Within the [[Dwarven Mine]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|3037,9814}}
+|-
+|Within the [[Fremennik Slayer Cave]] || Single
+|{{Map|mapID=-1|type=maplink|mtype=pin|text=Map|icon=redPin|2718,10006}}
+|-
+|Within the [[Mausoleum]] || Single
+|?
+|-
+|Within [[Zanaris]], north-east of the throne room || Single
+|?
+|}
+
+==Drops==
+The first player to successfully open the chest will receive either a trinket, a weapon, or a piece of the [[Ancient Warriors' equipment|Ancient Warriors' armour]].{{CiteNews|url=https://secure.runescape.com/m=news/deadman-annihilation---everything-you-need-to-know?oldschool=1|title=Deadman: Annihilation - Everything You Need To Know|newsdate=23 January 2026|quote=The first player to open the chest will receive a guaranteed drop of any of the following: Trinket of Advanced Weaponry, Trinket of Undead, Morrigan's Thrownaxe x100, Morrigan's Javelin x100, Any piece of Ancient Warrior's armour (Vesta, Statius, Morrigan or Zuriel)... The Thunder Khopesh... The Dogsword}}
+
+On the permanent Deadman world, the chest will contain a tier 5 [[archaic emblem]], with a rare chance to instead drop Ancient Warrior's armour and a very rare chance to instead drop the dogsword.
+
+{{DropsTableHead}}
+{{DropsLineReward|name=Trinket of advanced weaponry|quantity=1|rarity=}}
+{{DropsLineReward|name=Trinket of undead|quantity=1|rarity=}}
+{{DropsLineReward|name=Thunder khopesh (Deadman Mode)|alt=Thunder khopesh|image=Thunder khopesh.png|quantity=1|rarity=}}
+{{DropsLineReward|name=The dogsword (Deadman Mode)|alt=The dogsword|image=The dogsword.png|quantity=1|rarity=}}
+{{DropsLineReward|name=Morrigan's javelin (Deadman Mode)|alt=Morrigan's javelin|image=Morrigan's javelin.png|quantity=100|rarity=}}
+{{DropsLineReward|name=Morrigan's throwing axe (Deadman Mode)|alt=Morrigan's throwing axe|image=Morrigan's throwing axe.png|quantity=100|rarity=}}
+{{DropsLineReward|name=Statius's full helm (Deadman Mode)|alt=Statius's full helm|image=Statius's full helm.png|quantity=1|rarity=}}
+{{DropsLineReward|name=Statius's platebody (Deadman Mode)|alt=Statius's platebody|image=Statius's platebody.png|quantity=1|rarity=}}
+{{DropsLineReward|name=Statius's platelegs (Deadman Mode)|alt=Statius's platelegs|image=Statius's platelegs.png|quantity=1|rarity=}}
+{{DropsLineReward|name=Vesta's chainbody (Deadman Mode)|alt=Vesta's chainbody|image=Vesta's chainbody.png|quantity=1|rarity=}}
+{{DropsLineReward|name=Vesta's plateskirt (Deadman Mode)|alt=Vesta's plateskirt|image=Vesta's plateskirt.png|quantity=1|rarity=}}
+{{DropsLineReward|name=Zuriel's hood (Deadman Mode)|alt=Zuriel's hood|image=Zuriel's hood.png|quantity=1|rarity=}}
+{{DropsLineReward|name=Zuriel's robe top (Deadman Mode)|alt=Zuriel's robe top|image=Zuriel's robe top.png|quantity=1|rarity=}}
+{{DropsLineReward|name=Zuriel's robe bottom (Deadman Mode)|alt=Zuriel's robe bottom|image=Zuriel's robe bottom.png|quantity=1|rarity=}}
+{{DropsLineReward|name=Morrigan's coif (Deadman Mode)|alt=Morrigan's coif|image=Morrigan's coif.png|quantity=1|rarity=}}
+{{DropsLineReward|name=Morrigan's leather body (Deadman Mode)|alt=Morrigan's leather body|image=Morrigan's leather body.png|quantity=1|rarity=}}
+{{DropsLineReward|name=Morrigan's leather chaps (Deadman Mode)|alt=Morrigan's leather chaps|image=Morrigan's leather chaps.png|quantity=1|rarity=}}
+{{DropsTableBottom}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 2 September 2026
+|update = Summer Sweep Up Miscellaneous
+|change = The Deadman chest location south-west of the [[Lumber Yard]] could cause players to get trapped and safely open the chest, so it has been removed. Many new locations have been added.
+}}
+{{Subject changes
+|date = 5 August 2026
+|update = Wyrmscraig & Sailing Changes
+|change = Deadman's chests now spawn once per hour on the permanent Deadman world.
+}}
+{{Subject changes
+|date = 18 February 2026
+|update = 25th Anniversary Event: 25 Years, 25 Mementos!
+|change = Deadman's chests for Artio/Callisto, Calvar'ion/Vet'ion, and Spindel/Venenatis now spawn outside of their cave entrance.
+}}
+{{Subject changes
+|date = 4 February 2026
+|update = Deadman: Annihilation Tweaks, Shellbane Gryphon CAs & More!
+|change = The chest now correctly takes 60 seconds to open in singles and 30 seconds in multi, whereas previously it took 80 seconds and 41 seconds respectively.
+}}
+{{Subject changes
+|date = 2 February 2026
+|type = hotfix
+|change = The chest can no longer be looted while standing inside of it.
+}}
+{{Subject changes footer}}
+
+==Gallery==
+<gallery mode=nolines heights=400>
+Deadman's chest (scenery) spawn animation.webp|Spawning animation
+Deadman's chest (scenery) idle animation.webp|Idle animation
+</gallery>
+
+==Trivia==
+*Its appearance and animations are the same as that of the [[Deadman Supply Chest]].
+*It is possible for [[breach monster]]s to spawn a Deadman's chest.
+*Every one of the timed chest spawn broadcast messages is grammatically incorrect, e.g., {{mes|A Deadman's Chest has spawned at on the Catherby Beach!}}{{sic}}
+
+==References==
+{{Reflist}}
+
+{{Deadman: Annihilation}}

@@ -1,0 +1,1367 @@
+[
+  {
+    "kind": "item",
+    "source": "13307",
+    "name": "Blood money",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "13317",
+    "name": "Deadman's chest",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "13318",
+    "name": "Deadman's legs",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "13319",
+    "name": "Deadman's cape",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "13660",
+    "name": "Chronicle",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "14403",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "18218",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "18219",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "18220",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "18221",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "22331",
+    "name": "Starter sword",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "22332",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "22333",
+    "name": "Starter bow",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "22334",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "22335",
+    "name": "Starter staff",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "22336",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "26149",
+    "name": "Tuna",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "28531",
+    "name": "Corrupted voidwaker",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "28532",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "28533",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "28534",
+    "name": "Corrupted dragon claws",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "28535",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "28536",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "28537",
+    "name": "Corrupted armadyl godsword",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "28538",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "28539",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "28540",
+    "name": "Corrupted twisted bow",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "28541",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "28542",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "28543",
+    "name": "Corrupted scythe of vitur",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "28544",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "28545",
+    "name": "Corrupted scythe of vitur (uncharged)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "28546",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "28547",
+    "name": "Corrupted tumeken's shadow",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "28548",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "28549",
+    "name": "Corrupted tumeken's shadow (uncharged)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "28550",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "28561",
+    "name": "Trinket of vengeance",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "28562",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "28563",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "28564",
+    "name": "Trinket of fairies",
+    "status": "EXISTING local 23822",
+    "handling": "REUSE: EXISTING local 23822"
+  },
+  {
+    "kind": "item",
+    "source": "28565",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "28566",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "28567",
+    "name": "Trinket of advanced weaponry",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "28568",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "28569",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "28570",
+    "name": "Trinket of undead",
+    "status": "EXISTING local 23824",
+    "handling": "REUSE: EXISTING local 23824"
+  },
+  {
+    "kind": "item",
+    "source": "28571",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "28572",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "29599",
+    "name": "Corrupted dark bow",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "29600",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "29601",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "29602",
+    "name": "Corrupted Volatile Nightmare staff",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "29603",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "29604",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "29605",
+    "name": "Armadyl godsword (Deadman)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "29606",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "29607",
+    "name": "Voidwaker (Deadman)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "29608",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "29609",
+    "name": "Volatile Nightmare staff (Deadman)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "29610",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "29611",
+    "name": "Dark bow (Deadman)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "29612",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "29613",
+    "name": "Imbued Zamorak cape (Deadman)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "29614",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "29615",
+    "name": "Imbued Guthix cape (Deadman)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "29616",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "29617",
+    "name": "Imbued Saradomin cape (Deadman)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "29618",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "29619",
+    "name": "Armageddon rug",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "29620",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "29621",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "29622",
+    "name": "Armageddon teleport scroll",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "29623",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "29624",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "29625",
+    "name": "Armageddon weapon scroll",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "29626",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "29627",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "29628",
+    "name": "Armageddon cape fabric",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "29629",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "29630",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "33012",
+    "name": "Annihilation weapon scroll",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "33013",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "33014",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "33015",
+    "name": "Annihilation blueprints",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "33016",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "33017",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "33018",
+    "name": "Annihilation teleport scroll",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "33019",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "33020",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "33021",
+    "name": "Bow of Faerdhinen (c)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "33022",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "33023",
+    "name": "Crystal body",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "33024",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "33025",
+    "name": "Crystal body (inactive)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "33026",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "33027",
+    "name": "Crystal legs",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "33028",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "33029",
+    "name": "Crystal legs (inactive)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "33030",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "33031",
+    "name": "Crystal helm",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "33032",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "33033",
+    "name": "Crystal helm (inactive)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "33034",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "33035",
+    "name": "Toxic staff (uncharged)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "33036",
+    "name": "Toxic staff (Deadman)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "33037",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "33041",
+    "name": "Thunder khopesh",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "33042",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "33043",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "33044",
+    "name": "Trinket of avarice",
+    "status": "EXISTING local 23823",
+    "handling": "REUSE: EXISTING local 23823"
+  },
+  {
+    "kind": "item",
+    "source": "33045",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "33046",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "33047",
+    "name": "Trinket of fortuity (inactive)",
+    "status": "EXISTING local 23825",
+    "handling": "REUSE: EXISTING local 23825"
+  },
+  {
+    "kind": "item",
+    "source": "33048",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "33049",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "33050",
+    "name": "Trinket of fortuity (active)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "33051",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "33052",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "33063",
+    "name": "Starter cape",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "33064",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "33122",
+    "name": "Annihilation exit portal blueprints",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "33123",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "34422",
+    "name": "Fire ruby",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "34423",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "34424",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "item",
+    "source": "34425",
+    "name": "Amulet of fire",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "34426",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "34427",
+    "name": "source-linked form (decode before import)",
+    "status": "PREFLIGHT ONLY; Claude assigns/verifies local id",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "npc",
+    "source": "6516",
+    "name": "Financial Wizard West Varrock",
+    "status": "PREFLIGHT ONLY",
+    "handling": "npc"
+  },
+  {
+    "kind": "npc",
+    "source": "6485",
+    "name": "Financial Seer",
+    "status": "PREFLIGHT ONLY",
+    "handling": "npc"
+  },
+  {
+    "kind": "npc",
+    "source": "8391",
+    "name": "Nigel main",
+    "status": "PREFLIGHT ONLY",
+    "handling": "npc"
+  },
+  {
+    "kind": "npc",
+    "source": "8390",
+    "name": "Nigel DMM alternative",
+    "status": "PREFLIGHT ONLY",
+    "handling": "npc"
+  },
+  {
+    "kind": "npc",
+    "source": "15569",
+    "name": "Lil Zuk",
+    "status": "PREFLIGHT ONLY",
+    "handling": "npc"
+  },
+  {
+    "kind": "npc",
+    "source": "15570",
+    "name": "Lil Kal",
+    "status": "PREFLIGHT ONLY",
+    "handling": "npc"
+  },
+  {
+    "kind": "npc",
+    "source": "15571",
+    "name": "Lil Wisp",
+    "status": "PREFLIGHT ONLY",
+    "handling": "npc"
+  },
+  {
+    "kind": "item",
+    "source": "13308",
+    "name": "Blood money count model",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "AUTO_COUNT: imported by parent Blood money 13307"
+  },
+  {
+    "kind": "item",
+    "source": "13309",
+    "name": "Blood money count model",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "AUTO_COUNT: imported by parent Blood money 13307"
+  },
+  {
+    "kind": "item",
+    "source": "13310",
+    "name": "Blood money count model",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "AUTO_COUNT: imported by parent Blood money 13307"
+  },
+  {
+    "kind": "item",
+    "source": "13311",
+    "name": "Blood money count model",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "AUTO_COUNT: imported by parent Blood money 13307"
+  },
+  {
+    "kind": "item",
+    "source": "13312",
+    "name": "Blood money count model",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "AUTO_COUNT: imported by parent Blood money 13307"
+  },
+  {
+    "kind": "item",
+    "source": "13313",
+    "name": "Blood money count model",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "AUTO_COUNT: imported by parent Blood money 13307"
+  },
+  {
+    "kind": "item",
+    "source": "13314",
+    "name": "Blood money count model",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "AUTO_COUNT: imported by parent Blood money 13307"
+  },
+  {
+    "kind": "item",
+    "source": "13315",
+    "name": "Blood money count model",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "AUTO_COUNT: imported by parent Blood money 13307"
+  },
+  {
+    "kind": "item",
+    "source": "13316",
+    "name": "Blood money count model",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "AUTO_COUNT: imported by parent Blood money 13307"
+  },
+  {
+    "kind": "item",
+    "source": "13658",
+    "name": "Teleport card",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "item"
+  },
+  {
+    "kind": "item",
+    "source": "13659",
+    "name": "Teleport card noted",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "AUTO_NOTE: imported with parent Spec(noted=true)"
+  },
+  {
+    "kind": "item",
+    "source": "14402",
+    "name": "Teleport card placeholder",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "NO_IMPORT: OSRS bank placeholder; 667 importer has no placeholder conversion"
+  },
+  {
+    "kind": "seq",
+    "source": "11444",
+    "name": "HUMAN_DEADMAN_ARMAGEDDON_REWARD_TELEPORT_01; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "11810",
+    "name": "VFX_KHOPESH_LIGHTNING_EXTRA; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "11811",
+    "name": "VFX_KHOPESH_LIGHTNING_IMPACT; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "11812",
+    "name": "HUMAN_SPECIAL_KHOPESH; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "11935",
+    "name": "LEAGUE_5_KHOPESH_READY; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "11936",
+    "name": "LEAGUE_5_KHOPESH_WALK_F; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "11937",
+    "name": "LEAGUE_5_KHOPESH_RUN_F; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "13701",
+    "name": "HUMAN_DEADMAN_ANNIHILATION_REWARD_TELEPORT_FULL; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "13702",
+    "name": "HUMAN_DEADMAN_ANNIHILATION_REWARD_TELEPORT_01; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "13703",
+    "name": "HUMAN_DEADMAN_ANNIHILATION_REWARD_TELEPORT_02; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "13704",
+    "name": "HUMAN_DEADMAN_ANNIHILATION_REWARD_TELEPORT_03; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "13705",
+    "name": "HUMAN_DEADMAN_ANNIHILATION_REWARD_TELEPORT_04; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "13706",
+    "name": "HUMAN_DEADMAN_ANNIHILATION_REWARD_TELEPORT_05; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "13707",
+    "name": "HUMAN_DEADMAN_ANNIHILATION_REWARD_TELEPORT_06; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "13708",
+    "name": "DEADMAN_2026_HOME_TELE_SPOTANIM_FULL; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "13709",
+    "name": "DEADMAN_2026_HOME_TELE_SPOTANIM_01; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "13710",
+    "name": "DEADMAN_2026_HOME_TELE_SPOTANIM_02; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "13711",
+    "name": "DEADMAN_2026_HOME_TELE_SPOTANIM_03; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "13712",
+    "name": "DEADMAN_2026_HOME_TELE_SPOTANIM_04; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "13713",
+    "name": "DEADMAN_2026_HOME_TELE_SPOTANIM_05; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "13714",
+    "name": "DEADMAN_2026_HOME_TELE_SPOTANIM_06; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "seq",
+    "source": "14497",
+    "name": "SPOTANIM_AMULET_OF_FIRE_CREATE; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "seq"
+  },
+  {
+    "kind": "spotanim",
+    "source": "3030",
+    "name": "FX_KHOPESH_SPECIAL; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "spotanim"
+  },
+  {
+    "kind": "spotanim",
+    "source": "3031",
+    "name": "FX_KHOPESH_LIGHTNING_SPECIAL_EXTRA; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "spotanim"
+  },
+  {
+    "kind": "spotanim",
+    "source": "3032",
+    "name": "FX_KHOPESH_LIGHTNING_BASIC; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "spotanim"
+  },
+  {
+    "kind": "spotanim",
+    "source": "3033",
+    "name": "FX_KHOPESH_LIGHTNING_SPECIAL; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "spotanim"
+  },
+  {
+    "kind": "spotanim",
+    "source": "3565",
+    "name": "DEADMAN_2026_HOME_TELE_SPOTANIM_FULL; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "spotanim"
+  },
+  {
+    "kind": "spotanim",
+    "source": "3566",
+    "name": "DEADMAN_2026_HOME_TELE_SPOTANIM_01; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "spotanim"
+  },
+  {
+    "kind": "spotanim",
+    "source": "3567",
+    "name": "DEADMAN_2026_HOME_TELE_SPOTANIM_02; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "spotanim"
+  },
+  {
+    "kind": "spotanim",
+    "source": "3568",
+    "name": "DEADMAN_2026_HOME_TELE_SPOTANIM_03; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "spotanim"
+  },
+  {
+    "kind": "spotanim",
+    "source": "3569",
+    "name": "DEADMAN_2026_HOME_TELE_SPOTANIM_04; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "spotanim"
+  },
+  {
+    "kind": "spotanim",
+    "source": "3570",
+    "name": "DEADMAN_2026_HOME_TELE_SPOTANIM_05; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "spotanim"
+  },
+  {
+    "kind": "spotanim",
+    "source": "3571",
+    "name": "DEADMAN_2026_HOME_TELE_SPOTANIM_06; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "spotanim"
+  },
+  {
+    "kind": "spotanim",
+    "source": "4020",
+    "name": "SPOTANIM_AMULET_OF_FIRE; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "spotanim"
+  },
+  {
+    "kind": "sprite",
+    "source": "170",
+    "name": "safebox or Deadman Tutor icon candidate; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "INTERFACE_DEPENDENCY"
+  },
+  {
+    "kind": "sprite",
+    "source": "828",
+    "name": "safebox or Deadman Tutor icon candidate; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "INTERFACE_DEPENDENCY"
+  },
+  {
+    "kind": "sprite",
+    "source": "829",
+    "name": "safebox or Deadman Tutor icon candidate; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "INTERFACE_DEPENDENCY"
+  },
+  {
+    "kind": "sprite",
+    "source": "830",
+    "name": "safebox or Deadman Tutor icon candidate; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "INTERFACE_DEPENDENCY"
+  },
+  {
+    "kind": "sprite",
+    "source": "1041",
+    "name": "safebox or Deadman Tutor icon candidate; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "INTERFACE_DEPENDENCY"
+  },
+  {
+    "kind": "sprite",
+    "source": "1042",
+    "name": "safebox or Deadman Tutor icon candidate; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "INTERFACE_DEPENDENCY"
+  },
+  {
+    "kind": "sprite",
+    "source": "1524",
+    "name": "safebox or Deadman Tutor icon candidate; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "NO_IMPORT: standalone icon candidate; semantic mapping unproven, dump is not import"
+  },
+  {
+    "kind": "sprite",
+    "source": "1681",
+    "name": "safebox or Deadman Tutor icon candidate; CANDIDATE only; assets presence is not timing/semantic proof",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "NO_IMPORT: standalone icon candidate; semantic mapping unproven, dump is not import"
+  },
+  {
+    "kind": "interface",
+    "source": "230",
+    "name": "Safe Deposit Box source root",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "interface"
+  },
+  {
+    "kind": "interface",
+    "source": "232",
+    "name": "Safe Deposit Box source inventory",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "interface"
+  },
+  {
+    "kind": "loc",
+    "source": "54114",
+    "name": "Deadman rug",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "loc"
+  },
+  {
+    "kind": "loc",
+    "source": "54115",
+    "name": "Deadman rug",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "loc"
+  },
+  {
+    "kind": "loc",
+    "source": "54116",
+    "name": "Deadman rug",
+    "status": "PREFLIGHT ONLY; Claude validates dependencies and local mapping",
+    "handling": "loc"
+  }
+]

@@ -62,7 +62,7 @@ object RangedCombatStrategy : CombatStrategy {
             val weapon = pawn.getEquipment(EquipmentType.WEAPON)
             val attackStyle = CombatConfigs.getAttackStyle(pawn)
             var range =
-                when (weapon?.id) {
+                when (gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(weapon?.id)) {
                     Items.ORANGE_SALAMANDER,
                     Items.RED_SALAMANDER,
                     Items.BLACK_SALAMANDER,
@@ -100,6 +100,8 @@ object RangedCombatStrategy : CombatStrategy {
                     // attack range" - the previous fix (2026-09-17, tx kits2) corrected the recolours' range from
                     // the 667 default 7 to 9, but the sourced OSRS value is 10, one range tile short for every
                     // dark bow variant (base, 667 recolours 15701-15704, OSRS painted green/blue/yellow/white).
+                    (gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.DARK_BOW.local ?: Int.MIN_VALUE) -> 6
+                    (gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.TWISTED_BOW.local ?: Int.MIN_VALUE) -> 10
                     Items.TWISTED_BOW, in Bows.CRYSTAL_BOWS, in Bows.DARK_BOWS -> 10
                     // Combat run 2026-09-29, OSRS Wiki infobox attack ranges (reference\weapons\osrs_weapons.json): these fell back
                     // to the default 7, so a blowpipe fired from 7 tiles instead of 5 and the 8-tile crossbows came one tile short.
@@ -127,6 +129,10 @@ object RangedCombatStrategy : CombatStrategy {
         if (pawn is Player) {
             val weapon = pawn.getEquipment(EquipmentType.WEAPON)
             val ammo = pawn.getEquipment(EquipmentType.AMMO)
+            if (gg.rsmod.plugins.content.starter.DeadmanStarterPack.isBow(weapon?.id)) {
+                return target !is Player && weapon != null && gg.rsmod.plugins.content.starter.DeadmanStarterPack.charges(weapon) > 0 &&
+                    gg.rsmod.plugins.content.starter.StarterWeaponCombat.bowAppearance != null
+            }
 
             // An armed special that fires without ammo (SpecialAttacks.registerReach), e.g. the Eclipse atlatl's Eclipse: OSRS Wiki
             // "Atlatl darts do not need to be equipped to perform the special attack."
@@ -154,7 +160,7 @@ object RangedCombatStrategy : CombatStrategy {
                 pawn.resetFacePawn()
                 return false
             }
-            val crossbow = CrossbowType.values.firstOrNull { it.item == weapon?.id }
+            val crossbow = CrossbowType.values.firstOrNull { it.item == gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.bowBase(weapon?.id) }
             if (crossbow != null && fired == null) {
                 val message =
                     if (ammo !=
@@ -169,7 +175,7 @@ object RangedCombatStrategy : CombatStrategy {
                 return false
             }
 
-            val bow = BowType.values.firstOrNull { it.item == weapon?.id }
+            val bow = BowType.values.firstOrNull { it.item == gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.bowBase(weapon?.id) }
             if (bow != null && bow.ammo.isNotEmpty()) {
                 if (fired == null) {
                     val message =
@@ -195,7 +201,10 @@ object RangedCombatStrategy : CombatStrategy {
     ) {
         val world = pawn.world
 
-        val animation = CombatConfigs.getAttackAnimation(pawn)
+        val starterAppearance = (pawn as? Player)?.getEquipment(EquipmentType.WEAPON)?.takeIf {
+            gg.rsmod.plugins.content.starter.DeadmanStarterPack.isBow(it.id)
+        }?.let { gg.rsmod.plugins.content.starter.StarterWeaponCombat.bowAppearance }
+        val animation = starterAppearance?.animation ?: CombatConfigs.getAttackAnimation(pawn)
 
         /*
          * A list of actions that will be executed upon this hit dealing damage
@@ -265,6 +274,11 @@ object RangedCombatStrategy : CombatStrategy {
                 world.spawn(first)
                 target.graphic(osrs.GLAIVE_01_IMPACT, 0, first.lifespan)
                 if (charged) world.spawn(pawn.createProjectile(target, osrs.GLAIVE_02_TRAVEL, RangedProjectile.DRAGON_THROWNAXE.type))
+            } else if (gg.rsmod.plugins.content.starter.DeadmanStarterPack.isBow(pawn.getEquipment(EquipmentType.WEAPON)?.id)) {
+                gg.rsmod.plugins.content.starter.StarterWeaponCombat.bowAppearance?.let { look ->
+                    pawn.graphic(look.cast, 96)
+                    world.spawn(pawn.createProjectile(target, look.projectile, ProjectileType.ARROW))
+                }
             } else if (gg.rsmod.plugins.content.items.osrs.CrystalEquipment.isCrystalBow(pawn.getEquipment(EquipmentType.WEAPON)?.id) ||
                 pawn.getEquipment(EquipmentType.WEAPON)?.id in gg.rsmod.plugins.content.items.osrs.RevenantBows.ALL
             ) {
@@ -272,7 +286,7 @@ object RangedCombatStrategy : CombatStrategy {
                 // Crystal bows fire their own arrow: Void donor arrows.gfx.toml special_arrow_shoot 250 (drawback, height 60) and
                 // special_arrow 249 (projectile). Bow of Faerdhinen: OSRS SP_ATTACK_ARROW_LAUNCH/TRAVEL_FAERDHINEN imported (fxpilot),
                 // same height as the crystal bow (ADAPTED).
-                val bowfa = pawn.getEquipment(EquipmentType.WEAPON)?.id in
+                val bowfa = gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(pawn.getEquipment(EquipmentType.WEAPON)?.id) in
                     setOf(gg.rsmod.plugins.api.cfg.Items.BOW_OF_FAERDHINEN, gg.rsmod.plugins.api.cfg.Items.BOW_OF_FAERDHINEN_C)
                 // Owner 2026-09-18: the shiny arrow did not leave the bow cleanly. Void's "height = 60" is in Void's own units;
                 // every arrow drawback in this server's RangedProjectile table uses 96, so these bows now match them.
@@ -558,6 +572,12 @@ object RangedCombatStrategy : CombatStrategy {
 
         if (damage > 0 && pawn.entityType.isPlayer) {
             addCombatXp(pawn as Player, target, damage)
+        }
+        // Preserve the shot's stance/weapon for its XP, even when this was its final charge.
+        if (pawn is Player) {
+            pawn.getEquipment(EquipmentType.WEAPON)?.takeIf { gg.rsmod.plugins.content.starter.DeadmanStarterPack.isBow(it.id) }?.let {
+                gg.rsmod.plugins.content.starter.StarterWeaponCombat.consume(pawn, it)
+            }
         }
     }
 

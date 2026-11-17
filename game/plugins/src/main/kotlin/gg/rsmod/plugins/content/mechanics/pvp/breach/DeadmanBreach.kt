@@ -1001,7 +1001,7 @@ object DeadmanBreach {
             // N104: what this player got from this kill, for the Collection Log (pets go through Pets.award with the same entry).
             val logged = ArrayList<Pair<Int, Int>>()
             val source = "breach:${npc.id}"
-            BreachLoot.roll(world.random, DropTableFactory.killRate(player)).forEach drops@{ drop ->
+            BreachLoot.roll(world.random, DropTableFactory.killRate(player, npcId = npc.id)).forEach drops@{ drop ->
                 val def = world.definitions.getNullable(ItemDef::class.java, drop.item) ?: return@drops
                 // N243 (owner 2026-10-23): a breach pet arrives like every pet (Pets.award: follower / backpack / bank, the OSRS message,
                 // the "Getting pet" sound); only one nobody has room for lands on the ground, like the Deadman's chest.
@@ -1014,11 +1014,15 @@ object DeadmanBreach {
                     }
                 }
                 val item = if (drop.noted && def.noteLinkId > 0) def.noteLinkId else drop.item
-                world.spawn(GroundItem(item, drop.amount, tile, player))
+                val reward = gg.rsmod.game.model.item.Item(item, drop.amount)
+                val trinkets = gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets
+                if (!trinkets.collectDrop(player, reward, trinkets.valueOfDrop(player, reward))) {
+                    world.spawn(GroundItem(item, drop.amount, tile, player))
+                }
                 logged += drop.item to drop.amount
             }
             // Audit D-14: at most one Archaic emblem per account per breach event, however many monsters it helps kill.
-            if (ledger.damageOf(name) >= BreachLoot.EMBLEM_DAMAGE && BreachIds.ARCHAIC_EMBLEM_TIER_5 > 0 &&
+            if (!gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled && ledger.damageOf(name) >= BreachLoot.EMBLEM_DAMAGE && BreachIds.ARCHAIC_EMBLEM_TIER_5 > 0 &&
                 world.definitions.getNullable(ItemDef::class.java, BreachIds.ARCHAIC_EMBLEM_TIER_5) != null &&
                 claimArchaicEmblem(npc.attr[BREACH_EVENT_ATTR] ?: lastEventId, name)
             ) {
@@ -1038,7 +1042,7 @@ object DeadmanBreach {
             runCatching { gg.rsmod.plugins.content.quests.tab.DeadmanTasks.onBreachLoot(player, ledger.damageOf(name)) }
         }
         var paid = 0
-        ledger.pointEarners().forEach { (name, damage) ->
+        if (!gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled) ledger.pointEarners().forEach { (name, damage) ->
             val player = online[name.lowercase()] ?: return@forEach
             if (BreachPoints.award(player, damage) > 0) paid++
         }

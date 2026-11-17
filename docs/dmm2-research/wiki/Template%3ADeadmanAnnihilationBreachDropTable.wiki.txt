@@ -1,0 +1,146 @@
+<includeonly>==Drops==
+{{DropLogProject|kills=1368089}}
+
+Drops are received by the first 16 players to deal damage to a breach monster. There is a tertiary roll for rare drops, then two rolls for non-unique drops. After both regular drops are decided, there is a 50% chance that one of them is replaced by chitin.
+
+===Rare drops===
+====Emblems====
+Tier 5 emblems are always dropped for players who are both eligible for loot and also deal 250 or more damage.{{CiteVideo|author=Old School RuneScape|title=Everything You Need to Know for Deadman: Annihilation|url=bCI8cwUtw0k&t=490|timestamp=8:10|date=|site=Youtube|notes=|name=}}
+{{DropsTableHead}}
+{{DropsLine|name=Archaic emblem (tier 5)|quantity=1|rarity=Always}}
+{{DropsTableBottom}}
+{{Reflist}}
+
+====Trinkets and weapons====
+There is a roughly 1/72 chance for eligible players to roll this table.
+{{DropsTableHead}}
+{{DropsLine|name=Trinket of advanced weaponry|quantity=1|rarity=60/9576|approx=yes}}
+{{DropsLine|name=Trinket of fairies|quantity=1|rarity=20/9576|approx=yes}}
+{{DropsLine|name=Trinket of avarice|quantity=1|rarity=10/9576|approx=yes}}
+{{DropsLine|name=Trinket of undead|quantity=1|rarity=10/9576|approx=yes}}
+{{DropsLine|name=Morrigan's throwing axe (Deadman Mode)|alt=Morrigan's throwing axe|image=Morrigan's throwing axe.png|quantity=100|rarity=10/9576|approx=yes}}
+{{DropsLine|name=Morrigan's javelin (Deadman Mode)|alt=Morrigan's javelin|image=Morrigan's javelin.png|quantity=100|rarity=10/9576|approx=yes}}
+{{DropsLine|name=Statius's warhammer (Deadman Mode)|alt=Statius's warhammer|image=Statius's warhammer.png|quantity=1|rarity=3/9576|approx=yes}}
+{{DropsLine|name=Zuriel's staff (Deadman Mode)|alt=Zuriel's staff|image=Zuriel's staff.png|quantity=1|rarity=3/9576|approx=yes}}
+{{DropsLine|name=Vesta's spear (Deadman Mode)|alt=Vesta's spear|image=Vesta's spear.png|quantity=1|rarity=3/9576|approx=yes}}
+{{DropsLine|name=Vesta's longsword (Deadman Mode)|alt=Vesta's longsword|image=Vesta's longsword.png|quantity=1|rarity=3/9576|approx=yes}}
+{{DropsLine|name=Trinket of fortuity (inactive)|quantity=1|rarity=1/9576|approx=yes}}
+{{DropsTableBottom}}
+
+====Mega-rare====
+Within the trinkets and weapons table, there is a roughly 1/92 chance to receive a piece of equipment.
+{{DropsTableHead}}
+{{DropsLine|name=Ancient staff|quantity=1|rarity=1/145728|approx=yes|bucket=no}}
+{{DropsLine|name=Master wand|quantity=1|rarity=1/145728|approx=yes|bucket=no}}
+{{DropsLine|name=Mage's book|quantity=1|rarity=1/145728|approx=yes|bucket=no}}
+{{DropsLine|name=Statius's full helm (Deadman Mode)|alt=Statius's full helm|image=Statius's full helm.png|quantity=1|rarity=1/145728|approx=yes}}
+{{DropsLine|name=Statius's platebody (Deadman Mode)|alt=Statius's platebody|image=Statius's platebody.png|quantity=1|rarity=1/145728|approx=yes}}
+{{DropsLine|name=Statius's platelegs (Deadman Mode)|alt=Statius's platelegs|image=Statius's platelegs.png|quantity=1|rarity=1/145728|approx=yes}}
+{{DropsLine|name=Vesta's chainbody (Deadman Mode)|alt=Vesta's chainbody|image=Vesta's chainbody.png|quantity=1|rarity=1/145728|approx=yes}}
+{{DropsLine|name=Vesta's plateskirt (Deadman Mode)|alt=Vesta's plateskirt|image=Vesta's plateskirt.png|quantity=1|rarity=1/145728|approx=yes}}
+{{DropsLine|name=Zuriel's hood (Deadman Mode)|alt=Zuriel's hood|image=Zuriel's hood.png|quantity=1|rarity=1/145728|approx=yes}}
+{{DropsLine|name=Zuriel's robe top (Deadman Mode)|alt=Zuriel's robe top|image=Zuriel's robe top.png|quantity=1|rarity=1/145728|approx=yes}}
+{{DropsLine|name=Zuriel's robe bottom (Deadman Mode)|alt=Zuriel's robe bottom|image=Zuriel's robe bottom.png|quantity=1|rarity=1/145728|approx=yes}}
+{{DropsLine|name=Morrigan's coif (Deadman Mode)|alt=Morrigan's coif|image=Morrigan's coif.png|quantity=1|rarity=1/145728|approx=yes}}
+{{DropsLine|name=Morrigan's leather body (Deadman Mode)|alt=Morrigan's leather body|image=Morrigan's leather body.png|quantity=1|rarity=1/145728|approx=yes}}
+{{DropsLine|name=Morrigan's leather chaps (Deadman Mode)|alt=Morrigan's leather chaps|image=Morrigan's leather chaps.png|quantity=1|rarity=1/145728|approx=yes}}
+{{DropsLine|name=Mystic robe top|quantity=1|rarity=1/145728|approx=yes|bucket=no}}
+{{DropsLine|name=Mystic robe bottom|quantity=1|rarity=1/145728|approx=yes|bucket=no}}
+{{DropsLine|name=Armadyl d'hide body|quantity=1|rarity=1/145728|approx=yes|bucket=no}}
+{{DropsLine|name=Armadyl chaps|quantity=1|rarity=1/145728|approx=yes|bucket=no}}
+{{DropsLine|name=Saradomin d'hide body|quantity=1|rarity=1/145728|approx=yes|bucket=no}}
+{{DropsLine|name=Saradomin chaps|quantity=1|rarity=1/145728|approx=yes|bucket=no}}
+{{DropsLine|name=Zamorak d'hide body|quantity=1|rarity=1/145728|approx=yes|bucket=no}}
+{{DropsLine|name=Zamorak chaps|quantity=1|rarity=1/145728|approx=yes|bucket=no}}
+{{DropsTableBottom}}
+
+===Regular drops===
+There are two rolls for regular drops, and a 50% chance that one of them is replaced by chitin.
+
+====Chitin====
+{{DropsTableHead}}
+{{DropsLine|name=Chitin|quantity=1 (noted)|rarity=1/2}}
+{{DropsTableBottom}}
+
+====Runes and ammunition====
+{{DropsTableHead|bucket=no}}
+{{DropsLine|name=Nature rune|quantity=100-200|rarity=18/351|approx=yes|rolls=2}}
+{{DropsLine|name=Steel cannonball|quantity=150-200|rarity=10/351|approx=yes|rolls=2}}
+{{DropsLine|name=Dragonstone bolts (e)|quantity=30-80|rarity=10/351|approx=yes|rolls=2}}
+{{DropsLine|name=Death rune|quantity=300-500|rarity=10/351|approx=yes|rolls=2}}
+{{DropsLine|name=Steel cannonball|quantity=201-300|rarity=8/351|approx=yes|rolls=2}}
+{{DropsLine|name=Law rune|quantity=100-200|rarity=8/351|approx=yes|rolls=2}}
+{{DropsLine|name=Steel cannonball|quantity=100-149|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Blood rune|quantity=300-500|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Wrath rune|quantity=300-500|rarity=5/351|approx=yes|rolls=2}}
+{{DropsLine|name=Blighted ancient ice sack|quantity=150-350|rarity=5/351|approx=yes|rolls=2}}
+{{DropsLine|name=Chaos rune|quantity=100-200|rarity=4/351|approx=yes|rolls=2}}
+{{DropsTableBottom}}
+
+====Weapons and armour====
+{{DropsTableHead|bucket=no}}
+{{DropsLine|name=Rune scimitar|quantity=1|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Rune platelegs|quantity=1|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Rune plateskirt|quantity=1|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Rune med helm|quantity=1|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Rune full helm|quantity=1|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Rune chainbody|quantity=1|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Rune platebody|quantity=1|rarity=5/351|approx=yes|rolls=2}}
+{{DropsLine|name=Rune kiteshield|quantity=1|rarity=4/351|approx=yes|rolls=2}}
+{{DropsTableBottom}}
+
+====Food====
+{{DropsTableHead|bucket=no}}
+{{DropsLine|name=Shark|quantity=20-40 (noted)|rarity=22/351|approx=yes|rolls=2}}
+{{DropsLine|name=Manta ray|quantity=20-40 (noted)|rarity=20/351|approx=yes|rolls=2}}
+{{DropsLine|name=Cooked karambwan|quantity=20-40 (noted)|rarity=8/351|approx=yes|rolls=2}}
+{{DropsTableBottom}}
+
+====Potions====
+{{DropsTableHead|bucket=no}}
+{{DropsLine|name=Saradomin brew(4)|quantity=8-16 (noted)|rarity=9/351|approx=yes|rolls=2}}
+{{DropsLine|name=Saradomin brew(4)|quantity=3-6 (noted)|rarity=8/351|approx=yes|rolls=2}}
+{{DropsLine|name=Prayer potion(4)|quantity=3-16 (noted)|rarity=8/351|approx=yes|rolls=2}}
+{{DropsLine|name=Super combat potion(4)|quantity=8-16 (noted)|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Super combat potion(4)|quantity=3-6 (noted)|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Super restore(4)|quantity=8-16 (noted)|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Ranging potion(4)|quantity=8-16 (noted)|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Ranging potion(4)|quantity=3-6 (noted)|rarity=2/351|approx=yes|rolls=2}}
+{{DropsTableBottom}}
+
+====Herbs====
+{{DropsTableHead|bucket=no}}
+{{DropsLine|name=Torstol|quantity=10-20 (noted)|rarity=11/351|approx=yes|rolls=2}}
+{{DropsLine|name=Cadantine|quantity=10-20 (noted)|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Dwarf weed|quantity=10-20 (noted)|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Lantadyme|quantity=10-20 (noted)|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Ranarr weed|quantity=10-20 (noted)|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Snapdragon|quantity=10-20 (noted)|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Toadflax|quantity=10-20 (noted)|rarity=4/351|approx=yes|rolls=2}}
+{{DropsLine|name=Avantoe|quantity=10-20 (noted)|rarity=2/351|approx=yes|rolls=2}}
+{{DropsLine|name=Irit leaf|quantity=10-20 (noted)|rarity=2/351|approx=yes|rolls=2}}
+{{DropsLine|name=Kwuarm|quantity=10-20 (noted)|rarity=2/351|approx=yes|rolls=2}}
+{{DropsTableBottom}}
+
+====Secondaries====
+{{DropsTableHead|bucket=no}}
+{{DropsLine|name=Blue dragon scale|quantity=36-40 (noted)|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Potato cactus|quantity=36-40 (noted)|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Red spiders' eggs|quantity=36-40 (noted)|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Snape grass|quantity=36-40 (noted)|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=White berries|quantity=36-40 (noted)|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Wine of Zamorak|quantity=36-40 (noted)|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Crushed nest|quantity=36-40 (noted)|rarity=4/351|approx=yes|rolls=2}}
+{{DropsLine|name=Limpwurt root|quantity=36-40 (noted)|rarity=2/351|approx=yes|rolls=2}}
+{{DropsLine|name=Mort myre fungus|quantity=36-40 (noted)|rarity=2/351|approx=yes|rolls=2}}
+{{DropsLine|name=Unicorn horn|quantity=36-40 (noted)|rarity=2/351|approx=yes|rolls=2}}
+{{DropsTableBottom}}
+
+====Other====
+{{DropsTableHead|bucket=no}}
+{{DropsLine|name=Coins|quantity=9000-11000|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Uncut diamond|quantity=15-30 (noted)|rarity=6/351|approx=yes|rolls=2}}
+{{DropsLine|name=Uncut ruby|quantity=15-30 (noted)|rarity=2/351|approx=yes|rolls=2}}
+{{DropsLine|name=Uncut emerald|quantity=15-30 (noted)|rarity=2/351|approx=yes|rolls=2}}
+{{DropsLine|name=Uncut sapphire|quantity=15-30 (noted)|rarity=2/351|approx=yes|rolls=2}}
+{{DropsTableBottom}}</includeonly><noinclude>{{/doc}}[[Category:Drop table templates]]</noinclude>

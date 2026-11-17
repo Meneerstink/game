@@ -1,0 +1,94 @@
+{{Infobox NPC
+|version1 = Normal
+|version2 = Deadman
+|name = Nigel
+|image = [[File:Nigel.png|120px]]
+|release1 = [[22 October]] [[2015]]
+|release2 = [[21 June]] [[2018]]
+|update1 = Abyssal Bludgeon Buff
+|update2 = Theatre of Blood Changes & Deadman Summer Finals
+|members = No
+|race = [[Human]]
+|location1 = [[Grand Exchange]]
+|location2 = [[Lumbridge]] graveyard
+|shop = [[Deadman Reward Store]]
+|gender = Male
+|options1 = Talk-to, Trade
+|options2 = Talk-to, Teleport, Trade
+|icon = [[File:Deadman Tutor icon.png]]
+|examine = Looks like a guy not to be messed with.
+|map1 = {{Map|name=Nigel|x=3152|y=3512|r=2|mtype=square|bucket=yes}}
+|map2 = {{Map|name=Nigel|x=3245|y=3200|r=3|mtype=square|bucket=yes}}
+|id1 = 8391
+|id2 = 8390
+|leagueRegion = No
+}}
+[[File:Nigel chathead.png|left]]
+'''Nigel''' is the [[Deadman Mode]] tutor located at the [[Grand Exchange]] on main game worlds and at the [[Lumbridge]] graveyard on Deadman Mode worlds, offering information to players about this particular game mode.
+
+He sells [[Deadman armour]], at a cost of one [[blood money]] per piece. In order to purchase them, players must use the blood money on Nigel, instead of speaking to him, as there are no dialogue options for purchasing the armour. A full set of Deadman armour currently costs three pieces of blood money, the equivalent to three player kills.
+
+Since [[Deadman: Apocalypse]], the temporary event has allowed the players to transfer their progress onto the world 345 permanent Deadman Mode. Due to this, players who have made any progress on their permanent [[Deadman Mode]] [[world]] will not be able to log into the [[Deadman_Mode#Variants|temporary Deadman Mode]] without first talking to Nigel. Players with any progress on their world 345 accounts who wish to participate in the temporary event with the same account must first speak to Nigel while in world 345 to begin the transfer process, where he will give several warnings to confirm the transfer. Leaving [[Lumbridge]] or logging back into world 345 will cancel the reset.
+
+In the temporary Deadman Mode worlds, Nigel has two features not present in the permanent world:
+* He can disable and enable experience gain for combat stats or only Hitpoints as of [[Deadman: Annihilation]], similarly to a [[Deadman chest]].
+* He can teleport the player to one of the following locations, once per day:
+** [[East Ardougne]]
+** [[Falador]]
+** [[Seers' Village]]
+** [[Tree Gnome Stronghold]]
+** [[Varrock]]
+** [[Kourend Castle]]
+
+{{bug|
+*Using the [[imbued ancient cape (Deadman)]] on Nigel disconnects the player and consumes the cape.
+* All but two of Nigel's dialogue options when asking him questions about Deadman Mode do not work, and some dialogue in the second option is missing.}}
+
+==Deadman rewards store==
+{{main|Deadman Reward Store}}
+With the release of [[Deadman: Armageddon]], Nigel was given a [[Deadman Reward Store|shop]] where [[Deadman Points]] could be spent. Players have access to their gained points after the event has ended.
+
+{{StoreTableHead|currency=Deadman Points|hidecaption=y|hidestock=y|hiderestock=y|hidege=y|bucket=no}}
+{{StoreLine|name=Armageddon weapon scroll|stock=inf|restock=N/A|buy=12000|sell=12000}}
+{{StoreLine|name=Armageddon cape fabric|stock=inf|restock=N/A|buy=6000|sell=6000}}
+{{StoreLine|name=Armageddon teleport scroll|stock=inf|restock=N/A|buy=9000|sell=9000}}
+{{StoreLine|name=Armageddon rug|stock=inf|restock=N/A|buy=3000|sell=3000}}
+{{StoreLine|name=Annihilation weapon scroll|stock=inf|restock=N/A|buy=12000|sell=12000}}
+{{StoreLine|name=Annihilation blueprints|stock=inf|restock=N/A|buy=15000|sell=15000}}
+{{StoreLine|name=Annihilation teleport scroll|stock=inf|restock=N/A|buy=10000|sell=10000}}
+{{StoreTableBottom}}
+
+==Store==
+{{StoreTableHead|currency=Blood money|hidecaption=y|hidestock=y|hiderestock=y|hidebuy=y|hidege=y}}
+{{StoreLine|name=Deadman's chest|bucketname=Deadman's chest#Deadman Mode|image=Deadman's chest (Deadman Mode).png|stock=inf|restock=N/A|buy=N/A|sell=1}}
+{{StoreLine|name=Deadman's legs|bucketname=Deadman's legs#Deadman Mode|image=Deadman's legs (Deadman Mode).png|stock=inf|restock=N/A|buy=N/A|sell=1}}
+{{StoreLine|name=Deadman's cape|bucketname=Deadman's cape#Deadman Mode|image=Deadman's cape (Deadman Mode).png|stock=inf|restock=N/A|buy=N/A|sell=1}}
+{{StoreTableBottom}}
+
+==Dialogue==
+{{Hastranscript|npc}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 3 November 2026
+|update = Quest Month Kick Off, TFA Tweaks & More
+|change = Nigel was moved to the Grand Exchange on main game worlds. He remains in Lumbridge on Deadman Mode worlds.
+}}
+{{Subject changes
+|date = 27 October 2016
+|update = Deadman Changes & QOL
+|change = Nigel has had his dialogue changed to be up to date with current Deadman Mode rules.
+}}
+{{Subject changes
+|date = 29 October 2015
+|update = Deadman Mode
+|poll = 
+|change = Nigel the Deadman now provides even more information on Deadman Mode.
+}}
+{{Subject changes footer}}
+
+{{Deadman Mode}}
+{{Tutors}}
+{{Lumbridge}}
+{{Varrock}}

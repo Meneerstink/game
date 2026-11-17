@@ -33,6 +33,7 @@ object BreachPoints {
         player: Player,
         damage: Int,
     ): Int {
+        if (gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled) return 0
         val room = (DAMAGE_CAP - earned(player)).coerceAtLeast(0)
         val given = damage.coerceAtMost(room).coerceAtLeast(0)
         if (given == 0) return 0
@@ -47,6 +48,7 @@ object BreachPoints {
         player: Player,
         amount: Int,
     ) {
+        if (gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled) return
         // N106: the one balance helper (stops at 2,147,483,647; a negative amount is an admin take, floored at 0).
         if (amount >= 0) {
             gg.rsmod.game.model.attr.PointBalance.add(player.attr, BALANCE, amount)

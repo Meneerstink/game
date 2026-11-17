@@ -1,0 +1,61 @@
+{{Confuse|Annihilation weapon scroll}}
+{{Infobox Item
+|name = Armageddon weapon scroll
+|image = [[File:Armageddon weapon scroll.png]]
+|release = [[7 August]] [[2024]]
+|update = Poll 82 Changes
+|members = Yes
+|quest = No
+|tradeable = Yes
+|equipable = No
+|stackable = No
+|noteable = Yes
+|options = Read, Drop
+|examine = Take this to Nigel to give the Armadyl Godsword, Volatile Nightmare Staff, Dark Bow or Voidwaker a cosmetic theme from Deadman: Armageddon.
+|value = 25000
+|alchable = No
+|weight = 0.100
+|exchange = Yes
+|id = 29625
+}}
+[[File:Armageddon weapon scroll detail.png|left|130px]]
+The '''Armageddon weapon scroll''' is an item that can be purchased from the [[Deadman Reward Store]] for 12,000 [[Deadman: Apocalypse/Points|Deadman Points]], which is earned from participating in [[Deadman: Armageddon]].
+
+It can be brought to [[Nigel]] in order to change the [[Armadyl godsword]], [[dark bow]], [[voidwaker]], and [[volatile Nightmare staff]] to resemble their corrupt variants from Deadman: Armageddon. When you give the scroll to [[Nigel]], it will permanently unlock all weapon cosmetics for the player and remove the scroll permanently. You can then freely switch any of the weapons<ref>OldSchoolRS; Let’s Talk Deadman: Armageddon! stream. https://www.youtube.com/live/enmaX1RmXLw?t=1656s</ref> between their standard and deadman variant at [[Nigel]], and it can be applied to however many of the item you wish.
+
+Upon PvP death the PK'er will receive the normal variant of the item.<ref>OldSchoolRS; Let's Talk Deadman: Armageddon! stream. https://www.youtube.com/live/enmaX1RmXLw?t=1670s</ref>
+
+==Products==
+{{Uses material list|Armageddon weapon scroll}}
+
+==Shop locations==
+{{Store locations list|Armageddon weapon scroll}}
+
+==Transcript==
+{{Hastranscript|transclude=yes}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 11 March 2026
+|update = More from the Getting Around Poll
+|change = The item can now be sacrificed to [[Death's Coffer]].
+}}
+{{Subject changes
+|date = 7 August 2024
+|update = Poll 82 Changes
+|change = The item was made available.
+}}
+{{Subject changes
+|date = 17 July 2024
+|update = Deadman: Armageddon & While Guthix Sleeps Updates
+|change = The item was added to the game, but was unobtainable.
+}}
+{{Subject changes footer}}
+
+==References==
+{{reflist}}
+
+{{Deadman: Armageddon}}
+{{Ornament kits}}
+[[Category:Ornament kits]]

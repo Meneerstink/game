@@ -1,0 +1,51 @@
+{{Deadman permanent}}
+{{Infobox Item
+|name = Trinket of fairies
+|image = [[File:Trinket of fairies.png]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|quest = No
+|tradeable = Yes
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Fairy-ring, Spirit-tree, Tool-leprechauns, Last-destination, Drop
+|examine = A magic rock! This one smells funny and lets you teleport.
+|value = 100000
+|weight = 1.000
+|exchange = dmm
+|id = 28564
+}}
+[[File:Trinket of fairies detail.png|left|130px]]
+The '''trinket of fairies''' is an item in [[Deadman Mode]] that allows players to remotely access [[fairy rings]], [[spirit tree]]s, and [[tool leprechaun]]s that they have access to. The trinket cannot be used beyond level 30 [[Wilderness]].
+
+It can be acquired as a drop from monsters found during [[breach]]es.
+
+==Item sources==
+{{Drop sources|Trinket of fairies}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 21 January 2026
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|change = * The trinket can now be used to teleport to [[tool leprechaun]]s.
+* The trinket's value was increased from 10,000 to 100,000.
+}}
+{{Subject changes
+|date = 12 March 2025
+|update = Permanent Deadman: World 345 Improvements
+|change = Trinkets are now available in permanent Deadman Mode.
+}}
+{{Subject changes
+|date = 6 September 2023
+|update = DMM Tweaks, Upcoming Launcher Changes & more!
+|change = Players can no longer use trinket of fairies to teleport when beyond level 30 [[wilderness]].
+}}
+{{Subject changes footer}}
+
+{{Deadman Mode}}
+{{Deadman: Annihilation}}
+{{Deadman: Armageddon}}
+{{Deadman: Apocalypse}}

@@ -72,7 +72,7 @@ enum class AnnihilationTier(
         }
 
         /** The chance factor of every non-guaranteed line of a monster-kill drop roll (N100). */
-        fun dropRate(player: Player): Double = of(player).dropRate
+        fun dropRate(player: Player): Double = of(player).dropRate + gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets.bonus(player)
 
         /**
          * Login: records the tier the account is in without a message (an existing account had no rate change; a relog

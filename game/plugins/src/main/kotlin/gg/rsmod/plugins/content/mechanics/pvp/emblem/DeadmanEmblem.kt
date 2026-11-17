@@ -235,6 +235,7 @@ object DeadmanEmblem {
             EmblemLog.write("SUSPICIOUS", victim, "killer" to (killer?.username ?: "-"), "victim" to victim.username, "risk" to risk, "verdict" to verdict.name, "notes" to result.suspicious.joinToString("; "), "area" to area(victim))
         }
         if (killer != null) {
+            gg.rsmod.plugins.content.mechanics.deadman.BloodMoney.onJudgedKill(killer, victim, verdict)
             gg.rsmod.plugins.content.mechanics.pvp.Killstreaks.onJudgedKill(killer, victim, verdict)
             gg.rsmod.plugins.content.mechanics.pvp.KillGrace.grantForKill(killer, victim, verdict, victim.tile.isMulti(world))
         }

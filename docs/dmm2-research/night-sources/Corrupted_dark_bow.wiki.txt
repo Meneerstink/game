@@ -1,0 +1,55 @@
+{{Deadman seasonal}}
+{{Infobox Item
+|name = Corrupted dark bow
+|image = [[File:Corrupted dark bow.png]]
+|release = [[17 July]] [[2024]]
+|update = Deadman: Armageddon & While Guthix Sleeps Updates
+|members = Yes
+|quest = No
+|tradeable = Yes
+|equipable = Yes
+|stackable = No
+|noteable = Yes
+|options = Wield, Drop
+|examine = A bow from an even darker dimension.
+|value = 250000
+|weight = 1.814
+|exchange = dmm
+|id = 29599
+}}
+[[File:Corrupted dark bow detail.png|left|150px]]
+The '''corrupted dark bow''' is a ranged weapon that requires level 50 [[Ranged]] to wield. Exclusive to [[Deadman: Armageddon]], it can be acquired by opening a [[Trinket of advanced weaponry]] obtained from a [[Deadman:_Armageddon#Breaches|breach]].
+
+As a corrupted variant of the [[dark bow]], it has an attack range of 6 tiles rather than 10. It also fires arrows 2 ticks faster than the regular dark bow.
+
+==Combat stats==
+{{Infobox Bonuses
+|astab = 0
+|aslash = 0
+|acrush = 0
+|amagic = 0
+|arange = +95
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|drange = 0
+|str = 0
+|rstr = 0
+|mdmg = 0
+|prayer = 0
+|slot = 2h
+|speed = 6
+|attackrange = 10
+|combatstyle = Bow
+|image = [[File:Corrupted dark bow equipped male.png|190px]]
+|altimage = [[File:Corrupted dark bow equipped female.png|190px]]
+}}
+
+{{CombatStyles|Bow|speed=7|attackrange=6}}
+
+==Item sources==
+{{Drop sources|Corrupted dark bow}}
+
+{{Deadman: Annihilation}}
+{{Deadman: Armageddon}}

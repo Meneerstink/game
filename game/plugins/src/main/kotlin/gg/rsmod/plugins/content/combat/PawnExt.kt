@@ -347,6 +347,12 @@ fun Pawn.dealHit(
     hit.sourceSpellId = if (curseHitStyle == CombatClass.MAGIC) sourceSpellId else null
     hit.sourceMaxHit = kotlin.math.floor(maxHit + 1e-9).toInt() + bonusDamage
 
+    if (this is Player && target is Npc && executeHit) {
+        val owner = this
+        hit.addAction {
+            if (hit.hitmarks.any { it.damage > 0 }) gg.rsmod.plugins.content.mechanics.deadman.UndeadThralls.recordDamage(owner, target)
+        }
+    }
     val pawnHit = PawnHit(hit, executeHit)
 
     // Debug toolkit (C:\RSPS\TRACES.md): every hit of every fight, with what changed the rolled damage.

@@ -1,0 +1,120 @@
+{
+  "date": "2026-11-17",
+  "result": "PASS",
+  "tests": 82,
+  "classes": [
+    {
+      "name": "gg.rsmod.game.model.skill.DeadmanExperienceLocksTests",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-17T00:57:09",
+      "file": "game/build/test-results/test/TEST-gg.rsmod.game.model.skill.DeadmanExperienceLocksTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.DeadmanExperienceExtensionTests",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-17T00:57:51",
+      "file": "game/plugins/build/test-results/test/TEST-gg.rsmod.plugins.content.mechanics.deadman.DeadmanExperienceExtensionTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests",
+      "tests": "13",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-17T00:58:02",
+      "file": "game/plugins/build/test-results/test/TEST-gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.starter.DeadmanStarterPackTests",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-17T00:58:04",
+      "file": "game/plugins/build/test-results/test/TEST-gg.rsmod.plugins.content.starter.DeadmanStarterPackTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.starter.StarterWeaponCombatTests",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-17T00:58:07",
+      "file": "game/plugins/build/test-results/test/TEST-gg.rsmod.plugins.content.starter.StarterWeaponCombatTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.starter.StarterPackInteractionsTests",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-17T00:58:07",
+      "file": "game/plugins/build/test-results/test/TEST-gg.rsmod.plugins.content.starter.StarterPackInteractionsTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.starter.NewPlayerStartTests",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-17T00:58:07",
+      "file": "game/plugins/build/test-results/test/TEST-gg.rsmod.plugins.content.starter.NewPlayerStartTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStoreTests",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-17T00:58:02",
+      "file": "game/plugins/build/test-results/test/TEST-gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStoreTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.NigelHouseRewardsTests",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-17T00:58:01",
+      "file": "game/plugins/build/test-results/test/TEST-gg.rsmod.plugins.content.mechanics.deadman.NigelHouseRewardsTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests",
+      "tests": "18",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-17T00:57:59",
+      "file": "game/plugins/build/test-results/test/TEST-gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2CosmeticsTests",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-17T00:57:57",
+      "file": "game/plugins/build/test-results/test/TEST-gg.rsmod.plugins.content.mechanics.deadman.Dmm2CosmeticsTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-17T00:57:59",
+      "file": "game/plugins/build/test-results/test/TEST-gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2InteractionTests",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-11-17T00:57:59",
+      "file": "game/plugins/build/test-results/test/TEST-gg.rsmod.plugins.content.mechanics.deadman.Dmm2InteractionTests.xml"
+    }
+  ],
+  "compiler": "Kotlin 1.8.0 current changed source files plus own dependencies/fixtures; focused Gradle Test/JUnit",
+  "scripts": 9,
+  "priority": "low",
+  "buildslot": 7044,
+  "full_suite": false,
+  "testclient_or_live": false,
+  "source_byte_hashes": "13/13 git index hashes matched sha256_file",
+  "preflight_unique_rows": 195,
+  "reserved_paths_changed": []
+}

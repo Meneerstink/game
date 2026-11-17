@@ -1,0 +1,18 @@
+[[File:Deadman armour equipped male.png|right|130px|]]
+[[File:Deadman armour equipped female.png|right|130px|]]
+'''Deadman armour''' is a set of cosmetic armour purchased from [[Justine's stuff for the Last Shopper Standing]] for 160 [[Last Man Standing]] points per piece, costing a total of 480 points. Players can store a complete set of Deadman armour in the [[armour case]] of the [[costume room]] of their [[player-owned house]].
+
+In [[Deadman Mode]], it is obtained by using [[blood money]] on [[Nigel]], costing [[File:Blood money 1.png]] [[Blood money|1]] per piece totalling at [[File:Blood money 3.png]] [[Blood money|3]] for the set. The armour pieces share their stats with a regular [[cape]], [[iron platebody]] and [[Iron platelegs|platelegs]]. In order to purchase deadman armour in Deadman Mode, players must '''use''' the blood money on Nigel, instead of speaking to him, as there are no dialogue options for purchasing the armour.
+
+As free-to-play players are no longer able to earn Last Man Standing points, the cosmetic set is no longer obtainable in free-to-play, unless an account earned some points before competitive LMS was made members only, and still has some left over.
+
+==Components and bonuses (Cosmetic)==
+{{Infotable Bonuses|Deadman's chest#Cosmetic|Deadman's legs#Cosmetic|Deadman's cape#Cosmetic}}
+
+==Components and bonuses (Deadman Mode)==
+{{Infotable Bonuses|Deadman's chest#Deadman Mode|Deadman's legs#Deadman Mode|Deadman's cape#Deadman Mode}}
+
+{{Deadman Mode}}
+{{Last Man Standing}}
+[[Category:Melee armour]]
+[[Category:Clothing sets]]

@@ -29,6 +29,10 @@ on_item_option(item = PvpRespawnChest.ITEM, option = "open") {
 }
 
 on_login {
+    DeadmanStarterPack.migrate(player)
+    if (player.attr[NewPlayerStart.STARTER_PACK_GIVEN] == true) {
+        DeadmanStarterPack.grantIntroductionReward(player)
+    }
     val newAccount = player.attr[NEW_ACCOUNT_ATTR] ?: return@on_login
     if (newAccount) {
         val inventory = player.getInventoryStarterItems()

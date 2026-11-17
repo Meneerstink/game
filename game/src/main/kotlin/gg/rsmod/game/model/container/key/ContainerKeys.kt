@@ -14,6 +14,9 @@ val EQUIPMENT_KEY = ContainerKey("equipment", capacity = 14, stackType = Contain
 val RANDOM_EVENT_GIFT_KEY = ContainerKey("random_event_gift", capacity = 28, stackType = ContainerStackType.STACK)
 val BANK_KEY = ContainerKey("bank", capacity = 800, stackType = ContainerStackType.STACK)
 
+/** DMM2: Wizard and Seer share ten single items; never bank stacks or a death-loot container. */
+val SAFE_DEPOSIT_BOX_KEY = ContainerKey("safe_deposit_box", capacity = 10, stackType = ContainerStackType.NO_STACK)
+
 /**
  * Death's Office: the items Death holds for a player (OSRS "Death's Office Item Retrieval", inventory 636, 120 slots). Items
  * arrive here when a gravestone collapses, when a familiar's cargo is rescued (owner override) or when an old grave hands its

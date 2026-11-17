@@ -1,0 +1,40 @@
+{{Infobox Item
+|name = Fire ruby
+|image = [[File:Fire ruby.png]]
+|release = [[2 September]] [[2026]]
+|update = Summer Sweep Up Miscellaneous
+|members = Yes
+|quest = No
+|tradeable = Yes
+|equipable = No
+|stackable = No
+|noteable = Yes
+|options = Drop
+|examine = Rather hot to the touch, maybe I could start a fire with this.
+|value = 20000
+|weight = 0.100
+|exchange = Yes
+|id = 34422
+}}
+[[File:Fire ruby detail.png|left|120px]]
+The '''fire ruby''' is an [[elemental gems|elemental gem]] obtained by killing [[Infernal Mage|infernal mage]]s. It is used in the creation of the [[amulet of fire]]; the fire ruby must be used on the [[Fire Altar]] along with an [[amulet of magic]] and 100 [[fire rune]]s.
+
+The player may bring a fire ruby or other elemental gems to [[Archmage Sedridor]] to get some hints on what to do with them.
+
+==Item sources==
+{{Drop sources|Fire ruby}}
+
+==Products==
+{{Uses material list|Fire ruby}}
+
+==Trivia==
+* Despite the fire ruby's examine text it cannot, in fact, be used to light fires.
+
+==See also==
+* [[Air diamond]]
+* [[Water sapphire]]
+* [[Earth emerald]]
+
+{{Gems}}
+
+[[Category:Collection log items]]

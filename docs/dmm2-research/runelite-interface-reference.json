@@ -1,0 +1,40 @@
+{
+  "url": "https://raw.githubusercontent.com/runelite/runelite/master/runelite-api/src/main/java/net/runelite/api/gameval/InterfaceID.java",
+  "sha256": "afbcf6059ebb09b5a79bf5aa53c536b687ce4c068101fb133d645bde67ea4f3d",
+  "retrieved": "2026-11-16",
+  "lines": [
+    {
+      "line": 237,
+      "text": "\tpublic static final int DEADMAN_SAFEBOX = 230;"
+    },
+    {
+      "line": 239,
+      "text": "\tpublic static final int DEADMAN_SAFEBOX_SIDE = 232;"
+    },
+    {
+      "line": 498,
+      "text": "\tpublic static final int BARBASSAULT_REWARD_SHOP = 491;"
+    },
+    {
+      "line": 651,
+      "text": "\tpublic static final int BR_REWARD_SHOP = 645;"
+    },
+    {
+      "line": 658,
+      "text": "\tpublic static final int LEAGUE_SKILLCAPES_SHOP = 652;"
+    },
+    {
+      "line": 759,
+      "text": "\tpublic static final int GIANTS_FOUNDRY_REWARD_SHOP = 753;"
+    },
+    {
+      "line": 9050,
+      "text": "\tpublic static final class DeadmanSafebox"
+    },
+    {
+      "line": 9082,
+      "text": "\tpublic static final class DeadmanSafeboxSide"
+    }
+  ],
+  "warning": "Live RuneLite names are only a locator; source group must also exist and be decoded in pinned cache2686."
+}

@@ -1,0 +1,102 @@
+{{Infobox Item
+|version1 = Cosmetic
+|version2 = Deadman Mode
+|name = Deadman's legs
+|image1 = [[File:Deadman's legs (cosmetic).png]]
+|image2 = [[File:Deadman's legs (Deadman Mode).png]]
+|release1 = [[29 August]] [[2019]]
+|release2 = [[29 October]] [[2015]]
+|update1 = Last Man Standing (2019)
+|update2 = Deadman Mode
+|members = No
+|quest = No
+|tradeable = No
+|equipable = Yes
+|stackable = No
+|noteable = No
+|options1 = Wear, Drop
+|options2 = Wear, Destroy
+|destroy1 = N/A
+|destroy2 = You can get another from Deadman Nigel in Lumbridge.
+|examine = That numb feeling.
+|value = 1
+|alchable = Yes
+|weight1 = 0.110
+|weight2 = 9.071
+|id1 = 24190
+|id2 = 13318
+|leagueRegion = No
+}}
+{{Synced switch
+|version1 = [[File:Deadman's legs (cosmetic) detail.png|left|90px]]
+|version2 = [[File:Deadman's legs (Deadman Mode) detail.png|left|90px]]
+}}
+The '''Deadman's legs ''' are cosmetic leggings that can be bought from [[Justine's stuff for the Last Shopper Standing]] for 160 [[Last Man Standing]] points. It is part of the [[Deadman armour]] set.
+
+In [[Deadman Mode]], it has similar defensive stats to [[iron platelegs]] but with no negative offensive stats, and is purchased from [[Nigel]] for one [[blood money]], and may be reclaimed for free. In order to purchase [[deadman armour]] in Deadman mode, players must use the blood money on Nigel, instead of speaking to him, as there are no dialogue options for purchasing the armour.
+
+{{Costume storage|armour case|[[Deadman armour]] set|set=true}}
+
+==Combat stats==
+{{Infobox Bonuses
+|version1 = Cosmetic
+|version2 = Deadman Mode
+|astab = 0
+|aslash = 0
+|acrush = 0
+|amagic = 0
+|arange = 0
+|dstab1 = 0
+|dstab2 = 11
+|dslash1 = 0
+|dslash2 = 10
+|dcrush1 = 0
+|dcrush2 = 10
+|dmagic1 = 0
+|dmagic2 = -2
+|drange1 = 0
+|drange2 = 10
+|str = 0
+|rstr = 0
+|mdmg = 0
+|prayer = 0
+|slot = legs
+|image = [[File:Deadman's legs equipped male.png|130px]]
+|altimage = [[File:Deadman's legs equipped female.png|130px]]
+}}
+
+==Shop locations==
+{{Store locations list|Deadman's legs}}
+
+==Gallery==
+<gallery heights="250" style="text-align:left">
+Deadman armour equipped male.png|The full Deadman armour set on body type A.
+Deadman armour equipped female.png|The full Deadman armour set on body type B.
+</gallery>
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 21 January 2026
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|change = The Deadman mode version's stats were adjusted.
+}}
+{{Subject changes
+|date = 14 September 2017
+|update = Fossil Island changes
+|change = The Deadman mode version was made available to free-to-play players.
+}}
+{{Subject changes
+|date = 11 February 2016
+|update = Tournament Stats & Skilling QoL
+|change = Deadman's Legs have had a stretching issue resolved.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+*Although the [[Deadman Mode]] version is marked as a free-to-play item, it is not obtainable in free-to-play as Deadman Mode is members only.
+
+{{Deadman Mode}}
+{{Last Man Standing}}
+[[Category:Items storable in the costume room]]
+[[Category:Collection log items]]

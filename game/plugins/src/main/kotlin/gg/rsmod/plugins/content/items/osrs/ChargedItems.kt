@@ -19,7 +19,10 @@ object ChargedItems {
         val map = LinkedHashMap<Int, Int>()
         Blowpipe.Pipe.values().forEach { map[it.charged] = it.empty }
         map.putAll(DizanasQuiver.UNCHARGED_FOR)
-        PoweredStaves.Staff.values().forEach { map[it.charged] = it.uncharged }
+        PoweredStaves.Staff.values().filter { it.available }.forEach { map[it.charged] = it.uncharged }
+        gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SCYTHE.local?.let { charged ->
+            gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SCYTHE_EMPTY.local?.let { map[charged] = it }
+        }
         map.putAll(CrystalEquipment.INACTIVE_FOR)
         RevenantBows.CHARGED_FOR.forEach { (uncharged, charged) -> map[charged] = uncharged }
         RevenantWeapons.CHARGED_FOR.forEach { (uncharged, charged) -> map[charged] = uncharged }

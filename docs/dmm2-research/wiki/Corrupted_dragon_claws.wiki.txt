@@ -1,0 +1,57 @@
+{{Deadman seasonal}}
+{{confuse|Dragon claws (cr)}}
+{{Infobox Item
+|name = Corrupted dragon claws
+|image = [[File:Corrupted dragon claws.png]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|quest = No
+|tradeable = Yes
+|equipable = Yes
+|stackable = No
+|noteable = Yes
+|options = Wield, Drop
+|examine = A set of fighting claws.
+|value = 250000
+|weight = 0.907
+|exchange = dmm
+|id = 28534
+}}
+[[File:Corrupted dragon claws detail.png|left|150px]]
+'''Corrupted dragon claws''' are a melee weapon that require level 40 [[Attack]] to wield. Exclusive to [[Deadman Mode]] seasonals, it can be acquired by opening a [[trinket of advanced weaponry]] obtained from a [[Deadman:_Apocalypse#Breaches|breach]].
+
+As a corrupted variant of the [[dragon claws]], it has 20% lower bonuses than the regular variant.
+
+==Combat stats==
+{{Infobox Bonuses
+|astab = 33
+|aslash = 46
+|acrush = -4
+|amagic = 0
+|arange = 0
+|dstab = 11
+|dslash = 21
+|dcrush = 6
+|dmagic = 0
+|drange = 0
+|str = 48
+|rstr = 0
+|mdmg = 0
+|prayer = 0
+|slot = 2h
+|speed = 4
+|attackrange = 1
+|combatstyle = Claw
+|image = [[File:Corrupted dragon claws equipped male.png|130px]]
+|altimage = [[File:Corrupted dragon claws equipped female.png|140px]]
+}}
+
+{{CombatStyles|Claw|speed=4|attackrange=1}}
+
+==Item sources==
+{{Drop sources|Corrupted dragon claws}}
+
+{{Deadman: Annihilation}}
+{{Deadman: Armageddon}}
+{{Deadman: Apocalypse}}

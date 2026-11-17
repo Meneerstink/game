@@ -1,0 +1,71 @@
+{{Infobox NPC
+|version1 = Skeleton
+|version2 = Imp
+|name = {{Null name}}
+|image1 = [[File:Greater skeletal thrall.png|130px|class=pageimage]]
+|image2 = [[File:Thrall imp ranged greater.png|130px]]
+|release1 = [[16 June]] [[2021]]
+|release2 = [[11 June]] [[2026]]
+|update = A Kingdom Divided
+|members = Yes
+|race1 = [[Undead]]
+|race2 = Imp
+|location = N/A
+|examine1 = Spooky.
+|examine2 =
+|map = No
+|id1 = 10883
+|id2 = 15706
+|leagueRegion = No
+}}
+'''Greater skeletal thralls''' are undead that have been resurrected via the [[Resurrect Greater Skeleton]] spell. Besides the required runes, summoning greater thralls requires six [[prayer points]] and having the [[Book of the Dead]] equipped or in the player's inventory.
+
+Greater skeletal thralls have an [[attack speed]] of 4 (attacking every 2.4 seconds) and attack using [[Ranged]] (with a max hit of 3), ignoring any accuracy checks in the process. They will attack the last target that the player damaged, and cannot be damaged themselves. However, they '''cannot''' attack other players.
+
+Thralls will remain for a set amount of time (<math>CurrentMagicLevel</math> ticks), but players can cast resurrection spells again after 16 ticks, albeit the existing thrall will disappear if players do so. Due to the fact they ignore accuracy checks, in most situations a greater thrall will offer a static 0.625 damage per second.
+
+Thralls can be cosmetically changed by consuming the [[impish whistle]], obtainable from the [[Leagues Reward Shop]] or purchasing from another player.
+
+==Combat Achievements==
+The following [[Combat Achievement]] tasks involve thralls.
+
+{| class="wikitable sortable" style=width:600px;
+! style="width:25%;" | Name
+! style="width:55%;" | Description
+! style="width:10%;" | Difficulty
+! style="width:10%;" | Category
+|-
+| [[Sit Back and Relax]]
+| Deal 100 damage to creatures using undead thralls.
+| Medium
+| Mechanical
+|}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 31 January 2024
+|update = Scurrius & DT2 Combat Achievements
+|change = Thralls now have a better pathfinding method, allowing them to move towards a target from further away.
+}}
+{{Subject changes
+|date = 9 March 2023
+|update = Even More Poll 78 Changes
+|change = The Thrall duration bar has been adjusted to be in line with the player’s [[Combat Achievement]] rewards.
+}}
+{{Subject changes
+|date = 24 August 2022
+|update = Tombs of Amascut
+|change = Thralls can no longer be directly interacted with.
+}}
+{{Subject changes
+|date = 13 July 2022
+|update = Emir's Arena: Full Launch
+|change = Thralls now pathfind around obstacles.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+*Its bow resembles the [[seercull]].
+
+{{Arceuus spellbook}}

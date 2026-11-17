@@ -1,0 +1,201 @@
+{{Deadman permanent|content=yes}}
+{{Otheruses|def=no|the old version of the shop|Bounty Hunter Shop (historical)|the current Bounty Hunter rewards|Bounty Hunter Store}}
+{{Infobox Shop
+|name = Bounty Hunter Shop
+|image = [[File:Bounty Hunter Shop.png|300px]]
+|release = [[18 September]] [[2014]]
+|update = Bounty Hunter
+|members = Yes
+|icon = [[File:Bounty Hunter trader icon.png]]
+|location = [[Grand Exchange]], [[Edgeville]]
+|owner = [[Emblem Trader]]
+|special = Bounty Hunter trader
+|map = {{Map|name=Bounty Hunter Shop|3163,3504|3096,3503|mtype=pin|zoom=1|x=3130|y=3504}}
+|leagueRegion = No
+}}
+The '''Bounty Hunter Shop''' is a store run by the [[Emblem Trader#Grand Exchange|Emblem Trader]] at the [[Grand Exchange]], which is accessible on both permanent and seasonal [[Deadman Mode]] worlds.
+
+[[Archaic emblem]]s can be handed in at the Emblem Trader in exchange for store credit, which can spent on a wide variety of supplies and ornaments. Participating in Wilderness Slayer yields a chance of receiving a tier 1 emblem as an uncommon drop from the assigned monsters, while tier 5 emblems can be received from any NPC with a combat level of 100 or higher at a rate of 1/300.
+
+During the [[Deadman: Annihilation]] game mode, tier 1 and tier 5 archaic emblems may be exchanged at the Emblem Trader for 100,000 and 1,500,000 archaic points respectively. On the permanent Deadman world, they are worth 50,000 and 750,000 points.
+
+==Stock (permanent deadman)==
+{{StoreTableHead|hidebuy=yes|hidege=yes|hidestock=y|hiderestock=y|hidecaption=y|currency=Archaic emblem|bucket=No}}
+{{StoreLine|stock=∞|buy=N/A|name=Crystal weapon seed|sell=540000}}
+{{StoreLine|stock=∞|buy=N/A|name=Green dark bow paint|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Yellow dark bow paint|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=White dark bow paint|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Blue dark bow paint|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Paddewwa teleport (tablet)|displayname=Paddewwa teleport|sell=10000}}
+{{StoreLine|stock=∞|buy=N/A|name=Senntisten teleport (tablet)|displayname=Senntisten teleport|sell=10000}}
+{{StoreLine|stock=∞|buy=N/A|name=Annakarl teleport (tablet)|displayname=Annakarl teleport|sell=10000}}
+{{StoreLine|stock=∞|buy=N/A|name=Carrallanger teleport (tablet)|displayname=Carrallanger teleport|sell=10000}}
+{{StoreLine|stock=∞|buy=N/A|name=Dareeyak teleport (tablet)|displayname=Dareeyak teleport|sell=10000}}
+{{StoreLine|stock=∞|buy=N/A|name=Ghorrock teleport (tablet)|displayname=Ghorrock teleport|sell=10000}}
+{{StoreLine|stock=∞|buy=N/A|name=Kharyrll teleport (tablet)|displayname=Kharyrll teleport|sell=10000}}
+{{StoreLine|stock=∞|buy=N/A|name=Lassar teleport (tablet)|displayname=Lassar teleport|sell=10000}}
+{{StoreLine|stock=∞|buy=N/A|name=Volcanic whip mix|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Frozen whip mix|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Steam staff upgrade kit|sell=250000}}
+{{StoreLine|stock=∞|buy=N/A|name=Lava staff upgrade kit|sell=250000}}
+{{StoreLine|stock=∞|buy=N/A|name=Dragon pickaxe upgrade kit|sell=300000}}
+{{StoreLine|stock=∞|buy=N/A|name=Ward upgrade kit|sell=350000}}
+{{StoreLine|stock=∞|buy=N/A|name=Ring of wealth scroll|sell=50000}}
+{{StoreLine|stock=∞|buy=N/A|name=Magic shortbow scroll|sell=100000}}
+{{StoreLine|stock=∞|buy=N/A|name=Saradomin's tear|sell=25000000}}
+{{StoreLine|stock=∞|buy=N/A|name=Rune pouch|sell=1200000}}
+{{StoreLine|stock=∞|buy=N/A|name=Rune pouch note|sell=1200000}}
+{{StoreLine|stock=∞|buy=N/A|name=Looting bag|sell=10000}}
+{{StoreLine|stock=∞|buy=N/A|name=Looting bag note|sell=10000}}
+{{StoreLine|stock=∞|buy=N/A|name=Scroll of Redirection|sell=1000}}
+{{StoreLine|stock=∞|buy=N/A|name=Clue box|sell=100000}}
+{{StoreLine|stock=∞|buy=N/A|name=Blighted entangle sack|sell=1000}}
+{{StoreLine|stock=∞|buy=N/A|name=Blighted teleport spell sack|sell=3000}}
+{{StoreLine|stock=∞|buy=N/A|name=Blighted vengeance sack|sell=3000}}
+{{StoreLine|stock=∞|buy=N/A|name=Blighted ancient ice sack|sell=2000}}
+{{StoreLine|stock=∞|buy=N/A|name=Blighted surge sack|sell=2500}}
+{{StoreLine|stock=∞|buy=N/A|name=Climbing boots|sell=5400}}
+{{StoreLine|stock=∞|buy=N/A|name=Granite clamp|sell=250000}}
+{{StoreLine|stock=∞|buy=N/A|name=Ornate maul handle|sell=1250000}}
+{{StoreLine|stock=∞|buy=N/A|name=Target teleport scroll|sell=8000000}}
+{{StoreLine|stock=∞|buy=N/A|name=Hunter's honour|sell=2500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Rogue's revenge|sell=2500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Super attack(4)|sell=1000}}
+{{StoreLine|stock=∞|buy=N/A|name=Super strength(4)|sell=1000}}
+{{StoreLine|stock=∞|buy=N/A|name=Ranging potion(4)|sell=6000}}
+{{StoreLine|stock=∞|buy=N/A|name=Super restore(4)|sell=10000}}
+{{StoreLine|stock=∞|buy=N/A|name=Saradomin brew(4)|sell=25000}}
+{{StoreLine|stock=∞|buy=N/A|name=Prayer potion(4)|sell=3000}}
+{{StoreLine|stock=∞|buy=N/A|name=Stamina potion(4)|sell=8000}}
+{{StoreLine|stock=∞|buy=N/A|name=Super combat potion(4)|sell=30000}}
+{{StoreLine|stock=∞|buy=N/A|name=Extended antifire(4)|sell=5000}}
+{{StoreLine|stock=∞|buy=N/A|name=Zamorak brew(4)|sell=25000}}
+{{StoreLine|stock=∞|buy=N/A|name=Antidote++(4)|sell=3000}}
+{{StoreLine|stock=∞|buy=N/A|name=Magic potion(4)|sell=8000}}
+{{StoreLine|stock=∞|buy=N/A|name=Scroll of Imbuing|sell=1000000}}
+{{StoreLine|stock=∞|buy=N/A|name=Saradomin halo|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Zamorak halo|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Guthix halo|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Brassica halo|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Ancient halo|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Seren halo|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Bandos halo|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Armadyl halo|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Trouver parchment|sell=250000}}
+{{StoreLine|stock=∞|buy=N/A|name=Ancient sceptre|sell=1000000}}
+{{StoreLine|stock=∞|buy=N/A|name=Fremennik quest lamp|sell=2000000}}
+{{StoreLine|stock=∞|buy=N/A|name=Elf quest lamp|sell=2000000}}
+{{StoreLine|stock=∞|buy=N/A|name=Gnome quest lamp|sell=5000000}}
+{{StoreLine|stock=∞|buy=N/A|name=Mahjarrat 1 quest lamp|sell=1500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Kharidian quest lamp|sell=2000000}}
+{{StoreLine|stock=∞|buy=N/A|name=Myreque quest lamp|sell=2000000}}
+{{StoreLine|stock=∞|buy=N/A|name=Dragonkin quest lamp|sell=5000000}}
+{{StoreLine|stock=∞|buy=N/A|name=Mahjarrat 2 quest lamp|sell=5000000}}
+{{StoreLine|stock=∞|buy=N/A|name=Camelot quest lamp|sell=2500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Recipe for disaster quest lamp|sell=3500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Fairy tale quest lamp|sell=1000000}}
+{{StoreTableBottom}}
+
+==Stock (Annihilation)==
+{{StoreTableHead|hidebuy=yes|hidege=yes|hidestock=y|hiderestock=y|hidecaption=y|currency=Archaic emblem|bucket=No}}
+{{StoreLine|stock=∞|buy=N/A|name=Super attack(4)|sell=15000}}
+{{StoreLine|stock=∞|buy=N/A|name=Super strength(4)|sell=15000}}
+{{StoreLine|stock=∞|buy=N/A|name=Super defence(4)|sell=15000}}
+{{StoreLine|stock=∞|buy=N/A|name=Ranging potion(4)|sell=30000}}
+{{StoreLine|stock=∞|buy=N/A|name=Magic potion(4)|sell=20000}}
+{{StoreLine|stock=∞|buy=N/A|name=Super combat potion(4)|sell=75000}}
+{{StoreLine|stock=∞|buy=N/A|name=Prayer potion(4)|sell=15000}}
+{{StoreLine|stock=∞|buy=N/A|name=Saradomin brew(4)|sell=75000}}
+{{StoreLine|stock=∞|buy=N/A|name=Super restore(4)|sell=50000}}
+{{StoreLine|stock=∞|buy=N/A|name=Zamorak brew(4)|sell=20000}}
+{{StoreLine|stock=∞|buy=N/A|name=Stamina potion(4)|sell=50000}}
+{{StoreLine|stock=∞|buy=N/A|name=Extended antifire(4)|sell=25000}}
+{{StoreLine|stock=∞|buy=N/A|name=Antidote++(4)|sell=15000}}
+{{StoreLine|stock=∞|buy=N/A|name=Anti-venom(4)|sell=100000}}
+{{StoreLine|stock=∞|buy=N/A|name=Blighted entangle sack|sell=2000}}
+{{StoreLine|stock=∞|buy=N/A|name=Blighted teleport spell sack|sell=3000}}
+{{StoreLine|stock=∞|buy=N/A|name=Blighted vengeance sack|sell=3000}}
+{{StoreLine|stock=∞|buy=N/A|name=Blighted ancient ice sack|sell=2500}}
+{{StoreLine|stock=∞|buy=N/A|name=Blighted surge sack|sell=2500}}
+{{StoreLine|stock=∞|buy=N/A|name=Ring of wealth scroll|sell=50000}}
+{{StoreLine|stock=∞|buy=N/A|name=Magic shortbow scroll|sell=100000}}
+{{StoreLine|stock=∞|buy=N/A|name=Saradomin's tear|sell=1500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Rune pouch note|sell=100000}}
+{{StoreLine|stock=∞|buy=N/A|name=Looting bag note|sell=10000}}
+{{StoreLine|stock=∞|buy=N/A|name=Scroll of Redirection|sell=1000}}
+{{StoreLine|stock=∞|buy=N/A|name=Clue box|sell=10000}}
+{{StoreLine|stock=∞|buy=N/A|name=Ornate maul handle|sell=1250000}}
+{{StoreLine|stock=∞|buy=N/A|name=Scroll of Imbuing|sell=1000000}}
+{{StoreLine|stock=∞|buy=N/A|name=Trouver parchment|sell=250000}}
+{{StoreLine|stock=∞|buy=N/A|name=Saradomin halo|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Zamorak halo|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Guthix halo|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Brassica halo|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Ancient halo|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Seren halo|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Bandos halo|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Armadyl halo|sell=500000}}
+{{StoreLine|stock=∞|buy=N/A|name=Ancient sceptre|sell=1000000}}
+{{StoreLine|stock=∞|buy=N/A|name=Guthixian icon|sell=1000000}}
+{{StoreTableBottom}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 5 August 2026
+|update = Wyrmscraig & Sailing Changes
+|change = The Ancient Sceptre and Blighted surge sacks have been added to the Emblem Trader store, alongside a new lamp to complete Fairy Tale part 1 and 2 quests.
+}}
+{{Subject changes
+|date = 21 January 2026
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|change = The Emblem Trader now sells various Quest lamps that can be used to automatically complete a number of Quest storylines.
+}}
+{{Subject changes
+|date = 12 March 2025
+|update = Permanent Deadman: World 345 Improvements
+|change = Added Scroll of imbuing, halo's and Trouver parchment to the stock
+}}
+{{Subject changes
+|date = 30 August 2023
+|update = Poll 80 ToA Changes & DMM Tweaks
+|change = 
+*The Emblem Trader has been repatriated to his usual spot in northern Edgeville.
+*Increases in price brought about by the previous update have been reverted on the permanent Deadman Mode world.
+}}
+{{Subject changes
+|date = 23 August 2023
+|update = Deadman: Apocalypse - Friday 25th August
+|change = 
+*The shop has been moved from Edgeville to the Grand Exchange.
+*Price of potions, blighted rune sacks, and Saradomin's tear were increased, while the rune pouch note went down in price, matching the announced point costs for the Deadman: Apocalypse event in both cases.
+}}
+{{Subject changes
+|date = 13 January 2021
+|update = God Wars Instancing and Soul Wars Improvements
+|change = The Bounty Hunter Reward Shop has been closed on regular game modes, leaving Deadman Mode as the only place where the store can be accessed.
+}}
+{{Subject changes
+|date = 27 October 2021
+|update = Revenant Caves & Deadman Changes
+|change = The Emblem Trader now offers blighted spell sacks in the Bounty Hunter Shop on the permanent Deadman Mode world.
+}}
+{{Subject changes
+|date = 12 June 2020
+|update = Darkmeyer Improvements
+|change = The Bounty Hunter Shop on the permanent Deadman Mode world now stocks the potions previously offered during Deadman Tournament events.{{^|These additions were not included in the update post – see instead https://archive.ph/xCOs8 and [[Special:Diff/12601418]].}}
+}}
+{{Subject changes
+|date =  30 April 2020
+|update = Poll 70 and Bounty Hunter Changes
+|change = The old version of the Bounty Hunter Shop, which players on the permanent Deadman Mode world have access to, now stock looting bag notes and rune pouch notes.
+}}
+{{Subject changes
+|date = 13 April 2017
+|update = Wilderness Slayer
+|change = Players on the permanent Deadman Mode are now able to acquire store credit for the Bounty Hunter Shop by trading in tier 1 emblems received from Wilderness Slayer.
+}}
+{{Subject changes footer}}
+
+{{Deadman Mode}}
+{{Shops}}

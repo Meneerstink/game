@@ -1,0 +1,83 @@
+{{Infobox Item
+|name = Imbued ancient cape (Deadman)
+|image = [[File:Imbued ancient cape (Deadman).png]]
+|release = [[7 October]] [[2026]]
+|update = Pete Kayer's Challenges
+|members = Yes
+|quest = No
+|exchange = No
+|tradeable = No
+|bankable = Yes
+|equipable = Yes
+|stackable = No
+|noteable = No
+|options = Wear, Drop
+|examine = A cape from an almighty god, imbued with great power.
+|value = 80000
+|alchable = No
+|weight = 0.453
+|id = 34607
+}}
+[[File:Imbued ancient cape (Deadman) detail.png|left|width=143x143]]
+The Deadman '''imbued ancient cape''' is an ornamented variant of the [[imbued ancient cape]], made by giving [[Nigel]] an [[Armageddon cape fabric]] to unlock the god cape transformations, and using the [[ancient fabric]] on one of the imbued Deadman god capes. Unlike the others, it cannot be made by using an imbued ancient cape on Nigel. This cape, like its base component, counts as a [[Zaros#Affiliated_items|Zarosian item]] for [[God Wars Dungeon]].
+
+If the player dies a PvP death and the item is unprotected, it will remain in the player's inventory; however, the item will be in a broken, unusable state and must be repaired by using it on [[Perdu]] and paying him {{NoCoins|96,000}} [[coins]]. The ornament is removed and Nigel '''cannot''' reapply it.{{fact}}
+
+{{bug|
+* The imbued ancient cape (Deadman) can't be stored in the [[cape rack]].
+* The cape cannot be created by showing an imbued ancient cape to Nigel.}}
+
+==Combat stats==
+{{Infobox Bonuses
+|astab = 0
+|aslash = 0
+|acrush = 0
+|amagic = +15
+|arange = 0
+|dstab = +3
+|dslash = +3
+|dcrush = +3
+|dmagic = +15
+|drange = 0
+|str = 0
+|rstr = 0
+|mdmg = 2
+|prayer = 0
+|slot = cape
+|image = [[File:Imbued ancient cape (Deadman) equipped male.png]]
+|altimage = [[File:Imbued ancient cape (Deadman) equipped female.png]]
+}}
+
+==Creation==
+<tabber>
+Saradomin = {{Recipe
+|members = Yes
+|ticks = 0
+|mat1 = Imbued Saradomin cape (Deadman)
+|mat2 = Ancient fabric
+|output1 = Imbued ancient cape (Deadman)
+|output1cost = No
+}}
+|-|
+Zamorak = {{Recipe
+|members = Yes
+|ticks = 0
+|mat1 = Imbued Zamorak cape (Deadman)
+|mat2 = Ancient fabric
+|output1 = Imbued ancient cape (Deadman)
+|output1cost = No
+}}
+|-|
+Guthix = {{Recipe
+|members = Yes
+|ticks = 0
+|mat1 = Imbued Guthix cape (Deadman)
+|mat2 = Ancient fabric
+|output1 = Imbued ancient cape (Deadman)
+|output1cost = No
+}}
+</tabber>
+
+{{Deadman: Armageddon}}
+{{Magic armour}}
+{{Cape}}

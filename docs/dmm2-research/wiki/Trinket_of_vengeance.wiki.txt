@@ -1,0 +1,57 @@
+{{Deadman permanent}}
+{{Infobox Item
+|version1 = Normal
+|version2 = (2)
+|version3 = (1)
+|name = Trinket of vengeance
+|image = [[File:Trinket of vengeance.png]]
+|release1 = [[23 August]] [[2023]]
+|release2 = [[27 May]] [[2026]]
+|release3 = [[27 May]] [[2026]]
+|update1 = Deadman: Apocalypse - Friday 25th August
+|update2 = Changes to Sailing & LMS Rewards Eligibility
+|update3 = Changes to Sailing & LMS Rewards Eligibility
+|members = Yes
+|quest = No
+|tradeable = Yes
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Cast, Drop
+|examine1 = A magic rock! This one casts the Vengeance spell.
+|examine2 = A magic rock! This one casts the Vengeance spell and has 2 charges remaining.
+|examine3 = A magic rock! This one casts the Vengeance spell and has one charge remaining.
+|value1 = 100000
+|value2 = 1
+|value3 = 1
+|weight = 1.000
+|exchange = dmm
+|id1 = 28561
+|id2 = 33428
+|id3 = 33431
+}}
+[[File:Trinket of vengeance detail.png|left|130px]]
+The '''trinket of vengeance''' is an item in [[Deadman Mode]] and its seasonal variants [[Deadman: Apocalypse|Apocalypse]] and [[Deadman: Armageddon|Armageddon]] which casts the [[Vengeance]] spell. Though it has no requirements to use, it retains the 30 second casting cooldown that the spell has.
+
+Like the [[Deadman: Apocalypse/Sigils|sigils]], [[Deadman: Apocalypse#Trinkets|trinkets]] are dropped by most monsters (via the [[Deadman:_Apocalypse/Global_loot_table|Deadman Mode drop table]]) and are tradeable on the [[Grand Exchange]].
+
+This trinket is not accessible in [[Deadman: Annihilation]]. In [[Deadman: All Stars Season 3]], a version of the trinket that had only two charges before being destroyed was available.
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 21 January 2026
+|update = Holy Moleys and the Hooded Slayer Helm are Here!
+|change = The trinket's value was increased from 10,000 to 100,000.
+}}
+{{Subject changes
+|date = 12 March 2025
+|update = Permanent Deadman: World 345 Improvements
+|change = Trinkets are now available in permanent Deadman Mode.
+}}
+{{Subject changes footer}}
+
+{{Deadman Mode}}
+{{Deadman: Annihilation}}
+{{Deadman: Armageddon}}
+{{Deadman: Apocalypse}}

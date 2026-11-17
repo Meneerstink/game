@@ -1,0 +1,527 @@
+[
+    {
+        "name": "item-13307",
+        "exit": 0,
+        "log": "item-13307.txt"
+    },
+    {
+        "name": "item-13317",
+        "exit": 0,
+        "log": "item-13317.txt"
+    },
+    {
+        "name": "item-13318",
+        "exit": 0,
+        "log": "item-13318.txt"
+    },
+    {
+        "name": "item-13319",
+        "exit": 0,
+        "log": "item-13319.txt"
+    },
+    {
+        "name": "item-13660",
+        "exit": 0,
+        "log": "item-13660.txt"
+    },
+    {
+        "name": "item-22331",
+        "exit": 0,
+        "log": "item-22331.txt"
+    },
+    {
+        "name": "item-22333",
+        "exit": 0,
+        "log": "item-22333.txt"
+    },
+    {
+        "name": "item-22335",
+        "exit": 0,
+        "log": "item-22335.txt"
+    },
+    {
+        "name": "item-26149",
+        "exit": 0,
+        "log": "item-26149.txt"
+    },
+    {
+        "name": "item-28531",
+        "exit": 0,
+        "log": "item-28531.txt"
+    },
+    {
+        "name": "item-28534",
+        "exit": 0,
+        "log": "item-28534.txt"
+    },
+    {
+        "name": "item-28537",
+        "exit": 0,
+        "log": "item-28537.txt"
+    },
+    {
+        "name": "item-28540",
+        "exit": 0,
+        "log": "item-28540.txt"
+    },
+    {
+        "name": "item-28543",
+        "exit": 0,
+        "log": "item-28543.txt"
+    },
+    {
+        "name": "item-28545",
+        "exit": 0,
+        "log": "item-28545.txt"
+    },
+    {
+        "name": "item-28547",
+        "exit": 0,
+        "log": "item-28547.txt"
+    },
+    {
+        "name": "item-28549",
+        "exit": 0,
+        "log": "item-28549.txt"
+    },
+    {
+        "name": "item-28561",
+        "exit": 0,
+        "log": "item-28561.txt"
+    },
+    {
+        "name": "item-28567",
+        "exit": 0,
+        "log": "item-28567.txt"
+    },
+    {
+        "name": "item-29599",
+        "exit": 0,
+        "log": "item-29599.txt"
+    },
+    {
+        "name": "item-29602",
+        "exit": 0,
+        "log": "item-29602.txt"
+    },
+    {
+        "name": "item-29605",
+        "exit": 0,
+        "log": "item-29605.txt"
+    },
+    {
+        "name": "item-29607",
+        "exit": 0,
+        "log": "item-29607.txt"
+    },
+    {
+        "name": "item-29609",
+        "exit": 0,
+        "log": "item-29609.txt"
+    },
+    {
+        "name": "item-29611",
+        "exit": 0,
+        "log": "item-29611.txt"
+    },
+    {
+        "name": "item-29613",
+        "exit": 0,
+        "log": "item-29613.txt"
+    },
+    {
+        "name": "item-29615",
+        "exit": 0,
+        "log": "item-29615.txt"
+    },
+    {
+        "name": "item-29617",
+        "exit": 0,
+        "log": "item-29617.txt"
+    },
+    {
+        "name": "item-29619",
+        "exit": 0,
+        "log": "item-29619.txt"
+    },
+    {
+        "name": "item-29622",
+        "exit": 0,
+        "log": "item-29622.txt"
+    },
+    {
+        "name": "item-29625",
+        "exit": 0,
+        "log": "item-29625.txt"
+    },
+    {
+        "name": "item-29628",
+        "exit": 0,
+        "log": "item-29628.txt"
+    },
+    {
+        "name": "item-33012",
+        "exit": 0,
+        "log": "item-33012.txt"
+    },
+    {
+        "name": "item-33015",
+        "exit": 0,
+        "log": "item-33015.txt"
+    },
+    {
+        "name": "item-33018",
+        "exit": 0,
+        "log": "item-33018.txt"
+    },
+    {
+        "name": "item-33021",
+        "exit": 0,
+        "log": "item-33021.txt"
+    },
+    {
+        "name": "item-33023",
+        "exit": 0,
+        "log": "item-33023.txt"
+    },
+    {
+        "name": "item-33025",
+        "exit": 0,
+        "log": "item-33025.txt"
+    },
+    {
+        "name": "item-33027",
+        "exit": 0,
+        "log": "item-33027.txt"
+    },
+    {
+        "name": "item-33029",
+        "exit": 0,
+        "log": "item-33029.txt"
+    },
+    {
+        "name": "item-33031",
+        "exit": 0,
+        "log": "item-33031.txt"
+    },
+    {
+        "name": "item-33033",
+        "exit": 0,
+        "log": "item-33033.txt"
+    },
+    {
+        "name": "item-33035",
+        "exit": 0,
+        "log": "item-33035.txt"
+    },
+    {
+        "name": "item-33036",
+        "exit": 0,
+        "log": "item-33036.txt"
+    },
+    {
+        "name": "item-33041",
+        "exit": 0,
+        "log": "item-33041.txt"
+    },
+    {
+        "name": "item-33050",
+        "exit": 0,
+        "log": "item-33050.txt"
+    },
+    {
+        "name": "item-33063",
+        "exit": 0,
+        "log": "item-33063.txt"
+    },
+    {
+        "name": "item-33122",
+        "exit": 0,
+        "log": "item-33122.txt"
+    },
+    {
+        "name": "item-34422",
+        "exit": 0,
+        "log": "item-34422.txt"
+    },
+    {
+        "name": "item-34425",
+        "exit": 0,
+        "log": "item-34425.txt"
+    },
+    {
+        "name": "item-13658",
+        "exit": 0,
+        "log": "item-13658.txt"
+    },
+    {
+        "name": "npc-6516",
+        "exit": 0,
+        "log": "npc-6516.txt"
+    },
+    {
+        "name": "npc-6485",
+        "exit": 0,
+        "log": "npc-6485.txt"
+    },
+    {
+        "name": "npc-8391",
+        "exit": 0,
+        "log": "npc-8391.txt"
+    },
+    {
+        "name": "npc-8390",
+        "exit": 0,
+        "log": "npc-8390.txt"
+    },
+    {
+        "name": "npc-15569",
+        "exit": 0,
+        "log": "npc-15569.txt"
+    },
+    {
+        "name": "npc-15570",
+        "exit": 0,
+        "log": "npc-15570.txt"
+    },
+    {
+        "name": "npc-15571",
+        "exit": 1,
+        "log": "npc-15571.txt"
+    },
+    {
+        "name": "seq-11444",
+        "exit": 0,
+        "log": "seq-11444.txt"
+    },
+    {
+        "name": "seq-11810",
+        "exit": 0,
+        "log": "seq-11810.txt"
+    },
+    {
+        "name": "seq-11811",
+        "exit": 0,
+        "log": "seq-11811.txt"
+    },
+    {
+        "name": "seq-11812",
+        "exit": 0,
+        "log": "seq-11812.txt"
+    },
+    {
+        "name": "seq-11935",
+        "exit": 0,
+        "log": "seq-11935.txt"
+    },
+    {
+        "name": "seq-11936",
+        "exit": 0,
+        "log": "seq-11936.txt"
+    },
+    {
+        "name": "seq-11937",
+        "exit": 0,
+        "log": "seq-11937.txt"
+    },
+    {
+        "name": "seq-13701",
+        "exit": 0,
+        "log": "seq-13701.txt"
+    },
+    {
+        "name": "seq-13702",
+        "exit": 0,
+        "log": "seq-13702.txt"
+    },
+    {
+        "name": "seq-13703",
+        "exit": 0,
+        "log": "seq-13703.txt"
+    },
+    {
+        "name": "seq-13704",
+        "exit": 0,
+        "log": "seq-13704.txt"
+    },
+    {
+        "name": "seq-13705",
+        "exit": 0,
+        "log": "seq-13705.txt"
+    },
+    {
+        "name": "seq-13706",
+        "exit": 0,
+        "log": "seq-13706.txt"
+    },
+    {
+        "name": "seq-13707",
+        "exit": 0,
+        "log": "seq-13707.txt"
+    },
+    {
+        "name": "seq-13708",
+        "exit": 0,
+        "log": "seq-13708.txt"
+    },
+    {
+        "name": "seq-13709",
+        "exit": 0,
+        "log": "seq-13709.txt"
+    },
+    {
+        "name": "seq-13710",
+        "exit": 0,
+        "log": "seq-13710.txt"
+    },
+    {
+        "name": "seq-13711",
+        "exit": 0,
+        "log": "seq-13711.txt"
+    },
+    {
+        "name": "seq-13712",
+        "exit": 0,
+        "log": "seq-13712.txt"
+    },
+    {
+        "name": "seq-13713",
+        "exit": 0,
+        "log": "seq-13713.txt"
+    },
+    {
+        "name": "seq-13714",
+        "exit": 0,
+        "log": "seq-13714.txt"
+    },
+    {
+        "name": "seq-14497",
+        "exit": 0,
+        "log": "seq-14497.txt"
+    },
+    {
+        "name": "spotanim-3030",
+        "exit": 0,
+        "log": "spotanim-3030.txt"
+    },
+    {
+        "name": "spotanim-3031",
+        "exit": 0,
+        "log": "spotanim-3031.txt"
+    },
+    {
+        "name": "spotanim-3032",
+        "exit": 0,
+        "log": "spotanim-3032.txt"
+    },
+    {
+        "name": "spotanim-3033",
+        "exit": 0,
+        "log": "spotanim-3033.txt"
+    },
+    {
+        "name": "spotanim-3565",
+        "exit": 0,
+        "log": "spotanim-3565.txt"
+    },
+    {
+        "name": "spotanim-3566",
+        "exit": 0,
+        "log": "spotanim-3566.txt"
+    },
+    {
+        "name": "spotanim-3567",
+        "exit": 0,
+        "log": "spotanim-3567.txt"
+    },
+    {
+        "name": "spotanim-3568",
+        "exit": 0,
+        "log": "spotanim-3568.txt"
+    },
+    {
+        "name": "spotanim-3569",
+        "exit": 0,
+        "log": "spotanim-3569.txt"
+    },
+    {
+        "name": "spotanim-3570",
+        "exit": 0,
+        "log": "spotanim-3570.txt"
+    },
+    {
+        "name": "spotanim-3571",
+        "exit": 0,
+        "log": "spotanim-3571.txt"
+    },
+    {
+        "name": "spotanim-4020",
+        "exit": 0,
+        "log": "spotanim-4020.txt"
+    },
+    {
+        "name": "loc-54114",
+        "exit": 0,
+        "log": "loc-54114.txt"
+    },
+    {
+        "name": "loc-54115",
+        "exit": 0,
+        "log": "loc-54115.txt"
+    },
+    {
+        "name": "loc-54116",
+        "exit": 0,
+        "log": "loc-54116.txt"
+    },
+    {
+        "name": "interfaces-230-232",
+        "exit": 1,
+        "log": "interfaces-230-232.txt"
+    },
+    {
+        "name": "bundle-item",
+        "exit": 0,
+        "log": "bundle-item.txt"
+    },
+    {
+        "name": "bundle-npc",
+        "exit": 1,
+        "log": "bundle-npc.txt"
+    },
+    {
+        "name": "bundle-seq",
+        "exit": 0,
+        "log": "bundle-seq.txt"
+    },
+    {
+        "name": "bundle-spotanim",
+        "exit": 0,
+        "log": "bundle-spotanim.txt"
+    },
+    {
+        "name": "bundle-loc",
+        "exit": 0,
+        "log": "bundle-loc.txt"
+    },
+    {
+        "name": "interface-232",
+        "exit": 0,
+        "log": "interface-232.txt"
+    },
+    {
+        "name": "npc-skeletal-15571",
+        "exit": 0,
+        "log": "npc-skeletal-15571.txt"
+    },
+    {
+        "name": "bundle-npc-classic",
+        "exit": 0,
+        "log": "bundle-npc-classic.txt"
+    },
+    {
+        "name": "wisp-sidecar",
+        "exit": 0,
+        "log": "wisp-sidecar.txt"
+    }
+]

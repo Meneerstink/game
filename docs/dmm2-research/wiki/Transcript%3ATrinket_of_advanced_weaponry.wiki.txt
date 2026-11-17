@@ -1,0 +1,22 @@
+{{transcript|item}}
+
+==When opened==
+* {{tcond|If the player doesn't have enough space around them to open it:}}
+** {{mes|You must have nothing surrounding you to open this trinket.}}
+* {{trandom}}
+* {{topt|Corrupted armadyl godsword}}
+** {{mes|Your trinket gave you a Corrupted armadyl godsword!}}
+* {{topt|Corrupted dragon claws}}
+** {{mes|Your trinket gave you a Corrupted dragon claws!}}
+* {{topt|Corrupted Scythe of Vitur (uncharged)}}
+** {{mes|Your trinket gave you a Corrupted Scythe of Vitur (uncharged)!}}
+* {{topt|Corrupted tumeken's shadow (uncharged)}}
+** {{mes|Your trinket gave you a Corrupted tumeken's shadow (uncharged)!}}
+* {{topt|Corrupted twisted bow}}
+** {{mes|Your trinket gave you a Corrupted twisted bow!}}
+* {{topt|Corrupted voidwaker}}
+** {{mes|Your trinket gave you a Corrupted voidwaker!}}
+* {{topt|Corrupted dark bow}}
+** {{mes|Your trinket gave you a Corrupted dark bow!}}
+* {{topt|Corrupted Volatile Nightmare staff}}
+** {{mes|Your trinket gave you a Corrupted Volatile Nightmare staff!}}

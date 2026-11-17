@@ -83,7 +83,9 @@ object CombatConfigs {
         )
 
     fun getCombatStrategy(pawn: Pawn): CombatStrategy =
-        if (gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn)) {
+        if (gg.rsmod.plugins.content.starter.StarterWeaponCombat.builtInStaff(pawn)) {
+            gg.rsmod.plugins.content.starter.StarterWeaponCombat
+        } else if (gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn)) {
             gg.rsmod.plugins.content.combat.strategy.PoweredStaffCombatStrategy
         } else when (getCombatClass(pawn)) {
             CombatClass.MELEE -> MeleeCombatStrategy
@@ -114,6 +116,7 @@ object CombatConfigs {
         if (pawn is Player) {
             return when {
                 pawn.attr.has(Combat.CASTING_SPELL) -> CombatClass.MAGIC
+                gg.rsmod.plugins.content.starter.DeadmanStarterPack.isStaff(pawn.getEquipment(EquipmentType.WEAPON)?.id) -> CombatClass.MAGIC
                 // Powered staves always attack with their built-in spell (owner decision option a: magic class forced).
                 gg.rsmod.plugins.content.items.osrs.PoweredStaves.wielded(pawn) != null -> CombatClass.MAGIC
                 pawn.hasWeaponType(
@@ -157,7 +160,8 @@ object CombatConfigs {
             val default = PLAYER_DEFAULT_ATTACK_SPEED
             val weapon = pawn.getEquipment(EquipmentType.WEAPON)
             // Missing metadata is -1, not a one-tick weapon. Keep explicit custom speeds.
-            var speed = weapon?.getDef(pawn.world.definitions)?.attackSpeed?.takeIf { it > 0 } ?: default
+            var speed = gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.attackSpeed(weapon?.id)
+                ?: weapon?.let { pawn.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(it.id)!!) }?.attackSpeed?.takeIf { it > 0 } ?: default
             // OSRS Wiki "Toxic blowpipe": "During player versus player combat, its attack speed is 4, or equal to a shortbow."
             // "Rosewood blowpipe" etc.: "As with all blowpipes ... During player versus player combat, its attack speed is 4".
             if (weapon != null && gg.rsmod.plugins.content.items.osrs.Blowpipe.isBlowpipe(weapon.id) &&
@@ -183,12 +187,15 @@ object CombatConfigs {
                 speed -= 1
             }
             // "Powered staff": attack speed 4 for the built-in spell; spellbook casts keep 5 - with any weapon or none.
-            if (magic && !gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn)) {
+            if (magic && !gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn) &&
+                !gg.rsmod.plugins.content.starter.StarterWeaponCombat.builtInStaff(pawn)) {
                 // Spellbook casts: 5 ticks, weapon exceptions from the one table (AutocastWeapons.spellAttackSpeed).
                 speed = gg.rsmod.plugins.content.combat.magic.AutocastWeapons.spellAttackSpeed(
                     weapon?.id, castSpell, autocast = pawn.attr[gg.rsmod.plugins.content.combat.magic.Autocast.AUTO_CAST] == true,
                 )
             }
+            if (gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SHADOW.matches(weapon?.id) &&
+                gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn)) speed = 5
             // Miasmic spells: melee and ranged attack speed is halved (doubled delay) for the effect duration. Magic is not
             // slowed (Void donor Combat.kt: `hasClock("miasmic") && (fightStyle == "range" || fightStyle == "melee")`); a
             // slowed player used to cast barrages every 10 ticks too (combat run 2026-09-29).
@@ -226,7 +233,7 @@ object CombatConfigs {
         if (pawn is Player) {
             val style = pawn.getAttackStyle()
             val option = getCombatStyle(style)
-            var weaponId = pawn.getEquipment(EquipmentType.WEAPON)?.id
+            var weaponId = gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(pawn.getEquipment(EquipmentType.WEAPON)?.id)
             // Void's revision-667 salamander animation table uses the same scorch sequence
             // for the weapon's three hybrid style buttons. The local cache contains that exact
             // sequence (5247); do this before the generic weapon-type fallbacks below.

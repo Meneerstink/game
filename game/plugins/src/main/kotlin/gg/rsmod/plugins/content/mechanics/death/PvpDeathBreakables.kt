@@ -125,7 +125,7 @@ object PvpDeathBreakables {
 
     val ALL: Collection<Breakable> get() = entries.values
 
-    fun breakableFor(itemId: Int): Breakable? = entries[itemId]
+    fun breakableFor(itemId: Int): Breakable? = entries[gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(itemId)]
 
     /** The [Breakable] a broken item [brokenId] repairs back into, or `null` if it isn't one of these. */
     fun forBroken(brokenId: Int): Breakable? = byBrokenId[brokenId]
@@ -307,8 +307,15 @@ object PvpDeathBreakables {
     fun victimGraveItems(item: Item): List<Item> =
         if (petOrTrinket(item.id)) listOf(Item(item)) else VICTIM_GRAVE[item.id]?.map { Item(it, item.amount) } ?: emptyList()
 
-    fun converts(itemId: Int): Boolean =
-        petOrTrinket(itemId) || itemId in PVP_BASE || itemId in PVP_COINS_FROM_PARTS || itemId == Items.VENATOR_BOW || itemId == Items.TONALZTICS_OF_RALOS ||
+    fun converts(itemId: Int): Boolean {
+        val base = gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(itemId)!!
+        if (base != itemId) {
+            val skin = gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStore.active?.contract?.skins?.firstOrNull { it.cosmetic == itemId }
+            // Imbued god capes break/Perdu like their base, handled by UntradeableDeathProtection.
+            return skin?.unlock != gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStore.Reward.CAPE_FABRIC || converts(base)
+        }
+        return gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.FORTUITY.matches(itemId) || gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SCYTHE.matches(itemId) ||
+            petOrTrinket(itemId) || itemId in PVP_BASE || itemId in PVP_COINS_FROM_PARTS || itemId == Items.VENATOR_BOW || itemId == Items.TONALZTICS_OF_RALOS ||
             OsrsOrnamentKits.forPvpConversion(itemId) != null || itemId in kitToGrave ||
             gg.rsmod.plugins.content.items.osrs.OrnamentKitRules.isKit(itemId) || itemId == Items.TOXIC_BLOWPIPE ||
             itemId == Items.BLAZING_BLOWPIPE ||
@@ -319,6 +326,7 @@ object PvpDeathBreakables {
             gg.rsmod.plugins.content.items.osrs.RevenantWeapons.isCharged(itemId) ||
             itemId in gg.rsmod.plugins.content.items.osrs.RevenantBows.UNCHARGED_FOR || itemId == Items.SERPENTINE_HELM ||
             pointsDeath(itemId) || crystalSeedOnDeath(itemId) != null
+    }
 
     /**
      * OSRS Wiki "Crystal equipment": "Upon death in the Wilderness, the killer will receive the seed form of the crystal equipment."
@@ -434,6 +442,10 @@ object PvpDeathBreakables {
         victim: gg.rsmod.game.model.entity.Player? = null,
     ): List<Item>? {
         val id = item.id
+        gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStore.active?.baseItem(item)?.let { base -> return killerItems(base, prices, victim) ?: listOf(base) }
+        if (gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.FORTUITY.matches(id)) return listOfNotNull(
+            gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.FORTUITY_EMPTY.local?.let { Item(it) }, Item(Items.COINS_995, gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets.FORTUITY_DEPOSIT))
+        if (gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SCYTHE.matches(id)) return listOfNotNull(gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SCYTHE_EMPTY.local?.let { Item(it) })
         PVP_BASE[id]?.let { parts -> return parts.map { Item(it, item.amount) } + listOfNotNull(victim?.let { storedScrolls(it, item) }) }
         PVP_COINS_FROM_PARTS[id]?.let { parts -> return partsCoins(id, parts, item.amount, prices) }
         if (id == Items.VENATOR_BOW) {

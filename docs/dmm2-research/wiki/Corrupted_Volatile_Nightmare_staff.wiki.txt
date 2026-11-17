@@ -1,0 +1,74 @@
+{{Deadman seasonal}}
+{{Infobox Item
+|name = Corrupted Volatile Nightmare staff
+|image = [[File:Corrupted Volatile Nightmare staff.png]]
+|release = [[17 July]] [[2024]]
+|update = Deadman: Armageddon & While Guthix Sleeps Updates
+|members = Yes
+|quest = No
+|tradeable = Yes
+|equipable = Yes
+|stackable = No
+|noteable = Yes
+|options = Wield, Drop
+|examine = An ancient staff corrupted by darkness. A volatile orb has been added to it.
+|value = 250000
+|weight = 1.600
+|exchange = dmm
+|id = 29602
+}}
+[[File:Corrupted Volatile Nightmare staff detail.png|left|150px]]
+The '''corrupted volatile Nightmare staff''' is a magic weapon that requires level 50 [[Magic]] and 20 [[Hitpoints]] to wield. Exclusive to [[Deadman: Armageddon]], it can be acquired by opening a [[Trinket of advanced weaponry]] obtained from a [[Deadman:_Armageddon#Breaches|breach]].
+
+As a corrupted variant of the [[volatile Nightmare staff]], the attack range of its [[special attack]] is 6 tiles rather than 10.
+
+==Combat stats==
+{{Infobox Bonuses
+|astab = 0
+|aslash = 0
+|acrush = 0
+|amagic = +16
+|arange = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = +14
+|drange = 0
+|str = +0
+|rstr = 0
+|mdmg = +15
+|prayer = 0
+|slot = weapon
+|speed = 5
+|attackrange = staff
+|combatstyle = Staff
+|image = [[File:Corrupted Volatile Nightmare staff equipped male.png|180px]]
+|altimage = [[File:Corrupted Volatile Nightmare staff equipped female.png|180px]]
+}}
+{{CombatStyles|Staff|speed=5|attackrange=staff}}
+{{Autocasting|standard=yes|arceuus=no|ancient=yes}}
+==Special attack==
+[[File:Immolate.gif|thumb|250px|A player performing the regular volatile Nightmare staff's special attack, ''Immolate''.]]
+The corrupted volatile Nightmare staff has a [[special attack]], ''Immolate'', that consumes 55% of the player's special attack energy to hit the target with 50% increased accuracy and deals a high amount of damage. The special attack does not consume runes.
+
+When calculating the max hit, Immolate acts like any other spell. The spell's max hit is calculated first and then rounded down. All [[magic damage]] gear, including the +15% from the staff is calculated separately. Because the staff has a magic damage bonus, the max hit seen in-game will always be higher than the spell's max hit. The max hit varies with visible Magic level according to the formula below.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1765337358294003882|date=06 March 2024|archiveurl=https://reldo.runescape.wiki/i/108809|archivedate=03 May 2026|quote=[What is the formula for the Volatile staff's special attack base maxhit?] The base is 58, scaled up or down by your *visible* Magic stat divided by 99, if I'm reading my colleagues' code correctly.}} The spell's max hit is limited to, at most, 58. This means that even though the max hit is based on the player's magic level, [[Temporary skill boost|boosting]] above magic level 98 will not increase the max hit. It can be increased though by using additional magic damage gear including the [[Slayer helmet (i)]] when on a [[slayer task]].
+
+For additional details, [[Volatile Nightmare staff#Special attack|see volatile Nightmare staff]]
+
+==Item sources==
+{{Drop sources|Corrupted Volatile Nightmare staff}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 12 August 2026
+|update = Summer Sweep Up - Agility & Chambers of Xeric Changes
+|change = The item was renamed from "Corrupted volatile nightmare staff" to "Corrupted Volatile Nightmare staff"
+}}
+{{Subject changes footer}}
+
+==References==
+{{Reflist}}
+
+{{Deadman: Annihilation}}
+{{Deadman: Armageddon}}

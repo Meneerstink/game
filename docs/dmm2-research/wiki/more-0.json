@@ -1,0 +1,135 @@
+{
+  "batchcomplete": true,
+  "query": {
+    "redirects": [
+      {
+        "from": "Greater ghost",
+        "to": "Greater ghostly thrall"
+      },
+      {
+        "from": "Greater skeleton",
+        "to": "Resurrect Greater Skeleton"
+      },
+      {
+        "from": "Greater zombie",
+        "to": "Greater zombified thrall"
+      }
+    ],
+    "pages": [
+      {
+        "pageid": 25690,
+        "ns": 0,
+        "title": "Vengeance",
+        "revisions": [
+          {
+            "revid": 15359389,
+            "parentid": 15358798,
+            "timestamp": "2026-10-01T09:01:13Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{External|rs|dw}}\n{{Otheruses|the [[spell]] that reflects [[damage]] done to the [[player character|player]]|the spell that applies this effect to other players|Vengeance Other}}\n{{Infobox Spell\n|name = Vengeance\n|image = [[File:Vengeance.png]]\n|release = [[24 July]] [[2006]]\n|update = Lunar Diplomacy\n|members = Yes\n|level = 94\n|spellbook = Lunar\n|type = Combat\n|exp = 112\n|cost = {{RuneReq|Astral=4|Earth=10|Death=2}}\n|speed = 0 ticks\n|cooldown = 50 ticks\n|description = Rebound damage to an opponent\n|anim = [[File:Vengeance.gif|150px]]\n|sound = No\n}}\n[[File:Vengeance icon (mobile).png|left]]\n'''Vengeance''' is a level 94 [[Lunar spell]] that rebounds 75% of the damage taken in the next hit back to the opponent dealing it. The player will say {{Overhead|Taste vengeance!}} when the rebound is activated. Vengeance can only be cast once every 30 seconds, and the spell icon will be greyed out if the spell is on cooldown. Additionally, the effect will wear off upon logout or when teleporting into a [[player-owned house]]. \n\nAs with all Lunar spells, the [[quest]] [[Lunar Diplomacy]] must be completed to cast Vengeance. \n\n==Mechanics==\n===Reflected damage===\nVengeance reflects 75% of damage taken back to an opponent. The damage is always <u>rounded down</u> to the nearest integer, but has a minimum of 1. \n\nAs an example, if an opponent deals 80 points of damage, the player reflects 60 (80 * 0.75) points of damage. If the opponent instead deals 81 points of damage, the player will still reflect 60 points of damage because 60.75 (81 * 0.75) rounds down. If the opponent deals just 1 point of damage, the player will reflect 1 point of damage back.\n\nVengeance's effect '''does''' stack with the [[ring of recoil]]. \n\n===Use in PvP===\nVengeance is popular in [[PvP]], especially when an opponent is using hard-hitting weapons such as [[godsword]]s or [[Dharok the Wretched's equipment]], since it is possible to rebound large amounts of damage back onto the opponent.\n\n[[Player killers]] sometimes remove their armour when attacking with Vengeance activated, in order to increase the chance of their opponent hitting them. Players seeking to counter Vengeance can simply strike the player with a lower-hitting weapon to minimise the full potential of this spell. \n\nIf players desire to hide the Vengeance animation from an opponent, they must cast Vengeance at the exact same [[tick]] as the start of another weapon animation, such as the [[Armadyl godsword]] special attack. The Vengeance animation will then be cancelled, hiding its activation from opponents.\n\n===Use in PvM===\nIn PvM, monster damage can typically be negated or reduced through various means, such as movement or praying correctly. If a monster is vulnerable to vengeance and its damage is distributed to one large hit splat, players can intentionally tank more damage than is necessary in order to proc a larger Vengeance. Although the [[Thermonuclear smoke devil]] deals a sizable chunk of damage, its damage is distributed through lots of tiny hit splats - it has a low max hit of 8, making vengeance not ideal. Whereas monsters like the [[Kalphite Queen|Kalphite queen]] will deal its large amount of damage in one hit splat.\n\nBeing on the Lunar spellbook, players can also [[Spellbook Swap|spellbook swap]] and benefit from other spellbooks as well.\n\n===Rebounding all damage===\nWearing [[Dharok the Wretched's equipment]] whilst wearing an [[amulet of the damned]] along with [[Ring of recoil|rings of recoil]] makes it possible for players to rebound 100% of damage received in a single hit back onto their opponent. Runes can be provided with a [[Blighted vengeance sack]], although it is restricted to the Wilderness only. [[Echo boots]] can also be used to rebound damage.\n\n===Exceptions===\nThe rebound effect of Vengeance will not be activated on [[poison]], [[venom]] or [[disease]] hits, and does not count towards [[Smite]] drains if used in [[PvP]]. Additionally, some [[monsters]] are immune to it; for a list of monsters known to be immune to recoil effects, see [[:Category:Monsters immune to recoil]].\n\nVengeance cannot be cast while in a [[player-owned house]]. Any active Vengeance casts will be removed from the player if they enter one.\n\n== Spell cost ==\n{{Spell cost table\n|Rune1 = Earth\n|Rune1num = 10\n|Rune2 = Death\n|Rune2num = 2\n|Rune3 = Astral\n|Rune3num = 4\n}}\n{| class=\"wikitable\"\n|+\n! colspan=\"3\" |Wilderness-only casting\n|-\n|{{CostLine|Blighted vengeance sack}}\n|}\n\n==Animation override==\n[[File:Vengeance (Trailblazer Reloaded League).gif|thumb|150px|''Leagues IV - Trailblazer reloaded'' Vengeance animation]]\nAn [[animation override]] is available for Vengeance, unlockable via the [[Trailblazer reloaded vengeance scroll]]. Players can apply and revert the animation override at any time via the \"Animation\" menu option on the spell's icon.\n\n==Sound effects==\n{{SFXTableHead}}\n{{SFXLine|file=Vengeance.ogg|name=lunar_vengence|desc=Casting the spell|id=2907}}\n{{SFXLine|file=Vengeance (Trailblazer Reloaded League).wav|name=leagues4_vengence_spell_01|desc=Casting the spell with the ''Leagues IV - Trailblazer reloaded'' animation override|id=7569}}\n{{SFXTableBottom}}\n\n==Combat Achievements==\nThree [[combat achievements]] require using Vengeance against a boss: \n*[[Demonic Rebound]] for the [[Abyssal Sire]]\n*[[Insect Deflection]] for the [[Kalphite Queen]]\n*[[Snake Rebound]] for [[Zulrah]]\n\nIt is also of great use for getting most combat achievement speed times where it is available to use, by intentionally taking a large hit to reflect back for extra damage.\n\n==Changes==\n{{Subject changes header}}\n{{Subject changes\n|date = 6 June 2019\n|update = PvP Changes and Deadman Beta\n|poll =\n|change = The Vengeance spell no longer disrupts a player's walk animation unless they're already in a PvP area when they cast it, intending to minimise affecting genuine PvP situations while limiting the ability to lure using the spell.\n}}\n{{Subject changes\n|date = 3 March 2016\n|update = Architectural Alliance\n|poll = Quality of Life - Top 10 General Suggestions\n|change = The Vengeance spell icon will now be greyed out if the spell is on cooldown.\n}}\n{{Subject changes\n|date = 19 September 2013\n|update = Patch Notes (19 September 2013)\n|change = The Vengeance spells will now reflect damage more reliably when you are on low health. Previously, the reflected damage was being capped at the number of hitpoints you had left at the time.\n}}\n{{Subject changes footer}}\n\n{{Lunar spellbook}}\n{{Combat spells}}\n\n[[Category:Forced speech]]"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 66252,
+        "ns": 0,
+        "title": "Deadman's chest",
+        "revisions": [
+          {
+            "revid": 15386524,
+            "parentid": 15239883,
+            "timestamp": "2026-10-30T17:19:22Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{otheruses|the item|the bar in [[Brimhaven]]|Dead Man's Chest|the loot chest in [[Deadman Mode]]|Deadman's chest (scenery)|the bank chests in Deadman Mode|Deadman chest}}\n{{Infobox Item\n|version1 = Cosmetic\n|version2 = Deadman Mode\n|name = Deadman's chest\n|image1 = [[File:Deadman's chest (cosmetic).png]]\n|image2 = [[File:Deadman's chest (Deadman Mode).png]]\n|release1 = [[29 August]] [[2019]]\n|release2 = [[29 October]] [[2015]]\n|update1 = Last Man Standing (2019)\n|update2 = Deadman Mode\n|members = No\n|quest = No\n|tradeable = No\n|equipable = Yes\n|stackable = No\n|noteable = No\n|options1 = Wear, Drop\n|options2 = Wear, Destroy\n|destroy1 = N/A\n|destroy2 = You can get another from Deadman Nigel in Lumbridge.\n|examine = 15 men may jump on you, but only to steal the contents of your bank.\n|value1 = 2\n|value2 = 1\n|alchable = Yes\n|weight1 = 0.120\n|weight2 = 9.979\n|id1 = 24189\n|id2 = 13317\n|leagueRegion = No\n}}\n{{Synced switch\n|version1 = [[File:Deadman's chest (cosmetic) detail.png|left|150px]]\n|version2 = [[File:Deadman's chest (Deadman Mode) detail.png|left|150px]]\n}}\nThe '''Deadman's chest''' is a cosmetic platebody that can be bought from [[Justine's stuff for the Last Shopper Standing]] for 160 [[Last Man Standing]] points. It is part of the [[Deadman armour]] set.\n\nIn [[Deadman Mode]], it has similar defensive stats to an [[iron platebody]] but with no negative offensive stats, and is purchased from [[Nigel]] for one [[blood money]], and may be reclaimed for free. In order to purchase [[deadman armour]] in Deadman mode, players must use the blood money on Nigel, instead of speaking to him, as there are no dialogue options for purchasing the armour.\n\n{{Costume storage|armour case|[[Deadman armour]] set|set=true}}\n\n==Combat stats==\n{{Infobox Bonuses\n|version1 = Cosmetic\n|version2 = Deadman Mode\n|astab = 0\n|aslash = 0\n|acrush = 0\n|amagic = 0\n|arange = 0\n|dstab1 = 0\n|dstab2 = 21\n|dslash1 = 0\n|dslash2 = 20\n|dcrush1 = 0\n|dcrush2 = 12\n|dmagic1 = 0\n|dmagic2 = 3\n|drange1 = 0\n|drange2 = 20\n|str = 0\n|rstr = 0\n|mdmg = 0\n|prayer = 0\n|slot = body\n|image = [[File:Deadman's chest equipped male.png|130px]]\n|altimage = [[File:Deadman's chest equipped female.png|130px]]\n}}\n\n==Shop locations==\n{{Store locations list|Deadman's chest}}\n\n==Gallery==\n<gallery heights=\"250\" style=\"text-align:left\">\nDeadman armour equipped male.png|The full Deadman armour set on body type A.\nDeadman armour equipped female.png|The full Deadman armour set on body type B.\n</gallery>\n\n==Changes==\n{{Subject changes header}}\n{{Subject changes\n|date = 21 January 2026\n|update = Holy Moleys and the Hooded Slayer Helm are Here!\n|change = The Deadman mode version's stats were adjusted.\n}}\n{{Subject changes\n|date = 14 September 2017\n|update = Fossil Island changes\n|change = The Deadman mode version was made available to free-to-play players.\n}}\n{{Subject changes footer}}\n\n==Trivia==\n*The name and examine text are references to the fictional sea shanty ''{{Wp|Dead Man's Chest}}'' from the book ''{{Wp|Treasure Island}}''.\n*Although the [[Deadman Mode]] version is marked as a free-to-play item, it is not obtainable in free-to-play as Deadman Mode is members only.\n\n{{Deadman Mode}}\n{{Last Man Standing}}\n[[Category:Items storable in the costume room]]\n[[Category:Collection log items]]"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 314821,
+        "ns": 0,
+        "title": "Resurrect Greater Skeleton",
+        "revisions": [
+          {
+            "revid": 15327964,
+            "parentid": 15300141,
+            "timestamp": "2026-09-02T01:32:17Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Infobox Spell\n|name = Resurrect Greater Skeleton\n|image = [[File:Resurrect Greater Skeleton.png]]\n|release = [[16 June]] [[2021]]\n|update = A Kingdom Divided\n|members = Yes\n|level = 76\n|spellbook = Arceuus\n|type = Combat\n|exp = 88\n|cost = {{RuneReq|Fire=10|Blood=5|Cosmic=1}} <sup>6</sup> {{SCP|Prayer}} {{plinkp|Book of the Dead}}\n|speed = 4 ticks\n|cooldown = 16 ticks\n|quest = [[A Kingdom Divided]]\n|description = Calls upon a greater skeletal thrall to fight alongside you\n|anim = [[File:Resurrect Skeleton.gif|300px]]\n|sound = [[File:Resurrect Greater Skeleton.ogg]]\n}}\n{{Redirect|Greater skeleton|the monster summoned by Ve'tion|Greater Skeleton Hellhound (Vet'ion)|the monster summoned by Calvar'ion|Greater Skeleton Hellhound (Calvar'ion)}}\n[[File:Resurrect Greater Skeleton icon (mobile).png|left]]\n'''Resurrect Greater Skeleton''' is a [[resurrection spells|resurrection spell]] within the [[Arceuus spellbook]] that requires level 76 [[Magic]] and the completion of [[A Kingdom Divided]] to be cast. In addition to the required runes, casting this spell requires six [[prayer points]] and having the [[Book of the Dead]] equipped or in the player's inventory.\n\nThe spell will summon a [[greater skeletal thrall]], which has an [[attack speed]] of 4 (attacking every 2.4 seconds) and attacks using [[Ranged]] (with a max hit of 3), ignoring any accuracy checks in the process. They will attack the same target that the player is attacking, and cannot be damaged. However, they '''cannot''' attack other players. Damage dealt by the thrall counts as damage dealt by the player that summoned it.\n\nThralls will remain for a set amount of time (<math>0.6 * CurrentMagicLevel</math> seconds). Players can cast resurrection spells again after 10 seconds, albeit the existing thrall will disappear.\n\nSummoned [[thrall]]s last twice as long as normal after claiming the [[Master Combat Achievements]] rewards. \n\n==Cost==\n{{Spell cost table\n|nooffhand=0|Rune1=fire|Rune1num=10|Rune2=blood|Rune2num=5|Rune3=cosmic|Rune3num=1}}\n\n{{Arceuus spellbook}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 314848,
+        "ns": 0,
+        "title": "Greater ghostly thrall",
+        "revisions": [
+          {
+            "revid": 15350895,
+            "parentid": 15346831,
+            "timestamp": "2026-09-19T12:28:48Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Infobox NPC\n|version1 = Ghost\n|version2 = Imp\n|name = {{Null name}}\n|image1 = [[File:Greater ghostly thrall.png|130px|class=pageimage]]\n|image2 = [[File:Thrall imp magic greater.png|130px]]\n|release1 = [[16 June]] [[2021]]\n|release2 = [[11 June]] [[2026]]\n|update = A Kingdom Divided\n|members = Yes\n|race1 = [[Undead]]\n|race2 = Imp\n|location = N/A\n|examine1 = Eeek! A ghost!\n|examine2 =\n|map = No\n|id1 = 10880\n|id2 = 15703\n|leagueRegion = No\n}}\n'''Greater ghostly thralls''' are undead that have been resurrected via the [[Resurrect Greater Ghost]] spell. Besides the required runes, summoning greater thralls requires six [[prayer points]] and having the [[Book of the Dead]] equipped or in the player's inventory.\n\nGreater ghostly thralls have an [[attack speed]] of 4 (attacking every 2.4 seconds) and attack using [[Magic]] (with a max hit of 3), ignoring any accuracy checks in the process. They will attack the last target that the player damaged, and cannot be damaged themselves. However, they '''cannot''' attack other players.\n\nThralls will remain for a set amount of time (<math>CurrentMagicLevel</math> ticks), but players can cast resurrection spells again after 16 ticks, albeit the existing thrall will disappear if players do so. Due to the fact they ignore accuracy checks, in most situations a greater thrall will offer a static 0.625 damage per second.\n\nThralls can be cosmetically changed by consuming the [[impish whistle]], obtainable from the [[Leagues Reward Shop]] or purchasing from another player.\n\n==Combat Achievements==\nThe following [[Combat Achievement]] tasks involve thralls.\n\n{| class=\"wikitable sortable\" style=width:600px;\n! style=\"width:25%;\" | Name\n! style=\"width:55%;\" | Description\n! style=\"width:10%;\" | Difficulty\n! style=\"width:10%;\" | Category\n|-\n| [[Sit Back and Relax]]\n| Deal 100 damage to creatures using undead thralls.\n| Medium\n| Mechanical\n|}\n\n==Changes==\n{{Subject changes header}}\n{{Subject changes\n|date = 5 June 2024\n|update = Pride 2024\n|change = A bug where ghostly thralls had their combat style set to melee has been fixed, and should function as how it were prior to the previous update.\n}}\n{{Subject changes\n|date = 29 May 2024\n|type = hotfix\n|change = Adjusted ghostly thrall attack range due to their combat style being set to melee.\n}}\n{{Subject changes\n|date = 31 January 2024\n|update = Scurrius & DT2 Combat Achievements\n|change = Thralls now have a better pathfinding method, allowing them to move towards a target from further away.\n}}\n{{Subject changes\n|date = 9 March 2023\n|update = Even More Poll 78 Changes\n|change = The Thrall duration bar has been adjusted to be in line with the player\u2019s [[Combat Achievement]] rewards.\n}}\n{{Subject changes\n|date = 24 August 2022\n|update = Tombs of Amascut\n|change = Thralls can no longer be directly interacted with.\n}}\n{{Subject changes\n|date = 13 July 2022\n|update = Emir's Arena: Full Launch\n|change = Thralls now pathfind around obstacles.\n}}\n{{Subject changes footer}}\n\n{{Arceuus spellbook}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 314852,
+        "ns": 0,
+        "title": "Greater zombified thrall",
+        "revisions": [
+          {
+            "revid": 15350897,
+            "parentid": 15346839,
+            "timestamp": "2026-09-19T12:29:51Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Infobox NPC\n|version1 = Zombie\n|version2 = Imp\n|name = {{Null name}}\n|image1 = [[File:Greater zombified thrall.png|130px|class=pageimage]]\n|image2 = [[File:Thrall imp melee greater.png|130px]]\n|release1 = [[16 June]] [[2021]]\n|release2 = [[11 June]] [[2026]]\n|update = A Kingdom Divided\n|members = Yes\n|race1 = [[Undead]]\n|race2 = Imp\n|location = N/A\n|examine1 = Dead man walking.\n|examine2 =\n|map = No\n|id1 = 10886\n|id2 = 15709\n|leagueRegion = No\n}}\n'''Greater zombified thralls''' are undead that have been resurrected via the [[Resurrect Greater Zombie]] spell. Besides the required runes, summoning greater thralls requires six [[prayer points]] and having the [[Book of the Dead]] equipped or in the player's inventory.\n\nGreater zombified thralls have an [[attack speed]] of 4 (attacking every 2.4 seconds) and attack using [[Melee]] (with a max hit of 3), ignoring any accuracy checks in the process. They will attack the last target that the player damaged, and cannot be damaged themselves. However, they '''cannot''' attack other players.\n\nThralls will remain for a set amount of time (<math>CurrentMagicLevel</math> ticks), but players can cast resurrection spells again after 16 ticks, albeit the existing thrall will disappear if players do so. Due to the fact they ignore accuracy checks, in most situations a greater thrall will offer a static 0.625 damage per second.\n\nThralls can be cosmetically changed by consuming the [[impish whistle]], obtainable from the [[Leagues Reward Shop]] or purchasing from another player.\n\n==Combat Achievements==\nThe following [[Combat Achievement]] tasks involve thralls.\n\n{| class=\"wikitable sortable\" style=width:600px;\n! style=\"width:25%;\" | Name\n! style=\"width:55%;\" | Description\n! style=\"width:10%;\" | Difficulty\n! style=\"width:10%;\" | Category\n|-\n| [[Sit Back and Relax]]\n| Deal 100 damage to creatures using undead thralls.\n| Medium\n| Mechanical\n|}\n\n==Changes==\n{{Subject changes header}}\n{{Subject changes\n|date = 31 January 2024\n|update = Scurrius & DT2 Combat Achievements\n|change = Thralls now have a better pathfinding method, allowing them to move towards a target from further away.\n}}\n{{Subject changes\n|date = 9 March 2023\n|update = Even More Poll 78 Changes\n|change = The Thrall duration bar has been adjusted to be in line with the player\u2019s [[Combat Achievement]] rewards.\n}}\n{{Subject changes\n|date = 24 August 2022\n|update = Tombs of Amascut\n|change = Thralls can no longer be directly interacted with.\n}}\n{{Subject changes\n|date = 13 July 2022\n|update = Emir's Arena: Full Launch\n|change = Thralls now pathfind around obstacles.\n}}\n{{Subject changes footer}}\n\n{{Arceuus spellbook}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 393455,
+        "ns": 0,
+        "title": "Trinket of vengeance",
+        "revisions": [
+          {
+            "revid": 15351326,
+            "parentid": 15221774,
+            "timestamp": "2026-09-19T18:21:31Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Deadman permanent}}\n{{Infobox Item\n|version1 = Normal\n|version2 = (2)\n|version3 = (1)\n|name = Trinket of vengeance\n|image = [[File:Trinket of vengeance.png]]\n|release1 = [[23 August]] [[2023]]\n|release2 = [[27 May]] [[2026]]\n|release3 = [[27 May]] [[2026]]\n|update1 = Deadman: Apocalypse - Friday 25th August\n|update2 = Changes to Sailing & LMS Rewards Eligibility\n|update3 = Changes to Sailing & LMS Rewards Eligibility\n|members = Yes\n|quest = No\n|tradeable = Yes\n|equipable = No\n|stackable = No\n|noteable = \n|options = Cast, Drop\n|examine1 = A magic rock! This one casts the Vengeance spell.\n|examine2 = A magic rock! This one casts the Vengeance spell and has 2 charges remaining.\n|examine3 = A magic rock! This one casts the Vengeance spell and has one charge remaining.\n|value1 = 100000\n|value2 = 1\n|value3 = 1\n|weight = 1.000\n|exchange = dmm\n|id1 = 28561\n|id2 = 33428\n|id3 = 33431\n}}\n[[File:Trinket of vengeance detail.png|left|130px]]\nThe '''trinket of vengeance''' is an item in [[Deadman Mode]] and its seasonal variants [[Deadman: Apocalypse|Apocalypse]] and [[Deadman: Armageddon|Armageddon]] which casts the [[Vengeance]] spell. Though it has no requirements to use, it retains the 30 second casting cooldown that the spell has.\n\nLike the [[Deadman: Apocalypse/Sigils|sigils]], [[Deadman: Apocalypse#Trinkets|trinkets]] are dropped by most monsters (via the [[Deadman:_Apocalypse/Global_loot_table|Deadman Mode drop table]]) and are tradeable on the [[Grand Exchange]].\n\nThis trinket is not accessible in [[Deadman: Annihilation]]. In [[Deadman: All Stars Season 3]], a version of the trinket that had only two charges before being destroyed was available.\n\n==Changes==\n{{Subject changes header}}\n{{Subject changes\n|date = 21 January 2026\n|update = Holy Moleys and the Hooded Slayer Helm are Here!\n|change = The trinket's value was increased from 10,000 to 100,000.\n}}\n{{Subject changes\n|date = 12 March 2025\n|update = Permanent Deadman: World 345 Improvements\n|change = Trinkets are now available in permanent Deadman Mode.\n}}\n{{Subject changes footer}}\n\n{{Deadman Mode}}\n{{Deadman: Annihilation}}\n{{Deadman: Armageddon}}\n{{Deadman: Apocalypse}}"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

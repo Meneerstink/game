@@ -1,0 +1,165 @@
+{
+  "batchcomplete": true,
+  "query": {
+    "redirects": [
+      {
+        "from": "Corrupted volatile nightmare staff",
+        "to": "Corrupted Volatile Nightmare staff"
+      }
+    ],
+    "pages": [
+      {
+        "pageid": 393458,
+        "ns": 0,
+        "title": "Trinket of fairies",
+        "revisions": [
+          {
+            "revid": 15191597,
+            "parentid": 15118616,
+            "timestamp": "2026-04-22T04:45:42Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Deadman permanent}}\n{{Infobox Item\n|name = Trinket of fairies\n|image = [[File:Trinket of fairies.png]]\n|release = [[23 August]] [[2023]]\n|update = Deadman: Apocalypse - Friday 25th August\n|members = Yes\n|quest = No\n|tradeable = Yes\n|equipable = No\n|stackable = No\n|noteable = \n|options = Fairy-ring, Spirit-tree, Tool-leprechauns, Last-destination, Drop\n|examine = A magic rock! This one smells funny and lets you teleport.\n|value = 100000\n|weight = 1.000\n|exchange = dmm\n|id = 28564\n}}\n[[File:Trinket of fairies detail.png|left|130px]]\nThe '''trinket of fairies''' is an item in [[Deadman Mode]] that allows players to remotely access [[fairy rings]], [[spirit tree]]s, and [[tool leprechaun]]s that they have access to. The trinket cannot be used beyond level 30 [[Wilderness]].\n\nIt can be acquired as a drop from monsters found during [[breach]]es.\n\n==Item sources==\n{{Drop sources|Trinket of fairies}}\n\n==Changes==\n{{Subject changes header}}\n{{Subject changes\n|date = 21 January 2026\n|update = Holy Moleys and the Hooded Slayer Helm are Here!\n|change = * The trinket can now be used to teleport to [[tool leprechaun]]s.\n* The trinket's value was increased from 10,000 to 100,000.\n}}\n{{Subject changes\n|date = 12 March 2025\n|update = Permanent Deadman: World 345 Improvements\n|change = Trinkets are now available in permanent Deadman Mode.\n}}\n{{Subject changes\n|date = 6 September 2023\n|update = DMM Tweaks, Upcoming Launcher Changes & more!\n|change = Players can no longer use trinket of fairies to teleport when beyond level 30 [[wilderness]].\n}}\n{{Subject changes footer}}\n\n{{Deadman Mode}}\n{{Deadman: Annihilation}}\n{{Deadman: Armageddon}}\n{{Deadman: Apocalypse}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 393460,
+        "ns": 0,
+        "title": "Trinket of undead",
+        "revisions": [
+          {
+            "revid": 15298165,
+            "parentid": 15191599,
+            "timestamp": "2026-08-13T23:52:21Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Deadman permanent}}\n{{Infobox Item\n|name = Trinket of undead\n|image = [[File:Trinket of undead.png]]\n|release = [[23 August]] [[2023]]\n|update = Deadman: Apocalypse - Friday 25th August\n|members = Yes\n|quest = No\n|tradeable = Yes\n|equipable = No\n|stackable = No\n|noteable = \n|options = Summon Lil Zuk, Summon Lil Kal, Summon Lil Wisp, Drop\n|examine = A magic rock! This one gives you random thralls.\n|value = 100000\n|weight = 1.000\n|exchange = dmm\n|id = 28570\n}}\n[[File:Trinket of undead detail.png|left|130px]]\nThe '''trinket of undead''' is an item in [[Deadman Mode]] that allows players to summon a special [[thrall]] of the player's choice, being either [[TzRek-Zuk]], the [[Kalphite Princess#Flying|Kalphite Princess]], or [[Wisp]]. These thralls function the same as greater thralls, functioning as a melee, ranged, or magic thrall respectively. Though the trinket has no requirements to use, it does have a 10 second cooldown.\n\nBeing identical to regular greater thralls, the trinket's thralls always deal [[successful hit]]s, with the damage roll ranging from 0-3. The damage roll can be increased to 0-15 with the [[sigil of the augmented thrall]].\n\nIt can be acquired as a drop from monsters found during [[breach]]es, as well as from looting the [[Deadman's chest (scenery)|Deadman's chest]].\n\n==Item sources==\n{{Drop sources|Trinket of undead}}\n\n==Changes==\n{{Subject changes header}}\n{{Subject changes\n|date = 21 January 2026\n|update = Holy Moleys and the Hooded Slayer Helm are Here!\n|change = * Players can now choose what thrall to summon and the thralls summoned by the trinket have different models.\n* The trinket's value was increased from 10,000 to 100,000.\n}}\n{{Subject changes\n|date = 12 March 2025\n|update = Permanent Deadman: World 345 Improvements\n|change = Trinkets are now available in permanent Deadman Mode.\n}}\n{{Subject changes footer}}\n\n==Trivia==\n* The special thralls summoned by the trinket all have unique examine text, though this can only be seen in the cache and not in-game as the thralls lack an 'Examine' option:\n** TzRek-Zuk: \"Probably couldn't break through a wall at this size.\"\n** Kalphite Princess: \"I might need more than 10k.\"\n** Wisp: \"Wispy.\"\n\n{{Deadman Mode}}\n{{Deadman: Annihilation}}\n{{Deadman: Armageddon}}\n{{Deadman: Apocalypse}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 517707,
+        "ns": 0,
+        "title": "Corrupted dark bow",
+        "revisions": [
+          {
+            "revid": 15192587,
+            "parentid": 15121484,
+            "timestamp": "2026-04-22T04:51:40Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Deadman seasonal}}\n{{Infobox Item\n|name = Corrupted dark bow\n|image = [[File:Corrupted dark bow.png]]\n|release = [[17 July]] [[2024]]\n|update = Deadman: Armageddon & While Guthix Sleeps Updates\n|members = Yes\n|quest = No\n|tradeable = Yes\n|equipable = Yes\n|stackable = No\n|noteable = Yes\n|options = Wield, Drop\n|examine = A bow from an even darker dimension.\n|value = 250000\n|weight = 1.814\n|exchange = dmm\n|id = 29599\n}}\n[[File:Corrupted dark bow detail.png|left|150px]]\nThe '''corrupted dark bow''' is a ranged weapon that requires level 50 [[Ranged]] to wield. Exclusive to [[Deadman: Armageddon]], it can be acquired by opening a [[Trinket of advanced weaponry]] obtained from a [[Deadman:_Armageddon#Breaches|breach]].\n\nAs a corrupted variant of the [[dark bow]], it has an attack range of 6 tiles rather than 10. It also fires arrows 2 ticks faster than the regular dark bow.\n\n==Combat stats==\n{{Infobox Bonuses\n|astab = 0\n|aslash = 0\n|acrush = 0\n|amagic = 0\n|arange = +95\n|dstab = 0\n|dslash = 0\n|dcrush = 0\n|dmagic = 0\n|drange = 0\n|str = 0\n|rstr = 0\n|mdmg = 0\n|prayer = 0\n|slot = 2h\n|speed = 6\n|attackrange = 10\n|combatstyle = Bow\n|image = [[File:Corrupted dark bow equipped male.png|190px]]\n|altimage = [[File:Corrupted dark bow equipped female.png|190px]]\n}}\n\n{{CombatStyles|Bow|speed=7|attackrange=6}}\n\n==Item sources==\n{{Drop sources|Corrupted dark bow}}\n\n{{Deadman: Annihilation}}\n{{Deadman: Armageddon}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 517712,
+        "ns": 0,
+        "title": "Corrupted Volatile Nightmare staff",
+        "revisions": [
+          {
+            "revid": 15303344,
+            "parentid": 15299532,
+            "timestamp": "2026-08-16T19:03:05Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Deadman seasonal}}\n{{Infobox Item\n|name = Corrupted Volatile Nightmare staff\n|image = [[File:Corrupted Volatile Nightmare staff.png]]\n|release = [[17 July]] [[2024]]\n|update = Deadman: Armageddon & While Guthix Sleeps Updates\n|members = Yes\n|quest = No\n|tradeable = Yes\n|equipable = Yes\n|stackable = No\n|noteable = Yes\n|options = Wield, Drop\n|examine = An ancient staff corrupted by darkness. A volatile orb has been added to it.\n|value = 250000\n|weight = 1.600\n|exchange = dmm\n|id = 29602\n}}\n[[File:Corrupted Volatile Nightmare staff detail.png|left|150px]]\nThe '''corrupted volatile Nightmare staff''' is a magic weapon that requires level 50 [[Magic]] and 20 [[Hitpoints]] to wield. Exclusive to [[Deadman: Armageddon]], it can be acquired by opening a [[Trinket of advanced weaponry]] obtained from a [[Deadman:_Armageddon#Breaches|breach]].\n\nAs a corrupted variant of the [[volatile Nightmare staff]], the attack range of its [[special attack]] is 6 tiles rather than 10.\n\n==Combat stats==\n{{Infobox Bonuses\n|astab = 0\n|aslash = 0\n|acrush = 0\n|amagic = +16\n|arange = 0\n|dstab = 0\n|dslash = 0\n|dcrush = 0\n|dmagic = +14\n|drange = 0\n|str = +0\n|rstr = 0\n|mdmg = +15\n|prayer = 0\n|slot = weapon\n|speed = 5\n|attackrange = staff\n|combatstyle = Staff\n|image = [[File:Corrupted Volatile Nightmare staff equipped male.png|180px]]\n|altimage = [[File:Corrupted Volatile Nightmare staff equipped female.png|180px]]\n}}\n{{CombatStyles|Staff|speed=5|attackrange=staff}}\n{{Autocasting|standard=yes|arceuus=no|ancient=yes}}\n==Special attack==\n[[File:Immolate.gif|thumb|250px|A player performing the regular volatile Nightmare staff's special attack, ''Immolate''.]]\nThe corrupted volatile Nightmare staff has a [[special attack]], ''Immolate'', that consumes 55% of the player's special attack energy to hit the target with 50% increased accuracy and deals a high amount of damage. The special attack does not consume runes.\n\nWhen calculating the max hit, Immolate acts like any other spell. The spell's max hit is calculated first and then rounded down. All [[magic damage]] gear, including the +15% from the staff is calculated separately. Because the staff has a magic damage bonus, the max hit seen in-game will always be higher than the spell's max hit. The max hit varies with visible Magic level according to the formula below.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1765337358294003882|date=06 March 2024|archiveurl=https://reldo.runescape.wiki/i/108809|archivedate=03 May 2026|quote=[What is the formula for the Volatile staff's special attack base maxhit?] The base is 58, scaled up or down by your *visible* Magic stat divided by 99, if I'm reading my colleagues' code correctly.}} The spell's max hit is limited to, at most, 58. This means that even though the max hit is based on the player's magic level, [[Temporary skill boost|boosting]] above magic level 98 will not increase the max hit. It can be increased though by using additional magic damage gear including the [[Slayer helmet (i)]] when on a [[slayer task]].\n\nFor additional details, [[Volatile Nightmare staff#Special attack|see volatile Nightmare staff]]\n\n==Item sources==\n{{Drop sources|Corrupted Volatile Nightmare staff}}\n\n==Changes==\n{{Subject changes header}}\n{{Subject changes\n|date = 12 August 2026\n|update = Summer Sweep Up - Agility & Chambers of Xeric Changes\n|change = The item was renamed from \"Corrupted volatile nightmare staff\" to \"Corrupted Volatile Nightmare staff\"\n}}\n{{Subject changes footer}}\n\n==References==\n{{Reflist}}\n\n{{Deadman: Annihilation}}\n{{Deadman: Armageddon}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 548376,
+        "ns": 0,
+        "title": "Thunder khopesh",
+        "revisions": [
+          {
+            "revid": 15237675,
+            "parentid": 15192882,
+            "timestamp": "2026-06-22T22:05:32Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Gone}}\n{{Otheruses|def=no|the weapon in Deadman: Annihilation|Thunder khopesh (Deadman Mode)}}\n{{Infobox Item\n|name = Thunder khopesh\n|image = [[File:Thunder khopesh.png]]\n|release = [[27 November]] [[2024]]\n|update = Leagues V: Raging Echoes OUT NOW!\n|removal = [[12 November]] [[2025]]\n|removalupdate = No\n|members = Yes\n|quest = No\n|tradeable = No\n|bankable = Yes\n|equipable = Yes\n|stackable = No\n|noteable = No\n|options = Wield, Drop\n|examine = A powerful Khopesh, imbued with the power of thunder and lightning.\n|value = 50000\n|weight = 1.360\n|id = 30388\n}}\n[[File:Thunder khopesh detail.png|130px|left]]\nThe '''thunder khopesh''' was an unlock in the [[Grid Master]] [[community event]]. After the player builds a [[demonic throne]] in their [[player-owned house]], the player is given the thunder khopesh.\n\n[[File:Thunder khopesh - passive effect.webp|thumb|left|275x275px|The thunder khopesh's passive effect.]]\nIt has a [[passive effect]] that grants standard, [[successful hit]]s a 20% chance to summon a delayed lightning bolt at the target's location, damaging enemies in a 3x3 area for up to 50% of the player's max hit. The lightning bolt will be summoned at the centre of the target's location at the time the effect was triggered.\n\nThe lightning does not roll accuracy checks, but it is possible for enemies to move out of the effect between the attack triggering and the attack striking, causing them to avoid the damage entirely. No experience is gained from the damage dealt by the lightning bolts.\n\nIt is a [[corpbane]] weapon, meaning it does full damage to the [[Corporeal Beast]].\n\n==Combat stats==\n{{Infobox Bonuses\n|astab = +65\n|aslash = +110\n|acrush = 0\n|amagic = 0\n|arange = 0\n|dstab = 0\n|dslash = 0\n|dcrush = 0\n|dmagic = 0\n|drange = 0\n|str = +100\n|rstr = 0\n|mdmg = 0\n|prayer = 0\n|slot = weapon\n|speed = 4\n|attackrange = 1\n|combatstyle = Slash Sword\n|image = [[File:Thunder khopesh equipped male.png|180px]]\n|altimage = [[File:Thunder khopesh equipped female.png|180px]]\n}}\n\n{{CombatStyles|Slash Sword|speed=4|attackrange=1}}\n\n==Special attack==\n[[File:Lingering Lightning.webm|A player performing the thunder khopesh's special attack.|thumb|autoplay|loop|200px]]\nThe thunder khopesh has a [[special attack]], ''Lingering Lightning'', which consumes 50% of the wielder's special attack energy. The special attack deals two hits in quick succession; if either of these is a [[successful hit]], an additional lightning bolt is summoned that deals damage up to 100% of the player's maximum hit. Aside from a guaranteed chance to trigger and a much higher max hit, the mechanics of the lightning bolt from the special attack are otherwise identical to the lightning bolt from the passive effect.\n\n==Past appearances==\nThis item appeared in a previous [[temporary event]], with the following differences from its latest incarnation:\n*[[Raging Echoes League]]\n**The khopesh was dropped by the [[Echo King Black Dragon]] at a rate of 1/25.\n**The special attack had the same official description, but dealt much higher damage than described: the initial two hitsplats had a 50% increased maximum hit, and the subsequent lightning bolt dealt up to 225% of the player's maximum hit.\n\n==Changes==\n{{Subject changes header}}\n{{Subject changes\n|date = 12 November 2025\n|change = The thunder khopesh was removed at the conclusion of [[Grid Master]].\n}}\n{{Subject changes\n|date = 15 October 2025\n|update = \n|change = The thunder khopesh was re-added at the start of [[Grid Master]].\n}}\n{{Subject changes\n|date = 22 January 2025\n|update = Bank QoL & Mini Menu Improvements\n|change = The thunder khopesh was removed at the conclusion of [[Raging Echoes League]].\n}}\n{{Subject changes\n|date = 27 November 2024\n|update = Leagues V: Raging Echoes OUT NOW!\n|change = The thunder khopesh was added with the start of [[Raging Echoes League]].\n}}\n{{Subject changes footer}}\n\n==Gallery==\n<gallery mode=\"packed\" heights=\"200\" style=\"text-align:left\">\nRaging Echoes League - echo gear concept art.png|Concept art of the Raging Echo equipment, by [[Mod Jerv]].\nThunder khopesh equipped.gif|Animation of the equipped khopesh, by [[Mod Hend]].\n</gallery>\n\n==Trivia==\n* The passive lightning attacks still activate on [[Free-to-play]] servers.\n* The Thunder Khopesh is based on [[Vet'ion]]'s weapon.\n{{Grid Master}}\n{{Raging Echoes League}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 640874,
+        "ns": 0,
+        "title": "Trinket of avarice",
+        "revisions": [
+          {
+            "revid": 15286577,
+            "parentid": 15194287,
+            "timestamp": "2026-08-03T18:19:52Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Deadman permanent}}\n{{Infobox Item\n|name = Trinket of avarice\n|image = [[File:Trinket of avarice.png]]\n|release = [[21 January]] [[2026]]\n|update = Holy Moleys and the Hooded Slayer Helm are Here!\n|members = Yes\n|quest = No\n|tradeable = Yes\n|equipable = No\n|stackable = No\n|noteable = \n|options = Note/Unnote, Value, Drop\n|examine = A magic rock! This one automatically notes and retrieves drops.\n|value = 100000\n|weight = 1.000\n|exchange = dmm\n|id = 33044\n}}\n[[File:Trinket of avarice detail.png|left|100px]]\nThe '''trinket of avarice''' is an item in [[Deadman Mode]]. It allows loot to be automatically noted and picked up. It will also put loot into [[looting bag]]s if possible. The value option can be used to adjust what items are automatically picked up, based on their value.\n\nIt can be acquired as a drop from monsters found during [[breach]]es.\n\n==Item sources==\n{{Drop sources|Trinket of avarice}}\n\n==Changes==\n{{Subject changes header}}\n{{Subject changes\n|date = 18 February 2026\n|update = 25th Anniversary Event: 25 Years, 25 Mementos!\n|change = \n* The trinket of avarice will now also loot bones from NPCs automatically.\n* Noted items will now stack as intended even if your looting bag is full when you have the trinket of avarice active.\n}}\n{{Subject changes footer}}\n\n{{Deadman: Annihilation}}\n{{Deadman Mode}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 640875,
+        "ns": 0,
+        "title": "Trinket of fortuity",
+        "revisions": [
+          {
+            "revid": 15286578,
+            "parentid": 15194288,
+            "timestamp": "2026-08-03T18:20:04Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Deadman permanent}}\n{{Infobox Item\n|version1 = (inactive)\n|version2 = (active)\n|name1 = Trinket of fortuity (inactive)\n|name2 = Trinket of fortuity (active)\n|image1 = [[File:Trinket of fortuity (inactive).png]]\n|image2 = [[File:Trinket of fortuity.png]]\n|release = [[21 January]] [[2026]]\n|update = Holy Moleys and the Hooded Slayer Helm are Here!\n|members = Yes\n|quest = No\n|tradeable = Yes\n|equipable = No\n|stackable = No\n|noteable = \n|options1 = Charge, Drop\n|options2 = Uncharge, Drop\n|examine1 = A magic rock! This one increases the chance of obtaining rare items when active.\n|examine2 = A magic rock! This one increases the chance of obtaining rare items. Teleportation will behave as if you were skulled.\n|value = 100000\n|weight = 1.000\n|exchange = dmm\n|gemwname1 = Trinket of fortuity (inactive)\n|gemwname2 = Trinket of fortuity (active)\n|id1 = 33047\n|id2 = 33050\n}}\n{{Synced switch\n|version1 = [[File:Trinket of fortuity (inactive) detail.png|left|140px]]\n|version2 = [[File:Trinket of fortuity detail.png|left|140px]]\n}}\nThe '''trinket of fortuity''' is an item in [[Deadman Mode]]. When charged with 50,000,000 [[coins]], it adds an extra +100% drop rate multiplier to bosses. For example, this would boost a drop rate multiplier of 6x to 7x. It also makes teleportation behave as if the player is skulled when charged, which adds a seven second timer when attempting to teleport.\n\nIn [[Deadman: Annihilation]], it only requires 10,000,000 coins to charge instead of 50,000,000. \n\nIt can be acquired as a drop from monsters found during [[breach]]es.\n\n==Item sources==\n{{Drop sources|Trinket of fortuity (inactive)}}\n\n==Transcript==\n{{hastranscript|item}}\n\n==Changes==\n{{Subject changes header}}\n{{Subject changes\n|date = 11 February 2026\n|update = Music System Improvements & Deadman Tweaks\n|change = \n* The trinket of fortuity's teleport timer can no longer be bypassed if you place it in the [[looting bag]].\n* Only the 7-second teleport timer will apply if you have a trinket of fortuity active on you, rather than the out-of-combat timer too.\n}}\n{{Subject changes footer}}\n\n{{Deadman: Annihilation}}\n{{Deadman Mode}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 681759,
+        "ns": 0,
+        "title": "Amulet of fire",
+        "revisions": [
+          {
+            "revid": 15396852,
+            "parentid": 15369796,
+            "timestamp": "2026-11-08T15:54:52Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Infobox Item\n|name = Amulet of fire\n|image = [[File:Amulet of fire.png]]\n|release = [[2 September]] [[2026]]\n|update = Summer Sweep Up Miscellaneous\n|members = Yes\n|quest = No\n|tradeable = Yes\n|equipable = Yes\n|stackable = No\n|noteable = Yes\n|options = Wear, Drop\n|examine = I hope my clothes don't catch on fire.\n|value = 21000\n|weight = 0.107\n|exchange = Yes\n|id = 34425\n}}\n[[File:Amulet of fire detail.png|left|120px]]\nThe '''amulet of fire''' is an amulet requiring level 59 [[Magic]] to equip. It is made by using a [[fire ruby]] on the [[Fire Altar]], along with an [[amulet of magic]] and 100 [[fire rune]]s; creating the amulet requires level 21 [[Runecraft]], granting 125 experience. It can also be created when accessing the altars via [[Guardians of the Rift]], as they are the same altars as outside the minigame.\n\nAlongside identical stats to an amulet of magic, the amulet of fire adds a +2 max hit to [[fire spells]], which is added before [[magic damage]] and [[elemental weakness]] modifiers are applied, and therefore scales with both. Additionally, this +2 max hit stacks additively with the bonus from the [[chaos gauntlets]], for a total of +5 max hits when casting [[bolt spells]]. Lastly, the max hit bonus also works against [[Salarin the twisted]].\n\nThe amulet of fire, alongside the [[Amulet of air|amulets of air]], [[Amulet of water|water]], and [[Amulet of earth|earth]], can be combined into an [[elemental amulet]] at any elemental [[runic altar]], which combines the effects of all four amulets into one. Doing so requires level 30 [[Runecraft]] and 500 of each elemental rune, granting 175 experience.\n\n==Combat stats==\n{{Infobox Bonuses\n|astab = 0\n|aslash = 0\n|acrush = 0\n|amagic = +10\n|arange = 0\n|dstab = 0\n|dslash = 0\n|dcrush = 0\n|dmagic = 0\n|drange = 0\n|str = 0\n|rstr = 0\n|mdmg = 0\n|prayer = 0\n|slot = neck\n|image = [[File:Amulet of fire equipped male.png]]\n|altimage = [[File:Amulet of fire equipped female.png]]\n}}\n\n==Creation==\n[[File:Creating amulet of fire.webp|right|thumb|A player creating the amulet of fire.]]\n{{Recipe\n|skill1 = Runecraft\n|skill1lvl = 21\n|skill1boostable = Yes\n|skill1exp = 125\n|members = Yes\n|ticks = 3\n|facilities = Fire Altar\n|mat1 = Amulet of magic\n|mat2 = Fire ruby\n|mat3 = Fire rune\n|mat3quantity = 100\n|output1 = Amulet of fire\n}}\n\n==Products==\n{{Uses material list|Amulet of fire}}\n\n==Used in recommended equipment==\n{{Used in recommended equipment|Amulet of fire}}\n\n{{Amulets}}"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

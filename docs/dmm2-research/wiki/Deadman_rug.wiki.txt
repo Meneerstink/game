@@ -1,0 +1,73 @@
+{{Infobox Construction
+|name = Deadman rug
+|image = [[File:Deadman rug built.png|250px]]
+|icon = [[File:Deadman rug icon.png]]
+|furniturename = Rug
+|release = [[7 August]] [[2024]]
+|update = Poll 82 Changes
+|level = 28
+|experience = 283
+|room = [[Parlour]], [[bedroom]], [[skill hall]], [[quest hall]], [[chapel]], [[Dungeon (Construction)|dungeon]], [[portal nexus]]
+|hotspot = [[Rug space]], [[stair space]]
+|flatpack = No
+|examine = A rug adorned with the icon of Deadman.
+|id = 54114, 54115, 54116
+|itemid = 29598
+}}
+A '''deadman rug''' can be built in the [[rug space]] of the [[parlour]], [[bedroom]], [[skill hall]], [[quest hall]], [[chapel]], [[Dungeon (Construction)|dungeon]], and [[portal nexus]] in a [[player-owned house]]. It requires 28 [[Construction]] to build and gives 283 [[experience]] when built.
+
+If the furniture is removed, players will receive their [[Armageddon rug]] back, allowing them to sell it if they so wish. Note that players '''will not''' get their rug back if the room the rug is built in is deleted.
+
+==Creation==
+{{Recipe
+|skill1 = Construction
+|skill1lvl = 28
+|skill1boostable = Yes
+|skill1exp =283 
+|members = Yes
+|ticks = 5
+|tools = Saw, Hammer
+|mat1 = Bolt of cloth
+|mat1quantity = 4
+|mat2 = Armageddon rug
+|output1 = Deadman rug
+|output1pic = Deadman rug icon
+|output1cost = 0
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|daterange = 27-28 November 2024
+|type=hotfix
+|change = The deadman rug was removed from the [[Lumbridge Castle]]'s {{FloorNumber|uk=0}}.
+}}
+{{Subject changes
+|date = 27 November 2024
+|update = Leagues V: Raging Echoes OUT NOW!
+|change = A DMM rug tile has mysteriously appeared in Lumbridge Castle.
+}}
+{{Subject changes
+|date = 23 October 2024
+|update = Halloween Fixes & Miscellaneous Changes
+|change = The skulls on the rug have been darkened so that they are more visible.
+}}
+{{Subject changes footer}}
+
+===Gallery (historical)===
+{|style="text-align: center" cellpadding="15"
+|[[File:Deadman rug built (historical, v1).png|center|200px]]
+|[[File:Deadman rug built.png|center|200px]]
+|-
+|7 August 2024 - <br/>23 October 2024
+|23 October 2024 – <br/>present
+|}
+
+{{Parlour}}
+{{Bedroom}}
+{{Hall (skill trophies)}}
+{{Hall (quest trophies)}}
+{{Chapel}}
+{{Dungeon (Construction)}}
+{{Portal nexus}}
+{{Deadman: Armageddon}}

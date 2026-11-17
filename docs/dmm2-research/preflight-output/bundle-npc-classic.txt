@@ -1,0 +1,33 @@
+DRY_RUN_ONLY kind=npc upstream=[6516, 6485, 8391, 8390, 15569, 15570] targets=[C:\RSPS\work\gpt-a\build\dmm2\cache-plan\game\game\data/cache, C:\RSPS\work\gpt-a\build\dmm2\cache-plan/file-server/cache]
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[06:28:13.537 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS npc_model_candidates=65100 next npc=15081 bas=2398 seq=16221 frameset=4574 base=3580 synth=10561
+PLAN npc 6516 'Financial Wizard' -> 15081 bas=2398 models=[20399, 214, 250, 20405, 3189, 20395, 177, 20402, 181]->[65536, 54914, 54814, 59207, 53718, 59213, 56708, 65537, 58335] heads=[82, 52, 20393]->[54850, 55072, 65538] seqs={808=808, 819=819, 820=820, 821=821, 822=822} ops=[Talk-to, null, Bank, Collect, Deposit-box]
+PLAN npc 6485 'Financial Seer' -> 15082 bas=2398 models=[408, 417, 21914, 21899, 10706, 21911, 358, 437]->[65539, 65540, 65541, 65542, 55409, 65543, 61195, 55464] heads=[125, 136]->[65544, 65545] seqs={808=808, 819=819, 820=820, 821=821, 822=822} ops=[Talk-to, null, Bank, Collect, Deposit-box]
+PLAN npc 8391 'Nigel' -> 15083 bas=2398 models=[29473, 29637, 29633, 29636, 29634, 29635, 29638, 29639]->[65546, 65547, 65548, 65549, 65550, 65551, 65552, 65553] heads=[29640]->[65554] seqs={808=808, 819=819, 820=820, 821=821, 822=822} ops=[Talk-to, null, null, Trade, null]
+PLAN npc 8390 'Nigel' -> 15084 bas=2398 models=[29473, 29637, 29633, 29636, 29634, 29635, 29638, 29639]->[65546, 65547, 65548, 65549, 65550, 65551, 65552, 65553] heads=[29640]->[65554] seqs={808=808, 819=819, 820=820, 821=821, 822=822} ops=[Talk-to, null, Teleport, Trade, null]
+PLAN npc 15569 'null' -> 15085 bas=2399 models=[34586]->[31511] heads=[]->[] seqs={7975=15874, 7977=15875} ops=[null, null, null, null, null]
+PLAN npc 15570 'null' -> 15086 bas=2400 models=[24602, 24605, 24606]->[31472, 31466, 31461] heads=[]->[] seqs={6236=15878} ops=[null, null, null, null, null]
+DROPPED model 181: face z-offsets (not representable in 667)
+DROPPED model 52: face z-offsets (not representable in 667)
+DROPPED npc 6516: category 249
+DROPPED model 125: face z-offsets (not representable in 667)
+DROPPED npc 6485: category 250
+DROPPED npc 8391: no OSRS movement sequences; humanoid default set 808/819/820/821/822 applied
+DROPPED model 29633: face z-offsets (not representable in 667)
+DROPPED model 29638: face z-offsets (not representable in 667)
+DROPPED model 29640: face z-offsets (not representable in 667)
+DROPPED npc 8390: no OSRS movement sequences; humanoid default set 808/819/820/821/822 applied
+DROPPED npc 15569: ambient 30 -> 19 (OSRS additive -> 667 multiplicative lighting)
+DROPPED npc 15569: category 1540
+DROPPED npc 15569: params (2)
+DROPPED model 24602: face z-offsets (not representable in 667)
+DROPPED npc 15570: ambient 30 -> 20 (OSRS additive -> 667 multiplicative lighting)
+DROPPED npc 15570: category 1540
+DROPPED npc 15570: params (2)
+PREFLIGHT transaction=tx-20261117-052822 mutations=44 outcomes={CREATE=56, NO_OP=32}
+DRY_RUN records=28

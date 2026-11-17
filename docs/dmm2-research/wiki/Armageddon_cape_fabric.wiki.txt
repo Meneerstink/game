@@ -1,0 +1,61 @@
+{{Infobox Item
+|name = Armageddon cape fabric
+|image = [[File:Armageddon cape fabric.png]]
+|release = [[7 August]] [[2024]]
+|update = Poll 82 Changes
+|members = Yes
+|quest = No
+|tradeable = Yes
+|equipable = No
+|stackable = No
+|noteable = Yes
+|options = Read, Drop
+|examine = Take this to Nigel to give the imbued Saradomin, Guthix or Zamorak Cape a cosmetic theme from Deadman: Armageddon.
+|value = 25000
+|alchable = No
+|weight = 0.100
+|exchange = Yes
+|id = 29628
+}}
+[[File:Armageddon cape fabric detail.png|left|130px]]
+The '''Armageddon cape fabric''' is an item that can be purchased from the [[Deadman Reward Store]] for 6,000 [[Deadman: Apocalypse/Points|Deadman Points]], which is earned from participating in [[Deadman: Armageddon]].
+
+It can be brought to [[Nigel]] in order to change the [[imbued god capes]] to a Deadman-themed cosmetic variant. When you give the fabric to [[Nigel]], it will permanently unlock all cape cosmetics for the player. This process is not reversible. You can then freely switch any of the capes{{CiteVideo|author=Old School RuneScape|title=OldSchool RS;  Let’s Talk Deadman: Armageddon! <nowiki>|</nowiki> OSRS Q&A Livestream July 18th |url=https://www.youtube.com/watch?v=enmaX1RmXLw|timestamp=35:42 - 36:05|date=18 July 2024|site=YouTube|notes=|name=}} between their standard and deadman variant at [[Nigel]], and it can be applied to however many of the item you wish.
+
+Upon PvP death, the cape will become [[broken]], the cosmetic is removed, and the killer receives 96,000 coins. After repairing, the player can go back to Nigel to reapply the cosmetic.
+
+==Products==
+To make the [[Imbued ancient cape (Deadman)]], you must use the [[ancient fabric]] on one of the other Deadman imbued god capes.
+{{Uses material list|Armageddon cape fabric}}
+
+==Shop locations==
+{{Store locations list|Armageddon cape fabric}}
+
+==Transcript==
+{{Hastranscript|transclude=yes}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 11 March 2026
+|update = More from the Getting Around Poll
+|change = The item can now be sacrificed to [[Death's Coffer]].
+}}
+{{Subject changes
+|date = 7 August 2024
+|update = Poll 82 Changes
+|change = The item was made available.
+}}
+{{Subject changes
+|date = 17 July 2024
+|update = Deadman: Armageddon & While Guthix Sleeps Updates
+|change = The item was added to the game, but was unobtainable.
+}}
+{{Subject changes footer}}
+
+==References==
+{{Reflist}}
+
+{{Deadman: Armageddon}}
+{{Ornament kits}}
+[[Category:Ornament kits]]

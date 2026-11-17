@@ -1,0 +1,80 @@
+{{Infobox Item
+|version1 = Cosmetic
+|version2 = Deadman Mode
+|name = Deadman's cape
+|image1 = [[File:Deadman's cape (cosmetic).png]]
+|image2 = [[File:Deadman's cape (Deadman Mode).png]]
+|release1 = [[29 August]] [[2019]]
+|release2 = [[29 October]] [[2015]]
+|update1 = Last Man Standing (2019)
+|update2 = Deadman Mode
+|members = No
+|quest = No
+|tradeable = No
+|equipable = Yes
+|stackable = No
+|noteable = No
+|options1 = Wear, Drop
+|options2 = Wear, Destroy
+|destroy1 = N/A
+|destroy2 = You can get another from Deadman Nigel in Lumbridge.
+|examine = Dark and sinister, just like a deadman.
+|value1 = 3
+|value2 = 2
+|alchable = Yes
+|weight1 = 0.090
+|weight2 = 0.453
+|id1 = 24191
+|id2 = 13319
+|leagueRegion = No
+}}
+{{Synced switch
+|version1 = [[File:Deadman's cape (cosmetic) detail.png|left|130px]]
+|version2 = [[File:Deadman's cape (Deadman Mode) detail.png|left|130px]]
+}}
+The '''Deadman's cape''' is a cosmetic [[cape]] that can be bought from [[Justine's stuff for the Last Shopper Standing]] for 160 [[Last Man Standing]] points. It is part of the [[Deadman armour]] set.
+
+In [[Deadman Mode]], it is purchased from [[Nigel]] for one [[blood money]] and may be reclaimed for free. In order to purchase [[deadman armour]] in Deadman Mode, players must use the blood money on Nigel, instead of speaking to him, as there are no dialogue options for purchasing the armour.
+
+{{Costume storage|armour case|[[Deadman armour]] set|set=true}}
+
+==Combat stats==
+{{Infobox Bonuses
+|version1 = Cosmetic
+|version2 = Deadman Mode
+|astab = 0
+|aslash = 0
+|acrush = 0
+|amagic = 0
+|arange = 0
+|dstab = 0
+|dslash1 = 0
+|dslash2 = 1
+|dcrush1 = 0
+|dcrush2 = 1
+|dmagic = 0
+|drange1 = 0
+|drange2 = 2
+|str = 0
+|rstr = 0
+|mdmg = 0
+|prayer = 0
+|slot = cape
+|image = [[File:Deadman's cape equipped male.png|120px]]
+|altimage = [[File:Deadman's cape equipped female.png|120px]]
+}}
+
+==Shop locations==
+{{Store locations list|Deadman's cape}}
+
+==Gallery==
+<gallery heights="250" style="text-align:left">
+Deadman armour equipped male.png|The full Deadman armour set on body type A.
+Deadman armour equipped female.png|The full Deadman armour set on body type B.
+</gallery>
+
+{{Deadman Mode}}
+{{Last Man Standing}}
+{{Cape}}
+[[Category:Items storable in the costume room]]
+[[Category:Collection log items]]

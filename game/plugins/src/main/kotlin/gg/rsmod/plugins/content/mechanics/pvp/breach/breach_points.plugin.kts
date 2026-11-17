@@ -9,6 +9,7 @@ package gg.rsmod.plugins.content.mechanics.pvp.breach
 /** The Breach Trader npc (clone batch breach-trader); the same id breach_shop.plugin.kts spawns. */
 val BREACH_TRADER_NPC = 14478
 
+if (!gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled) {
 on_command("breachpoints") {
     player.message(
         "Breach Points: ${"%,d".format(BreachPoints.balance(player))}. Earned from breach damage: " +
@@ -30,3 +31,5 @@ if (BreachIds.ARCHAIC_EMBLEM_TIER_5 > 0) {
         }
     }
 }
+
+} // DMM2 release: no balance command or emblem exchange registered.

@@ -129,16 +129,17 @@ object AutocastWeapons {
     fun incompatibility(definition: ItemDef?, spell: CombatSpell, player: Player? = null): String? {
         if (definition == null || !isAutocastWeapon(definition)) return "You need a magic weapon to autocast spells."
         if (spell.autoCastId <= 0 || spell.componentId == -1) return "That spell can't be autocast."
+        val id = gg.rsmod.plugins.content.mechanics.deadman.DeadmanCosmetics.base(definition.id)!!.let { gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.specialBase(it) }
         val required = requiredWeapons(spell)
-        if (required.isNotEmpty() && definition.id !in required) return requiredWeaponMessage(spell)
-        if (spell in GOD_SPELL_WEAPONS && definition.id in MANUAL_GOD_STAVES) return "You can't autocast that spell with this weapon."
+        if (required.isNotEmpty() && id !in required) return requiredWeaponMessage(spell)
+        if (spell in GOD_SPELL_WEAPONS && id in MANUAL_GOD_STAVES) return "You can't autocast that spell with this weapon."
         if (spell.interfaceId == Autocast.ANCIENT_BOOK) {
             // Amulet of the damned with Ahrim's set: "The staff can autocast Ancient Magicks" (AmuletOfTheDamned).
             val ahrim = player != null && definition.name.startsWith("Ahrim's staff", ignoreCase = true) && gg.rsmod.plugins.content.items.osrs.AmuletOfTheDamned.ahrimCanAutocastAncients(player)
-            return if (definition.id in ANCIENT_WEAPONS || definition.id in required || ahrim) null else "You can't autocast Ancient Magicks with this weapon."
+            return if (id in ANCIENT_WEAPONS || id in required || ahrim) null else "You can't autocast Ancient Magicks with this weapon."
         }
-        if (spell == CombatSpell.CRUMBLE_UNDEAD && definition.id !in CRUMBLE_UNDEAD_WEAPONS) return "You can't autocast that spell with this weapon."
-        if (definition.id in WAVE_SURGE_ONLY && required.isEmpty() && spell != CombatSpell.CRUMBLE_UNDEAD && !isWaveOrSurge(spell)) {
+        if (spell == CombatSpell.CRUMBLE_UNDEAD && id !in CRUMBLE_UNDEAD_WEAPONS) return "You can't autocast that spell with this weapon."
+        if (id in WAVE_SURGE_ONLY && required.isEmpty() && spell != CombatSpell.CRUMBLE_UNDEAD && !isWaveOrSurge(spell)) {
             return "You can't autocast that spell with this weapon."
         }
         return null

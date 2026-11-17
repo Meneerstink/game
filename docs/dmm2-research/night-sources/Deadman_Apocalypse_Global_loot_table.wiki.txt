@@ -1,0 +1,162 @@
+The global loot table for [[Deadman: Apocalypse]] is accessed by nearly all monsters killed during the game mode, except for [[raids]] and [[Nightmare Zone]].
+__NOTOC__<!--Can be re-enabled in the event subtables are given descriptive names, as only "Subtable 9" provides no meaningful basis for navigation-->
+==Rate of access==
+{{DropLogProject|kills=3300000}}
+
+The drop rate formulas shown below, together with the composition of the various subtables, were derived from [[RuneScape:Crowdsourcing|crowdsourced]] information during the previous [[Deadman: Reborn]] event, but have been confirmed to still apply to the Deadman: Apocalypse game mode.{{CiteTwitter|author=Mod Manked|url=https://twitter.com/Mankedupmage/status/1693247461089804303|date=20 August 2023|archiveurl=|archivedate=|quote=[Hey Manked, will the rate of hitting the global loot table in Apocalypse be the same as it was in Reborn? (...)] Supply drops are the same rates pretty much (adjusted sigil tier based on bracket to account for 5 brackets). Global loot table is the same (although it is "reworked" to be different items, so no longer 3rd age etc).}} Some differences exist: [[Deadman Mode#Global loot table|Ancient Warriors' weapons]] are now only dropped by monsters spawned from breaches, and items primarily obtained from [[Treasure Trails]] have been moved off the global loot table.
+
+The chance of receiving supplies through the global loot table is halved when killing [[maniacal monkey]]s in [[Kruk's Dungeon]].{{CiteTwitter|author=Mod Manked|url=https://twitter.com/Mankedupmage/status/1692830703476441278|date=19 August 2023|archiveurl=|archivedate=|quote=[Can we expect to see any nerfs to MM2 tunnels? (...)] 50% nerf for supply drops in mm2 tunnels (...)}} [[Superior slayer monster]]s have a guaranteed chance of rolling on this table.
+
+The rate of accessing this table depends on the combat level of the monster. The probability of rolling for this table after killing a monster with combat level <math>L</math> is approximately:
+
+For monsters level 1 to 50:
+:<math>\mathbb{P} \approx \frac{1}{250 + \left\lfloor (50 - L)^2/5 \right\rfloor}</math>
+For monsters level 50 to 150:
+:<math>\mathbb{P} \approx \frac{1}{\left\lfloor 337.5 - 1.75L \right\rfloor}</math>.
+For monsters over level 150:
+:<math>\mathbb{P} \approx \frac{1}{75}</math>
+
+[[File:Deadman Apocalypse drop table denominator.png]]
+
+==Resources==
+If the rolls for a sigil or emblem both fail, two rolls for resources are received.
+
+The resource tables are broken up into multiple subtables of items that can be rolled for. Each item on all the subtables have the same chance to be rolled for. The roll depends on the monster's combat level using the formula: <math>\text{random}(\text{min}(\text{npcCombatLevel}, 100))</math>
+
+===Emblems===
+Tier 1 and tier 5 emblems have a chance to drop on any monster. The chance appears to be approximately 1/12 per resource drop, and you can only get one emblem per resource drop.
+
+Monsters killed during [[Wilderness Slayer]] have additional chances to drop tier 1 emblems.
+{{DropsTableHead}}
+{{DropsLine|name=Archaic emblem (tier 1)|quantity=1|rarity=Varies|gemw=No|bucket=No}}
+{{DropsLine|name=Archaic emblem (tier 5)|quantity=1|rarity=Varies|gemw=No|bucket=No}}
+{{DropsTableBottom}}
+
+===Subtable 1===
+''All monsters can access this table. For monsters over level 100, there is a 4/100 chance to roll this table.''
+{{DropsTableHead}}
+{{DropsLine|name=Lobster|quantity=50-80 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Superantipoison(4)|quantity=8-16 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Chaos rune|quantity=400-600|rarity=Varies|bucket=No}}
+{{DropsLine|name=Irit leaf|quantity=30-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Unicorn horn|quantity=36-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsTableBottom}}
+
+===Subtable 2===
+''Monsters level 5 and above can access this table. For monsters over level 100, there is a 4/100 chance to roll this table.''
+{{DropsTableHead}}
+{{DropsLine|name=Swordfish|quantity=50-80 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Super strength(4)|quantity=8-16 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Cosmic rune|quantity=400-600|rarity=Varies|bucket=No}}
+{{DropsLine|name=Kwuarm|quantity=30-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Limpwurt root|quantity=36-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsTableBottom}}
+
+===Subtable 3===
+''Monsters level 9 and above can access this table. For monsters over level 100, there is a 4/100 chance to roll this table.''
+{{DropsTableHead}}
+{{DropsLine|name=Monkfish|quantity=50-80 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Super energy(4)|quantity=8-16 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Law rune|quantity=400-600|rarity=Varies|bucket=No}}
+{{DropsLine|name=Avantoe|quantity=30-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Mort myre fungus|quantity=36-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsTableBottom}}
+
+===Subtable 4===
+''Monsters level 13 and above can access this table. For monsters over level 100, there is a 12/100 chance to roll this table.''
+{{DropsTableHead}}
+{{DropsLine|name=Shark|quantity=50-80 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Prayer potion(4)|quantity=8-16 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Nature rune|quantity=400-600|rarity=Varies|bucket=No}}
+{{DropsLine|name=Ranarr weed|quantity=30-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Snape grass|quantity=36-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsTableBottom}}
+
+===Subtable 5===
+''Monsters level 25 and above can access this table. For monsters over level 100, there is a 12/100 chance to roll this table.''
+{{DropsTableHead}}
+{{DropsLine|name=Shark|quantity=100-150 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Super defence(4)|quantity=8-16 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Mud rune|quantity=400-600|rarity=Varies|bucket=No}}
+{{DropsLine|name=Cadantine|quantity=30-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=White berries|quantity=36-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsTableBottom}}
+
+===Subtable 6===
+''Monsters level 37 and above can access this table. For monsters over level 100, there is a 12/100 chance to roll this table.''
+{{DropsTableHead}}
+{{DropsLine|name=Cooked karambwan|quantity=50-80 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Antifire potion(4)|quantity=8-16 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Mist rune|quantity=400-600|rarity=Varies|bucket=No}}
+{{DropsLine|name=Lantadyme|quantity=30-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Blue dragon scale|quantity=36-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsTableBottom}}
+
+===Subtable 7===
+''Monsters level 49 and above can access this table. For monsters over level 100, there is a 12/100 chance to roll this table.''
+{{DropsTableHead}}
+{{DropsLine|name=Cooked karambwan|quantity=50-100 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Ranging potion(4)|quantity=8-16 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Steam rune|quantity=400-600|rarity=Varies|bucket=No}}
+{{DropsLine|name=Dwarf weed|quantity=30-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Wine of Zamorak|quantity=36-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsTableBottom}}
+
+===Subtable 8===
+''Monsters level 61 and above can access this table. For monsters over level 100, there is a 8/100 chance to roll this table.''
+{{DropsTableHead}}
+{{DropsLine|name=Sea turtle|quantity=50-80 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Saradomin brew(4)|quantity=8-16 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Lava rune|quantity=400-600|rarity=Varies|bucket=No}}
+{{DropsLine|name=Toadflax|quantity=30-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Crushed nest|quantity=36-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsTableBottom}}
+
+===Subtable 9===
+''Monsters level 69 and above can access this table. For monsters over level 100, there is a 12/100 chance to roll this table.''
+{{DropsTableHead}}
+{{DropsLine|name=Sea turtle|quantity=100-150 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Super restore(4)|quantity=8-16 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Death rune|quantity=400-600|rarity=Varies|bucket=No}}
+{{DropsLine|name=Snapdragon|quantity=30-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Red spiders' eggs|quantity=36-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsTableBottom}}
+
+===Subtable 10===
+''Monsters level 81 and above can access this table. For monsters over level 100, there is a 12/100 chance to roll this table.''
+{{DropsTableHead}}
+{{DropsLine|name=Manta ray|quantity=50-80 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Super combat potion(4)|quantity=8-16 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Blood rune|quantity=400-600|rarity=Varies|bucket=No}}
+{{DropsLine|name=Torstol|quantity=30-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Potato cactus|quantity=36-40 (noted)|rarity=Varies|bucket=No}}
+{{DropsTableBottom}}
+
+===Subtable 11===
+''Monsters level 93 and above can access this table. For monsters over level 100, there is a 8/100 chance to roll this table.''
+
+There appears to be a 1/5 chance to roll on the uniques table.
+====Regular====
+{{DropsTableHead}}
+{{DropsLine|name=Manta ray|quantity=100-150 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Anti-venom(4)|quantity=8-16 (noted)|rarity=Varies|bucket=No}}
+{{DropsLine|name=Wrath rune|quantity=400-600|rarity=Varies|bucket=No}}
+{{DropsLine|name=Soul rune|quantity=400-600|rarity=Varies|bucket=No}}
+{{DropsTableBottom}}
+
+====Unique====
+{{DropsTableHead}}
+{{DropsLine|name=Amulet of fury|quantity=1|rarity=Varies|bucket=No}}
+{{DropsLine|name=Dark bow|quantity=1|rarity=Varies|bucket=No}}
+{{DropsLine|name=Archers ring|quantity=1|rarity=Varies|bucket=No}}
+{{DropsLine|name=Master wand|quantity=1|rarity=Varies|bucket=No}}
+{{DropsLine|name=Abyssal whip|quantity=1|rarity=Varies|bucket=No}}
+{{DropsLine|name=Mage's book|quantity=1|rarity=Varies|bucket=No}}
+{{DropsLine|name=Berserker ring|quantity=1|rarity=Varies|bucket=No}}
+{{DropsLine|name=Seers ring|quantity=1|rarity=Varies|bucket=No}}
+{{DropsTableBottom}}
+
+==References==
+{{Reflist}}
+
+{{Deadman: Apocalypse}}

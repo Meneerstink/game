@@ -55,7 +55,9 @@ SpecialAttacks.registerReach(Items.VOLATILE_NIGHTMARE_STAFF, Items.ELDRITCH_NIGH
 
 /* Volatile Nightmare staff - Immolate: 55 %, accuracy x1.5, spell max hit min(58, trunc((99 + 58 x Magic) / 99)). */
 SpecialAttacks.register(NightmareStaves.SPECIAL_ENERGY, Items.VOLATILE_NIGHTMARE_STAFF) {
-    val base = NightmareStaves.immolateBase(player.skills.getCurrentLevel(Skills.MAGIC))
+    val base = if (gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.VOLATILE.matches(player.getEquipment(EquipmentType.WEAPON)?.id))
+        (58L * player.skills.getCurrentLevel(Skills.MAGIC) / 99).toInt().coerceIn(0, 58)
+    else NightmareStaves.immolateBase(player.skills.getCurrentLevel(Skills.MAGIC))
     // N3: the special sequence (OSRS 8532) and graphics are silent. ADAPTED: Immolate's own sound is undocumented; it casts with the
     // same staff special sequence as Invocate, so the same cast sound.
     player.playSound(Sfx.SHADOW_CAST)

@@ -1,0 +1,24 @@
+{{Infobox NPC
+|name = Financial Seer
+|image = [[File:Financial Seer.png|100px]]
+|release = [[19 November]] [[2015]]
+|update = Max Capes & HP Insurance
+|members = Yes
+|race = [[Human]]
+|location = [[Neitiznot]]
+|gender = Female
+|options = Talk-to, Bank, Collect, Deposit-box
+|examine = A mistress of the arcane arts - aka finance.
+|map = {{Map|name=Financial Seer|x=2337|y=3807|r=4|mtype=square}}
+|id = 6485
+|leagueRegion = No
+}}
+[[File:Financial Seer chathead.png|left]]
+'''Financial Seers''' act as [[Financial Wizard]]s in [[Neitiznot]], only appearing in [[Deadman Mode]] and located in the bank. Players can give them ten items that they wish to keep safe; when the 10 items are given to the Financial Seer, they are securely stored in the Safe Deposit Box and cannot be used.
+[[File:Deadman_mode_-_Safe_Deposit_Box.png|thumb|left|The Safe Deposit Box, accessed by visiting the Financial Seer.]]
+Players cannot store untradeable items. Stackable items such as bank notes, runes, arrows, bolts, etc. will not count as one item. For example, 10 [[air rune]]s will count as 10 items.
+
+==Dialogue==
+{{hastranscript|npc}}
+
+{{Deadman Mode}}

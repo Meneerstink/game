@@ -39,8 +39,8 @@ import gg.rsmod.plugins.content.combat.venom
  */
 object PoweredStaves {
     enum class Staff(
-        val charged: Int,
-        val uncharged: Int,
+        private val chargedId: Int?,
+        private val unchargedId: Int?,
         /** The fully charged item (Trident of the Seas (full)), or null. */
         val full: Int?,
         val maxCharges: Int,
@@ -61,6 +61,7 @@ object PoweredStaves {
         val revenant: Boolean = false,
         /** N462 Tumeken's shadow: its own passive (equipment magic attack and damage x3, x4 inside ToA) and range/look. */
         val shadow: Boolean = false,
+        val corrupted: Boolean = false,
     ) {
         SEAS(
             Items.TRIDENT_OF_THE_SEAS, Items.UNCHARGED_TRIDENT, Items.TRIDENT_OF_THE_SEAS_FULL, 2_500, 75,
@@ -101,15 +102,22 @@ object PoweredStaves {
             null, 20_000, 85, listOf(Item(Items.SOUL_RUNE, 2), Item(Items.CHAOS_RUNE, 5)), setOf(Items.SOUL_RUNE, Items.CHAOS_RUNE), 1, 0.0,
             shadow = true,
         ),
+        CORRUPTED_SHADOW(
+            null, null, null, 20_000, 75, listOf(Item(Items.SOUL_RUNE, 2), Item(Items.CHAOS_RUNE, 5)),
+            setOf(Items.SOUL_RUNE, Items.CHAOS_RUNE), 1, 0.0, shadow = true, corrupted = true,
+        ),
         ;
 
+        val available: Boolean get() = !corrupted || (gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SHADOW.local != null && gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SHADOW_EMPTY.local != null)
+        val charged: Int get() = if (corrupted) requireNotNull(gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SHADOW.local) else requireNotNull(chargedId)
+        val uncharged: Int get() = if (corrupted) requireNotNull(gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SHADOW_EMPTY.local) else requireNotNull(unchargedId)
         val ids: Set<Int> get() = setOfNotNull(charged, uncharged, full)
 
         fun baseMaxHit(magicLevel: Int): Int = maxOf(1, magicLevel / 3 + maxHitOffset)
     }
 
     /** The [Staff] tier a charged or (full) item id belongs to, or `null` for an uncharged id or anything else. */
-    fun chargedTierOf(itemId: Int): Staff? = Staff.values().firstOrNull { it.charged == itemId || it.full == itemId }
+    fun chargedTierOf(itemId: Int): Staff? = Staff.values().filter { it.available }.firstOrNull { it.charged == itemId || it.full == itemId }
 
     const val ATTACK_RANGE = 7
 
@@ -124,7 +132,8 @@ object PoweredStaves {
         val player = pawn as? Player ?: return 1
         if (wielded(player)?.shadow != true || !usingBuiltInSpell(player) || target is Player) return 1
         val inToa = gg.rsmod.plugins.content.activity.toa.ToaLobby.of(player.world).raid(player.uid)?.contains(player) == true
-        return if (inToa) 4 else 3
+        val corrupted = wielded(player)?.corrupted == true
+        return if (inToa) (if (corrupted) 3 else 4) else (if (corrupted) 2 else 3)
     }
 
     /** Magic damage cap of the shadow passive: 100 % (the bonus slot holds tenths of a percent). */
@@ -151,7 +160,7 @@ object PoweredStaves {
     val TOXIC_UPGRADE: Map<Int, Int> =
         mapOf(Items.UNCHARGED_TRIDENT to Items.UNCHARGED_TOXIC_TRIDENT, Items.UNCHARGED_TRIDENT_E to Items.UNCHARGED_TOXIC_TRIDENT_E)
 
-    fun staffFor(itemId: Int?): Staff? = if (itemId == null) null else Staff.values().firstOrNull { itemId in it.ids }
+    fun staffFor(itemId: Int?): Staff? = if (itemId == null) null else Staff.values().filter { it.available }.firstOrNull { itemId in it.ids }
 
     fun wielded(pawn: Pawn): Staff? = (pawn as? Player)?.let { staffFor(it.getEquipment(EquipmentType.WEAPON)?.id) }
 

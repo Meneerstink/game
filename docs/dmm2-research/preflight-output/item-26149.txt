@@ -1,0 +1,13 @@
+DRY_RUN_ONLY kind=item upstream=[26149] targets=[C:\RSPS\work\gpt-a\build\dmm2\cache-plan\game\game\data/cache, C:\RSPS\work\gpt-a\build\dmm2\cache-plan/file-server/cache]
+NOTE Tuna (26149) has no upstream noted variant; only the item is imported
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[06:00:50.884 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS proven_free_holes=752 item_candidates=65100 safe_free=64348
+PLAN item 24634 'Tuna' <- upstream_item:26149 bytes=49 models=[upstream_model:2355->66609]
+  OPCODES 1=66609 2="Tuna" 4=1340 5=464 6=1920 7=0 8=3 12=0x00000001 16=FLAG 35="Eat" 40=0x02003d04bb006704ca
+  UPSTREAM_PARAMS {}
+TRANSACTION tx-20261117-050059 applied=false finalized=0 recovered=0

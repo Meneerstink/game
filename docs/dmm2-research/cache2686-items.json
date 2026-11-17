@@ -1,0 +1,4940 @@
+{
+  "13307": {
+    "models": {
+      "44": 2484
+    },
+    "fields": {
+      "11": true,
+      "7": 3,
+      "4": 710,
+      "6": 2012,
+      "5": 184,
+      "75": 2,
+      "12": 1,
+      "15": true,
+      "40": [
+        [
+          8128,
+          947
+        ]
+      ],
+      "2": "Blood money",
+      "3": "These can be taken to Deadman Nigel in Lumbridge.",
+      "148": 18218
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [
+      [
+        13308,
+        2
+      ],
+      [
+        13309,
+        3
+      ],
+      [
+        13310,
+        4
+      ],
+      [
+        13311,
+        5
+      ],
+      [
+        13312,
+        25
+      ],
+      [
+        13313,
+        100
+      ],
+      [
+        13314,
+        250
+      ],
+      [
+        13315,
+        1000
+      ],
+      [
+        13316,
+        10000
+      ]
+    ],
+    "name": "Blood money"
+  },
+  "13317": {
+    "models": {
+      "44": 29749,
+      "45": 29637,
+      "46": 29636,
+      "48": 29745,
+      "49": 29744
+    },
+    "fields": {
+      "12": 1,
+      "7": 65535,
+      "8": 7,
+      "4": 1158,
+      "5": 488,
+      "13": 4,
+      "14": 6,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 7,
+      "75": 9979,
+      "15": true,
+      "2": "Deadman's chest",
+      "3": "15 men may jump on you, but only to steal the contents of your bank.",
+      "148": 18219
+    },
+    "params": {
+      "11": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "4": 0,
+      "3": 0,
+      "5": 21,
+      "6": 20,
+      "7": 12,
+      "9": 20,
+      "8": 3
+    },
+    "inv": [
+      null,
+      "Wear",
+      null,
+      null,
+      "Destroy"
+    ],
+    "counts": [],
+    "name": "Deadman's chest"
+  },
+  "13318": {
+    "models": {
+      "44": 29752,
+      "45": 29020,
+      "48": 29743
+    },
+    "fields": {
+      "12": 1,
+      "8": 12,
+      "4": 1740,
+      "5": 444,
+      "13": 7,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 8,
+      "75": 9071,
+      "15": true,
+      "2": "Deadman's legs",
+      "3": "That numb feeling.",
+      "148": 18220
+    },
+    "params": {
+      "11": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "4": 0,
+      "3": 0,
+      "5": 11,
+      "6": 10,
+      "7": 10,
+      "9": 10,
+      "8": 2
+    },
+    "inv": [
+      null,
+      "Wear",
+      null,
+      null,
+      "Destroy"
+    ],
+    "counts": [],
+    "name": "Deadman's legs"
+  },
+  "13319": {
+    "models": {
+      "44": 29748,
+      "45": 29633,
+      "48": 29725
+    },
+    "fields": {
+      "12": 2,
+      "7": 7,
+      "8": 37,
+      "4": 1537,
+      "6": 1245,
+      "5": 292,
+      "13": 1,
+      "45offset": 0,
+      "48offset": 0,
+      "75": 453,
+      "15": true,
+      "2": "Deadman's cape",
+      "3": "Dark and sinister, just like a deadman.",
+      "148": 18221
+    },
+    "params": {
+      "10": 0,
+      "11": 0,
+      "14": 0,
+      "13": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "4": 0,
+      "3": 0,
+      "5": 0,
+      "6": 1,
+      "7": 1,
+      "9": 2,
+      "8": 0
+    },
+    "inv": [
+      null,
+      "Wear",
+      null,
+      null,
+      "Destroy"
+    ],
+    "counts": [],
+    "name": "Deadman's cape"
+  },
+  "22330": {
+    "models": {
+      "44": 7685
+    },
+    "fields": {
+      "7": 65535,
+      "8": 65530,
+      "4": 2020,
+      "6": 232,
+      "5": 112,
+      "94": 21,
+      "75": 4000,
+      "15": true,
+      "12": 1,
+      "2": "Deadman starter pack",
+      "3": "Contains some useful supplies."
+    },
+    "params": {
+      "295": 1
+    },
+    "inv": [
+      "Open",
+      null,
+      null,
+      null,
+      "Destroy"
+    ],
+    "counts": [],
+    "name": "Deadman starter pack"
+  },
+  "22331": {
+    "models": {
+      "44": 49503,
+      "45": 49484,
+      "48": 49483
+    },
+    "fields": {
+      "8": 65535,
+      "7": 65534,
+      "4": 1040,
+      "6": 1185,
+      "5": 352,
+      "13": 3,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 21,
+      "75": 1814,
+      "15": true,
+      "12": 1,
+      "40": [
+        [
+          61,
+          11065
+        ],
+        [
+          11200,
+          80
+        ],
+        [
+          5010,
+          80
+        ]
+      ],
+      "2": "Starter sword",
+      "3": "A sword from a starter pack.",
+      "148": 22332
+    },
+    "params": {
+      "10": 20,
+      "14": 4,
+      "0": 5,
+      "1": 21,
+      "2": -2,
+      "6": 1,
+      "295": 1
+    },
+    "inv": [
+      null,
+      "Wield",
+      null,
+      null,
+      "Destroy"
+    ],
+    "counts": [],
+    "name": "Starter sword"
+  },
+  "22333": {
+    "models": {
+      "44": 49505,
+      "45": 49486,
+      "48": 49482
+    },
+    "fields": {
+      "7": 11,
+      "8": 65533,
+      "4": 1316,
+      "6": 124,
+      "5": 508,
+      "13": 3,
+      "14": 5,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 106,
+      "75": 1360,
+      "15": true,
+      "12": 1,
+      "160": true,
+      "40": [
+        [
+          6674,
+          11065
+        ],
+        [
+          61,
+          80
+        ]
+      ],
+      "2": "Starter bow",
+      "3": "A bow from a starter pack.",
+      "148": 22334
+    },
+    "params": {
+      "13": 7,
+      "14": 4,
+      "4": 20,
+      "12": 7,
+      "295": 1,
+      "451": "Check"
+    },
+    "inv": [
+      null,
+      "Wield",
+      "Check",
+      null,
+      "Destroy"
+    ],
+    "counts": [],
+    "name": "Starter bow"
+  },
+  "22335": {
+    "models": {
+      "44": 49504,
+      "45": 49481,
+      "48": 49485
+    },
+    "fields": {
+      "7": 1,
+      "8": 65533,
+      "4": 1316,
+      "6": 1172,
+      "95": 117,
+      "5": 790,
+      "13": 3,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 1,
+      "75": 1814,
+      "15": true,
+      "12": 1,
+      "160": true,
+      "40": [
+        [
+          7073,
+          11065
+        ]
+      ],
+      "2": "Starter staff",
+      "3": "A staff from a starter pack.",
+      "148": 22336
+    },
+    "params": {
+      "14": 5,
+      "13": 6,
+      "3": 10,
+      "5": 2,
+      "6": 3,
+      "7": 1,
+      "8": 10,
+      "295": 1,
+      "451": "Check"
+    },
+    "inv": [
+      null,
+      "Wield",
+      "Check",
+      null,
+      "Destroy"
+    ],
+    "counts": [],
+    "name": "Starter staff"
+  },
+  "24189": {
+    "models": {
+      "44": 29749,
+      "45": 29637,
+      "46": 29636,
+      "48": 29745,
+      "49": 29744
+    },
+    "fields": {
+      "12": 2,
+      "7": 65535,
+      "8": 7,
+      "4": 1158,
+      "5": 488,
+      "13": 4,
+      "14": 6,
+      "45offset": 0,
+      "48offset": 0,
+      "75": 120,
+      "15": true,
+      "2": "Deadman's chest",
+      "3": "15 men may jump on you, but only to steal the contents of your bank."
+    },
+    "params": {},
+    "inv": [
+      null,
+      "Wear",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Deadman's chest"
+  },
+  "24190": {
+    "models": {
+      "44": 29752,
+      "45": 29020,
+      "48": 29743
+    },
+    "fields": {
+      "12": 1,
+      "8": 12,
+      "4": 1740,
+      "5": 444,
+      "13": 7,
+      "45offset": 0,
+      "48offset": 0,
+      "75": 110,
+      "15": true,
+      "2": "Deadman's legs",
+      "3": "That numb feeling."
+    },
+    "params": {},
+    "inv": [
+      null,
+      "Wear",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Deadman's legs"
+  },
+  "24191": {
+    "models": {
+      "44": 29748,
+      "45": 29633,
+      "48": 29725
+    },
+    "fields": {
+      "12": 3,
+      "7": 7,
+      "8": 37,
+      "4": 1537,
+      "6": 1245,
+      "5": 292,
+      "13": 1,
+      "45offset": 0,
+      "48offset": 0,
+      "75": 90,
+      "15": true,
+      "2": "Deadman's cape",
+      "3": "Dark and sinister, just like a deadman."
+    },
+    "params": {},
+    "inv": [
+      null,
+      "Wear",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Deadman's cape"
+  },
+  "28531": {
+    "models": {
+      "44": 49500,
+      "45": 49472,
+      "48": 49471
+    },
+    "fields": {
+      "8": 65535,
+      "4": 1723,
+      "6": 678,
+      "5": 539,
+      "13": 3,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 21,
+      "75": 1814,
+      "16": true,
+      "12": 250000,
+      "7": 1,
+      "65": true,
+      "2": "Corrupted voidwaker",
+      "3": "A truly fearsome weapon.",
+      "97": 28532,
+      "148": 28533
+    },
+    "params": {
+      "568": 3,
+      "1564": 3,
+      "434": 0,
+      "436": 65,
+      "10": 68,
+      "11": 0,
+      "14": 4,
+      "13": 0,
+      "0": 70,
+      "1": 80,
+      "2": -2,
+      "4": 0,
+      "3": 5,
+      "5": 0,
+      "6": 1,
+      "7": 0,
+      "9": 0,
+      "8": 2
+    },
+    "inv": [
+      null,
+      "Wield",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Corrupted voidwaker"
+  },
+  "28534": {
+    "models": {
+      "44": 49496,
+      "45": 49468,
+      "48": 49467
+    },
+    "fields": {
+      "45offset": 0,
+      "48offset": 0,
+      "7": 65535,
+      "8": 8,
+      "4": 886,
+      "6": 15,
+      "5": 349,
+      "13": 3,
+      "14": 5,
+      "75": 907,
+      "12": 250000,
+      "94": 65,
+      "16": true,
+      "65": true,
+      "2": "Corrupted dragon claws",
+      "3": "A set of fighting claws.",
+      "97": 28535,
+      "148": 28536
+    },
+    "params": {
+      "568": 3,
+      "10": 48,
+      "14": 4,
+      "0": 41,
+      "1": 57,
+      "2": -4,
+      "5": 13,
+      "6": 26,
+      "7": 7,
+      "1564": 3,
+      "434": 0,
+      "436": 40
+    },
+    "inv": [
+      null,
+      "Wield",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Corrupted dragon claws"
+  },
+  "28537": {
+    "models": {
+      "44": 49502,
+      "45": 49469,
+      "48": 49470
+    },
+    "fields": {
+      "13": 3,
+      "14": 5,
+      "45offset": 2,
+      "48offset": 0,
+      "94": 61,
+      "75": 10000,
+      "12": 250000,
+      "7": 65535,
+      "8": 65535,
+      "4": 1957,
+      "6": 484,
+      "5": 498,
+      "16": true,
+      "65": true,
+      "2": "Corrupted armadyl godsword",
+      "3": "A beautiful, heavy sword.",
+      "97": 28538,
+      "148": 28539
+    },
+    "params": {
+      "568": 3,
+      "1564": 3,
+      "434": 0,
+      "436": 65,
+      "10": 112,
+      "11": 7,
+      "14": 6,
+      "13": 0,
+      "0": 0,
+      "1": 132,
+      "2": 80,
+      "4": 0,
+      "3": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "9": 0,
+      "8": 0
+    },
+    "inv": [
+      null,
+      "Wield",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Corrupted armadyl godsword"
+  },
+  "28540": {
+    "models": {
+      "44": 49499,
+      "45": 49473,
+      "48": 49474
+    },
+    "fields": {
+      "7": 65533,
+      "8": 1,
+      "6": 1500,
+      "5": 720,
+      "13": 3,
+      "14": 5,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 64,
+      "75": 1814,
+      "16": true,
+      "12": 250000,
+      "65": true,
+      "2": "Corrupted twisted bow",
+      "3": "A mystical bow carved from the twisted remains of the Great Olm.",
+      "97": 28541,
+      "148": 28542
+    },
+    "params": {
+      "568": 3,
+      "1564": 3,
+      "434": 4,
+      "436": 70,
+      "1562": 3,
+      "1563": 70,
+      "13": 10,
+      "14": 6,
+      "4": 70,
+      "11": 0,
+      "189": 5,
+      "23": 70
+    },
+    "inv": [
+      null,
+      "Wield",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Corrupted twisted bow"
+  },
+  "28543": {
+    "models": {
+      "44": 49497,
+      "45": 49478,
+      "48": 49476
+    },
+    "fields": {
+      "160": true,
+      "94": 1193,
+      "7": 1,
+      "8": 17,
+      "4": 2105,
+      "6": 23,
+      "5": 327,
+      "13": 3,
+      "14": 5,
+      "45offset": 0,
+      "48offset": 0,
+      "75": 3175,
+      "16": true,
+      "15": true,
+      "12": 250000,
+      "2": "Corrupted scythe of vitur",
+      "3": "A powerful scythe.",
+      "148": 28544
+    },
+    "params": {
+      "568": 3,
+      "451": "Check",
+      "1564": 3,
+      "434": 0,
+      "436": 60,
+      "435": 2,
+      "437": 70,
+      "10": 64,
+      "11": 0,
+      "14": 5,
+      "13": 0,
+      "0": 70,
+      "1": 125,
+      "2": 30,
+      "4": 0,
+      "3": -6,
+      "5": -2,
+      "6": 8,
+      "7": 10,
+      "9": 0,
+      "8": 0
+    },
+    "inv": [
+      null,
+      "Wield",
+      "Check",
+      "Uncharge",
+      null
+    ],
+    "counts": [],
+    "name": "Corrupted scythe of vitur"
+  },
+  "28545": {
+    "models": {
+      "44": 49501,
+      "45": 49475,
+      "48": 49477
+    },
+    "fields": {
+      "94": 1193,
+      "7": 1,
+      "8": 17,
+      "4": 2105,
+      "6": 23,
+      "5": 327,
+      "13": 3,
+      "14": 5,
+      "45offset": 0,
+      "48offset": 0,
+      "75": 3175,
+      "16": true,
+      "12": 250000,
+      "65": true,
+      "2": "Corrupted scythe of vitur (uncharged)",
+      "3": "A powerful scythe. It is currently uncharged.",
+      "97": 28546
+    },
+    "params": {
+      "568": 3,
+      "10": 43,
+      "11": 0,
+      "14": 5,
+      "13": 0,
+      "0": 50,
+      "1": 75,
+      "2": 10,
+      "4": 0,
+      "3": -6,
+      "5": -2,
+      "6": 6,
+      "7": 0,
+      "9": 0,
+      "8": 0
+    },
+    "inv": [
+      null,
+      "Wield",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Corrupted scythe of vitur (uncharged)"
+  },
+  "28547": {
+    "models": {
+      "44": 49498,
+      "45": 49479,
+      "48": 49480
+    },
+    "fields": {
+      "160": true,
+      "7": 65525,
+      "8": 16,
+      "4": 1960,
+      "6": 1481,
+      "5": 465,
+      "95": 290,
+      "45offset": 0,
+      "48offset": 0,
+      "13": 3,
+      "14": 5,
+      "94": 1,
+      "75": 5000,
+      "16": true,
+      "12": 250000,
+      "15": true,
+      "2": "Corrupted tumeken's shadow",
+      "3": "An ancient staff created using a higher power.",
+      "148": 28548
+    },
+    "params": {
+      "568": 3,
+      "2257": 4329,
+      "451": "Check",
+      "14": 5,
+      "13": 8,
+      "3": 35,
+      "8": 20,
+      "11": 1,
+      "434": 6,
+      "436": 75
+    },
+    "inv": [
+      null,
+      "Wield",
+      "Check",
+      "Charge",
+      "Uncharge"
+    ],
+    "counts": [],
+    "name": "Corrupted tumeken's shadow"
+  },
+  "28549": {
+    "models": {
+      "44": 49498,
+      "45": 49479,
+      "48": 49480
+    },
+    "fields": {
+      "7": 65525,
+      "8": 16,
+      "4": 1960,
+      "6": 1481,
+      "5": 465,
+      "95": 290,
+      "45offset": 0,
+      "48offset": 0,
+      "13": 3,
+      "14": 5,
+      "94": 1,
+      "75": 4000,
+      "12": 250000,
+      "16": true,
+      "65": true,
+      "2": "Corrupted tumeken's shadow (uncharged)",
+      "3": "An ancient staff created using a higher power.",
+      "97": 28550
+    },
+    "params": {
+      "568": 3,
+      "14": 5,
+      "13": 8,
+      "3": 35,
+      "8": 20,
+      "11": 1,
+      "434": 6,
+      "436": 75
+    },
+    "inv": [
+      null,
+      "Wield",
+      "Charge",
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Corrupted tumeken's shadow (uncharged)"
+  },
+  "28555": {
+    "models": {
+      "44": 49505,
+      "45": 49486,
+      "48": 49482
+    },
+    "fields": {
+      "7": 11,
+      "8": 65533,
+      "4": 1316,
+      "6": 124,
+      "5": 508,
+      "13": 3,
+      "14": 5,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 106,
+      "75": 1360,
+      "15": true,
+      "12": 500,
+      "160": true,
+      "40": [
+        [
+          6674,
+          11065
+        ],
+        [
+          61,
+          80
+        ]
+      ],
+      "2": "Starter bow",
+      "3": "A bow from a starter pack.",
+      "148": 28556
+    },
+    "params": {
+      "13": 7,
+      "14": 4,
+      "4": 20,
+      "12": 7,
+      "295": 1,
+      "451": "Check"
+    },
+    "inv": [
+      null,
+      "Wield",
+      "Check",
+      null,
+      "Destroy"
+    ],
+    "counts": [],
+    "name": "Starter bow"
+  },
+  "28557": {
+    "models": {
+      "44": 49504,
+      "45": 49481,
+      "48": 49485
+    },
+    "fields": {
+      "7": 1,
+      "4": 1316,
+      "6": 1172,
+      "95": 117,
+      "5": 790,
+      "13": 3,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 1,
+      "75": 1814,
+      "15": true,
+      "12": 500,
+      "160": true,
+      "8": 65533,
+      "40": [
+        [
+          7073,
+          11065
+        ]
+      ],
+      "2": "Starter staff",
+      "3": "A staff from a starter pack.",
+      "148": 28558
+    },
+    "params": {
+      "14": 5,
+      "13": 6,
+      "3": 10,
+      "5": 2,
+      "6": 3,
+      "7": 1,
+      "8": 10,
+      "295": 1,
+      "451": "Check"
+    },
+    "inv": [
+      null,
+      "Wield",
+      "Check",
+      null,
+      "Destroy"
+    ],
+    "counts": [],
+    "name": "Starter staff"
+  },
+  "28559": {
+    "models": {
+      "44": 49503,
+      "45": 49484,
+      "48": 49483
+    },
+    "fields": {
+      "8": 65535,
+      "4": 1040,
+      "6": 1185,
+      "5": 352,
+      "13": 3,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 21,
+      "75": 1814,
+      "15": true,
+      "12": 500,
+      "7": 65534,
+      "40": [
+        [
+          61,
+          11065
+        ],
+        [
+          11200,
+          80
+        ],
+        [
+          5010,
+          80
+        ]
+      ],
+      "2": "Starter sword",
+      "3": "A sword from a starter pack.",
+      "148": 28560
+    },
+    "params": {
+      "10": 20,
+      "14": 4,
+      "0": 5,
+      "1": 21,
+      "2": -2,
+      "6": 1,
+      "295": 1
+    },
+    "inv": [
+      null,
+      "Wield",
+      null,
+      null,
+      "Destroy"
+    ],
+    "counts": [],
+    "name": "Starter sword"
+  },
+  "28561": {
+    "models": {
+      "44": 49495
+    },
+    "fields": {
+      "4": 1414,
+      "8": 16,
+      "5": 324,
+      "6": 95,
+      "75": 1000,
+      "16": true,
+      "12": 100000,
+      "65": true,
+      "2": "Trinket of vengeance",
+      "3": "A magic rock! This one casts the Vengeance spell.",
+      "97": 28562,
+      "148": 28563
+    },
+    "params": {
+      "568": 1
+    },
+    "inv": [
+      "Cast",
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Trinket of vengeance"
+  },
+  "28564": {
+    "models": {
+      "44": 49494
+    },
+    "fields": {
+      "4": 1414,
+      "8": 16,
+      "5": 324,
+      "6": 95,
+      "75": 1000,
+      "16": true,
+      "12": 100000,
+      "65": true,
+      "2": "Trinket of fairies",
+      "3": "A magic rock! This one smells funny and lets you teleport.",
+      "97": 28565,
+      "148": 28566
+    },
+    "params": {
+      "568": 1
+    },
+    "inv": [
+      "Fairy-ring",
+      "Spirit-tree",
+      "Tool-leprechauns",
+      "Last-destination",
+      null
+    ],
+    "counts": [],
+    "name": "Trinket of fairies"
+  },
+  "28567": {
+    "models": {
+      "44": 49493
+    },
+    "fields": {
+      "4": 1414,
+      "8": 16,
+      "5": 324,
+      "6": 95,
+      "75": 1000,
+      "16": true,
+      "12": 100000,
+      "65": true,
+      "2": "Trinket of advanced weaponry",
+      "3": "A magic rock! This one gives you a random corrupted weapon instead.",
+      "97": 28568,
+      "148": 28569
+    },
+    "params": {
+      "568": 3
+    },
+    "inv": [
+      "Open",
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Trinket of advanced weaponry"
+  },
+  "28570": {
+    "models": {
+      "44": 49495
+    },
+    "fields": {
+      "4": 1414,
+      "8": 16,
+      "5": 324,
+      "6": 95,
+      "75": 1000,
+      "16": true,
+      "12": 100000,
+      "65": true,
+      "40": [
+        [
+          957,
+          127
+        ],
+        [
+          9164,
+          957
+        ]
+      ],
+      "2": "Trinket of undead",
+      "3": "A magic rock! This one gives you random thralls.",
+      "97": 28571,
+      "148": 28572
+    },
+    "params": {
+      "568": 1
+    },
+    "inv": [
+      "Summon Lil Zuk",
+      "Summon Lil Kal",
+      "Summon Lil Wisp",
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Trinket of undead"
+  },
+  "29599": {
+    "models": {
+      "44": 54205,
+      "45": 54213,
+      "48": 54212
+    },
+    "fields": {
+      "13": 3,
+      "14": 5,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 64,
+      "75": 1814,
+      "4": 2128,
+      "6": 1034,
+      "5": 591,
+      "12": 250000,
+      "16": true,
+      "65": true,
+      "2": "Corrupted dark bow",
+      "3": "A bow from an even darker dimension.",
+      "97": 29600,
+      "148": 29601
+    },
+    "params": {
+      "568": 3,
+      "1564": 3,
+      "434": 4,
+      "436": 50,
+      "1562": 3,
+      "1563": 60,
+      "13": 6,
+      "14": 7,
+      "4": 89,
+      "23": 60
+    },
+    "inv": [
+      null,
+      "Wield",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Corrupted dark bow"
+  },
+  "29602": {
+    "models": {
+      "44": 54204,
+      "45": 54210,
+      "48": 54214
+    },
+    "fields": {
+      "7": 65531,
+      "8": 13,
+      "4": 2064,
+      "6": 1050,
+      "5": 404,
+      "75": 1600,
+      "13": 3,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 1,
+      "16": true,
+      "12": 250000,
+      "65": true,
+      "2": "Corrupted Volatile Nightmare staff",
+      "3": "An ancient staff corrupted by darkness. A volatile orb has been added to it.",
+      "97": 29603,
+      "148": 29604
+    },
+    "params": {
+      "568": 3,
+      "1564": 3,
+      "434": 6,
+      "436": 50,
+      "435": 3,
+      "437": 20,
+      "3": 16,
+      "8": 14,
+      "299": 150,
+      "14": 5,
+      "603": 1
+    },
+    "inv": [
+      null,
+      "Wield",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Corrupted Volatile Nightmare staff"
+  },
+  "29605": {
+    "models": {
+      "44": 49502,
+      "45": 49469,
+      "48": 49470
+    },
+    "fields": {
+      "13": 3,
+      "14": 5,
+      "45offset": 2,
+      "48offset": 0,
+      "94": 61,
+      "75": 10000,
+      "12": 1250000,
+      "7": 65535,
+      "8": 65535,
+      "4": 1957,
+      "6": 484,
+      "5": 498,
+      "16": true,
+      "15": true,
+      "2": "Armadyl godsword (Deadman)",
+      "3": "A beautiful, heavy sword.",
+      "148": 29606
+    },
+    "params": {
+      "1564": 3,
+      "434": 0,
+      "436": 75,
+      "10": 132,
+      "11": 8,
+      "14": 6,
+      "13": 0,
+      "0": 0,
+      "1": 132,
+      "2": 80,
+      "4": 0,
+      "3": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "9": 0,
+      "8": 0
+    },
+    "inv": [
+      null,
+      "Wield",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Armadyl godsword (Deadman)"
+  },
+  "29607": {
+    "models": {
+      "44": 49500,
+      "45": 49472,
+      "48": 49471
+    },
+    "fields": {
+      "8": 65535,
+      "4": 1723,
+      "6": 678,
+      "5": 539,
+      "13": 3,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 21,
+      "75": 1814,
+      "16": true,
+      "15": true,
+      "12": 2000000,
+      "7": 1,
+      "2": "Voidwaker (Deadman)",
+      "3": "A truly fearsome weapon.",
+      "148": 29608
+    },
+    "params": {
+      "1564": 3,
+      "434": 0,
+      "436": 75,
+      "10": 80,
+      "11": 0,
+      "14": 4,
+      "13": 0,
+      "0": 70,
+      "1": 80,
+      "2": -2,
+      "4": 0,
+      "3": 5,
+      "5": 0,
+      "6": 1,
+      "7": 0,
+      "9": 0,
+      "8": 2
+    },
+    "inv": [
+      null,
+      "Wield",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Voidwaker (Deadman)"
+  },
+  "29609": {
+    "models": {
+      "44": 54204,
+      "45": 54210,
+      "48": 54214
+    },
+    "fields": {
+      "7": 65531,
+      "8": 13,
+      "4": 2064,
+      "6": 1050,
+      "5": 404,
+      "75": 1600,
+      "13": 3,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 1,
+      "16": true,
+      "15": true,
+      "12": 4600000,
+      "2": "Volatile Nightmare staff (Deadman)",
+      "3": "An ancient staff corrupted by darkness. A volatile orb has been added to it.",
+      "148": 29610
+    },
+    "params": {
+      "1564": 3,
+      "434": 6,
+      "436": 82,
+      "435": 3,
+      "437": 50,
+      "3": 16,
+      "8": 14,
+      "299": 150,
+      "14": 5,
+      "603": 1
+    },
+    "inv": [
+      null,
+      "Wield",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Volatile Nightmare staff (Deadman)"
+  },
+  "29611": {
+    "models": {
+      "44": 54205,
+      "45": 54213,
+      "48": 54212
+    },
+    "fields": {
+      "12": 120002,
+      "13": 3,
+      "14": 5,
+      "45offset": 0,
+      "48offset": 6,
+      "94": 64,
+      "75": 1814,
+      "4": 2128,
+      "6": 1034,
+      "5": 591,
+      "16": true,
+      "15": true,
+      "2": "Dark bow (Deadman)",
+      "3": "A bow from a darker dimension.",
+      "148": 29612
+    },
+    "params": {
+      "1564": 3,
+      "434": 4,
+      "436": 60,
+      "1562": 3,
+      "1563": 60,
+      "13": 10,
+      "14": 9,
+      "4": 95,
+      "23": 60
+    },
+    "inv": [
+      null,
+      "Wield",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Dark bow (Deadman)"
+  },
+  "29613": {
+    "models": {
+      "44": 54203,
+      "45": 54216,
+      "48": 54215
+    },
+    "fields": {
+      "7": 3,
+      "8": 6,
+      "4": 2039,
+      "6": 1273,
+      "5": 471,
+      "13": 1,
+      "45offset": 0,
+      "48offset": 0,
+      "75": 453,
+      "16": true,
+      "15": true,
+      "12": 80000,
+      "40": [
+        [
+          689,
+          1860
+        ],
+        [
+          689,
+          1860
+        ]
+      ],
+      "2": "Imbued Zamorak cape (Deadman)",
+      "3": "A cape from the almighty god Zamorak, imbued with great power.",
+      "148": 29614
+    },
+    "params": {
+      "1564": 1,
+      "434": 6,
+      "436": 75,
+      "3": 15,
+      "5": 3,
+      "6": 3,
+      "7": 3,
+      "9": 0,
+      "8": 15,
+      "299": 20,
+      "41": 1,
+      "295": 1
+    },
+    "inv": [
+      null,
+      "Wear",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Imbued Zamorak cape (Deadman)"
+  },
+  "29615": {
+    "models": {
+      "44": 54203,
+      "45": 54216,
+      "48": 54215
+    },
+    "fields": {
+      "7": 3,
+      "8": 6,
+      "4": 2039,
+      "6": 1273,
+      "5": 471,
+      "13": 1,
+      "45offset": 0,
+      "48offset": 0,
+      "75": 453,
+      "16": true,
+      "15": true,
+      "12": 80000,
+      "40": [
+        [
+          689,
+          25509
+        ],
+        [
+          693,
+          25513
+        ],
+        [
+          299,
+          23849
+        ],
+        [
+          689,
+          25509
+        ],
+        [
+          693,
+          25513
+        ],
+        [
+          664,
+          24218
+        ],
+        [
+          274,
+          21778
+        ],
+        [
+          299,
+          23849
+        ],
+        [
+          37,
+          21541
+        ],
+        [
+          26,
+          21530
+        ],
+        [
+          18,
+          21530
+        ]
+      ],
+      "2": "Imbued Guthix cape (Deadman)",
+      "3": "A cape from the almighty god Guthix, imbued with great power.",
+      "148": 29616
+    },
+    "params": {
+      "1564": 1,
+      "434": 6,
+      "436": 75,
+      "3": 15,
+      "5": 3,
+      "6": 3,
+      "7": 3,
+      "9": 0,
+      "8": 15,
+      "299": 20,
+      "42": 1,
+      "295": 1
+    },
+    "inv": [
+      null,
+      "Wear",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Imbued Guthix cape (Deadman)"
+  },
+  "29617": {
+    "models": {
+      "44": 54203,
+      "45": 54216,
+      "48": 54215
+    },
+    "fields": {
+      "7": 3,
+      "8": 6,
+      "4": 2039,
+      "6": 1273,
+      "5": 471,
+      "13": 1,
+      "45offset": 0,
+      "48offset": 0,
+      "75": 453,
+      "16": true,
+      "15": true,
+      "12": 80000,
+      "40": [
+        [
+          689,
+          41670
+        ],
+        [
+          693,
+          41678
+        ],
+        [
+          299,
+          41257
+        ],
+        [
+          689,
+          41670
+        ],
+        [
+          693,
+          41678
+        ],
+        [
+          664,
+          41257
+        ],
+        [
+          274,
+          41240
+        ],
+        [
+          299,
+          41257
+        ],
+        [
+          37,
+          43045
+        ],
+        [
+          33,
+          43034
+        ],
+        [
+          18,
+          43026
+        ]
+      ],
+      "2": "Imbued Saradomin cape (Deadman)",
+      "3": "A cape from the almighty god Saradomin, imbued with great power.",
+      "148": 29618
+    },
+    "params": {
+      "1564": 1,
+      "434": 6,
+      "436": 75,
+      "3": 15,
+      "5": 3,
+      "6": 3,
+      "7": 3,
+      "9": 0,
+      "8": 15,
+      "299": 20,
+      "40": 1,
+      "295": 1
+    },
+    "inv": [
+      null,
+      "Wear",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Imbued Saradomin cape (Deadman)"
+  },
+  "29619": {
+    "models": {
+      "44": 54208
+    },
+    "fields": {
+      "75": 100,
+      "7": 65528,
+      "4": 2086,
+      "6": 1290,
+      "5": 332,
+      "16": true,
+      "12": 25000,
+      "113": 15,
+      "65": true,
+      "2": "Armageddon rug",
+      "3": "A fearsome yet stylish souvenir from Deadman: Armageddon.",
+      "97": 29620,
+      "148": 29621
+    },
+    "params": {
+      "295": 1
+    },
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Armageddon rug"
+  },
+  "29622": {
+    "models": {
+      "44": 54206,
+      "45": 54211,
+      "48": 54211
+    },
+    "fields": {
+      "13": 3,
+      "45offset": 0,
+      "48offset": 6,
+      "4": 1118,
+      "6": 505,
+      "5": 589,
+      "16": true,
+      "12": 25000,
+      "75": 100,
+      "8": 1,
+      "113": 15,
+      "65": true,
+      "2": "Armageddon teleport scroll",
+      "3": "A scroll which unlocks the Deadman: Armageddon home teleport animation.",
+      "97": 29623,
+      "148": 29624
+    },
+    "params": {
+      "295": 1
+    },
+    "inv": [
+      "Read",
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Armageddon teleport scroll"
+  },
+  "29625": {
+    "models": {
+      "44": 54207
+    },
+    "fields": {
+      "7": 65535,
+      "4": 1738,
+      "6": 1978,
+      "95": 1953,
+      "5": 388,
+      "8": 6,
+      "16": true,
+      "12": 25000,
+      "75": 100,
+      "113": 20,
+      "114": 10,
+      "65": true,
+      "2": "Armageddon weapon scroll",
+      "3": "Take this to Nigel to give the Armadyl Godsword, Volatile Nightmare Staff, Dark Bow or Voidwaker a cosmetic theme from Deadman: Armageddon.",
+      "97": 29626,
+      "148": 29627
+    },
+    "params": {
+      "295": 1
+    },
+    "inv": [
+      "Read",
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Armageddon weapon scroll"
+  },
+  "29628": {
+    "models": {
+      "44": 54201
+    },
+    "fields": {
+      "4": 1360,
+      "6": 90,
+      "5": 576,
+      "16": true,
+      "12": 25000,
+      "75": 100,
+      "7": 1,
+      "8": 6,
+      "65": true,
+      "2": "Armageddon cape fabric",
+      "3": "Take this to Nigel to give the imbued Saradomin, Guthix or Zamorak Cape a cosmetic theme from Deadman: Armageddon.",
+      "97": 29629,
+      "148": 29630
+    },
+    "params": {
+      "295": 1
+    },
+    "inv": [
+      "Read",
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Armageddon cape fabric"
+  },
+  "30388": {
+    "models": {
+      "44": 55637,
+      "45": 55757,
+      "48": 55756
+    },
+    "fields": {
+      "12": 50000,
+      "7": 2,
+      "8": 3,
+      "4": 1809,
+      "6": 2020,
+      "5": 613,
+      "13": 3,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 21,
+      "75": 1360,
+      "16": true,
+      "15": true,
+      "95": 34,
+      "40": [
+        [
+          33,
+          127
+        ],
+        [
+          24,
+          43059
+        ],
+        [
+          19408,
+          968
+        ]
+      ],
+      "2": "Thunder khopesh",
+      "3": "A powerful Khopesh, imbued with the power of thunder and lightning.",
+      "148": 30389
+    },
+    "params": {
+      "10": 100,
+      "11": 0,
+      "14": 4,
+      "0": 65,
+      "1": 110,
+      "2": 0,
+      "4": 0,
+      "3": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "9": 0,
+      "8": 0,
+      "701": 1,
+      "2059": "A powerful Khopesh, imbued with the power of thunder and lightning.<br><br>Deals full damage to the Corporeal Beast<br>Has a 20% chance to trigger a AoE lightning bolt under the target, hitting anything in a 1 tile radius, which rolls with 50% of the original attacks max hit.",
+      "2060": "50% - Attacks twice. If either attack is successful an additional lightning bolt is summoned rolling up to 100% of the original attacks max hit."
+    },
+    "inv": [
+      null,
+      "Wield",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Thunder khopesh"
+  },
+  "33012": {
+    "models": {
+      "44": 54207
+    },
+    "fields": {
+      "7": 65535,
+      "4": 1738,
+      "6": 1978,
+      "95": 1953,
+      "5": 388,
+      "8": 6,
+      "16": true,
+      "12": 25000,
+      "75": 100,
+      "113": 20,
+      "114": 10,
+      "65": true,
+      "2": "Annihilation weapon scroll",
+      "3": "Take this to Nigel to give the Toxic Staff of the Dead, Bow of Faerdhinen (c) or Crystal armour a cosmetic theme from Deadman: Annihilation.",
+      "97": 33013,
+      "148": 33014
+    },
+    "params": {
+      "295": 1
+    },
+    "inv": [
+      "Read",
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Annihilation weapon scroll"
+  },
+  "33015": {
+    "models": {
+      "44": 28470
+    },
+    "fields": {
+      "4": 2184,
+      "6": 1454,
+      "5": 364,
+      "16": true,
+      "12": 25000,
+      "75": 100,
+      "65": true,
+      "2": "Annihilation blueprints",
+      "3": "Take this to an estate agent and ask them to redecorate your player-owned house for a Wilderness theme.",
+      "97": 33016,
+      "148": 33017
+    },
+    "params": {
+      "295": 1
+    },
+    "inv": [
+      "Read",
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Annihilation blueprints"
+  },
+  "33018": {
+    "models": {
+      "44": 54206,
+      "45": 54211,
+      "48": 54211
+    },
+    "fields": {
+      "13": 3,
+      "45offset": 0,
+      "48offset": 6,
+      "4": 1118,
+      "6": 505,
+      "5": 589,
+      "16": true,
+      "12": 25000,
+      "75": 100,
+      "8": 1,
+      "113": 15,
+      "65": true,
+      "2": "Annihilation teleport scroll",
+      "3": "A scroll which unlocks the Deadman: Annihilation home teleport animation.",
+      "97": 33019,
+      "148": 33020
+    },
+    "params": {
+      "295": 1
+    },
+    "inv": [
+      "Read",
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Annihilation teleport scroll"
+  },
+  "33036": {
+    "models": {
+      "44": 41576,
+      "45": 59944,
+      "48": 59945
+    },
+    "fields": {
+      "4": 2150,
+      "6": 1010,
+      "95": 229,
+      "5": 512,
+      "45offset": 0,
+      "48offset": 0,
+      "13": 3,
+      "94": 1,
+      "160": true,
+      "75": 1500,
+      "12": 1000006,
+      "16": true,
+      "15": true,
+      "40": [
+        [
+          17467,
+          21947
+        ]
+      ],
+      "2": "Toxic staff (Deadman)",
+      "3": "A ghastly weapon with evil origins, with a toxic fang attached.",
+      "148": 33037
+    },
+    "params": {
+      "1564": 3,
+      "434": 0,
+      "436": 75,
+      "435": 6,
+      "437": 75,
+      "0": 55,
+      "1": 70,
+      "3": 25,
+      "6": 3,
+      "7": 3,
+      "8": 17,
+      "10": 72,
+      "299": 150,
+      "41": 1,
+      "346": 1,
+      "2257": 4334,
+      "451": "Check",
+      "1737": 1
+    },
+    "inv": [
+      null,
+      "Wield",
+      "Check",
+      null,
+      "Uncharge"
+    ],
+    "counts": [],
+    "name": "Toxic staff (Deadman)"
+  },
+  "33041": {
+    "models": {
+      "44": 55637,
+      "45": 55757,
+      "48": 55756
+    },
+    "fields": {
+      "12": 1000000,
+      "7": 2,
+      "8": 3,
+      "4": 1809,
+      "6": 2020,
+      "5": 613,
+      "13": 3,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 21,
+      "75": 1360,
+      "16": true,
+      "95": 34,
+      "65": true,
+      "40": [
+        [
+          33,
+          127
+        ],
+        [
+          24,
+          43059
+        ],
+        [
+          19408,
+          968
+        ]
+      ],
+      "2": "Thunder khopesh",
+      "3": "A powerful Khopesh, imbued with the power of thunder and lightning.",
+      "97": 33042,
+      "148": 33043
+    },
+    "params": {
+      "10": 100,
+      "11": 0,
+      "14": 4,
+      "0": 65,
+      "1": 110,
+      "2": 0,
+      "4": 0,
+      "3": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "9": 0,
+      "8": 0,
+      "701": 1,
+      "568": 1,
+      "434": 0,
+      "436": 60
+    },
+    "inv": [
+      null,
+      "Wield",
+      "Inspect",
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Thunder khopesh"
+  },
+  "33044": {
+    "models": {
+      "44": 28471
+    },
+    "fields": {
+      "4": 1414,
+      "8": 16,
+      "5": 324,
+      "6": 95,
+      "75": 1000,
+      "16": true,
+      "12": 100000,
+      "65": true,
+      "2": "Trinket of avarice",
+      "3": "A magic rock! This one automatically notes and retrieves drops.",
+      "97": 33045,
+      "148": 33046
+    },
+    "params": {
+      "568": 1
+    },
+    "inv": [
+      "Note/Unnote",
+      "Value",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Trinket of avarice"
+  },
+  "33047": {
+    "models": {
+      "44": 28473
+    },
+    "fields": {
+      "4": 1414,
+      "8": 16,
+      "5": 324,
+      "6": 95,
+      "75": 1000,
+      "16": true,
+      "12": 100000,
+      "65": true,
+      "2": "Trinket of fortuity (inactive)",
+      "3": "A magic rock! This one increases the chance of obtaining rare items when active.",
+      "97": 33048,
+      "148": 33049
+    },
+    "params": {
+      "568": 1
+    },
+    "inv": [
+      "Charge",
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Trinket of fortuity (inactive)"
+  },
+  "33050": {
+    "models": {
+      "44": 28474
+    },
+    "fields": {
+      "4": 1414,
+      "8": 16,
+      "5": 324,
+      "6": 95,
+      "75": 1000,
+      "16": true,
+      "12": 100000,
+      "65": true,
+      "2": "Trinket of fortuity (active)",
+      "3": "A magic rock! This one increases the chance of obtaining rare items. Teleportation will behave as if you were skulled.",
+      "97": 33051,
+      "148": 33052
+    },
+    "params": {
+      "568": 1
+    },
+    "inv": [
+      "Uncharge",
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Trinket of fortuity (active)"
+  },
+  "33063": {
+    "models": {
+      "44": 37197,
+      "45": 37019,
+      "48": 37051
+    },
+    "fields": {
+      "13": 1,
+      "75": 453,
+      "45offset": 0,
+      "48offset": 3,
+      "7": 3,
+      "8": 12,
+      "4": 2130,
+      "6": 47,
+      "5": 361,
+      "16": true,
+      "15": true,
+      "94": 27,
+      "12": 1,
+      "2": "Starter cape",
+      "3": "Lets the person behind you know that you mean business.",
+      "148": 33064
+    },
+    "params": {
+      "0": 5,
+      "1": 5,
+      "2": 5,
+      "3": 5,
+      "4": 5
+    },
+    "inv": [
+      null,
+      "Wear",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Starter cape"
+  },
+  "33065": {
+    "models": {
+      "44": 28459
+    },
+    "fields": {
+      "7": 3,
+      "8": 65519,
+      "4": 728,
+      "6": 122,
+      "95": 63,
+      "5": 194,
+      "75": 80,
+      "16": true,
+      "15": true,
+      "40": [
+        [
+          5231,
+          7514
+        ]
+      ],
+      "2": "Deadman's skull",
+      "3": "A Deadman's skull filled with magical power.",
+      "43": [
+        [
+          2,
+          [
+            1,
+            "Prayers"
+          ],
+          [
+            2,
+            "Spellbook"
+          ]
+        ]
+      ]
+    },
+    "params": {
+      "295": 1
+    },
+    "inv": [
+      "Shop",
+      "Unlocks",
+      "Swap",
+      "Breach Check",
+      "Destroy"
+    ],
+    "counts": [],
+    "name": "Deadman's skull"
+  },
+  "33122": {
+    "models": {
+      "44": 28470
+    },
+    "fields": {
+      "4": 2184,
+      "6": 1454,
+      "5": 364,
+      "16": true,
+      "15": true,
+      "12": 1,
+      "75": 100,
+      "2": "Annihilation exit portal blueprints",
+      "3": "Blueprints used to build an exit portal in your player-owned house.",
+      "148": 33123
+    },
+    "params": {
+      "295": 1
+    },
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Annihilation exit portal blueprints"
+  },
+  "33428": {
+    "models": {
+      "44": 49495
+    },
+    "fields": {
+      "4": 1414,
+      "8": 16,
+      "5": 324,
+      "6": 95,
+      "75": 1000,
+      "16": true,
+      "12": 1,
+      "65": true,
+      "2": "Trinket of vengeance (2)",
+      "3": "A magic rock! This one casts the Vengeance spell and has 2 charges remaining.",
+      "97": 33429,
+      "148": 33430
+    },
+    "params": {
+      "568": 1
+    },
+    "inv": [
+      "Cast",
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Trinket of vengeance (2)"
+  },
+  "33431": {
+    "models": {
+      "44": 49495
+    },
+    "fields": {
+      "4": 1414,
+      "8": 16,
+      "5": 324,
+      "6": 95,
+      "75": 1000,
+      "16": true,
+      "12": 1,
+      "65": true,
+      "2": "Trinket of vengeance (1)",
+      "3": "A magic rock! This one casts the Vengeance spell and has one charge remaining.",
+      "97": 33432,
+      "148": 33433
+    },
+    "params": {
+      "568": 1
+    },
+    "inv": [
+      "Cast",
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Trinket of vengeance (1)"
+  },
+  "34422": {
+    "models": {
+      "44": 61875
+    },
+    "fields": {
+      "12": 20000,
+      "94": 2517,
+      "7": 0,
+      "8": 65522,
+      "4": 780,
+      "6": 317,
+      "95": 1860,
+      "5": 200,
+      "75": 100,
+      "16": true,
+      "65": true,
+      "40": [
+        [
+          127,
+          931
+        ]
+      ],
+      "2": "Fire ruby",
+      "3": "Rather hot to the touch, maybe I could start a fire with this.",
+      "97": 34423,
+      "148": 34424
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Fire ruby"
+  },
+  "34425": {
+    "models": {
+      "44": 61877,
+      "45": 61881,
+      "48": 61884
+    },
+    "fields": {
+      "12": 21000,
+      "7": 2,
+      "8": 4,
+      "4": 700,
+      "6": 133,
+      "5": 432,
+      "13": 2,
+      "45offset": 0,
+      "48offset": 0,
+      "75": 107,
+      "16": true,
+      "65": true,
+      "40": [
+        [
+          127,
+          931
+        ]
+      ],
+      "2": "Amulet of fire",
+      "3": "I hope my clothes don't catch on fire.",
+      "97": 34426,
+      "148": 34427
+    },
+    "params": {
+      "3": 10
+    },
+    "inv": [
+      null,
+      "Wear",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Amulet of fire"
+  },
+  "772": {
+    "models": {
+      "44": 35763,
+      "45": 30556,
+      "48": 31195
+    },
+    "fields": {
+      "12": 15,
+      "8": 16,
+      "4": 1979,
+      "6": 1481,
+      "5": 377,
+      "13": 3,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 26,
+      "75": 1814,
+      "16": true,
+      "15": true,
+      "2": "Dramen staff",
+      "3": "Crafted from a Dramen tree branch.",
+      "148": 17325
+    },
+    "params": {
+      "10": 10,
+      "11": 0,
+      "14": 4,
+      "13": 0,
+      "0": -1,
+      "1": -1,
+      "2": 10,
+      "4": 0,
+      "3": 10,
+      "5": 2,
+      "6": 3,
+      "7": 1,
+      "9": 0,
+      "8": 10
+    },
+    "inv": [
+      null,
+      "Wield",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Dramen staff"
+  },
+  "13308": {
+    "models": {
+      "44": 2485
+    },
+    "fields": {
+      "11": true,
+      "7": 3,
+      "4": 710,
+      "6": 2012,
+      "5": 184,
+      "15": true,
+      "40": [
+        [
+          8128,
+          947
+        ]
+      ]
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "13309": {
+    "models": {
+      "44": 2486
+    },
+    "fields": {
+      "11": true,
+      "7": 3,
+      "4": 710,
+      "6": 2012,
+      "5": 184,
+      "15": true,
+      "40": [
+        [
+          8128,
+          947
+        ]
+      ]
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "13310": {
+    "models": {
+      "44": 2487
+    },
+    "fields": {
+      "11": true,
+      "7": 3,
+      "4": 710,
+      "6": 2012,
+      "5": 184,
+      "15": true,
+      "40": [
+        [
+          8128,
+          947
+        ]
+      ]
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "13311": {
+    "models": {
+      "44": 2488
+    },
+    "fields": {
+      "11": true,
+      "7": 3,
+      "4": 710,
+      "6": 2012,
+      "5": 184,
+      "15": true,
+      "40": [
+        [
+          8128,
+          947
+        ]
+      ]
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "13312": {
+    "models": {
+      "44": 2667
+    },
+    "fields": {
+      "7": 3,
+      "4": 710,
+      "6": 2012,
+      "5": 184,
+      "11": true,
+      "15": true,
+      "40": [
+        [
+          8128,
+          947
+        ]
+      ]
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "13313": {
+    "models": {
+      "44": 2825
+    },
+    "fields": {
+      "7": 3,
+      "4": 710,
+      "6": 2012,
+      "5": 184,
+      "11": true,
+      "15": true,
+      "40": [
+        [
+          8128,
+          947
+        ]
+      ]
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "13314": {
+    "models": {
+      "44": 2423
+    },
+    "fields": {
+      "7": 2,
+      "8": 65534,
+      "4": 650,
+      "6": 2044,
+      "5": 160,
+      "11": true,
+      "15": true,
+      "40": [
+        [
+          8128,
+          947
+        ]
+      ]
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "13315": {
+    "models": {
+      "44": 2710
+    },
+    "fields": {
+      "7": 11,
+      "8": 13,
+      "4": 980,
+      "6": 64,
+      "5": 172,
+      "11": true,
+      "15": true,
+      "40": [
+        [
+          8128,
+          947
+        ]
+      ]
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "13316": {
+    "models": {
+      "44": 2775
+    },
+    "fields": {
+      "7": 11,
+      "4": 1000,
+      "6": 80,
+      "5": 168,
+      "11": true,
+      "15": true,
+      "40": [
+        [
+          8128,
+          947
+        ]
+      ]
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "18218": {
+    "models": {},
+    "fields": {
+      "148": 13307,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "18219": {
+    "models": {},
+    "fields": {
+      "148": 13317,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "18220": {
+    "models": {},
+    "fields": {
+      "148": 13318,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "18221": {
+    "models": {},
+    "fields": {
+      "148": 13319,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "22332": {
+    "models": {},
+    "fields": {
+      "148": 22331,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "22334": {
+    "models": {},
+    "fields": {
+      "148": 22333,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "22336": {
+    "models": {},
+    "fields": {
+      "148": 22335,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28532": {
+    "models": {},
+    "fields": {
+      "97": 28531,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28533": {
+    "models": {},
+    "fields": {
+      "148": 28531,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28535": {
+    "models": {},
+    "fields": {
+      "97": 28534,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28536": {
+    "models": {},
+    "fields": {
+      "148": 28534,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28538": {
+    "models": {},
+    "fields": {
+      "97": 28537,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28539": {
+    "models": {},
+    "fields": {
+      "148": 28537,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28541": {
+    "models": {},
+    "fields": {
+      "97": 28540,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28542": {
+    "models": {},
+    "fields": {
+      "148": 28540,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28544": {
+    "models": {},
+    "fields": {
+      "148": 28543,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28546": {
+    "models": {},
+    "fields": {
+      "97": 28545,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28548": {
+    "models": {},
+    "fields": {
+      "148": 28547,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28550": {
+    "models": {},
+    "fields": {
+      "97": 28549,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28556": {
+    "models": {},
+    "fields": {
+      "148": 28555,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28558": {
+    "models": {},
+    "fields": {
+      "148": 28557,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28560": {
+    "models": {},
+    "fields": {
+      "148": 28559,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28562": {
+    "models": {},
+    "fields": {
+      "97": 28561,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28563": {
+    "models": {},
+    "fields": {
+      "148": 28561,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28565": {
+    "models": {},
+    "fields": {
+      "97": 28564,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28566": {
+    "models": {},
+    "fields": {
+      "148": 28564,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28568": {
+    "models": {},
+    "fields": {
+      "97": 28567,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28569": {
+    "models": {},
+    "fields": {
+      "148": 28567,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28571": {
+    "models": {},
+    "fields": {
+      "97": 28570,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "28572": {
+    "models": {},
+    "fields": {
+      "148": 28570,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29600": {
+    "models": {},
+    "fields": {
+      "97": 29599,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29601": {
+    "models": {},
+    "fields": {
+      "148": 29599,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29603": {
+    "models": {},
+    "fields": {
+      "97": 29602,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29604": {
+    "models": {},
+    "fields": {
+      "148": 29602,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29606": {
+    "models": {},
+    "fields": {
+      "148": 29605,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29608": {
+    "models": {},
+    "fields": {
+      "148": 29607,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29610": {
+    "models": {},
+    "fields": {
+      "148": 29609,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29612": {
+    "models": {},
+    "fields": {
+      "148": 29611,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29614": {
+    "models": {},
+    "fields": {
+      "148": 29613,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29616": {
+    "models": {},
+    "fields": {
+      "148": 29615,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29618": {
+    "models": {},
+    "fields": {
+      "148": 29617,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29620": {
+    "models": {},
+    "fields": {
+      "97": 29619,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29621": {
+    "models": {},
+    "fields": {
+      "148": 29619,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29623": {
+    "models": {},
+    "fields": {
+      "97": 29622,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29624": {
+    "models": {},
+    "fields": {
+      "148": 29622,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29626": {
+    "models": {},
+    "fields": {
+      "97": 29625,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29627": {
+    "models": {},
+    "fields": {
+      "148": 29625,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29629": {
+    "models": {},
+    "fields": {
+      "97": 29628,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "29630": {
+    "models": {},
+    "fields": {
+      "148": 29628,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "30389": {
+    "models": {},
+    "fields": {
+      "148": 30388,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33013": {
+    "models": {},
+    "fields": {
+      "97": 33012,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33014": {
+    "models": {},
+    "fields": {
+      "148": 33012,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33016": {
+    "models": {},
+    "fields": {
+      "97": 33015,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33017": {
+    "models": {},
+    "fields": {
+      "148": 33015,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33019": {
+    "models": {},
+    "fields": {
+      "97": 33018,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33020": {
+    "models": {},
+    "fields": {
+      "148": 33018,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33037": {
+    "models": {},
+    "fields": {
+      "148": 33036,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33042": {
+    "models": {},
+    "fields": {
+      "97": 33041,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33043": {
+    "models": {},
+    "fields": {
+      "148": 33041,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33045": {
+    "models": {},
+    "fields": {
+      "97": 33044,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33046": {
+    "models": {},
+    "fields": {
+      "148": 33044,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33048": {
+    "models": {},
+    "fields": {
+      "97": 33047,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33049": {
+    "models": {},
+    "fields": {
+      "148": 33047,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33051": {
+    "models": {},
+    "fields": {
+      "97": 33050,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33052": {
+    "models": {},
+    "fields": {
+      "148": 33050,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33064": {
+    "models": {},
+    "fields": {
+      "148": 33063,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33123": {
+    "models": {},
+    "fields": {
+      "148": 33122,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33429": {
+    "models": {},
+    "fields": {
+      "97": 33428,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33430": {
+    "models": {},
+    "fields": {
+      "148": 33428,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33432": {
+    "models": {},
+    "fields": {
+      "97": 33431,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33433": {
+    "models": {},
+    "fields": {
+      "148": 33431,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "34423": {
+    "models": {},
+    "fields": {
+      "97": 34422,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "34424": {
+    "models": {},
+    "fields": {
+      "148": 34422,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "34426": {
+    "models": {},
+    "fields": {
+      "97": 34425,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "34427": {
+    "models": {},
+    "fields": {
+      "148": 34425,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33025": {
+    "models": {
+      "44": 59962,
+      "45": 59941,
+      "48": 59955
+    },
+    "fields": {
+      "12": 1500000,
+      "113": 226,
+      "7": 65535,
+      "8": 5,
+      "4": 1284,
+      "5": 488,
+      "13": 4,
+      "14": 6,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 7,
+      "75": 2000,
+      "16": true,
+      "15": true,
+      "2": "Crystal body (inactive)",
+      "3": "Sturdier than it looks.",
+      "148": 33026
+    },
+    "params": {
+      "11": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "4": 0,
+      "3": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "9": 0,
+      "8": 0
+    },
+    "inv": [
+      null,
+      "Wear",
+      null,
+      "Revert",
+      null
+    ],
+    "counts": [],
+    "name": "Crystal body (inactive)"
+  },
+  "33027": {
+    "models": {
+      "44": 59959,
+      "45": 59938,
+      "48": 59952
+    },
+    "fields": {
+      "12": 1000000,
+      "4": 2168,
+      "5": 444,
+      "13": 7,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 8,
+      "75": 1000,
+      "16": true,
+      "15": true,
+      "160": true,
+      "2": "Crystal legs",
+      "3": "A bright, shiny set of leg armour.",
+      "148": 33028
+    },
+    "params": {
+      "11": 2,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "4": 18,
+      "3": -12,
+      "5": 26,
+      "6": 21,
+      "7": 30,
+      "9": 38,
+      "8": 34,
+      "1564": 7,
+      "434": 1,
+      "436": 70,
+      "435": 16,
+      "437": 50,
+      "2257": 4337,
+      "451": "Check"
+    },
+    "inv": [
+      null,
+      "Wear",
+      "Check",
+      "Revert",
+      null
+    ],
+    "counts": [],
+    "name": "Crystal legs"
+  },
+  "33029": {
+    "models": {
+      "44": 59960,
+      "45": 59939,
+      "48": 59953
+    },
+    "fields": {
+      "12": 1000000,
+      "113": 226,
+      "4": 2168,
+      "5": 444,
+      "13": 7,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 8,
+      "75": 1000,
+      "16": true,
+      "15": true,
+      "2": "Crystal legs (inactive)",
+      "3": "A bright, shiny set of leg armour.",
+      "148": 33030
+    },
+    "params": {
+      "11": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "4": 0,
+      "3": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "9": 0,
+      "8": 0
+    },
+    "inv": [
+      null,
+      "Wear",
+      null,
+      "Revert",
+      null
+    ],
+    "counts": [],
+    "name": "Crystal legs (inactive)"
+  },
+  "33031": {
+    "models": {
+      "44": 59957,
+      "45": 59935,
+      "48": 59949,
+      "51": 59930,
+      "53": 59932
+    },
+    "fields": {
+      "8": 3,
+      "4": 716,
+      "6": 103,
+      "95": 13,
+      "5": 157,
+      "13": 0,
+      "14": 8,
+      "27": 11,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 2,
+      "75": 500,
+      "16": true,
+      "15": true,
+      "12": 500000,
+      "160": true,
+      "2": "Crystal helm",
+      "3": "This helmet shines bright, like a diamond.",
+      "148": 33032
+    },
+    "params": {
+      "11": 2,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "4": 9,
+      "3": -10,
+      "5": 12,
+      "6": 8,
+      "7": 14,
+      "9": 18,
+      "8": 10,
+      "1564": 0,
+      "434": 1,
+      "436": 70,
+      "435": 16,
+      "437": 50,
+      "2257": 4337,
+      "451": "Check"
+    },
+    "inv": [
+      null,
+      "Wear",
+      "Check",
+      "Revert",
+      null
+    ],
+    "counts": [],
+    "name": "Crystal helm"
+  },
+  "33033": {
+    "models": {
+      "44": 59958,
+      "45": 59936,
+      "48": 59950,
+      "51": 59931,
+      "53": 59933
+    },
+    "fields": {
+      "113": 226,
+      "8": 3,
+      "4": 716,
+      "6": 103,
+      "95": 13,
+      "5": 157,
+      "13": 0,
+      "14": 8,
+      "27": 11,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 2,
+      "75": 500,
+      "16": true,
+      "15": true,
+      "12": 500000,
+      "2": "Crystal helm (inactive)",
+      "3": "This helmet shines bright, like a diamond.",
+      "148": 33034
+    },
+    "params": {
+      "11": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "4": 0,
+      "3": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "9": 0,
+      "8": 0
+    },
+    "inv": [
+      null,
+      "Wear",
+      null,
+      "Revert",
+      null
+    ],
+    "counts": [],
+    "name": "Crystal helm (inactive)"
+  },
+  "33035": {
+    "models": {
+      "44": 28897,
+      "45": 59946,
+      "48": 59947
+    },
+    "fields": {
+      "4": 2150,
+      "6": 1010,
+      "95": 229,
+      "5": 512,
+      "45offset": 0,
+      "48offset": 0,
+      "13": 3,
+      "94": 1,
+      "75": 1500,
+      "12": 1000006,
+      "16": true,
+      "15": true,
+      "40": [
+        [
+          17467,
+          21947
+        ]
+      ],
+      "2": "Toxic staff (uncharged)",
+      "3": "It needs to be charged with Zulrah's scales."
+    },
+    "params": {
+      "0": 55,
+      "1": 70,
+      "3": 17,
+      "6": 3,
+      "7": 3,
+      "8": 17,
+      "10": 72,
+      "299": 150,
+      "41": 1,
+      "434": 0,
+      "436": 75,
+      "435": 6,
+      "437": 75,
+      "1737": 1
+    },
+    "inv": [
+      null,
+      "Wield",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Toxic staff (uncharged)"
+  },
+  "26149": {
+    "models": {
+      "44": 2355
+    },
+    "fields": {
+      "8": 3,
+      "4": 1340,
+      "6": 1920,
+      "5": 464,
+      "75": 400,
+      "94": 58,
+      "16": true,
+      "15": true,
+      "12": 1,
+      "40": [
+        [
+          61,
+          1211
+        ],
+        [
+          103,
+          1226
+        ]
+      ],
+      "2": "Tuna",
+      "3": "Wow, this is a big fish."
+    },
+    "params": {},
+    "inv": [
+      "Eat",
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Tuna"
+  },
+  "13658": {
+    "models": {
+      "44": 31242
+    },
+    "fields": {
+      "8": 65535,
+      "4": 789,
+      "5": 443,
+      "75": 20,
+      "12": 100,
+      "65": true,
+      "2": "Teleport card",
+      "3": "A card which has magical properties.",
+      "97": 13659,
+      "148": 14402
+    },
+    "params": {
+      "295": 1
+    },
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      "Destroy"
+    ],
+    "counts": [],
+    "name": "Teleport card"
+  },
+  "13660": {
+    "models": {
+      "44": 31245,
+      "45": 31193,
+      "48": 31194
+    },
+    "fields": {
+      "75": 1000,
+      "13": 5,
+      "45offset": 0,
+      "48offset": 0,
+      "7": 1,
+      "8": 65532,
+      "4": 830,
+      "6": 69,
+      "5": 332,
+      "12": 200,
+      "15": true,
+      "40": [
+        [
+          5018,
+          103
+        ],
+        [
+          61,
+          11177
+        ],
+        [
+          10351,
+          61
+        ]
+      ],
+      "2": "Chronicle",
+      "3": "The legends of RuneScape.",
+      "148": 14403
+    },
+    "params": {
+      "295": 1,
+      "451": "Check Charges",
+      "452": "Teleport"
+    },
+    "inv": [
+      null,
+      "Wield",
+      "Teleport",
+      "Check charges",
+      "Destroy"
+    ],
+    "counts": [],
+    "name": "Chronicle"
+  },
+  "30689": {
+    "models": {
+      "44": 2742
+    },
+    "fields": {
+      "75": 56,
+      "7": 65530,
+      "4": 1210,
+      "6": 1892,
+      "5": 264,
+      "12": 12,
+      "16": true,
+      "15": true,
+      "40": [
+        [
+          82,
+          5202
+        ]
+      ],
+      "2": "Trinket dust",
+      "3": "Looks like this used to be useful."
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Trinket dust"
+  },
+  "33021": {
+    "models": {
+      "44": 28476,
+      "45": 59942,
+      "48": 59943
+    },
+    "fields": {
+      "7": 65535,
+      "6": 15,
+      "5": 561,
+      "8": 4,
+      "13": 3,
+      "14": 5,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 106,
+      "75": 1500,
+      "12": 5000000,
+      "16": true,
+      "15": true,
+      "2": "Bow of Faerdhinen (c)",
+      "3": "A magical elven bow, corrupted through the addition of too many shards.",
+      "148": 33022
+    },
+    "params": {
+      "13": 10,
+      "14": 5,
+      "4": 128,
+      "23": 80,
+      "12": 106,
+      "258": 20,
+      "434": 4,
+      "436": 80,
+      "435": 16,
+      "437": 70
+    },
+    "inv": [
+      null,
+      "Wield",
+      null,
+      "Uncharge",
+      null
+    ],
+    "counts": [],
+    "name": "Bow of Faerdhinen (c)"
+  },
+  "33023": {
+    "models": {
+      "44": 59961,
+      "45": 59940,
+      "48": 59954
+    },
+    "fields": {
+      "12": 1500000,
+      "7": 65535,
+      "8": 5,
+      "4": 1284,
+      "5": 488,
+      "13": 4,
+      "14": 6,
+      "45offset": 0,
+      "48offset": 0,
+      "94": 7,
+      "75": 2000,
+      "16": true,
+      "15": true,
+      "160": true,
+      "2": "Crystal body",
+      "3": "Sturdier than it looks.",
+      "148": 33024
+    },
+    "params": {
+      "11": 3,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "4": 31,
+      "3": -18,
+      "5": 46,
+      "6": 38,
+      "7": 48,
+      "9": 68,
+      "8": 44,
+      "1564": 4,
+      "434": 1,
+      "436": 70,
+      "435": 16,
+      "437": 50,
+      "2257": 4337,
+      "451": "Check"
+    },
+    "inv": [
+      null,
+      "Wear",
+      "Check",
+      "Revert",
+      null
+    ],
+    "counts": [],
+    "name": "Crystal body"
+  },
+  "29598": {
+    "models": {
+      "44": 54198
+    },
+    "fields": {
+      "75": 3200,
+      "94": 206,
+      "15": true,
+      "7": 65535,
+      "8": 65464,
+      "4": 2086,
+      "6": 1290,
+      "5": 332,
+      "2": "Deadman rug",
+      "3": "Deadman rug"
+    },
+    "params": {
+      "23": 28
+    },
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "Deadman rug"
+  },
+  "33022": {
+    "models": {},
+    "fields": {
+      "148": 33021,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33024": {
+    "models": {},
+    "fields": {
+      "148": 33023,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33026": {
+    "models": {},
+    "fields": {
+      "148": 33025,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33028": {
+    "models": {},
+    "fields": {
+      "148": 33027,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33030": {
+    "models": {},
+    "fields": {
+      "148": 33029,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33032": {
+    "models": {},
+    "fields": {
+      "148": 33031,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33034": {
+    "models": {},
+    "fields": {
+      "148": 33033,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33038": {
+    "models": {
+      "44": 55628,
+      "45": 55751,
+      "48": 55764
+    },
+    "fields": {
+      "13": 3,
+      "14": 5,
+      "45offset": 2,
+      "48offset": 0,
+      "94": 61,
+      "75": 10000,
+      "12": 1000000,
+      "7": 65535,
+      "8": 2,
+      "4": 2237,
+      "6": 485,
+      "5": 500,
+      "16": true,
+      "95": 20,
+      "65": true,
+      "2": "The dogsword",
+      "3": "A dog couldn't wield a sword this powerful.",
+      "97": 33039,
+      "148": 33040
+    },
+    "params": {
+      "1564": 3,
+      "434": 0,
+      "436": 60,
+      "10": 132,
+      "11": 8,
+      "14": 6,
+      "13": 0,
+      "0": 0,
+      "1": 132,
+      "2": 80,
+      "4": 0,
+      "3": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "9": 0,
+      "8": 0,
+      "40": 1,
+      "41": 1,
+      "42": 1,
+      "568": 1
+    },
+    "inv": [
+      null,
+      "Wield",
+      null,
+      null,
+      null
+    ],
+    "counts": [],
+    "name": "The dogsword"
+  },
+  "17325": {
+    "models": {},
+    "fields": {
+      "148": 772,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "14401": {
+    "models": {
+      "44": 596
+    },
+    "fields": {
+      "15": true,
+      "75": 0,
+      "4": 3000,
+      "5": 512,
+      "94": 277,
+      "160": true
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "799": {
+    "models": {
+      "44": 2429
+    },
+    "fields": {
+      "11": true,
+      "75": 0,
+      "8": 2,
+      "4": 760,
+      "6": 28,
+      "5": 552
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "13659": {
+    "models": {},
+    "fields": {
+      "97": 13658,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "14402": {
+    "models": {},
+    "fields": {
+      "148": 13658,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "14403": {
+    "models": {},
+    "fields": {
+      "148": 13660,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33039": {
+    "models": {},
+    "fields": {
+      "97": 33038,
+      "98": 799
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  },
+  "33040": {
+    "models": {},
+    "fields": {
+      "148": 33038,
+      "149": 14401
+    },
+    "params": {},
+    "inv": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "counts": []
+  }
+}

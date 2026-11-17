@@ -1,0 +1,58 @@
+{{Deadman seasonal}}
+{{Infobox Item
+|name = Corrupted twisted bow
+|image = [[File:Corrupted twisted bow.png]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|quest = No
+|tradeable = Yes
+|equipable = Yes
+|stackable = No
+|noteable = Yes
+|options = Wield, Drop
+|examine = A mystical bow carved from the twisted remains of the Great Olm.
+|value = 250000
+|weight = 1.814
+|exchange = dmm
+|id = 28540
+}}
+[[File:Corrupted twisted bow detail.png|left|150px]]
+The '''corrupted twisted bow''' is a ranged weapon that requires level 70 [[Ranged]] to wield. Exclusive to [[Deadman Mode]] seasonals, it can be acquired by opening a [[trinket of advanced weaponry]] obtained from a [[Deadman:_Apocalypse#Breaches|breach]].
+
+As a corrupted variant of the [[twisted bow]], it has 20% lower bonuses than the regular variant, with its [[Ranged Strength]] reduced from +20 to +2.
+
+Like the normal variant, the [[Budget Setup]] combat achievement will not be completed if the bow is brought into [[The Inferno]].
+
+==Combat stats==
+{{Infobox Bonuses
+|astab = 0
+|aslash = 0
+|acrush = 0
+|amagic = 0
+|arange = +56
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|drange = 0
+|str = 0
+|rstr = +2
+|mdmg = 0
+|prayer = 0
+|slot = 2h
+|speed = 6
+|attackrange = 10
+|combatstyle = Bow
+|image = [[File:Corrupted twisted bow equipped male.png|180px]]
+|altimage = [[File:Corrupted twisted bow equipped female.png|180px]]
+}}
+
+{{CombatStyles|Bow|speed=6|attackrange=10}}
+
+==Item sources==
+{{Drop sources|Corrupted twisted bow}}
+
+{{Deadman: Annihilation}}
+{{Deadman: Armageddon}}
+{{Deadman: Apocalypse}}

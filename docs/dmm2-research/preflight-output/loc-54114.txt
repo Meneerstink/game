@@ -1,0 +1,11 @@
+DRY_RUN_ONLY kind=loc upstream=[54114] targets=[C:\RSPS\work\gpt-a\build\dmm2\cache-plan\game\game\data/cache, C:\RSPS\work\gpt-a\build\dmm2\cache-plan/file-server/cache]
+LOCTYPES=63175 failures=0 maxId=63182
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[02:39:19.923 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+PLAN loc 54114 'Rug' -> 63183 models=[54198]->[12089] size=1x1 interact=0 anim=-1 options=[null, null, null, null, Remove]
+PREFLIGHT transaction=tx-20261117-013956 mutations=2 outcomes={CREATE=4}
+DRY_RUN records=2

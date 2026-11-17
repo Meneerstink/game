@@ -22,6 +22,7 @@ object Possessions {
             key.name == "inventory" -> "your inventory"
             key.name == "equipment" -> "your equipment"
             key.name == "bank" -> "your bank"
+            key.name == "safe_deposit_box" -> "your safe deposit box"
             key.name == "gravestone" -> "your gravestone"
             key.name == "death_recovery" -> "Death's Office"
             key.name.startsWith("bob_pet_") || key.name.startsWith("bob_petpack_") -> "your pet's pack"

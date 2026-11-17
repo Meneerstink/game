@@ -1,0 +1,15 @@
+DRY_RUN_ONLY kind=item upstream=[33027] targets=[C:\RSPS\work\gpt-a\build\dmm2\cache-plan\game\game\data/cache, C:\RSPS\work\gpt-a\build\dmm2\cache-plan/file-server/cache]
+NOTE Crystal legs (33027) has no upstream noted variant; only the item is imported
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[06:11:39.776 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS proven_free_holes=752 item_candidates=65100 safe_free=64348
+PLAN item 24634 'Crystal legs' <- upstream_item:33027 bytes=95 models=[upstream_model:59959->65536, upstream_model:59938->65537, upstream_model:59952->65538]
+  OPCODES 1=65536 2="Crystal legs" 4=2168 5=444 6=0 7=0 8=0 12=0x000f4240 16=FLAG 23=65537 25=65538 36="Wear" 37="Check" 38="Revert" 127=0x02002d 129=0x010033 249=0x0101000210436865636b00
+  UPSTREAM_PARAMS {0=0, 1=0, 2=0, 3=-12, 4=18, 5=26, 6=21, 7=30, 8=34, 9=38, 11=2, 434=1, 435=16, 436=70, 437=50, 451=Check, 1564=7, 2257=4337}
+DROPPED model 59952: face z-offsets (not representable in 667)
+DROPPED Crystal legs: OSRS opcode 160 (meaning unverified) not encoded
+TRANSACTION tx-20261117-051148 applied=false finalized=0 recovered=0

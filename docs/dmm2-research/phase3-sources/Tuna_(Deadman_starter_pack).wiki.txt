@@ -1,0 +1,25 @@
+{{Deadman seasonal}}
+{{Infobox Item
+|name = Tuna
+|image = [[File:Tuna (Deadman starter pack).png]]
+|release = [[25 August]] [[2021]]
+|update = Deadman Reborn
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|edible = Yes
+|options = Eat, Drop
+|examine = Wow, this is a big fish.
+|value = 1
+|weight = 0.400
+|id = 26149
+}}
+[[File:Tuna (Deadman starter pack) detail.png|left|100px]]
+'''Tuna''' are a type of [[fish]] that only can be obtained by opening a [[Deadman starter pack]]. Eating the fish heals the player for 10 [[Hitpoints]] just like a regular [[tuna]].
+
+{{Fish}}
+{{Deadman: Reborn}}
+[[Category:Food]]

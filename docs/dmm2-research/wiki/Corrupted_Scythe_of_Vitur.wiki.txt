@@ -1,0 +1,90 @@
+{{Deadman seasonal}}
+{{Infobox Item
+|defver = 2
+|version1 = Uncharged
+|version2 = Charged
+|name1 = Corrupted Scythe of Vitur (uncharged)
+|name2 = Corrupted Scythe of Vitur
+|image1 = [[File:Corrupted Scythe of Vitur (uncharged).png]]
+|image2 = [[File:Corrupted Scythe of Vitur.png]]
+|release = [[23 August]] [[2023]]
+|update = Deadman: Apocalypse - Friday 25th August
+|members = Yes
+|quest = No
+|tradeable1 = Yes
+|tradeable2 = No
+|equipable = Yes
+|stackable = No
+|noteable1 = Yes
+|noteable2 = No
+|options1 = Wield, Drop
+|options2 = Wield, Check, Uncharge, Drop
+|wornoptions = Check
+|examine1 = A powerful scythe. It is currently uncharged.
+|examine2 = A powerful scythe.
+|value = 250000
+|weight = 3.175
+|exchange1 = dmm
+|exchange2 = No
+|id1 = 28545
+|id2 = 28543
+}}
+{{Synced switch
+|version1 = [[File:Corrupted Scythe of Vitur (uncharged) detail.png|left|200px]]
+|version2 = [[File:Corrupted Scythe of Vitur detail.png|left|200px]]
+}}
+The '''Corrupted Scythe of Vitur''' is a melee weapon that requires level 60 [[Attack]] and 70 [[Strength]] to wield. Exclusive to [[Deadman Mode]] seasonals, it can be acquired by opening a [[trinket of advanced weaponry]] obtained from a [[Deadman:_Apocalypse#Breaches|breach]].
+
+As a corrupted variant of the [[scythe of Vitur]], it has 20% lower bonuses than the regular variant, but only requires [[blood rune]]s to charge (300 per 100 charges). It also does not count as a scythe of Vitur for the [[Back in My Day...]] [[combat achievement]].
+
+==Combat stats==
+{{Infobox Bonuses
+|version1 = Uncharged
+|version2 = Charged
+|astab1 = +40
+|astab2 = +56
+|aslash1 = +60
+|aslash2 = +88
+|acrush1 = +8
+|acrush2 = +24
+|amagic = -6
+|arange = 0
+|dstab = -2
+|dslash1 = +5
+|dslash2 = +7
+|dcrush1 = +0
+|dcrush2 = +8
+|dmagic = 0
+|drange = 0
+|str1 = +40
+|str2 = +60
+|rstr = 0
+|mdmg = 0
+|prayer = 0
+|slot = 2h
+|speed = 5
+|attackrange = 1
+|combatstyle = Scythe
+|image1 = [[File:Corrupted Scythe of Vitur (uncharged) equipped male.png|180px]]
+|image2 = [[File:Corrupted Scythe of Vitur equipped male.png|180px]]
+|altimage1 = [[File:Corrupted Scythe of Vitur (uncharged) equipped female.png|180px]]
+|altimage2 = [[File:Corrupted Scythe of Vitur equipped female.png|180px]]
+}}
+
+{{CombatStyles|Scythe|speed=5|attackrange=1}}
+
+==Item sources==
+{{Drop sources|Corrupted Scythe of Vitur (uncharged)}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 16 September 2026
+|update = Summer Sweep-Up Pet Improvements & More
+|change = The item was renamed from "Corrupted scythe of vitur" to "Corrupted Scythe of Vitur".
+}}
+{{Subject changes footer}}
+
+{{Deadman: Annihilation}}
+{{Deadman: Armageddon}}
+{{Deadman: Apocalypse}}

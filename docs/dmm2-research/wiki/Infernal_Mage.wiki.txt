@@ -1,0 +1,164 @@
+{{External|rs}}
+{{hasTask|Infernal Mages}}
+{{otheruses|the slayer monster|the superior variant|Malevolent Mage}}
+{{Infobox Monster
+|name = Infernal Mage
+|image = [[File:Infernal Mage.png|150px]]
+|release = [[26 January]] [[2005]]
+|update = Slayer Skill
+|members = Yes
+|combat = 66
+|size = 1
+|examine = An evil magic user.
+|xpbonus = 0
+|max hit = 8
+|aggressive = No
+|poisonous = No
+|attack style = [[Magic]]
+|attack speed = 4
+|respawn = 15
+|slaylvl = 45
+|slayxp = 60
+|cat = Infernal Mages
+|assignedby = vannaka, Mortimer
+|hitpoints = 60
+|att = 1
+|str = 1
+|def = 60
+|mage = 75
+|range = 1
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 40
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|poisonresistance = 0
+|venomresistance = 0
+|immunecannon = No
+|immunethrall = No
+|immuneburn = Immune to weak burns
+|id = 443,444,445,446,447
+}}
+[[File:Infernal Mage icon.png|left]]
+'''Infernal Mages''' are [[Slayer monsters]] that require 45 [[Slayer]] to kill. They are mainly hunted for their unique drops: the [[fire ruby]], and the rare [[Mystic boots (dark)|dark mystic boots]] and [[Mystic hat (dark)|hat]]. Players who plan on fighting them should be wary of their accurate magic attack, although [[Protect from Magic]] negates this completely.
+
+To reach the Infernal Mage area in the {{FloorNumber|uk=1|caps=n|nohelp=n}} of the [[Slayer Tower]], players can take the long way up the south-east stairs, which requires running past aggressive [[banshee]]s, so wearing [[earmuffs]] or a [[Slayer helmet]] is recommended if the player's combat level is below 47. Players with 18 [[Agility]] can avoid the banshees by using the [[Broken window (Slayer Tower)|broken window]] shortcut for quick access to the stairs.
+
+==Locations==
+{{LocTableHead}}
+{{LocLine
+|name = Infernal Mage
+|location = [[Slayer Tower]] ({{FloorNumber|uk=1}})
+|levels = 66
+|members = Yes
+|mapID = 0
+|plane = 1
+|x:3433,y:3556|x:3434,y:3563|x:3434,y:3570|x:3434,y:3575|x:3435,y:3559|x:3438,y:3555|x:3439,y:3569|x:3439,y:3575|x:3440,y:3564|x:3442,y:3556|x:3443,y:3560|x:3443,y:3572|x:3446,y:3569|x:3446,y:3575|x:3448,y:3573
+|mtype = pin
+|leagueRegion = Morytania
+}}
+{{LocTableBottom}}
+
+==Drops==
+{{DropLogProject|kills=31289}}
+
+{{Average drop value|mob=Infernal Mage}}
+
+===Pre-roll===
+{{DropsTableHead}}
+{{DropsLine|name=Lava battlestaff|quantity=1|rarity=1/1000}}
+{{DropsLine|name=Mystic boots (dark)|quantity=1|rarity=1/512|raritynotes={{NamedRef|Drop Rates V2}}}}
+{{DropsLine|name=Mystic hat (dark)|quantity=1|rarity=1/512|raritynotes={{CiteForum|author=Envision|url=https://reldo.runescape.wiki/i/108912|title=Drop Rates V2|postdate=22 April 2014|name=Drop Rates V2}}}}
+{{DropsTableBottom}}
+
+===100%===
+{{DropsTableHead}}
+{{DropsLine|name=Bones|quantity=1|rarity=Always}}
+{{DropsTableBottom}}
+
+===Staves===
+{{DropsTableHead}}
+{{DropsLine|name=Staff|quantity=1|rarity=8/128}}
+{{DropsLine|name=Staff of fire|quantity=1|rarity=1/128}}
+{{DropsTableBottom}}
+
+===Elemental runes===
+{{DropsTableHead}}
+{{DropsLine|name=Earth rune|quantity=10|rarity=6/128}}
+{{DropsLine|name=Fire rune|quantity=10|rarity=6/128}}
+{{DropsLine|name=Earth rune|quantity=36|rarity=4/128}}
+{{DropsLine|name=Air rune|quantity=10|rarity=3/128}}
+{{DropsLine|name=Water rune|quantity=10|rarity=3/128}}
+{{DropsLine|name=Air rune|quantity=18|rarity=2/128}}
+{{DropsLine|name=Water rune|quantity=18|rarity=2/128}}
+{{DropsLine|name=Earth rune|quantity=18|rarity=2/128}}
+{{DropsLine|name=Fire rune|quantity=18|rarity=2/128}}
+{{DropsTableBottom}}
+
+===Catalytic runes===
+{{DropsTableHead}}
+{{DropsLine|name=Mind rune|quantity=18|rarity=2/128}}
+{{DropsLine|name=Body rune|quantity=18|rarity=2/128}}
+{{DropsLine|name=Blood rune|quantity=4|rarity=2/128}}
+{{DropsLine|name=Death rune|quantity=7|rarity=18/128}}
+{{DropsTableBottom}}
+
+===Coins===
+''The overall chance of rolling a coin drop is 49/128 with an average value of {{Coins|4}}.''
+{{DropsTableHead}}
+{{DropsLine|name=Coins|quantity=1|rarity=21/128|gemw=No}}
+{{DropsLine|name=Coins|quantity=2|rarity=16/128|gemw=No}}
+{{DropsLine|name=Coins|quantity=4|rarity=9/128|gemw=No}}
+{{DropsLine|name=Coins|quantity=29|rarity=3/128|gemw=No}}
+{{DropsTableBottom}}
+
+===Nothing===
+{{DropsTableHead}}
+{{DropsLine|name=Nothing|quantity=1|rarity=16/128}}
+{{DropsTableBottom}}
+
+===Tertiary===
+{{DropsTableHead}}
+{{DropsLine|name=Fire ruby|quantity=1|rarity=1/64}}
+{{DropsTableBottom}}
+
+==Collection log==
+Infernal Mages have 3 [[collection log]] items.
+{{Sync}}
+{{Collection log list|cname1=Mystic boots (dark)|cname2=Mystic hat (dark)|cname3=Fire ruby}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 2 September 2026
+|update = Summer Sweep Up Miscellaneous
+|change = Infernal mages now drop the [[fire ruby]].
+}}
+{{Subject changes
+|date = 8 May 2024
+|update = Project Rebalance: Skilling & Poll 81 MTA Changes
+|change = Chaeldar no longer assigns players Infernal Mage tasks.
+}}
+{{Subject changes
+|change = Duradel no longer assigns players Infernal Mage tasks.
+|date = 10 September 2015
+|update = Slayer Assignment Rework
+}}
+{{Subject changes footer}}
+
+==Trivia==
+*Infernal Mages appear to be wielding a version of the [[Slayer's staff]], along with a set of green, decaying [[mystic robes]].
+* They appear to be casting [[Fire Blast]], however their max hit suggests they are actually casting [[Fire Strike]].
+
+==References==
+{{Reflist}}
+
+{{Slayer monsters}}

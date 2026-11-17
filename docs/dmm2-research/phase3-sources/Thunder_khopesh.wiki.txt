@@ -1,0 +1,102 @@
+{{Gone}}
+{{Otheruses|def=no|the weapon in Deadman: Annihilation|Thunder khopesh (Deadman Mode)}}
+{{Infobox Item
+|name = Thunder khopesh
+|image = [[File:Thunder khopesh.png]]
+|release = [[27 November]] [[2024]]
+|update = Leagues V: Raging Echoes OUT NOW!
+|removal = [[12 November]] [[2025]]
+|removalupdate = No
+|members = Yes
+|quest = No
+|tradeable = No
+|bankable = Yes
+|equipable = Yes
+|stackable = No
+|noteable = No
+|options = Wield, Drop
+|examine = A powerful Khopesh, imbued with the power of thunder and lightning.
+|value = 50000
+|weight = 1.360
+|id = 30388
+}}
+[[File:Thunder khopesh detail.png|130px|left]]
+The '''thunder khopesh''' was an unlock in the [[Grid Master]] [[community event]]. After the player builds a [[demonic throne]] in their [[player-owned house]], the player is given the thunder khopesh.
+
+[[File:Thunder khopesh - passive effect.webp|thumb|left|275x275px|The thunder khopesh's passive effect.]]
+It has a [[passive effect]] that grants standard, [[successful hit]]s a 20% chance to summon a delayed lightning bolt at the target's location, damaging enemies in a 3x3 area for up to 50% of the player's max hit. The lightning bolt will be summoned at the centre of the target's location at the time the effect was triggered.
+
+The lightning does not roll accuracy checks, but it is possible for enemies to move out of the effect between the attack triggering and the attack striking, causing them to avoid the damage entirely. No experience is gained from the damage dealt by the lightning bolts.
+
+It is a [[corpbane]] weapon, meaning it does full damage to the [[Corporeal Beast]].
+
+==Combat stats==
+{{Infobox Bonuses
+|astab = +65
+|aslash = +110
+|acrush = 0
+|amagic = 0
+|arange = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|drange = 0
+|str = +100
+|rstr = 0
+|mdmg = 0
+|prayer = 0
+|slot = weapon
+|speed = 4
+|attackrange = 1
+|combatstyle = Slash Sword
+|image = [[File:Thunder khopesh equipped male.png|180px]]
+|altimage = [[File:Thunder khopesh equipped female.png|180px]]
+}}
+
+{{CombatStyles|Slash Sword|speed=4|attackrange=1}}
+
+==Special attack==
+[[File:Lingering Lightning.webm|A player performing the thunder khopesh's special attack.|thumb|autoplay|loop|200px]]
+The thunder khopesh has a [[special attack]], ''Lingering Lightning'', which consumes 50% of the wielder's special attack energy. The special attack deals two hits in quick succession; if either of these is a [[successful hit]], an additional lightning bolt is summoned that deals damage up to 100% of the player's maximum hit. Aside from a guaranteed chance to trigger and a much higher max hit, the mechanics of the lightning bolt from the special attack are otherwise identical to the lightning bolt from the passive effect.
+
+==Past appearances==
+This item appeared in a previous [[temporary event]], with the following differences from its latest incarnation:
+*[[Raging Echoes League]]
+**The khopesh was dropped by the [[Echo King Black Dragon]] at a rate of 1/25.
+**The special attack had the same official description, but dealt much higher damage than described: the initial two hitsplats had a 50% increased maximum hit, and the subsequent lightning bolt dealt up to 225% of the player's maximum hit.
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 12 November 2025
+|change = The thunder khopesh was removed at the conclusion of [[Grid Master]].
+}}
+{{Subject changes
+|date = 15 October 2025
+|update = 
+|change = The thunder khopesh was re-added at the start of [[Grid Master]].
+}}
+{{Subject changes
+|date = 22 January 2025
+|update = Bank QoL & Mini Menu Improvements
+|change = The thunder khopesh was removed at the conclusion of [[Raging Echoes League]].
+}}
+{{Subject changes
+|date = 27 November 2024
+|update = Leagues V: Raging Echoes OUT NOW!
+|change = The thunder khopesh was added with the start of [[Raging Echoes League]].
+}}
+{{Subject changes footer}}
+
+==Gallery==
+<gallery mode="packed" heights="200" style="text-align:left">
+Raging Echoes League - echo gear concept art.png|Concept art of the Raging Echo equipment, by [[Mod Jerv]].
+Thunder khopesh equipped.gif|Animation of the equipped khopesh, by [[Mod Hend]].
+</gallery>
+
+==Trivia==
+* The passive lightning attacks still activate on [[Free-to-play]] servers.
+* The Thunder Khopesh is based on [[Vet'ion]]'s weapon.
+{{Grid Master}}
+{{Raging Echoes League}}

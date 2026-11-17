@@ -505,7 +505,7 @@ object DropViewer {
     fun bracketLine(player: Player, source: DropSources.Source): Triple<String, String, String> {
         val tier = AnnihilationTier.of(player)
         val boosted = source.kind in setOf(DropSources.Kind.NPC, DropSources.Kind.BREACH, DropSources.Kind.BARROWS)
-        val rate = tier.dropRate.let { if (it % 1.0 == 0.0) it.toInt().toString() else it.toString() }
+        val rate = sourceRate(player, source).let { if (it % 1.0 == 0.0) it.toInt().toString() else it.toString() }
         return Triple("Your bracket", tier.label, if (boosted) "·  ${rate}x on rare drops" else "·  no boost on this loot")
     }
 
@@ -687,7 +687,7 @@ object DropViewer {
     private fun drawRows(player: Player, source: DropSources.Source) {
         val world = player.world
         val i = INTERFACE
-        val view = DropSources.view(player, source)
+        val view = DropSources.view(player, source, sourceRate(player, source))
         // Always bar (p12 names on the parchment, the items in their own size, a note on a smaller second line - N307); when they
         // do not all fit, the bar points to the table's Always group.
         var x = ALWAYS_X
@@ -857,4 +857,11 @@ object DropViewer {
 
     /** The kill rate the viewer's "Your chance" uses (the roll's own). */
     fun rate(player: Player): Double = DropTableFactory.killRate(player)
+
+    /** The selected source has a known target; ordinary monsters must not borrow Fortuity's boss bonus. */
+    fun sourceRate(player: Player, source: DropSources.Source): Double = when (source.kind) {
+        DropSources.Kind.NPC -> DropTableFactory.killRate(player, npcId = source.tableNpc)
+        DropSources.Kind.BREACH, DropSources.Kind.GUARDIAN, DropSources.Kind.JAD -> DropTableFactory.killRate(player, npcId = source.modelNpc)
+        else -> rate(player)
+    }
 }

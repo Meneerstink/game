@@ -1,0 +1,14 @@
+DRY_RUN_ONLY kind=item upstream=[29599] targets=[C:\RSPS\work\gpt-a\build\dmm2\cache-plan\game\game\data/cache, C:\RSPS\work\gpt-a\build\dmm2\cache-plan/file-server/cache]
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[06:04:39.238 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS proven_free_holes=752 item_candidates=65100 safe_free=64348
+PLAN item 24634 'Corrupted dark bow' <- upstream_item:29599 bytes=79 models=[upstream_model:54205->65536, upstream_model:54213->65537, upstream_model:54212->65538]
+  OPCODES 1=65536 2="Corrupted dark bow" 4=2128 5=591 6=1034 7=0 8=0 12=0x0003d090 16=FLAG 23=65537 25=65538 36="Wield" 65=FLAG 97=24635 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {4=89, 13=6, 14=7, 23=60, 434=4, 436=50, 568=3, 1562=3, 1563=60, 1564=3}
+PLAN item 24635 'Corrupted dark bow (noted)' <- upstream_item:29600 bytes=7 models=[]
+  OPCODES 97=24634 98=799
+TRANSACTION tx-20261117-050448 applied=false finalized=0 recovered=0
