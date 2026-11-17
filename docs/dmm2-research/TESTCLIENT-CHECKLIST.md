@@ -234,7 +234,7 @@ Vervolgens A9 in de gewone opnieuw gestarte 78-client op live, inclusief minimap
 
 ## 13. Aanvulling fase 5 — concrete hertest van de botbevindingen
 
-Bronnen, gekozen adviezen en importgrenzen: `PHASE5-SUPPLEMENT.md`. De huidige echte ids blijven de eerste 143 mappings; geen PLAN-id gebruiken.
+Bronnen, gekozen adviezen en importgrenzen: `PHASE5-SUPPLEMENT.md`. Sinds fase6 geldt Claude's nieuwe bestand met151 mappings/163 bestandsregels (zie `PHASE6-WINDOWS.md`); de oorspronkelijke143 mappings blijven gelijk. Geen PLAN-id gebruiken.
 
 1. **Fire Altar.** `::tele 2578 4845 0` is onze bestaande Altar.FIRE-ingang; loop naar altaar2482. `::item 25016 1`, `::item 1727 1`, `::item 554 100`, `::setlvl runecrafting 21`. Gebruik ruby op altaar: rode amulet-enchant (visuele bron Creating amulet of fire.webp), geluid, drie ticks, één25018 en precies de drie ingrediënten verbruikt. Niet de rune-craft791/186 verwachten. Tweede oude klik maakt geen extra item.
 2. Alleen ruby of Runecrafting20: onmiddellijke receptgegevens; geen mislukte craftanimatie of mutatie. De melding is een feitelijk receptoverzicht, GEEN bewezen letterlijke OSRS-refusal. Boost terugvallen, runen verwijderen, lopen/logout/dood tijdens de drie ticks: geen gedeeltelijke kosten of dubbel resultaat. Geluid145/hoogte92 naast echte OSRS-craft vergelijken: gekozen advies, geen audio-/hoogtemeting.
@@ -243,3 +243,41 @@ Bronnen, gekozen adviezen en importgrenzen: `PHASE5-SUPPLEMENT.md`. De huidige e
 5. **Specials.** Herstel energie met `::restore`; klik de echte specialbalk in de client, controleer de ingeschakelde staat en val pas daarna een nieuw levend doelwit aan. Herhaal voor24958 voidwaker,24960 claws,24962 AGS,24976 corrupted dark bow en24978 corrupted Volatile. Controleer de ids vooraf in ids.tsv; het mappinggeneratorcommando uit blok0 is leidend. Kosten50/50/50/55/55%, hetzelfde aanvalstype als de basis, fysieke corrupted stats, geen kosten bij ongeldige aanval. Bot+`::spec` was ook voor gewone claws onbruikbaar en is geen special-aftekening.
 6. **Rest van de familie.** Gewone aanvallen met twisted bow, beide scythes, beide shadows, Volatile-bash/autocast, khopesh en de zestien skins. Scythe-specifieke8056 pas na echte extra mapping; normale Scythe-categoryaudio is gekozen advies en moet naast Vitur worden beluisterd. Shadowcast gebruikt de gedeelde gewone Shadow-presentatie; verschil versus de basis melden. Khopesh-special blijft pas beschikbaar na installatie van het echte appearance-contract; controleer dat hij zonder contract geen energie verbruikt.
 7. **UI-ronde na Claude's imports én adapters.** 230/232: quillfontgetallen0/10, alle tien items, deposit inventory/equipment, withdraw1/5/10/X/All, inventoryopties, skull/afstand/relog/dood, closing/replay. Reward Store: OMNISHOP819/806, bronrow929, zeven rewards, welkomst-/helptekst en prijzen naast `phase5-sources/reward-store.png`; alle buy/sellbackroutes op echte DP. Statische PLAN-successen zijn nog geen widget-/callback-PASS.
+
+## 14. Fase6: één ronde voor de werkelijke vensters
+
+Eerst nieuwe servercode mergen en de bestaande `OsrsInterfacePortTool dmm2-ui --reuse` opnieuw plannen/toepassen
+volgens `PHASE6-WINDOWS.md`. Verwacht componentaantallen230=41,232=31,819=193,806=83;
+de oude17/3/55/14 hebben de nieuwe widgets nog niet. Gebruik de actuele mappings, geen PLAN-ids.
+
+1. `::tele 3151 3513 0`, `::empty`, `::item 995 100`. **Geen skull.** Wizard15314 → Deposit-box:
+   Safe Deposit Box met0/10, tien vakken, inventory rechts. Deposit-1,5,10,X,All op coins:
+   één coin neemt één vak, maximumtien. Bij100 coins en volle box blijft90 in inventory.
+   Elfde coin kost niets. Withdraw-1/5/10/X/All: weer100 coins, geen restant in box.
+   Vijfmaal heen/terug, ook via Seer15315, steeds100 totaal.
+2. `::empty`, `::item 4151 1`, echte whip equippen. Open box, Deposit worn items: whip naar box,
+   speler verliest weapon-bonussen/look. Herhaal met een uitgerust ammo-stack van100: tien in box,
+   negentig blijven uitgerust, geen onterechte volledige unequip. Untradeable (`::item 772 1`) blijft buiten box.
+   Charge-item bewaren/opnemen: exact dezelfde charges. Tel equipment+inventory+box, niet alleen iconen.
+3. Box met whip, inventory vol met nonstackables: withdrawal weigert zonder itemverlies.
+   Depositing-X openen, **sluiten/heropenen**, antwoord10: oude prompt mag niets verplaatsen.
+   Herhaal met logout/login, wisselen van de stack, lopen buiten2tegels en skull na openen.
+   Skull is ook bij de Seer geblokkeerd; na verstrijken opnieuw openen.
+4. Sluit metX/Esc, open Bank/Collect en wissel naar Nigel. Geen achterblijvende side-overlay of bruikbare oude knop.
+   PvM/PvP/guard/alt-death met inhoud: box blijft veilig, geen effect vanuit opgeslagen Fortuity/Undead/Avarice,
+   geen kopie in graf/lootkey/Perdu. Relog bewaart box/charges en opent geen oude sessie.
+5. Nigel15316 **Trade**, daarna Talk-to → `I'd like to access the Reward Store.`: dezelfde winkel.
+   Welkomsttekst/zeven iconen/naam/prijs/scrollbars naast `phase5-sources/reward-store.png`.
+   Check aanklikken op kaartachtergrond én item/naam. Klikgeluid bij selecteren/bulkdeposit/koopknop:
+   bron2266 is bytegelijk met667 `INTERFACE_SELECT1`; geen dubbele cues.
+6. `::empty`, `::givepoints teamtest1 deadman 12000` (controleer bestaande commandusage; het commando voegt toe).
+   Select Armageddon weapon scroll → Buy1: DP12000 lager en één echte24996; gebruik de generator uitblok0
+   als de echte mapping verschilt. Inventory Select → Value12000DP → Sell1: precies hetzelfde saldo terug.
+   Rechtsklik Buy/Sell1/5/10/50 en de knoppen, ook notes; een geconsumeerde unlock is niet refundbaar.
+   Doe vijf rondes en herhaal voor alle zeven prijzen12000/6000/9000/3000/12000/15000/10000.
+7. Geen DP maar wel bloodmoney: geen aankoop. Volle inventory, gewijzigd item en refund bij maximaalDP:
+   geen gedeeltelijke debet/credit, geen verdwijnen/dupe. Sluit/heropen/relog/teleport/NPCdespawn/dood tussen
+   selecteren en knop: oude selectie doet niets. Tweede testaccount krijgt geen selectie of saldo van de eerste.
+8. Hele ronde Fixed, Resizable en Stretched; X/Esc herstelt normale inventory. Het huidige serverport gebruikt
+   desktop normal-view; optional expanded/mobile/hover branches staan expliciet als grens in PHASE6-WINDOWS.
+   Native PLAN en unitproeven zijn geen grafische of A9-aftekening.

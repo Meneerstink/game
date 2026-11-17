@@ -27,7 +27,7 @@ class Dmm2BootTests {
 
     @Test fun `published transaction mappings install starter rewards NPCs and exact cosmetic states`() {
         val parsed = Dmm2Ids.parse(File(directory, "ids.tsv").readLines())
-        assertEquals(143, parsed.size)
+        assertEquals(151, parsed.size)
         assertEquals(86, parsed.keys.count { it.startsWith("item:") })
         Dmm2Ids.install(emptyList()) // A prior lookup must not hide the subsequently published file.
         val store = boot()
@@ -36,7 +36,11 @@ class Dmm2BootTests {
         assertEquals(15314, Dmm2Ids.npc(6516))
         assertEquals(15315, Dmm2Ids.npc(6485))
         assertEquals(1203, Dmm2Ids.interfaceId(232))
-        assertNull(Dmm2Ids.interfaceId(230), "Unimported main window must stay unavailable")
+        assertEquals(1204, Dmm2Ids.interfaceId(230))
+        assertEquals(1205, Dmm2Ids.interfaceId(819))
+        assertEquals(1206, Dmm2Ids.interfaceId(806))
+        assertSame(Dmm2SafeDepositUi, Dmm2Interactions.safeUi)
+        assertSame(Dmm2RewardUi, Dmm2Interactions.rewardUi)
         assertNull(Dmm2Ids.ItemId.ANCIENT_DEADMAN_CAPE.local)
         val pack = assertNotNull(DeadmanStarterPack.ids)
         assertEquals(listOf(24954, 24955, 24956, 24957, 24953, 24950, 24951, 25014),

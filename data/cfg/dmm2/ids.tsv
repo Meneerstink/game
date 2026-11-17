@@ -152,3 +152,12 @@ spotanim	3569	3466
 spotanim	3570	3467
 spotanim	3571	3468
 spotanim	4020	3469
+# ui/av: dmm2_uiimport.sh apply 17-11
+interface	230	1204
+interface	819	1205
+interface	806	1206
+seq	721	17752
+seq	8056	17753
+seq	8057	17754
+spotanim	116	3470
+seq	679	17755
