@@ -69,12 +69,12 @@ object SafeDepositBox {
 
     /** UI230:11 is Deposit worn items, not a second inventory button (cache script1152). */
     fun depositWorn(player: Player, slot: Int, expectedId: Int, amount: Int): Transfer {
-        val result = depositFrom(player, player.equipment, slot, expectedId, amount)
+        val result = depositFrom(player, player.equipment, slot, expectedId, amount, worn = true)
         if (result.moved > 0 && player.equipment[slot] == null) EquipAction.onItemUnequip(player, expectedId, slot)
         return result
     }
 
-    private fun depositFrom(player: Player, inventory: ItemContainer, slot: Int, expectedId: Int, amount: Int): Transfer {
+    private fun depositFrom(player: Player, inventory: ItemContainer, slot: Int, expectedId: Int, amount: Int, worn: Boolean = false): Transfer {
         val access = accessStatus(player)
         if (access != Status.OK) return Transfer(access)
         if (amount <= 0) return Transfer(Status.INVALID_AMOUNT)
@@ -84,7 +84,7 @@ object SafeDepositBox {
         val base = item.toUnnoted(player.world.definitions).getDef(player.world.definitions)
         if (!base.tradeable || RemovedItems.isUnobtainable(base)) return Transfer(Status.UNTRADEABLE)
         // Bulk worn deposit must respect the same equipment locks as ordinary unequip (e.g. practice gear).
-        if (inventory === player.equipment && !player.world.plugins.canUnequipSlot(player, slot)) return Transfer(Status.UNAVAILABLE)
+        if (worn && !player.world.plugins.canUnequipSlot(player, slot)) return Transfer(Status.UNAVAILABLE)
         val box = container(player)
         val count = minOf(amount, item.amount, box.freeSlotCount)
         if (count == 0) return Transfer(Status.BOX_FULL)
