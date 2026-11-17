@@ -1,0 +1,92 @@
+[
+  {
+    "source": 34727,
+    "name": "Keyhole",
+    "examine": "Must be a way out of this weird, weird place.",
+    "options": [
+      "Use",
+      "Exit",
+      null,
+      null,
+      null
+    ],
+    "sourceFile": "Keyhole_(The_Mimic).wiki",
+    "sourceSha256": "c923af6543b9b2bd271aadfa476cbf03d21679076e55bbe64a54f8de8d10d208",
+    "revision": 15334464
+  },
+  {
+    "source": 34728,
+    "name": "Coins",
+    "examine": "Lovely money!",
+    "options": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "sourceFile": "Coins_(The_Mimic).wiki",
+    "sourceSha256": "40756b75acd53e8d2424dafb5e412433939d8bb29b93619a7295d12455b622cc",
+    "revision": 14914004
+  },
+  {
+    "source": 34729,
+    "name": "Sweets",
+    "examine": "That'll rot more than just your teeth.",
+    "options": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "sourceFile": "Sweets.wiki",
+    "sourceSha256": "5acc53af213164956595cf98a32673c4779cb18ebe1c3be4c3beda8869942a9f",
+    "revision": 15334486
+  },
+  {
+    "source": 34730,
+    "name": "Sweet",
+    "examine": "The wrapper isn't even suitable for recycling. How sad.",
+    "options": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "sourceFile": "Sweet.wiki",
+    "sourceSha256": "fdd11f2d06a71b20294927d81ad8336e6f5515c2c02c92e86f7876351969d4fe",
+    "revision": 15344088
+  },
+  {
+    "source": 34731,
+    "name": "Sweets",
+    "examine": "wheeeeee sugar rush hype",
+    "options": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "sourceFile": "Sweets.wiki",
+    "sourceSha256": "5acc53af213164956595cf98a32673c4779cb18ebe1c3be4c3beda8869942a9f",
+    "revision": 15334486
+  },
+  {
+    "source": 34732,
+    "name": "Amulet of Glory",
+    "examine": "Gosh, that's a big glory.",
+    "options": [
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "sourceFile": "Amulet_of_Glory_(scenery).wiki",
+    "sourceSha256": "0fbb81f17fc5b95d6c84e79f1dd1b4f493d299bfab4a4240f05852e7213cddd8",
+    "revision": 15330215
+  }
+]

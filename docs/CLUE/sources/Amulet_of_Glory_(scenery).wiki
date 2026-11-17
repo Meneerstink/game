@@ -1,0 +1,14 @@
+{{Infobox Scenery
+|name = Amulet of Glory
+|image = [[File:Amulet of Glory (scenery).png|250x250px]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|quest = No
+|location = [[The Mimic]]
+|options = None
+|examine = Gosh, that's a big glory.
+|map = {{Map|x=2710|y=4324|plane=1|mapID=-1|mtype=pin}}
+|id = 34732
+}}
+A large [[Amulet of glory (t)|trimmed '''amulet of glory''']] can be found inside the mimic chest when fighting [[The Mimic]].

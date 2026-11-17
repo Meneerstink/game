@@ -33,3 +33,5 @@ on_item_option(Items.MIMIC, "open") {
         }
     }
 }
+
+on_world_init { MimicArenaScenery.install(world) }

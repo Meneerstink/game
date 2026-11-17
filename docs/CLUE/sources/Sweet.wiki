@@ -1,0 +1,18 @@
+{{Otheruses|the scenery}}
+{{Infobox Scenery
+|name = Sweet
+|image = [[File:Sweet.png|250x250px]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|quest = No
+|location = Inside the [[Strange casket]]
+|options = None
+|examine = The wrapper isn't even suitable for recycling. How sad.
+|map = {{Map|x:2727,y:4317|x:2710,y:4314|plane=1|mapID=-1|mtype=pin}}
+|id = 34730
+}}
+
+'''Sweets''' are found inside the [[Strange casket]] in [[Watson's house]], where [[The Mimic]] is fought if the player is in the possession of a [[Mimic]].
+
+{{Decorative scenery}}

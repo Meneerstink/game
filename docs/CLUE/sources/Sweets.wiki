@@ -1,0 +1,22 @@
+{{Otheruses|the scenery|the item|Purple sweets}}
+{{Infobox Scenery
+|version1 = Two sweets
+|version2 = Three sweets
+|name = Sweets
+|image1 = [[File:Sweets.png|250x250px]]
+|image2 = [[File:Sweets (three).png|250x250px]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|quest = No
+|location = Inside the [[Strange casket]]
+|options = None
+|examine1 = wheeeeee sugar rush hype
+|examine2 = That'll rot more than just your teeth.
+|map1 = {{Map|x:2719,y:4324|plane=1|mapID=-1|mtype=pin}}
+|map2 = {{Map|x:2724,y:4324|plane=1|mapID=-1|mtype=pin}}
+|id1 = 34731
+|id2 = 34729
+}}
+
+'''Sweets''' are found inside the [[Strange casket]] in [[Watson's house]], where [[The Mimic]] is fought if the player is in the possession of a [[Mimic]].

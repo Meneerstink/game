@@ -1309,6 +1309,46 @@
       "file": "Dog.wiki",
       "sha256": "759a68641192b708c47d46a2d34541401e9c73c03b63af676837d759465345ed",
       "url": "https://oldschool.runescape.wiki/w/Dog"
+    },
+    {
+      "page": "Sweets",
+      "revision": 15334486,
+      "revision_time": "2026-09-08T08:37:04Z",
+      "file": "Sweets.wiki",
+      "sha256": "5acc53af213164956595cf98a32673c4779cb18ebe1c3be4c3beda8869942a9f",
+      "url": "https://oldschool.runescape.wiki/w/Sweets"
+    },
+    {
+      "page": "Sweet",
+      "revision": 15344088,
+      "revision_time": "2026-09-15T16:30:54Z",
+      "file": "Sweet.wiki",
+      "sha256": "fdd11f2d06a71b20294927d81ad8336e6f5515c2c02c92e86f7876351969d4fe",
+      "url": "https://oldschool.runescape.wiki/w/Sweet"
+    },
+    {
+      "page": "Keyhole (The Mimic)",
+      "revision": 15334464,
+      "revision_time": "2026-09-08T08:34:58Z",
+      "file": "Keyhole_(The_Mimic).wiki",
+      "sha256": "c923af6543b9b2bd271aadfa476cbf03d21679076e55bbe64a54f8de8d10d208",
+      "url": "https://oldschool.runescape.wiki/w/Keyhole_(The_Mimic)"
+    },
+    {
+      "page": "Amulet of Glory (scenery)",
+      "revision": 15330215,
+      "revision_time": "2026-09-03T19:14:18Z",
+      "file": "Amulet_of_Glory_(scenery).wiki",
+      "sha256": "0fbb81f17fc5b95d6c84e79f1dd1b4f493d299bfab4a4240f05852e7213cddd8",
+      "url": "https://oldschool.runescape.wiki/w/Amulet_of_Glory_(scenery)"
+    },
+    {
+      "page": "Coins (The Mimic)",
+      "revision": 14914004,
+      "revision_time": "2025-06-02T06:18:02Z",
+      "file": "Coins_(The_Mimic).wiki",
+      "sha256": "40756b75acd53e8d2424dafb5e412433939d8bb29b93619a7295d12455b622cc",
+      "url": "https://oldschool.runescape.wiki/w/Coins_(The_Mimic)"
     }
   ]
 }

@@ -40,9 +40,10 @@ object MimicEncounter {
     val assets by lazy {
         val obj = JsonParser().parse(File(RspsPaths.data("cfg/clue/mimic-encounter.json")).readText()).asJsonObject
         fun number(key: String) = obj[key]?.takeUnless { it.isJsonNull }
-        Assets(obj["arenaImported"].asBoolean, number("keyholeLocalId")?.asInt,
+        val scene=MimicArenaScenery.mapping
+        Assets(obj["arenaImported"].asBoolean && scene!=null, scene?.locals?.get(34727),
             number("candyAttackChance")?.asDouble, number("candyImpactDelayTicks")?.asInt, number("forwardStepChance")?.asDouble,
-            MimicCombat.ENCOUNTER_IMPLEMENTED, number("arenaRegionId")?.asInt)
+            MimicCombat.ENCOUNTER_IMPLEMENTED, scene?.region)
     }
 
     fun session(player: Player) = sessions[player]

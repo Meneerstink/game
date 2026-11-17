@@ -1,0 +1,15 @@
+{{Infobox Scenery
+|name = Keyhole
+|image = [[File:Keyhole (The Mimic).png|250x250px]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|quest = No
+|location = Inside the [[Strange casket]]
+|options = Use, Exit
+|examine = Must be a way out of this weird, weird place.
+|map = {{Map|name=Keyhole (The Mimic)|x:2719,y:4311|plane=1|mapID=-1|mtype=pin}}
+|id = 34727
+}}
+
+'''Keyhole''' is the light shining through the keyhole to the [[Strange casket]] as seen from the inside, and serves as the exit from the fight against [[The Mimic]].

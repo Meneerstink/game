@@ -1,0 +1,14 @@
+{{Infobox Scenery
+|name = Coins
+|image = [[File:Coins (The Mimic).png|250x250px]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|quest = No
+|location = Inside the [[Strange casket]]
+|options = None
+|examine = Lovely money!
+|map = {{Map|name=Coins (The Mimic)|x:2713,y:4324|x:2716,y:4324|x:2721,y:4324|x:2727,y:4324|x:2727,y:4321|x:2727,y:4318|x:2727,y:4314|x:2727,y:4311|x:2724,y:4311|x:2721,y:4311|x:2716,y:4311|x:2713,y:4311|x:2710,y:4311|x:2710,y:4315|x:2710,y:4318|x:2710,y:4321|plane=1|mapID=-1|mtype=pin|zoom=3}}
+|id = 34728
+}}
+'''Coins''' are [[scenery]] objects found in [[The Mimic]]'s lair inside the [[Strange casket]]. Players cannot interact with these coins, but they can [[examine]] them.
