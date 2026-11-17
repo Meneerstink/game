@@ -10,8 +10,8 @@ class TreasureTrailStepCatalogueTests {
     private val raw get() = File(RspsPaths.data("cfg/clue/steps.json")).readText()
     private val rows get() = TreasureTrailStepCatalogue.parse(raw).rows
 
-    @Test fun `all20emote scrolls show the source instruction without the Wiki editorial prefix`() {
-        assertEquals(20,rows.count { it.action==TreasureTrailStepCatalogue.Action.EMOTE })
+    @Test fun `all emote scrolls show the source instruction without the Wiki editorial prefix`() {
+        assertEquals(23,rows.count { it.action==TreasureTrailStepCatalogue.Action.EMOTE })
         assertTrue(rows.none { "The emote reveals" in it.hint })
         assertTrue(rows.filter { it.action==TreasureTrailStepCatalogue.Action.EMOTE }.all { it.hint==it.hint.trim() })
     }
