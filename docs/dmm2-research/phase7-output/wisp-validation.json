@@ -1,0 +1,19 @@
+{
+  "cache_files": 80,
+  "all_copy_bytes_unchanged": true,
+  "journal_entries": 0,
+  "native_plan_exit": 0,
+  "unit_tests": 4,
+  "creates": 98,
+  "physical_index_appends": 2,
+  "other_replaces": 0,
+  "conflicts": 0,
+  "meets_zero_replace_requirement": false,
+  "max_classic_fallback_error": 118.00418044677777,
+  "mean_classic_fallback_error": 5.332474469603481,
+  "planned_seq_only": 17773,
+  "source_seq": 10241,
+  "source_clip": "224:0",
+  "source_rig": 2138,
+  "output_sha256": "f27370e41ffe9b0c06c55e0e5b61826ddf07f062cb904fb344dac0f451e51586"
+}

@@ -818,11 +818,42 @@ object SkeletalBakeTool {
      * and every vertex of `a`, between `a`'s own skinned position and the position `b`'s blended matrix gives it. Each merged cluster then
      * takes the member motion that fits all its vertices best. The remaining error is measured on the classic replay and reported.
      */
+    /** Existing classic skin/base, frozen when adding an animation to an already imported NPC. */
+    data class FrozenLayout(val models: List<ByteArray>, val base: ByteArray)
+
+    data class FrozenGroups(val types: IntArray, val scale: IntArray, val rotate: IntArray, val translate: IntArray)
+
+    /** Only the layout emitted by bakeSet is accepted; never silently relabel an existing model. */
+    fun frozenGroups(base: ByteArray, clusters: Int): FrozenGroups {
+        val input = In(base)
+        val count = input.u8()
+        val types = IntArray(count) { input.u8() }
+        repeat(count) { input.u8() }
+        repeat(count) { input.u16() }
+        val sizes = IntArray(count) { input.u8() }
+        val labels = sizes.map { size -> List(size) { input.u8() } }
+        require(input.remaining == 0 && count > 0 && types[0] == 0 && labels[0].isEmpty()) { "Not a baked NPC base" }
+        val scale = IntArray(clusters) { -1 }
+        val rotate = IntArray(clusters) { -1 }
+        val translate = IntArray(clusters) { -1 }
+        for (i in 1 until count) {
+            require(labels[i].size == 1 && labels[i][0] in 0 until clusters) { "Invalid frozen cluster at group $i" }
+            val ci = labels[i][0]
+            val target = when (types[i]) { 3 -> scale; 2 -> rotate; 1 -> translate; else -> error("Unsupported frozen type ${types[i]}") }
+            require(target[ci] == -1) { "Duplicate frozen group for cluster $ci" }
+            target[ci] = i
+        }
+        require(rotate.all { it >= 0 } && translate.all { it >= 0 }) { "Missing frozen rotation/translation" }
+        require((0 until clusters).all { (scale[it] < 0 || scale[it] < rotate[it]) && rotate[it] < translate[it] })
+        return FrozenGroups(types, scale, rotate, translate)
+    }
+
     fun bakeSet(
         reader: ModernCacheReader,
         modelIds: List<Int>,
         osrsSeqs: List<Int>,
         localBase: Int,
+        frozen: FrozenLayout? = null,
     ): BakedSet {
         require(modelIds.isNotEmpty() && osrsSeqs.isNotEmpty())
         val seqs = osrsSeqs.map { id ->
@@ -834,7 +865,9 @@ object SkeletalBakeTool {
         val bones = skeletalBase(reader.file(INDEX_SKELETONS, skeleton, 0) ?: error("skeleton $skeleton missing")) ?: error("skeleton $skeleton has no bones")
         val raws = modelIds.map { m -> ModernModelDecoder.decode(reader.file(7, m, 0) ?: error("model $m missing"), flattenTextures = true) }
         val dropped = ArrayList<String>()
-        val labelled = modelIds.map { m -> Rev667ModelDecoder.decode(OsrsModelConversion.convert(reader, m, dropped)) }
+        require(frozen == null || frozen.models.size == modelIds.size)
+        val labelled = frozen?.models?.map { Rev667ModelDecoder.decode(it) }
+            ?: modelIds.map { m -> Rev667ModelDecoder.decode(OsrsModelConversion.convert(reader, m, dropped)) }
         raws.indices.forEach { i -> check(labelled[i].vertexCount == raws[i].vertexCount) { "model ${modelIds[i]} changed vertex count in conversion" } }
 
         // Every vertex of every model: (model index, vertex index).
@@ -883,8 +916,13 @@ object SkeletalBakeTool {
             return b.indices.sortedBy { b[it] }.joinToString(",") { "${b[it]}:${w[it]}" }
         }
         val groupsBySig = verts.groupBy { sig(it) }.values.map { it.toHashSet() }
-        val groups = groupsBySig.map { it.toMutableList() }.toMutableList()
-        val signatureClusters = groups.size
+        val groups = if (frozen == null) groupsBySig.map { it.toMutableList() }.toMutableList() else {
+            val byLabel = verts.groupBy { (mi, v) -> labelled[mi].vertexLabel!![v] }.toSortedMap()
+            require(byLabel.keys.toList() == (0 until byLabel.size).toList()) { "Non-contiguous frozen skin labels" }
+            byLabel.values.map { it.toMutableList() }.toMutableList()
+        }
+        val signatureClusters = groupsBySig.size
+        val fixed = frozen?.let { frozenGroups(it.base, groups.size) }
         // Motion of each cluster: its representative's blended matrix per frame.
         val motion = groups.map { g -> frameMats.map { mats -> blended(bonesOf(g[0]), weightsOf(g[0]), mats) } }.toMutableList()
         // Rest position of a vertex as the client holds it (upscaled), in the labelled model's space.
@@ -913,8 +951,8 @@ object SkeletalBakeTool {
         fun scales(mo: List<DoubleArray>) =
             mo.any { m -> (0..2).any { c -> Math.round(sqrt(m[c] * m[c] + m[4 + c] * m[4 + c] + m[8 + c] * m[8 + c]) * 128).toInt() != 128 } }
         fun groupCost(mo: List<DoubleArray>) = if (scales(mo)) 3 else 2
-        var budget = 1 + motion.sumOf { groupCost(it) }
-        if (budget > MAX_BASE_GROUPS) {
+        var budget = fixed?.types?.size ?: (1 + motion.sumOf { groupCost(it) })
+        if (fixed == null && budget > MAX_BASE_GROUPS) {
             val n0 = groups.size
             val costs = Array(n0) { a -> DoubleArray(n0) { b -> if (a == b) Double.MAX_VALUE else cost(a, b) } }
             val alive = BooleanArray(n0) { true }
@@ -982,7 +1020,7 @@ object SkeletalBakeTool {
         val rotateGroup = IntArray(groups.size)
         val translateGroup = IntArray(groups.size)
         groups.indices.forEach { ci ->
-            if (scales(motion[ci])) {
+            if (fixed?.scale?.get(ci)?.let { it >= 0 } ?: scales(motion[ci])) {
                 scaleGroup[ci] = typeList.size
                 typeList += 3
                 labels += listOf(ci)
@@ -997,6 +1035,10 @@ object SkeletalBakeTool {
         val n = typeList.size
         check(n == budget && n <= MAX_BASE_GROUPS)
         val types = typeList.toIntArray()
+        if (fixed != null) {
+            check(types.contentEquals(fixed.types) && scaleGroup.contentEquals(fixed.scale) &&
+                rotateGroup.contentEquals(fixed.rotate) && translateGroup.contentEquals(fixed.translate)) { "Frozen base order changed" }
+        }
         val base = ByteArrayOutputStream()
         base.write(n)
         types.forEach { base.write(it) }
@@ -1005,6 +1047,7 @@ object SkeletalBakeTool {
         labels.forEach { base.write(it.size) }
         labels.forEach { l -> l.forEach { base.write(it) } }
         val baseBytes = base.toByteArray()
+        if (frozen != null) check(baseBytes.contentEquals(frozen.base)) { "Frozen base bytes changed" }
 
         var maxErr = 0.0
         var sumErr = 0.0

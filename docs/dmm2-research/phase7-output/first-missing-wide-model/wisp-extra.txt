@@ -1,0 +1,3 @@
+Exception in thread "main" java.lang.IllegalStateException: Missing local model 66863
+	at gg.rsmod.game.tools.importer.OsrsPetImportTool.skeletalNpcExtraSeq(OsrsPetImportTool.kt:457)
+	at gg.rsmod.game.tools.importer.OsrsPetImportTool.main(OsrsPetImportTool.kt:1226)
