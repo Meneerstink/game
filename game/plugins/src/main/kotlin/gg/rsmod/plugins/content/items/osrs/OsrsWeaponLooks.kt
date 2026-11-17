@@ -268,6 +268,12 @@ object OsrsWeaponLooks {
     private val lateLooks: Map<Int, Look> by lazy {
         listOfNotNull(
             gg.rsmod.plugins.content.activity.cox.CoxIds.item(21003)?.let { it to Look(all(OsrsSeq.ELDER_MAUL_ATTACK), block = OsrsSeq.ELDER_MAUL_DEFEND) },
+            // Dinh's bulwark = OSRS 21015 (CoX): wiki 'Pummel' (Crush, the only attacking style) = HUMAN_DINHS_BULWARK_CRUSH 7507, block
+            // HUMAN_DINHS_BULWARK_BLOCK 7512 (gameval; _BASH 7511 = the 'Shield Bash' special). Mapping by name (wiki names no sequence).
+            gg.rsmod.plugins.content.activity.cox.CoxIds.item(21015)?.let { id ->
+                val crush = gg.rsmod.plugins.content.activity.cox.CoxIds.seq(7507) ?: return@let null
+                id to Look(all(crush), block = gg.rsmod.plugins.content.activity.cox.CoxIds.seq(7512))
+            },
         ).toMap()
     }
 
