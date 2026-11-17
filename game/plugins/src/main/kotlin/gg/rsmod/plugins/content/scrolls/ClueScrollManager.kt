@@ -182,7 +182,7 @@ class ClueScrollManager(
                 if (TreasureTrailMaps.read(player, step)) return@on_item_option
                 val mapInterfaceId = step.mapInterfaceId
                 if (mapInterfaceId != null) {
-                    player.openInterface(dest = InterfaceDestination.MAIN_SCREEN_FULL, interfaceId = mapInterfaceId)
+                    player.openInterface(dest = InterfaceDestination.MAIN_SCREEN, interfaceId = mapInterfaceId)
                 } else {
                     ClueInterfaces.text(player, step.hint)
                 }

@@ -11,7 +11,7 @@ ClueNpcs.local(306)?.let { guide ->
 on_world_init {
     world.plugins.bindNpcOverride { player, npc, option -> TreasureTrailPuzzleDialogue.talk(player, npc, option) }
 }
-TreasureTrailPuzzleBoxes.sources.forEach { source ->
+TreasureTrailPuzzleBoxes.hardSources.forEach { source ->
     ClueItems.local(source.item)?.let { id ->
         on_item_option(id, "open") { TreasureTrailPuzzleBoxes.open(player, player.getInteractingItem()) }
     }

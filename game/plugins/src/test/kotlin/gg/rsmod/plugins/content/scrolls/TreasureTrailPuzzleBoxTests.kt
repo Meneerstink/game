@@ -134,6 +134,7 @@ class TreasureTrailPuzzleBoxTests {
         mockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
         every { p.openInterface(any<Int>(), any<InterfaceDestination>(), any<Boolean>()) } just Runs
         assertTrue(TreasureTrailPuzzleBoxes.open(p, box))
+        verify { p.openInterface(701, InterfaceDestination.MAIN_SCREEN, false) }
         val session = assertNotNull(TreasureTrailPuzzleBoxes.session(p))
         val source = com.google.gson.JsonParser().parse(java.io.File(gg.rsmod.game.RspsPaths.data("../docs/CLUE/cache/interfaces.json")).readText())
             .asJsonObject["306"].asJsonObject
@@ -152,6 +153,39 @@ class TreasureTrailPuzzleBoxTests {
         val before = session.board.encode()
         assertFalse(TreasureTrailPuzzleBoxes.click(p, 0))
         assertEquals(before, session.board.encode())
+    }
+
+    @Test fun `all hard box pictures match the pinned Wiki including the formerly unbound castle box`() {
+        val wiki = java.io.File(gg.rsmod.game.RspsPaths.data("../docs/CLUE/sources/Puzzle_box.wiki")).readText()
+        for (picture in 1..3) {
+            val line = wiki.lineSequence().single { it.startsWith("|id$picture =") }
+            val ids = line.substringAfter('=').split(',').map { it.trim().toInt() }.toSet()
+            assertEquals(ids, TreasureTrailPuzzleBoxes.hardSources.filter { it.picture == picture }.map { it.item }.toSet())
+        }
+    }
+
+    @Test fun `a loose castle box opens on the visible pane but cannot complete or transfer a clue`() {
+        val p = account(); val other = account()
+        p.inventory[0] = null
+        val box = Item(assertNotNull(ClueItems.local(2795)))
+        p.inventory[1] = box
+        mockkObject(ClueInterfaces)
+        every { ClueInterfaces.of(306) } returns 701
+        mockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
+        every { p.openInterface(any<Int>(), any<InterfaceDestination>(), any<Boolean>()) } just Runs
+        assertTrue(TreasureTrailPuzzleBoxes.open(p, box))
+        verify { p.openInterface(701, InterfaceDestination.MAIN_SCREEN, false) }
+        val session = assertNotNull(TreasureTrailPuzzleBoxes.session(p))
+        assertNull(session.contract); assertEquals(1, session.source.picture)
+        val blank = session.board.tiles().indexOf(0)
+        val cell = (0..24).first { kotlin.math.abs(it / 5 - blank / 5) + kotlin.math.abs(it % 5 - blank % 5) == 1 }
+        assertFalse(TreasureTrailPuzzleBoxes.move(other, session, cell))
+        assertTrue(TreasureTrailPuzzleBoxes.move(p, session, cell))
+        assertFalse(TreasureTrailPuzzleBoxes.handIn(p, steps.first(), box))
+        p.inventory[1] = Item(box)
+        assertFalse(TreasureTrailPuzzleBoxes.move(p, session, blank))
+        TreasureTrailPuzzleBoxes.close(p)
+        assertNull(box.getAttr(ItemAttribute.CLUE_TASK_COMPLETE))
     }
 
     @Test fun `each issuer keeps the clue and gives its own box once with independent accounts`() {

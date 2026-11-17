@@ -32,7 +32,7 @@ object TreasureTrailMaps {
             player.message("This clue scroll is temporarily unavailable.")
             return true
         }
-        player.openInterface(local, InterfaceDestination.MAIN_SCREEN_FULL)
+        player.openInterface(local, InterfaceDestination.MAIN_SCREEN)
         player.setInterfaceEvents(local, map.close, -1..-1, 0x2)
         return true
     }

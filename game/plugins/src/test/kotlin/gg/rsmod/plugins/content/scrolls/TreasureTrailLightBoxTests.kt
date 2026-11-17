@@ -10,6 +10,8 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.item.ItemAttribute
 import io.mockk.*
+import gg.rsmod.plugins.api.InterfaceDestination
+import gg.rsmod.plugins.api.ext.openInterface
 import kotlin.random.Random
 import kotlin.test.*
 
@@ -48,6 +50,30 @@ class TreasureTrailLightBoxTests {
         (0..7).filter { combination and (1 shl it) != 0 }.forEach(candidate::toggle)
         candidate.solved
     }
+    @Test fun `a loose light box opens without a clue and cannot write completion or cross accounts`() {
+        val (p, step) = account(); val (other, _) = account()
+        p.inventory[0] = null
+        every { ClueScrollManager.activeStep(p, any()) } returns null
+        val box = Item(30501)
+        p.inventory[1] = box
+        mockkObject(TreasureTrailLightBoxes)
+        every { TreasureTrailLightBoxes.iface() } returns 701
+        every { TreasureTrailLightBoxes.control() } returns 2411
+        mockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
+        every { p.openInterface(any<Int>(), any<InterfaceDestination>(), any<Boolean>()) } just Runs
+        assertTrue(TreasureTrailLightBoxes.open(p, box))
+        verify { p.openInterface(701, InterfaceDestination.MAIN_SCREEN, false) }
+        val session = assertNotNull(TreasureTrailLightBoxes.session(p))
+        assertNull(session.contract)
+        assertFalse(TreasureTrailLightBoxes.toggle(other, session, 0))
+        assertTrue(TreasureTrailLightBoxes.toggle(p, session, 0))
+        assertNull(box.getAttr(ItemAttribute.CLUE_TASK_COMPLETE))
+        assertNull(box.getAttr(ItemAttribute.CLUE_LIGHT_BITS))
+        assertFalse(TreasureTrailLightBoxes.handIn(p, step, box))
+        p.inventory[1] = null; p.bank[0] = box
+        assertFalse(TreasureTrailLightBoxes.toggle(p, session, 0))
+    }
+
     @Test fun `source eight-switch boards always have a solution among all 256 positions`() {
         repeat(100) { seed ->
             val board = TreasureTrailLightPuzzle.create(Random(seed))

@@ -41,7 +41,7 @@ class TreasureTrailMapsTests {
             val local = map.group+1000
             every { ClueInterfaces.of(map.group) } returns local
             assertTrue(TreasureTrailMaps.read(player, TreasureTrailSourceStep(row)))
-            verify { player.openInterface(local, InterfaceDestination.MAIN_SCREEN_FULL, false) }
+            verify { player.openInterface(local, InterfaceDestination.MAIN_SCREEN, false) }
             verify { player.write(IfSetEventsMessage((local shl 16) or map.close, -1, -1, 0x2)) }
         }
         verify(exactly=0) { ClueInterfaces.text(any(), any()) }

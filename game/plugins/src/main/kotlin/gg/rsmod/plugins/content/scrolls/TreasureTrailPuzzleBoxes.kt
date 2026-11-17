@@ -20,13 +20,22 @@ object TreasureTrailPuzzleBoxes {
     )
     val masterSources = listOf(Source("master", 20280, 4), Source("master", 20281, 5),
         Source("master", 20282, 6), Source("master", 23417, 9))
+    // Puzzle_box.wiki id1/id2/id3: Open belongs to the item, including a
+    // drop-tricked leftover or a box whose issuing step is outside our selection.
+    val hardSources = listOf(
+        1 to listOf(2795, 2798, 2800, 12579, 12588, 19891, 19911, 23171),
+        2 to listOf(3565, 3567, 3578, 12582, 19887, 23173),
+        3 to listOf(3569, 3571, 3576, 12585, 19895, 19897, 19903),
+    ).flatMap { (picture, items) -> items.map { Source("standalone", it, picture) } }
     val pictures = listOf(1, 2, 3, 4, 5, 6, 9)
     const val CLICK_FIRST = 6
     const val CLOSE = 5
     const val MODEL_FIRST = 31
     const val STRIDE = 50
-    class Session(val contract: ClueStepContract, val box: Item, val source: Source, val board: TreasureTrailSlidingPuzzle) {
-        fun valid(player: Player): Boolean = contract.valid(player) && player.inventory.any { it === box }
+    class Session(val contract: ClueStepContract?, val box: Item, val source: Source, val board: TreasureTrailSlidingPuzzle,
+                  private val viewer: Player? = null) {
+        fun valid(player: Player): Boolean = (contract?.valid(player) ?: (player === viewer && !player.isDead())) &&
+            player.inventory.any { it === box }
     }
     private val sessions = HashMap<Player, Session>()
     fun session(player: Player): Session? = sessions[player]
@@ -35,7 +44,7 @@ object TreasureTrailPuzzleBoxes {
             ?: if (TreasureTrailMasterPuzzles.supports(step.source) && item != null)
                 masterSources.singleOrNull { ClueItems.local(it.item) == item } else null
     fun tier(item: Int): ClueScrollTier? = when {
-        sources.any { ClueItems.local(it.item) == item } -> ClueScrollTier.HARD
+        hardSources.any { ClueItems.local(it.item) == item } -> ClueScrollTier.HARD
         masterSources.any { ClueItems.local(it.item) == item } || ClueItems.local(20355) == item -> ClueScrollTier.MASTER
         else -> null
     }
@@ -85,15 +94,18 @@ object TreasureTrailPuzzleBoxes {
     }
 
     fun open(player: Player, box: Item): Boolean {
+        if (player.isDead() || player.inventory.none { it === box }) return false
         val step = listOf(ClueScrollTier.HARD, ClueScrollTier.MASTER).mapNotNull {
             ClueScrollManager.activeStep(player, it) as? TreasureTrailSourceStep
-        }.firstOrNull { source(it, box.id) != null } ?: return false
+        }.firstOrNull { source(it, box.id) != null }
+        val source = (hardSources + masterSources).firstOrNull { ClueItems.local(it.item) == box.id } ?: return false
         val iface = ClueInterfaces.of(306) ?: return false
         if (player.interfaces.isVisible(iface)) close(player)
-        val session = start(player, step, box) ?: return false
+        val session = if (step != null) start(player, step, box) ?: return false else
+            Session(null, box, source, TreasureTrailSlidingPuzzle.create(Random.Default), player)
         // An old interface's close callback must not discard the newly installed board.
         sessions.remove(player)
-        player.openInterface(iface, InterfaceDestination.MAIN_SCREEN_FULL)
+        player.openInterface(iface, InterfaceDestination.MAIN_SCREEN)
         sessions[player] = session
         player.setInterfaceEvents(iface, CLOSE, -1..-1, 0x2)
         repeat(25) { player.setInterfaceEvents(iface, CLICK_FIRST + it, -1..-1, 0x2) }
@@ -103,8 +115,10 @@ object TreasureTrailPuzzleBoxes {
 
     fun move(player: Player, session: Session, cell: Int): Boolean {
         if (sessions[player] !== session || !session.valid(player) || !session.board.move(cell)) return false
-        session.box.removeAttr(ItemAttribute.CLUE_TASK_COMPLETE)
-        player.inventory.dirty = true
+        if (session.contract != null) {
+            session.box.removeAttr(ItemAttribute.CLUE_TASK_COMPLETE)
+            player.inventory.dirty = true
+        }
         return true
     }
 
@@ -135,7 +149,7 @@ object TreasureTrailPuzzleBoxes {
     /** Solving never advances a clue. Close records the result, then the issuing NPC must receive it. */
     fun close(player: Player) {
         sessions.remove(player)?.let { session ->
-            if (session.valid(player) && session.board.solved) {
+            if (session.contract != null && session.valid(player) && session.board.solved) {
                 session.box.putAttr(ItemAttribute.CLUE_TASK_COMPLETE, 1)
                 player.inventory.dirty = true
             }

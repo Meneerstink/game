@@ -32,8 +32,10 @@ object TreasureTrailLightBoxes {
     private val MASKS = listOf(ItemAttribute.CLUE_LIGHT_A, ItemAttribute.CLUE_LIGHT_B,
         ItemAttribute.CLUE_LIGHT_C, ItemAttribute.CLUE_LIGHT_D, ItemAttribute.CLUE_LIGHT_E,
         ItemAttribute.CLUE_LIGHT_F, ItemAttribute.CLUE_LIGHT_G, ItemAttribute.CLUE_LIGHT_H)
-    class Session(val contract: ClueStepContract, val box: Item, val board: TreasureTrailLightPuzzle) {
-        fun valid(player: Player): Boolean = contract.valid(player) && player.inventory.any { it === box }
+    class Session(val contract: ClueStepContract?, val box: Item, val board: TreasureTrailLightPuzzle,
+                  private val viewer: Player? = null) {
+        fun valid(player: Player): Boolean = (contract?.valid(player) ?: (player === viewer && !player.isDead())) &&
+            player.inventory.any { it === box }
     }
     private val sessions = HashMap<Player, Session>()
     fun session(player: Player): Session? = sessions[player]
@@ -79,12 +81,15 @@ object TreasureTrailLightBoxes {
         return Session(contract, box, board).also { sessions[player] = it }
     }
     fun open(player: Player, box: Item): Boolean {
+        if (box.id != ClueItems.local(SOURCE_ITEM) || player.isDead() || player.inventory.none { it === box }) return false
         val iface = iface() ?: return false
-        val step = ClueScrollManager.activeStep(player, ClueScrollTier.MASTER) as? TreasureTrailSourceStep ?: return false
-        val session = start(player, step, box) ?: return false
+        val step = (ClueScrollManager.activeStep(player, ClueScrollTier.MASTER) as? TreasureTrailSourceStep)
+            ?.takeIf { supports(it.source) }
+        val session = if (step != null) start(player, step, box) ?: return false else
+            Session(null, box, restore(box) ?: TreasureTrailLightPuzzle.create(Random.Default), player)
         // Closing an old modal must not discard the newly installed session.
         sessions.remove(player)
-        player.openInterface(iface, InterfaceDestination.MAIN_SCREEN_FULL)
+        player.openInterface(iface, InterfaceDestination.MAIN_SCREEN)
         sessions[player] = session
         player.setInterfaceEvents(iface, CLOSE, -1..-1, 0x2)
         buttons.forEach { player.setInterfaceEvents(iface, it, -1..-1, 0x2) }
@@ -93,8 +98,10 @@ object TreasureTrailLightBoxes {
     }
     fun toggle(player: Player, session: Session, button: Int): Boolean {
         if (sessions[player] !== session || !session.valid(player) || !session.board.toggle(button)) return false
-        write(session.box, session.board)
-        player.inventory.dirty = true
+        if (session.contract != null) {
+            write(session.box, session.board)
+            player.inventory.dirty = true
+        }
         return true
     }
     fun click(player: Player, component: Int): Boolean {
