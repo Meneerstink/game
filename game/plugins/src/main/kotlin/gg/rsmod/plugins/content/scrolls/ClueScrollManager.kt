@@ -44,6 +44,9 @@ class ClueScrollManager(
         private val steps: Map<ClueScrollTier, MutableList<ClueStep>> =
             ClueScrollTier.values().toList().associateWith { mutableListOf<ClueStep>() }
 
+        /** Snapshot for the ADMIN cluestep client-verification command; never adds an unavailable source row. */
+        fun registeredSteps(tier: ClueScrollTier): List<ClueStep> = steps.getValue(tier).toList()
+
         fun registerStep(step: ClueStep) {
             check(steps.getValue(step.tier).none { it.persistenceId == step.persistenceId }) { "Duplicate clue step key: ${step.tier} ${step.hint}" }
             steps.getValue(step.tier).add(step)
