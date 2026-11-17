@@ -60,9 +60,9 @@ def main():
         test=ROOT/'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/scrolls'
         libraries=[main/(name+'.kt') for name in ['ClueGuardianProfiles','TreasureTrailDigGuards','TreasureTrailGuardians',
                     'TreasureTrailHotCold','TreasureTrailHotColdDialogue','TreasureTrailWizards','TreasureTrailAgents',
-                    'ClueScrollManager','ClueGuardianDrops','ClueGuardianCombat','ClueCombatAssets']]
+                    'ClueScrollManager','ClueGuardianDrops','ClueGuardianCombat','ClueCombatAssets','TreasureTrailChallenges']]
         libraries += [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/skills/slayer/Krystilia.kt']
-        cohorts=['TreasureTrailDigGuardTests','TreasureTrailGuardianTests','TreasureTrailHotColdTests','TreasureTrailWizardTests','ClueGuardianCombatTests']
+        cohorts=['TreasureTrailDigGuardTests','TreasureTrailGuardianTests','TreasureTrailHotColdTests','TreasureTrailWizardTests','ClueGuardianCombatTests','TreasureTrailChallengeTests']
         tests=[test/(name+'.kt') for name in cohorts]
         inputs=libraries+tests+[ROOT/'data/cfg/clue/hotcold.json',ROOT/'data/cfg/clue/guardians.json']
         names=['gg.rsmod.plugins.content.scrolls.'+name for name in cohorts]

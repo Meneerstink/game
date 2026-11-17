@@ -1,41 +1,7 @@
 package gg.rsmod.plugins.content.scrolls
 
 import kotlin.math.abs
-import kotlin.math.max
 import kotlin.random.Random
-
-/** Rules from the pinned Strange device / Hot Cold Intro Wiki sources. */
-object TreasureTrailHotCold {
-    enum class Temperature(val message: String) {
-        ICE_COLD("The Device is Ice Cold"), VERY_COLD("The Device is Very Cold"),
-        COLD("The Device is Cold"), WARM("The Device is Warm"), HOT("The Device is Hot"),
-        VERY_HOT("The Device is Very Hot"), INCREDIBLY_HOT("The Device is Incredibly Hot"),
-        SHAKING("The Device is Visibly Shaking"),
-    }
-
-    fun distance(x: Int, z: Int, targetX: Int, targetZ: Int): Long =
-        max(abs(x.toLong() - targetX), abs(z.toLong() - targetZ))
-
-    fun temperature(distance: Long): Temperature {
-        require(distance >= 0)
-        return when {
-            distance >= 500 -> Temperature.ICE_COLD
-            distance >= 200 -> Temperature.VERY_COLD
-            distance >= 150 -> Temperature.COLD
-            distance >= 100 -> Temperature.WARM
-            distance >= 70 -> Temperature.HOT
-            distance >= 30 -> Temperature.VERY_HOT
-            distance >= 4 -> Temperature.INCREDIBLY_HOT
-            else -> Temperature.SHAKING
-        }
-    }
-
-    // Wiki Hot Cold Intro: a 9x9 dig area; the 0..3 shaking threshold is narrower.
-    fun canDig(x: Int, z: Int, plane: Int, targetX: Int, targetZ: Int, targetPlane: Int): Boolean =
-        plane == targetPlane && distance(x, z, targetX, targetZ) <= 4
-
-    fun feelDamage(random: Random): Int = random.nextInt(3, 9)
-}
 
 /**
  * The 5x5 sliding board. Tile numbers are internal image indices; zero is the

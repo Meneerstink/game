@@ -18,7 +18,7 @@ import kotlin.random.Random
 /** Master only. Coordinates come from cache DB rows; the Wiki pins their guardian types. */
 class TreasureTrailHotCold(val targets: List<Target>) {
     data class Target(val id: Int, val centre: Tile, val radius: Int, val guards: List<Int>) {
-        fun distance(tile: Tile): Int = max(abs(tile.x - centre.x), abs(tile.z - centre.z))
+        fun distance(tile: Tile): Int = distance(tile.x,tile.z,centre.x,centre.z).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
         fun at(tile: Tile): Boolean = tile.height == centre.height && distance(tile) <= radius
     }
     data class Offer(val contract: ClueStepContract, val target: Target)
@@ -78,7 +78,7 @@ class TreasureTrailHotCold(val targets: List<Target>) {
         }
         offer.contract.scroll.putAttr(ItemAttribute.CLUE_TASK_COMPLETE, distance + 1)
         player.inventory.dirty = true
-        return Reading("The device is ${temperature(distance)}$change",random.nextInt(3,9)).also {
+        return Reading("The device is ${temperature(distance)}$change",feelDamage(random)).also {
             player.message(it.text)
             player.hit(it.damage)
         }
@@ -92,15 +92,25 @@ class TreasureTrailHotCold(val targets: List<Target>) {
 
     companion object {
         val current by lazy { parse(File(RspsPaths.data("cfg/clue/hotcold.json")).readText()) }
-        fun temperature(distance: Int): String = when {
-            distance >= 500 -> "ice cold"
-            distance >= 200 -> "very cold"
-            distance >= 150 -> "cold"
-            distance >= 100 -> "warm"
-            distance >= 70 -> "hot"
-            distance >= 30 -> "very hot"
-            distance >= 5 -> "incredibly hot"
-            else -> "visibly shaking"
+        fun distance(x: Int,z: Int,targetX: Int,targetZ: Int): Long =
+            max(abs(x.toLong()-targetX),abs(z.toLong()-targetZ))
+        fun canDig(x: Int,z: Int,plane: Int,targetX: Int,targetZ: Int,targetPlane: Int): Boolean =
+            plane==targetPlane && distance(x,z,targetX,targetZ)<=4
+        fun feelDamage(random: Random): Int = random.nextInt(3,9)
+        fun temperature(distance: Int): String = temperature(distance.toLong())
+        /** Master-specific Wiki guide:9x9, visibly shaking at Chebyshev distance0..4. */
+        fun temperature(distance: Long): String {
+            require(distance>=0)
+            return when {
+                distance >= 500 -> "ice cold"
+                distance >= 200 -> "very cold"
+                distance >= 150 -> "cold"
+                distance >= 100 -> "warm"
+                distance >= 70 -> "hot"
+                distance >= 30 -> "very hot"
+                distance >= 5 -> "incredibly hot"
+                else -> "visibly shaking"
+            }
         }
         fun parse(text: String): TreasureTrailHotCold = TreasureTrailHotCold(JsonParser().parse(text).asJsonObject["targets"].asJsonArray.map {
             val row=it.asJsonObject; val p=row["centre"].asJsonArray

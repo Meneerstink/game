@@ -5,8 +5,8 @@ import kotlin.test.*
 
 class TreasureTrailChallengeTests {
     @Test fun `hot cold uses every sourced boundary and a nine by nine dig area`() {
-        val temperatures = TreasureTrailHotCold.Temperature.values().reversed()
-        val ranges = listOf(0L..3L, 4L..29L, 30L..69L, 70L..99L, 100L..149L, 150L..199L, 200L..499L, 500L..10_000L)
+        val temperatures = listOf("visibly shaking","incredibly hot","very hot","hot","warm","cold","very cold","ice cold")
+        val ranges = listOf(0L..4L, 5L..29L, 30L..69L, 70L..99L, 100L..149L, 150L..199L, 200L..499L, 500L..10_000L)
         ranges.forEachIndexed { index, range ->
             assertEquals(temperatures[index], TreasureTrailHotCold.temperature(range.first))
             assertEquals(temperatures[index], TreasureTrailHotCold.temperature(range.last))
