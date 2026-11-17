@@ -45,6 +45,33 @@ object Dmm2Boot {
                 skins += NigelRewardStore.Skin(NigelRewardStore.Reward.CAPE_FABRIC, baseAncient, ancient)
             NigelRewardStore.install(NigelRewardStore.Contract(rewards, skins, Dmm2Ids.item(33122)))
         }
+        ThunderKhopesh.appearance = khopeshAppearance()
         ThunderKhopesh.register()
+    }
+
+    /**
+     * DMM2 fase 7 (Claude 17-11, testclient: 4 treffers zonder bliksem - appearance was never set, so passive, special and the chest
+     * entry were silently off). Every asset is an applied cache-2686 import (ids.tsv): seq HUMAN_SPECIAL_KHOPESH 11812, spotanims
+     * FX_KHOPESH_SPECIAL 3030, FX_KHOPESH_LIGHTNING_BASIC 3032 (passive) and FX_KHOPESH_LIGHTNING_SPECIAL 3033 (special/PvP bolts)
+     * (RuneLite gameval names). Missing any of them keeps the weapon's extras off, as before.
+     * ONZEKER (no OSRS timing source yet, phase-3 advice): the bolt lands with the melee hit (delay 1); measure in an OSRS video.
+     */
+    private fun khopeshAppearance(): ThunderKhopesh.Appearance? {
+        val specialSeq = Dmm2Ids.seq(11812) ?: return null
+        val specialGfx = Dmm2Ids.spot(3030) ?: return null
+        val basic = Dmm2Ids.spot(3032) ?: return null
+        val specialBolt = Dmm2Ids.spot(3033) ?: return null
+        return object : ThunderKhopesh.Appearance {
+            override val passiveDelay = ThunderKhopesh.STANDARD_MELEE_DELAY
+            override val pvmHitDelays = listOf(ThunderKhopesh.STANDARD_MELEE_DELAY, ThunderKhopesh.STANDARD_MELEE_DELAY)
+            override fun swing(player: gg.rsmod.game.model.entity.Player, special: Boolean) {
+                if (!special) return // ordinary swings keep the sword animation from CorruptedWeapons
+                player.animate(specialSeq)
+                player.graphic(specialGfx)
+            }
+            override fun bolt(player: gg.rsmod.game.model.entity.Player, tile: gg.rsmod.game.model.Tile, special: Boolean) {
+                player.world.spawn(gg.rsmod.game.model.TileGraphic(tile, if (special) specialBolt else basic, 0))
+            }
+        }
     }
 }

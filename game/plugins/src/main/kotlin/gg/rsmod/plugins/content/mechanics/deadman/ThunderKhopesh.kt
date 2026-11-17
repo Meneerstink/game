@@ -26,7 +26,8 @@ object ThunderKhopesh {
         /** Override after OSRS measurement; null explicitly disables the PvP special before energy is spent. */
         val pvpInitialDelay: Int? get() = STANDARD_MELEE_DELAY
         fun swing(player: Player, special: Boolean)
-        fun bolt(player: Player, tile: Tile)
+        /** [special]: the special/PvP bolt (FX_KHOPESH_LIGHTNING_SPECIAL) instead of the passive one (_BASIC). */
+        fun bolt(player: Player, tile: Tile, special: Boolean)
     }
     @Volatile var appearance: Appearance? = null
     fun withinBolt(tile: Tile, target: Tile, size: Int = 1): Boolean = tile.height == target.height &&
@@ -36,7 +37,7 @@ object ThunderKhopesh {
         if (!Dmm2Ids.ItemId.KHOPESH.matches(player.equipment[3]?.id) || !landed || player.world.randomDouble() >= 0.2) return
         // The bolt is magic damage; Protect from Melee only reduces the triggering swing.
         val max = MeleeCombatFormula.getMaxHitIgnoringMeleeProtection(player, target).toInt()
-        bolt(player, target, Tile(target.getCentreTile()), look.passiveDelay, 0, max / 2)
+        bolt(player, target, Tile(target.getCentreTile()), look.passiveDelay, 0, max / 2, special = false)
     }
     /** Register only with a complete proven presentation, so no energy is spent on a missing lightning asset. */
     fun register() {
@@ -59,17 +60,17 @@ object ThunderKhopesh {
                 dealt += hit.hit.hitmarks.sumOf { it.damage }
             }
             if (landed) {
-                if (pvp) PVP_BOLT_TICKS.forEach { delay -> bolt(player, target, tile, delay, dealt * 30 / 100, dealt * 45 / 100) }
-                else bolt(player, target, tile, look.passiveDelay, 0, max)
+                if (pvp) PVP_BOLT_TICKS.forEach { delay -> bolt(player, target, tile, delay, dealt * 30 / 100, dealt * 45 / 100, special = true) }
+                else bolt(player, target, tile, look.passiveDelay, 0, max, special = true)
             }
         }
     }
-    private fun bolt(player: Player, original: Pawn, tile: Tile, delay: Int, minimum: Int, maximum: Int) {
+    private fun bolt(player: Player, original: Pawn, tile: Tile, delay: Int, minimum: Int, maximum: Int, special: Boolean) {
         require(delay >= 0)
         player.world.queue {
             wait(delay)
             if (!player.isOnline || player.isDead() || player.tile.height != tile.height) return@queue
-            appearance?.bolt(player, tile)
+            appearance?.bolt(player, tile, special)
             // Candidate discovery never bypasses single/multi, guarded zones, combat-level restrictions or target ownership.
             val candidates = mutableListOf<Pawn>(original)
             player.world.npcs.forEach { if (it !== original && withinBolt(tile, it.tile, it.getSize())) candidates += it }

@@ -32,7 +32,7 @@ class Dmm2SourcePolicyTests {
             override val passiveDelay = 1
             override val pvmHitDelays = listOf(1, 2)
             override fun swing(player: Player, special: Boolean) {}
-            override fun bolt(player: Player, tile: Tile) {}
+            override fun bolt(player: Player, tile: Tile, special: Boolean) {}
         }
         assertEquals(1, look.pvpInitialDelay)
         assertEquals(listOf(7, 9, 11, 13), ThunderKhopesh.PVP_BOLT_TICKS)
