@@ -11,6 +11,13 @@ Claude may apply these prepared batches in order now; rerun each allocator after
 its predecessors. The unfinished guardian/Mimic runtime does not require waiting
 to import these identities. Full gameplay/client/release acceptance remains open.
 
+Watson statistics/pinboard papers are prepared too: WATSON-BOARDS.md,
+BOARD-PREFLIGHT.tsv and validation/watson-boards-{actual-source,preflight}.json.
+Source221/625 -> proposed1207/1208;31mutations,tx-20261117-123453,applied=false.
+Run verify_boards.py then preflight_boards.py on current production source.
+Uses existing scenery62628/62629 and the SAME interfaces.tsv; rerun after
+preceding UI batches. Wide-IF3 client patch/release precedes UI cache application.
+
 The older checkpoints below are
 historical evidence, with remaining gates explicitly superseded by later entries.
 

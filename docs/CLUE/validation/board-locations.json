@@ -1,0 +1,371 @@
+{
+  "sourceDefinitions": [
+    {
+      "definition": {
+        "id": 6567,
+        "name": "Treasure Trail Statistics",
+        "models": [
+          31952
+        ],
+        "modelTypes": [
+          4
+        ],
+        "sizeX": 1,
+        "sizeY": 1,
+        "interactType": 2,
+        "blocksProjectile": true,
+        "wallOrDoor": 1,
+        "contouredGround": -1,
+        "contouredGroundValue": 0,
+        "mergeNormals": false,
+        "modelClipped": false,
+        "animationId": -1,
+        "decorDisplacement": 16,
+        "ambient": 50,
+        "contrast": 0,
+        "options": [
+          "Read",
+          null,
+          null,
+          null,
+          null
+        ],
+        "category": -1,
+        "rotated": false,
+        "shadow": true,
+        "modelSizeX": 128,
+        "modelSizeHeight": 128,
+        "modelSizeY": 128,
+        "mapSceneId": -1,
+        "blockingMask": 0,
+        "offsetX": 0,
+        "offsetHeight": 0,
+        "offsetY": 0,
+        "obstructsGround": false,
+        "hollow": false,
+        "supportsItems": -1,
+        "varbitId": -1,
+        "varpId": -1,
+        "ambientSoundId": -1,
+        "mapAreaId": -1,
+        "randomizeAnimStart": true,
+        "deferAnimChange": false,
+        "unknownOpcodes": [],
+        "subOps": []
+      },
+      "id": 6567
+    },
+    {
+      "definition": {
+        "id": 6615,
+        "name": "Pinboard",
+        "models": [
+          24884
+        ],
+        "modelTypes": [
+          4
+        ],
+        "sizeX": 1,
+        "sizeY": 1,
+        "interactType": 2,
+        "blocksProjectile": false,
+        "wallOrDoor": 1,
+        "contouredGround": -1,
+        "contouredGroundValue": 0,
+        "mergeNormals": false,
+        "modelClipped": false,
+        "animationId": -1,
+        "decorDisplacement": 16,
+        "ambient": 40,
+        "contrast": 0,
+        "options": [
+          "Read",
+          null,
+          null,
+          null,
+          null
+        ],
+        "category": -1,
+        "rotated": false,
+        "shadow": true,
+        "modelSizeX": 128,
+        "modelSizeHeight": 128,
+        "modelSizeY": 128,
+        "mapSceneId": -1,
+        "blockingMask": 0,
+        "offsetX": 0,
+        "offsetHeight": 0,
+        "offsetY": 0,
+        "obstructsGround": false,
+        "hollow": false,
+        "supportsItems": -1,
+        "varbitId": -1,
+        "varpId": -1,
+        "ambientSoundId": -1,
+        "mapAreaId": -1,
+        "randomizeAnimStart": true,
+        "deferAnimChange": false,
+        "unknownOpcodes": [],
+        "subOps": []
+      },
+      "id": 6615
+    },
+    {
+      "definition": {
+        "id": 26634,
+        "name": "Treasure Trail Statistics",
+        "models": [
+          2040
+        ],
+        "modelTypes": [
+          4
+        ],
+        "sizeX": 1,
+        "sizeY": 1,
+        "interactType": 2,
+        "blocksProjectile": true,
+        "wallOrDoor": 1,
+        "contouredGround": -1,
+        "contouredGroundValue": 0,
+        "mergeNormals": false,
+        "modelClipped": false,
+        "animationId": -1,
+        "decorDisplacement": 16,
+        "ambient": 50,
+        "contrast": 0,
+        "options": [
+          "Read",
+          null,
+          null,
+          null,
+          null
+        ],
+        "category": -1,
+        "rotated": false,
+        "shadow": true,
+        "modelSizeX": 128,
+        "modelSizeHeight": 128,
+        "modelSizeY": 128,
+        "mapSceneId": -1,
+        "blockingMask": 0,
+        "offsetX": 0,
+        "offsetHeight": 0,
+        "offsetY": 0,
+        "obstructsGround": false,
+        "hollow": false,
+        "supportsItems": -1,
+        "varbitId": -1,
+        "varpId": -1,
+        "ambientSoundId": -1,
+        "mapAreaId": -1,
+        "randomizeAnimStart": true,
+        "deferAnimChange": false,
+        "unknownOpcodes": [],
+        "subOps": []
+      },
+      "id": 26634
+    }
+  ],
+  "sourceWatsonPlacements": [
+    {
+      "rotation": 1,
+      "id": 6567,
+      "type": 4,
+      "z": 3575,
+      "plane": 0,
+      "x": 1646
+    },
+    {
+      "rotation": 1,
+      "id": 6615,
+      "type": 4,
+      "z": 3572,
+      "plane": 0,
+      "x": 1651
+    }
+  ],
+  "target1": [
+    {
+      "rotation": 1,
+      "type": 4,
+      "plane": 0,
+      "id": 62628,
+      "z": 3575,
+      "x": 1646,
+      "sha1": "a2c9e0131cfdb527fd84c9f0cdb300e883e3c75d",
+      "definition": {
+        "id": 62628,
+        "name": "Treasure Trail Statistics",
+        "modelsByShape": {
+          "4": [
+            3557
+          ]
+        },
+        "sizeX": 1,
+        "sizeZ": 1,
+        "options": [
+          "Read",
+          null,
+          null,
+          null,
+          null
+        ],
+        "animation": -1,
+        "msi": -1,
+        "mapElement": -1,
+        "opcodes": [
+          1,
+          2,
+          19,
+          29,
+          30
+        ],
+        "opcodeOffsets": [
+          0,
+          6,
+          33,
+          35,
+          37
+        ]
+      }
+    },
+    {
+      "rotation": 1,
+      "type": 4,
+      "plane": 0,
+      "id": 62629,
+      "z": 3572,
+      "x": 1651,
+      "sha1": "aa3e83b5b364c57f7a9968153baf54e6cbf89dab",
+      "definition": {
+        "id": 62629,
+        "name": "Pinboard",
+        "modelsByShape": {
+          "4": [
+            3209
+          ]
+        },
+        "sizeX": 1,
+        "sizeZ": 1,
+        "options": [
+          "Read",
+          null,
+          null,
+          null,
+          null
+        ],
+        "animation": -1,
+        "msi": -1,
+        "mapElement": -1,
+        "opcodes": [
+          1,
+          2,
+          18,
+          19,
+          29,
+          30
+        ],
+        "opcodeOffsets": [
+          0,
+          6,
+          16,
+          17,
+          19,
+          21
+        ]
+      }
+    }
+  ],
+  "target2": [
+    {
+      "rotation": 1,
+      "type": 4,
+      "plane": 0,
+      "id": 62628,
+      "z": 3575,
+      "x": 1646,
+      "sha1": "a2c9e0131cfdb527fd84c9f0cdb300e883e3c75d",
+      "definition": {
+        "id": 62628,
+        "name": "Treasure Trail Statistics",
+        "modelsByShape": {
+          "4": [
+            3557
+          ]
+        },
+        "sizeX": 1,
+        "sizeZ": 1,
+        "options": [
+          "Read",
+          null,
+          null,
+          null,
+          null
+        ],
+        "animation": -1,
+        "msi": -1,
+        "mapElement": -1,
+        "opcodes": [
+          1,
+          2,
+          19,
+          29,
+          30
+        ],
+        "opcodeOffsets": [
+          0,
+          6,
+          33,
+          35,
+          37
+        ]
+      }
+    },
+    {
+      "rotation": 1,
+      "type": 4,
+      "plane": 0,
+      "id": 62629,
+      "z": 3572,
+      "x": 1651,
+      "sha1": "aa3e83b5b364c57f7a9968153baf54e6cbf89dab",
+      "definition": {
+        "id": 62629,
+        "name": "Pinboard",
+        "modelsByShape": {
+          "4": [
+            3209
+          ]
+        },
+        "sizeX": 1,
+        "sizeZ": 1,
+        "options": [
+          "Read",
+          null,
+          null,
+          null,
+          null
+        ],
+        "animation": -1,
+        "msi": -1,
+        "mapElement": -1,
+        "opcodes": [
+          1,
+          2,
+          18,
+          19,
+          29,
+          30
+        ],
+        "opcodeOffsets": [
+          0,
+          6,
+          16,
+          17,
+          19,
+          21
+        ]
+      }
+    }
+  ]
+}

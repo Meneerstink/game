@@ -13,6 +13,7 @@ object ClueInterfaceImportTool {
     const val REWARD_FIRST = 5
     const val REWARD_SLOTS = 12 // cache 2686 config 2/5/141 = [2, 0, 12, 0]
     val GROUPS = listOf(73, 203)
+    val BOARD_COUNTS = mapOf(221 to 14, 625 to 8)
     // Exact source child counts, including the Close component. Reject a truncated final child too.
     val MAP_COUNTS = mapOf(86 to 119, 337 to 82, 338 to 13, 339 to 52, 340 to 86, 341 to 113, 342 to 18, 343 to 147, 344 to 108, 346 to 49, 347 to 67, 348 to 48, 349 to 58, 350 to 49, 351 to 60, 352 to 70, 353 to 64, 354 to 83, 355 to 65, 356 to 83, 357 to 94, 358 to 59, 359 to 124, 360 to 84, 361 to 118, 362 to 85)
     val MAP_GROUPS = MAP_COUNTS.keys.toList()
@@ -22,17 +23,21 @@ object ClueInterfaceImportTool {
     @JvmOverloads
     fun components(group: Int, node: JsonNode, fonts: Map<Int, Int>, models: Map<Int, Int>, sprites: Map<Int, Int>, pictures: JsonNode? = null): List<OsrsInterfacePortTool.C> {
         if (group == 306) return CluePuzzleInterfaceBake.components(node, CluePuzzleInterfaceBake.pictures(requireNotNull(pictures)), models, sprites)
-        require(group in GROUPS || group in MAP_GROUPS)
+        require(group in GROUPS || group in MAP_GROUPS || group in BOARD_COUNTS)
         fun JsonNode.int(key: String, default: Int = 0) = get(key)?.asInt() ?: default
         fun JsonNode.flag(key: String) = get(key)?.asBoolean() ?: false
         fun JsonNode.hover(key: String): List<Int> {
             val hook = get(key)?.takeUnless { it.isNull }?.map { it.asInt() }.orEmpty()
             if (hook.isEmpty()) return emptyList()
-            require(hook.size == 3 && hook[0] == 44 && hook[1] == -2147483645) { "Unsupported source hover: $hook" }
-            return listOf(44, hook[1], sprites.getValue(hook[2]))
+            val self = int("id")
+            require(hook.size == 3 && (hook[0] == 44 || group == 625 && hook[0] == 2809) &&
+                (hook[1] == -2147483645 || group == 221 && hook[1] == self)) { "Unsupported source hover: $hook" }
+            // Both source board hooks set only the current close component's sprite.
+            // Resolve explicit OSRS self references through the native event-component sentinel.
+            return listOf(44, -2147483645, sprites.getValue(hook[2]))
         }
         val ids = node.fieldNames().asSequence().map(String::toInt).sorted().toList()
-        require(ids == (0 until when (group) { 73 -> 5; 203 -> 3; else -> MAP_COUNTS.getValue(group) }).toList())
+        require(ids == (0 until when (group) { 73 -> 5; 203 -> 3; else -> BOARD_COUNTS[group] ?: MAP_COUNTS.getValue(group) }).toList())
         require(ids.isNotEmpty())
         val out = ids.map { id ->
             val n = node[id.toString()]
@@ -69,7 +74,7 @@ object ClueInterfaceImportTool {
         require(args.size >= 3) { "Usage: <source-json> <mapping-tsv> <plan-tsv> [--apply]" }
         val sourceJson = File(args[0]); val mappingFile = File(args[1]); val planFile = File(args[2])
         val apply = "--apply" in args
-        val groups = when { "--maps" in args -> MAP_GROUPS; "--puzzles" in args -> PUZZLE_GROUPS; else -> GROUPS }
+        val groups = when { "--boards" in args -> BOARD_COUNTS.keys.toList(); "--maps" in args -> MAP_GROUPS; "--puzzles" in args -> PUZZLE_GROUPS; else -> GROUPS }
         val root = ObjectMapper().readTree(sourceJson)
         val old = if (mappingFile.isFile) mappingFile.readLines().filter { it.isNotBlank() && !it.startsWith("#") }
             .map { it.split('\t') }.associate { (it[0] to it[1].toInt()) to it[2].toInt() } else emptyMap()
@@ -79,6 +84,12 @@ object ClueInterfaceImportTool {
         val mutations = mutableListOf<CacheMutation>()
         try {
             val local = libraries.first()
+            if ("--boards" in args) libraries.forEach { cache ->
+                check(cache.data(12,DeathsOfficeInterfaceImportTool.SCROLL_SCRIPT,0)
+                    ?.contentEquals(DeathsOfficeInterfaceImportTool.scrollScript()) == true) {
+                    "Native paper scrollbar program5377 is absent or differs from the reviewed implementation"
+                }
+            }
             // Both caches already contain this exact two-argument IF_SETGRAPHIC script.
             // Pin bytes rather than assuming an OSRS script ID means the same operation in 667.
             val hover = ObjectMapper().readTree(File(sourceJson.parentFile, "hover.json"))
