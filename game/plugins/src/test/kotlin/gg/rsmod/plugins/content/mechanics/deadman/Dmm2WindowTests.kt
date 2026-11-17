@@ -108,8 +108,10 @@ class Dmm2WindowTests {
         safe(); Dmm2SafeDepositUi.depositAll(f.player,true)
         assertNull(f.equipment[3]); assertEquals(772,f.equipment[2]!!.id)
         assertEquals(321,box()[0]!!.getAttr(ItemAttribute.CHARGES)); assertEquals(1L,count(4151))
-        io.mockk.verify(exactly = 1) { f.world.plugins.executeUnequipItem(f.player,4151) }
-        io.mockk.verify(exactly = 1) { f.world.plugins.executeUnequipSlot(f.player,3) }
+        // Claude 17-11: verify on the plugins mock itself; a chained f.world.plugins inside verify(exactly = 1) also counts getPlugins().
+        val plugins = f.world.plugins
+        io.mockk.verify(exactly = 1) { plugins.executeUnequipItem(f.player,4151) }
+        io.mockk.verify(exactly = 1) { plugins.executeUnequipSlot(f.player,3) }
     }
 
     @Test fun `partial worn ammo deposit keeps equipped stack active and does not fire unequip hooks`() {
@@ -118,8 +120,9 @@ class Dmm2WindowTests {
         safe(); Dmm2SafeDepositUi.depositAll(f.player,true)
         assertEquals(90,f.equipment[13]!!.amount); assertEquals(10,box().occupiedSlotCount)
         assertEquals(100L,count(892))
-        io.mockk.verify(exactly = 0) { f.world.plugins.executeUnequipItem(f.player,892) }
-        io.mockk.verify(exactly = 0) { f.world.plugins.executeUnequipSlot(f.player,13) }
+        val plugins = f.world.plugins
+        io.mockk.verify(exactly = 0) { plugins.executeUnequipItem(f.player,892) }
+        io.mockk.verify(exactly = 0) { plugins.executeUnequipSlot(f.player,13) }
     }
 
     @Test fun `full inventory skull movement death and close invalidate withdrawals without losing safe contents`() {
