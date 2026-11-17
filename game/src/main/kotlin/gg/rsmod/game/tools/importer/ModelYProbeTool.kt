@@ -19,7 +19,7 @@ object ModelYProbeTool {
                 val local = arg.startsWith("ons:")
                 val id = arg.removePrefix("ons:").toInt()
                 val data = (if (local) (if (id > 0xFFFF) ours.data(37, id - 65536) else ours.data(7, id)) else osrs.file(7, id, 0)) ?: run { println("model $arg: ontbreekt"); null } ?: continue
-                val m = ModernModelDecoder.decode(data, flattenTextures = true)
+                val m = ModernModelDecoder.decode(data, flattenTextures = System.getenv("FLAT") != null)
                 val ys = m.vertexY.take(m.vertexCount)
                 println("model $arg: vertices=${m.vertexCount} faces=${m.faceCount} y min=${ys.minOrNull()} max=${ys.maxOrNull()} x ${m.vertexX.take(m.vertexCount).minOrNull()}..${m.vertexX.take(m.vertexCount).maxOrNull()} z ${m.vertexZ.take(m.vertexCount).minOrNull()}..${m.vertexZ.take(m.vertexCount).maxOrNull()} version=${m.version}")
                 val per = sortedMapOf<String, IntArray>()
