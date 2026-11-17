@@ -26,8 +26,13 @@ binds/opens loose hard/master puzzle boxes plus lightboxes without clue credit.
 Drop Viewer odds use the same encounter-readiness gate as actual openings.
 Integration193256 compiled all scripts with5598unchanged inputs:89/90tests
 passed; only the then-new emote-count assertion was wrong (20versus23records).
-Commit9d0c257e2 fixes that assertion. Fresh13-class run215433 also includes two
-78golden-broadcast/jingle transaction break tests; result pending.
+Commit9d0c257e2 fixes that assertion. Fresh13-class run215433 includes the two
+78golden-broadcast/jingle transaction break tests and is ACCEPTED:92tests green,
+0failures/errors/skips/missing,all13XMLfresh,5598inputhashesunchanged. The remote
+build/script graph succeeded in6m32s; report transfer eventually completed.
+Proof:validation/integration-20261117-215433.json. Independent fresh production
+compilation plus two changed test classes also passed20tests; exact source/jar
+hashes in validation/casket-client-actual-source.json. Testcommit71cc0ce0e.
 Claude's client round2 (dossier21:4x, screens/CLUE-R2) independently confirms
 all four round1 defects repaired in RESIZABLE: map, loose boxes, ordinary78
 opening, and the reviewed emote data. Full fixed/resizable/real-NPC/client break
@@ -122,8 +127,9 @@ Claude from applying any of the prepared item/NPC/STASH/UI/combat imports.
   No donor behaviour or estimated ID is promoted as a source fact.
 * A5/F7: integration173604 compiled everything and passed314of315tests;
   integration193256 reran the failed path class successfully, but had one new
-  test-count failure (89/90). Corrected13-class rerun215433 is separate and
-  pending. Do not call either original run wholly green.
+  test-count failure (89/90). Corrected13-class rerun215433 is independently
+  verified92/92green with13freshXMLand unchanged5598inputs;20fresh local-source
+  tests also green. Do not call either earlier failed run wholly green.
 * A6-A9/F4/F8: OPEN, assigned to Claude by the task card: compare actual client
   against OSRS, run the requested break cases, then prove the live bundle.
 * A10: component commits plus timestamped ChatGPT-B lines in team/dossiers/CLUE.txt;

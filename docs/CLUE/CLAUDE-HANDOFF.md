@@ -28,9 +28,17 @@ Integratie 193256: 90 tests, 89 groen / 1 fout in de toenmalige testtelling;
 alle spelcode/scripts compileerden, 5598 inputhashes ongewijzigd. Geen groene
 acceptatie van die run. Herhaling 195429 meldde remote BUILD SUCCESSFUL maar
 haalde na sessieonderbreking geen verse XML/summary terug: niet geaccepteerd.
-Nieuwe 13-klassenrun 215433 via verplichte rgradle, met twee extra
-78-melding/jingle-breektests, loopt met bevroren inputs. Resultaat volgt.
-Details blijven in `validation/` en `build/clue/integration-*`.
+Nieuwe 13-klassenrun **215433 is geaccepteerd: 92 tests groen**, geen
+failures/errors/skips/missing; alle 13 XML-rapporten vers en alle 5598
+inputhashes gelijk. Verplichte rgradle-route, remote BUILD SUCCESSFUL6m32s,
+spelcode en alle scripts gecompileerd/gevalideerd. De trage rapportoverdracht
+is volledig afgerond; geen proces is gestopt. Bewijs:
+`validation/integration-20261117-215433.json`.
+De twee geraakte klassen zijn ook onafhankelijk tegen vijf vers gecompileerde
+productieklassen uitgevoerd: **20 tests groen**; bewijs
+`validation/casket-client-actual-source.json`.
+Testcommit `71cc0ce0e`; handoff `a26fbf3f3`, assetbewijs `d52179c9c`.
+De runner weigert voortaan oude lokale XML als nieuwe remote bewijsvoering.
 
 ## Cache: toegepast, niet opnieuw importeren
 

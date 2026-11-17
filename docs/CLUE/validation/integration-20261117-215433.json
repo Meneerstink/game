@@ -1,0 +1,168 @@
+{
+  "exit": 0,
+  "unchangedInputs": true,
+  "changed": [],
+  "missing": [],
+  "accepted": true,
+  "tests": 92,
+  "skipped": 0,
+  "classes": [
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.ClueCasketTransactionTests",
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794953016.0,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.ClueInterfacesTests",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794953016.0,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.ClueScrollLifecycleTests",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794953016.0,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailStepCatalogueTests",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794953016.0,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailMapsTests",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794953016.0,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailPuzzleBoxTests",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794953016.0,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailLightBoxTests",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794953016.0,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailMasterPuzzleTests",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794953016.0,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailContractTests",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794953016.0,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailHotColdTests",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794953016.0,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.areas.watson.MimicChallengeTests",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794953016.0,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.areas.watson.MimicEncounterTests",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794953016.0,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.areas.watson.ClueMimicSceneryTests",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794953016.0,
+      "fresh": true
+    }
+  ],
+  "command": [
+    "cmd.exe",
+    "/d",
+    "/c",
+    "C:/RSPS/tools/remote/rgradle.cmd",
+    "-I",
+    "tools/clue/test-init.gradle",
+    ":game:plugins:test",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.ClueCasketTransactionTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.ClueInterfacesTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.ClueScrollLifecycleTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.TreasureTrailStepCatalogueTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.TreasureTrailMapsTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.TreasureTrailPuzzleBoxTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.TreasureTrailLightBoxTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.TreasureTrailMasterPuzzleTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.TreasureTrailContractTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.TreasureTrailHotColdTests",
+    "--tests",
+    "gg.rsmod.plugins.content.areas.watson.MimicChallengeTests",
+    "--tests",
+    "gg.rsmod.plugins.content.areas.watson.MimicEncounterTests",
+    "--tests",
+    "gg.rsmod.plugins.content.areas.watson.ClueMimicSceneryTests",
+    "--priority",
+    "low"
+  ],
+  "inputCount": 5598,
+  "inputsSha256": "8df003eaeb0f2866e960b271af69409bc0ed155fb218820e06b8abb600aede4e",
+  "note": "All13XMLreportsfresh and all92tests green. Remote wrapper report transfer eventually completed; none of its processes was stopped. Whole branch/scripts compiled or UP-TO-DATE against snapshot.20fresh local-source tests are retained separately."
+}

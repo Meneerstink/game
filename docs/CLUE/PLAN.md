@@ -112,8 +112,11 @@ Integration193256 compiled all scripts and passed89/90tests; its only failure
 was a new test-count assertion corrected in9d0c257e2. Run195429 has no retrieved
 XML/summary after interruption, so remains unaccepted despite remote success.
 Fresh13-class/scripts integration215433, including78broadcast/jingle break
-tests, is pending. Claude clientround2 independently confirmed the four repairs
-in resizable (dossier21:4x). See CLAUDE-HANDOFF.md for remaining checks.
+tests, is ACCEPTED92/92green:all13XMLfresh,0fail/error/skip/missing,5598inputs
+unchanged. Independent five-class production compilation plus the two changed
+test classes passed20tests. Proofs are in validation/;testcommit71cc0ce0e.
+Claude clientround2 independently confirmed the four repairs in resizable
+(dossier21:4x). See CLAUDE-HANDOFF.md for remaining checks.
 No cache writes are required for these repairs. Owner Q1/Q5 and source Q8 remain
 explicit exclusions; no primary values are fabricated to remove their gates.
 
