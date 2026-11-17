@@ -268,25 +268,25 @@ object OsrsWeaponLooks {
     private val lateLooks: Map<Int, Look> by lazy {
         listOfNotNull(
             gg.rsmod.plugins.content.activity.cox.CoxIds.item(21003)?.let { it to Look(all(OsrsSeq.ELDER_MAUL_ATTACK), block = OsrsSeq.ELDER_MAUL_DEFEND) },
-            // Dinh's bulwark = OSRS 21015 (CoX): wiki 'Pummel' (Crush, the only attacking style) = HUMAN_DINHS_BULWARK_CRUSH 7507, block
-            // HUMAN_DINHS_BULWARK_BLOCK 7512 (gameval; _BASH 7511 = the 'Shield Bash' special). Mapping by name (wiki names no sequence).
+            // Dinh's bulwark = OSRS 21015 (CoX), wiki 'Pummel' (Crush, the only attacking style). OBSERVED in OSRS (RuneLite
+            // weapon-animation-replacer set "Dinh's bulwhark", OsrsWeaponLooksObservedTests): crush 7511, special 7512, DEFEND 7517 - the
+            // gameval names (_CRUSH 7507 / _BASH 7511 / _BLOCK 7512) suggested otherwise; the in-game observation wins (rule of this file).
             gg.rsmod.plugins.content.activity.cox.CoxIds.item(21015)?.let { id ->
-                val crush = gg.rsmod.plugins.content.activity.cox.CoxIds.seq(7507) ?: return@let null
-                id to Look(all(crush), block = gg.rsmod.plugins.content.activity.cox.CoxIds.seq(7512))
+                val crush = gg.rsmod.plugins.content.activity.cox.CoxIds.seq(7511) ?: return@let null
+                id to Look(all(crush), block = OsrsSeq.ELDER_MAUL_DEFEND)
             },
         ).toMap() + kerisLooks()
     }
 
     /**
      * N630 Keris partisan + ornaments (ToA ids.tsv: OSRS 25979 / 25981 breaching / 27287 corruption / 27291 the sun / 30891 amascut).
-     * No text source names its attacks (wiki, gameval only TOA_KERIS_PARTISAN_SPECIAL01 9544) -> MEASURED in OSRS video (work\keris-video,
-     * N630 dossier 17-11): Stab and Pound play the SAME motion - partisan held level overhead (~0.3 s hold), swept down, thrust level at
-     * hip height (~0.3 s hold), back; ~1.1 s. Only HUMAN_SPEAR_LUNGE 429 (local 15798, delays 4,4,15,4,4,4,4,15,4 = 1.16 s) and its copy
-     * HUMAN_ZAMORAKSPEAR_LUNGE 1710 have that two-hold shape (the stab seqs 428/1711 = one 18-cycle hold, 0.8 s) - 429 on every style,
-     * spear block 383 (ADVICE, ONZEKER between 429 and 1710; testclient screens\N630\keris2).
+     * OBSERVED in OSRS: RuneLite weapon-animation-replacer set "Spear" lists 25979 - stand 813 (staff stance), ATTACK_STAB HUMAN_DSPEAR_STAB
+     * 381, ATTACK_CRUSH HUMAN_DSPEAR_LUNGE 382, DEFEND 383. Partisan styles (wiki): Stab (stab), Lunge (stab), Pound (crush), Block (stab)
+     * -> 381 / 381 / 382 / 381 (ids 380-382 are the classic sequences, same id in both caches). The OSRS video (work\keris-video) shows
+     * the lunge-shaped two-hold motion (overhead, then level thrust) for both clips.
      */
     private fun kerisLooks(): Map<Int, Look> {
-        val look = Look(all(OsrsSeq.HUMAN_SPEAR_LUNGE), block = OsrsSeq.OSRS_DEFEND_SPEAR)
+        val look = Look(intArrayOf(381, 381, 382, 381), block = OsrsSeq.OSRS_DEFEND_SPEAR)
         return kerisIds().associateWith { look }
     }
 

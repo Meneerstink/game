@@ -14,6 +14,6 @@ RenderAnimations.register(OsrsBas.NIGHTMARE_STAFF, *OsrsWeaponLooks.NIGHTMARE_ST
 RenderAnimations.register(OsrsBas.ZAMORAK_SPEAR, Items.BLUE_MOON_SPEAR)
 RenderAnimations.register(OsrsBas.COLOSSAL_BLADE, Items.COLOSSAL_BLADE)
 // N630 (17-11): the Keris partisan stands with the partisan UPRIGHT beside the body, arm down (OSRS video howgood.mp4 8 s) = exactly the
-// staff stance (render 28 = Staff of air param 644; screens\N630\stance-compare2.png). The ToA import has no param 644 -> default stance
-// held it diagonally across the body. Walk/run follow the staff set (ONZEKER: walking not compared).
+// staff stance (render 28 = Staff of air param 644; screens\N630\stance-compare2.png); the RuneLite replacer set "Spear" (item 25979)
+// confirms stand 813 / walk 1205 / run 1210 = the staff pose set. The ToA import has no param 644 -> default stance held it diagonally.
 RenderAnimations.register(28, *OsrsWeaponLooks.kerisIds().toIntArray())
