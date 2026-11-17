@@ -103,4 +103,14 @@ class ClueNpcSourcesTests {
         assertEquals(fullLine.normal, secondLine.your)
         assertEquals(fullLine.normal, secondLine.normal)
     }
+    @Test fun `resolved legacy Jellies use regular rates and infobox levels exclude unrelated Vyrewatch variants`() {
+        val jellies=ClueNpcSources.rows.filter { it.name=="Jelly" }
+        assertEquals(setOf(1637,1638,1639,1640,1641,1642,7459,7460,8599,8617,10699),jellies.map { it.npc }.toSet())
+        assertTrue(jellies.all { it.level==78 && it.denominator==128 && it.tier==ClueScrollTier.HARD })
+        assertEquals(4,ClueNpcSources.rows.count { it.name=="Farmer" && it.level==7 && it.tier==ClueScrollTier.EASY && it.denominator==128 })
+        val vyres=ClueNpcSources.rows.filter { it.name=="Vyrewatch" }
+        assertTrue(vyres.any { it.level==110 });assertTrue(vyres.any { it.level==120 })
+        assertTrue(vyres.all { it.level in setOf(87,105,110,120,125) && it.denominator==128 })
+        assertFalse(vyres.any { it.level in setOf(130,140) })
+    }
 }

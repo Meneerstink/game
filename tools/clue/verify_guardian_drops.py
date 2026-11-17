@@ -32,6 +32,46 @@ def main():
         tests=[following/(name+'.kt') for name in ['TreasureTrailHotColdTests','TreasureTrailWizardTests']]
         inputs=libraries+tests+[ROOT/'build/clue/hotcold/hotcold.json']
         names=['gg.rsmod.plugins.content.scrolls.'+name for name in ['TreasureTrailHotColdTests','TreasureTrailWizardTests']]
+    if '--mimic-candies' in sys.argv:
+        following=ROOT/'build/clue/mimic-candies/next'
+        libraries=[following/'MimicCandies.kt']
+        tests=[following/'MimicCandiesTests.kt']
+        inputs=libraries+tests
+        names=['gg.rsmod.plugins.content.areas.watson.MimicCandiesTests']
+    if '--hotcold-runtime' in sys.argv:
+        main=ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls'
+        test=ROOT/'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/scrolls'
+        libraries=[main/(name+'.kt') for name in ['TreasureTrailHotCold','TreasureTrailHotColdDialogue',
+                    'TreasureTrailWizards','TreasureTrailAgents','ClueScrollManager','ClueGuardianDrops']]
+        tests=[test/(name+'.kt') for name in ['TreasureTrailHotColdTests','TreasureTrailWizardTests']]
+        inputs=libraries+tests+[ROOT/'data/cfg/clue/hotcold.json']
+        names=['gg.rsmod.plugins.content.scrolls.'+name for name in ['TreasureTrailHotColdTests','TreasureTrailWizardTests']]
+    if '--mimic-candies-runtime' in sys.argv:
+        main=ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/watson'
+        libraries=[main/(name+'.kt') for name in ['MimicCandies','MimicEncounter','MimicMinions','MimicAttacks','MimicCaskets']]
+        scrolls=ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls'
+        libraries += [scrolls/(name+'.kt') for name in ['ClueGuardianProfiles','ClueGuardianCombat','ClueCombatAssets']]
+        cohorts=['MimicCandiesTests','MimicAttackTests','MimicEncounterTests','MimicChallengeTests','MimicRewardsTests','TheMimicCombatDefTests']
+        tests=[ROOT/'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/areas/watson'/(name+'.kt') for name in cohorts]
+        inputs=libraries+tests+[ROOT/'data/cfg/clue/mimic-encounter.json']
+        names=['gg.rsmod.plugins.content.areas.watson.'+name for name in cohorts]
+    if '--dig-guards' in sys.argv:
+        main=ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls'
+        test=ROOT/'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/scrolls'
+        libraries=[main/(name+'.kt') for name in ['ClueGuardianProfiles','TreasureTrailDigGuards','TreasureTrailGuardians',
+                    'TreasureTrailHotCold','TreasureTrailHotColdDialogue','TreasureTrailWizards','TreasureTrailAgents',
+                    'ClueScrollManager','ClueGuardianDrops','ClueGuardianCombat','ClueCombatAssets']]
+        libraries += [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/skills/slayer/Krystilia.kt']
+        cohorts=['TreasureTrailDigGuardTests','TreasureTrailGuardianTests','TreasureTrailHotColdTests','TreasureTrailWizardTests','ClueGuardianCombatTests']
+        tests=[test/(name+'.kt') for name in cohorts]
+        inputs=libraries+tests+[ROOT/'data/cfg/clue/hotcold.json',ROOT/'data/cfg/clue/guardians.json']
+        names=['gg.rsmod.plugins.content.scrolls.'+name for name in cohorts]
+    if '--npc-resolution' in sys.argv:
+        main=ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls'
+        libraries=[main/'ClueNpcSources.kt']
+        tests=[ROOT/'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/scrolls/ClueNpcSourcesTests.kt']
+        inputs=libraries+tests+[ROOT/'data/cfg/clue/npc-sources.json']
+        names=['gg.rsmod.plugins.content.scrolls.ClueNpcSourcesTests']
     frozen={str(p):sha256(p.read_bytes()).hexdigest() for p in inputs}
     compiler=[jar(m) for m in ['org.jetbrains.kotlin/kotlin-compiler-embeddable/1.8.0',
         'org.jetbrains.kotlin/kotlin-stdlib/1.8.0','org.jetbrains.kotlin/kotlin-script-runtime/1.8.0',

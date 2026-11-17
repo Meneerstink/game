@@ -1,0 +1,353 @@
+{{External|rs|rsc}}
+{{otheruses|the monster|other farmers|Farmer (disambiguation)}}
+{{Infobox Monster
+|version1 = Straw hat, brown hair
+|version2 = Green shirt, short sleeves
+|version3 = Khaki shirt, bracers
+|version4 = Straw hat, blonde hair
+|version5 = Green shirt, long sleeves
+|version6 = Khaki shirt, no bracers
+|version7 = Straw hat, black hair
+|name = Farmer
+|image1 = [[File:Farmer (straw hat, brown hair).png|150px]]
+|image2 = [[File:Farmer (green shirt, short sleeves).png|150px]]
+|image3 = [[File:Farmer (khaki shirt, bracers).png|150px]]
+|image4 = [[File:Farmer (straw hat, blonde hair).png|150px]]
+|image5 = [[File:Farmer (green shirt, long sleeves).png|150px]]
+|image6 = [[File:Farmer (khaki shirt, no bracers).png|150px]]
+|image7 = [[File:Farmer (straw hat, black hair).png|150px]]
+|release1 = [[4 January]] [[2001]]
+|release2 = [[22 February]] [[2005]]
+|release3 = [[22 February]] [[2005]]
+|release4 = [[9 November]] [[2022]]
+|release5 = [[9 November]] [[2022]]
+|release6 = [[9 November]] [[2022]]
+|release7 = [[9 November]] [[2022]]
+|update1 = Runescape beta is now online!
+|update2 = Wilderness Capes, and Changes
+|update3 = Wilderness Capes, and Changes
+|update4 = Diversity & Inclusion Changes and Quest Speedrunning Updates
+|update5 = Diversity & Inclusion Changes and Quest Speedrunning Updates
+|update6 = Diversity & Inclusion Changes and Quest Speedrunning Updates
+|update7 = Diversity & Inclusion Changes and Quest Speedrunning Updates
+|members = No
+|combat = 7
+|size = 1
+|examine1 = He grows the crops in this area.
+|examine2 = He grows the crops in this area.
+|examine3 = He grows the crops in this area.
+|examine4 = She grows the crops in this area.
+|examine5 = She grows the crops in this area.
+|examine6 = She grows the crops in this area.
+|examine7 = He grows the crops in this area.
+|xpbonus = 0
+|max hit = 1
+|aggressive = No
+|poisonous = No
+|attack style = [[Stab]]
+|attack speed = 6
+|respawn = 25
+|hitpoints = 12
+|att = 3
+|str = 4
+|def = 8
+|mage = 1
+|range = 1
+|attbns = 5
+|strbns = 6
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|poisonresistance = 0
+|venomresistance = 0
+|immunecannon = No
+|immunethrall = No
+|dropversion = Free-to-play, Members-only
+|id1 = 3114
+|id2 = 3243
+|id3 = 3244
+|id4 = 11918
+|id5 = 11919
+|id6 = 11920
+|id7 = 11921
+|leagueRegion = Kandarin,Misthalin,Kourend
+}}
+'''Farmers''' are level 7 [[human]]s found on farms. Farmers are fairly weak and can be fair [[melee]] training for lower levels. Players with level 10 [[Thieving]] can pickpocket farmers, gaining 14.5 [[experience]].
+
+==Locations==
+{{LocTableHead}}
+{{LocLine
+|name = Farmer
+|location = [[Ardougne farm]]
+|levels = 7
+|members = Yes
+|mapID = 0
+|plane = 0
+|x:2645,y:3367,title:3114|x:2652,y:3351,title:11919
+|mtype = pin
+|dropversion = Members-only
+|leagueRegion = Kandarin
+}}
+
+{{LocLine
+|name = Farmer
+|location = [[South Varrock farm]]
+|levels = 7
+|members = No
+|mapID = 0
+|plane = 0
+|x:3181,y:3293,title:3114|x:3162,y:3338,title:3243|x:3165,y:3324,title:3114|x:3227,y:3290,title:3114|x:3199,y:3289,title:11921|x:3192,y:3330,title:11918
+|mtype = pin
+|dropversion = Free-to-play
+|leagueRegion = Misthalin
+}}
+
+{{LocLine
+|name = Farmer
+|location = [[Groats' farm]]
+|levels = 7
+|members = No
+|mapID = 0
+|plane = 0
+|x:3262,y:3325,title:3244
+|mtype = pin
+|dropversion = Free-to-play
+|leagueRegion = Misthalin
+}}
+
+{{LocLine
+|name = Farmer
+|location = North-west of [[Lumbridge]]
+|levels = 7
+|members = No
+|mapID = 0
+|plane = 0
+|x:3154,y:3293,title:11920
+|mtype = pin
+|dropversion = Free-to-play
+|leagueRegion = Misthalin
+}}
+
+{{LocLine
+|name = Farmer
+|location = North of [[Lumbridge]] East Farm
+|levels = 7
+|members = No
+|mapID = 0
+|plane = 0
+|x:3233,y:3308,title:11919
+|mtype = pin
+|dropversion = Free-to-play
+|leagueRegion = Misthalin
+}}
+
+{{LocLine
+|name = Farmer
+|location = South of [[Watson's house]]
+|levels = 7
+|members = Yes
+|mapID = 0
+|plane = 0
+|x:1644,y:3566,title:3114
+|mtype = pin
+|dropversion = Members-only
+|leagueRegion = Kourend
+}}
+
+{{LocTableBottom}}
+
+==Free-to-play drops==
+{{DropLogProject|jagex=yes}}
+
+{{Average drop value|mob=Farmer#Free-to-play}}
+
+===100%===
+{{DropsTableHead|dropversion=Free-to-play|leagueRegion=no}}
+{{DropsLine|name=Bones|quantity=1|rarity=Always}}
+{{DropsTableBottom}}
+
+===Weapons and armour===
+{{DropsTableHead|dropversion=Free-to-play|leagueRegion=no}}
+{{DropsLine|name=Bronze med helm|quantity=1|rarity=2/128}}
+{{DropsLine|name=Iron dagger|quantity=1|rarity=1/128}}
+{{DropsTableBottom}}
+
+===Runes and ammunition===
+{{DropsTableHead|dropversion=Free-to-play|leagueRegion=no}}
+{{DropsLine|name=Bronze arrow|quantity=7|rarity=3/128}}
+{{DropsLine|name=Earth rune|quantity=4|rarity=2/128}}
+{{DropsLine|name=Fire rune|quantity=6|rarity=2/128}}
+{{DropsLine|name=Mind rune|quantity=9|rarity=2/128}}
+{{DropsLine|name=Chaos rune|quantity=2|rarity=1/128}}
+{{DropsTableBottom}}
+
+===Coins===
+{{DropsTableHead|dropversion=Free-to-play|leagueRegion=no}}
+{{DropsLine|name=Coins|quantity=3|rarity=38/128}}
+{{DropsLine|name=Coins|quantity=10|rarity=23/128}}
+{{DropsLine|name=Coins|quantity=15|rarity=4/128}}
+{{DropsLine|name=Coins|quantity=25|rarity=1/128}}
+{{DropsTableBottom}}
+
+===Other===
+{{DropsTableHead|dropversion=Free-to-play|leagueRegion=no}}
+{{DropsLine|name=Nothing|rarity=30/128}}
+{{DropsLine|name=Energy potion(3)|quantity=1|rarity=9/128}}
+{{DropsLine|name=Fishing bait|quantity=1|rarity=5/128}}
+{{DropsLine|name=Copper ore|quantity=1|rarity=2/128}}
+{{DropsLine|name=Earth talisman|quantity=1|rarity=2/128}}
+{{DropsLine|name=Cabbage|quantity=1|rarity=1/128}}
+{{DropsTableBottom}}
+
+===Tertiary===
+{{DropsTableHead|dropversion=Free-to-play|leagueRegion=no}}
+{{DropsLineClue|type=beginner|rarity=1/90}}
+{{DropsTableBottom}}
+
+==Members' drops==
+{{DropLogProject|jagex=yes}}
+
+{{Average drop value|mob=Farmer#Members}}
+
+===100%===
+{{DropsTableHead|dropversion=Members|leagueRegion = Misthalin,Kandarin,Kourend}}
+{{DropsLine|name=Bones|quantity=1|rarity=Always}}
+{{DropsTableBottom}}
+
+===Runes===
+{{DropsTableHead|dropversion=Members|leagueRegion = Misthalin,Kandarin,Kourend}}
+{{DropsLine|name=Earth rune|quantity=4|rarity=2/128}}
+{{DropsLine|name=Fire rune|quantity=6|rarity=2/128}}
+{{DropsLine|name=Mind rune|quantity=9|rarity=2/128}}
+{{DropsLine|name=Chaos rune|quantity=2|rarity=1/128}}
+{{DropsTableBottom}}
+
+===Herbs===
+{{HerbDropTableInfo|11/128}}
+{{DropsTableHead|dropversion=Members|leagueRegion = Misthalin,Kandarin,Kourend}}
+{{HerbDropLines|11/128}}
+{{DropsTableBottom}}
+
+===Seeds===
+{{AllotmentSeedDropTableInfo|27/128}}
+{{DropsTableHead|dropversion=Members|leagueRegion = Misthalin,Kandarin,Kourend}}
+{{AllotmentSeedDropLines|27/128}}
+{{DropsTableBottom}}
+
+===Coins===
+{{DropsTableHead|dropversion=Members|leagueRegion = Misthalin,Kandarin,Kourend}}
+{{DropsLine|name=Coins|quantity=3|rarity=38/128|gemw=No}}
+{{DropsLine|name=Coins|quantity=25|rarity=1/128|gemw=No}}
+{{DropsTableBottom}}
+
+===Other===
+{{DropsTableHead|dropversion=Members|leagueRegion = Misthalin,Kandarin,Kourend}}
+{{DropsLine|name=Nothing|rarity=28/128}}
+{{DropsLine|name=Fishing bait|quantity=1|rarity=5/128}}
+{{DropsLine|name=Rake|quantity=1|rarity=3/128}}
+{{DropsLine|name=Earth talisman|quantity=1|rarity=2/128}}
+{{DropsLine|name=Gardening boots|quantity=1|rarity=2/128}}
+{{DropsLine|name=Seed dibber|quantity=1|rarity=2/128}}
+{{DropsLine|name=Secateurs|quantity=1|rarity=1/128}}
+{{DropsLine|name=Watering can(8)|quantity=1|rarity=1/128|gemw=No}}
+{{DropsTableBottom}}
+
+===Tertiary===
+{{DropsTableHead|dropversion=Members|leagueRegion = Misthalin,Kandarin,Kourend}}
+{{DropsLineClue|type=beginner|rarity=1/90}}
+{{DropsLineClue|type=easy|rarity=1/128}}
+{{DropsTableBottom}}
+
+==Pickpocketing==
+===Pickpocket chance===
+{{Skilling success chart|label=Farmer pickpocket chance|showbefore=yes
+|label1=Normal|low1=150|high1=240|req1=7|color1=grey|image1=Thieving icon.png
+|label2=Gloves of silence|low2=157|high2=252|req2=7|color2=darkblue|image2=Gloves of silence.png
+|label3=Ardougne Diary|low3=165|high3=264|req3=38|color3=black|image3=Ardougne cloak 3.png
+|label4=Thieving cape + Ardougne Diary|low4=181|high4=290|req4=99|color4=purple|image4=Thieving cape.png
+}}
+
+{{Thieving info
+|name = Farmer
+|level = 10
+|xp = 14.5
+|type = Pickpocket
+|tool = None
+|timename = [[Stun_(status)#Thieving|Stun]] Timer
+|time = 5s
+|damage = 1
+}}
+
+A successful pickpocket attempt will gain one of the following items:
+{{DropLogProject|kills=2324719|type=pickpockets}}
+{{DropsTableHead}}
+{{DropsLineSkill|name=Coins|quantity=9|rarity=123/128|gemw=No|skill=Thieving}}
+{{DropsLineSkill|name=Potato seed|quantity=1|rarity=5/128|skill=Thieving}}
+{{DropsTableBottom}}
+
+===Tertiary===
+{{DropsTableHead}}
+{{DropsLineSkill
+|name=Rocky
+|quantity=1
+|skill=thieving
+|rarity=1/256961
+|altrarity=1/254736
+|altraritydash=yes
+|raritynotes=
+{{CiteTwitter
+|author=Mod Kieren
+|url=https://twitter.com/JagexKieren/status/780410304731709440
+|date=26 September 2016
+|archiveurl=https://reldo.runescape.wiki/i/104505
+|archivedate=26 May 2020
+|quote=Okay... first one! Thieving pet rates! Others soon :). Retweet! [https://pbs.twimg.com/media/CtSTBe9XEAABH3h.jpg]
+}}{{Refn|group=d| The drop rate increases with Thieving level; see [[Rocky#Drop_rates|Rocky]] page for more details.}}
+}}
+{{DropsTableBottom}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 19 August 2026
+|update = Summer Sweep Up - Hunter & Skilling
+|change = Drops of five coins (9/128) have been replaced by one energy potion(3).
+}}
+{{Subject changes
+|date = 9 November 2022
+|update = Diversity & Inclusion Changes and Quest Speedrunning Updates
+|change = Several new models were added as part of the [[Diversity & Inclusion updates]], including female varieties.
+}}
+{{Subject changes
+|date = 6 December 2004
+|update = Various Small Changes.
+|change = The NPC was graphically updated.
+}}
+{{Subject changes
+|date = 30 April 2002
+|update = Latest RuneScape News (30 April 2002)
+|change = With the release of [[Thieving]], farmers can now be pickpocketed.
+}}
+{{Subject changes footer}}
+
+===Gallery (historical)===
+{|style="text-align: center" cellpadding="15"
+|[[File:Farmer (historical).png|center|300x150px]]
+|[[File:Farmer (straw hat, brown hair).png|center|300x150px]]
+|-
+|29 March 2004 –<br/>6 December 2004
+|6 December 2004 –<br/>present
+|}
+
+==References==
+{{Reflist}}
+
+{{Pickpocket}}

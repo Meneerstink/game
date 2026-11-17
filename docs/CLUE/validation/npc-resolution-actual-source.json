@@ -1,0 +1,9 @@
+{
+  "inputs": {
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueNpcSources.kt": "95475f792b3f06ffd38b0af095becbd003b7fdb18898c17ff19cee94a95f9c00",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueNpcSourcesTests.kt": "72ee52348dc65e421cb1763a48b8415d81c6f38a3376bb3eca5336b2c40bdcc3",
+    "C:\\RSPS\\work\\gpt-b\\data\\cfg\\clue\\npc-sources.json": "9ad9676da52680dfe2110575f0e5b3b549058a5d9352e3d8bd59b5aafd8d11e3"
+  },
+  "unchanged": true,
+  "tests": "JUnit version 4.13.2\n.....\nTime: 13,858\n\nOK (5 tests)\n\n"
+}

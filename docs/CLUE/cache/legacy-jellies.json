@@ -1,0 +1,57 @@
+{
+  "1637": {
+    "name": "Jelly",
+    "level": 78,
+    "sha256": "96951e4885f6ecba22fb71974ea1bc4390ec3de1ba1c5b79c90dbd32214763ed"
+  },
+  "1638": {
+    "name": "Jelly",
+    "level": 78,
+    "sha256": "c97a8a08a392afb9b7f30deb55b2cd71c9ec31b773c8b0b204630eda8ca4b2c4"
+  },
+  "1639": {
+    "name": "Jelly",
+    "level": 78,
+    "sha256": "ac9a75acc78fdbb1dcb3ea809e537b2e93e1c1be97a6d194ff5f73dab46c6a16"
+  },
+  "1640": {
+    "name": "Jelly",
+    "level": 78,
+    "sha256": "842de9cafcecbded476710ddd2a31c57bbc61aed78ca9cec9c24247dfb4f5467"
+  },
+  "1641": {
+    "name": "Jelly",
+    "level": 78,
+    "sha256": "005a80c3505ff03e0376d464363c64fefb008c7e0843fc2058cda3f94a097c5d"
+  },
+  "1642": {
+    "name": "Jelly",
+    "level": 78,
+    "sha256": "690e86fd61e5afeac7cf64c7afbc7229430a023ab417a55143dd02b378069a07"
+  },
+  "7459": {
+    "name": "Jelly",
+    "level": 78,
+    "sha256": "7d4bb24bcd459e13c3703e0e9b6042ba0c4d5c589edc1d6157f523a23e1ecd97"
+  },
+  "7460": {
+    "name": "Jelly",
+    "level": 78,
+    "sha256": "c563041f25129dd8ffb720b452774a3816c28b7a6388b01ce57d3ed1d6cab45b"
+  },
+  "8599": {
+    "name": "Jelly",
+    "level": 78,
+    "sha256": "842de9cafcecbded476710ddd2a31c57bbc61aed78ca9cec9c24247dfb4f5467"
+  },
+  "8617": {
+    "name": "Jelly",
+    "level": 78,
+    "sha256": "e80fc9632970daaab8ab77cf7db4065162a5240e107f1123408f7fb50e14cca6"
+  },
+  "10699": {
+    "name": "Jelly",
+    "level": 78,
+    "sha256": "aa6151bb7ebea503d6522aec27c6a79fcd5ff9bc3e67f13dce099a6f0900cb75"
+  }
+}

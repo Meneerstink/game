@@ -2,49 +2,6 @@
   {
     "tier": "easy",
     "source": {
-      "name": "Farmer Members",
-      "page": "Farmer",
-      "url": "https://oldschool.runescape.wiki/w/Farmer#Members",
-      "variant": "Members",
-      "method": "combat",
-      "levels": "",
-      "quantity": "1",
-      "fractions": [
-        "1/128"
-      ],
-      "rarity": "1/128"
-    },
-    "reason": "Local combat level does not match this Wiki variant",
-    "candidates": [
-      {
-        "npc": 7,
-        "name": "Farmer",
-        "level": 7,
-        "sha256": "cab9c209af64b2ad747fc1d73fd2db29fe6421358c17722fb31a2f4626daa2dc"
-      },
-      {
-        "npc": 1757,
-        "name": "Farmer",
-        "level": 7,
-        "sha256": "546b425db299e366884f078fe5735ba5ee356ed7b825264421f2d59dc122a892"
-      },
-      {
-        "npc": 1758,
-        "name": "Farmer",
-        "level": 7,
-        "sha256": "7a763f9d7bf3819cf86ef3f0a589ab72be22c0c0fb25cfeee5f99b3ab6bb5781"
-      },
-      {
-        "npc": 1760,
-        "name": "Farmer",
-        "level": 7,
-        "sha256": "a78ac2a8f3513667198a64af0b55d0affabb952d64b01786ec73fb6983be9090"
-      }
-    ]
-  },
-  {
-    "tier": "easy",
-    "source": {
       "name": "Cave goblin (monster)",
       "page": "Cave goblin (monster)",
       "url": "https://oldschool.runescape.wiki/w/Cave_goblin_(monster)",
@@ -1753,6 +1710,92 @@
   {
     "tier": "hard",
     "source": {
+      "name": "Jelly Wilderness Slayer Cave",
+      "page": "Jelly",
+      "url": "https://oldschool.runescape.wiki/w/Jelly#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "method": "combat",
+      "levels": "78",
+      "quantity": "1",
+      "fractions": [
+        "1/64",
+        "1/32"
+      ],
+      "rarity": "1/64 ; 1/32"
+    },
+    "reason": "Source wilderness-cave variants11241..11245 absent; original667Jellies are regular",
+    "candidates": [
+      {
+        "npc": 1637,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "96951e4885f6ecba22fb71974ea1bc4390ec3de1ba1c5b79c90dbd32214763ed"
+      },
+      {
+        "npc": 1638,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "c97a8a08a392afb9b7f30deb55b2cd71c9ec31b773c8b0b204630eda8ca4b2c4"
+      },
+      {
+        "npc": 1639,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "ac9a75acc78fdbb1dcb3ea809e537b2e93e1c1be97a6d194ff5f73dab46c6a16"
+      },
+      {
+        "npc": 1640,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "842de9cafcecbded476710ddd2a31c57bbc61aed78ca9cec9c24247dfb4f5467"
+      },
+      {
+        "npc": 1641,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "005a80c3505ff03e0376d464363c64fefb008c7e0843fc2058cda3f94a097c5d"
+      },
+      {
+        "npc": 1642,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "690e86fd61e5afeac7cf64c7afbc7229430a023ab417a55143dd02b378069a07"
+      },
+      {
+        "npc": 7459,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "7d4bb24bcd459e13c3703e0e9b6042ba0c4d5c589edc1d6157f523a23e1ecd97"
+      },
+      {
+        "npc": 7460,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "c563041f25129dd8ffb720b452774a3816c28b7a6388b01ce57d3ed1d6cab45b"
+      },
+      {
+        "npc": 8599,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "842de9cafcecbded476710ddd2a31c57bbc61aed78ca9cec9c24247dfb4f5467"
+      },
+      {
+        "npc": 8617,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "e80fc9632970daaab8ab77cf7db4065162a5240e107f1123408f7fb50e14cca6"
+      },
+      {
+        "npc": 10699,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "aa6151bb7ebea503d6522aec27c6a79fcd5ff9bc3e67f13dce099a6f0900cb75"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
       "name": "Cyclops Warriors' Guild Basement",
       "page": "Cyclops",
       "url": "https://oldschool.runescape.wiki/w/Cyclops#Warriors'_Guild_Basement",
@@ -2330,613 +2373,6 @@
   {
     "tier": "hard",
     "source": {
-      "name": "Vyrewatch",
-      "page": "Vyrewatch",
-      "url": "https://oldschool.runescape.wiki/w/Vyrewatch",
-      "variant": null,
-      "method": "combat",
-      "levels": "87\u2013125",
-      "quantity": "1",
-      "fractions": [
-        "1/128"
-      ],
-      "rarity": "1/128"
-    },
-    "reason": "Local combat level does not match this Wiki variant",
-    "candidates": [
-      {
-        "npc": 4805,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "eb60b24a1a476cfc218fe638358fc48742cb54e973a38d951957d358881ad48b"
-      },
-      {
-        "npc": 4806,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "aba1e1580a4b421fc2866ca57e02d93e1b5f09678efd0e86df404b1f372242f2"
-      },
-      {
-        "npc": 4807,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "d4dd6b09d24e8ef14d537d770a649b2b24852061a08cd7cafcacfea90e460dd3"
-      },
-      {
-        "npc": 4808,
-        "name": "Vyrewatch",
-        "level": 140,
-        "sha256": "6262d6ccd6404458f430c5451db08a143af792442f90042c5986a3f95efd7cd4"
-      },
-      {
-        "npc": 4813,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "0f50ea01d795dcceb13dd45ccb973cb46a755be378905ad027f0ab94c1b3a973"
-      },
-      {
-        "npc": 4814,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "ddb7633c2e8fc6a65a831deb26f2564d64566a7974f191fdd1686ed9acc0e08e"
-      },
-      {
-        "npc": 4815,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "eccad07ae60bdf4d32ad52038b356768cbf8a360eb90b58c9a1ac62ac4bef3a1"
-      },
-      {
-        "npc": 4816,
-        "name": "Vyrewatch",
-        "level": 140,
-        "sha256": "0b40472ecded5ff80d969f3f4291292aa862ddcf3464823a0929755e21f47714"
-      },
-      {
-        "npc": 4817,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "e4785f1f226ffcfb7fdd92e415a6a466eda5e6a686cc3d0cf1b1c93c5fe8f3f9"
-      },
-      {
-        "npc": 4818,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "effa7add6e1cc991bacee8aefbf02534a84cf24b4978e64eff91b53d281ca5ff"
-      },
-      {
-        "npc": 4819,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "734fe494629ed53c4e2ec180e03e88f3d0230004ae47ef69c607a0bcdf1e2d7b"
-      },
-      {
-        "npc": 4820,
-        "name": "Vyrewatch",
-        "level": 140,
-        "sha256": "a2e28fd0472b59de5e84c98363c1e15a65f2e2552d279bc6db181b804b463b8d"
-      },
-      {
-        "npc": 4825,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "06eda851de0190f5d6dddc8c27c1219882d06e1af0ca347cbb83e7b00214949c"
-      },
-      {
-        "npc": 4826,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "bc10e42437bf36b37f55411c0817ed4e33cbdb67810d737d1918449b2272fe7d"
-      },
-      {
-        "npc": 4827,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "05bb3ee77d9012f8e85294220a8b878949d824a9c882cfb3bde260c7bcf09970"
-      },
-      {
-        "npc": 4828,
-        "name": "Vyrewatch",
-        "level": 140,
-        "sha256": "38925da4842b45b29cf0c129b05389e889b0fc0b675949576a03e7329b70f299"
-      },
-      {
-        "npc": 4829,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "9b7916ed126a0ef4dcc78ce17422803386bab345414612daeb9e0d22fe23efe9"
-      },
-      {
-        "npc": 4830,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "1049a7931e8ad2b07a84b9920f2a42308e83b0b11807b6d3ea9af186bddcc243"
-      },
-      {
-        "npc": 4831,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "018ae34949b6cbca405f5df9cf7914ae8d6a4bf187ae7c8db28a447dac0593a0"
-      },
-      {
-        "npc": 4832,
-        "name": "Vyrewatch",
-        "level": 140,
-        "sha256": "dca5087261f2007523d324141e70f1a15a0410b54376660da029fdf2fef685a4"
-      },
-      {
-        "npc": 4833,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "f77b9b1cc6dcc88f1fdf42870a39c9f071bd36d4339d315d7113e41db286177e"
-      },
-      {
-        "npc": 4834,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "a07bae4ffb11876071ad4e79b7de4f29400cd395cb093bc9d2ba34379d3c09c2"
-      },
-      {
-        "npc": 4835,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "a4e5231337bc41df448190124af879244f3d61109a918cf51e40c3bd840a14d4"
-      },
-      {
-        "npc": 4836,
-        "name": "Vyrewatch",
-        "level": 140,
-        "sha256": "38925da4842b45b29cf0c129b05389e889b0fc0b675949576a03e7329b70f299"
-      },
-      {
-        "npc": 4837,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "eb60b24a1a476cfc218fe638358fc48742cb54e973a38d951957d358881ad48b"
-      },
-      {
-        "npc": 4838,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "aba1e1580a4b421fc2866ca57e02d93e1b5f09678efd0e86df404b1f372242f2"
-      },
-      {
-        "npc": 4839,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "d4dd6b09d24e8ef14d537d770a649b2b24852061a08cd7cafcacfea90e460dd3"
-      },
-      {
-        "npc": 4840,
-        "name": "Vyrewatch",
-        "level": 140,
-        "sha256": "6262d6ccd6404458f430c5451db08a143af792442f90042c5986a3f95efd7cd4"
-      },
-      {
-        "npc": 4841,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "e4785f1f226ffcfb7fdd92e415a6a466eda5e6a686cc3d0cf1b1c93c5fe8f3f9"
-      },
-      {
-        "npc": 4842,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "effa7add6e1cc991bacee8aefbf02534a84cf24b4978e64eff91b53d281ca5ff"
-      },
-      {
-        "npc": 4843,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "734fe494629ed53c4e2ec180e03e88f3d0230004ae47ef69c607a0bcdf1e2d7b"
-      },
-      {
-        "npc": 4844,
-        "name": "Vyrewatch",
-        "level": 140,
-        "sha256": "a2e28fd0472b59de5e84c98363c1e15a65f2e2552d279bc6db181b804b463b8d"
-      },
-      {
-        "npc": 4847,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "410be63c6728e1a0363ad84fbd37cf801fa31b8098bbcd4790e5e92737239d90"
-      },
-      {
-        "npc": 4848,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "1f99bc73077c5321da2e78af4cbf351ae44fb3fbad5b98a5f048f5efe9b9cef1"
-      },
-      {
-        "npc": 4849,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "f00eee20965fcf21f14628ad0fb2048783ab858e12bb4cb52ccd63cb87969001"
-      },
-      {
-        "npc": 4850,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "a7b51822bb6581a4358f4b1c927adf976584e0e8a9c343aa7405f2e2e047c5bc"
-      },
-      {
-        "npc": 4851,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "df31316c0b0a51eb78da7ca743293f8bcf119e5d7f913c0c9ddd323114fe2417"
-      },
-      {
-        "npc": 4852,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "4aed57e1dd33bd3a172cc2fafa33127a12f5b7fcfbace1af2af44cb588d52989"
-      },
-      {
-        "npc": 7606,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "b2e48b17d60a0d34808598c3070ebf08019f7574f98ca880e2879e64101bc9f5"
-      },
-      {
-        "npc": 7607,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "515a2bbc54f59b91171111e6f9d3daf1e921945086564050138458411dec4f57"
-      },
-      {
-        "npc": 7608,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "9c1ce076b9508ca1cfff3c1a783ee20d8d0b2d8d066c9a065745cbd0254d23b4"
-      },
-      {
-        "npc": 7609,
-        "name": "Vyrewatch",
-        "level": 140,
-        "sha256": "0e7dfdfeafe1655a070d68dd4ce5ee4bfe0d03b05a986fab58142b0159c59052"
-      },
-      {
-        "npc": 7610,
-        "name": "Vyrewatch",
-        "level": 112,
-        "sha256": "f80a3be651de23cda463e0cae25f9a0530c7dc80372353baa520b13ded9f3f98"
-      },
-      {
-        "npc": 7611,
-        "name": "Vyrewatch",
-        "level": 112,
-        "sha256": "ccaa9f2e2de2bd4407b6691f47df78792ac10d82ba76add0ac8cd9e66fb2313b"
-      },
-      {
-        "npc": 7612,
-        "name": "Vyrewatch",
-        "level": 112,
-        "sha256": "7dc87a87ea68270026d32a16a239223f80ce8d8d1fdfca1327362c1a3adc2d96"
-      },
-      {
-        "npc": 7614,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "6667c6df08007750b48bd0e9a17a1449a7cc2ee380b70082e27db8cc135e4bab"
-      },
-      {
-        "npc": 7615,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "735b59ca09b15c3d0449f5aa220f152e50b28973fb15b644dcdece9c3c54fa22"
-      },
-      {
-        "npc": 7616,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "05afc10b52062bfdeb1be85d8b7293df4fc58308c93848269e3b67316d50f375"
-      },
-      {
-        "npc": 7617,
-        "name": "Vyrewatch",
-        "level": 140,
-        "sha256": "d28accdbd7ddadb11958246f6e750fce78a9b2cd164d789d5b69b9e9494f374a"
-      },
-      {
-        "npc": 7618,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "c2b172b667bdcf6cf2f1e6418a50f789bc34abb9eb0f13668525d5cc0b0c74aa"
-      },
-      {
-        "npc": 7619,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "ce589ba71eb7f4bcf1ad3b1fdd245ed1a0c9d41beda867a816be7e78c9635537"
-      },
-      {
-        "npc": 7620,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "312a1d6ac77dd5a0bfeee4739d18bb7552ffa891b95d3c05a8464d7b7ecb10d2"
-      },
-      {
-        "npc": 7621,
-        "name": "Vyrewatch",
-        "level": 140,
-        "sha256": "a6dc3d20d564f7b752ecdd4a6b1cf342cf93d9898e4232e46ffd77be5f7ac1c9"
-      },
-      {
-        "npc": 7626,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "5680446e154160d5118e9cec5ebf56fb77cbc63e44ec8e2eea527595d959b820"
-      },
-      {
-        "npc": 7627,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "dd1e6870581081e402fb18732dcb7494ecc9bb64e6f252085ad181337d378e9a"
-      },
-      {
-        "npc": 7628,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "f98c40dac13fb5b752cf383c5aa60cdaef4ba487f669d7fa54a8590cc9426568"
-      },
-      {
-        "npc": 7629,
-        "name": "Vyrewatch",
-        "level": 140,
-        "sha256": "9c0ea06a525d429d4f0e04238eac12cec59da5f485bc2cc644c61565b3010926"
-      },
-      {
-        "npc": 7630,
-        "name": "Vyrewatch",
-        "level": 85,
-        "sha256": "1f865eccece91efcb5bb1ffa8ce81108284ec02ef40468485e6fb5521f01a009"
-      },
-      {
-        "npc": 7631,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "6030f8b7f95748303cc8fceb1cd212253bc393ca9ea1272ba8c68ea0694d1b8e"
-      },
-      {
-        "npc": 7632,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "bfdbbc67600434beede15f39ec371a1f938aedf7640fb5e750db654163f6a85f"
-      },
-      {
-        "npc": 7633,
-        "name": "Vyrewatch",
-        "level": 85,
-        "sha256": "7e766194dcb38c61ad3334178721a188175e8b87b7490a4c153faabee34f6e1c"
-      },
-      {
-        "npc": 7634,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "5a77fa890bf42266bbf3ba9345efb2218158051123c64a4de4aa1a39c4827505"
-      },
-      {
-        "npc": 7635,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "05afc10b52062bfdeb1be85d8b7293df4fc58308c93848269e3b67316d50f375"
-      },
-      {
-        "npc": 7682,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "0608d5b34fa4e0d08f645fc1bd61a05f2a4cb74a54d378990faa3a5a39d4ddad"
-      },
-      {
-        "npc": 7683,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "976cc7fc5f8f8226ed057b126191f89b5375c243c08978aa790a6eaa97e21906"
-      },
-      {
-        "npc": 7691,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "3e560fb1cf13d70327eed17a651a0c398f8403decc9844736f5f95ee252e224f"
-      },
-      {
-        "npc": 7692,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "dcaec65fe9dbe5861f3763cda6645fc533ae6cd4864ff3a5bfbff55442b111e1"
-      },
-      {
-        "npc": 7693,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "43edbad14dbc8d802d96333dbe3ee968d9d3991a5be188acecd820ecceadfa0d"
-      },
-      {
-        "npc": 7694,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "ad67e54a2990a7908f4b8f4a192f59c410117a32381e88e51a44ca27768ad7d6"
-      },
-      {
-        "npc": 7695,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "6667c6df08007750b48bd0e9a17a1449a7cc2ee380b70082e27db8cc135e4bab"
-      },
-      {
-        "npc": 7696,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "735b59ca09b15c3d0449f5aa220f152e50b28973fb15b644dcdece9c3c54fa22"
-      },
-      {
-        "npc": 7697,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "05afc10b52062bfdeb1be85d8b7293df4fc58308c93848269e3b67316d50f375"
-      },
-      {
-        "npc": 7698,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "87e3474dd83cc72cc061028dff88356f5c45488651a7ebf166c7debd802ae505"
-      },
-      {
-        "npc": 7699,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "f77b9b1cc6dcc88f1fdf42870a39c9f071bd36d4339d315d7113e41db286177e"
-      },
-      {
-        "npc": 7700,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "a07bae4ffb11876071ad4e79b7de4f29400cd395cb093bc9d2ba34379d3c09c2"
-      },
-      {
-        "npc": 7701,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "a4e5231337bc41df448190124af879244f3d61109a918cf51e40c3bd840a14d4"
-      },
-      {
-        "npc": 7702,
-        "name": "Vyrewatch",
-        "level": 140,
-        "sha256": "38925da4842b45b29cf0c129b05389e889b0fc0b675949576a03e7329b70f299"
-      },
-      {
-        "npc": 7703,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "5680446e154160d5118e9cec5ebf56fb77cbc63e44ec8e2eea527595d959b820"
-      },
-      {
-        "npc": 7704,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "dd1e6870581081e402fb18732dcb7494ecc9bb64e6f252085ad181337d378e9a"
-      },
-      {
-        "npc": 7705,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "f98c40dac13fb5b752cf383c5aa60cdaef4ba487f669d7fa54a8590cc9426568"
-      },
-      {
-        "npc": 7706,
-        "name": "Vyrewatch",
-        "level": 140,
-        "sha256": "9c0ea06a525d429d4f0e04238eac12cec59da5f485bc2cc644c61565b3010926"
-      },
-      {
-        "npc": 14046,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "cb5c9682f1af20015a49545d1cd80a83a6b5b67a53d20aa26227417b2a15d3e2"
-      },
-      {
-        "npc": 14047,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "4045fb21b810fa9e28f99aa02032e40cf40072e11a545806686b6b077fcfa81b"
-      },
-      {
-        "npc": 14048,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "09048240799e47c9fcddb58573ec77755af16c81de4695ba35ee971a208870b7"
-      },
-      {
-        "npc": 14049,
-        "name": "Vyrewatch",
-        "level": 110,
-        "sha256": "725e6cf833e2195df1b5c5032af29b796f1dac3cedd34231f7941d8324599000"
-      },
-      {
-        "npc": 14050,
-        "name": "Vyrewatch",
-        "level": 120,
-        "sha256": "76fdb1b17054bb000b062f49346aa0a6faee49c38d5a6dabd81e96b2d7e8a18f"
-      },
-      {
-        "npc": 14051,
-        "name": "Vyrewatch",
-        "level": 130,
-        "sha256": "40c1041c55f0894773fc23c4963d2fb42aef99e79eb1cfb8f9bed40bcb048ea2"
-      },
-      {
-        "npc": 14075,
-        "name": "Vyrewatch",
-        "level": 112,
-        "sha256": "e7b88c830397990fd2ba724f2185e6c1a7b41bcab1ee10c90964660afb4893bd"
-      },
-      {
-        "npc": 14076,
-        "name": "Vyrewatch",
-        "level": 112,
-        "sha256": "7bfef39662d8689d14c3b83400cdc29c024abca6c2cd1eefdef06a5f81cfb329"
-      },
-      {
-        "npc": 14077,
-        "name": "Vyrewatch",
-        "level": 112,
-        "sha256": "9d4ebc1a3b2728ca214dd311cdb4903b834fc00a4c35cbc403ea44c1291fed1f"
-      },
-      {
-        "npc": 14084,
-        "name": "Vyrewatch",
-        "level": 128,
-        "sha256": "913d6adda74d9f211a7ae838272769186288c5ad91751d61ea855e586775e8a0"
-      },
-      {
-        "npc": 14086,
-        "name": "Vyrewatch",
-        "level": 128,
-        "sha256": "66cd16f2b441b67061a088e99afdbb7f166713cfbb0fd4d3ffcd2885c878f0dd"
-      },
-      {
-        "npc": 14088,
-        "name": "Vyrewatch",
-        "level": 128,
-        "sha256": "38815b9a1d5fd7b05dfa6d3e9aef3d43c4b95ed17707a6636284debb481d6fb3"
-      },
-      {
-        "npc": 14090,
-        "name": "Vyrewatch",
-        "level": 128,
-        "sha256": "0b32a6ea3cefd78d4251d856684c1be92b6cb63b2374795957d95ce872667f34"
-      },
-      {
-        "npc": 14092,
-        "name": "Vyrewatch",
-        "level": 128,
-        "sha256": "67f09ce5ef50e94e700bc822d93f028d5cd54572f441fc528583364537f536b0"
-      },
-      {
-        "npc": 14094,
-        "name": "Vyrewatch",
-        "level": 128,
-        "sha256": "6968f1ca3471ff8c8669a8971586f366725a17f41c070aad20e44230b436b2ef"
-      },
-      {
-        "npc": 14096,
-        "name": "Vyrewatch",
-        "level": 128,
-        "sha256": "e2e94f2bee2221ffa567abadf92ec1fdb0407971494c55b698ecfc7b9eaac84f"
-      },
-      {
-        "npc": 14098,
-        "name": "Vyrewatch",
-        "level": 128,
-        "sha256": "edda6e01a9c761e9dda355e6134bf5ce48a9adb0d4c3f136918cca69ea307af9"
-      }
-    ]
-  },
-  {
-    "tier": "hard",
-    "source": {
       "name": "Bandit Level 130",
       "page": "Bandit",
       "url": "https://oldschool.runescape.wiki/w/Bandit#Level_130",
@@ -3427,8 +2863,21 @@
       ],
       "rarity": "1/200"
     },
-    "reason": "NPC/variant absent from local cache",
-    "candidates": []
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 15283,
+        "name": "Lizardman shaman",
+        "level": null,
+        "sha256": "1566d3e5460022da31643c80ac0b659b9d6118e235b7105389b456e617245669"
+      },
+      {
+        "npc": 15284,
+        "name": "Lizardman shaman",
+        "level": null,
+        "sha256": "e766cc1818ad20e58c6729137212762c05c7af6cd569cd21ce457b720f641c41"
+      }
+    ]
   },
   {
     "tier": "elite",
@@ -3445,8 +2894,21 @@
       ],
       "rarity": "1/1,200"
     },
-    "reason": "NPC/variant absent from local cache",
-    "candidates": []
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 15283,
+        "name": "Lizardman shaman",
+        "level": null,
+        "sha256": "1566d3e5460022da31643c80ac0b659b9d6118e235b7105389b456e617245669"
+      },
+      {
+        "npc": 15284,
+        "name": "Lizardman shaman",
+        "level": null,
+        "sha256": "e766cc1818ad20e58c6729137212762c05c7af6cd569cd21ce457b720f641c41"
+      }
+    ]
   },
   {
     "tier": "hard",
