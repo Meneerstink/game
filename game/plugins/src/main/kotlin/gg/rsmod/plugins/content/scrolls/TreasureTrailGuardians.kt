@@ -34,9 +34,13 @@ object TreasureTrailGuardians {
     }
     private fun guarded(step: TreasureTrailSourceStep) = step.source.let {
         it.action == TreasureTrailStepCatalogue.Action.DIG && it.challenge == TreasureTrailStepCatalogue.Challenge.GUARD ||
+            it.action == TreasureTrailStepCatalogue.Action.HOT_COLD && TreasureTrailHotCold.current.supports(it) ||
             it.action == TreasureTrailStepCatalogue.Action.EMOTE &&
             it.challenge == TreasureTrailStepCatalogue.Challenge.DOUBLE_AGENT && agentSource(it.tier, false) != null
     }
+    private fun atSite(player: Player, step: TreasureTrailSourceStep): Boolean =
+        if (step.source.action == TreasureTrailStepCatalogue.Action.HOT_COLD)
+            TreasureTrailHotCold.current.site(player, step) != null else step.source.at(player.tile)
     private fun marked(player: Player, contract: ClueStepContract): Boolean =
         contract.scroll.getAttr(ItemAttribute.CLUE_GUARD_KEY) == contract.step.persistenceId &&
             contract.scroll.getAttr(ItemAttribute.CLUE_GUARD_PROGRESS) == ClueScrollManager.progress(player, contract.tier) + 1
@@ -54,7 +58,7 @@ object TreasureTrailGuardians {
     fun attempt(player: Player, step: TreasureTrailSourceStep, sources: List<Int>, wilderness: Boolean = false, component: Int? = null,
                 spawn: (Player, List<Int>) -> List<Npc>?): Result {
         val row = step.source
-        if (!guarded(step) || !player.isOnline || !row.at(player.tile)) return Result.UNHANDLED
+        if (!guarded(step) || !player.isOnline || !atSite(player, step)) return Result.UNHANDLED
         if (row.action == TreasureTrailStepCatalogue.Action.EMOTE &&
             (component != row.firstEmote || !TreasureTrailEmotes.attire(player, row))) return Result.UNHANDLED
         val contract = ClueStepContract.capture(player, step) ?: return Result.UNHANDLED
@@ -64,7 +68,9 @@ object TreasureTrailGuardians {
             if (existing.step === step) return Result.FIGHTING
             remove(player)
         }
-        val allowed = when (row.challenge) {
+        val allowed = if (row.action == TreasureTrailStepCatalogue.Action.HOT_COLD)
+            TreasureTrailHotCold.current.site(player, step)?.guards == sources
+        else when (row.challenge) {
             TreasureTrailStepCatalogue.Challenge.DOUBLE_AGENT -> sources.size == 1 &&
                 sources.single() == agentSource(row.tier, wilderness)
             TreasureTrailStepCatalogue.Challenge.GUARD -> if (row.chooseGuard)
@@ -113,7 +119,7 @@ object TreasureTrailGuardians {
 
     /** A post-fight coordinate still requires the correct dig; killing never grants a casket. */
     fun dig(player: Player, step: TreasureTrailSourceStep): Boolean =
-        step.source.action == TreasureTrailStepCatalogue.Action.DIG && step.source.at(player.tile) &&
+        step.source.action in setOf(TreasureTrailStepCatalogue.Action.DIG, TreasureTrailStepCatalogue.Action.HOT_COLD) && atSite(player, step) &&
             ready(player, step) && ClueStepContract.capture(player, step)?.advance(player) == true
 
     fun cycle() {

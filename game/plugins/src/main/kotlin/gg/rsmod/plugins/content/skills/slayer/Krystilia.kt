@@ -46,7 +46,8 @@ object Krystilia {
     val TASKS = listOf(
         task(SlayerAssignment.ABYSSAL_DEMON, 75..125, 5, "Abyssal demon", slayer=85, quest="Priest in Peril", unlock=MORE_SLAYER, extended=200..250),
         task(SlayerAssignment.ANKOU, 75..125, 6, "Ankou", extended=91..150),
-        task(SlayerAssignment.AVIANSIE, 75..125, 7, "Aviansie", "Armadylean guard", godWars=true, unlock=AVIANSIES, extended=200..250),
+        // Armadylean guard Wiki: the treasure-trail guardian does not count as an Aviansie task.
+        task(SlayerAssignment.AVIANSIE, 75..125, 7, "Aviansie", godWars=true, unlock=AVIANSIES, extended=200..250),
         task(SlayerAssignment.BANDIT, 75..125, 4, "Bandit"),
         task(SlayerAssignment.BEAR, 65..100, 6, "Grizzly bear", "Bear", "Black bear", "Callisto", "Artio"),
         task(SlayerAssignment.BLACK_DEMON, 100..150, 7, "Black demon", extended=200..250),

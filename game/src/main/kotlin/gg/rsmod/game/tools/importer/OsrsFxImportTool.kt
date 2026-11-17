@@ -237,6 +237,9 @@ object OsrsFxImportTool {
      */
     val SEQ_BATCHES: Map<String, List<Int>> =
         mapOf(
+            // CLUE: gameval human weapon/casting roles, ork and aviansie combat on the source NPC rigs.
+            // Supplemental sequences only: the frozen clue-steps ten-NPC roster is unchanged.
+            "clue-guard-combat" to listOf(376, 378, 390, 424, 426, 427, 727, 836, 1162, 1167, 4320, 4321, 4322, 6957, 6958, 6959),
             // Owner 2026-09-21 ("there is no breach"): the loc animations of OSRS "Breach" 49561 and "Boss Spawn"
             // 49563, kept here as the record of a settled question. `OsrsLocImportTool` dropped both animations as
             // "not an imported classic sequence", so the obvious next step was to import the sequences and re-import
