@@ -17,7 +17,7 @@ object ModelFaceLiftTool {
     fun main(args: Array<String>) {
         require(args.size >= 4 && args[0] in setOf("plan", "apply")) { "Usage: plan|apply <dy> <priority> <modelId>..." }
         val dy = args[1].toInt().also { require(it in 1..16) }
-        val prio = args[2].toInt()
+        val prio = args[2].toInt() // -1 = every face (whole model)
         val ids = args.drop(3).map { it.toInt() }
         val paths = listOf(RspsPaths.data("cache"), RspsPaths.root("file-server/cache"))
         val library = CacheLibrary(paths[0])
@@ -27,16 +27,33 @@ object ModelFaceLiftTool {
                 val current = requireNotNull(ModelArchive.read(library, id)) { "model $id missing" }
                 val model = Rev667ModelDecoder.decode(current)
                 check(Rev667ModelEncoder.encode(model).contentEquals(current)) { "model $id: codec does not round-trip, refusing" }
-                val pr = requireNotNull(model.facePriority) { "model $id has no per-face priorities" }
+                val pr = model.facePriority ?: ByteArray(model.faceCount) { model.globalPriority }.also { require(prio == -1) { "model $id has no per-face priorities" } }
                 val mine = HashSet<Int>(); val others = HashSet<Int>()
                 for (f in 0 until model.faceCount) {
-                    val set = if (pr[f].toInt() == prio) mine else others
+                    val set = if (prio == -1 || pr[f].toInt() == prio) mine else others
                     set += model.faceA[f]; set += model.faceB[f]; set += model.faceC[f]
                 }
                 check(mine.isNotEmpty()) { "model $id: no faces of priority $prio" }
                 check(mine.none { it in others }) { "model $id: priority-$prio faces share vertices with other faces, refusing" }
                 val before = mine.map { model.vertexY[it] }.distinct().sorted()
-                for (v in mine) model.vertexY[v] -= dy
+                val sign = System.getenv("NORMAL")?.toIntOrNull()
+                if (sign == null) {
+                    for (v in mine) model.vertexY[v] -= dy
+                } else {
+                    // N613: decal on a vertical wall - move the layer along its own average face normal (sign +1/-1), dy units.
+                    var nx = 0.0; var ny = 0.0; var nz = 0.0
+                    for (f in 0 until model.faceCount) {
+                        if (prio != -1 && pr[f].toInt() != prio) continue
+                        val a = model.faceA[f]; val b = model.faceB[f]; val c = model.faceC[f]
+                        val ux = (model.vertexX[b] - model.vertexX[a]).toDouble(); val uy = (model.vertexY[b] - model.vertexY[a]).toDouble(); val uz = (model.vertexZ[b] - model.vertexZ[a]).toDouble()
+                        val vx = (model.vertexX[c] - model.vertexX[a]).toDouble(); val vy = (model.vertexY[c] - model.vertexY[a]).toDouble(); val vz = (model.vertexZ[c] - model.vertexZ[a]).toDouble()
+                        nx += uy * vz - uz * vy; ny += uz * vx - ux * vz; nz += ux * vy - uy * vx
+                    }
+                    val len = Math.sqrt(nx * nx + ny * ny + nz * nz).takeIf { it > 0 } ?: error("model $id: no normal")
+                    val mx = Math.round(sign * dy * nx / len).toInt(); val my = Math.round(sign * dy * ny / len).toInt(); val mz = Math.round(sign * dy * nz / len).toInt()
+                    println("NORMAL model $id: avg normal (${"%.2f".format(nx / len)}, ${"%.2f".format(ny / len)}, ${"%.2f".format(nz / len)}) move ($mx,$my,$mz)")
+                    for (v in mine) { model.vertexX[v] += mx; model.vertexY[v] += my; model.vertexZ[v] += mz }
+                }
                 val after = mine.map { model.vertexY[it] }.distinct().sorted()
                 println("LIFT model $id: ${mine.size} vertices of priority $prio  y $before -> $after")
                 mutations += CacheMutation(7, id, 0, Rev667ModelEncoder.encode(model), "model $id: priority $prio faces +$dy up (z-fight)",
