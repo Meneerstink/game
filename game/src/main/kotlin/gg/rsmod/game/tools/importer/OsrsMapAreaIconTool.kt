@@ -24,7 +24,9 @@ object OsrsMapAreaIconTool {
     /** OSRS area -> the local loc ids that carry it (from data/cfg/cox/ids.tsv). */
     // 65762 = the ToA entrance's RAID_ICON 46201 (OSRS 3355,2714 plane 1, square 13354; N618 16-11: our Necropolis import kept it as 65762,
     // same def as 46201, without the area) - the same raid icon as CoX.
-    val ICONS = linkedMapOf(91 to listOf(66582, 65762), 1015 to listOf(66594))
+    // N618 17-11: 65762 weer ERUIT - de ToA-ingang krijgt het icoon via het statische element (StaticMapElementTool, OSRS-plek
+    // 3355,2714; voedt wereldkaart + minimap); loc + element samen gaven op de minimap twee iconen naast elkaar (tx-20261116-012712 teruggedraaid).
+    val ICONS = linkedMapOf(91 to listOf(66582), 1015 to listOf(66594))
 
     /** Areas whose OSRS sprite already has a pixel-proven 667 mapelement (OsrsMapIconTable: OSRS sprite 1504 = mapelement 612). */
     // 91 -> 1149: created by this tool on 15-11 (tx-20261115-212554, sprite 8954) - reused for the next raid-icon locs (ToA, N618).
