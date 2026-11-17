@@ -21,6 +21,11 @@ object TreasureTrailGuardians {
     private val spawning = HashSet<Player>()
     fun session(player: Player): Session? = sessions[player]
 
+    /** Identity, never an NPC name/id whitelist: ordinary copies remain ordinary combatants. */
+    fun owner(actor: Npc): Player? = sessions.values.firstOrNull { session ->
+        session.actors.any { it === actor } && session.player.isOnline && session.contract.valid(session.player)
+    }?.player
+
     /** The source explicitly exempts the first emote step, including master emotes. */
     fun agentSource(tier: ClueScrollTier, wilderness: Boolean): Int? = when (tier) {
         ClueScrollTier.HARD -> if (wilderness) 1777 else 1778

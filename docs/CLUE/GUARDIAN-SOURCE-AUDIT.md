@@ -67,3 +67,22 @@ Reentrant spawning is refused; callback validation rejects bank/death/logout,
 foreign-world/dead/despawned actors, and removes unique failed actors once.
 The latest actual-source basic cohort passed117tests including these12 and the
 updated lifecycle tests. Separate Gradle/scripts acceptance still required.
+
+## Continuation 17-Nov: PvP priority
+
+`ClueGuardianPvp` now connects the real guardian session identities to the
+shared `PawnExt.isAttackedByOtherThan` path. Only an actual guardian belonging
+to the player yields to a player (or that player's familiar) in Wilderness
+singles; a same-name NPC or another account's guardian is not exempted.
+A separate player reservation survives subsequent wizard hits, clue cleanup,
+and a projectile already in flight from a third account. It uses the existing
+17-tick PJ duration, expires with a dead/offline opponent, and does not impose
+reservations on multi areas. Familiar impacts consult the same player rule.
+
+The freshly compiled actual-source run passed19 tests in one JVM: five new
+ClueGuardianPvpTests, twelve Guardian controller tests, and the two existing
+SinglesPlus regressions (ordinary NPCs/bosses/third attackers). Initial small
+compiler invocation needed the existing plugin friend-path for AncientCurses;
+no production change was needed for that harness failure. Inputs were frozen
+and recorded in validation/guardian-pvp-actual-source.json. This completes the
+PvP adapter component; guardian combat/spawn/loot and Gradle acceptance remain.
