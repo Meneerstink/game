@@ -13,7 +13,9 @@ ClueScrollTier.values().filter { it.casketId >= 0 }.forEach { tier ->
                 player.message("You cannot open this on Entrana, the monks are watching you too closely.")
                 return@queue
             }
-            if (MimicCaskets.supported(tier)) {
+            // Q1 keeps the encounter disabled. Ordinary rewards must remain available,
+            // without an opt-in prompt, a Mimic roll or changes to the player's opt-in.
+            if (MimicCaskets.supported(tier) && gg.rsmod.plugins.content.areas.watson.MimicEncounter.ready(player.world)) {
                 if (player.attr[MimicCaskets.ASKED] != true && player.attr[StrangeCasket.MIMIC_CHALLENGES] != true) {
                     messageBox(StrangeCasket.OPEN_BEFORE_FIGHT)
                     val wantsChallenge = options("Yes, I'd like to get Mimic challenges.", "No, I don't think I want that.") == 1

@@ -151,6 +151,12 @@ class ClueCasketTransactionTests {
             every { gg.rsmod.plugins.content.skills.summoning.Pets.owns(player, "Bloodhound") } returns false
             player.attr[gg.rsmod.plugins.content.areas.watson.StrangeCasket.MIMIC_CHALLENGES] = true
             repeat(9) { ClueCompletions.opened(player, master) }
+            // With Q1 disabled the real opening/viewer must retain the ordinary reward odds.
+            val ordinary = ClueRewardView.view(player, master).lines
+            assertTrue(ordinary.none { it.key == "clue:mimic" })
+            assertTrue(ordinary.filter { it.key.startsWith("clue:") }.any { it.your > 0.0 })
+            mockkObject(gg.rsmod.plugins.content.areas.watson.MimicEncounter)
+            every { gg.rsmod.plugins.content.areas.watson.MimicEncounter.ready(world) } returns true
             val lines = ClueRewardView.view(player, master).lines
             assertEquals(1.0, lines.single { it.key == "clue:mimic" }.your)
             assertTrue(lines.filter { it.key != "clue:mimic" }.all { it.your == 0.0 })
@@ -158,7 +164,7 @@ class ClueCasketTransactionTests {
             val postFight = gg.rsmod.plugins.content.areas.watson.MimicRewardView.view(player, master)
             assertEquals(1.0 / 1000, postFight.lines.single { it.item == 19730 }.your)
             assertTrue(postFight.lines.none { it.key == "clue:mimic" })
-        } finally { unmockkObject(ClueItems, ClueCasketLocation, gg.rsmod.plugins.content.skills.summoning.Pets) }
+        } finally { unmockkObject(ClueItems, ClueCasketLocation, gg.rsmod.plugins.content.skills.summoning.Pets, gg.rsmod.plugins.content.areas.watson.MimicEncounter) }
     }
 
     @Test fun `player dropped clue retains its identity and lasts an hour while stale confirmation cannot drop another scroll`() {

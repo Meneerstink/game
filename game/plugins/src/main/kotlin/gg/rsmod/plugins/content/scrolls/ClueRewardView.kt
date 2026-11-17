@@ -43,7 +43,8 @@ object ClueRewardView {
         ClueCasketRewards.milestone(tier)?.let { (threshold, osrs) ->
             extra(osrs, 1.0, completed >= threshold && !ClueContainers.held(player, ClueItems.local(osrs) ?: -1), "$threshold completions; if not owned")
         }
-        if (includeMimic && gg.rsmod.plugins.content.areas.watson.MimicCaskets.supported(tier)) {
+        if (includeMimic && gg.rsmod.plugins.content.areas.watson.MimicCaskets.supported(tier) &&
+            gg.rsmod.plugins.content.areas.watson.MimicEncounter.ready(world)) {
             val chance = gg.rsmod.plugins.content.areas.watson.MimicCaskets.chance(player, tier)
             val normal = 1.0 / if (tier == ClueScrollTier.ELITE) 35 else 15
             // Conversion replaces the whole opening, including once-per-casket extras.
