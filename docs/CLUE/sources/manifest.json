@@ -1285,6 +1285,30 @@
       "file": "Treasure_Trails__Full_guide__Master.wiki",
       "sha256": "9799ee40c443d4623a9fa28b8c2150566317d38525bf210e524b0ec2ec012830",
       "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Full_guide/Master"
+    },
+    {
+      "page": "Bloodhound",
+      "revision": 15375113,
+      "revision_time": "2026-10-18T15:29:45Z",
+      "file": "Bloodhound.wiki",
+      "sha256": "06e1c845e3e860c12cb78cbc39d17a5c8cefcb7878fc128a6e11ccbd7761b997",
+      "url": "https://oldschool.runescape.wiki/w/Bloodhound"
+    },
+    {
+      "page": "Call follower",
+      "revision": 15338208,
+      "revision_time": "2026-09-09T23:29:48Z",
+      "file": "Call_follower.wiki",
+      "sha256": "a42ea37838b868b1d7fb7aced64b0cd5d84e0f701cc9ac563a32edc9b4bea006",
+      "url": "https://oldschool.runescape.wiki/w/Call_follower"
+    },
+    {
+      "page": "Dog",
+      "revision": 15389611,
+      "revision_time": "2026-11-02T06:28:48Z",
+      "file": "Dog.wiki",
+      "sha256": "759a68641192b708c47d46a2d34541401e9c73c03b63af676837d759465345ed",
+      "url": "https://oldschool.runescape.wiki/w/Dog"
     }
   ]
 }

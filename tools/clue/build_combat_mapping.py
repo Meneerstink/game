@@ -14,6 +14,9 @@ SOURCES=[376,378,390,424,426,427,727,836,1162,1167,4320,4321,4322,6957,6958,6959
 
 
 def main():
+    pet='--pet-dig' in sys.argv
+    sources=[14498] if pet else SOURCES
+    filename='pet-dig.tsv' if pet else 'combat-assets.tsv'
     sys.path.insert(0,'C:/RSPS/tools/cache667')
     from js5 import Cache
     ledger=Path('C:/RSPS/OSRS_IMPORT_MASTER.yml')
@@ -25,7 +28,7 @@ def main():
     caches=[Cache(p) for p in ['C:/RSPS/game/game/data/cache','C:/RSPS/file-server/cache']]
     missing=[];rows=[];proof={}
     try:
-        for source in SOURCES:
+        for source in sources:
             local=mapping.get(source)
             if local is None:missing.append(source);continue
             data=[cache.file(20,local>>7,local&127) for cache in caches]
@@ -35,16 +38,16 @@ def main():
     finally:
         for cache in caches:cache.dat.close()
     assert digest==sha256(ledger.read_bytes()).hexdigest(),'Ledger changed during read-only audit; rerun'
-    out=ROOT/'build/clue/combat-assets';out.mkdir(parents=True,exist_ok=True)
+    out=ROOT/('build/clue/pet-dig/applied-mapping' if pet else 'build/clue/combat-assets');out.mkdir(parents=True,exist_ok=True)
     (out/'mapping-proof.json').write_text(json.dumps(dict(ledger=digest,missing=missing,sequences=proof),indent=2)+'\n')
     if missing:
         print('Supplemental sequence imports pending:',missing)
         assert '--write' not in sys.argv,'Cannot publish an incomplete applied mapping'
         return
-    assert len(rows)==len(SOURCES)
+    assert len(rows)==len(sources)
     if '--write' in sys.argv:
-        (ROOT/'data/cfg/clue/combat-assets.tsv').write_text('# dual-cache-ledger-verified; applied=true\n'+''.join(rows))
-    print('Verified16applied sequences in both caches;', 'published mapping' if '--write' in sys.argv else 'audit only')
+        (ROOT/'data/cfg/clue'/filename).write_text('# dual-cache-ledger-verified; applied=true\n'+''.join(rows))
+    print('Verified',len(rows),'applied sequences in both caches;', 'published '+filename if '--write' in sys.argv else 'audit only')
 
 
 if __name__=='__main__':main()

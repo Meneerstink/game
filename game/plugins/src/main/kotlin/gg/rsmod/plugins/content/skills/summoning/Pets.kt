@@ -498,6 +498,8 @@ object Pets {
         Familiar.playFollowerCall(player, npc)
         npc.facePawn(player)
         PetVoices.appear(player, npc)
+        // Wiki Call follower rev15338208: Bloodhound can dig the owner's current clue tile without a spade.
+        gg.rsmod.plugins.content.scrolls.CluePetDig.dig(player,npc)
         return true
     }
 

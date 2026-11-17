@@ -1,0 +1,10 @@
+[[File:Call follower.png|left]]
+The '''Call follower''' button is a feature that allows a player to call their [[Pet|follower]] with one click. The button is located in the [[Worn Equipment]] to the right of [[Items Kept on Death]] button. Calling a follower is non-interrupting, meaning the player will continue any current actions or dialogues regardless of clicking this button.
+
+If a player uses this feature without a follower, they will receive a message stating {{mes|You do not have a follower.}}
+
+If a player uses this feature when their follower is nearby, they will receive a message stating {{mes|Your follower is already close enough.}} To call successfully, a follower must either be 5 or more tiles away from the player or have any kind of [[Game square#Types of tiles|unwalkable tile]] affecting their path (such as a fence or cliff). Followers can become stuck behind other players or [[Non-player character|NPCs]], but these do not count as unwalkable tiles.
+
+If the follower is an adult [[dog]] or the [[Bloodhound]] pet, this feature will also allow them to dig at your current tile for [[Treasure Trails|Treasure Trail]] steps.
+{{Interface}}
+[[Category:Mechanics]]

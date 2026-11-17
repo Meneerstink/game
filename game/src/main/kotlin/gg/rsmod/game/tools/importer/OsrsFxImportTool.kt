@@ -239,6 +239,7 @@ object OsrsFxImportTool {
         mapOf(
             // CLUE: gameval human weapon/casting roles, ork and aviansie combat on the source NPC rigs.
             // Supplemental sequences only: the frozen clue-steps ten-NPC roster is unchanged.
+            "clue-pet-dig" to listOf(14498), // DOG_UPDATE_DIG: post-2686 source2762, same dog rig1491.
             "clue-guard-combat" to listOf(376, 378, 390, 424, 426, 427, 727, 836, 1162, 1167, 4320, 4321, 4322, 6957, 6958, 6959),
             // Owner 2026-09-21 ("there is no breach"): the loc animations of OSRS "Breach" 49561 and "Boss Spawn"
             // 49563, kept here as the record of a settled question. `OsrsLocImportTool` dropped both animations as
@@ -1020,6 +1021,10 @@ object OsrsFxImportTool {
         val existing = existingFx(assetMap)
         val npcOwned = npcOwnedFx(assetMap)
         val reader = ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE))
+        if (batchName == "clue-pet-dig") {
+            val raw = reader.file(2, 12, 14498) ?: error("Bloodhound Dig requires the documented OSRS source2762 fixture")
+            check(CacheItemProbeTool.sha1(raw) == "993d84f6d4f2567afbd0e4e9678abd8d89c38f7b") { "Unexpected Bloodhound source14498 bytes; use source2762 from PET-DIG-SOURCE.json" }
+        }
         val library = CacheLibrary(TARGETS[0])
         val mutations = mutableListOf<CacheMutation>()
         val records = mutableListOf<String>()

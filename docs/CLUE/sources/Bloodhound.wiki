@@ -1,0 +1,77 @@
+{{Multi Infobox
+|text1 = Follower
+|item1 =
+{{Infobox NPC
+|name = Bloodhound
+|image = [[File:Bloodhound (follower).png|280px]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|race = Dog
+|location = [[Clue scroll (master)|Master]] [[Treasure Trails]]
+|options = Talk-to, Pick-up, Dig
+|examine = Tracking down clues with logic and a pipe.
+|map = No
+|id = 6296,7232
+|leagueRegion = General
+}}
+|text2 = Item
+|item2 =
+{{Infobox Item
+|name = Bloodhound
+|image = [[File:Bloodhound.png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Drop
+|examine = Tracking down clues all over the world.
+|value = 1
+|alchable = No
+|weight = 0.015
+|id = 19730
+|leagueRegion = General
+}}
+}}
+{{Synced switch
+|version1 = [[File:Bloodhound chathead.png|left]]
+|version2 = [[File:Bloodhound detail.png|left|140px]]
+}}
+The '''Bloodhound''' is a [[pet]] that can be received as a rare reward from [[Clue scroll (master)|master]] [[Treasure Trails]] at a rate of 1/1,000. Like [[dog]]s, the Bloodhound can be used to dig for [[Treasure Trail]] steps.
+
+When a player receives the pet, it will automatically try to appear as their follower. At the same time, a message in the [[Chat Interface|chatbox]] will state {{mes|You have a funny feeling like you're being followed.|color=red}} However, if a player receives a pet while having a follower out (for example, a [[cat]]), it will be placed into their [[inventory]]. When this occurs, the message in the chatbox will instead state {{mes|You feel something weird sneaking into your backpack.|color=red}}
+
+If a player's inventory is full '''and''' they have a follower already, they '''will not''' receive the pet; it must instead be claimed from [[Probita]] in [[East Ardougne]].
+
+On [[death]], if a player loses their pet (as a follower or in your inventory) it will wander around the area for 30 seconds before despawning. Even if the player returns in time, the pet cannot be picked up, but can be reclaimed from Probita.
+
+==Item sources==
+{{Drop sources|Bloodhound}}
+
+==Dialogue==
+{{Hastranscript|npc}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 8 September 2026
+|update = A Ruff Situation & Crab Quest Out Today!
+|poll = A Ruff Situation, Crab Quest & Bronzeman Mode
+|change = The Bloodhound now has a right-click "Dig" option, which can be used in place of a spade for clue scroll steps. 
+}}
+{{Subject changes footer}}
+
+==Trivia==
+* The Bloodhound's dialogue makes references to ''{{WP|Up (2009 film)|Up}}'', ''{{WP|Sherlock Holmes}}'', ''{{WP|Goodfellas}}'', and ''{{WP|Star Trek}}''.
+* Using a set of [[bones]] on the bloodhound will result in the chatbox message {{mes|You give the dog the bone - it eats it.}} This is possibly a reference to the children's song "{{Wp|This Old Man}}".
+* A [[Locke_McScruff|non-interactable bloodhound]] exists on [[Aldarin]], near a [[cabbage]] patch.
+* The Bloodhound is the only one-off pet in the game to have any utility (the ability to dig for Treasure Trails like pet dogs). In addition, the Bloodhound can be reclaimed for free when lost due to death unlike regular pet dogs.
+* If the player attempts to trade the Bloodhound in for blood runes, the [[Mysterious Stranger (dog)|mysterious stranger]] states that, for the deal to be fair for such a rare breed, the player would have to be compensated with more blood runes than they can offer.
+
+{{Pets}}
+{{Master clue rewards}}
+[[Category:Collection log items]]
