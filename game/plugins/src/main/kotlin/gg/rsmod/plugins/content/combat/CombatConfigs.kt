@@ -246,10 +246,8 @@ object CombatConfigs {
             // OSRS-IMPORT: imported weapons play their own OSRS sequences (OsrsWeaponLooks), before any 667 weapon-class fallback.
             if (weaponId != null) {
                 val againstNpc = pawn.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR]?.get() is Npc
-                // N630: a look registered on the PHYSICAL id (DMM2 corrupted/Deadman AGS + claws) wins over the presentation base.
-                (physicalId?.let { gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.attackAnimation(it, style, againstNpc, getCombatStyle(pawn) == StyleType.STAB) }
-                    ?: gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks
-                    .attackAnimation(weaponId, style, againstNpc, getCombatStyle(pawn) == StyleType.STAB))
+                gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks
+                    .attackAnimation(weaponId, style, againstNpc, getCombatStyle(pawn) == StyleType.STAB)
                     ?.let { return it }
                 if (againstNpc && weaponId in gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.PVN_CROSSBOWS) {
                     return gg.rsmod.plugins.content.items.osrs.OsrsSeq.XBOWS_HUMAN_FIRE_AND_RELOAD_PVN
@@ -363,7 +361,7 @@ object CombatConfigs {
             // N630 (17-11, bot trace screens\N630\looks-2259): the attack looks a DMM2 corrupted / (Deadman) weapon up through its presentation
             // base, the block did not -> Corrupted voidwaker blocked with the 667 HD sequence 15074. Same base for both.
             val lookId = if (weapon == -1) weapon else gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.presentationBase(weapon)
-            (gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.blockAnimation(weapon) ?: gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.blockAnimation(lookId))?.let { return it }
+            gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.blockAnimation(lookId)?.let { return it }
             val weaponAnimation = weapon.let { CombatAnimation.getItemAnimation(it, weaponType = pawn.getWeaponType()) }
             if (weaponAnimation != null) {
                 return weaponAnimation.blockAnimation.id
