@@ -70,8 +70,9 @@ Bron: [Wizard rev15364116](https://oldschool.runescape.wiki/w/Special:PermanentL
 
 1. Eerst zonder skull: `::item 995 11`; Wizard Deposit-box. Stort tien munten: tien losse vakken, één munt blijft gedragen.
    Elfde weigert. Seer toont exact dezelfde tien vakken. Haal elk vak één keer uit; oude klik geeft niets extra.
-2. Stort één charged scythe en één active Fortuity, noteer charges/10M. Bewaar ook gewone noted/tradeable items.
-   Untradeables/burden-trinkets weigeren; noted items blijven dezelfde vorm, charges blijven gelijk.
+2. Stort één lege corrupted scythe en één active Fortuity; noteer de10M-lading. Bewaar ook gewone noted/tradeable items.
+   Charged corrupted scythe/shadow en blood money zijn onruilbaar en moeten weigeren, met ongewijzigde charges/aantallen.
+   Overige untradeables/burden-trinkets weigeren; noted items blijven dezelfde vorm. Test attribuutbehoud met een werkelijk ruilbaar item.
 3. Sluit UI, logout/login: contents blijven, oude toegang niet. Bank/safebox geeft geen Fortuity-,Avarice-,Vengeance-,Undead- of fairy-effect.
 4. Vul gewone inventory (echte items) en probeer opname. Alles blijft in de box. Maak één vak vrij en probeer opnieuw.
    Test ook een bestaande coinsstack op Int.MAX_VALUE met daarnaast vrije vakken: geen tweede overflowstack.
@@ -147,7 +148,8 @@ De vlag `rsps.dmm2.release` staat standaardUIT. Claude test de vlag pas in zijn 
 4. Geldige PvP-kill: éénphysicalbloodmoney als owned drop; geen geld bij alt/same-IP/ongeldig/practice/self.
    Twee laptopaccounts op hetzelfdeIP moeten dus0 geven; dit is de verwachte antifarmuitkomst, geen mislukte1money-test.
    Gebruik een daadwerkelijk VALID beoordeelde proef voor de1-route; de geïsoleerde unitproef dekt beide verdicts zonder IP-uitzondering.
-5. Dood/verhandelen/grondloot van bloodmoney als gewoon fysiek item; geen tweede virtuele wallet.
+5. Blood money is onruilbaar (wiki rev15380671/cache2686): trade/GE/safebox weigeren. Controleer dood/owned grondloot
+   via de gewone onruilbare-itemmatrix; geen tweede virtuele wallet en geen onbewezen OSRS-doodconversie toevoegen.
    Ontbrekende mapping → persistent pending; na mapping eenmalig leveren, volle inventory blijft retrybaar, overflow geen tweede stack.
 
 ## 7. Alle trinkets

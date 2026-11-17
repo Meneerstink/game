@@ -1,0 +1,119 @@
+--- a/game/plugins/src/main/kotlin/gg/rsmod/plugins/content/quests/tab/DropSources.kt
++++ b/game/plugins/src/main/kotlin/gg/rsmod/plugins/content/quests/tab/DropSources.kt
+@@ -191,7 +191,7 @@
+             npcId in gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessBossClues.NPCS
+ 
+     /** The view of [source] at [rate] for [player] (cached per source + rate; the player-specific parts are added on top). */
+-    fun view(player: Player, source: Source, rate: Double = DropTableFactory.killRate(player)): View {
++    fun view(player: Player, source: Source, rate: Double = DropViewer.sourceRate(player, source)): View {
+         // N522: Avarice notes, RoW, MM2 and diary tables are evaluated for the requesting player. A shared base would leak
+         // the first viewer's state to everyone else. This is table data only; rendering and all existing sources stay unchanged.
+         val base = if (playerDependent(source.tableNpc)) {
+@@ -450,7 +450,7 @@
+ 
+     private fun archaic(world: World, note: String): Line? {
+         val item = BreachIds.ARCHAIC_EMBLEM_TIER_5
+-        if (item <= 0) return null
++        if (gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled || item <= 0) return null
+         return Line("archaic", item, itemName(world, item), "1", 1.0, 1.0, note = note)
+     }
+ 
+@@ -673,7 +673,20 @@
+     /** Per item: every entry that can give it, with the chance per kill (your, normal), at one drop rate. */
+     class ItemIndex(val names: Map<Int, String>, val sources: Map<Int, List<Triple<Source, Double, Double>>>)
+ 
+-    private val indexes = java.util.concurrent.ConcurrentHashMap<Double, ItemIndex>()
++    // Snapshot the bracket and Fortuity effect separately; neither may leak into the other player's search.
++    private val indexes = java.util.concurrent.ConcurrentHashMap<String, ItemIndex>()
++    private fun bracketRate(player: Player) = gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationTier.of(player).dropRate
++    private fun indexKey(rate: Double, bonus: Double) = "$rate|$bonus"
++    private fun indexRate(player: Player, source: Source, rate: Double, bonus: Double): Double {
++        val npc = when (source.kind) {
++            Kind.NPC -> source.tableNpc
++            Kind.BREACH, Kind.GUARDIAN, Kind.JAD -> source.modelNpc
++            else -> null
++        }
++        val boss = npc == null || gg.rsmod.plugins.content.skills.summoning.BurdenTrinketDrops.sourceOf(player.world, npc) ==
++            gg.rsmod.plugins.content.skills.summoning.BurdenTrinketDrops.Source.BOSS
++        return rate + if (boss) bonus else 0.0
++    }
+ 
+     @Volatile private var warming = false
+ 
+@@ -682,25 +695,28 @@
+      * no player's first search waits ~1 s in one tick. A search before it is done builds what it needs itself.
+      */
+     fun warmUp(player: Player) {
+-        if (warming || indexes.size >= RATES.size) return
++        val bonus = gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets.bonus(player)
++        if (warming || RATES.all { indexes.containsKey(indexKey(it, bonus)) }) return
+         warming = true
+         player.world.queue {
++            try {
+             val sources = all(player)
+             // The logged-in player's own rate first: most likely the first search.
+-            val own = DropTableFactory.killRate(player)
++            val own = bracketRate(player)
+             for (rate in listOf(own) + RATES.filter { it != own }) {
+-                if (indexes.containsKey(rate)) continue
++                if (indexes.containsKey(indexKey(rate, bonus))) continue
+                 val names = HashMap<Int, String>()
+                 val bySource = HashMap<Int, MutableList<Triple<Source, Double, Double>>>()
+                 sources.forEachIndexed { i, s ->
+-                    for ((item, c) in itemChances(view(player, s, rate))) {
++                    for ((item, c) in itemChances(view(player, s, indexRate(player, s, rate, bonus)))) {
+                         names.getOrPut(item) { itemName(player.world, item) }
+                         bySource.getOrPut(item) { ArrayList() } += Triple(s, c.first, c.second)
+                     }
+                     if (i % WARM_UP_PER_TICK == WARM_UP_PER_TICK - 1) wait(1)
+                 }
+-                indexes.putIfAbsent(rate, ItemIndex(names, bySource))
+-            }
++                indexes.putIfAbsent(indexKey(rate, bonus), ItemIndex(names, bySource))
++            }
++            } finally { warming = false }
+         }
+     }
+ 
+@@ -709,24 +725,27 @@
+     private val RATES: List<Double> by lazy { gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationTier.values().map { it.dropRate }.distinct() }
+ 
+     /** Built once per drop rate (the first search at that rate), then a search is a lookup. */
+-    fun itemIndex(player: Player, rate: Double = DropTableFactory.killRate(player)): ItemIndex =
+-        (indexes[rate] ?: synchronized(indexes) {
+-            indexes[rate] ?: run {
++    fun itemIndex(player: Player, rate: Double = bracketRate(player)): ItemIndex {
++        val bonus = gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets.bonus(player)
++        val key = indexKey(rate, bonus)
++        return (indexes[key] ?: synchronized(indexes) {
++            indexes[key] ?: run {
+                 val start = System.nanoTime()
+                 val names = HashMap<Int, String>()
+                 val bySource = HashMap<Int, MutableList<Triple<Source, Double, Double>>>()
+                 for (s in all(player)) {
+-                    for ((item, c) in itemChances(view(player, s, rate))) {
++                    for ((item, c) in itemChances(view(player, s, indexRate(player, s, rate, bonus)))) {
+                         names.getOrPut(item) { itemName(player.world, item) }
+                         bySource.getOrPut(item) { ArrayList() } += Triple(s, c.first, c.second)
+                     }
+                 }
+                 ItemIndex(names, bySource).also {
+-                    indexes[rate] = it
++                    indexes[key] = it
+                     gg.rsmod.game.Server.logger.info("Drop Viewer: item index at {}x ({} items) built in {} ms.", rate, names.size, (System.nanoTime() - start) / 1_000_000)
+                 }
+             }
+         }).let { personalWildernessIndex(player, it, rate) }
++    }
+ 
+     /** N522: refresh only the new player-dependent NPC contributions in an otherwise shared item-search index. */
+     internal fun personalWildernessIndex(player: Player, base: ItemIndex, rate: Double, sources: List<Source> = all(player)): ItemIndex {
+@@ -739,7 +758,7 @@
+         }
+         bySource.entries.removeIf { it.value.isEmpty() }
+         dynamic.forEach { source ->
+-            itemChances(view(player, source, rate)).forEach { (item, chance) ->
++            itemChances(view(player, source, indexRate(player, source, rate, gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets.bonus(player)))).forEach { (item, chance) ->
+                 names.getOrPut(item) { itemName(player.world, item) }
+                 bySource.getOrPut(item) { ArrayList() } += Triple(source, chance.first, chance.second)
+             }

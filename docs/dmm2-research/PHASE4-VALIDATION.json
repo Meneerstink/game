@@ -1,0 +1,23 @@
+{
+  "native_plans": 8,
+  "cache_files_unchanged": 78,
+  "allocations_equal_to_phase3": true,
+  "junit_batch_contract_tests": 3,
+  "junit_corrected_break_tests": 17,
+  "python_apply_handoff_tests": 6,
+  "proposal_copies_compiled": true,
+  "patches": 5,
+  "patch_check": true,
+  "reserved_paths_unchanged": true,
+  "plan_metadata_collisions": 67,
+  "evidence_sha256": {
+    "phase4-output/batch-tests.txt": "35e5dcb770ca1087046a16151edadd615d8daa151e5c4ae94c37ea58b0a19f0a",
+    "phase4-review-output/break-tests.txt": "c10900e30a910e64d30e12f8fcb9800f0d2381a2a641a397e31552208ca1853a"
+  },
+  "limitations": [
+    "PLAN-only metadata IDs; regenerate from actual apply",
+    "No apply by GPT-A",
+    "No runtime/live evidence",
+    "UI230/font645, Nigel icon, ancient34607 and AV/POH require Claude integration"
+  ]
+}

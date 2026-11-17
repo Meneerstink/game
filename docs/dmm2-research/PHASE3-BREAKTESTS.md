@@ -12,10 +12,11 @@ Een geschreven test geldt pas als groen wanneer die run klaar is.
 |Reward Store|Alle zeven producten vijfmaal kopen/sellback met reconnect en oude slots|DP + ongebruikte rewardwaarde constant; oude sellback kan geen tweede refund geven|
 |Permanente unlock|Consumeer, reconnect, opnieuw unlock/sellback|Eén flag; geen nieuw verkoopbaar product na consumptie|
 |Safebox/active Fortuity|Skull/nietskull × PvM/PvP-resolver, reconnect|Safe kopie heeft geen effect/refund en komt niet in de death-risklijsten|
-|Charged scythe|Charge, safebox, JSON-containerreload, withdrawal, well-refund, replay|200 charges blijven bewaard; precies600blood-runes terug, geen tweede refund|
+|Corrupted scythe|Charged safebox weigert, JSON-containerreload, well-refund, lege vorm opslaan/opnemen, replay|200 charges blijven bij weigering; precies600blood-runes terug, geen tweede refund; lege ruilbare vorm eenmaal opgeslagen|
 |Starter|Reclaim/reconnect vijfmaal, eenmaligeintroreward/reconnect vijfmaal|Eén ongeopend pack; exact één1M+100tabs; geen cash uit reclaim|
 |Alle zes trinkets|Carried én safe kopie, twee deathcontexts × skull/nietskull × vijfretries|Iedere carried kopie eenmaal in risk; iedere safe kopie buiten risk; totaal12|
 |Volle safebox/inventory|Elf fysieke munten, tien boxslots, volle inventory, stale withdrawal/reconnect|Elf munten blijven over inventory+bank+box; geen verloren unit/overflowstack|
+|Blood money onruilbaar|Vijf safeboxpogingen met relog|Alle elf blijven gedragen; geen transfer. Fase4 corrigeert de eerdere onjuiste ruilbare testfixture volgens wiki15380671/cache2686|
 |Fire-amulet|Volle inventory, echte receptkosten, reconnect en vijf complete-retries|Eén ruby+amulet-of-magic+100fire verbruikt; éénamulet en éénXP-event|
 |Advanced weaponry|Vijf onderbroken/obstructed openings met reload, dan volledigeinventory/replay|Eéntrinket wordt éénwapen;28fysiekeitems blijven28; geen RNG bij geweigerde/stale call|
 |Undead|Summon, vijf reconnects en andere summonkeuze|Persistent gedeelde17tickcooldown; geen tweede spawn; trinket behouden|

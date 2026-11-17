@@ -1,0 +1,38 @@
+// Compile the review-only copies plus the corrected OWN break-test class; never apply a proposal patch.
+gradle.projectsEvaluated {
+    def root = gradle.rootProject
+    root.tasks.register('dmm2Phase4Review') {
+        doLast {
+            def cache = new File(gradle.gradleUserHomeDir, 'caches/modules-2/files-2.1')
+            def jars = { String p -> root.fileTree(new File(cache, p)).matching { include '**/*.jar' }.files.toList() }
+            def compiler = ['kotlin-compiler-embeddable','kotlin-stdlib','kotlin-stdlib-common','kotlin-script-runtime','kotlin-reflect','kotlin-daemon-embeddable'].collectMany { jars('org.jetbrains.kotlin/' + it + '/1.8.0') } + jars('org.jetbrains.intellij.deps/trove4j') + jars('org.jetbrains/annotations/13.0')
+            def libs = root.fileTree('game/build/install/game/lib').matching { include '*.jar' }.files.toList() + jars('io.mockk') + jars('net.bytebuddy') + jars('org.objenesis') + jars('junit') + jars('org.hamcrest') + jars('org.jetbrains.kotlinx') + jars('org.jetbrains.kotlin/kotlin-test/1.8.0') + jars('org.jetbrains.kotlin/kotlin-test-junit/1.8.0')
+            libs += jars('org.jetbrains.kotlin/kotlin-reflect/1.8.0')
+            def existing = root.files('build/dmm2/phase3-classes','game/build/classes/kotlin/main','game/plugins/build/classes/kotlin/main','net/build/classes/kotlin/main','util/build/classes/kotlin/main',libs)
+            def output = root.file('build/dmm2/phase4-review-classes');output.mkdirs()
+            def sources = ['build/dmm2/proposal-sources/DropSources.kt','build/dmm2/proposal-sources/CollectionLogPages.kt',
+                // Unchanged API source prevents a cross-module smart-cast artifact in the isolated compiler.
+                'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/drops/DropEntry.kt',
+                'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/drops/DropTable.kt',
+                'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/drops/DropTableFactory.kt',
+                'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/deadman/DeadmanPlayerFixture.kt',
+                'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/deadman/Dmm2BreakTests.kt'].collect { root.file(it).path }
+            root.exec {
+                commandLine([new File(System.getProperty('java.home'),'bin/java.exe').path,'-Xmx768m','-cp',root.files(compiler).asPath,
+                    'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler','-no-stdlib','-no-reflect','-nowarn','-jvm-target','11','-module-name','game',
+                    '-Xfriend-paths=' + root.files('game/build/classes/kotlin/main','game/plugins/build/classes/kotlin/main','build/dmm2/phase3-classes').files.collect { it.path }.join(','),
+                    '-cp',existing.asPath,'-d',output.path] + sources)
+            }
+            println '[DMM2 review] both proposal copies and own break tests compiled; original reserved files untouched'
+            def evidence = root.file('docs/dmm2-research/phase4-review-output');evidence.mkdirs()
+            new File(evidence,'break-tests.txt').withOutputStream { stream ->
+                root.exec {
+                    commandLine new File(System.getProperty('java.home'),'bin/java.exe').path,'-Xmx768m','-cp',root.files(output,existing).asPath,
+                        'org.junit.runner.JUnitCore','gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests'
+                    standardOutput=stream;errorOutput=stream
+                }
+            }
+            println '[DMM2 review] corrected own Dmm2BreakTests green'
+        }
+    }
+}

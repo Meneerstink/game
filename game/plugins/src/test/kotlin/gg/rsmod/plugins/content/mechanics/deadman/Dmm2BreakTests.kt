@@ -35,9 +35,12 @@ class Dmm2BreakTests {
     init {
         Dmm2Ids.install(ids.map { "item\t${it.key.source}\t${it.value}" })
         ids.values.forEach { f.define(it).tradeable = true }
-        f.define(id(Dmm2Ids.ItemId.BLOOD_MONEY), true).tradeable = true
+        // Wiki Blood money rev15380671 + native cache2686: stackable, UNTRADEABLE.
+        f.define(id(Dmm2Ids.ItemId.BLOOD_MONEY), true).tradeable = false
+        f.defs.getValue(id(Dmm2Ids.ItemId.SCYTHE)).tradeable = false
+        f.defs.getValue(id(Dmm2Ids.ItemId.SHADOW)).tradeable = false
         rewards.values.forEach { f.define(it).tradeable = true }
-        f.define(Items.COINS_995, true); f.define(Items.TELEPORT_TO_HOUSE, true)
+        f.define(Items.COINS_995, true).tradeable = true; f.define(Items.TELEPORT_TO_HOUSE, true)
         f.define(Items.BLOOD_RUNE, true); f.define(900).tradeable = true
         every { f.player.timers } returns timers
         store = NigelRewardStore(NigelRewardStore.Contract(rewards, emptyList(), null))
@@ -179,20 +182,25 @@ class Dmm2BreakTests {
         assertEquals(0L, f.count(active))
     }
 
-    @Test fun `charged scythe safe storage relog refund cannot be repeated or lose charges`() {
+    @Test fun `charged scythe refuses safe storage without charge loss then empty form is storable`() {
         val empty = id(Dmm2Ids.ItemId.SCYTHE_EMPTY); val active = id(Dmm2Ids.ItemId.SCYTHE)
         f.inventory[0] = Item(empty); f.inventory[1] = Item(Items.BLOOD_RUNE, 600)
         assertEquals(CorruptedWeapons.Result.OK, CorruptedWeapons.chargeScythe(f.player, 0, empty, 2))
         assertEquals(SafeDepositBox.Status.OK, SafeDepositBox.beginAccess(f.player))
-        assertEquals(1, SafeDepositBox.deposit(f.player, 0, active).moved)
-        reload(); assertEquals(200, f.containers.getValue(SAFE_DEPOSIT_BOX_KEY)[0]!!.getAttr(ItemAttribute.CHARGES))
-        assertEquals(SafeDepositBox.Status.NOT_OPEN, SafeDepositBox.withdraw(f.player, 0, active).status)
-        SafeDepositBox.beginAccess(f.player); assertEquals(1, SafeDepositBox.withdraw(f.player, 0, active).moved)
+        assertEquals(SafeDepositBox.Status.UNTRADEABLE, SafeDepositBox.deposit(f.player, 0, active).status)
+        reload(); assertEquals(200, f.inventory[0]!!.getAttr(ItemAttribute.CHARGES))
+        assertEquals(0, f.containers[SAFE_DEPOSIT_BOX_KEY]?.occupiedSlotCount ?: 0)
         val slot = f.inventory.rawItems.indices.single { f.inventory[it]?.id == active }
         assertEquals(CorruptedWeapons.Result.OK, CorruptedWeapons.unchargeScythe(f.player, slot, active, atWell = true))
         reload()
         assertEquals(CorruptedWeapons.Result.ITEM_CHANGED, CorruptedWeapons.unchargeScythe(f.player, slot, active, atWell = true))
         assertEquals(600L, f.count(Items.BLOOD_RUNE)); assertEquals(1L, f.count(empty)); assertEquals(0L, f.count(active))
+        SafeDepositBox.beginAccess(f.player)
+        assertEquals(1, SafeDepositBox.deposit(f.player, slot, empty).moved)
+        reload(); assertEquals(SafeDepositBox.Status.NOT_OPEN, SafeDepositBox.withdraw(f.player, 0, empty).status)
+        SafeDepositBox.beginAccess(f.player)
+        assertEquals(1, SafeDepositBox.withdraw(f.player, 0, empty).moved)
+        assertEquals(600L, f.count(Items.BLOOD_RUNE)); assertEquals(1L, f.count(empty))
     }
 
     @Test fun `starter reclaim reload duplicates neither unopened equipment pack nor introduction cash`() {
@@ -235,7 +243,7 @@ class Dmm2BreakTests {
     }
 
     @Test fun `ten physical safe slots full inventory and stale withdrawals conserve every unit after reload`() {
-        val money = id(Dmm2Ids.ItemId.BLOOD_MONEY)
+        val money = Items.COINS_995
         f.inventory[0] = Item(money, 11)
         SafeDepositBox.beginAccess(f.player)
         assertEquals(10, SafeDepositBox.deposit(f.player, 0, money, Int.MAX_VALUE).moved)
@@ -252,6 +260,19 @@ class Dmm2BreakTests {
         assertEquals(1, SafeDepositBox.withdraw(f.player, 0, money).moved)
         assertEquals(SafeDepositBox.Status.ITEM_CHANGED, SafeDepositBox.withdraw(f.player, 0, money).status)
         reload(); assertEquals(11L, f.count(money))
+    }
+
+    @Test fun `OSRS blood money cannot enter safe deposit box before or after relog`() {
+        val money = id(Dmm2Ids.ItemId.BLOOD_MONEY)
+        f.inventory[0] = Item(money, 11)
+        repeat(5) {
+            SafeDepositBox.beginAccess(f.player)
+            val before = encoded()
+            assertEquals(SafeDepositBox.Status.UNTRADEABLE, SafeDepositBox.deposit(f.player, 0, money, 11).status)
+            assertEquals(before, encoded())
+            assertEquals(11L, f.count(money))
+            reload()
+        }
     }
 
     @Test fun `fire recipe in a full inventory consumes its exact inputs once across relog and repeated completion`() {
