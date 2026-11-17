@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStoreTests" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-17T05:22:27" hostname="LAPTOP-KLOL515N" time="0.076">
+  <properties/>
+  <testcase name="sellback overflow stale slots modified and noted redemption preserve item and points" classname="gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStoreTests" time="0.013"/>
+  <testcase name="redeem consumes once persists unlock and cannot refund an unlock or consume second scroll" classname="gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStoreTests" time="0.003"/>
+  <testcase name="house blueprint conversion replacement reclaim and selection require permanent unlocks" classname="gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStoreTests" time="0.006"/>
+  <testcase name="all seven rewards use exact DP prices and full sellback without touching other wallets" classname="gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStoreTests" time="0.012"/>
+  <testcase name="buy failures negative MAX amounts and full inventory never charge or partially grant" classname="gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStoreTests" time="0.007"/>
+  <testcase name="skin conversion requires unlock and preserves every charge state in both directions without alias" classname="gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStoreTests" time="0.009"/>
+  <testcase name="missing local ids fail closed without phantom item or point changes" classname="gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStoreTests" time="0.005"/>
+  <testcase name="sale X handles multiple copies and notes while refusing partial shortfall" classname="gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStoreTests" time="0.015"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

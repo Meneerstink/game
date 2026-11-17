@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.starter.DeadmanStarterPackTests" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-17T05:22:28" hostname="LAPTOP-KLOL515N" time="0.054">
+  <properties/>
+  <testcase name="charge copies do not alias and last shot destroys weapon" classname="gg.rsmod.plugins.content.starter.DeadmanStarterPackTests" time="0.007"/>
+  <testcase name="full inventory and bank preserve unpaid marker and retry reward without partial cash" classname="gg.rsmod.plugins.content.starter.DeadmanStarterPackTests" time="0.005"/>
+  <testcase name="introduction and repeated opening never farm money or tabs" classname="gg.rsmod.plugins.content.starter.DeadmanStarterPackTests" time="0.017"/>
+  <testcase name="legacy unopened reward migrates once while already opened never pays again" classname="gg.rsmod.plugins.content.starter.DeadmanStarterPackTests" time="0.018"/>
+  <testcase name="pack in bank prevents reclaim and eleven space gate is atomic" classname="gg.rsmod.plugins.content.starter.DeadmanStarterPackTests" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

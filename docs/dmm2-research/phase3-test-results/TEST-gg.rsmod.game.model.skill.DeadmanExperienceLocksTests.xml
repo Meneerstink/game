@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.game.model.skill.DeadmanExperienceLocksTests" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-17T05:21:07" hostname="LAPTOP-KLOL515N" time="10.427">
+  <properties/>
+  <testcase name="skilling and Summoning still gain XP with both locks" classname="gg.rsmod.game.model.skill.DeadmanExperienceLocksTests" time="9.782"/>
+  <testcase name="all seven skills reject normal and exact reward XP before orb and task events" classname="gg.rsmod.game.model.skill.DeadmanExperienceLocksTests" time="0.424"/>
+  <testcase name="persistent flags roundtrip through serializer key semantics and survive death cleanup" classname="gg.rsmod.game.model.skill.DeadmanExperienceLocksTests" time="0.048"/>
+  <testcase name="legacy and new accounts gain XP by default" classname="gg.rsmod.game.model.skill.DeadmanExperienceLocksTests" time="0.128"/>
+  <testcase name="HP switch remains independent when combat is reenabled" classname="gg.rsmod.game.model.skill.DeadmanExperienceLocksTests" time="0.042"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/Pa/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+]]></system-err>
+</testsuite>

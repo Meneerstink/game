@@ -1,0 +1,135 @@
+{
+  "result": "PASS",
+  "tests": 101,
+  "classes": [
+    {
+      "name": "gg.rsmod.game.model.skill.DeadmanExperienceLocksTests",
+      "tests": 5,
+      "timestamp": "2026-11-17T05:21:07",
+      "sha256": "8faa9865a48bc2d507821d27b8d064eda81d27540d9306118094d9fb30b51b65",
+      "file": "docs/dmm2-research/phase3-test-results/TEST-gg.rsmod.game.model.skill.DeadmanExperienceLocksTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.DeadmanExperienceExtensionTests",
+      "tests": 1,
+      "timestamp": "2026-11-17T05:22:10",
+      "sha256": "82ae39cfa4660a309bdc3f98929c29d1c47a403ef565a86b116a02dca7ed9dda",
+      "file": "docs/dmm2-research/phase3-test-results/TEST-gg.rsmod.plugins.content.mechanics.deadman.DeadmanExperienceExtensionTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests",
+      "tests": 16,
+      "timestamp": "2026-11-17T05:28:29",
+      "sha256": "ad53e097cfb76728b5add37ebe8345e3bfeda881da8ce98fe5b6a2df8a579b07",
+      "file": "docs/dmm2-research/phase3-test-results/TEST-gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2CosmeticsTests",
+      "tests": 6,
+      "timestamp": "2026-11-17T05:22:22",
+      "sha256": "209fc333a8e205163b6ee0b2abb9883d048102c0258fc65aea5261e14096811d",
+      "file": "docs/dmm2-research/phase3-test-results/TEST-gg.rsmod.plugins.content.mechanics.deadman.Dmm2CosmeticsTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests",
+      "tests": 8,
+      "timestamp": "2026-11-17T05:22:23",
+      "sha256": "9df3c2011488df69ea2fa22f5e96de49d8dd7f528cc504fdcf18aa5b04d7de26",
+      "file": "docs/dmm2-research/phase3-test-results/TEST-gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2InteractionTests",
+      "tests": 2,
+      "timestamp": "2026-11-17T05:22:23",
+      "sha256": "f33ed90dfff2b5ceaaf880a03792d97c436b28477e605dd5b8773357e86ada11",
+      "file": "docs/dmm2-research/phase3-test-results/TEST-gg.rsmod.plugins.content.mechanics.deadman.Dmm2InteractionTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests",
+      "tests": 18,
+      "timestamp": "2026-11-17T05:22:23",
+      "sha256": "f40a32d1575836d71200c488594df817146a581573f2fdbf59499e168c2227f4",
+      "file": "docs/dmm2-research/phase3-test-results/TEST-gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2SourcePolicyTests",
+      "tests": 3,
+      "timestamp": "2026-11-17T05:22:24",
+      "sha256": "e2be632659c0872c7883227ccf78276486a571f7205309dfdc6468f182f9481e",
+      "file": "docs/dmm2-research/phase3-test-results/TEST-gg.rsmod.plugins.content.mechanics.deadman.Dmm2SourcePolicyTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.NigelHouseRewardsTests",
+      "tests": 4,
+      "timestamp": "2026-11-17T05:22:24",
+      "sha256": "9defe8a58322ec1ecfb964f2df87192edd376cffd7838fed337cdd8eb9065030",
+      "file": "docs/dmm2-research/phase3-test-results/TEST-gg.rsmod.plugins.content.mechanics.deadman.NigelHouseRewardsTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStoreTests",
+      "tests": 8,
+      "timestamp": "2026-11-17T05:22:27",
+      "sha256": "044947cc41d2975eee9a12669b312ac5f2c34f98e6f19df419abac86fd208cef",
+      "file": "docs/dmm2-research/phase3-test-results/TEST-gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStoreTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests",
+      "tests": 13,
+      "timestamp": "2026-11-17T05:22:27",
+      "sha256": "5270f5d2dd4e94d504929d0fe391f3fa821a0187a57aac78d65bb2c455df5a98",
+      "file": "docs/dmm2-research/phase3-test-results/TEST-gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.starter.DeadmanStarterPackTests",
+      "tests": 5,
+      "timestamp": "2026-11-17T05:22:28",
+      "sha256": "2903ec1e27cbd58d4e6940482009aa4d665253c8c211bff671ed85f4c8d6b1e0",
+      "file": "docs/dmm2-research/phase3-test-results/TEST-gg.rsmod.plugins.content.starter.DeadmanStarterPackTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.starter.NewPlayerStartTests",
+      "tests": 4,
+      "timestamp": "2026-11-17T05:22:39",
+      "sha256": "378c142438e49d1514c0cbe39ea2468d15aaafcdadbb01788dd80ec705bc1972",
+      "file": "docs/dmm2-research/phase3-test-results/TEST-gg.rsmod.plugins.content.starter.NewPlayerStartTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.starter.StarterPackInteractionsTests",
+      "tests": 4,
+      "timestamp": "2026-11-17T05:22:39",
+      "sha256": "48c5b0890a026f87dfa76385ccf95e3660a8cc26c96cfdeea6de56061a5ecece",
+      "file": "docs/dmm2-research/phase3-test-results/TEST-gg.rsmod.plugins.content.starter.StarterPackInteractionsTests.xml"
+    },
+    {
+      "name": "gg.rsmod.plugins.content.starter.StarterWeaponCombatTests",
+      "tests": 4,
+      "timestamp": "2026-11-17T05:22:40",
+      "sha256": "be800f2fed468ef66695c47cd13b9d5e8983c79dfbcfb994cea6f5ad9884c6b3",
+      "file": "docs/dmm2-research/phase3-test-results/TEST-gg.rsmod.plugins.content.starter.StarterWeaponCombatTests.xml"
+    }
+  ],
+  "method": "Current Kotlin 1.8 source precompile; real Gradle Test/JUnit; nine own scripts compiled; 15 own classes only",
+  "correction": "Initial new full-safebox fixture had tradeable=false for Blood money. Corrected to true; only Dmm2BreakTests rerun.",
+  "phase3_new_tests": 19,
+  "previous_own_tests": 82,
+  "priority": "low",
+  "machine_build_slot": true,
+  "full_suite": false,
+  "sources": {
+    "pages": 16,
+    "missing": 2
+  },
+  "source_hashes": {
+    "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/deadman/Dmm2BreakTests.kt": "95c7052779eaad6a4fef1138838f25019004394166b39bb9fe1f6b2257551bd2",
+    "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/deadman/Dmm2SourcePolicyTests.kt": "6fba5885a97dc2eba3b0962a07a2b7463ff2d48ec953b9e6eebad15702832a8d",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/drops/DropTableFactory.kt": "37a2902bf1f6e02b2b8e3e9492c64c0eaf51d9c472128d926d2156cc44660244",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/deadman/DeadmanTrinkets.kt": "de20b0caca6ca04495732a26765e160908d95c00c79d80b75347fb1a7e42868b",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/deadman/Dmm2Boot.kt": "128e7a60d1f849f562cfc3d4f99307d653ad91eeeaf4ef9fed2194fc211eba71",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/deadman/Dmm2Ids.kt": "d2cf8a798d254b4ae7f8fba40bdea6848eebe77272095bcf3127dd6fa1e14932",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/deadman/NigelRewardStore.kt": "5c876243955f9278714e3884805f5e663f019f16677726b3c9ddfe4649d1372a",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/deadman/ThunderKhopesh.kt": "768a01028be20a6e6c02879f924c7b6c4c019434d5f6de293475e34d3f66ea37",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/deadman/dmm2.plugin.kts": "61c8cd24a77a03f3b8d215f2317c8604838b68643c96a0251f7bb8303acc2f68",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/breach/DeadmanBreach.kt": "bd802e90935666e375b9afd37d986a464d0f738d1a07461b90dad27c0a8aa3d7"
+  },
+  "runtime_or_live": false
+}

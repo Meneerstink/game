@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.mechanics.deadman.Dmm2SourcePolicyTests" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-17T05:22:24" hostname="LAPTOP-KLOL515N" time="0.462">
+  <properties/>
+  <testcase name="khopesh default uses ordinary melee launch offset with source pinned four bolt schedule" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2SourcePolicyTests" time="0.001"/>
+  <testcase name="ancient Deadman cape requires fabric and a Deadman god cape with no duplicate conversion or Nigel bypass" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2SourcePolicyTests" time="0.237"/>
+  <testcase name="avarice uses the shared GE stack value and clamps overflow without wrapping the pickup threshold" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2SourcePolicyTests" time="0.224"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

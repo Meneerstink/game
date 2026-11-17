@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-17T05:22:23" hostname="LAPTOP-KLOL515N" time="0.141">
+  <properties/>
+  <testcase name="missing blood money mapping queues a durable claim paid once after import" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests" time="0.016"/>
+  <testcase name="blood money award reuses every existing antifarm verdict and pays nothing before release" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests" time="0.085"/>
+  <testcase name="released server cannot mint or spend legacy breach balances through public award and admin helpers" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests" time="0.008"/>
+  <testcase name="full inventory cannot consume money or grant an unlock and missing bindings cannot invent an item" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests" time="0.005"/>
+  <testcase name="overflow never debits marks or loses lifetime state and succeeds when room is made" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests" time="0.008"/>
+  <testcase name="migration is disabled by default and one successful snapshot is idempotent" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests" time="0.006"/>
+  <testcase name="armour purchase unlocks each piece at exactly one blood money and reclaim is free" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests" time="0.007"/>
+  <testcase name="zero small MAX negative historical balances have defined nonwrapping conversion" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

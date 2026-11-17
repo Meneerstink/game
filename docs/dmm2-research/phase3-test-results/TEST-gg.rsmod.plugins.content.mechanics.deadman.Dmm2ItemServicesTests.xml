@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" tests="18" skipped="0" failures="0" errors="0" timestamp="2026-11-17T05:22:23" hostname="LAPTOP-KLOL515N" time="1.034">
+  <properties/>
+  <testcase name="khopesh passive magic bolt does not inherit melee protection from the triggering swing" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.363"/>
+  <testcase name="fortuity boosts boss kills once but not ordinary or breach monster kills" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.426"/>
+  <testcase name="undead has a persistent shared summon cooldown and never displaces the familiar" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.025"/>
+  <testcase name="scythe independent max splits batches last charge and non well uncharge destroy charges" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.012"/>
+  <testcase name="saved charged scythe with no charges cannot borrow charged bonuses for a free swing" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.016"/>
+  <testcase name="corrupted shadow is separate tier with unchanged costs and reduced multiplier model" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.013"/>
+  <testcase name="fortuity conserves ten million across charge refund and repeats" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.03"/>
+  <testcase name="mapping validates duplicate and unknown ids without using source ids as local items" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.016"/>
+  <testcase name="fortuity no money overflow and full inventory rollback and bank confers no effect" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.03"/>
+  <testcase name="khopesh uses snapshot tile and four pvp bolt times" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.011"/>
+  <testcase name="scythe cleave covers three adjacent squares for each facing without reaching behind or across planes" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.017"/>
+  <testcase name="fire altar recipe is atomic costs exact ingredients and never succeeds twice" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.008"/>
+  <testcase name="missing advanced weaponry mapping reserves its rare weight instead of increasing other breach rewards" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.019"/>
+  <testcase name="advanced weaponry has eight outcomes empty charged weapons and stale double click safety" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.012"/>
+  <testcase name="well refunds only whole hundred charge batches and overflow rolls back the complete scythe" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.007"/>
+  <testcase name="PvP loss converts charged corrupted weapons and fortuity to exact loot without changing the source items" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.004"/>
+  <testcase name="avarice handles bones notes full inventory threshold and never grants from the bank" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.009"/>
+  <testcase name="vengeance uses the same spell cooldown without consuming the trinket" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
