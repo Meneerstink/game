@@ -49,6 +49,7 @@ object Dmm2Boot {
         ThunderKhopesh.appearance = khopeshAppearance()
         ThunderKhopesh.register()
         UndeadThralls.appearance = thrallAppearance()
+        registerStarterWeaponLooks()
         installHomeTeleports()
         // DMM2 fase 7 (Claude 17-11): the starter weapons never fired (appearance null -> canAttack false). Wiki Starter_staff: "equipped
         // with a built-in Fire Strike" -> our Fire Strike AV (OSRS 99/100/101 imports + the staff cast animation, CombatSpell index 1).
@@ -151,6 +152,26 @@ object Dmm2Boot {
         val armageddonSpot = Dmm2Ids.spot(2909)
         if (armageddonSeq != null && armageddonSpot != null)
             DeadmanHomeTeleport.install(NigelRewardStore.Teleport.ARMAGEDDON, listOf(DeadmanHomeTeleport.Stage(armageddonSeq, armageddonSpot, 23)))
+    }
+
+    /**
+     * N629 (owner 17-11 testclient: the starter bow floated loose from the hand, the starter sword vanished mid-swing): the DMM2 starter
+     * weapons are OSRS imports but were not in OsrsWeaponLooks, so they fell back to the 667 weapon classes (HD sequences such as 15071
+     * that OSRS never had - the same root cause as owner 2026-09-24 'FIX alle OSRS GEPORTE WEAPONS'). Same rows as the other imports:
+     *  - Starter sword: wiki Starter_sword "actually a slash sword", Chop/Slash/Lunge/Block = slash, slash, stab, slash ->
+     *    HUMAN_SWORD_SLASH 390 / HUMAN_SWORD_STAB 386, block HUMAN_SWORD_DEF 388 (the OsrsWeaponLooks slash-sword row).
+     *  - Starter bow: HUMAN_BOW 426 on every style, block OSRS_DEFEND_RANGED (the OsrsWeaponLooks bow row).
+     */
+    private fun registerStarterWeaponLooks() {
+        val looks = gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks
+        val seq = gg.rsmod.plugins.content.items.osrs.OsrsSeq
+        Dmm2Ids.item(22331)?.let { sword ->
+            looks.register(gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.Look(intArrayOf(seq.HUMAN_SWORD_SLASH, seq.HUMAN_SWORD_SLASH, seq.HUMAN_SWORD_STAB, seq.HUMAN_SWORD_SLASH),
+                block = seq.HUMAN_SWORD_DEF), sword)
+        }
+        Dmm2Ids.item(22333)?.let { bow ->
+            looks.register(gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.Look(IntArray(4) { seq.HUMAN_BOW }, block = seq.OSRS_DEFEND_RANGED), bow)
+        }
     }
 
     private const val RANGE = 6
