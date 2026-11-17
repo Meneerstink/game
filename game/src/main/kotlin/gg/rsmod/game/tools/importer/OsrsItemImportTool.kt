@@ -1596,6 +1596,16 @@ object OsrsItemImportTool {
             out.writeByte(code)
             out.writeShort(value and 0xFFFF)
         }
+        // N415: a model id above 0xFFFF (archive MODELS_EXT) does not fit opcode N's u16: the 78 client's wide opcode 240 sets that
+        // field (g1 target opcode + g4 id), as ItemDefCodec writes it. A plain u16 silently truncated 66079 to 543 (wrong mesh).
+        fun model16(code: Int, value: Int) {
+            if (ModelArchive.isWide(value)) {
+                require(value <= ModelArchive.MAX_MODEL_ID) { "model $value past ${ModelArchive.MAX_MODEL_ID}" }
+                out.writeByte(ModelArchive.OBJ_WIDE_MODEL)
+                out.writeByte(code)
+                out.writeInt(value)
+            } else u16(code, value)
+        }
         fun str(code: Int, value: String) {
             out.writeByte(code)
             out.writeBytes(value.toByteArray(Charsets.ISO_8859_1))
@@ -1604,7 +1614,7 @@ object OsrsItemImportTool {
 
         check(def.textureFind.isEmpty()) { "${def.name}: retexture tables use OSRS texture ids and are not mapped yet" }
 
-        if (def.inventoryModel > 0) u16(1, model(def.inventoryModel))
+        if (def.inventoryModel > 0) model16(1, model(def.inventoryModel))
         str(2, def.name)
         u16(4, def.zoom2d)
         u16(5, def.xan2d)
@@ -1629,9 +1639,9 @@ object OsrsItemImportTool {
             92 to def.maleHeadModel2, 93 to def.femaleHeadModel2,
         ).filter { it.second >= 0 }.also { own ->
             extraWornModels.keys.forEach { code -> check(own.none { it.first == code }) { "${def.name}: opcode $code is already a worn mesh" } }
-        }.forEach { (code, id) -> u16(code, model(id)) }
+        }.forEach { (code, id) -> model16(code, model(id)) }
         // Local meshes the item wears besides its own (WornForearm): opcode -> local model id.
-        extraWornModels.forEach { (code, id) -> u16(code, id) }
+        extraWornModels.forEach { (code, id) -> model16(code, id) }
         def.groundOptions.forEachIndexed { i, op -> if (op != null) str(30 + i, op) }
         def.inventoryOptions.forEachIndexed { i, op -> if (op != null) str(35 + i, op) }
         if (def.colorFind.isNotEmpty()) {
