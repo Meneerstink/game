@@ -1,0 +1,61 @@
+LOCTYPES=66953 failures=0 maxId=66960
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-b/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[18:22:36.265 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+LOC osrs=2239 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66961
+LOC osrs=6926 'null' ops=[null, null, null, null, null] size=1x1 anim=-1->-1 -> 66962
+LOC osrs=16416 'null' ops=[null, null, null, null, null] size=1x1 anim=-1->-1 -> 66963
+LOC osrs=21808 'null' ops=[null, null, null, null, null] size=1x1 anim=-1->-1 -> 66964
+LOC osrs=26947 'null' ops=[null, null, null, null, null] size=1x1 anim=-1->-1 -> 66965
+LOC osrs=27787 'null' ops=[null, null, null, null, null] size=1x1 anim=-1->-1 -> 66966
+LOC osrs=34675 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66967
+LOC osrs=34676 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66968
+LOC osrs=34689 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66969
+LOC osrs=34690 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66970
+LOC osrs=34691 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66971
+LOC osrs=34692 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66972
+LOC osrs=34693 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66973
+LOC osrs=34694 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66974
+LOC osrs=34695 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66975
+LOC osrs=34696 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66976
+LOC osrs=34697 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66977
+LOC osrs=34698 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66978
+LOC osrs=34699 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66979
+LOC osrs=34700 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66980
+LOC osrs=34701 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66981
+LOC osrs=34702 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66982
+LOC osrs=34703 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66983
+LOC osrs=34704 'null' ops=[null, null, null, null, null] size=2x2 anim=-1->-1 -> 66984
+LOC osrs=34714 'null' ops=[null, null, null, null, null] size=2x2 anim=-1->-1 -> 66985
+LOC osrs=34715 'null' ops=[null, null, null, null, null] size=2x2 anim=-1->-1 -> 66986
+LOC osrs=34716 'null' ops=[null, null, null, null, null] size=2x2 anim=-1->-1 -> 66987
+LOC osrs=34717 'null' ops=[null, null, null, null, null] size=4x2 anim=-1->-1 -> 66988
+LOC osrs=34718 'null' ops=[null, null, null, null, null] size=4x4 anim=-1->-1 -> 66989
+LOC osrs=34719 'null' ops=[null, null, null, null, null] size=4x4 anim=-1->-1 -> 66990
+LOC osrs=34720 'null' ops=[null, null, null, null, null] size=4x4 anim=-1->-1 -> 66991
+LOC osrs=34721 'null' ops=[null, null, null, null, null] size=4x4 anim=-1->-1 -> 66992
+LOC osrs=34722 'null' ops=[null, null, null, null, null] size=4x4 anim=-1->-1 -> 66993
+LOC osrs=34723 'null' ops=[null, null, null, null, null] size=4x4 anim=-1->-1 -> 66994
+LOC osrs=34724 'null' ops=[null, null, null, null, null] size=4x4 anim=-1->-1 -> 66995
+LOC osrs=34725 'null' ops=[null, null, null, null, null] size=4x4 anim=-1->-1 -> 66996
+LOC osrs=34726 'null' ops=[null, null, null, null, null] size=4x4 anim=-1->-1 -> 66997
+LOC osrs=34727 'Keyhole' ops=[Use, Exit, null, null, null] size=2x3 anim=-1->-1 -> 66998
+LOC osrs=34728 'Coins' ops=[null, null, null, null, null] size=3x3 anim=-1->-1 -> 66999
+LOC osrs=34729 'Sweets' ops=[null, null, null, null, null] size=3x3 anim=-1->-1 -> 67000
+LOC osrs=34730 'Sweet' ops=[null, null, null, null, null] size=3x1 anim=-1->-1 -> 67001
+LOC osrs=34731 'Sweets' ops=[null, null, null, null, null] size=3x2 anim=-1->-1 -> 67002
+LOC osrs=34732 'Amulet of Glory' ops=[null, null, null, null, null] size=3x3 anim=-1->-1 -> 67003
+SQUARE 10819 m42_67 -> m16_64=6946 l16_64=6947 locs=250
+DROPPED model 37128: face z-offsets (not representable in 667)
+DROPPED model 37129: face z-offsets (not representable in 667)
+DROPPED model 37130: face z-offsets (not representable in 667)
+DROPPED model 37132: face z-offsets (not representable in 667)
+DROPPED model 37134: face z-offsets (not representable in 667)
+DROPPED model 37135: face z-offsets (not representable in 667)
+FLOOR overlay osrs=41 tiles=320 rgb=ff00ff tex=-1 -> local 41 rgb=ff00ff tex=-1
+PLAN clue-mimic-arena squares=[10819] types=43 models=46 floors underlay=0 overlay=1 mutations=91
+PREFLIGHT transaction=tx-20261117-172241 mutations=91 outcomes={CREATE=182}
+DRY_RUN transaction=tx-20261117-172241 (nothing written)

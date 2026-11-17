@@ -21,7 +21,7 @@ import kotlin.test.*
 class MimicEncounterTests {
     private val accounts=mutableListOf<Player>()
     // Synthetic complete encounter fixture for lifecycle tests; probabilities are not OSRS assertions.
-    private val cacheReady=MimicEncounter.Assets(true,1,0.0,4,0.0,true)
+    private val cacheReady=MimicEncounter.Assets(true,1,0.0,4,0.0,true,arenaRegion=4160)
     data class Account(val player:Player,val world:World,val allocator:InstancedMapAllocator,
                        val map:InstancedMap,val idle:Npc,val casket:Item)
     @AfterTest fun cleanup() { accounts.forEach { MimicEncounter.leave(it,moveOutside=false) };unmockkAll() }
@@ -48,6 +48,26 @@ class MimicEncounterTests {
         every { idle.isSpawned() } returns true
         accounts+=p
         return Account(p,world,allocator,map,idle,casket)
+    }
+
+    @Test fun `missing mapping or occupied native source cannot allocate an encounter`() {
+        val a=account()
+        for(region in listOf(null,-1,65536,10819)) {
+            assertFalse(MimicEncounter.enter(a.player,a.casket,cacheReady.copy(arenaRegion=region)) { _,_->error("Invalid source cannot spawn") })
+            assertFalse(MimicChallenge.active(a.casket))
+        }
+        verify(exactly=0) { a.allocator.allocate(any(),any(),any()) }
+    }
+    @Test fun `all256copied chunks keep source relative coordinates rotation and planes in the relocated square`() {
+        val chunks=MimicEncounter.sourceChunks(4160)
+        assertEquals(1,chunks.regionSize);assertEquals(256,chunks.values.size)
+        for(x in 0..7) for(z in 0..7) for(plane in 0..3) {
+            val key=gg.rsmod.game.model.instance.InstancedChunkSet.getCoordinates(x,z,plane)
+            val chunk=assertNotNull(chunks.values[key])
+            assertEquals(Tile(1024+x*8,4096+z*8,plane),Tile.fromRotatedHash(chunk.packed))
+            assertEquals(0,chunk.rot)
+        }
+        assertFailsWith<IllegalArgumentException> { MimicEncounter.sourceChunks(10819) }
     }
 
     @Test fun `refused passive spawn releases the room without a token failure or teleport`() {

@@ -1,0 +1,49 @@
+{
+  "sourceRegion": 10819,
+  "targetProposal": 4160,
+  "squareOffset": [
+    -26,
+    -3
+  ],
+  "reserved": false,
+  "owner": "14September2026 Q10/17: unused square, instance (OSRS_IMPORT_MASTER.yml owner answers)",
+  "sourceBounds": [
+    2688,
+    4288,
+    2751,
+    4351
+  ],
+  "targetBounds": [
+    1024,
+    4096,
+    1087,
+    4159
+  ],
+  "targets": [
+    {
+      "cache": "C:/RSPS/game/game/data/cache",
+      "original": {
+        "m42_67": 3583,
+        "l42_67": 3584
+      },
+      "proposal": {
+        "m16_64": null,
+        "l16_64": null
+      },
+      "referenceSha256": "51c0f3ab5f38bb97fae1504f29d1e95e302a6039afa26ba574246a77d294f095"
+    },
+    {
+      "cache": "C:/RSPS/file-server/cache",
+      "original": {
+        "m42_67": 3583,
+        "l42_67": 3584
+      },
+      "proposal": {
+        "m16_64": null,
+        "l16_64": null
+      },
+      "referenceSha256": "51c0f3ab5f38bb97fae1504f29d1e95e302a6039afa26ba574246a77d294f095"
+    }
+  ],
+  "note": "Original10819 is occupied in667; preserve it. Recheck proposed4160 in both caches immediately before apply."
+}

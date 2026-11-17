@@ -30,18 +30,19 @@ object MimicEncounter {
     }
 
     data class Assets(val imported: Boolean, val keyhole: Int?, val candyChance: Double?, val impactDelay: Int?, val stepChance: Double?,
-                      val combatImplemented: Boolean = false) {
+                      val combatImplemented: Boolean = false, val arenaRegion: Int? = null) {
         val timingsReady: Boolean get() = candyChance != null && candyChance.isFinite() && candyChance in 0.0..1.0 &&
             impactDelay != null && impactDelay > 0 &&
             stepChance != null && stepChance.isFinite() && stepChance in 0.0..1.0 && candyChance+stepChance<=1.0
-        val ready: Boolean get() = imported && keyhole != null && combatImplemented && timingsReady
+        val ready: Boolean get() = imported && keyhole != null && arenaRegion != null && arenaRegion in 0..65535 &&
+            arenaRegion != 10819 && combatImplemented && timingsReady
     }
     val assets by lazy {
         val obj = JsonParser().parse(File(RspsPaths.data("cfg/clue/mimic-encounter.json")).readText()).asJsonObject
         fun number(key: String) = obj[key]?.takeUnless { it.isJsonNull }
         Assets(obj["arenaImported"].asBoolean, number("keyholeLocalId")?.asInt,
             number("candyAttackChance")?.asDouble, number("candyImpactDelayTicks")?.asInt, number("forwardStepChance")?.asDouble,
-            MimicCombat.ENCOUNTER_IMPLEMENTED)
+            MimicCombat.ENCOUNTER_IMPLEMENTED, number("arenaRegionId")?.asInt)
     }
 
     fun session(player: Player) = sessions[player]
@@ -65,13 +66,12 @@ object MimicEncounter {
             player.message("This challenge is temporarily unavailable.")
             return false
         }
-        val chunks = InstancedChunkSet.Builder()
-        for (x in 0..7) for (z in 0..7) for (height in 0..3)
-            chunks.set(x, z, height, 0, Tile(2688 + x * 8, 4288 + z * 8, height))
+        // Source10819 is occupied native667 content. Copy only the verified relocated room.
+        val chunks = sourceChunks(assets.arenaRegion!!)
         val config = InstancedMapConfiguration.Builder().setOwner(player.uid).setExitTile(OUTSIDE)
             .addAttribute(InstancedMapAttribute.DEALLOCATE_ON_LOGOUT)
             .addAttribute(InstancedMapAttribute.DEALLOCATE_ON_DEATH).build()
-        val map = player.world.instanceAllocator.allocate(player.world, chunks.build(), config) ?: return false
+        val map = player.world.instanceAllocator.allocate(player.world, chunks, config) ?: return false
         // A refused NPC spawn is not an attempt. Publish the actor before issuing a token.
         val boss = spawn(player, map) ?: run {
             player.world.instanceAllocator.release(player.world, map)
@@ -105,6 +105,15 @@ object MimicEncounter {
         player.teleportTo(session.tile(2719, 4314))
         player.persistNow()
         return true
+    }
+
+    internal fun sourceChunks(region: Int): InstancedChunkSet {
+        require(region in 0..65535 && region != 10819) { "Mimic source must be a verified relocated square, never native10819" }
+        val baseX=(region ushr 8)*64; val baseZ=(region and 255)*64
+        val chunks=InstancedChunkSet.Builder()
+        for(x in 0..7) for(z in 0..7) for(plane in 0..3)
+            chunks.set(x,z,plane,0,Tile(baseX+x*8,baseZ+z*8,plane))
+        return chunks.build()
     }
 
     private fun arenaTile(map: InstancedMap, x: Int, z: Int) =

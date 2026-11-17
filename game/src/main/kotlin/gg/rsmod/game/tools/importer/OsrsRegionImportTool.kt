@@ -242,7 +242,8 @@ object OsrsRegionImportTool {
 
     val BATCHES: Map<String, Batch> =
         mapOf(
-            "clue-mimic-arena" to Batch(listOf(10819), note = "The Mimic arena, OSRS cache 2686 m42_67",
+            "clue-mimic-arena" to Batch(listOf(10819), note = "The Mimic arena, source2686 m42_67 relocated to unused m16_64",
+                squareOffset = -26 to -3,
                 sourceCache = gg.rsmod.game.RspsPaths.root("import-source/openrs2-2686/cache"),
                 sourceKeys = gg.rsmod.game.RspsPaths.root("import-source/openrs2-2686/keys.json")),
             // N522 bundle 2: OSRS Wiki "Scorpia" (cave in the Scorpion Pit, x 3233 y 10341 -> square 12961, empty in the 667 map) and
@@ -714,7 +715,13 @@ object OsrsRegionImportTool {
                 check(missingSeqs.isEmpty()) { "loc animations not imported yet (add an OsrsFxImportTool SEQ_BATCHES entry): $missingSeqs" }
                 if (!batch.retileTargets) importedDefs.forEach { (modernId, def) ->
                     val localId = locIdMap.getValue(modernId)
-                    val bytes = Rev667LocType.encodeFromModern(def, { modelIdMap.getValue(it) }, dropped) { seqs["seq:$it"] }
+                    val encoded = Rev667LocType.encodeFromModern(def, { modelIdMap.getValue(it) }, dropped) { seqs["seq:$it"] }
+                    val bytes = if (name == "clue-mimic-arena" && def.ambientSoundId >= 0) {
+                        val sound = def.ambientSoundId
+                        val other = ModernCacheReader(File(FeroxImportTool.FILE_SERVER_CACHE)).use { it.file(4,sound,0) }
+                        ClueMimicArenaAssets.preserveAmbient(encoded,def,modern.file(4,sound,0),listOf(library.data(4,sound,0),other))
+                            .also { dropped.remove("loc ${def.id}: ambient sound") }
+                    } else encoded
                     val decoded = Rev667LocType.decode(localId, bytes)
                     check(decoded.allModels == def.models.map { modelIdMap.getValue(it) }) { "loc $modernId encode/decode model mismatch" }
                     if (def.animationId != -1) check(decoded.animation == seqs["seq:${def.animationId}"]) { "loc $modernId animation ${def.animationId} not imported" }
@@ -826,6 +833,7 @@ object OsrsRegionImportTool {
                 dropped.distinct().forEach { println("DROPPED $it") }
                 underlayMap.forEach { (m, l) -> println("FLOOR underlay osrs=${m - 1} rgb=${Integer.toHexString(modernUnderlays[m - 1]?.rgb ?: -1)} -> local ${l - 1} rgb=${Integer.toHexString(newUnderlays[l - 1] ?: localUnderlays[l - 1] ?: -1)}${if (newUnderlays.containsKey(l - 1)) " NEW plain" else ""}") }
                 overlayMap.forEach { (m, l) -> println("FLOOR overlay osrs=${m - 1} tiles=${overlayUse[m] ?: 0} rgb=${Integer.toHexString(modernOverlays[m - 1]?.rgb ?: -1)} tex=${modernOverlays[m - 1]?.texture} -> local ${l - 1} rgb=${Integer.toHexString((newOverlays[l - 1] ?: localOverlays[l - 1])?.rgb ?: -1)} tex=${(newOverlays[l - 1] ?: localOverlays[l - 1])?.texture}${if (newOverlays.containsKey(l - 1)) " NEW" else ""}") }
+                if (name == "clue-mimic-arena") modelIdMap.forEach { (upstream, local) -> println("MODEL osrs=$upstream -> $local") }
                 println("PLAN $name squares=${batch.squares} types=${importedDefs.size} models=${modelIdMap.size} floors underlay=${underlayMap.size} overlay=${overlayMap.size} mutations=${mutations.size}")
                 val planned =
                     when {
@@ -879,7 +887,7 @@ object OsrsRegionImportTool {
         val sb = StringBuilder()
         sb.appendLine("  - name: OSRS region import '$name' - ${batch.note.replace(": ", ", ")} (squares ${batch.squares}, ${batch.squareOffset?.let { "moved ${it.first},${it.second} squares -> ${batch.squares.map { s -> batch.target(s) }}" } ?: "same coordinates"})")
         sb.appendLine("    transaction_id: $transactionId")
-        sb.appendLine("    source: OpenRS2 cache 2499, map squares ${plan.squareGroups.entries.joinToString { "${it.key} -> groups ${it.value.first}/${it.value.second}" }}")
+        sb.appendLine("    source: ${batch.sourceCache}, map squares ${plan.squareGroups.entries.joinToString { "${it.key} -> groups ${it.value.first}/${it.value.second}" }}")
         sb.appendLine("    loc_ids:")
         plan.locIdMap.forEach { (modern, local) -> sb.appendLine("      - { upstream_id: $modern, local_id: $local, mode: IMPORT }") }
         sb.appendLine("    models:")

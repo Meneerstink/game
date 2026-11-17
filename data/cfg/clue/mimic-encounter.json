@@ -21,5 +21,7 @@
   "candyAttackChance": null,
   "candyLandingOffsets": null,
   "candyFlight": null,
-  "sourceGateNote": "Owner Q1: exact candy distribution/ballistics and random choices await OSRS measurement, never donor defaults. Code retains the ordinary casket until ready."
+  "sourceGateNote": "Owner Q1: exact candy distribution/ballistics and random choices await OSRS measurement, never donor defaults. Code retains the ordinary casket until ready.",
+  "arenaRegionId": null,
+  "arenaRelocationNote": "Native667 source10819 is occupied; only a verified relocated source region may be instanced. Proposed4160 is not reserved. Q1 remains gated."
 }

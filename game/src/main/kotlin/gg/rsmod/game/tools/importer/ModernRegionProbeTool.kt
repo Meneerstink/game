@@ -460,6 +460,8 @@ class ModernObjectDef(val id: Int) {
     var varpId = -1
     var transforms: IntArray? = null
     var ambientSoundId = -1
+    var ambientSoundRadius = 0
+    var ambientSoundRetain = 0
     var mapAreaId = -1
     var randomizeAnimStart = true
     var deferAnimChange = false
@@ -575,8 +577,8 @@ class ModernObjectDef(val id: Int) {
                     }
                     78 -> {
                         def.ambientSoundId = buf.u16()
-                        buf.u8()
-                        buf.u8()
+                        def.ambientSoundRadius = buf.u8()
+                        def.ambientSoundRetain = buf.u8()
                     }
                     79 -> {
                         buf.u16()
