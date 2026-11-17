@@ -1,7 +1,7 @@
 osrs_group	local_interface	components	extra	report
 230	1204	41	DMM2 stoneframe17..30 title18 close30; safe slots31..40 from1151/1156 (5x2,39x38)	230:0 onLoad script 1151 15073285 NOT RUN (server fills this part) | 230:4 onLoad script 703 -2147483645,"Safe Deposit Box",0 NOT RUN (server fills this part) | 230:9 onMouseOver script 273 15073290,75 NOT RUN (server fills this part) | 230:9 onMouseLeave script 273 15073290,0 NOT RUN (server fills this part) | 230:9 onOp script 1152 -2147483645,179,170,-2147483644 NOT RUN (server fills this part) | 230:11 onMouseOver script 273 15073292,75 NOT RUN (server fills this part) | 230:11 onMouseLeave script 273 15073292,0 NOT RUN (server fills this part) | 230:11 onOp script 1152 -2147483645,179,170,-2147483644 NOT RUN (server fills this part)
 232	1203	31	DMM2 inventory slots3..30 from1158/1161 (4x7,42x36,offset16/4)	232:0 onLoad script 1158 15204354 NOT RUN (server fills this part)
-819	1205	193	thinbox parent=31 components=47..48 | thinbox parent=34 components=49..50 | thinbox parent=37 components=51..52 | thinbox parent=44 components=53..54 | DMM2 OMNISHOP title56 close66 products67..150 stride12 info151..155; DBrow929/table39/currency1206=Deadman Points | DMM2 OMNISHOP buttons156..191 nofilters192	819:18 onClick script 7148  NOT RUN (server fills this part)
+819	1205	211	thinbox parent=31 components=47..48 | thinbox parent=34 components=49..50 | thinbox parent=37 components=51..52 | thinbox parent=44 components=53..54 | DMM2 OMNISHOP title56 close66 products67..150 stride12 info151..155; DBrow929/table39/currency1206=Deadman Points | DMM2 OMNISHOP buttons156..191 filterbacking192 controls193..198 expandedframe199..210; layout bridge source7155	819:18 onClick script 7148  NOT RUN (server fills this part)
 806	1206	83	thinbox parent=5 components=12..13 | DMM2 OMNISHOP_SIDE inventory14..41 info42..46 buttons47..82	806:3 onOp script 7256  NOT RUN (server fills this part)
 sprite	829	8955		
 sprite	828	8956		
@@ -47,3 +47,8 @@ sprite	917	9033
 sprite	918	9034		
 sprite	919	9035		
 sprite	920	9036		
+sprite	4735	9105		
+sprite	8386	9106		
+sprite	4737	9107		
+sprite	8387	9108		
+sprite	788	9109		
