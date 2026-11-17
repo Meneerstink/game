@@ -2104,6 +2104,8 @@ private val entranaPermittedItems: List<Int> =
     )
 
 fun Player.hasEntranaRestrictedEquipment(): Boolean {
+    // Deadman starter pack wiki rev15188784: an unopened pack cannot be smuggled onto Entrana.
+    if (inventory.contains(gg.rsmod.plugins.content.newplayer.NewPlayerConfig.current.starterChestItem)) return true
     val allItemsList =
         (inventory.sequence() + equipment.sequence())
             .filterNot { item ->

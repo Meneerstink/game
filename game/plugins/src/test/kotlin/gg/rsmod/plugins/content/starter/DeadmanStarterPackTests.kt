@@ -14,7 +14,7 @@ class DeadmanStarterPackTests {
     private val pack = NewPlayerConfig.current.starterChestItem
     init {
         f.attr[NEW_ACCOUNT_ATTR] = true
-        (700..707).forEach { f.define(it, it == 703) }
+        (700..707).forEach { f.define(it) }
         listOf(pack, Items.DRAMEN_STAFF, Items.DEADMANS_SKULL, 900).forEach { f.define(it) }
         f.define(Items.COINS_995, true); f.define(Items.TELEPORT_TO_HOUSE, true)
         DeadmanStarterPack.install(ids)
@@ -64,7 +64,10 @@ class DeadmanStarterPackTests {
         (1..17).forEach { f.inventory[it] = Item(900) }
         assertEquals(DeadmanStarterPack.Result.NO_SPACE, DeadmanStarterPack.open(f.player))
         assertEquals(1L, f.count(pack)); assertEquals(0L, f.count(ids.sword))
-        f.inventory[17] = null
+        f.inventory[17] = null // Eleven free meets the wiki gate, but twelve nonstackable tuna must also fit.
+        assertEquals(DeadmanStarterPack.Result.NO_SPACE, DeadmanStarterPack.open(f.player))
+        assertEquals(1L, f.count(pack)); assertEquals(0L, f.count(ids.sword))
+        (7..16).forEach { f.inventory[it] = null }
         assertEquals(DeadmanStarterPack.Result.OK, DeadmanStarterPack.open(f.player))
         assertEquals(12L, f.count(ids.tuna))
     }
