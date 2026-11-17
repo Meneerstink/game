@@ -13,6 +13,27 @@ object CluePuzzleInterfaceBake {
     val SELECTORS = listOf(1,2,3,4,5,6,9)
 
     data class Picture(val selector: Int, val models: List<Int>)
+
+    /**
+     * OSRS offsetX/Y are camera translations, not the 667 IF3 projection-centre fields.
+     * For the unrotated frame meshes, bake (xoff, yoff, yoff) before camera pitch,
+     * exactly as CC_SETMODELANGLE/InterfaceManager would do with xof2d/yof2d.
+     * Decode from source on each import; never translate an already ported mesh.
+     */
+    fun adaptFrameModel(id: Int, model: ModelData, source: JsonNode) {
+        val frame = source.elements().asSequence().singleOrNull {
+            it["type"].asInt() == 6 && it["modelId"].asInt() == id
+        } ?: return
+        require(frame["rotationY"].asInt() == 0 && frame["rotationZ"].asInt() == 0)
+        require(model.version < 13) { "Puzzle source offsets require OSRS coarse model units" }
+        val x = frame["offsetX2d"].asInt()
+        val y = frame["offsetY2d"].asInt()
+        repeat(model.vertexCount) { v ->
+            model.vertexX[v] += x
+            model.vertexY[v] += y
+            model.vertexZ[v] += y
+        }
+    }
     fun pictures(node: JsonNode): List<Picture> = node.map { row ->
         Picture(row["selector"].asInt(),row["models"].map { it.asInt() })
     }.also { rows ->
@@ -43,7 +64,8 @@ object CluePuzzleInterfaceBake {
                 scrollW=n.n("scrollWidth"),scrollH=n.n("scrollHeight"),noClickThrough=n.b("noClickThrough"),
                 sprite=if(type==5)sprites.getValue(n.n("spriteId")) else -1,colour=n.n("textColor"),filled=n.b("filled"),
                 ops=n["actions"]?.map { it.asText() }.orEmpty(),model=if(type==6)models.getValue(n.n("modelId")) else -1,
-                originX=n.n("offsetX2d"),originY=n.n("offsetY2d"),xan=n.n("rotationX"),yan=n.n("rotationZ"),zan=n.n("rotationY"),
+                // Frame offsets are baked in adaptFrameModel, never interpreted as screen pixels.
+                originX=0,originY=0,xan=n.n("rotationX"),yan=n.n("rotationZ"),zan=n.n("rotationY"),
                 zoom=n.n("modelZoom"),ortho=n.b("orthogonal"),mouseOver=hook("onMouseOverListener"),mouseLeave=hook("onMouseLeaveListener"))
         }.toMutableList()
         require(components.single { it.id==4 }.let { it.w==251 && it.h==251 })

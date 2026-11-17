@@ -2,18 +2,21 @@
 import hashlib
 import json
 import subprocess
+import sys
 from preflight_stashes import snapshot, ROOT
 
 
 def main():
-    out = ROOT/'build/clue/puzzles-preflight'
+    render_fix = '--render-fix' in sys.argv
+    out = ROOT/('build/clue/puzzle-render/preflight' if render_fix else 'build/clue/puzzles-preflight')
     out.mkdir(parents=True, exist_ok=True)
     runtime = ROOT/'data/cfg/clue/interfaces.tsv'
-    args = [json.loads(line) for line in (ROOT/'build/clue/interface-port/server.args').read_text().splitlines()]
-    cp = str(ROOT/'build/clue/interface-port/server')+';'+args[args.index('-cp')+1]
+    codec = ROOT/('build/clue/puzzle-render/codec' if render_fix else 'build/clue/interface-port')
+    args = [json.loads(line) for line in (codec/'server.args').read_text().splitlines()]
+    cp = str(codec/'server')+';'+args[args.index('-cp')+1]
     command = ['C:/Program Files/Eclipse Adoptium/jdk-11.0.32.101-hotspot/bin/java.exe', '-Xmx512m', '-cp', cp,
                'gg.rsmod.game.tools.importer.ClueInterfaceImportTool', str(ROOT/'docs/CLUE/cache/puzzle-interface.json'),
-               str(runtime), str(ROOT/'docs/CLUE/PUZZLE-UI-PREFLIGHT.tsv'), '--puzzles']
+               str(runtime), str(ROOT/('docs/CLUE/PUZZLE-RENDER-PREFLIGHT.tsv' if render_fix else 'docs/CLUE/PUZZLE-UI-PREFLIGHT.tsv')), '--puzzles']
 
     def state():
         value = snapshot()

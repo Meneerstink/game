@@ -166,6 +166,7 @@ object ClueInterfaceImportTool {
                 if (textures.isNotEmpty()) add(26, 0, 0, materials.encode(), "CLUE static texture material")
                 val textureMap = mapping.filterKeys { it.first == "texture" }.mapKeys { it.key.second }
                 for ((id, model) in decoded) {
+                    if ("--puzzles" in args) CluePuzzleInterfaceBake.adaptFrameModel(id, model, root["306"])
                     val localId = allocate("model", id) {
                         ModelIdAllocator.resolveFromCandidates("clue_ui:$id", "interface", emptyMap(), candidates, reserved).also { reserved += it }
                     }

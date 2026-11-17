@@ -67,7 +67,18 @@ B publiceerde geen arena-runtime-mapping; Claude mag de read-only verifier uit
 [MIMIC-ARENA.md](MIMIC-ARENA.md) gebruiken en pas na collision/render-controle
 publiceren. Dat schakelt het gevecht niet in.
 
-**Geen nieuwe cachebatch vereist voor de huidige clientreparaties of tests.**
+**18-Nov puzzelvenster: nieuwe reparatiebatch vereist.**
+Zie [PUZZLE-RENDER-FIX.md](PUZZLE-RENDER-FIX.md) en de exacte toegepaste
+ids in `PUZZLE-RENDER-PREFLIGHT.tsv`. Bron306 -> lokaal1235: twee lijstmodellen
+3438/4695 -> 67276/67277 en componenten1235:2/3. OSRS-modeloffsets waren
+foutief schermoffsets geworden; de lijst stond daardoor boven het raster.
+PREFLIGHT tx-20261117-231716 groen, 371 logische mutaties, precies vier
+REPLACE-wijzigingen per cache; overige367 NO_OP. Geen nieuwe ids.
+Drie verse gerichte productietests +199 native Component-decodes +260
+native Mesh/JavaMatrix-projecties groen. Verplichte rgradle-test loopt nog.
+Claude past toe en controleert OpenGL fixed/resizable/Stretched, alle zeven
+plaatjes, klikken in elke rij, leeg vak en X/Esc. B heeft geen cache toegepast.
+
 Exacte bronids/batchcommando's en journals blijven bewaard in het historische
 handoffdossier, `ITEM-PREFLIGHT.tsv`, `NPC-PREFLIGHT.tsv`,
 `COMBAT-PREFLIGHT.txt`, [BLOODHOUND-DIG.md](BLOODHOUND-DIG.md) en

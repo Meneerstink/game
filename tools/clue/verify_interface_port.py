@@ -13,6 +13,9 @@ CACHE = Path(os.environ['USERPROFILE']) / '.gradle/caches/modules-2/files-2.1'
 JAVA = Path('C:/Program Files/Eclipse Adoptium/jdk-11.0.32.101-hotspot/bin')
 OUT = ROOT / 'build/clue/interface-port'
 STAGE = ROOT/'build/clue/original-maps/next' if '--staged-original-maps' in sys.argv else None
+PUZZLE_ONLY = '--puzzle-only' in sys.argv
+if PUZZLE_ONLY:
+    OUT = ROOT/'build/clue/puzzle-render/codec'
 if STAGE:
     OUT = ROOT/'build/clue/original-maps/codec'
 CLIENT = Path('C:/RSPS/2011scape-client/2011scape-client')
@@ -51,13 +54,26 @@ def main():
     cp = [str(OUT/'server')] + cp
     testing = [jar(m) for m in ['org.jetbrains.kotlin/kotlin-test/1.8.0', 'org.jetbrains.kotlin/kotlin-test-junit/1.8.0',
                                'junit/junit', 'org.hamcrest/hamcrest-core']]
+    test_sources = [ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/CluePuzzleInterfaceTests.kt'] if PUZZLE_ONLY else [
+             ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/ClueInterfaceImportTests.kt',
+             STAGE/'ClueMapInterfaceImportTests.kt' if STAGE else ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/ClueMapInterfaceImportTests.kt',
+             ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/CluePuzzleInterfaceTests.kt']
     run([JAVA/'java.exe', '-Xmx256m', '-cp', ';'.join(compiler), 'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler',
          argument_file('tests.args', ['-no-stdlib', '-no-reflect', '-jvm-target', '11', '-cp', ';'.join(cp+testing),
-             '-d', OUT/'tests', ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/ClueInterfaceImportTests.kt',
-             STAGE/'ClueMapInterfaceImportTests.kt' if STAGE else ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/ClueMapInterfaceImportTests.kt',
-             ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/CluePuzzleInterfaceTests.kt'])])
+             '-d', OUT/'tests'] + test_sources)])
     run([JAVA/'java.exe', '-Xmx128m', '-cp', ';'.join([str(OUT/'tests')]+cp+testing),
-         '-Drsps.data='+str(ROOT/'data'), 'org.junit.runner.JUnitCore', 'gg.rsmod.game.tools.importer.ClueInterfaceImportTests', 'gg.rsmod.game.tools.importer.ClueMapInterfaceImportTests', 'gg.rsmod.game.tools.importer.CluePuzzleInterfaceTests'], ROOT/'game')
+         '-Drsps.data='+str(ROOT/'data'), 'org.junit.runner.JUnitCore'] +
+         ([] if PUZZLE_ONLY else ['gg.rsmod.game.tools.importer.ClueInterfaceImportTests', 'gg.rsmod.game.tools.importer.ClueMapInterfaceImportTests']) +
+         ['gg.rsmod.game.tools.importer.CluePuzzleInterfaceTests'], ROOT/'game')
+    if PUZZLE_ONLY:
+        client_cp = [str(CLIENT/'runescape/build/classes/java/main'), jar('org.openrs2/openrs2-deob-annotations')]
+        run([JAVA/'javac.exe', argument_file('client.args', ['-cp', ';'.join(client_cp+cp), '-d', OUT/'client',
+             CLIENT/'runescape/src/main/java/Component.java', CLIENT/'runescape/src/main/java/JavaMatrix.java',
+             ROOT/'tools/clue/CluePuzzleClientRegression.java'])])
+        run([JAVA/'java.exe', '-Xmx128m', '-cp', ';'.join([str(OUT/'client')]+client_cp+cp),
+             'CluePuzzleClientRegression', ROOT/'docs/CLUE/cache/puzzle-interface.json', ROOT/'build/clue/puzzle-render/geometry.json'])
+        print('Puzzle-only source tests and actual native decoder/projection passed; caches/client untouched', flush=True)
+        return
     run([JAVA/'javac.exe', argument_file('fixtures.args', ['-cp', ';'.join(cp), '-d', OUT/'fixtures',
          ROOT/'tools/clue/ClueInterfaceFixtureProbe.java'])])
     run([JAVA/'java.exe', '-Xmx128m', '-cp', ';'.join([str(OUT/'fixtures')]+cp), 'ClueInterfaceFixtureProbe',

@@ -12,6 +12,35 @@ class CluePuzzleInterfaceTests {
     private val pictures=CluePuzzleInterfaceBake.pictures(evidence["pictures"])
     private val models=(pictures.flatMap { it.models }+listOf(3438,4695)).distinct().associateWith { it+70000 }
 
+    @Test fun `frame camera translations stay in model space instead of moving the projection centre`() {
+        val components=CluePuzzleInterfaceBake.components(source,pictures,models,mapOf(539 to 9000,540 to 9001))
+        for (id in listOf(2,3)) {
+            val frame=source[id.toString()]
+            val mesh=ModelData(2,0,0)
+            mesh.vertexX[0]=-94; mesh.vertexX[1]=90
+            mesh.vertexY[0]=-8; mesh.vertexY[1]=4
+            mesh.vertexZ[0]=-78; mesh.vertexZ[1]=106
+            val x=mesh.vertexX.copyOf(); val y=mesh.vertexY.copyOf(); val z=mesh.vertexZ.copyOf()
+            CluePuzzleInterfaceBake.adaptFrameModel(frame["modelId"].asInt(),mesh,source)
+            repeat(2) { v ->
+                assertEquals(x[v]+frame["offsetX2d"].asInt(),mesh.vertexX[v])
+                assertEquals(y[v]+frame["offsetY2d"].asInt(),mesh.vertexY[v])
+                assertEquals(z[v]+frame["offsetY2d"].asInt(),mesh.vertexZ[v])
+            }
+            assertEquals(0,components[id].originX)
+            assertEquals(0,components[id].originY)
+            assertEquals(frame["originalY"].asInt(),components[id].y)
+        }
+        val tile=ModelData(1,0,0).also { it.vertexZ[0]=64 }
+        CluePuzzleInterfaceBake.adaptFrameModel(pictures.first().models.first(),tile,source)
+        assertContentEquals(intArrayOf(64),tile.vertexZ)
+        val backing=components[1]
+        assertTrue(backing.filled)
+        assertEquals(3611648,backing.colour)
+        assertEquals(265,backing.w); assertEquals(265,backing.h)
+        assertEquals(1,backing.xMode); assertEquals(1,backing.yMode)
+    }
+
     @Test fun `seven real pictures become source click regions and wide model layers without synthetic tile items`() {
         val components=CluePuzzleInterfaceBake.components(source,pictures,models,mapOf(539 to 9000,540 to 9001))
         assertEquals(6+25+168,components.size)
