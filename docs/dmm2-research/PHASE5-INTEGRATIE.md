@@ -20,4 +20,4 @@ DropSources.view, itemIndex en warmUp onderscheiden nu de bracketfactor en Fortu
 
 ## Grenzen
 
-UI230/font645, ancient cape34607 en Nigel's kaarticoon hebben geen mapping in deze ronde; er is geen id voor verzonnen. Asset-/callbackcontracten voor UI, AV, thralls, Home/POH, Chronicle en tutorreclaim blijven de eerder beschreven Claude-integratie. Khopesh-timing, Salarin en overige gekozen bronadviezen blijven in PHASE3-SOURCES.md. Dit document is geen runtime/live/AF-bewijs.
+UI230/OMNISHOP819+806, ancient cape34607 en Nigel's kaarticoon hebben geen nieuwe productie-mapping in deze ronde. Font645 is inmiddels bewezen als named quillfont in beide caches; de aanvullende UI/AV-PLANs zijn groen op kopieën, zie PHASE5-SUPPLEMENT.md. Asset-/callbackcontracten voor UI, AV, thralls, Home/POH, Chronicle en tutorreclaim blijven de beschreven Claude-integratie. Khopesh-timing, Salarin en overige gekozen bronadviezen blijven in PHASE3-SOURCES.md. Dit document is geen runtime/live/AF-bewijs.

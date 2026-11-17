@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:28:28" hostname="LAPTOP-KLOL515N" time="10.253">
+  <properties/>
+  <testcase name="missing blood money mapping queues a durable claim paid once after import" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests" time="9.852"/>
+  <testcase name="blood money award reuses every existing antifarm verdict and pays nothing before release" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests" time="0.318"/>
+  <testcase name="released server cannot mint or spend legacy breach balances through public award and admin helpers" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests" time="0.014"/>
+  <testcase name="full inventory cannot consume money or grant an unlock and missing bindings cannot invent an item" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests" time="0.013"/>
+  <testcase name="overflow never debits marks or loses lifetime state and succeeds when room is made" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests" time="0.012"/>
+  <testcase name="migration is disabled by default and one successful snapshot is idempotent" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests" time="0.013"/>
+  <testcase name="armour purchase unlocks each piece at exactly one blood money and reclaim is free" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests" time="0.018"/>
+  <testcase name="zero small MAX negative historical balances have defined nonwrapping conversion" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests" time="0.011"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/Pa/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+]]></system-err>
+</testsuite>

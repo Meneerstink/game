@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.quests.tab.QuestTabClickTests" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:30:31" hostname="LAPTOP-KLOL515N" time="9.71">
+  <properties/>
+  <testcase name="registered prerequisite uses its real requirements start items combat and rewards" classname="gg.rsmod.plugins.content.quests.tab.QuestTabClickTests" time="7.118"/>
+  <testcase name="every group and every prerequisite including the last row opens its own server detail" classname="gg.rsmod.plugins.content.quests.tab.QuestTabClickTests" time="0.985"/>
+  <testcase name="all expansions can stay open and every overflow quest remains reachable with events" classname="gg.rsmod.plugins.content.quests.tab.QuestTabClickTests" time="0.387"/>
+  <testcase name="two fast toggles rebind moved rows and titles invalid slots and hidden tabs do nothing" classname="gg.rsmod.plugins.content.quests.tab.QuestTabClickTests" time="0.212"/>
+  <testcase name="exactly thirty rows enable the final physical slot and collapsing clears its old event" classname="gg.rsmod.plugins.content.quests.tab.QuestTabClickTests" time="0.14"/>
+  <testcase name="refresh sends no redundant event packets and remount restores every event" classname="gg.rsmod.plugins.content.quests.tab.QuestTabClickTests" time="0.867"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/Pa/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+]]></system-err>
+</testsuite>

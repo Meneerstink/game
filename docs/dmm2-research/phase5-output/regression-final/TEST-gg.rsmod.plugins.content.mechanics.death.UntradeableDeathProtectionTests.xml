@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtectionTests" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:29:59" hostname="LAPTOP-KLOL515N" time="5.644">
+  <properties/>
+  <testcase name="above level 20 an unlocked untradeable is destroyed for coins" classname="gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtectionTests" time="0.157"/>
+  <testcase name="loot keys, conversions and emblems keep their own rules" classname="gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtectionTests" time="0.044"/>
+  <testcase name="a destroyed untradeable is recorded for Perdu at its repair price" classname="gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtectionTests" time="5.249"/>
+  <testcase name="rune pouch keeps the empty pouch below 20 and is destroyed above 20 when unlocked" classname="gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtectionTests" time="0.001"/>
+  <testcase name="below level 20 a lockable untradeable breaks and the killer gets the repair price" classname="gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtectionTests" time="0.001"/>
+  <testcase name="an already damaged item is never paid out twice" classname="gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtectionTests" time="0.0"/>
+  <testcase name="N552 an already broken high-tier item is lost above level 20 for nothing, kept below 20, low tier kept everywhere" classname="gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtectionTests" time="0.001"/>
+  <testcase name="a lost untradeable is recorded for Perdu at its store value, a Lost Property item is not" classname="gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtectionTests" time="0.047"/>
+  <testcase name="a locked item breaks below 20 and is mangled above 20 for 500k" classname="gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtectionTests" time="0.004"/>
+  <testcase name="a broken quiver never keeps the ammo that went to the killer" classname="gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtectionTests" time="0.112"/>
+  <testcase name="a non-lockable untradeable is always lost and the killer gets its high alchemy value" classname="gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtectionTests" time="0.01"/>
+  <testcase name="repair price is the OSRS amount, else 25 percent of the store price with a 10k floor" classname="gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtectionTests" time="0.0"/>
+  <testcase name="an untradeable item such as Arclight is handled, a tradeable one is not" classname="gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtectionTests" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/Pa/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+nov. 17, 2026 11:29:57 A.M. io.netty.util.internal.PlatformDependent <clinit>
+INFO: Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+]]></system-err>
+</testsuite>

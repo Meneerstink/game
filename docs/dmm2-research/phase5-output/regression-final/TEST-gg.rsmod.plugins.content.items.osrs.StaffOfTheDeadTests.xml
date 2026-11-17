@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.items.osrs.StaffOfTheDeadTests" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:27:55" hostname="LAPTOP-KLOL515N" time="0.125">
+  <properties/>
+  <testcase name="Power of Death halves melee, ends on damage without the staff and is shared by four staves" classname="gg.rsmod.plugins.content.items.osrs.StaffOfTheDeadTests" time="0.057"/>
+  <testcase name="hooks are wired into hits, rune removal, venom, combat, autocast and PvP death" classname="gg.rsmod.plugins.content.items.osrs.StaffOfTheDeadTests" time="0.059"/>
+  <testcase name="scales charge the toxic staff up to 11000 and it reverts to uncharged at 0" classname="gg.rsmod.plugins.content.items.osrs.StaffOfTheDeadTests" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
