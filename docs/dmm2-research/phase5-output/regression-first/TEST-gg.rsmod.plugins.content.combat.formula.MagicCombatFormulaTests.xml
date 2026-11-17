@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.combat.formula.MagicCombatFormulaTests" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:07:35" hostname="LAPTOP-KLOL515N" time="7.16">
+  <properties/>
+  <testcase name="Virtus' Ancient Magicks bonus scales per piece worn, not just full set" classname="gg.rsmod.plugins.content.combat.formula.MagicCombatFormulaTests" time="4.148"/>
+  <testcase name="magic damage bonus (BonusSlot MAGIC_DAMAGE_BONUS, tenths of a percent) composes into max hit" classname="gg.rsmod.plugins.content.combat.formula.MagicCombatFormulaTests" time="0.13"/>
+  <testcase name="Virtus gives no Ancient Magicks bonus on a standard-spellbook spell" classname="gg.rsmod.plugins.content.combat.formula.MagicCombatFormulaTests" time="0.109"/>
+  <testcase name="an unbuffed caster deals exactly the spell's base max hit" classname="gg.rsmod.plugins.content.combat.formula.MagicCombatFormulaTests" time="0.117"/>
+  <testcase name="void mage's 1_45x applies to the effective Attack level used for accuracy" classname="gg.rsmod.plugins.content.combat.formula.MagicCombatFormulaTests" time="1.104"/>
+  <testcase name="protect from magic only zeroes accuracy against a non-player attacker" classname="gg.rsmod.plugins.content.combat.formula.MagicCombatFormulaTests" time="0.224"/>
+  <testcase name="chaos gauntlets add a flat plus 3 to bolt spells before the magic damage multiplier" classname="gg.rsmod.plugins.content.combat.formula.MagicCombatFormulaTests" time="0.12"/>
+  <testcase name="Augury's Magic Attack prayer multiplier composes into the attack roll" classname="gg.rsmod.plugins.content.combat.formula.MagicCombatFormulaTests" time="0.134"/>
+  <testcase name="TargetModifiers' Salve amulet bonus does not change the magic max hit" classname="gg.rsmod.plugins.content.combat.formula.MagicCombatFormulaTests" time="0.423"/>
+  <testcase name="gear, elite void and prayer magic damage add up before multiplying (OSRS Maximum magic hit)" classname="gg.rsmod.plugins.content.combat.formula.MagicCombatFormulaTests" time="0.132"/>
+  <testcase name="the plain Salve amulet does not change magic accuracy (only Salve (i) and (ei) do)" classname="gg.rsmod.plugins.content.combat.formula.MagicCombatFormulaTests" time="0.173"/>
+  <testcase name="full Virtus gives 15 percent extra magic damage on an Ancient Magicks spell, not the flat 6 percent spellbook" classname="gg.rsmod.plugins.content.combat.formula.MagicCombatFormulaTests" time="0.107"/>
+  <testcase name="chaos gauntlets do not apply to a non-bolt spell" classname="gg.rsmod.plugins.content.combat.formula.MagicCombatFormulaTests" time="0.121"/>
+  <testcase name="a larger magic damage bonus produces a strictly larger max hit once it crosses a whole point" classname="gg.rsmod.plugins.content.combat.formula.MagicCombatFormulaTests" time="0.113"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/Pa/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+]]></system-err>
+</testsuite>

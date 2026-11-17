@@ -1,0 +1,51 @@
+// DMM2 supplement: existing importers, immutable phase4 cache copies, PLAN only, central build slot.
+gradle.projectsEvaluated {
+    def root = gradle.rootProject
+    root.tasks.register('dmm2Phase5UiPlans') {
+        doLast {
+            def cache = new File(gradle.gradleUserHomeDir, 'caches/modules-2/files-2.1')
+            def jars = { String p -> root.fileTree(new File(cache, p)).matching { include '**/*.jar' }.files.toList() }
+            def compiler = ['kotlin-compiler-embeddable', 'kotlin-stdlib', 'kotlin-stdlib-common', 'kotlin-script-runtime', 'kotlin-reflect', 'kotlin-daemon-embeddable'].collectMany { jars('org.jetbrains.kotlin/' + it + '/1.8.0') } + jars('org.jetbrains.intellij.deps/trove4j') + jars('org.jetbrains/annotations/13.0')
+            def libs = root.fileTree('game/build/install/game/lib').matching { include '*.jar' }.files.toList() + jars('junit/junit') + jars('org.hamcrest') + jars('org.jetbrains.kotlin/kotlin-test/1.8.0') + jars('org.jetbrains.kotlin/kotlin-test-junit/1.8.0')
+            def existing = root.files('game/build/classes/kotlin/main', 'util/build/classes/kotlin/main', libs)
+            def output = root.file('build/dmm2/phase5-ui-classes'); output.mkdirs()
+            def sources = ['OsrsInterfacePortTool', 'OsrsFxImportTool'].collect { root.file('game/src/main/kotlin/gg/rsmod/game/tools/importer/' + it + '.kt').path }
+            sources.add(root.file('game/src/test/kotlin/gg/rsmod/game/tools/importer/Dmm2UiPlanTests.kt').path)
+            root.exec {
+                commandLine([new File(System.getProperty('java.home'), 'bin/java.exe').path, '-Xmx768m', '-cp', root.files(compiler).asPath,
+                    'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler', '-no-stdlib', '-no-reflect', '-jvm-target', '11', '-nowarn', '-module-name', 'game',
+                    '-Xfriend-paths=' + root.file('game/build/classes/kotlin/main').path, '-cp', existing.asPath, '-d', output.path] + sources)
+            }
+            def box = root.file('build/dmm2/phase4-plan')
+            if (!new File(box, 'game/game/data/cache/main_file_cache.dat2').isFile()) throw new GradleException('Missing isolated phase4 snapshot')
+            def out = root.file('docs/dmm2-research/phase5-ui-output'); out.mkdirs()
+            def cp = root.files(output, existing).asPath
+            def jobs = [
+                ['tests', 'org.junit.runner.JUnitCore', 'gg.rsmod.game.tools.importer.Dmm2UiPlanTests'],
+                ['interfaces', 'gg.rsmod.game.tools.importer.OsrsInterfacePortTool', 'dmm2-ui'],
+                ['weapon-seqs', 'gg.rsmod.game.tools.importer.OsrsFxImportTool', 'dmm2-weapon-av'],
+                ['fire-spots', 'gg.rsmod.game.tools.importer.OsrsFxImportTool', 'dmm2-fire-av']
+            ]
+            jobs.each { job ->
+                def main = job[1]; def args = job.drop(2)
+                assert !args.contains('--apply')
+                def argv = [new File(System.getProperty('java.home'), 'bin/java.exe').path, '-Xmx768m']
+                if (job[0] != 'tests') argv += ['-Drsps.root=' + box.path, '-Drsps.data=' + new File(box, 'game/game/data').path]
+                argv += ['-cp', cp, main] + args
+                def rc
+                new File(out, job[0] + '.txt').withOutputStream { stream ->
+                    rc = root.exec {
+                        commandLine argv
+                        workingDir root.file('game')
+                        environment 'RSPS_OSRS_SOURCE_CACHE', 'C:/RSPS/import-source/openrs2-2686/cache'
+                        environment 'RSPS_OSRS_SOURCE_TAG', ''
+                        standardOutput = stream; errorOutput = stream; ignoreExitValue = true
+                    }.exitValue
+                }
+                println '[DMM2 supplement PLAN] ' + job[0] + ' exit=' + rc
+                new File(out, job[0] + '-command.json').text = groovy.json.JsonOutput.toJson([argv:argv, exit:rc])
+                if (rc != 0) throw new GradleException(job[0] + ' failed; inspect phase5-ui-output/' + job[0] + '.txt')
+            }
+        }
+    }
+}

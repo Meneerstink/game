@@ -222,10 +222,22 @@ gg.rsmod.plugins.content.items.osrs.AncientCape.assets.fabric?.let { fabric ->
 }
 Dmm2Ids.ItemId.FIRE_RUBY.local?.let { id ->
     on_item_on_obj(obj = Altar.FIRE.altar, item = id) {
+        fun requirements(result: FireAmulet.Result) {
+            if (result in setOf(FireAmulet.Result.LEVEL, FireAmulet.Result.INGREDIENTS)) player.message(FireAmulet.REQUIREMENTS)
+        }
+        val ready = FireAmulet.check(player)
+        if (ready != FireAmulet.Result.OK) {
+            requirements(ready)
+            return@on_item_on_obj
+        }
         val tile = Tile(player.tile)
         player.queue(TaskPriority.WEAK) {
+            player.animate(Dmm2Ids.seq(FireAmulet.CRAFT_ANIMATION_SOURCE) ?: Anims.LVL_3_ENCHANT)
+            player.graphic(Dmm2Ids.spot(FireAmulet.CRAFT_GRAPHIC_SOURCE) ?: Gfx.LVL_3_ENCHANT, 92)
+            // Same named ruby-amulet enchant sound as the visually identical action. See PHASE5-SUPPLEMENT: inference, not an audio capture.
+            player.playSound(Sfx.ENCHANT_RUBY_AMULET)
             wait(FireAmulet.CRAFT_TICKS)
-            if (player.tile == tile && !player.isDead()) FireAmulet.craft(player)
+            if (player.tile == tile && !player.isDead()) requirements(FireAmulet.craft(player))
         }
     }
 }

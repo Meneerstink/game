@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.quests.tab.QuestTabTests" tests="21" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:30:43" hostname="LAPTOP-KLOL515N" time="10.411">
+  <properties/>
+  <testcase name="a long place reads in full, as its short form or cut - never past its room" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="6.568"/>
+  <testcase name="groups use the existing choice data and the Quests tab lists every group, quest and requirement" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.231"/>
+  <testcase name="the classic quest list 190 fits the panel box of the Quests tab, nothing cut off at the right" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.351"/>
+  <testcase name="every points page names where the points are spent" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.316"/>
+  <testcase name="emblem line shows None or the owned tier with its points" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.031"/>
+  <testcase name="Info window fits the fixed-mode main screen, the list fits its well, every page fits its boxes" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="1.508"/>
+  <testcase name="every Deadman line fits next to its title, the chest spot within three lines" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.349"/>
+  <testcase name="breach time notations" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.015"/>
+  <testcase name="Info pages carry the numbers of the rules they explain" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.019"/>
+  <testcase name="groups not chosen yet show the Quest Tutor note and every option locked" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.019"/>
+  <testcase name="chest line - Active over its spot, else the time until the next one" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.0"/>
+  <testcase name="six Deadman lines fit the fixed-mode panel without scrolling" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.004"/>
+  <testcase name="point lines read exactly the balances the three stores spend" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.029"/>
+  <testcase name="tabs left to right as the approved design - Quests, Deadman, Deadman Tasks, Drops &amp; Collection Log" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.001"/>
+  <testcase name="chosen tab is stored on the account and a new account starts on Deadman" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.095"/>
+  <testcase name="accounts from before the choices get no note" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.021"/>
+  <testcase name="the gameframe quest icon stays the Deadman skull after clientscript 1766 redraws the tab strip" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.255"/>
+  <testcase name="N289 - a group whose quests are all yours reads a green Unlocked, a chosen group Chosen, an open group Pick 1" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.46"/>
+  <testcase name="chosen option is marked with its unlock, finished quests read Unlocked, the rest Locked" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.106"/>
+  <testcase name="a point row opens Info on those points and never a store, the emblem row Info on the emblem" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.027"/>
+  <testcase name="the Info window close is guarded" classname="gg.rsmod.plugins.content.quests.tab.QuestTabTests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/Pa/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+nov. 17, 2026 11:30:42 A.M. io.netty.util.internal.PlatformDependent <clinit>
+INFO: Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+]]></system-err>
+</testsuite>

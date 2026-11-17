@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.combat.CombatInterruptionPolicyTests" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:07:32" hostname="LAPTOP-KLOL515N" time="1.942">
+  <properties/>
+  <testcase name="teleports still end combat through their own hard reset" classname="gg.rsmod.plugins.content.combat.CombatInterruptionPolicyTests" time="0.089"/>
+  <testcase name="only the player combat loop is persistent" classname="gg.rsmod.plugins.content.combat.CombatInterruptionPolicyTests" time="1.813"/>
+  <testcase name="every handler interruption is classified as a hard stop or a combat-preserving action" classname="gg.rsmod.plugins.content.combat.CombatInterruptionPolicyTests" time="0.039"/>
+  <testcase name="equipping keeps the combat target" classname="gg.rsmod.plugins.content.combat.CombatInterruptionPolicyTests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

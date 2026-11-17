@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests" tests="17" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:29:39" hostname="LAPTOP-KLOL515N" time="15.998">
+  <properties/>
+  <testcase name="N247 above level 20 a fire cape or defender breaks, Void is lost for coins - OSRS broken table" classname="gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests" time="0.167"/>
+  <testcase name="PvM deaths and protected defenders are untouched" classname="gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests" time="4.209"/>
+  <testcase name="a used amulet of the damned turns to dust on any death, the full one does not" classname="gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests" time="0.561"/>
+  <testcase name="a carried kit is never lost on a wilderness death - it goes to the victim's gravestone" classname="gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests" time="0.756"/>
+  <testcase name="protected revenant weapons still drop their stored ether" classname="gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests" time="0.192"/>
+  <testcase name="ornamented items without the base plus kit rule keep the default death handling" classname="gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests" time="0.017"/>
+  <testcase name="every breakable item breaks in place and pays exactly its sourced repair cost" classname="gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests" time="0.206"/>
+  <testcase name="wilderness death breaks an inventory Avernic defender in place and pays the repair cost once" classname="gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests" time="0.003"/>
+  <testcase name="an equipped Avernic defender is unequipped and kept broken in the inventory" classname="gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests" time="0.181"/>
+  <testcase name="a lost charged slayer helmet drops its stored Summoning scrolls to the killer, the screen shows them" classname="gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests" time="0.79"/>
+  <testcase name="owner Q14 conversions - killer loot, victim gravestone share and imbue refund for the whole set" classname="gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests" time="6.337"/>
+  <testcase name="an unprotected serpentine helm drops uncharged with its scales" classname="gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests" time="0.155"/>
+  <testcase name="granite maul (or) without a Grand Exchange price gives nothing instead of a wrong amount" classname="gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests" time="0.018"/>
+  <testcase name="forBroken round-trips every breakable's broken id back to its Breakable, and rejects anything else" classname="gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests" time="0.0"/>
+  <testcase name="a charged or full powered staff drops as its uncharged id on an unprotected wilderness death, charges lost" classname="gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests" time="0.989"/>
+  <testcase name="every kitted item drops its plain item to the killer and sends its kit to the victim's gravestone" classname="gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests" time="0.214"/>
+  <testcase name="lost revenant bows - Craw's activation disappears, Webweaver's goes to the killer" classname="gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests" time="1.198"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/Pa/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+nov. 17, 2026 11:29:38 A.M. io.netty.util.internal.PlatformDependent <clinit>
+INFO: Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+]]></system-err>
+</testsuite>

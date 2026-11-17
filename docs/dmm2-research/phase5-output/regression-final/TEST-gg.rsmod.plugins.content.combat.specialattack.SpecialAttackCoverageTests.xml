@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.combat.specialattack.SpecialAttackCoverageTests" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:27:17" hostname="LAPTOP-KLOL515N" time="0.088">
+  <properties/>
+  <testcase name="every plan-required special attack weapon is registered in its plugin file, all 18" classname="gg.rsmod.plugins.content.combat.specialattack.SpecialAttackCoverageTests" time="0.08"/>
+  <testcase name="the weapons directory exists and is where the coverage list expects it" classname="gg.rsmod.plugins.content.combat.specialattack.SpecialAttackCoverageTests" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

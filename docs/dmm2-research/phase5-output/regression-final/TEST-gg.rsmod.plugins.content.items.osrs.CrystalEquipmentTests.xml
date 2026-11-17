@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.items.osrs.CrystalEquipmentTests" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:27:53" hostname="LAPTOP-KLOL515N" time="0.12">
+  <properties/>
+  <testcase name="crystal armour gives 5, 10 and 15 percent accuracy and half that damage per piece to crystal bows only" classname="gg.rsmod.plugins.content.items.osrs.CrystalEquipmentTests" time="0.068"/>
+  <testcase name="a charged item without a charge count is new and an inactive one with charges still counts them" classname="gg.rsmod.plugins.content.items.osrs.CrystalEquipmentTests" time="0.002"/>
+  <testcase name="Revert returns exactly one crystal armour seed per piece, active or inactive, and nothing else" classname="gg.rsmod.plugins.content.items.osrs.CrystalEquipmentTests" time="0.0"/>
+  <testcase name="singing bowl, corruption, bow seed-revert and revert warnings are wired in" classname="gg.rsmod.plugins.content.items.osrs.CrystalEquipmentTests" time="0.026"/>
+  <testcase name="formula, ammo, projectile, charge use and PvP death are wired in" classname="gg.rsmod.plugins.content.items.osrs.CrystalEquipmentTests" time="0.01"/>
+  <testcase name="charges used count towards corruption, 1 percent per 2000, and lower the 2000 shard price" classname="gg.rsmod.plugins.content.items.osrs.CrystalEquipmentTests" time="0.002"/>
+  <testcase name="singing bowl creation recipes match the owner's cRYSTAL document (OSRS Wiki quoted verbatim)" classname="gg.rsmod.plugins.content.items.osrs.CrystalEquipmentTests" time="0.008"/>
+  <testcase name="shards add 100 charges up to 20000 and items go inactive at 0" classname="gg.rsmod.plugins.content.items.osrs.CrystalEquipmentTests" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

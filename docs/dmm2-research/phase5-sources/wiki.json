@@ -1,0 +1,139 @@
+{
+  "batchcomplete": true,
+  "query": {
+    "pages": [
+      {
+        "ns": 120,
+        "title": "Transcript:Fire ruby",
+        "missing": true
+      },
+      {
+        "pageid": 244597,
+        "ns": 120,
+        "title": "Transcript:Archmage Sedridor",
+        "revisions": [
+          {
+            "revid": 15396838,
+            "parentid": 15395062,
+            "timestamp": "2026-11-08T15:43:32Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Transcript|npc}}\n\n==Standard dialogue before Rune Mysteries==\n* '''Archmage Sedridor:''' Welcome adventurer, to the world renowned Wizards' Tower, home to the Order of Wizards. How may I help you?\n* '''Player:''' I'm just looking around.\n* '''Archmage Sedridor:''' Well, take care adventurer. You stand on the ruins of the old destroyed Wizards' Tower. Strange and powerful magicks lurk here.\n* {{tact|end}}\n\n==Standard dialogue after Rune Mysteries==\n* '''Player:''' Hello there.\n* '''Archmage Sedridor:''' Hello again, [player name]. What can I do for you?\n* {{topt|Can you teleport me to the Rune Essence Mine?}}\n** '''Player:''' Can you teleport me to the Rune Essence Mine?\n** '''Archmage Sedridor:''' {{overhead|Senventior disthine molenko!}}\n** {{qact|Player is teleported to the rune essence mine.}}\n* {{topt|cond=If the player has completed [[Desert Treasure II - The Fallen Empire]] but not yet informed Sedridor about Persten:|I have news on Persten.}}\n** '''Player:''' I have news on Persten.\n** '''Archmage Sedridor:''' Yes?\n** '''Player:''' I'm sorry, but she's gone.\n** '''Archmage Sedridor:''' I see. It was always unlikely that she'd survive the Abyss.\n** '''Player:''' It wasn't the Abyss. I think she might have been dead long before then. The Persten we spoke to was an imposter.\n** '''Archmage Sedridor:''' An imposter? What do you mean?\n** '''Player:''' A Mahjarrat called Sliske was disguised as her.\n** '''Archmage Sedridor:''' I can't believe it. Persten and I had our differences, but this...\n** '''Archmage Sedridor:''' I'd better share this news with the others. Thank you for bringing it to me.\n** {{tact|other}}\n* {{topt|cond=If the player has completed [[Temple of the Eye]]:|How are things at the Temple of the Eye?}}\n** '''Player:''' How are things at the Temple of the Eye?\n** '''Archmage Sedridor:''' Between the Guardians of the Rift and ourselves, we are managing to keep the Abyss at bay.\n** '''Archmage Sedridor:''' However, despite all our research, we are no closer to working out how to close the rift permanently.\n** {{tcond|If the player has not previously informed Sedridor of the Stone of Jas following [[Desert Treasure II - The Fallen Empire]]:}}\n*** '''Archmage Sedridor:''' Gaining a better understanding of the artefact that was once there is key, but we have found little mention of this 'Eye'.\n*** '''Archmage Sedridor:''' I'm sure the wizards of the first tower had plenty of research on it. After all, they knew enough about it to use its symbol as the symbol for our order.\n*** '''Archmage Sedridor:''' All that knowledge lost because of those accursed Zamorakians!\n*** {{tcond|If the player has completed [[Desert Treasure II - The Fallen Empire]]:}}\n**** '''Player:''' I don't know if it will be much help, but I found out its real name. It's called the Stone of Jas.\n**** '''Archmage Sedridor:''' Hmm... That could be useful. I'll have a dig around and see if we can find any mention of it.\n**** {{tact|continue}}\n*** {{tcond|If the player has completed [[While Guthix Sleeps]]:}}\n**** '''Player:''' I don't know if it will be much help, but I found out the artifact. It's called the Stone of Jas.\n**** '''Archmage Sedridor:''' You found it?\n**** '''Player:''' Yes, but it was then stolen by a Mahjarrat called Lucien.\n**** '''Archmage Sedridor:''' That's unfortunate. Having the artifact to study would have been very useful. Still, knowing its name might help. I'll have a dig around and see if we can any mention of it.\n**** {{tact|continue}}\n*** '''Archmage Sedridor:''' Anyway, if you wish to help defend the temple, just head through the portal.\n*** {{tact|other}}\n** {{tcond|If the player has informed Sedridor of the Stone of Jas:}}\n*** '''Player:''' Were you able to find any information on the Stone of Jas?\n*** '''Archmage Sedridor:''' Not yet. So far we've still only been able to find a few small mentions of it, but they all call it the Eye.\n*** '''Archmage Sedridor:''' I'm sure the wizards of the first tower had plenty of research that could have helped. All that knowledge lost because of those accursed Zamorakians!\n*** '''Archmage Sedridor:''' Anyway, if you wish to help defend the temple, just head through the portal.\n*** {{tact|other}}\n** {{topt|Can you teleport me to the Rune Essence Mine?}}\n*** {{tact|above}}\n** {{topt|Could you tell me about the old Wizards' Tower?}}\n*** {{tact|below}}\n** {{topt|I might do that, thanks.}}\n*** '''Player:''' I might do that, thanks.\n*** {{tact|end}}\n* {{topt|cond=If the player has any of the [[elemental gems]] in their inventory:|I found this rather odd gem in my travels.}}\n** '''Player:''' I found this rather odd gem in my travels. Do you have an idea of what it might be?\n** '''Archmage Sedridor:''' I can take a look for you, please give it to me.\n** {{tbox|pic=air diamond detail.png|You show Archmage Sedridor the gem.}}{{Efn|If you have multiple gems in your inventory, only one will display. It is picked in this order: Air diamond, Water sapphire, Fire ruby or Earth emerald.}}\n** '''Archmage Sedridor:''' Remarkable! I feel a faint magical energy coming from the gem, but it feels like it could store much more energy than it currently has.\n** '''Player:''' You can tell all that just from holding the gem?\n** '''Archmage Sedridor:''' When you have been a wizard as long as I have, you tend to learn a thing or two about magic.\n** '''Archmage Sedridor:''' I wonder what would happen if you took this to a runic altar with some kind of magical amulet to bind it to.\n** '''Archmage Sedridor:''' Maybe there are any other gems out there, perhaps you could combine all of them in some way at an altar as well.\n** {{tact|end}}\n* {{topt|Who else knows the teleport to the Rune Essence Mine?}}\n** '''Player:''' Who else knows the teleport to the Rune Essence Mine?\n** '''Archmage Sedridor:''' Apart from myself, there's also Aubury in Varrock, Wizard Cromperty in East Ardougne, Brimstail in the Tree Gnome Stronghold and Wizard Distentor in Yanille's Wizards' Guild.\n** {{topt|Can you teleport me to the Rune Essence Mine?}}\n*** {{tact|above}}\n** {{topt|Could you tell me about the old Wizards' Tower?}}\n*** {{tact|below}}\n** {{topt|Thanks for the information.}}\n*** '''Player:''' Thanks for the information.\n*** '''Archmage Sedridor:''' My pleasure.\n*** {{tact|end}}\n* {{topt|Could you tell me about the old Wizards' Tower?}}\n** '''Player:''' Could you tell me about the old Wizards' Tower?\n** '''Archmage Sedridor:''' Of course. The first Wizards' Tower was built at the same time the Order of Wizards was founded. It was at the dawn of the Fifth Age, when the secrets of runecrafting were rediscovered.\n** '''Archmage Sedridor:''' For years, the tower was a hub of magical research. Wizards of all races and religions were welcomed into our order.\n** '''Archmage Sedridor:''' Alas, that openness is what ultimately led to disaster. The wizards who served Zamorak, the evil god of chaos, tried to claim our magical discoveries in his name.\n** '''Archmage Sedridor:''' They failed, but in retaliation, they burnt the entire tower to the ground. Years of work was destroyed.\n** '''Archmage Sedridor:''' The tower was soon rebuilt of course, but even now we are still trying to regain knowledge that was lost.\n** '''Archmage Sedridor:''' That's why I spend my time down here, in fact. This basement is all that is left of the old tower, and I believe there are still some secrets to discover here.\n** '''Archmage Sedridor:''' Of course, one secret I am no longer looking for is the teleportation incantation to the Rune Essence Mine. We have you to thank for that.\n** {{tcond|If the player did not speak to the [[Mage of Zamorak]] about the abyssal incantation post-quest:}}\n*** {{tact|other}}\n** {{tcond|If the player spoke to the [[Mage of Zamorak]] about the Z.M.I. post-quest:}}\n*** '''Player:''' I've heard a different take on how the tower burnt down. Something about a ritual gone wrong?\n*** '''Archmage Sedridor:''' Nothing more than Zamorakian hearsay! They burnt the tower down and are now too cowardly to even admit it!\n*** '''Player:''' Fair enough.\n*** {{tact|other}}\n* {{topt|Nothing thanks, I'm just looking around.}}\n** '''Player:''' Nothing thanks, I'm just looking around.\n** '''Archmage Sedridor:''' Well, take care. You stand on the ruins of the old destroyed Wizards' Tower. Strange and powerful magicks lurk here.\n** {{tact|end}}\n\n==Treasure Trails==\n===Beginner===\n* '''Archmage Sedridor:''' Well done.\n* {{tact|receives=a [new clue/casket]}}\n* You've obtained a [new clue/casket]!\n* {{tact|end}}\n\n==References==\n{{Notelist}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 517876,
+        "ns": 0,
+        "title": "Deadman Reward Store",
+        "revisions": [
+          {
+            "revid": 15394269,
+            "parentid": 15391114,
+            "timestamp": "2026-11-05T00:21:19Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Obsolete|Shop moved to the GE on main game worlds}}\n{{Infobox Shop\n|name = Deadman Reward Store\n|image = [[File:Deadman Reward Store.png|300px]]\n|release = [[17 July]] [[2024]]\n|update = Deadman: Armageddon & While Guthix Sleeps Updates\n|members = Yes\n|icon = [[File:Deadman Tutor icon.png]]\n|location = [[Grand Exchange]]\n|owner = [[Nigel]]\n|special = [[Deadman]] rewards\n|map = {{Map|name=Nigel|x=3245|y=3200|r=3|mtype=square|bucket=yes}}\n|leagueRegion = No\n}}\nThe '''Deadman Reward Store''' is a store run by [[Nigel]] at the [[Grand Exchange]]. He sells and buys rewards from [[Deadman: Armageddon]] and [[Deadman: Annihilation]] in exchange for [[Deadman Points]]. The Deadman Points balance is separate for both main game and Deadman Mode, which means that they can be spent on both gamemodes without affecting the other. The points accumulate between events.\n\n'''Note''': You need to log onto the permanent Deadman Mode world 345 after the event ends to have your Deadman Points be available in the main game.\n\n==Stock==\n===Deadman: Armageddon===\n{{StoreTableHead|currency=Deadman Points|column1=GP per point|hidecaption=y|hidestock=y|hiderestock=y}}\n{{StoreLine|name=Armageddon weapon scroll|stock=inf|restock=N/A|buy=12000|sell=12000|column1={{Coins|{{GEP|Armageddon weapon scroll}}/12000}}}}\n{{StoreLine|name=Armageddon cape fabric|stock=inf|restock=N/A|buy=6000|sell=6000|column1={{Coins|{{GEP|Armageddon cape fabric}}/6000}}}}\n{{StoreLine|name=Armageddon teleport scroll|stock=inf|restock=N/A|buy=9000|sell=9000|column1={{Coins|{{GEP|Armageddon teleport scroll}}/9000}}}}\n{{StoreLine|name=Armageddon rug|stock=inf|restock=N/A|buy=3000|sell=3000|column1={{Coins|{{GEP|Armageddon rug}}/3000}}}}\n{{StoreTableBottom}}\nA total of 30,000 points is required for all Armageddon rewards. However, an Armageddon rug only fits one [[rug space]], so multiple may be desired.\n\n===Deadman: Annihilation===\n{{StoreTableHead|currency=Deadman Points|column1=GP per point|hidecaption=y|hidestock=y|hiderestock=y}}\n{{StoreLine|name=Annihilation weapon scroll|stock=inf|restock=N/A|buy=12000|sell=12000|column1={{Coins|{{GEP|Annihilation weapon scroll}}/12000}}}}\n{{StoreLine|name=Annihilation blueprints|stock=inf|restock=N/A|buy=15000|sell=15000|column1={{Coins|{{GEP|Annihilation blueprints}}/15000}}}}\n{{StoreLine|name=Annihilation teleport scroll|stock=inf|restock=N/A|buy=10000|sell=10000|column1={{Coins|{{GEP|Annihilation teleport scroll}}/10000}}}}\n{{StoreTableBottom}}\nA total of 37,000 points is required for all Annihilation rewards.\n\n==Gallery==\n<gallery style=\"text-align:left\">\nDeadman Reward Store interface.png|The store's interface.\n</gallery>\n\n==Changes==\n{{Subject changes header}}\n{{Subject changes\n|date = 3 November 2026\n|update = Quest Month Kick Off, TFA Tweaks & More\n|change = Nigel was moved to the Grand Exchange on main game worlds. He remains in Lumbridge on Deadman Mode worlds.\n}}\n{{Subject changes\n|date = 14 August 2024\n|update = Slayer Partners\n|change = Rewards can now be sold back to the store for the same price.\n}}\n{{Subject changes footer}}\n\n== Trivia ==\n* The store is accessible in [[free-to-play]], but all of its rewards are members only.\n\n{{Deadman: Armageddon}}\n{{Deadman: Annihilation}}\n{{Shops}}\n{{Lumbridge}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 640874,
+        "ns": 0,
+        "title": "Trinket of avarice",
+        "revisions": [
+          {
+            "revid": 15286577,
+            "parentid": 15194287,
+            "timestamp": "2026-08-03T18:19:52Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Deadman permanent}}\n{{Infobox Item\n|name = Trinket of avarice\n|image = [[File:Trinket of avarice.png]]\n|release = [[21 January]] [[2026]]\n|update = Holy Moleys and the Hooded Slayer Helm are Here!\n|members = Yes\n|quest = No\n|tradeable = Yes\n|equipable = No\n|stackable = No\n|noteable = \n|options = Note/Unnote, Value, Drop\n|examine = A magic rock! This one automatically notes and retrieves drops.\n|value = 100000\n|weight = 1.000\n|exchange = dmm\n|id = 33044\n}}\n[[File:Trinket of avarice detail.png|left|100px]]\nThe '''trinket of avarice''' is an item in [[Deadman Mode]]. It allows loot to be automatically noted and picked up. It will also put loot into [[looting bag]]s if possible. The value option can be used to adjust what items are automatically picked up, based on their value.\n\nIt can be acquired as a drop from monsters found during [[breach]]es.\n\n==Item sources==\n{{Drop sources|Trinket of avarice}}\n\n==Changes==\n{{Subject changes header}}\n{{Subject changes\n|date = 18 February 2026\n|update = 25th Anniversary Event: 25 Years, 25 Mementos!\n|change = \n* The trinket of avarice will now also loot bones from NPCs automatically.\n* Noted items will now stack as intended even if your looting bag is full when you have the trinket of avarice active.\n}}\n{{Subject changes footer}}\n\n{{Deadman: Annihilation}}\n{{Deadman Mode}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 681758,
+        "ns": 0,
+        "title": "Fire ruby",
+        "revisions": [
+          {
+            "revid": 15396853,
+            "parentid": 15356561,
+            "timestamp": "2026-11-08T15:57:06Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Infobox Item\n|name = Fire ruby\n|image = [[File:Fire ruby.png]]\n|release = [[2 September]] [[2026]]\n|update = Summer Sweep Up Miscellaneous\n|members = Yes\n|quest = No\n|tradeable = Yes\n|equipable = No\n|stackable = No\n|noteable = Yes\n|options = Drop\n|examine = Rather hot to the touch, maybe I could start a fire with this.\n|value = 20000\n|weight = 0.100\n|exchange = Yes\n|id = 34422\n}}\n[[File:Fire ruby detail.png|left|120px]]\nThe '''fire ruby''' is an [[elemental gems|elemental gem]] obtained by killing [[Infernal Mage|infernal mage]]s. It is used in the creation of the [[amulet of fire]]; the fire ruby must be used on the [[Fire Altar]] along with an [[amulet of magic]] and 100 [[fire rune]]s.\n\nThe player may bring a fire ruby or other elemental gems to [[Archmage Sedridor]] to get some hints on what to do with them.\n\n==Item sources==\n{{Drop sources|Fire ruby}}\n\n==Products==\n{{Uses material list|Fire ruby}}\n\n==Trivia==\n* Despite the fire ruby's examine text it cannot, in fact, be used to light fires.\n\n==See also==\n* [[Air diamond]]\n* [[Water sapphire]]\n* [[Earth emerald]]\n\n{{Gems}}\n\n[[Category:Collection log items]]"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 681759,
+        "ns": 0,
+        "title": "Amulet of fire",
+        "revisions": [
+          {
+            "revid": 15396852,
+            "parentid": 15369796,
+            "timestamp": "2026-11-08T15:54:52Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Infobox Item\n|name = Amulet of fire\n|image = [[File:Amulet of fire.png]]\n|release = [[2 September]] [[2026]]\n|update = Summer Sweep Up Miscellaneous\n|members = Yes\n|quest = No\n|tradeable = Yes\n|equipable = Yes\n|stackable = No\n|noteable = Yes\n|options = Wear, Drop\n|examine = I hope my clothes don't catch on fire.\n|value = 21000\n|weight = 0.107\n|exchange = Yes\n|id = 34425\n}}\n[[File:Amulet of fire detail.png|left|120px]]\nThe '''amulet of fire''' is an amulet requiring level 59 [[Magic]] to equip. It is made by using a [[fire ruby]] on the [[Fire Altar]], along with an [[amulet of magic]] and 100 [[fire rune]]s; creating the amulet requires level 21 [[Runecraft]], granting 125 experience. It can also be created when accessing the altars via [[Guardians of the Rift]], as they are the same altars as outside the minigame.\n\nAlongside identical stats to an amulet of magic, the amulet of fire adds a +2 max hit to [[fire spells]], which is added before [[magic damage]] and [[elemental weakness]] modifiers are applied, and therefore scales with both. Additionally, this +2 max hit stacks additively with the bonus from the [[chaos gauntlets]], for a total of +5 max hits when casting [[bolt spells]]. Lastly, the max hit bonus also works against [[Salarin the twisted]].\n\nThe amulet of fire, alongside the [[Amulet of air|amulets of air]], [[Amulet of water|water]], and [[Amulet of earth|earth]], can be combined into an [[elemental amulet]] at any elemental [[runic altar]], which combines the effects of all four amulets into one. Doing so requires level 30 [[Runecraft]] and 500 of each elemental rune, granting 175 experience.\n\n==Combat stats==\n{{Infobox Bonuses\n|astab = 0\n|aslash = 0\n|acrush = 0\n|amagic = +10\n|arange = 0\n|dstab = 0\n|dslash = 0\n|dcrush = 0\n|dmagic = 0\n|drange = 0\n|str = 0\n|rstr = 0\n|mdmg = 0\n|prayer = 0\n|slot = neck\n|image = [[File:Amulet of fire equipped male.png]]\n|altimage = [[File:Amulet of fire equipped female.png]]\n}}\n\n==Creation==\n[[File:Creating amulet of fire.webp|right|thumb|A player creating the amulet of fire.]]\n{{Recipe\n|skill1 = Runecraft\n|skill1lvl = 21\n|skill1boostable = Yes\n|skill1exp = 125\n|members = Yes\n|ticks = 3\n|facilities = Fire Altar\n|mat1 = Amulet of magic\n|mat2 = Fire ruby\n|mat3 = Fire rune\n|mat3quantity = 100\n|output1 = Amulet of fire\n}}\n\n==Products==\n{{Uses material list|Amulet of fire}}\n\n==Used in recommended equipment==\n{{Used in recommended equipment|Amulet of fire}}\n\n{{Amulets}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 684144,
+        "ns": 6,
+        "title": "File:Creating amulet of fire.webp",
+        "revisions": [
+          {
+            "revid": 15329402,
+            "parentid": 15328677,
+            "timestamp": "2026-09-03T12:18:51Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Animation license|Amulet of fire}}"
+              }
+            }
+          }
+        ],
+        "imagerepository": "local",
+        "imageinfo": [
+          {
+            "timestamp": "2026-09-02T17:29:41Z",
+            "size": 309340,
+            "width": 360,
+            "height": 260,
+            "url": "https://oldschool.runescape.wiki/images/Creating_amulet_of_fire.webp?7a578",
+            "descriptionurl": "https://oldschool.runescape.wiki/w/File:Creating_amulet_of_fire.webp",
+            "descriptionshorturl": "https://oldschool.runescape.wiki/index.php?curid=684144",
+            "sha1": "fc5eb2c00477ddc227e5b3baabfe1d82ea7f6aac"
+          }
+        ]
+      }
+    ]
+  }
+}

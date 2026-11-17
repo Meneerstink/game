@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BootTests" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:28:03" hostname="LAPTOP-KLOL515N" time="7.568">
+  <properties/>
+  <testcase name="all actual skins round trip without losing charges or creating items" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BootTests" time="5.664"/>
+  <testcase name="drop viewer defaults use the actual roll rate for bosses and ordinary NPCs independently" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BootTests" time="1.871"/>
+  <testcase name="actual reward IDs buy and refund all seven prices without point or item inflation" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BootTests" time="0.025"/>
+  <testcase name="published transaction mappings install starter rewards NPCs and exact cosmetic states" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BootTests" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/Pa/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+]]></system-err>
+</testsuite>

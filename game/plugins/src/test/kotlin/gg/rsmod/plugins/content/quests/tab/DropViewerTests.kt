@@ -24,6 +24,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 /**
@@ -33,6 +34,32 @@ import kotlin.test.assertTrue
  * and a Deadman Task pays exactly once.
  */
 class DropViewerTests {
+    @Test
+    fun `actual fire ruby is on the Infernal Mage log page and records only from that source`() {
+        gg.rsmod.plugins.content.mechanics.deadman.Dmm2Boot.install(java.io.File("../../data/cfg/dmm2"))
+        val ruby = assertNotNull(gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.FIRE_RUBY.local)
+        assertEquals(25016, ruby)
+        val mages = intArrayOf(1643, 1644, 1645, 1646, 1647)
+        DropTableFactory.register(DropTableFactory.build { table("fire_ruby") { total(64); obj(ruby, slots = 1); nothing(63) } }, *mages)
+        val account = Account()
+        DropSources.reset()
+        CollectionLogPages.reset()
+        try {
+            val page = CollectionLogPages.all(account.player).single { it.key == "fire_ruby" }
+            assertEquals(listOf(ruby), page.items)
+            assertTrue(page.sources.isNotEmpty())
+            assertTrue(page.sources.all { key ->
+                DropSources.byKey(account.player, key)!!.npcs.any { it in mages }
+            })
+            assertEquals(emptyList(), CollectionLog.record(account.player, "chest", listOf(ruby to 1)))
+            assertFalse(CollectionLog.has(account.player, ruby))
+            assertEquals(listOf(ruby), CollectionLog.record(account.player, page.sources.first(), listOf(ruby to 1)))
+            assertEquals(1, CollectionLog.entries(account.player).getValue(ruby).count)
+        } finally {
+            CollectionLogPages.reset()
+            DropSources.reset()
+        }
+    }
     private class Account {
         val attributes = AttributeMap()
         val world = mockk<World>(relaxed = true)

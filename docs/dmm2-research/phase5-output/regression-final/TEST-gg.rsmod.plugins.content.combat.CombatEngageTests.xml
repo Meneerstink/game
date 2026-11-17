@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.combat.CombatEngageTests" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:26:31" hostname="LAPTOP-KLOL515N" time="14.673">
+  <properties/>
+  <testcase name="flat +-14 combat level range blocks a fight when the gap exceeds 14" classname="gg.rsmod.plugins.content.combat.CombatEngageTests" time="5.721"/>
+  <testcase name="an owner cannot attack their own familiar and an opponent cannot attack one in single combat" classname="gg.rsmod.plugins.content.combat.CombatEngageTests" time="1.104"/>
+  <testcase name="players can fight in dangerous wilderness within the flat +-14 combat level range" classname="gg.rsmod.plugins.content.combat.CombatEngageTests" time="0.095"/>
+  <testcase name="Ferox outside the bank can fight the Wilderness side of a barrier" classname="gg.rsmod.plugins.content.combat.CombatEngageTests" time="0.023"/>
+  <testcase name="a player protected by the post-kill grace period cannot be attacked" classname="gg.rsmod.plugins.content.combat.CombatEngageTests" time="0.022"/>
+  <testcase name="postAttack arms the combat-escape logout lock on the target" classname="gg.rsmod.plugins.content.combat.CombatEngageTests" time="7.507"/>
+  <testcase name="an opponent can attack a public familiar in multi combat even without an Attack cache option" classname="gg.rsmod.plugins.content.combat.CombatEngageTests" time="0.038"/>
+  <testcase name="players can fight in Ferox outside the bank" classname="gg.rsmod.plugins.content.combat.CombatEngageTests" time="0.018"/>
+  <testcase name="flat +-14 combat level range applies at exactly the boundary" classname="gg.rsmod.plugins.content.combat.CombatEngageTests" time="0.084"/>
+  <testcase name="an ordinary non attackable npc remains blocked for a player" classname="gg.rsmod.plugins.content.combat.CombatEngageTests" time="0.049"/>
+  <testcase name="flat +-14 combat level range also applies outside the Wilderness since PvP is dangerous everywhere" classname="gg.rsmod.plugins.content.combat.CombatEngageTests" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/Pa/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+]]></system-err>
+</testsuite>

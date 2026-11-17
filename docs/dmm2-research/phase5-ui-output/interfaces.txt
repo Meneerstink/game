@@ -1,0 +1,22 @@
+PLAN osrs 230 -> interface 1185: 17 components
+  REPORT 230:0 onLoad script 1151 15073285 NOT RUN (server fills this part)
+  REPORT 230:4 onLoad script 703 -2147483645,"Safe Deposit Box",0 NOT RUN (server fills this part)
+  REPORT 230:9 onMouseOver script 273 15073290,75 NOT RUN (server fills this part)
+  REPORT 230:9 onMouseLeave script 273 15073290,0 NOT RUN (server fills this part)
+  REPORT 230:9 onOp script 1152 -2147483645,179,170,-2147483644 NOT RUN (server fills this part)
+  REPORT 230:11 onMouseOver script 273 15073292,75 NOT RUN (server fills this part)
+  REPORT 230:11 onMouseLeave script 273 15073292,0 NOT RUN (server fills this part)
+  REPORT 230:11 onOp script 1152 -2147483645,179,170,-2147483644 NOT RUN (server fills this part)
+PLAN osrs 232 -> interface 1186: 3 components
+  REPORT 232:0 onLoad script 1158 15204354 NOT RUN (server fills this part)
+PLAN osrs 819 -> interface 1187: 55 components
+  EXTRA thinbox parent=31 components=47..48
+  EXTRA thinbox parent=34 components=49..50
+  EXTRA thinbox parent=37 components=51..52
+  EXTRA thinbox parent=44 components=53..54
+  REPORT 819:18 onClick script 7148  NOT RUN (server fills this part)
+PLAN osrs 806 -> interface 1188: 14 components
+  EXTRA thinbox parent=5 components=12..13
+  REPORT 806:3 onOp script 7256  NOT RUN (server fills this part)
+PREFLIGHT transaction=tx-20261117-102133 mutations=95 outcomes={CREATE=190}
+DRY_RUN interfaces 1185..1188 sprites 8819..8824

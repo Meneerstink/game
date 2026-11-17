@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CosmeticsTests" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:28:19" hostname="LAPTOP-KLOL515N" time="6.936">
+  <properties/>
+  <testcase name="crystal armour grants normal bonuses and changes to the matching cosmetic inactive state at zero" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CosmeticsTests" time="6.566"/>
+  <testcase name="cosmetic dark bow retains two arrow identity and matching god cape retains Charge bonus" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CosmeticsTests" time="0.116"/>
+  <testcase name="cosmetic weapons reach ordinary base loot but god capes retain their base break route" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CosmeticsTests" time="0.171"/>
+  <testcase name="toxic staff scales persist through cosmetic depletion recharging and rune saving identity" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CosmeticsTests" time="0.016"/>
+  <testcase name="skin charge transactions preserve state and full inventory refunds never overflow" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CosmeticsTests" time="0.042"/>
+  <testcase name="manual and autocast god spell compatibility sees the underlying cosmetic staff" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2CosmeticsTests" time="0.024"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/Pa/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+]]></system-err>
+</testsuite>

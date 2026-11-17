@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.starter.DeadmanStarterPackTests" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:30:55" hostname="LAPTOP-KLOL515N" time="6.176">
+  <properties/>
+  <testcase name="charge copies do not alias and last shot destroys weapon" classname="gg.rsmod.plugins.content.starter.DeadmanStarterPackTests" time="5.992"/>
+  <testcase name="full inventory and bank preserve unpaid marker and retry reward without partial cash" classname="gg.rsmod.plugins.content.starter.DeadmanStarterPackTests" time="0.042"/>
+  <testcase name="introduction and repeated opening never farm money or tabs" classname="gg.rsmod.plugins.content.starter.DeadmanStarterPackTests" time="0.086"/>
+  <testcase name="legacy unopened reward migrates once while already opened never pays again" classname="gg.rsmod.plugins.content.starter.DeadmanStarterPackTests" time="0.04"/>
+  <testcase name="pack in bank prevents reclaim and eleven space gate is atomic" classname="gg.rsmod.plugins.content.starter.DeadmanStarterPackTests" time="0.015"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/Pa/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+]]></system-err>
+</testsuite>

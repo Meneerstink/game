@@ -42,8 +42,10 @@ class SpecialAttackEnergyRefundTests {
         val player = mockk<Player>(relaxed = true)
         every { player.attr } returns AttributeMap()
         every { player.getEquipment(EquipmentType.WEAPON) } returns Item(weapon)
-        every { AttackTab.getEnergy(player) } answers { energy }
-        every { AttackTab.setEnergy(player, any()) } answers { energy = secondArg() }
+        // The dispatcher uses the Lightbearer/ToA-aware cost API, rather than whole-percent get/setEnergy.
+        every { AttackTab.canAffordSpecial(player, any()) } answers { energy >= secondArg<Int>() }
+        every { AttackTab.spendSpecial(player, any()) } answers { energy -= secondArg<Int>() }
+        every { AttackTab.refundSpecial(player, any()) } answers { energy += secondArg<Int>() }
         return player
     }
 

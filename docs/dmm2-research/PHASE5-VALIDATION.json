@@ -1,0 +1,262 @@
+{
+  "data": {
+    "mapping_rows": 143,
+    "native_metadata_rows": 73,
+    "corrupted_bonus_states": 10,
+    "skin_states": 16,
+    "no_id_collisions": true,
+    "native_appearance_and_requirements_preserved": true,
+    "exact_native_tradeability": true,
+    "nigel_wizard_seer_single_spawn": true,
+    "provenance": {
+      "data/cfg/dmm2/ids.tsv": "e7efbb117ec161980fe20e20d232da8e8c92ecd8c34fdd71d71795866084c7d4",
+      "docs/dmm2-research/phase5-output/items.generated.yml": "4f6fe3f285456477963acce10a289e109f31766253de526e73f102f0520182c9",
+      "data/cfg/dmm2/skins.tsv": "20c56c679b2b4dd11e1c50fe09b8840d86c744e57f0d079ee0db58be999a3957"
+    }
+  },
+  "test_classes": 39,
+  "unique_tests": 281,
+  "importer_tests": 2,
+  "tests": {
+    "gg.rsmod.game.model.skill.DeadmanExperienceLocksTests": {
+      "tests": 5,
+      "timestamp": "2026-11-17T10:25:16",
+      "sha256": "096d0680866dc136d0e0860bc894f3e31cad7468efc9fa168a6d3a08ad84fd00"
+    },
+    "gg.rsmod.plugins.content.combat.CombatEngageTests": {
+      "tests": 11,
+      "timestamp": "2026-11-17T10:26:31",
+      "sha256": "c54b110fd68c861b3f26b348c1a0a3d869b55a196b5901d6229c022d5cebd8a0"
+    },
+    "gg.rsmod.plugins.content.combat.CombatInterruptionPolicyTests": {
+      "tests": 4,
+      "timestamp": "2026-11-17T10:26:46",
+      "sha256": "da0ffdce4316062e36ad574ac484fed335fd989deaf8fb68aa9f2b55b445b21e"
+    },
+    "gg.rsmod.plugins.content.combat.CombatStyleRouteTests": {
+      "tests": 1,
+      "timestamp": "2026-11-17T10:35:42",
+      "sha256": "06c72a4a2e9cdefd126869dc74dedce687cd867a6759f184f32dbed5559e7848"
+    },
+    "gg.rsmod.plugins.content.combat.formula.MagicCombatFormulaTests": {
+      "tests": 14,
+      "timestamp": "2026-11-17T10:26:50",
+      "sha256": "97ca1395a7d0642a8238d97f74d6fe4d72a37251a278004531cfb7e0c14dbd5e"
+    },
+    "gg.rsmod.plugins.content.combat.formula.MeleeCombatFormulaTests": {
+      "tests": 12,
+      "timestamp": "2026-11-17T10:27:00",
+      "sha256": "d2c4ef8b2308309a4643c1ebfea271fb0c4a8831778906002cae74f175b601bb"
+    },
+    "gg.rsmod.plugins.content.combat.formula.RangedCombatFormulaTests": {
+      "tests": 7,
+      "timestamp": "2026-11-17T10:27:10",
+      "sha256": "57e0653a42b98e30681a6f872a7f6ce792ae5e0139b7def5ec653c34d43c2d47"
+    },
+    "gg.rsmod.plugins.content.combat.specialattack.SpecialAttackCoverageTests": {
+      "tests": 2,
+      "timestamp": "2026-11-17T10:27:17",
+      "sha256": "fa3f3f1698380acbc66435289d1b205fdb2b3f739ed305f348e85e31600c1b7b"
+    },
+    "gg.rsmod.plugins.content.combat.specialattack.SpecialAttackEnergyRefundTests": {
+      "tests": 3,
+      "timestamp": "2026-11-17T10:27:18",
+      "sha256": "2a1fdb849ff090da35f02e0fa3da3db4fba5c8efa2bd25c995beeae80c229f66"
+    },
+    "gg.rsmod.plugins.content.combat.specialattack.SpecialAttackXpTests": {
+      "tests": 3,
+      "timestamp": "2026-11-17T10:27:24",
+      "sha256": "232bb2cb62bee22b1c5a17774d5f2a23ae8df162b3d84935d0475018acba3148"
+    },
+    "gg.rsmod.plugins.content.combat.strategy.CombatXpRateTests": {
+      "tests": 4,
+      "timestamp": "2026-11-17T10:27:27",
+      "sha256": "dd5f6f346245f1946d328714802e4313fb128d12e56882c35a975b2cdb12c615"
+    },
+    "gg.rsmod.plugins.content.combat.strategy.MeleeCombatXpTests": {
+      "tests": 1,
+      "timestamp": "2026-11-17T10:27:42",
+      "sha256": "8a95affaca1f402d186a87edda550f71f2e0ed68177d983bd8fd864115210b69"
+    },
+    "gg.rsmod.plugins.content.drops.DropTableFactoryTest": {
+      "tests": 1,
+      "timestamp": "2026-11-17T10:27:44",
+      "sha256": "ddbf631ce4dc271e9c70773b168521ef451bb359290235ca20237b75567c4b7c"
+    },
+    "gg.rsmod.plugins.content.drops.DropTableTotalSlotsTests": {
+      "tests": 3,
+      "timestamp": "2026-11-17T10:27:48",
+      "sha256": "42bc9507681593f0e382151dc528242cf72e641bffb4428553ef32a80cf65073"
+    },
+    "gg.rsmod.plugins.content.items.osrs.CrystalEquipmentTests": {
+      "tests": 8,
+      "timestamp": "2026-11-17T10:27:53",
+      "sha256": "f0fda736eefc2829972d04b677f9b15b747232320140b135fc0a92a6b78b97e4"
+    },
+    "gg.rsmod.plugins.content.items.osrs.PoweredStavesTests": {
+      "tests": 5,
+      "timestamp": "2026-11-17T10:27:54",
+      "sha256": "0a3d91bda5a474c556d39634d70c10b5b69460c319a55955bbca2cee70863ca6"
+    },
+    "gg.rsmod.plugins.content.items.osrs.StaffOfTheDeadTests": {
+      "tests": 3,
+      "timestamp": "2026-11-17T10:27:55",
+      "sha256": "4c16fbe5b5c9a48575b6e8442e54da0b8c8034e9772754473884d03409d58aac"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.DeadmanExperienceExtensionTests": {
+      "tests": 1,
+      "timestamp": "2026-11-17T10:27:56",
+      "sha256": "ceb8ad03d3524adb5d22936cb6c9753fd5306555e20f9eb65cf65c55bb37a12c"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.Dmm2BootTests": {
+      "tests": 4,
+      "timestamp": "2026-11-17T10:28:03",
+      "sha256": "d0c99c86cf8a0962bd9e5f08e26ca56d20aee4695780c33db2c5f4f8c66be913"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests": {
+      "tests": 17,
+      "timestamp": "2026-11-17T10:28:12",
+      "sha256": "5cb1a1441c6c5e96a30639c3752ca2231fd52c783d75fe456522bdf081ff9ac7"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.Dmm2CosmeticsTests": {
+      "tests": 6,
+      "timestamp": "2026-11-17T10:28:19",
+      "sha256": "d452ff21f88e93ab586026b4530d5d57ed302dba5397adb1e4f0c69650e7fa2e"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests": {
+      "tests": 8,
+      "timestamp": "2026-11-17T10:28:28",
+      "sha256": "0b1e462ad59eb6381c3f16ec46b5d0d9242b2b2291a744e12ce989aed3a472c8"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.Dmm2InteractionTests": {
+      "tests": 2,
+      "timestamp": "2026-11-17T10:28:39",
+      "sha256": "3c34457698979a16867be6d4851048b691d3d117b83d150c6f48efb64dc3c81b"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests": {
+      "tests": 19,
+      "timestamp": "2026-11-17T10:36:02",
+      "sha256": "cddd3d6eecfcd94e48bbd15836f0585bea765c0e847c2391e7448f0a77517d29"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.Dmm2SourcePolicyTests": {
+      "tests": 3,
+      "timestamp": "2026-11-17T10:28:57",
+      "sha256": "4e77b772e81216e8a85f9994643920cc425557753a54e24c68d54ddf0ba7b668"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.Dmm2WeaponPresentationTests": {
+      "tests": 4,
+      "timestamp": "2026-11-17T10:36:12",
+      "sha256": "cb4721235fd337cefde6cd157b31cfa53acb16cf71914b970e58cf0b684c65ca"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.NigelHouseRewardsTests": {
+      "tests": 4,
+      "timestamp": "2026-11-17T10:29:14",
+      "sha256": "14add8fe7eddd7660a9a1746260c669600505049771fcc854464fe631b7420ce"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStoreTests": {
+      "tests": 8,
+      "timestamp": "2026-11-17T10:29:21",
+      "sha256": "1bddfb49d59fe20c949e3a70cf02e43e29d2b60f9c79e41e34fa463b2d5a40ae"
+    },
+    "gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests": {
+      "tests": 13,
+      "timestamp": "2026-11-17T10:29:27",
+      "sha256": "63b84b4a454ad5c739d4884ec113d5e8a3351cc3a34f361172f90e4487772c55"
+    },
+    "gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests": {
+      "tests": 17,
+      "timestamp": "2026-11-17T10:29:39",
+      "sha256": "949b5f2e70df8b688c9d245b19ca4784b0f19a463470e0f5742441e9c5fba680"
+    },
+    "gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtectionTests": {
+      "tests": 13,
+      "timestamp": "2026-11-17T10:29:59",
+      "sha256": "464d617cbca207c033f7036661fe97ff340b12da541ad53af3bce4cb996cf212"
+    },
+    "gg.rsmod.plugins.content.mechanics.pvp.breach.BreachRewardTests": {
+      "tests": 11,
+      "timestamp": "2026-11-17T10:30:07",
+      "sha256": "baaa6f1b0ec9cff616854bf56b2c8fbce454bc731a764a2fd53964052382f5dc"
+    },
+    "gg.rsmod.plugins.content.quests.tab.DropViewerTests": {
+      "tests": 20,
+      "timestamp": "2026-11-17T10:30:15",
+      "sha256": "6bea11bba0189bfe84afc0bb3c03c72138b2bc9cf7c1bfbd15c481b61f66a87f"
+    },
+    "gg.rsmod.plugins.content.quests.tab.QuestTabClickTests": {
+      "tests": 6,
+      "timestamp": "2026-11-17T10:30:31",
+      "sha256": "4e17b704b007174acc2412d059bcb8cf038b98b7b8f889a24f1e9edd17340c1d"
+    },
+    "gg.rsmod.plugins.content.quests.tab.QuestTabTests": {
+      "tests": 21,
+      "timestamp": "2026-11-17T10:30:43",
+      "sha256": "15600810177fb6f0877cf694b37e406f267d11f0b8a61d109f4ec27457ebf8f9"
+    },
+    "gg.rsmod.plugins.content.starter.DeadmanStarterPackTests": {
+      "tests": 5,
+      "timestamp": "2026-11-17T10:30:55",
+      "sha256": "750f2d67dcd3a394bf0a22561fe0aa6c909589d7938332442d7b50f60cc4928d"
+    },
+    "gg.rsmod.plugins.content.starter.NewPlayerStartTests": {
+      "tests": 4,
+      "timestamp": "2026-11-17T10:31:06",
+      "sha256": "99e76bb421175468a7bdecedeb63772fc79bf3626683eecb8dedeaa2a1775a77"
+    },
+    "gg.rsmod.plugins.content.starter.StarterPackInteractionsTests": {
+      "tests": 4,
+      "timestamp": "2026-11-17T10:31:13",
+      "sha256": "09b4d6df239c959d75d89b259c8f9fc55e3b13733fb046d3a2b91787f39b239d"
+    },
+    "gg.rsmod.plugins.content.starter.StarterWeaponCombatTests": {
+      "tests": 4,
+      "timestamp": "2026-11-17T10:31:19",
+      "sha256": "59f3c8b48ae3c207155f1649c02f25b6d26b0644eaaa14d2b3c3516e7e4f6e3e"
+    }
+  },
+  "plan_verification": {
+    "files": 78,
+    "unchanged": true,
+    "journal_empty": true,
+    "results": {
+      "fire-spots-command.json": 0,
+      "interfaces-command.json": 0,
+      "tests-command.json": 0,
+      "weapon-seqs-command.json": 0
+    }
+  },
+  "source_sha256": {
+    "docs/dmm2-research/phase5-sources/cache-probe.json": "60ea9737b7450d4069efb972ecbe375c0e58c78ea2d9d836fb40a56c806d1e18",
+    "docs/dmm2-research/phase5-sources/creating-fire-frames.png": "be81a7e280a12d6d934a340f468915438b0d780e4c7a79c7c35d0cfe8950220f",
+    "docs/dmm2-research/phase5-sources/creating-fire.webp": "84b21eee09bf16ac78f0943ec57142d968a3fbee1179e74027c4aab3ffdb2aa1",
+    "docs/dmm2-research/phase5-sources/deadman-config-strings.json": "35a87f3fe50dbb939043e7c19fa7322d6aec266c95b9c6ce69248ef7d1c0e611",
+    "docs/dmm2-research/phase5-sources/interfaces-raw.json": "4f58b7b88f690cd1f7eaa1009cfe58f878192ee7f27e9d7107acb1f20b1323ec",
+    "docs/dmm2-research/phase5-sources/omnishop-scripts.json": "d7bd9d54a1f9d24f1dc85a35f0c0645930f9a0b6b20d20ea73d388980044d43f",
+    "docs/dmm2-research/phase5-sources/omnishop.json": "a9298b95639648a7d7a5d3b7405f95306cf561315656d7e41015202cb6ccdc37",
+    "docs/dmm2-research/phase5-sources/reward-candidates.json": "2eddd46b7c6d4147ed81f578878ddf4306f7168cba3b54b35cf9a46de8bb5f24",
+    "docs/dmm2-research/phase5-sources/reward-store-image.json": "dec29efa151fc69d2c01f356f1e0c6a0e52c73abe327e278d53f4af24d36b737",
+    "docs/dmm2-research/phase5-sources/reward-store.png": "9638603d2ab8578a946beac164f90463b893b93de23e83de7202f491c5f7a9b0",
+    "docs/dmm2-research/phase5-sources/runelite-provenance.json": "0292e0cd5e6247a887ba04f1d383d1d0451bd35d7f13528e6b634af0b7aa115e",
+    "docs/dmm2-research/phase5-sources/shop-config.json": "5199e99852835c026f5afc576583618b4f4dcb9a4071900e3166f552ec487841",
+    "docs/dmm2-research/phase5-sources/shop-reward-rows.json": "80e46e8936f61fe14d29a17be96fa571b61c539e5849a252c895dda1cc331ea4",
+    "docs/dmm2-research/phase5-sources/sound-list.json": "bf7890c9487742d3a1879f9e29a97482e01560bb3bfbc03ea728ce42d0972177",
+    "docs/dmm2-research/phase5-sources/ui-scripts.json": "56376f1713f673e4648c938d68dc68a07f100ec736ff75a71edf92b24f4347a4",
+    "docs/dmm2-research/phase5-sources/wiki.json": "a3a8e4a9680a491bccd48e3456472526d64dcd2544d7917779b840aac53902a8"
+  },
+  "current_code_sha256": {
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/deadman/Dmm2Boot.kt": "145cfd71b8e07d41eb646c29a05c258d180345ba78446e2984121e06a1d7a44c",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/deadman/CorruptedWeapons.kt": "fe1ac9c294da1c9ecd8364a85d71df683507a21be169edee719409986e7b5ca5",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/deadman/FireAmulet.kt": "1df295891fd10cf65be46a3f7359ec1ed05936c66a28c91495f1b4134f083193",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/mechanics/deadman/dmm2.plugin.kts": "43219f5ecdbfdb03250bd14f333c243835c93a967ee545b6b619876deca4aa7f",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/combat/CombatConfigs.kt": "8ef2d930278647a021c81c7b8f80d9deb65c2f99f07990b25bcd12027f0b49e6",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/MeleeCombatStrategy.kt": "3f97bbe7d583f4fba8ba03584f82eae4cb08b48ddf0cf79143b72e7e19130b35",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/quests/tab/DropSources.kt": "ac9c2b4e4b3ff6dead51065f36c1309d8cb159e9962ec539512988d71031a998",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/quests/tab/CollectionLogPages.kt": "4319409bb12eabfa497c645395e3fd57f7be8e1cce65351de4410c949e4113db",
+    "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/deadman/Dmm2WeaponPresentationTests.kt": "7ca92e587178850bdefb8f6a00131254cd6d6f01de714606e5c3d2072611ad93",
+    "game/plugins/src/test/kotlin/gg/rsmod/plugins/content/mechanics/deadman/Dmm2ItemServicesTests.kt": "27960e2d59eefe02f2a8f978388f2025c3af69f27b9a04605ae47d0b8704f0dc",
+    "game/src/main/kotlin/gg/rsmod/game/tools/importer/OsrsInterfacePortTool.kt": "7ec1bbb39a12d1f9dca068f393240862ee4fbb4c9682cd8841daff6a382dcf5d",
+    "game/src/main/kotlin/gg/rsmod/game/tools/importer/OsrsFxImportTool.kt": "e5050dd452bcc4b9fe6a5b4453b69396b962672ab8551af3f672f61577b3da4f"
+  },
+  "code_hash_format": "LF, matching the repository Kotlin attributes",
+  "limitations": "Focused current-source compile/JUnit and PLAN evidence only; no client, server boot or live run by GPT-A."
+}

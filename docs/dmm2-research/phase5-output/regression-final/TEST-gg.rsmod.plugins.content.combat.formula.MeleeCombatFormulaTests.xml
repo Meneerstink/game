@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.combat.formula.MeleeCombatFormulaTests" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:27:00" hostname="LAPTOP-KLOL515N" time="8.175">
+  <properties/>
+  <testcase name="melee strength equipment bonus (BonusSlot STRENGTH_BONUS) composes into max hit" classname="gg.rsmod.plugins.content.combat.formula.MeleeCombatFormulaTests" time="5.276"/>
+  <testcase name="Aggressive style gives effective Strength the largest, plus 3, bonus" classname="gg.rsmod.plugins.content.combat.formula.MeleeCombatFormulaTests" time="0.27"/>
+  <testcase name="getAccuracyAgainstReducedDefence with a stab defence style reads the stab bonus whatever the attack style" classname="gg.rsmod.plugins.content.combat.formula.MeleeCombatFormulaTests" time="0.209"/>
+  <testcase name="Accurate style gives effective Strength no style bonus, same as Defensive" classname="gg.rsmod.plugins.content.combat.formula.MeleeCombatFormulaTests" time="0.216"/>
+  <testcase name="a level 1, unequipped, un-prayed attacker deals the minimum baseline hit" classname="gg.rsmod.plugins.content.combat.formula.MeleeCombatFormulaTests" time="0.3"/>
+  <testcase name="Controlled style gives effective Strength a plus 1 bonus" classname="gg.rsmod.plugins.content.combat.formula.MeleeCombatFormulaTests" time="0.317"/>
+  <testcase name="getAccuracyAgainstReducedDefence rolls the normal attack against a fraction of the defence roll" classname="gg.rsmod.plugins.content.combat.formula.MeleeCombatFormulaTests" time="0.256"/>
+  <testcase name="TargetModifiers' Salve amulet bonus multiplies the base hit rather than replacing it" classname="gg.rsmod.plugins.content.combat.formula.MeleeCombatFormulaTests" time="0.516"/>
+  <testcase name="void melee multiplies effective Strength by 1_10 and floors it" classname="gg.rsmod.plugins.content.combat.formula.MeleeCombatFormulaTests" time="0.182"/>
+  <testcase name="protect from melee only zeroes accuracy against a non-player attacker" classname="gg.rsmod.plugins.content.combat.formula.MeleeCombatFormulaTests" time="0.215"/>
+  <testcase name="Piety's Strength prayer multiplier composes into effective Strength" classname="gg.rsmod.plugins.content.combat.formula.MeleeCombatFormulaTests" time="0.172"/>
+  <testcase name="Accurate style's plus 3 effective Attack bonus composes into the attack roll" classname="gg.rsmod.plugins.content.combat.formula.MeleeCombatFormulaTests" time="0.242"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/Pa/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+]]></system-err>
+</testsuite>

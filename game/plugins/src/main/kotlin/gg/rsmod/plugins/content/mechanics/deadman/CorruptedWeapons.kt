@@ -12,6 +12,43 @@ import gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId
 /** DMM corrupted weapons are unrelated to native corrupt Ancient Warriors gear (N457). */
 object CorruptedWeapons {
     const val SCYTHE_CAPACITY = 20_000
+    const val SCYTHE_ATTACK_SOURCE = 8056 // RuneLite gameval SCYTHE_OF_VITUR_ATTACK; cache2686.
+
+    /** Presentation only: retain the wielded item's real bonuses, charges and special formula. */
+    fun presentationBase(id: Int): Int = when {
+        ItemId.VOIDWAKER.matches(id) -> Items.VOIDWAKER
+        ItemId.CLAWS.matches(id) -> Items.DRAGON_CLAWS
+        ItemId.GODSWORD.matches(id) -> Items.ARMADYL_GODSWORD
+        ItemId.TWISTED_BOW.matches(id) -> Items.TWISTED_BOW
+        ItemId.DARK_BOW.matches(id) -> Items.DARK_BOW
+        ItemId.VOLATILE.matches(id) -> Items.VOLATILE_NIGHTMARE_STAFF
+        else -> DeadmanCosmetics.base(id) ?: id
+    }
+
+    fun attackAnimation(id: Int, style: Int): Int? = when {
+        isScythe(id) -> Dmm2Ids.seq(SCYTHE_ATTACK_SOURCE)
+        // Wiki rev15262511: Slash Sword (Chop/Slash/Lunge/Block). Same classic style set as Voidwaker.
+        ItemId.KHOPESH.matches(id) -> if (style == 2) gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_SWORD_STAB
+            else gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_SWORD_SLASH
+        else -> null
+    }
+
+    /** Category fallback for silent sequences, matching each underlying weapon; never substitute its stats. */
+    fun swingSound(id: Int, style: gg.rsmod.game.model.combat.StyleType): Int? {
+        val sounds = gg.rsmod.plugins.content.items.osrs.OsrsWeaponSounds
+        return when {
+            // Existing OSRS Scythe category cues; List of sound IDs rev in phase5-sources/sound-list.json.
+            // Vitur-specific server audio is not encoded in seq8056; the category fallback is an explicit source-policy choice.
+            isScythe(id) -> when (style) {
+                gg.rsmod.game.model.combat.StyleType.STAB -> gg.rsmod.plugins.api.cfg.Sfx.SCYTHE_STAB
+                gg.rsmod.game.model.combat.StyleType.CRUSH -> gg.rsmod.plugins.api.cfg.Sfx.SCYTHE_DOUBLE
+                else -> gg.rsmod.plugins.api.cfg.Sfx.SCYTHE_SLASH
+            }
+            ItemId.VOIDWAKER.matches(id) || ItemId.KHOPESH.matches(id) -> sounds.SWORD.of(style)
+            ItemId.SHADOW.matches(id) || ItemId.SHADOW_EMPTY.matches(id) || ItemId.VOLATILE.matches(id) -> sounds.STAFF.of(style)
+            else -> sounds.melee(presentationBase(id), style)
+        }
+    }
     /** Source cache2686 param14; dark bow=7 (param13 range6), resolving the contradictory wiki infobox. */
     fun attackSpeed(id: Int?): Int? = when {
         ItemId.VOIDWAKER.matches(id) || ItemId.CLAWS.matches(id) || ItemId.KHOPESH.matches(id) -> 4

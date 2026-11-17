@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.drops.DropTableTotalSlotsTests" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:27:48" hostname="LAPTOP-KLOL515N" time="3.662">
+  <properties/>
+  <testcase name="a table with no declared total still rolls against what it holds" classname="gg.rsmod.plugins.content.drops.DropTableTotalSlotsTests" time="3.618"/>
+  <testcase name="an under-filled table rolls against its declared total and drops nothing in the remainder" classname="gg.rsmod.plugins.content.drops.DropTableTotalSlotsTests" time="0.038"/>
+  <testcase name="a table that over-fills its declared total keeps every entry reachable" classname="gg.rsmod.plugins.content.drops.DropTableTotalSlotsTests" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/Pa/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+]]></system-err>
+</testsuite>

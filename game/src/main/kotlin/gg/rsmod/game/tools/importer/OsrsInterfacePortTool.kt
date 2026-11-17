@@ -50,8 +50,10 @@ object OsrsInterfacePortTool {
     const val INDEX_INTERFACES = 3
     const val INDEX_SPRITES = 8
     const val SPRITE_FLOOR = 8819
-    // UI230 cannot be ported: source font645 has no proven667 mapping. Do not substitute another font.
+    // Original phase4 batch stays reproducible. Additional UI round uses the now-proven named quill font.
     val DMM2 = listOf(232)
+    // 819/806 OMNISHOP_MAIN/SIDE, source DB row929 = Deadman Reward Store. 645 is LMS, not Nigel.
+    val DMM2_UI = listOf(230, 232, 819, 806)
     val TOA = listOf(481, 482, 771, 772, 773, 774, 775, 776, 777, 778)
 
     // OSRS sprite groups (RuneLite gameval SpriteID) used by the rebuilt frame scripts.
@@ -693,8 +695,8 @@ object OsrsInterfacePortTool {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        raid = if (args.first() == "dmm2") "dmm2" else if (args.first() == "cox" || "--cox" in args) "cox" else "toa"
-        val groups = args.first().let { if (it == "dmm2") DMM2 else if (it == "toa") TOA else if (it == "cox") COX else it.split(',').map(String::toInt) }
+        raid = if (args.first() in setOf("dmm2", "dmm2-ui")) "dmm2" else if (args.first() == "cox" || "--cox" in args) "cox" else "toa"
+        val groups = args.first().let { if (it == "dmm2-ui") DMM2_UI else if (it == "dmm2") DMM2 else if (it == "toa") TOA else if (it == "cox") COX else it.split(',').map(String::toInt) }
         val apply = "--apply" in args
         val root = ObjectMapper().readTree(JSON)
         val library = CacheLibrary(TARGETS[0])
@@ -704,7 +706,8 @@ object OsrsInterfacePortTool {
         try {
             val sprIndex = library.index(INDEX_SPRITES)
             fun fontId(name: String) = sprIndex.archive(name)?.id ?: error("font '$name' missing in target cache")
-            fonts = mapOf(494 to fontId("p11_full"), 495 to fontId("p12_full"), 496 to fontId("b12_full"), 497 to fontId("q8_full"))
+            fonts = mapOf(494 to fontId("p11_full"), 495 to fontId("p12_full"), 496 to fontId("b12_full"), 497 to fontId("q8_full")) +
+                if (230 in groups) mapOf(645 to fontId("quill_oblique_large")) else emptyMap()
             firstInterface = (library.index(INDEX_INTERFACES).archiveIds().maxOrNull() ?: -1) + 1
             firstSprite = maxOf((sprIndex.archiveIds().maxOrNull() ?: -1) + 1, SPRITE_FLOOR)
         } finally {

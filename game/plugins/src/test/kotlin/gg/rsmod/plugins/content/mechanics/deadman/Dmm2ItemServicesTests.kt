@@ -25,6 +25,26 @@ class Dmm2ItemServicesTests {
         every { f.player.skills.getCurrentLevel(Skills.MAGIC) } returns 75
     }
     private fun id(item: ItemId) = ids.getValue(item)
+    @Test fun `fire altar preview spends nothing and completion rechecks both a lost boost and removed ingredients`() {
+        f.inventory[0] = Item(id(ItemId.FIRE_RUBY))
+        f.inventory[1] = Item(Items.AMULET_OF_MAGIC)
+        f.inventory[2] = Item(Items.FIRE_RUNE, 100)
+        repeat(5) { assertEquals(FireAmulet.Result.OK, FireAmulet.check(f.player)) }
+        assertEquals(1L, f.count(id(ItemId.FIRE_RUBY)))
+        assertEquals(100L, f.count(Items.FIRE_RUNE))
+        every { f.player.skills.getCurrentLevel(Skills.RUNECRAFTING) } returns 20
+        assertEquals(FireAmulet.Result.LEVEL, FireAmulet.craft(f.player))
+        assertEquals(1L, f.count(Items.AMULET_OF_MAGIC))
+        every { f.player.skills.getCurrentLevel(Skills.RUNECRAFTING) } returns 21
+        f.inventory[2] = Item(Items.FIRE_RUNE, 99)
+        assertEquals(FireAmulet.Result.INGREDIENTS, FireAmulet.craft(f.player))
+        assertEquals(1L, f.count(id(ItemId.FIRE_RUBY)))
+        f.inventory[2] = Item(Items.FIRE_RUNE, 100)
+        assertEquals(FireAmulet.Result.OK, FireAmulet.craft(f.player))
+        assertEquals(1L, f.count(id(ItemId.FIRE_AMULET)))
+        assertEquals(FireAmulet.Result.INGREDIENTS, FireAmulet.craft(f.player))
+        assertEquals(1L, f.count(id(ItemId.FIRE_AMULET)))
+    }
     @Test fun `mapping validates duplicate and unknown ids without using source ids as local items`() {
         assertFailsWith<IllegalArgumentException> { Dmm2Ids.parse(listOf("item\t28531\t100", "item\t28531\t101")) }
         assertFailsWith<IllegalArgumentException> { Dmm2Ids.parse(listOf("item\t28531\t0")) }

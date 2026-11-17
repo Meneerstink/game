@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.combat.specialattack.SpecialAttackXpTests" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:27:24" hostname="LAPTOP-KLOL515N" time="1.182">
+  <properties/>
+  <testcase name="the shared hit path awards special attack experience per hit type" classname="gg.rsmod.plugins.content.combat.specialattack.SpecialAttackXpTests" time="0.064"/>
+  <testcase name="no special attack plugin adds combat experience by hand" classname="gg.rsmod.plugins.content.combat.specialattack.SpecialAttackXpTests" time="0.428"/>
+  <testcase name="direct hits on the target outside dealHit either award the experience or are recorded effects" classname="gg.rsmod.plugins.content.combat.specialattack.SpecialAttackXpTests" time="0.69"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

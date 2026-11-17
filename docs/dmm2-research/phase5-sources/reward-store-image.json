@@ -1,0 +1,28 @@
+{
+  "continue": {
+    "iistart": "2024-08-08T18:03:26Z",
+    "continue": "||"
+  },
+  "query": {
+    "pages": [
+      {
+        "pageid": 522230,
+        "ns": 6,
+        "title": "File:Deadman Reward Store interface.png",
+        "imagerepository": "local",
+        "imageinfo": [
+          {
+            "timestamp": "2026-07-05T19:55:17Z",
+            "size": 38441,
+            "width": 480,
+            "height": 314,
+            "url": "https://oldschool.runescape.wiki/images/Deadman_Reward_Store_interface.png?e1bc2",
+            "descriptionurl": "https://oldschool.runescape.wiki/w/File:Deadman_Reward_Store_interface.png",
+            "descriptionshorturl": "https://oldschool.runescape.wiki/index.php?curid=522230",
+            "sha1": "dc2ecc23eac6fd60cc1ea942de4f8186189ad03e"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,365 @@
+{
+  "source_fonts": {
+    "quill_oblique_large": {
+      "group": 645,
+      "sprite_sha256": "8eff327ded04e37c7caf716f9e845d8d13465c26964becfe377c54e904c509a1"
+    },
+    "p11_full": {
+      "group": 494,
+      "sprite_sha256": "b33a1eb555abcf579661d655168bac1a5ad1e1fb7841cbe3a9e0372efbecb143"
+    },
+    "p12_full": {
+      "group": 495,
+      "sprite_sha256": "c7da41b4e540f6305b31672295b5aea929e9d7ef6d51902162d0631baaa6d10e"
+    },
+    "b12_full": {
+      "group": 496,
+      "sprite_sha256": "4b23a0094bd69ffb9e069be3f2675ef0182e09be54dcea249602bd69c65416b4"
+    },
+    "q8_full": {
+      "group": 497,
+      "sprite_sha256": "bb9e3502cb42ee83388f7a22c6516cd0d46c1cfd7e663615bac419066a950622"
+    }
+  },
+  "local_fonts": {
+    "quill_oblique_large": {
+      "group": 645,
+      "sprite_sha256": "45d95ca1738ff7600456e36911aa771ac266bb3d65b211c645bf4bc33e2a3902"
+    },
+    "p11_full": {
+      "group": 494,
+      "sprite_sha256": "2e20f026d2a189bbff5f62356b0130831e3325b0aafd53c99e97453ef6024b76"
+    },
+    "p12_full": {
+      "group": 495,
+      "sprite_sha256": "82fdb584130bf6d94547ece5853043830b0df2c9deb92433c1369ae728ff67a7"
+    },
+    "b12_full": {
+      "group": 496,
+      "sprite_sha256": "ba69ff980c4910585a4941e78c09bbac6bc819f2d89090b68a27b989250a2e52"
+    },
+    "q8_full": {
+      "group": 497,
+      "sprite_sha256": "ba27e19d0e44715c3499786c030b4fa411b3f231e9b634ce9000bb7993272769"
+    }
+  },
+  "23823": {
+    "source": 33044,
+    "local": {
+      "name": "Trinket of avarice",
+      "inv": [
+        "Note/Unnote",
+        "Value",
+        null,
+        null,
+        null
+      ],
+      "ground": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "params": {},
+      "model": 63900,
+      "cost": 100000,
+      "worn": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    "local_sha256": "101f6c2295720a50e6547ad7a98b82309df478cb8906003596b6669e2e747e20"
+  },
+  "23822": {
+    "source": 28564,
+    "local": {
+      "name": "Trinket of fairies",
+      "inv": [
+        "Fairy-ring",
+        "Spirit-tree",
+        "Tool-leprechauns",
+        "Last-destination",
+        null
+      ],
+      "ground": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "params": {},
+      "model": 63897,
+      "cost": 100000,
+      "worn": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    "local_sha256": "093ba8789b68c70e923107ac5355e14f6ee507b1fcaee1786f3b35124b851128"
+  },
+  "23824": {
+    "source": 28570,
+    "local": {
+      "name": "Trinket of undead",
+      "inv": [
+        "Summon Lil Zuk",
+        "Summon Lil Kal",
+        "Summon Lil Wisp",
+        null,
+        null
+      ],
+      "ground": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "params": {},
+      "model": 63903,
+      "cost": 100000,
+      "worn": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    "local_sha256": "5eb20193d27b1ee810aae67d62a3083ff5eaabadf78e9cbbb0d849e46ca91963"
+  },
+  "23825": {
+    "source": 33047,
+    "local": {
+      "name": "Trinket of fortuity (inactive)",
+      "inv": [
+        "Charge",
+        null,
+        null,
+        null,
+        null
+      ],
+      "ground": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "params": {},
+      "model": 63911,
+      "cost": 100000,
+      "worn": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    "local_sha256": "070ccd0a763dca75ec4379baa0acc5bd8ff1ba423051846591fb675919caf199"
+  },
+  "ui": {
+    "230": {
+      "components": 17,
+      "fonts": [
+        496,
+        645
+      ],
+      "texts": [
+        "0",
+        "/",
+        "/",
+        "10"
+      ]
+    },
+    "232": {
+      "components": 3,
+      "fonts": [],
+      "texts": []
+    },
+    "645": {
+      "components": 9,
+      "fonts": [
+        495
+      ],
+      "texts": []
+    }
+  },
+  "script_hits": {
+    "3522": {
+      "sha256": "986c4a6e22764a442b4bee9b8e2d411af671fa2f15cd2b50ef5646fdc8514666",
+      "strings": [
+        "<col=ffffff>Inquisitor's armour:<br><br>Each individual piece of Inquisitor's armour boosts damage and accuracy when using the crush attack style. <br><br>Current bonus: ",
+        "%<br>",
+        "<br>",
+        "<col=ffffff>Amulet of air:</col><br><br>",
+        "You have the Amulet of air equipped. Your air spells' max hit is increased by 2.<br><br>",
+        "<col=ffffff>Amulet of water:</col><br><br>",
+        "You have the Amulet of water equipped. Your water spells' max hit is increased by 2.<br><br>",
+        "<col=ffffff>Amulet of earth:</col><br><br>",
+        "You have the Amulet of earth equipped. Your earth spells' max hit is increased by 2.<br><br>",
+        "<col=ffffff>Amulet of fire:</col><br><br>",
+        "You have the Amulet of fire equipped. Your fire spells' max hit is increased by 2.<br><br>",
+        "<col=ffffff>Elemental amulet:</col><br><br>",
+        "You have the Elemental amulet equipped. Your air, water, earth and fire spells' max hit is increased by 2.<br><br>",
+        "<col=ffffff>Swampbark Armour: <br><br>When wearing the Swampbark Helm, Body, or Legs, the duration of Bind, Snare and Entangle spells is increased by 1.2 seconds.<br>This is cumulative for each piece worn.</col><br><br>",
+        "<col=ffffff>Bloodbark Armour: <br><br>When wearing a piece of Bloodbark armour, the amount of health restored by Blood spells is increased by 2.0%.<br>This is cumulative for each piece worn.</col><br><br>",
+        "<col=ffffff>Zealot's prayer robes:<br><br>When wearing a piece of the Zealot's prayer robes, you have a 1.25% chance of saving ensouled heads when reanimating them, bones when burying or offering them, and bonemeal & slime at the Ectofuntus. This works alongside the Wilderness altar's bone saving effect.<br>This is cumulative for each piece worn.</col><br><br>",
+        "<col=ffffff>Graceful Outfit:<br><br>The Graceful Outfit increases your run restoration rate.<br>",
+        "Graceful Hood:  +3%<br>",
+        "Graceful Torso:  +4%<br>",
+        "Graceful Legs:  +4%<br>",
+        "Graceful Gloves:  +3%<br>",
+        "Graceful Boots:  +3%<br>",
+        "Graceful Cape:  +3%<br>",
+        "<br>",
+        "<col=ffffff>Ranged Crystal Weaponry Accuracy Bonus:</col><br><br>",
+        "Crystal Helm: +5%<br>",
+        "Crystal Body:  +15%<br>",
+        "Crystal Legs:  +10%<br>",
+        "<br><col=ffffff>Ranged Crystal Weaponry Damage Bonus:</col><br><br>",
+        "Crystal Helm: +2.5%<br>",
+        "Crystal Body:  +7.5%<br>",
+        "Crystal Legs:  +5%<br>",
+        "<br>",
+        "<col=ffffff>Zaryte Crossbow:</col><br><br>",
+        "You have the Zaryte Crossbow equipped. Special bolt effects are increased by 10%.<br>",
+        "<br>",
+        "<col=ffffff>Keris Partisan of the Sun:</col><br><br>",
+        "While within the Tombs of Amascut:<br><br>- You have 25% increased accuracy against creatures below 25% health<br><br>- Killing a creature with the partisan restores ",
+        " hitpoints at the cost of ",
+        " prayer points.<br>    - This effect can overheal up to 20% above your hitpoints.<br>",
+        "<br>",
+        "<col=ffffff>Dizana's Sunfire:</col><br><br>",
+        "Dizana's Quiver ranged attack is increased by 10 and ranged strength is increased by 1.<br><col=ffffff>Only applies when using arrows and bolts.<br>",
+        "<br>",
+        "<col=ffffff>Raiments of the Eye - Bonus runes crafted </col><br><br>",
+        "Hood of the Eye: +10%<br>",
+        "Robe Top of the Eye: +10%<br>",
+        "Robe Bottoms of the Eye: +10%<br>",
+        "Boots of the Eye: +10%<br>",
+        "<br>This bonus stacks additively not multiplicatively with other similar effects.<br>",
+        "<br>",
+        "<col=ffffff>Smiths Uniform chance to smith faster bonus:</col><br><br>",
+        "Smiths Tunic: +20%<br>",
+        "Smiths Trousers: +20%<br>",
+        "Smiths Boots: +20%<br>",
+        "Smiths Gloves: +20%<br>",
+        "<br>",
+        "<col=ffffff>Virtus Robes:</col><br><br>",
+        "Virtus mask: +2% Magic damage and an additional 3% ancient magic damage<br>",
+        "Virtus robe top: +2% Magic damage and an additional 3% ancient magic damage<br>",
+        "Virtus robe bottom: +2% Magic damage and 3% an additional ancient magic damage<br>",
+        "<br>",
+        "<col=ffffff>Angler outfit fishing XP increase:</col><br><br>",
+        "Angler hat: +0.4%<br>",
+        "Angler top: +0.8%<br>",
+        "Angler waders: +0.6%<br>",
+        "Angler Boots: +0.2%<br>",
+        "<br>",
+        "<col=ffffff>Spirit Angler outfit fishing XP increase:</col><br><br>",
+        "Spirit Angler headband: +0.4%<br>",
+        "Spirit Angler top: +0.8%<br>",
+        "Spirit Angler waders: +0.6%<br>",
+        "Spirit Angler boots: +0.2%<br>",
+        "<br>",
+        "<col=ffffff>Lumberjack outfit woodcutting XP increase:</col><br><br>",
+        "Lumberjack hat headband: +0.4%<br>",
+        "Lumberjack body: +0.8%<br>",
+        "Lumberjack legs: +0.6%<br>",
+        "Lumberjack boots: +0.2%<br>",
+        "<br>",
+        "<col=ffffff>Prospector outfit mining XP increase:</col><br><br>",
+        "Prospector helmet: +0.4%<br>",
+        "Prospector jacket: +0.8%<br>",
+        "Prospector legs: +0.6%<br>",
+        "Prospector boots: +0.2%<br>",
+        "<br>",
+        "<col=ffffff>Farmer's outfit farming XP increase:</col><br><br>",
+        "Farmer's strawhat: +0.4%<br>",
+        "Farmer's top: +0.8%<br>",
+        "Farmer's legs: +0.6%<br>",
+        "Farmer's boots: +0.2%<br>",
+        "<br>",
+        "<col=ffffff>Pyromancer outfit firemaking XP increase:</col><br><br>",
+        "Pyromancer hood: +0.4%<br>",
+        "Pyromancer garb: +0.8%<br>",
+        "Pyromancer robe: +0.6%<br>",
+        "Pyromancer boots: +0.2%<br>",
+        "<br>",
+        "<col=ffffff>Shayzien armour reduces the damage of the acid splash attack used by Lizardman Shamans:</col><br><br>",
+        "Shayzien helm: ",
+        "% damage reduction<br>",
+        "Slayer helm: 20% damage reduction<br>",
+        "Shayzien body: ",
+        "% damage reduction<br>",
+        "Shayzien greaves: ",
+        "% damage reduction<br>",
+        "Shayzien boots: ",
+        "% damage reduction<br>",
+        "Shayzien gloves: ",
+        "% damage reduction<br>",
+        "<br>",
+        "<col=ffffff>Rogue kit double loot from standard pickpocketing:</col><br><br>",
+        "Rogue mask: 15% chance<br>",
+        "Rogue top: 15% chance<br>",
+        "Rogue trousers: 15% chance<br>",
+        "Rogue boots: 15% chance<br>",
+        "Rogue gloves: 15% chance<br>",
+        "<br>",
+        "<col=ffffff>Carpenter's outfit construction XP increase:</col><br><br>",
+        "Carpenter's helmet: +0.4%<br>",
+        "Carpenter's shirt: +0.8%<br>",
+        "Carpenter's trousers: +0.6%<br>",
+        "Carpenter's boots: +0.2%<br>",
+        "<br>",
+        "<col=ffffff>Swampbark increases the duration of Bind, Snare and Entangle spells:</col><br><br>",
+        "Swampbark helm: +1.2 seconds<br>",
+        "Swampbark body: +1.2 seconds<br>",
+        "Swampbark legs: +1.2 seconds<br>",
+        "<br>",
+        "<col=ffffff>Bloodbark increases the amount healed by Blood spells:</col><br><br>",
+        "Bloodbark helm: +2%<br>",
+        "Bloodbark body: +2%<br>",
+        "Bloodbark legs: +2%<br>",
+        "Bloodbark boots: +2%<br>",
+        "Bloodbark gloves: +2%<br>",
+        "<br>",
+        "<col=ffffff>Zealot's robes prayer XP increase:</col><br><br>",
+        "Zealot's helm: +1.25%<br>",
+        "Zealot's robe top: +1.25%<br>",
+        "Zealot's robe bottom: +1.25%<br>",
+        "Zealot's boots: +1.25%<br>",
+        "<br>",
+        "<col=ffffff>Raiments of the Eye bonus runes:</col><br><br>",
+        "Hat of the eye: +10%<br>",
+        "Robe top of the eye: +10%<br>",
+        "Robe bottoms of the eye: +10%<br>",
+        "Boots of the eye: +10%<br>",
+        "<br>",
+        "When wearing gear that gives a set bonus, you'll be able to view it here.<br>"
+      ]
+    }
+  }
+}
