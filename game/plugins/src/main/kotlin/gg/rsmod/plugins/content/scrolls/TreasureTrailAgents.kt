@@ -104,6 +104,9 @@ object TreasureTrailAgents {
         return listOf(npc)
     }
 
+    /** Shared personal identity for coordinate guardians and double agents. */
+    fun claim(player: Player, npc: Npc) { npc.attr[OWNER] = WeakReference(player) }
+
     /** The actual spawned identity owns the fight; ordinary same-id NPCs remain ordinary NPCs. */
     fun canAttack(attacker: Pawn, target: Pawn): Boolean {
         val actor = (target as? Npc)?.takeIf { it.attr.has(OWNER) }

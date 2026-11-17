@@ -1,0 +1,618 @@
+{
+  "sourceCache": 2686,
+  "sources": {
+    "Strange device": {
+      "page": "Strange device",
+      "revision": 15373639,
+      "revision_time": "2026-10-16T02:01:45Z",
+      "file": "Strange_device.wiki",
+      "sha256": "6e232302457666373bd1899bfa742b5a03ff924ecf4dd57025bb9bf63ded83b9",
+      "url": "https://oldschool.runescape.wiki/w/Strange_device"
+    },
+    "Jorral": {
+      "page": "Jorral",
+      "revision": 15256447,
+      "revision_time": "2026-07-07T17:37:58Z",
+      "file": "Jorral.wiki",
+      "sha256": "8bdd7233965bbf7632d52a2505bdf71c4b388ad2cd7e238820b0eb92656530c9",
+      "url": "https://oldschool.runescape.wiki/w/Jorral"
+    },
+    "Transcript:Jorral": {
+      "page": "Transcript:Jorral",
+      "revision": 15248065,
+      "revision_time": "2026-07-02T04:29:58Z",
+      "file": "Transcript_Jorral.wiki",
+      "sha256": "3843700e9cdf208437023664297747dc607217fc75bf9985a87b8d204d332bb4",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AJorral"
+    },
+    "Treasure Trails/Guide/Hot Cold/Master": {
+      "page": "Treasure Trails/Guide/Hot Cold/Master",
+      "revision": 15373288,
+      "revision_time": "2026-10-15T19:46:54Z",
+      "file": "Treasure_Trails__Guide__Hot_Cold__Master.wiki",
+      "sha256": "56e558908d499afda80f7276b0c1154c70f8ec6126b1cf7264a398181f4383b9",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Hot_Cold/Master"
+    },
+    "Template:Treasure Trails Guide Hot Cold Intro": {
+      "page": "Template:Treasure Trails Guide Hot Cold Intro",
+      "revision": 15376193,
+      "revision_time": "2026-10-19T18:56:38Z",
+      "file": "Template_Treasure_Trails_Guide_Hot_Cold_Intro.wiki",
+      "sha256": "73705fdd0d9e32fe6d1baf3a042966d881407b1e6bdd432d270a0ca4136193b4",
+      "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Hot_Cold_Intro"
+    }
+  },
+  "npc": 3490,
+  "item": 19939,
+  "targets": [
+    {
+      "id": 214,
+      "centre": [
+        2860,
+        3562,
+        0
+      ],
+      "radius": 4,
+      "description": "North of the Warriors' Guild in Burthorpe.",
+      "guards": [
+        7310
+      ],
+      "location": {
+        "table": 18,
+        "columnCount": 3,
+        "columns": {
+          "0": {
+            "types": [
+              22
+            ],
+            "values": [
+              46861802
+            ]
+          },
+          "1": {
+            "types": [
+              36
+            ],
+            "values": [
+              "North of the Warriors' Guild in Burthorpe."
+            ]
+          },
+          "2": {
+            "types": [
+              36
+            ],
+            "values": [
+              "Warriors' Guild"
+            ]
+          }
+        },
+        "sha256": "6ac907f536d07dbbabfc28a848a01c080a0fd658fb2f594ca5811b7e535e3457",
+        "bytes": 81
+      },
+      "clue": {
+        "table": 12,
+        "columnCount": 8,
+        "columns": {
+          "0": {
+            "types": [
+              0
+            ],
+            "values": [
+              140
+            ]
+          },
+          "1": {
+            "types": [
+              0
+            ],
+            "values": [
+              5
+            ]
+          },
+          "2": {
+            "types": [
+              74
+            ],
+            "values": [
+              214
+            ]
+          },
+          "4": {
+            "types": [
+              74
+            ],
+            "values": [
+              1802
+            ]
+          },
+          "5": {
+            "types": [
+              0
+            ],
+            "values": [
+              3
+            ]
+          }
+        },
+        "sha256": "741b51b5d1305b5c6af02570fdf234a9fc3ddc612c980c823352bd942b2fa495",
+        "bytes": 46,
+        "id": 690
+      }
+    },
+    {
+      "id": 216,
+      "centre": [
+        3033,
+        3438,
+        0
+      ],
+      "radius": 4,
+      "description": "West of Barbarian Village.",
+      "guards": [
+        7310
+      ],
+      "location": {
+        "table": 18,
+        "columnCount": 3,
+        "columns": {
+          "0": {
+            "types": [
+              22
+            ],
+            "values": [
+              49696110
+            ]
+          },
+          "1": {
+            "types": [
+              36
+            ],
+            "values": [
+              "West of Barbarian Village."
+            ]
+          },
+          "2": {
+            "types": [
+              36
+            ],
+            "values": [
+              "Barbarian Village"
+            ]
+          }
+        },
+        "sha256": "885472ded08230b0251361b369b0f2f0d084de348c1d8c69dddbc4f78f74f5da",
+        "bytes": 67
+      },
+      "clue": {
+        "table": 12,
+        "columnCount": 8,
+        "columns": {
+          "0": {
+            "types": [
+              0
+            ],
+            "values": [
+              142
+            ]
+          },
+          "1": {
+            "types": [
+              0
+            ],
+            "values": [
+              5
+            ]
+          },
+          "2": {
+            "types": [
+              74
+            ],
+            "values": [
+              216
+            ]
+          },
+          "4": {
+            "types": [
+              74
+            ],
+            "values": [
+              1802
+            ]
+          },
+          "5": {
+            "types": [
+              0
+            ],
+            "values": [
+              3
+            ]
+          }
+        },
+        "sha256": "523fe2c96e6690d9488b374a30af7e6a08195bbd98940bd8536d7ad90ef770be",
+        "bytes": 46,
+        "id": 692
+      }
+    },
+    {
+      "id": 218,
+      "centre": [
+        3031,
+        3304,
+        0
+      ],
+      "radius": 4,
+      "description": "In the cow pen north of Sarah's Farming Shop.",
+      "guards": [
+        7307,
+        7308,
+        7309
+      ],
+      "location": {
+        "table": 18,
+        "columnCount": 3,
+        "columns": {
+          "0": {
+            "types": [
+              22
+            ],
+            "values": [
+              49663208
+            ]
+          },
+          "1": {
+            "types": [
+              36
+            ],
+            "values": [
+              "In the cow pen north of Sarah's Farming Shop."
+            ]
+          },
+          "2": {
+            "types": [
+              36
+            ],
+            "values": [
+              "South Falador Farms"
+            ]
+          }
+        },
+        "sha256": "1e0bd40be816f0dc526a264a9c21aef711f48d027b00005e7bc4ee4a2edf57d8",
+        "bytes": 88
+      },
+      "clue": {
+        "table": 12,
+        "columnCount": 8,
+        "columns": {
+          "0": {
+            "types": [
+              0
+            ],
+            "values": [
+              144
+            ]
+          },
+          "1": {
+            "types": [
+              0
+            ],
+            "values": [
+              5
+            ]
+          },
+          "2": {
+            "types": [
+              74
+            ],
+            "values": [
+              218
+            ]
+          },
+          "4": {
+            "types": [
+              74
+            ],
+            "values": [
+              1803
+            ]
+          },
+          "5": {
+            "types": [
+              0
+            ],
+            "values": [
+              3
+            ]
+          }
+        },
+        "sha256": "22301404bc3d13d655304fac8916b3ef24782d09a5b5b95b2a623ff433deb9ca",
+        "bytes": 46,
+        "id": 694
+      }
+    },
+    {
+      "id": 219,
+      "centre": [
+        3030,
+        3364,
+        0
+      ],
+      "radius": 4,
+      "description": "Outside the Falador Party Room.",
+      "guards": [
+        7310
+      ],
+      "location": {
+        "table": 18,
+        "columnCount": 3,
+        "columns": {
+          "0": {
+            "types": [
+              22
+            ],
+            "values": [
+              49646884
+            ]
+          },
+          "1": {
+            "types": [
+              36
+            ],
+            "values": [
+              "Outside the Falador Party Room."
+            ]
+          },
+          "2": {
+            "types": [
+              36
+            ],
+            "values": [
+              "Falador"
+            ]
+          }
+        },
+        "sha256": "aa09fa84a3651941be34484cc893b13d407563db54358cde1ce695f2053dcbd3",
+        "bytes": 62
+      },
+      "clue": {
+        "table": 12,
+        "columnCount": 8,
+        "columns": {
+          "0": {
+            "types": [
+              0
+            ],
+            "values": [
+              145
+            ]
+          },
+          "1": {
+            "types": [
+              0
+            ],
+            "values": [
+              5
+            ]
+          },
+          "2": {
+            "types": [
+              74
+            ],
+            "values": [
+              219
+            ]
+          },
+          "4": {
+            "types": [
+              74
+            ],
+            "values": [
+              1802
+            ]
+          },
+          "5": {
+            "types": [
+              0
+            ],
+            "values": [
+              3
+            ]
+          }
+        },
+        "sha256": "31fbc63df2453df985f69bde5928ca134de1b0ea8bf86c56a988019b6c2f0afe",
+        "bytes": 46,
+        "id": 695
+      }
+    },
+    {
+      "id": 220,
+      "centre": [
+        2917,
+        3295,
+        0
+      ],
+      "radius": 4,
+      "description": "Outside the Crafting Guild cow pen.",
+      "guards": [
+        7310
+      ],
+      "location": {
+        "table": 18,
+        "columnCount": 3,
+        "columns": {
+          "0": {
+            "types": [
+              22
+            ],
+            "values": [
+              47795423
+            ]
+          },
+          "1": {
+            "types": [
+              36
+            ],
+            "values": [
+              "Outside the Crafting Guild cow pen."
+            ]
+          },
+          "2": {
+            "types": [
+              36
+            ],
+            "values": [
+              "Crafting Guild"
+            ]
+          }
+        },
+        "sha256": "678afc52022a8b0430ca4770062dea810a84e8dc28b655afcef675b15b95fdda",
+        "bytes": 73
+      },
+      "clue": {
+        "table": 12,
+        "columnCount": 8,
+        "columns": {
+          "0": {
+            "types": [
+              0
+            ],
+            "values": [
+              146
+            ]
+          },
+          "1": {
+            "types": [
+              0
+            ],
+            "values": [
+              5
+            ]
+          },
+          "2": {
+            "types": [
+              74
+            ],
+            "values": [
+              220
+            ]
+          },
+          "4": {
+            "types": [
+              74
+            ],
+            "values": [
+              1802
+            ]
+          },
+          "5": {
+            "types": [
+              0
+            ],
+            "values": [
+              3
+            ]
+          }
+        },
+        "sha256": "f0e9acef272d2f677909e2e4a5d013e2f6e1aea1d64736b12c090d20a6c375f3",
+        "bytes": 46,
+        "id": 696
+      }
+    },
+    {
+      "id": 221,
+      "centre": [
+        2976,
+        3239,
+        0
+      ],
+      "radius": 4,
+      "description": "In the centre of the Rimmington mine.",
+      "guards": [
+        7310
+      ],
+      "location": {
+        "table": 18,
+        "columnCount": 3,
+        "columns": {
+          "0": {
+            "types": [
+              22
+            ],
+            "values": [
+              48762023
+            ]
+          },
+          "1": {
+            "types": [
+              36
+            ],
+            "values": [
+              "In the centre of the Rimmington mine."
+            ]
+          },
+          "2": {
+            "types": [
+              36
+            ],
+            "values": [
+              "Rimmington"
+            ]
+          }
+        },
+        "sha256": "34b031ffd0b889172d1c5b52fcd0894a4a6c0cff6e4017e34030a9c158f2e58f",
+        "bytes": 71
+      },
+      "clue": {
+        "table": 12,
+        "columnCount": 8,
+        "columns": {
+          "0": {
+            "types": [
+              0
+            ],
+            "values": [
+              147
+            ]
+          },
+          "1": {
+            "types": [
+              0
+            ],
+            "values": [
+              5
+            ]
+          },
+          "2": {
+            "types": [
+              74
+            ],
+            "values": [
+              221
+            ]
+          },
+          "4": {
+            "types": [
+              74
+            ],
+            "values": [
+              1802
+            ]
+          },
+          "5": {
+            "types": [
+              0
+            ],
+            "values": [
+              3
+            ]
+          }
+        },
+        "sha256": "dcd58b2c1022a1f54b9b831c3a419d67a651e18f8a18f4f73a27db189506d4f8",
+        "bytes": 46,
+        "id": 697
+      }
+    }
+  ],
+  "selection": "Uniform over this owner-authorised limited target pool; not all OSRS locations.",
+  "radiusEvidence": "Master-specific Wiki Hot Cold Intro:9x9. Strange device generic0..3 table is not master-specific.",
+  "messagesSource": "OSRS Wiki Strange device temperature names; RuneLite parser confirms device prefix/comparison fragments."
+}

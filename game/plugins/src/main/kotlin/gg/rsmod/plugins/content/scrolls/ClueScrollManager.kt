@@ -88,7 +88,7 @@ class ClueScrollManager(
          * scrolls of more than one tier at once.
          */
         fun tryDig(player: Player): Boolean {
-            return TreasureTrailBasicSteps.dig(player)
+            return TreasureTrailWizards.dig(player) || TreasureTrailBasicSteps.dig(player)
         }
 
         /**
