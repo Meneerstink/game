@@ -103,7 +103,9 @@ class Dmm2WeaponPresentationTests {
                 Dmm2Ids.ItemId.VOLATILE to Items.VOLATILE_NIGHTMARE_STAFF))
             assertEquals(base, CorruptedWeapons.presentationBase(family.local!!))
         NigelRewardStore.active!!.contract.skins.forEach { assertEquals(it.base, CorruptedWeapons.presentationBase(it.cosmetic)) }
-        assertNull(CorruptedWeapons.attackAnimation(Dmm2Ids.ItemId.SCYTHE.local!!, 0), "Await the real new seq mapping")
+        // Claude 17-11: the OSRS scythe attack seq 8056 is imported since tx uiimport-apply-1241 (data/cfg/dmm2/ids.tsv seq 8056 -> local).
+        assertNotNull(Dmm2Ids.seq(CorruptedWeapons.SCYTHE_ATTACK_SOURCE), "ids.tsv must map OSRS seq 8056")
+        assertEquals(Dmm2Ids.seq(CorruptedWeapons.SCYTHE_ATTACK_SOURCE), CorruptedWeapons.attackAnimation(Dmm2Ids.ItemId.SCYTHE.local!!, 0))
         assertEquals(8056, CorruptedWeapons.SCYTHE_ATTACK_SOURCE)
     }
 }

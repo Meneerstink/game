@@ -83,6 +83,8 @@ object SafeDepositBox {
         if (item.id != expectedId || item.amount <= 0) return Transfer(Status.ITEM_CHANGED)
         val base = item.toUnnoted(player.world.definitions).getDef(player.world.definitions)
         if (!base.tradeable || RemovedItems.isUnobtainable(base)) return Transfer(Status.UNTRADEABLE)
+        // Bulk worn deposit must respect the same equipment locks as ordinary unequip (e.g. practice gear).
+        if (inventory === player.equipment && !player.world.plugins.canUnequipSlot(player, slot)) return Transfer(Status.UNAVAILABLE)
         val box = container(player)
         val count = minOf(amount, item.amount, box.freeSlotCount)
         if (count == 0) return Transfer(Status.BOX_FULL)
