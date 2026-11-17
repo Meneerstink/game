@@ -337,6 +337,15 @@ class Rev667LocType(val id: Int) {
                         val n = buf.u8()
                         repeat(n + 1) { buf.u16() }
                     }
+                    // CLUE STASH (client c1de063f LocType 242): multiloc with g4 destination ids - varbit g2, varp g2, fallback g4,
+                    // count g1, count+1 g4 ids. Without it the census stopped at the 23 STASH locs (17-11 'unknown opcode 242').
+                    242 -> {
+                        buf.u16()
+                        buf.u16()
+                        buf.i32()
+                        val n = buf.u8()
+                        repeat(n + 1) { buf.i32() }
+                    }
                     78 -> {
                         buf.u16()
                         buf.u8()

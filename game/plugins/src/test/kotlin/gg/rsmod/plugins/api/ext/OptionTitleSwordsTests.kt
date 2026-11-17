@@ -50,6 +50,16 @@ class OptionTitleSwordsTests {
     }
 
     @Test
+    fun `a title wider than the q8 line is drawn whole in p12 (Nigel 17-11), a fitting one keeps q8`() {
+        val nigel = "Would you like to adjust earning combat experience or hitpoints experience?"
+        assertTrue(width(nigel) > OptionTitleSwords.TITLE_WIDTH - 2 * OptionTitleSwords.MARGIN, "q8 measures it too wide")
+        val font = OptionTitleSwords.titleFont(width(nigel)) { N108Ui.textWidth(world, it, nigel) }
+        assertTrue(font != OptionTitleSwords.FONT, "a smaller font is chosen")
+        assertTrue(N108Ui.textWidth(world, font, nigel) <= OptionTitleSwords.TITLE_WIDTH, "and the whole title fits")
+        assertEquals(OptionTitleSwords.FONT, OptionTitleSwords.titleFont(width("Select an Option")) { N108Ui.textWidth(world, it, "Select an Option") })
+    }
+
+    @Test
     fun `class - every literal options title fits its title line and gets a sword pair it does not touch`() {
         val root = File("src/main/kotlin")
         val rows = mutableListOf<String>()
@@ -62,7 +72,9 @@ class OptionTitleSwordsTests {
                 val w = width(title)
                 val swords = OptionTitleSwords.choose(228, w)
                 if (swords != OptionTitleSwords.Swords.NARROW) rows += "$w px $swords  \"$title\"  (${file.name})"
-                if (w > 480) tooWide += "$w px \"$title\" (${file.name})"
+                val font = OptionTitleSwords.titleFont(w) { N108Ui.textWidth(world, it, title) }
+                val drawn = N108Ui.textWidth(world, font, title)
+                if (drawn > OptionTitleSwords.TITLE_WIDTH) tooWide += "$drawn px in $font \"$title\" (${file.name})"
             }
         }
         println("[N499] titles that leave the narrow swords:\n" + rows.sorted().joinToString("\n"))

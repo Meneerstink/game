@@ -195,6 +195,16 @@ class ObjectDef(
                     transforms!![i] = if (transform == 65535) -1 else transform
                 }
             }
+            242 -> {
+                // CLUE STASH scenery (client c1de063f LocType 242, GPT-B gpt-b/clue-scrolls-7): 77/92 with g4 destination ids. An
+                // unknown opcode was skipped without its payload, so the rest of the 23 STASH definitions was read out of step.
+                varbit = buf.readUnsignedShort().let { if (it == 65535) -1 else it }
+                varp = buf.readUnsignedShort().let { if (it == 65535) -1 else it }
+                buf.readInt() // fallback (the 92 'default' id, which this decoder also does not keep)
+                val count = buf.readUnsignedByte().toInt()
+                transforms = Array(count + 1) { 0 }
+                for (i in 0..count) transforms!![i] = buf.readInt()
+            }
             78 -> {
                 ambientSound = buf.readUnsignedShort()
                 ambientSoundRange = buf.readUnsignedByte().toInt()
