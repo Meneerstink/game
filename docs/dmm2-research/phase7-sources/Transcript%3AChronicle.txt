@@ -1,0 +1,41 @@
+{{transcript|item}}
+
+==Charging the chronicle==
+* {{tcond|If the chronicle is fully charged:}}
+** {{mes|Your book is fully charged! It has 1,000 charges already.}}
+** {{tact|end}}
+* {{tcond|If charged with exactly one teleport card:}}
+** {{tcond|If the chronicle was previously uncharged:}}
+*** {{mes|You add a single charge to your book. It now has one charge.}}
+*** {{tact|end}}
+** {{mes|You add a single charge to your book. It now has [amount] charges.}}
+* {{tcond|If charged with multiple teleport cards:}}
+** {{mes|You add [amount] charges to your book. It now has [amount] charges.}}
+
+==Teleporting==
+* {{tcond|If the chronicle has no more charges:}}
+** {{mes|Your book does not have any charges. Purchase some Teleport Cards from Diango.}}
+** {{tact|end}}
+* {{tcond|If the chronicle has no more charges after teleporting:}}
+** {{qact|The player is teleported to the Champions' Guild}}
+** {{mes|{{Colour|#ff0000|Your book has run out of charges.}}}}
+** {{tact|end}}
+* {{tcond|If the chronicle has exactly one charge remaining:}}
+** {{qact|The player is teleported to the Champions' Guild}}
+** {{mes|{{Colour|#ff0000|You have one charge left in your book.}}}}
+** {{tact|end}}
+* {{tcond|If the chronicle has multiple charges remaining:}}
+** {{qact|The player is teleported to the Champions' Guild}}
+** {{mes|{{Colour|#ff0000|You have [amount] charges left in your book.}}}}
+** {{tact|end}}
+
+==Checking charges==
+* {{tcond|If the chronicle has no more charges:}}
+** {{mes|Your book has run out of charges.}}
+** {{tact|end}}
+* {{tcond|If the chronicle has exactly one charge remaining:}}
+** {{mes|You have one charge left in your book.}}
+** {{tact|end}}
+* {{tcond|If the chronicle has multiple charges remaining:}}
+** {{mes|Your book has [amount] charges left.}}
+** {{tact|end}}

@@ -1,0 +1,57 @@
+FROZEN_SKIN npc=15571 base=3845 models=4 maxError=118.00418044677777 meanError=5.332474469603481
+skin skin_15320: models=[49222, 49218, 49221, 49224] vertices=2289 k=4.0 (upscale 4)
+seq 17773 <- OSRS 10241 animaya 14680064 (clip_224_0, 462628 bytes) rig 2138 ticks 0..90 sounds=2 mask=-
+PLAN skeletal extra npc 15571 -> 15320 seqs={10241=17773} sharedBase=3845 (rig/skin/models/BAS/movement unchanged)
+EXTRA_SEQ npc=15571 osrs=10241 local=17773
+PREFLIGHT transaction=tx-20261117-202545 mutations=50 outcomes={CREATE=98, REPLACE=2}
+  idx0_grp6016_file0 extra npc 15571 seq 10241 frame 0
+  idx0_grp6016_file1 extra npc 15571 seq 10241 frame 1
+  idx0_grp6016_file2 extra npc 15571 seq 10241 frame 2
+  idx0_grp6016_file3 extra npc 15571 seq 10241 frame 3
+  idx0_grp6016_file4 extra npc 15571 seq 10241 frame 4
+  idx0_grp6016_file5 extra npc 15571 seq 10241 frame 5
+  idx0_grp6016_file6 extra npc 15571 seq 10241 frame 6
+  idx0_grp6016_file7 extra npc 15571 seq 10241 frame 7
+  idx0_grp6016_file8 extra npc 15571 seq 10241 frame 8
+  idx0_grp6016_file9 extra npc 15571 seq 10241 frame 9
+  idx0_grp6016_file10 extra npc 15571 seq 10241 frame 10
+  idx0_grp6016_file11 extra npc 15571 seq 10241 frame 11
+  idx0_grp6016_file12 extra npc 15571 seq 10241 frame 12
+  idx0_grp6016_file13 extra npc 15571 seq 10241 frame 13
+  idx0_grp6016_file14 extra npc 15571 seq 10241 frame 14
+  idx0_grp6016_file15 extra npc 15571 seq 10241 frame 15
+  idx0_grp6016_file16 extra npc 15571 seq 10241 frame 16
+  idx0_grp6016_file17 extra npc 15571 seq 10241 frame 17
+  idx0_grp6016_file18 extra npc 15571 seq 10241 frame 18
+  idx0_grp6016_file19 extra npc 15571 seq 10241 frame 19
+  idx0_grp6016_file20 extra npc 15571 seq 10241 frame 20
+  idx0_grp6016_file21 extra npc 15571 seq 10241 frame 21
+  idx0_grp6016_file22 extra npc 15571 seq 10241 frame 22
+  idx0_grp6016_file23 extra npc 15571 seq 10241 frame 23
+  idx0_grp6016_file24 extra npc 15571 seq 10241 frame 24
+  idx0_grp6016_file25 extra npc 15571 seq 10241 frame 25
+  idx0_grp6016_file26 extra npc 15571 seq 10241 frame 26
+  idx0_grp6016_file27 extra npc 15571 seq 10241 frame 27
+  idx0_grp6016_file28 extra npc 15571 seq 10241 frame 28
+  idx0_grp6016_file29 extra npc 15571 seq 10241 frame 29
+  idx0_grp6016_file30 extra npc 15571 seq 10241 frame 30
+  idx0_grp6016_file31 extra npc 15571 seq 10241 frame 31
+  idx0_grp6016_file32 extra npc 15571 seq 10241 frame 32
+  idx0_grp6016_file33 extra npc 15571 seq 10241 frame 33
+  idx0_grp6016_file34 extra npc 15571 seq 10241 frame 34
+  idx0_grp6016_file35 extra npc 15571 seq 10241 frame 35
+  idx0_grp6016_file36 extra npc 15571 seq 10241 frame 36
+  idx0_grp6016_file37 extra npc 15571 seq 10241 frame 37
+  idx0_grp6016_file38 extra npc 15571 seq 10241 frame 38
+  idx0_grp6016_file39 extra npc 15571 seq 10241 frame 39
+  idx0_grp6016_file40 extra npc 15571 seq 10241 frame 40
+  idx0_grp6016_file41 extra npc 15571 seq 10241 frame 41
+  idx0_grp6016_file42 extra npc 15571 seq 10241 frame 42
+  idx0_grp6016_file43 extra npc 15571 seq 10241 frame 43
+  idx0_grp6016_file44 extra npc 15571 seq 10241 frame 44
+  idx4_grp10846_file0 osrs synth 7354
+  idx4_grp10847_file0 osrs synth 7472
+  idx20_grp138_file109 extra npc 15571 osrs seq 10241
+  idx10_grp345_file0 skeletal extra clip_224_0
+  idx10_grp6_file0 skeletal index APPEND 1 (existing 61443 bytes preserved)
+DRY_RUN records=4; shared index append is the only permitted physical replacement

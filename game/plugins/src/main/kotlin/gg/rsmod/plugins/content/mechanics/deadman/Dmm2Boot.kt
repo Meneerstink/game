@@ -80,7 +80,8 @@ object Dmm2Boot {
      */
     private fun thrallAppearance(): UndeadThralls.Appearance? {
         val npcs = UndeadThralls.Choice.values().associateWith { Dmm2Ids.npc(it.sourceNpc) ?: return null }
-        val attackSeq = mapOf(UndeadThralls.Choice.ZUK to Dmm2Ids.seq(7978), UndeadThralls.Choice.KAL to Dmm2Ids.seq(6234))
+        val attackSeq = mapOf(UndeadThralls.Choice.ZUK to Dmm2Ids.seq(7978), UndeadThralls.Choice.KAL to Dmm2Ids.seq(6234),
+            UndeadThralls.Choice.WISP to Dmm2Ids.seq(WISP_MAGIC_ATTACK))
         val rangedTravel = Dmm2Ids.spot(1906)
         val magicTravel = Dmm2Ids.spot(1907)
         val magicImpact = Dmm2Ids.spot(1908)
@@ -175,6 +176,8 @@ object Dmm2Boot {
     }
 
     private const val RANGE = 6
+    // RuneLite gameval NPC_WHISPERER_01_ATTACK_MAGIC_01; cache2686, narrow extra-seq import (PREFLIGHT 7.1).
+    const val WISP_MAGIC_ATTACK = 10241
 
     /** Chebyshev distance from [from] to the nearest tile of [target]'s body. */
     private fun distanceToBody(from: gg.rsmod.game.model.Tile, target: gg.rsmod.game.model.entity.Npc): Int {

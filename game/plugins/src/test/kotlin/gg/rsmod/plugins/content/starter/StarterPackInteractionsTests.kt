@@ -52,6 +52,24 @@ class StarterPackInteractionsTests {
         assertEquals("Your book has run out of charges.", StarterPackInteractions.checkMessage(f.player))
     }
 
+    @Test fun `Chronicle refuses Wilderness and reports zero charges even while animation evidence is missing`() {
+        val before = StarterPackInteractions.chronicleAppearance
+        try {
+            StarterPackInteractions.chronicleAppearance = null
+            val book = Item(ids.chronicle); f.inventory[0] = book
+            every { f.player.tile } returns Tile(3200, 3600)
+            assertEquals(StarterPackInteractions.Result.WILDERNESS, StarterPackInteractions.travel(f.player, book, 0, false))
+            every { f.player.tile } returns Tile(3200, 3200)
+            assertEquals(StarterPackInteractions.Result.NO_CHARGES, StarterPackInteractions.travel(f.player, book, 0, false))
+            verify(exactly = 1) { f.player.write(match<gg.rsmod.game.message.impl.MessageGameMessage> {
+                it.message == "Your book does not have any charges. Purchase some Teleport Cards from Diango."
+            }) }
+            f.attr[DeadmanStarterPack.CHRONICLE_CHARGES] = 2
+            assertEquals(StarterPackInteractions.Result.NOT_READY, StarterPackInteractions.travel(f.player, book, 0, false))
+            assertEquals(2, StarterPackInteractions.charges(f.player)); assertSame(book, f.inventory[0])
+        } finally { StarterPackInteractions.chronicleAppearance = before }
+    }
+
     @Test fun `starter tuna observes the existing food cooldown and consumes only the selected special fish`() {
         mockkObject(Foods)
         try {

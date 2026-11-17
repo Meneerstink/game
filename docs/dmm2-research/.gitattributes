@@ -8,3 +8,10 @@ phase5-output/regression-*/*.xml -text whitespace=cr-at-eol
 phase6-output/**/*.xml -text whitespace=cr-at-eol
 phase6-ui-output/*.txt -text -diff
 phase6-ui-output/*.json -text whitespace=cr-at-eol
+phase7-output/**/*.xml -text whitespace=cr-at-eol
+phase7-output/*.txt -text -diff
+phase7-output/*/*.txt -text -diff
+phase7-output/**/*.json -text whitespace=cr-at-eol
+phase7-sources/*.json -text whitespace=cr-at-eol
+# Preserve verbatim wiki source, including its intentional end-of-line spaces.
+phase7-sources/*.txt -text whitespace=cr-at-eol,-blank-at-eol

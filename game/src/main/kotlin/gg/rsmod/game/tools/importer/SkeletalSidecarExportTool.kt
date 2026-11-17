@@ -28,6 +28,43 @@ object SkeletalSidecarExportTool {
 
     class Export(val files: LinkedHashMap<String, ByteArray>, val indexLines: List<String>)
 
+    /** Additional sequence only: existing rig/skin/clips must match byte-for-byte. The shared index is append-only. */
+    fun appendOnlyMutations(export: Export, firstFree: Int, existing: (String) -> Pair<Int, ByteArray>?): List<CacheMutation> {
+        val out = ArrayList<CacheMutation>()
+        var next = firstFree
+        export.files.forEach { (name, bytes) ->
+            val group = GROUP_PREFIX + name
+            val old = existing(group)
+            if (old == null) out += CacheMutation(BINARY_INDEX, next++, 0, bytes, "skeletal extra $name", groupName = group)
+            else check(old.second.contentEquals(bytes)) { "Refusing to replace shared skeletal asset $group" }
+        }
+        val old = existing(INDEX_GROUP)
+        val oldBytes = old?.second ?: ByteArray(0)
+        val text = oldBytes.toString(Charsets.UTF_8)
+        val byKey = text.lines().filter { it.contains('=') }.associateBy { it.substringBefore('=').trim() }
+        val additions = export.indexLines.distinct().filter { line ->
+            val sameKey = byKey[line.substringBefore('=').trim()]
+            check(sameKey == null || sameKey == line) { "Refusing to replace skeletal index entry $sameKey with $line" }
+            sameKey == null
+        }
+        if (additions.isNotEmpty()) {
+            val suffix = (if (text.isNotEmpty() && !text.endsWith('\n')) "\n" else "") + additions.joinToString("") { "$it\n" }
+            val bytes = oldBytes + suffix.toByteArray(Charsets.UTF_8)
+            out += CacheMutation(BINARY_INDEX, old?.first ?: next, 0, bytes,
+                "skeletal index APPEND ${additions.size} (existing ${oldBytes.size} bytes preserved)",
+                groupName = if (old == null) INDEX_GROUP else null,
+                expectedCurrentSha1 = old?.second?.let { CacheItemProbeTool.sha1(it) })
+        }
+        return out
+    }
+
+    fun appendOnlyMutations(export: Export, library: CacheLibrary): List<CacheMutation> {
+        val index = library.index(BINARY_INDEX)
+        return appendOnlyMutations(export, (index.archiveIds().maxOrNull() ?: -1) + 1) { name ->
+            index.archive(name)?.let { it.id to (library.data(BINARY_INDEX, it.id, 0) ?: error("Empty skeletal group $name")) }
+        }
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         // N462: `cache-file plan|apply <file>` = one job per line ("<owner> <osrsModel,...> <localSeq>=<osrsSeq> ..."), one JVM for all.

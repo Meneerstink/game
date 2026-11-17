@@ -415,6 +415,112 @@ object OsrsPetImportTool {
             ),
         )
 
+    /** Stable asset-map namespace, independent of batch order and the original movement sequence slots. */
+    fun extraSeqKey(npc: Int, seq: Int): Int {
+        require(npc in 0..32767 && seq in 0..65535)
+        return (npc shl 16) or seq
+    }
+
+    /** Add combat/emote sequences without reimporting the NPC, BAS, skin, rig or movement. */
+    private fun skeletalNpcExtraSeq(osrsNpc: Int, requested: List<Int>, apply: Boolean) {
+        require(requested.isNotEmpty()) { "skeletal-npc-extra-seq <osrsNpc> <osrsSeq...> [--apply]" }
+        val targets = OsrsItemImportTool.TARGETS
+        val assetMap = File(OsrsItemImportTool.ASSET_MAP)
+        val ids = OsrsFxImportTool.existingFx(assetMap).toMutableMap()
+        val localNpc = ids["npc:$osrsNpc"] ?: error("NPC $osrsNpc is not imported")
+        val localBase = ids["npc_baked_base:$osrsNpc"] ?: error("NPC $osrsNpc has no baked base")
+        val records = ArrayList<String>()
+        val mutations = ArrayList<CacheMutation>()
+        ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE)).use { reader ->
+            val lib = CacheLibrary(targets.first())
+            try {
+                fun next(index: Int) = (lib.index(index).archiveIds().maxOrNull() ?: -1) + 1
+                fun nextPaged(index: Int): Int {
+                    val group = lib.index(index).archiveIds().maxOrNull() ?: return 0
+                    return (group shl 7) + (lib.index(index).archive(group)?.fileIds()?.maxOrNull() ?: -1) + 1
+                }
+                var nextSeq = nextPaged(OsrsFxImportTool.INDEX_SEQ)
+                var nextFrames = next(OsrsFxImportTool.INDEX_FRAMES)
+                var nextSynth = next(OsrsFxImportTool.INDEX_SYNTH)
+                fun local(kind: String, upstream: Int, allocate: () -> Int) = ids.getOrPut("$kind:$upstream") {
+                    allocate().also { records += "$kind|$upstream|$it" }
+                }
+                fun create(index: Int, group: Int, file: Int, bytes: ByteArray, label: String) {
+                    val old = lib.data(index, group, file)
+                    if (old != null) check(old.contentEquals(bytes)) { "Refusing to replace $label at $index/$group/$file" }
+                    else mutations += CacheMutation(index, group, file, bytes, label)
+                }
+                val npc = OsrsNpcProbeTool.decodeOsrs(osrsNpc,
+                    reader.file(ModernCacheReader.INDEX_CONFIG, OsrsNpcProbeTool.CONFIG_GROUP_NPC, osrsNpc) ?: error("Missing OSRS NPC"))
+                val models = npc.models.indices.map { i ->
+                    val id = ids["npc_baked_model:${packed(osrsNpc, i)}"] ?: error("Missing existing baked skin model $i")
+                    ModelArchive.read(lib, id) ?: error("Missing local model $id")
+                }
+                val base = lib.data(OsrsFxImportTool.INDEX_BASES, localBase, 0) ?: error("Missing local base $localBase")
+                // A sequence already in the sidecar belongs to this NPC only when its skin owner matches.
+                val index = lib.index(SkeletalSidecarExportTool.BINARY_INDEX)
+                val sidecar = index.archive(SkeletalSidecarExportTool.INDEX_GROUP)?.let {
+                    lib.data(SkeletalSidecarExportTool.BINARY_INDEX, it.id, 0)?.toString(Charsets.UTF_8)
+                }.orEmpty()
+                val existing = sidecar.lines().mapNotNull { line ->
+                    val fields = line.substringAfter('=', "").split('|')
+                    if (fields.size == 7 && fields[2] == "skin_$localNpc") fields[6].toInt() to line.substringBefore('=').removePrefix("seq.").toInt()
+                    else null
+                }.toMap()
+                val seqMap = LinkedHashMap<Int, Int>()
+                val newSeqs = requested.distinct().filter { osrs ->
+                    extraSeqKey(osrsNpc, osrs)
+                    existing[osrs]?.let { seqMap[osrs] = it } == null
+                }
+                if (newSeqs.isNotEmpty()) {
+                    val baked = SkeletalBakeTool.bakeSet(reader, npc.models.toList(), newSeqs, localBase,
+                        SkeletalBakeTool.FrozenLayout(models, base))
+                    for ((i, osrs) in newSeqs.withIndex()) {
+                        val key = extraSeqKey(osrsNpc, osrs)
+                        val frameSet = local("npc_baked_extra_frameset", key) { nextFrames++ }
+                        baked.frames[i].forEachIndexed { fi, bytes -> create(OsrsFxImportTool.INDEX_FRAMES, frameSet, fi, bytes, "extra npc $osrsNpc seq $osrs frame $fi") }
+                        val seq = OsrsFxImportTool.Seq(frameDurations = baked.durations[i], frames = IntArray(baked.frames[i].size) { (frameSet shl 16) or it })
+                        val source = SkeletalBakeTool.decodeSkeletalSeq(reader.file(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_SEQUENCE, osrs)!!)!!
+                        source.sounds.sortedBy { it[0] }.forEach { (tick, synth, loops, radius) ->
+                            val sound = local("synth", synth) { nextSynth++ }
+                            create(OsrsFxImportTool.INDEX_SYNTH, sound, 0,
+                                reader.file(OsrsFxImportTool.INDEX_SYNTH, synth, 0) ?: error("Missing sound $synth"), "osrs synth $synth")
+                            var fi = baked.ticks[i].indexOfLast { it <= tick }.coerceAtLeast(0)
+                            while (fi in seq.sounds) fi++
+                            check(fi < baked.frames[i].size && loops > 0) { "Cannot preserve sound $synth at tick $tick" }
+                            seq.sounds[fi] = sound to loops; seq.soundRadius[fi] = radius
+                        }
+                        val id = local("npc_baked_extra_seq", key) { nextSeq++ }
+                        create(OsrsFxImportTool.INDEX_SEQ, id ushr 7, id and 127, OsrsFxImportTool.encode667Seq(seq), "extra npc $osrsNpc osrs seq $osrs")
+                        seqMap[osrs] = id
+                    }
+                    println("FROZEN_SKIN npc=$osrsNpc base=$localBase models=${models.size} maxError=${baked.maxError} meanError=${baked.meanError}")
+                }
+                val export = SkeletalSidecarExportTool.export(localNpc.toString(), npc.models.toList(), seqMap.map { it.value to it.key })
+                mutations += SkeletalSidecarExportTool.appendOnlyMutations(export, lib)
+                println("PLAN skeletal extra npc $osrsNpc -> $localNpc seqs=$seqMap sharedBase=$localBase (rig/skin/models/BAS/movement unchanged)")
+                seqMap.forEach { (osrs, local) -> println("EXTRA_SEQ npc=$osrsNpc osrs=$osrs local=$local") }
+            } finally { lib.close() }
+        }
+        val tx = CacheTransaction(targets, mutations)
+        val plan = tx.preflight()
+        println("PREFLIGHT transaction=${tx.id} mutations=${mutations.size} outcomes=${plan.groupingBy { it.outcome }.eachCount()}")
+        mutations.forEach { println("  ${it.describeLocation()} ${it.label}") }
+        val errors = tx.blockingErrors(plan)
+        check(errors.isEmpty()) { "Blocked: $errors" }
+        // One physical REPLACE per cache is unavoidable for the shared index; its entire old byte prefix is preserved.
+        check(plan.none { it.outcome == MutationOutcome.REPLACE && !it.mutation.label.startsWith("skeletal index APPEND") }) { "Existing data would be replaced" }
+        if (!apply) { println("DRY_RUN records=${records.size}; shared index append is the only permitted physical replacement"); return }
+        val result = tx.apply(plan)
+        val errorsAfter = tx.verify()
+        if (errorsAfter.isNotEmpty()) { tx.rollback(); error("Verification failed: $errorsAfter") }
+        if (records.isNotEmpty()) assetMap.appendText(records.joinToString("", prefix = "\n") {
+            val (kind, upstream, local) = it.split('|')
+            "  - fx_kind: $kind\n    upstream_fx_id: $upstream\n    local_fx_id: $local\n    status: IMPORTED_BY_OSRS_SKELETAL_EXTRA\n    transaction: ${tx.id}\n"
+        })
+        println("APPLIED transaction=${tx.id} writes=${result.applied}; VERIFY_OK")
+    }
+
     private fun skeletalNpcs(
         batch: String,
         apply: Boolean,
@@ -1116,6 +1222,10 @@ object OsrsPetImportTool {
 
     @JvmStatic
     fun main(args: Array<String>) {
+        if (args.firstOrNull() == "skeletal-npc-extra-seq") {
+            skeletalNpcExtraSeq(args[1].toInt(), args.drop(2).filter { it != "--apply" }.map { it.toInt() }, "--apply" in args)
+            return
+        }
         val rows = OsrsPetRoster.load()
         when (args.firstOrNull()) {
             "skeletal-npc" -> skeletalNpcs(args[1], "--apply" in args)

@@ -1,0 +1,119 @@
+{{external|rs=Chronicle, Book of legends}}
+{{Infobox Item
+|name = Chronicle
+|image = [[File:Chronicle.png]]
+|release = [[17 March]] [[2016]]
+|update = The Easter Bunny's Workshop
+|members = No
+|quest = No
+|tradeable = No
+|equipable = Yes
+|stackable = No
+|noteable = No
+|options = Wield, Teleport, Check charges, Destroy
+|wornoptions = Check Charges, Teleport
+|destroy = You can buy another from Diango.
+|examine = The legends of RuneScape.
+|value = 200
+|alchable = No
+|weight = 1.000
+|id = 13660
+}}
+[[File:Chronicle detail.png|left|130px]]
+The '''Chronicle''' is an equipable book that can be used to [[Teleportation|teleport]] the player to just outside the [[Champions' Guild]], making it useful for players who plant seeds in [[Bush patches|bush]] and [[Hops patch|hops]] patches as well as free-to-play ironmen. The teleport is also a short distance from [[Charlie the Tramp]], making it useful for those doing [[Clue scroll (beginner)|beginner clues]]. 
+
+During the [[2016 Easter event]], players were able to acquire it for free by defeating the [[Chocolate Chicken]] during the event. It can now be purchased from [[Diango's Toy Store]] for {{NoCoins|300|c}}. If the player has a copy of the Chronicle in the inventory or [[bank]], trying to buy another one from [[Diango]] will fail, and the user will receive the following message: ''"You've already got one of those."'' However, it '''is''' possible to own more than one Chronicle if buying them from [[Perdu]]. 
+
+In order to use the Chronicle, it must be charged with [[teleport card]]s. Players can purchase them from [[Diango's Toy Store]] at a base price of {{NoCoins|150|c}} each. The book can hold a maximum of 1,000 charges, with one being used each time the Chronicle is used to teleport. Upon [[death]], when not an [[Items Kept on Death|item kept on death]], it is destroyed. If the Chronicle is lost or destroyed, it retains its charges if bought back.
+
+The Chronicle's powers do not work in the [[Wilderness]].
+
+==Combat stats==
+{{Infobox Bonuses
+|astab = 0
+|aslash = 0
+|acrush = 0
+|amagic = 0
+|arange = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|drange = 0
+|str = 0
+|rstr = 0
+|mdmg = 0
+|prayer = 0
+|slot = shield
+|image = [[File:Chronicle equipped.png|110px]]
+|altimage = [[File:Chronicle equipped female.png|120px]]
+}}
+==Shop locations==
+{{Store locations list|Chronicle}}
+
+==Destination==
+{{Map|3201,3355|mtype=square|r=2|align=left}}{{clear|left}}
+
+==Transcript==
+{{hastranscript|item}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 15 August 2019
+|update = Small Game Updates and Betas
+|change = The Chronicle book no longer stretches when worn with the Mythical cape.
+}}
+{{Subject changes
+|date = 13 September 2018
+|update = Left Click Range Cooking, Slayer Helm Recolour and Player Survey
+|change = A clipping issue with Chronicle books on females was improved.
+}}
+{{Subject changes
+|date = 5 July 2018
+|update = Game Integrity Changes: Dragonfire
+|change = The Chronicle and Graceful boots will no longer render through a person's body.
+}}
+{{Subject changes
+|date = 30 November 2017
+|update = Buffs, Deadman and Mythical Cape Designs
+|poll = Old School Content Poll 57: Quests, Buffs & QoL
+|change = Chronicle charges increased from 10 to 1000.
+}}
+{{Subject changes
+|date = 23 November 2017
+|update = Mage Arena II, Revenant Caves & Deadman Beta
+|change = When the Chronicle and Spottier cape are worn together, they will no longer appear attached to each other.
+}}
+{{Subject changes
+|date = 5 October 2017
+|update = Soundbank, HP bar, and QoL changes
+|change = The Chronicle has had its how many charges left messaging made red to allow it to be easier seen
+}}
+{{Subject changes
+|date = 6 October 2016
+|update = The Hill Giant Boss
+|change = The "Check charges" option was made right-click, so Wield is now the default option.
+}}
+{{Subject changes
+|date = 24 March 2016
+|update = White & Black Graceful
+|change = The Chronicle teleport to the Champion's guild can no longer be activated in the Wilderness.
+}}
+{{Subject changes
+|date = 17 March 2016
+|update = The Easter Bunny's Workshop
+|type = hotfix
+|change = The Chronicle now teleports players outside the Champion's Guild rather than inside, which allowed players with fewer than 32 [[quest point]]s to enter the guild.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+*This item was released to commemorate open beta access to Jagex's online card game ''{{RSL|Chronicle: RuneScape Legends|Chronicle: RuneScape Legends}}'', which was shut down in 2018. The item's name and examine text are references to that game.
+*This is one of only three equipable books in F2P, the others being the [[Cruciferous codex]] and the [[Book of Egg]].
+*The cards from Diango are 150 coins while [[Varrock teleport (tablet)|Varrock Teleport (tablet)]] varies in price on the GE and is typically more expensive; if you don't need to get to the GE but just to Varrock, consider using this to save a bit of money.
+
+{{Diango's Toy Store}}
+{{Teleportation items}}
+
+[[Category:Items with charges]]
