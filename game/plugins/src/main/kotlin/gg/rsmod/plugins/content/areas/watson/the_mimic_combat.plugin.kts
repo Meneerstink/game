@@ -7,7 +7,7 @@ import gg.rsmod.plugins.content.scrolls.ClueGuardianProfiles
 
 // The regression test builds this same definition, including the DSL HP conversion.
 set_combat_def(Npcs.THE_MIMIC_14402, MimicCombat.definition())
-on_npc_combat(Npcs.THE_MIMIC_14402) { npc.queue { MimicAttacks.combat(this) } }
+on_npc_combat(npc = Npcs.THE_MIMIC_14402) { npc.queue { MimicAttacks.combat(this) } }
 
 MimicMinions.profiles.forEach { p ->
     val id=p.local
