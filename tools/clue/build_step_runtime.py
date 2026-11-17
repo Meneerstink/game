@@ -18,6 +18,29 @@ def normalize(name):
     return name.casefold().strip()
 
 
+def scroll_text(kind, hint):
+    """The text on the in-game scroll. The Wiki clue template prefixes an editorial label to every kind ('The cryptic reveals
+    where to dig:'), which the real scroll does not show (Claude client rounds 1 + 3, 17-Nov). In-game text per RuneLite's clue
+    plugin, which matches the exact widget text: AnagramClue 'This anagram reveals who to speak to next: ' + text, CipherClue
+    'The cipher reveals who to speak to next: ' + text, coordinates = ten words 'DD degrees MM minutes north|south DD degrees
+    MM minutes east|west' (ClueScrollPlugin.coordinatesToWorldPoint; Wiki Coordinates guide: two lines), every other kind = the
+    bare instruction. Map clues show their map image; their text is left as is."""
+    if not isinstance(hint, str) or kind == 'MAP':
+        return hint
+    body = re.sub(r'^The [a-z]+ reveals\s*(?:who to speak to|where to dig|where to search)?\s*:?\s*', '', hint.strip(), flags=re.I).strip()
+    if kind == 'ANAGRAM':
+        return 'This anagram reveals who to speak to next: ' + body
+    if kind == 'CIPHER':
+        return 'The cipher reveals who to speak to next: ' + body
+    if kind == 'COORDINATE':
+        m = re.fullmatch(r'(\d+)\.(\d+)([NS])\s+(\d+)\.(\d+)([EW])', body)
+        if m:
+            ns = 'north' if m.group(3) == 'N' else 'south'
+            ew = 'east' if m.group(6) == 'E' else 'west'
+            return f'{m.group(1)} degrees {m.group(2)} minutes {ns}<br>{m.group(4)} degrees {m.group(5)} minutes {ew}'
+    return body
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--input', type=Path, default=ROOT/'docs/CLUE/STEPS-CURATED.json')
@@ -149,16 +172,13 @@ def main():
             guide = 'Treasure_Trails__Guide__Cryptic_clues__Master.wiki'
             requirements_source = dict(file=guide, sha256=sha256((SOURCES/guide).read_bytes()).hexdigest())
         challenge = dict(row.get('challenge', {}))
-        hint = row.get('hint')
-        if kind == 'EMOTE':
-            # Wiki's editorial label is not part of the actual scroll (Claude client proof17-Nov).
-            hint = re.sub(r'^The emote reveals\s*', '', hint).strip()
+        hint = scroll_text(kind, row.get('hint'))
         if row.get('challenges'):
             # Guide-only master anagrams have no Clue-info template. Losing
             # these fields turned both into a plain talk-to completion.
             assert kind == 'ANAGRAM' and row.get('anagram')
             challenge = dict(type='PUZZLE_CHOICE', alternatives=row['challenges'])
-            hint = row['anagram']
+            hint = scroll_text('ANAGRAM', row['anagram'])
         if row['key'] == 'master:sherlock':
             assert '|clue=Show this to Sherlock.' in raw.decode('utf8')
             hint = 'Show this to Sherlock.'

@@ -4,7 +4,7 @@
     "tier": "easy",
     "kind": "EMOTE",
     "action": "EMOTE",
-    "hint": "The clue reveals \n\nDance at the crossroads north of Draynor. Equip an iron chain body, a sapphire ring and a longbow.",
+    "hint": "Dance at the crossroads north of Draynor. Equip an iron chain body, a sapphire ring and a longbow.",
     "points": [
       [
         3109,
@@ -363,7 +363,7 @@
     "tier": "easy",
     "kind": "CRYPTIC",
     "action": "DIG",
-    "hint": "The cryptic reveals where to dig:\n\nDig between some ominous stones in Falador.",
+    "hint": "Dig between some ominous stones in Falador.",
     "points": [
       [
         3040,
@@ -386,7 +386,7 @@
     "tier": "easy",
     "kind": "CRYPTIC",
     "action": "DIG",
-    "hint": "The cryptic reveals where to dig:\n\nDig near some giant mushrooms, behind the Grand Tree.",
+    "hint": "Dig near some giant mushrooms, behind the Grand Tree.",
     "points": [
       [
         2458,
@@ -409,7 +409,7 @@
     "tier": "easy",
     "kind": "CRYPTIC",
     "action": "TALK",
-    "hint": "The cryptic reveals who to speak to:\n\nI wonder how many bronze shortswords he has handed out.",
+    "hint": "I wonder how many bronze shortswords he has handed out.",
     "points": [
       [
         3146,
@@ -445,7 +445,7 @@
     "tier": "easy",
     "kind": "CRYPTIC",
     "action": "TALK",
-    "hint": "The cryptic reveals who to speak to:\n\nOne of the sailors in Port Sarim is your next destination.",
+    "hint": "One of the sailors in Port Sarim is your next destination.",
     "points": [
       [
         3026,
@@ -493,7 +493,7 @@
     "tier": "easy",
     "kind": "CRYPTIC",
     "action": "SEARCH",
-    "hint": "The cryptic reveals where to search:\n\nSearch the crate in Rommiks crafting shop in Rimmington.",
+    "hint": "Search the crate in Rommiks crafting shop in Rimmington.",
     "points": [
       [
         2946,
@@ -516,7 +516,7 @@
     "tier": "easy",
     "kind": "CRYPTIC",
     "action": "SEARCH",
-    "hint": "The cryptic reveals where to search:\n\nSearch for a crate in Varrock Castle.",
+    "hint": "Search for a crate in Varrock Castle.",
     "points": [
       [
         3224,
@@ -539,7 +539,7 @@
     "tier": "easy",
     "kind": "CRYPTIC",
     "action": "SEARCH",
-    "hint": "The cryptic reveals where to search:\n\nSearch the bucket in the Port Sarim jail.",
+    "hint": "Search the bucket in the Port Sarim jail.",
     "points": [
       [
         3013,
@@ -870,7 +870,7 @@
     "tier": "easy",
     "kind": "CRYPTIC",
     "action": "TALK",
-    "hint": "The cryptic reveals who to speak to:\n\nSpeak to Hans to solve the clue.",
+    "hint": "Speak to Hans to solve the clue.",
     "points": [
       [
         3221,
@@ -919,7 +919,7 @@
     "tier": "easy",
     "kind": "CRYPTIC",
     "action": "TALK",
-    "hint": "The cryptic reveals who to speak to:\n\nSpeak to Doric, who lives north of Falador.",
+    "hint": "Speak to Doric, who lives north of Falador.",
     "points": [
       [
         2951,
@@ -956,7 +956,7 @@
     "tier": "easy",
     "kind": "CRYPTIC",
     "action": "TALK",
-    "hint": "The cryptic reveals who to speak to:\n\nSpeak to Arhein in Catherby.",
+    "hint": "Speak to Arhein in Catherby.",
     "points": [
       [
         2803,
@@ -993,7 +993,7 @@
     "tier": "easy",
     "kind": "CRYPTIC",
     "action": "TALK",
-    "hint": "The cryptic reveals who to speak to:\n\nSpeak to Ellis in Al Kharid.",
+    "hint": "Speak to Ellis in Al Kharid.",
     "points": [
       [
         3276,
@@ -1030,7 +1030,7 @@
     "tier": "easy",
     "kind": "CRYPTIC",
     "action": "TALK",
-    "hint": "The cryptic reveals who to speak to:\n\nSpeak to Ned in Draynor Village.",
+    "hint": "Speak to Ned in Draynor Village.",
     "points": [
       [
         3098,
@@ -1079,7 +1079,7 @@
     "tier": "easy",
     "kind": "CRYPTIC",
     "action": "TALK",
-    "hint": "The cryptic reveals who to speak to:\n\nSpeak to Gaius in Taverley.",
+    "hint": "Speak to Gaius in Taverley.",
     "points": [
       [
         2884,
@@ -1116,7 +1116,7 @@
     "tier": "easy",
     "kind": "CRYPTIC",
     "action": "TALK",
-    "hint": "The cryptic reveals who to speak to:\n\nTalk to Cassie in Falador.",
+    "hint": "Talk to Cassie in Falador.",
     "points": [
       [
         2975,
@@ -1777,7 +1777,7 @@
     "tier": "medium",
     "kind": "COORDINATE",
     "action": "DIG",
-    "hint": "The coordinate reveals where to dig:\n\n00.13S 13.58E",
+    "hint": "00 degrees 13 minutes south<br>13 degrees 58 minutes east",
     "points": [
       [
         2887,
@@ -1809,7 +1809,7 @@
     "tier": "medium",
     "kind": "COORDINATE",
     "action": "DIG",
-    "hint": "The coordinate reveals where to dig:\n\n00.20S 23.15E",
+    "hint": "00 degrees 20 minutes south<br>23 degrees 15 minutes east",
     "points": [
       [
         3184,
@@ -1841,7 +1841,7 @@
     "tier": "medium",
     "kind": "COORDINATE",
     "action": "DIG",
-    "hint": "The coordinate reveals where to dig:\n\n00.30N 24.16E",
+    "hint": "00 degrees 30 minutes north<br>24 degrees 16 minutes east",
     "points": [
       [
         3217,
@@ -1873,7 +1873,7 @@
     "tier": "medium",
     "kind": "ANAGRAM",
     "action": "TALK",
-    "hint": "The anagram reveals\nwho to speak to:\n\nA BAKER",
+    "hint": "This anagram reveals who to speak to next: A BAKER",
     "points": [
       [
         3217,
@@ -1913,7 +1913,7 @@
     "tier": "medium",
     "kind": "ANAGRAM",
     "action": "TALK",
-    "hint": "The anagram reveals\nwho to speak to:\n\nHALT US",
+    "hint": "This anagram reveals who to speak to next: HALT US",
     "points": [
       [
         2938,
@@ -1949,7 +1949,7 @@
     "tier": "medium",
     "kind": "ANAGRAM",
     "action": "TALK",
-    "hint": "The anagram reveals\nwho to speak to:\n\nAREA CHEF TREK",
+    "hint": "This anagram reveals who to speak to next: AREA CHEF TREK",
     "points": [
       [
         3242,
@@ -2006,7 +2006,7 @@
     "tier": "medium",
     "kind": "CIPHER",
     "action": "TALK",
-    "hint": "The cipher reveals who to speak to:\n\nGUHCHO",
+    "hint": "The cipher reveals who to speak to next: GUHCHO",
     "points": [
       [
         3440,
@@ -2070,7 +2070,7 @@
     "tier": "medium",
     "kind": "CIPHER",
     "action": "TALK",
-    "hint": "The cipher reveals who to speak to:\n\nXJABSE USBJCPSO",
+    "hint": "The cipher reveals who to speak to next: XJABSE USBJCPSO",
     "points": [
       [
         3112,
@@ -2817,7 +2817,7 @@
     "tier": "medium",
     "kind": "COORDINATE",
     "action": "DIG",
-    "hint": "The coordinate reveals where to dig:\n\n00.31S 17.43E",
+    "hint": "00 degrees 31 minutes south<br>17 degrees 43 minutes east",
     "points": [
       [
         3007,
@@ -2850,7 +2850,7 @@
     "tier": "medium",
     "kind": "COORDINATE",
     "action": "DIG",
-    "hint": "The coordinate reveals where to dig:\n\n02.48N 22.30E",
+    "hint": "02 degrees 48 minutes north<br>22 degrees 30 minutes east",
     "points": [
       [
         3160,
@@ -2883,7 +2883,7 @@
     "tier": "medium",
     "kind": "COORDINATE",
     "action": "DIG",
-    "hint": "The coordinate reveals where to dig:\n\n05.43N 23.05E",
+    "hint": "05 degrees 43 minutes north<br>23 degrees 05 minutes east",
     "points": [
       [
         3179,
@@ -3095,7 +3095,7 @@
     "tier": "hard",
     "kind": "COORDINATE",
     "action": "DIG",
-    "hint": "The coordinate reveals where to dig:\n\n01.30N 20.01E",
+    "hint": "01 degrees 30 minutes north<br>20 degrees 01 minutes east",
     "points": [
       [
         3081,
@@ -3129,7 +3129,7 @@
     "tier": "hard",
     "kind": "COORDINATE",
     "action": "DIG",
-    "hint": "The coordinate reveals where to dig:\n\n02.39N 29.58E",
+    "hint": "02 degrees 39 minutes north<br>29 degrees 58 minutes east",
     "points": [
       [
         3399,
@@ -3161,7 +3161,7 @@
     "tier": "hard",
     "kind": "COORDINATE",
     "action": "DIG",
-    "hint": "The coordinate reveals where to dig:\n\n02.48N 08.05E",
+    "hint": "02 degrees 48 minutes north<br>08 degrees 05 minutes east",
     "points": [
       [
         2699,
@@ -3195,7 +3195,7 @@
     "tier": "hard",
     "kind": "ANAGRAM",
     "action": "TALK",
-    "hint": "The anagram reveals who to speak to:\n\nBLUE GRIM GUIDED",
+    "hint": "This anagram reveals who to speak to next: BLUE GRIM GUIDED",
     "points": [
       [
         3238,
@@ -3220,7 +3220,7 @@
     "tier": "hard",
     "kind": "ANAGRAM",
     "action": "TALK",
-    "hint": "The anagram reveals who to speak to:\n\nDO SAY MORE",
+    "hint": "This anagram reveals who to speak to next: DO SAY MORE",
     "points": [
       [
         3230,
@@ -3272,7 +3272,7 @@
     "tier": "hard",
     "kind": "ANAGRAM",
     "action": "TALK",
-    "hint": "The anagram reveals\nwho to speak to:\n\nRAT MAT WITHIN",
+    "hint": "This anagram reveals who to speak to next: RAT MAT WITHIN",
     "points": [
       [
         3044,
@@ -3312,7 +3312,7 @@
     "tier": "hard",
     "kind": "CIPHER",
     "action": "TALK",
-    "hint": "The cipher reveals who to speak to:\n\nIWPPLQTP",
+    "hint": "The cipher reveals who to speak to next: IWPPLQTP",
     "points": [
       [
         2541,
@@ -3350,7 +3350,7 @@
     "tier": "hard",
     "kind": "CIPHER",
     "action": "TALK",
-    "hint": "The cipher reveals who to speak to:\n\nZHLUG ROG PDQ",
+    "hint": "The cipher reveals who to speak to next: ZHLUG ROG PDQ",
     "points": [
       [
         3224,
@@ -3436,7 +3436,7 @@
     "tier": "hard",
     "kind": "CRYPTIC",
     "action": "DIG",
-    "hint": "The cryptic reveals where to dig:\n\n46 is my number. My body is the colour of burnt orange and crawls among those with eight. Three mouths I have, yet I cannot eat. My blinking blue eye hides my grave.",
+    "hint": "46 is my number. My body is the colour of burnt orange and crawls among those with eight. Three mouths I have, yet I cannot eat. My blinking blue eye hides my grave.",
     "points": [
       [
         3170,
@@ -3459,7 +3459,7 @@
     "tier": "hard",
     "kind": "CRYPTIC",
     "action": "DIG",
-    "hint": "The cryptic reveals where to dig:\n\nAggie I see. Lonely and southern I feel. I am neither inside nor outside the house, yet no home would be complete without me. The treasure lies beneath me!",
+    "hint": "Aggie I see. Lonely and southern I feel. I am neither inside nor outside the house, yet no home would be complete without me. The treasure lies beneath me!",
     "points": [
       [
         3085,
@@ -3602,7 +3602,7 @@
     "tier": "hard",
     "kind": "ANAGRAM",
     "action": "TALK",
-    "hint": "The anagram reveals who to speak to:\n\nBY LOOK",
+    "hint": "This anagram reveals who to speak to next: BY LOOK",
     "points": [
       [
         2529,
@@ -3643,7 +3643,7 @@
     "tier": "hard",
     "kind": "ANAGRAM",
     "action": "TALK",
-    "hint": "The anagram reveals who to speak to:\n\nC ON GAME HOC",
+    "hint": "This anagram reveals who to speak to next: C ON GAME HOC",
     "points": [
       [
         2395,
@@ -3684,7 +3684,7 @@
     "tier": "hard",
     "kind": "ANAGRAM",
     "action": "TALK",
-    "hint": "The anagram reveals who to speak to:\n\nMOTHERBOARD",
+    "hint": "This anagram reveals who to speak to next: MOTHERBOARD",
     "points": [
       [
         2606,
@@ -3725,7 +3725,7 @@
     "tier": "hard",
     "kind": "ANAGRAM",
     "action": "TALK",
-    "hint": "The anagram reveals\nwho to speak to:\n\nSLIDE WOMAN",
+    "hint": "This anagram reveals who to speak to next: SLIDE WOMAN",
     "points": [
       [
         3088,
@@ -3910,7 +3910,7 @@
     "tier": "hard",
     "kind": "CIPHER",
     "action": "TALK",
-    "hint": "The cipher reveals who to speak to:\n\nUZZU MUJHRKYYKJ",
+    "hint": "The cipher reveals who to speak to next: UZZU MUJHRKYYKJ",
     "points": [
       [
         2501,
@@ -4163,7 +4163,7 @@
     "tier": "elite",
     "kind": "COORDINATE",
     "action": "DIG",
-    "hint": "The coordinate reveals where to dig:\n\n02.35S 11.52E",
+    "hint": "02 degrees 35 minutes south<br>11 degrees 52 minutes east",
     "points": [
       [
         2820,
@@ -4198,7 +4198,7 @@
     "tier": "elite",
     "kind": "COORDINATE",
     "action": "DIG",
-    "hint": "The coordinate reveals where to dig:\n\n05.07S 13.26E",
+    "hint": "05 degrees 07 minutes south<br>13 degrees 26 minutes east",
     "points": [
       [
         2870,
@@ -4233,7 +4233,7 @@
     "tier": "elite",
     "kind": "ANAGRAM",
     "action": "TALK",
-    "hint": "The anagram reveals who to speak to:\n\nDR HITMAN",
+    "hint": "This anagram reveals who to speak to next: DR HITMAN",
     "points": [
       [
         3182,
@@ -4273,7 +4273,7 @@
     "tier": "elite",
     "kind": "ANAGRAM",
     "action": "TALK",
-    "hint": "The anagram reveals who to speak to:\n\nCOOL NERD",
+    "hint": "This anagram reveals who to speak to next: COOL NERD",
     "points": [
       [
         3462,
@@ -4313,7 +4313,7 @@
     "tier": "elite",
     "kind": "CRYPTIC",
     "action": "DIG",
-    "hint": "The cryptic reveals where to dig:\n\nW marks the spot.",
+    "hint": "W marks the spot.",
     "points": [
       [
         2867,
@@ -4336,7 +4336,7 @@
     "tier": "elite",
     "kind": "CRYPTIC",
     "action": "DIG",
-    "hint": "The cryptic reveals where to dig:\n\nThree rule below and three sit at top. Come dig at my entrance.",
+    "hint": "Three rule below and three sit at top. Come dig at my entrance.",
     "points": [
       [
         2523,
@@ -4382,7 +4382,7 @@
     "tier": "elite",
     "kind": "KILL",
     "action": "KILL",
-    "hint": "The cryptic reveals \n\nGhostly bones.",
+    "hint": "Ghostly bones.",
     "points": [],
     "npcName": "Ankou",
     "npcCandidates": [
@@ -4532,7 +4532,7 @@
     "tier": "elite",
     "kind": "SHERLOCK",
     "action": "SHERLOCK",
-    "hint": "The cryptic reveals who to speak to:\n\nShow this to Sherlock.",
+    "hint": "Show this to Sherlock.",
     "points": [
       [
         2733,
@@ -4555,7 +4555,7 @@
     "tier": "master",
     "kind": "EMOTE",
     "action": "EMOTE",
-    "hint": "The clue reveals \n\nShow your anger at the Wise old man. Beware of double agents! Equip an abyssal whip, a legend's cape and some spined chaps.",
+    "hint": "Show your anger at the Wise old man. Beware of double agents! Equip an abyssal whip, a legend's cape and some spined chaps.",
     "points": [
       [
         3088,
@@ -4661,7 +4661,7 @@
     "tier": "master",
     "kind": "EMOTE",
     "action": "EMOTE",
-    "hint": "The clue reveals \n\nClap in the magic axe hut. Beware of double agents! Equip only some flared trousers.",
+    "hint": "Clap in the magic axe hut. Beware of double agents! Equip only some flared trousers.",
     "points": [
       [
         3191,
@@ -4704,7 +4704,7 @@
     "tier": "master",
     "kind": "COORDINATE",
     "action": "DIG",
-    "hint": "The clue reveals where to dig:\n\n03.26N 12.18E",
+    "hint": "03 degrees 26 minutes north<br>12 degrees 18 minutes east",
     "points": [
       [
         2834,
@@ -4738,7 +4738,7 @@
     "tier": "master",
     "kind": "COORDINATE",
     "action": "DIG",
-    "hint": "The clue reveals where to dig:\n\n03.50N 09.07E",
+    "hint": "03 degrees 50 minutes north<br>09 degrees 07 minutes east",
     "points": [
       [
         2732,
@@ -4772,7 +4772,7 @@
     "tier": "master",
     "kind": "THREE_PART_COMPONENT",
     "action": "TALK",
-    "hint": "The clue reveals who to speak to:\n\nAnger Abbot Langley.",
+    "hint": "Anger Abbot Langley.",
     "points": [
       [
         3058,
@@ -4813,7 +4813,7 @@
     "tier": "master",
     "kind": "THREE_PART_COMPONENT",
     "action": "TALK",
-    "hint": "The clue reveals who to speak to:\n\nRobin wishes to see your finest ranged equipment.",
+    "hint": "Robin wishes to see your finest ranged equipment.",
     "points": [
       [
         3673,
@@ -4855,7 +4855,7 @@
     "tier": "master",
     "kind": "ANAGRAM",
     "action": "TALK",
-    "hint": "Dim Tharn",
+    "hint": "This anagram reveals who to speak to next: Dim Tharn",
     "points": [],
     "npcName": "Mandrith",
     "npcCandidates": [
@@ -4891,7 +4891,7 @@
     "tier": "master",
     "kind": "ANAGRAM",
     "action": "TALK",
-    "hint": "Mus Kil Reader",
+    "hint": "This anagram reveals who to speak to next: Mus Kil Reader",
     "points": [],
     "npcName": "Radimus Erkle",
     "npcCandidates": [
@@ -4927,7 +4927,7 @@
     "tier": "master",
     "kind": "FALO",
     "action": "FALO",
-    "hint": "The clue reveals who to speak to:\n\nFalo the bard wants to see you.",
+    "hint": "Falo the bard wants to see you.",
     "points": [
       [
         2689,
@@ -4950,7 +4950,7 @@
     "tier": "master",
     "kind": "THREE_PART_COMPONENT",
     "action": "DIG",
-    "hint": "The clue reveals where to dig:\n\nA massive battle rages beneath so be careful when you dig by the large broken crossbow.",
+    "hint": "A massive battle rages beneath so be careful when you dig by the large broken crossbow.",
     "points": [
       [
         2927,

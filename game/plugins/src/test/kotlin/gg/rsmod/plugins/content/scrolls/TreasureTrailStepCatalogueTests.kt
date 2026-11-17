@@ -16,6 +16,21 @@ class TreasureTrailStepCatalogueTests {
         assertTrue(rows.filter { it.action==TreasureTrailStepCatalogue.Action.EMOTE }.all { it.hint==it.hint.trim() })
     }
 
+    /**
+     * Claude client round 3 (17-Nov): 'The cryptic reveals where to dig: ...' reached the player. In-game text per RuneLite's clue
+     * plugin (matches the widget text exactly): anagram 'This anagram reveals who to speak to next: ', cipher 'The cipher reveals who
+     * to speak to next: ', coordinates 'DD degrees MM minutes north|south<br>DD degrees MM minutes east|west', everything else bare.
+     */
+    @Test fun `no scroll shows a Wiki editorial label and lead-ins match the game`() {
+        val text = rows.filter { it.kind != "MAP" }
+        assertTrue(text.none { Regex("^The (clue|cryptic|emote|map|coordinate|anagram) reveals", RegexOption.IGNORE_CASE).containsMatchIn(it.hint) },
+            text.filter { Regex("^The (clue|cryptic|emote|map|coordinate|anagram) reveals").containsMatchIn(it.hint) }.joinToString { it.key })
+        assertTrue(text.filter { it.kind == "ANAGRAM" }.all { it.hint.startsWith("This anagram reveals who to speak to next: ") })
+        assertTrue(text.filter { it.kind == "CIPHER" }.all { it.hint.startsWith("The cipher reveals who to speak to next: ") })
+        val coordinate = Regex("""\d+ degrees \d+ minutes (north|south)<br>\d+ degrees \d+ minutes (east|west)""")
+        assertTrue(text.filter { it.kind == "COORDINATE" }.all { coordinate.matches(it.hint) }, text.filter { it.kind == "COORDINATE" }.joinToString { it.hint })
+    }
+
     @Test fun `historical Jarvis event answer is not an unconditional ordinary challenge answer`() {
         val step = rows.single { it.key.endsWith("AREA CHEF TREK") }
         assertEquals(TreasureTrailStepCatalogue.Challenge.NUMBER, step.challenge)
