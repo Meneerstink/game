@@ -1,0 +1,885 @@
+{
+  "kind": "OFFLINE_ACTUAL_DEFINITION_PREDICATES_NOT_SCENE_OR_BOOT_PROOF",
+  "records": [
+    {
+      "key": "Clue scroll (easy) - Dance at the crossroads north of Draynor",
+      "tier": "clue_easy",
+      "adapters": [
+        "emote"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Headbang in the mine north of Al Kharid",
+      "tier": "clue_easy",
+      "adapters": [
+        "emote"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Cheer at the Druids\u0027 Circle",
+      "tier": "clue_easy",
+      "adapters": [
+        "emote"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Clap on the causeway to the Wizards\u0027 Tower",
+      "tier": "clue_easy",
+      "adapters": [
+        "emote"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Jump for joy at the beehives",
+      "tier": "clue_easy",
+      "adapters": [
+        "emote"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - At the standing stones north of Falador",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Brother Galahad\u0027s house",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Directly behind the Wizards\u0027 Tower",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Dig between some ominous stones in Falador",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Dig near some giant mushrooms",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - I wonder how many bronze shortswords he has handed out",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - One of the sailors in Port Sarim",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Search the crate in Rommiks crafting shop in Rimmington",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Search for a crate in Varrock Castle",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Search the bucket in the Port Sarim jail",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Dance a jig by the entrance to the Fishing Guild",
+      "tier": "clue_easy",
+      "adapters": [
+        "emote"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Dance in the shack in Lumbridge Swamp",
+      "tier": "clue_easy",
+      "adapters": [
+        "emote"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Dance in the Party Room",
+      "tier": "clue_easy",
+      "adapters": [
+        "emote"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Cheer for the monks at Port Sarim",
+      "tier": "clue_easy",
+      "adapters": [
+        "emote"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - North of Falador.",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - West of the Champions\u0027 Guild",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - South-east Varrock mine",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Speak to Hans to solve the clue",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Speak to Doric, who lives north of Falador",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Speak to Arhein in Catherby",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Speak to Ellis in Al Kharid",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Speak to Ned in Draynor Village",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Speak to Gaius in Taverley",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (easy) - Talk to Cassie in Falador",
+      "tier": "clue_easy",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - Cheer in the Edgeville general store",
+      "tier": "clue_medium",
+      "adapters": [
+        "emote"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - Shrug in Catherby bank",
+      "tier": "clue_medium",
+      "adapters": [
+        "emote"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - Yawn in the Castle Wars lobby",
+      "tier": "clue_medium",
+      "adapters": [
+        "emote"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - Spin on the bridge by the Barbarian Village",
+      "tier": "clue_medium",
+      "adapters": [
+        "emote"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - 00.13S 13.58E",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - 00.20S 23.15E",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - 00.30N 24.16E",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - A BAKER",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - HALT US",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - AREA CHEF TREK",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - GUHCHO",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - XJABSE USBJCPSO",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - South of Draynor Village bank",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - Behind the Chemist\u0027s house in Rimmington",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - North of the Tower of Life",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - Cheer in the Barbarian Agility Arena",
+      "tier": "clue_medium",
+      "adapters": [
+        "emote"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - Jump for joy in Yanille bank",
+      "tier": "clue_medium",
+      "adapters": [
+        "emote"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - Miscellania",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - Mort Myre Swamp",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - At the entrance to the Ourania Cave",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - South-east of the Lighthouse",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - Between Seers\u0027 Village and Rellekka",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - To the east of the Ranging guild",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - West of the Crafting Guild",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - The crate in McGrubor\u0027s Wood",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - The crate west of the Clock Tower",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - 00.31S 17.43E",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - 02.48N 22.30E",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (medium) - 05.43N 23.05E",
+      "tier": "clue_medium",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - Salute in the banana plantation",
+      "tier": "clue_hard",
+      "adapters": [
+        "agent"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - Blow a raspberry in the Fishing Guild bank",
+      "tier": "clue_hard",
+      "adapters": [
+        "agent"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - Yawn in the rogues\u0027 general store",
+      "tier": "clue_hard",
+      "adapters": [
+        "agent"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - 01.30N 20.01E",
+      "tier": "clue_hard",
+      "adapters": [
+        "wizard"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - 02.39N 29.58E",
+      "tier": "clue_hard",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - 02.48N 08.05E",
+      "tier": "clue_hard",
+      "adapters": [
+        "wizard"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - BLUE GRIM GUIDED",
+      "tier": "clue_hard",
+      "adapters": [
+        "puzzle"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - DO SAY MORE",
+      "tier": "clue_hard",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - RAT MAT WITHIN",
+      "tier": "clue_hard",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - IWPPLQTP",
+      "tier": "clue_hard",
+      "adapters": [
+        "puzzle"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - ZHLUG ROG PDQ",
+      "tier": "clue_hard",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - Yanille anvils",
+      "tier": "clue_hard",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - A crate in the Lumber Yard",
+      "tier": "clue_hard",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - 46 is my number",
+      "tier": "clue_hard",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - Aggie I see",
+      "tier": "clue_hard",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - South-east of the Wilderness Agility Course",
+      "tier": "clue_hard",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - South of the Legends\u0027 Guild",
+      "tier": "clue_hard",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - In the western section of West Ardougne",
+      "tier": "clue_hard",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - In a crate by the stairs to the Observatory Dungeon",
+      "tier": "clue_hard",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - In a crate at the Dark Warriors\u0027 Fortress",
+      "tier": "clue_hard",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - BY LOOK",
+      "tier": "clue_hard",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - C ON GAME HOC",
+      "tier": "clue_hard",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - MOTHERBOARD",
+      "tier": "clue_hard",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - SLIDE WOMAN",
+      "tier": "clue_hard",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (hard) - UZZU MUJHRKYYKJ",
+      "tier": "clue_hard",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (elite) - Bow upstairs in the Edgeville Monastery",
+      "tier": "elite",
+      "adapters": [
+        "emote"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (elite) - Salute in the Warriors\u0027 guild bank",
+      "tier": "elite",
+      "adapters": [
+        "emote"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (elite) - Laugh in front of the gem store in Ardougne market",
+      "tier": "elite",
+      "adapters": [
+        "emote"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (elite) - 02.35S 11.52E",
+      "tier": "elite",
+      "adapters": [],
+      "eligible": false
+    },
+    {
+      "key": "Clue scroll (elite) - 05.07S 13.26E",
+      "tier": "elite",
+      "adapters": [],
+      "eligible": false
+    },
+    {
+      "key": "Clue scroll (elite) - DR HITMAN",
+      "tier": "elite",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (elite) - COOL NERD",
+      "tier": "elite",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (elite) - W marks the spot",
+      "tier": "elite",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (elite) - Three rule below and three sit at top",
+      "tier": "elite",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (elite) - South-west of Tree Gnome Village",
+      "tier": "elite",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (elite) - Ghostly bones",
+      "tier": "elite",
+      "adapters": [
+        "basic"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (elite) - Show this to Sherlock",
+      "tier": "elite",
+      "adapters": [
+        "sherlock"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (master) - Show your anger at the Wise old man",
+      "tier": "clue_master",
+      "adapters": [
+        "agent"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (master) - Clap in the magic axe hut",
+      "tier": "clue_master",
+      "adapters": [
+        "agent"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (master) - 03.26N 12.18E",
+      "tier": "clue_master",
+      "adapters": [],
+      "eligible": false
+    },
+    {
+      "key": "Clue scroll (master) - 03.50N 09.07E",
+      "tier": "clue_master",
+      "adapters": [],
+      "eligible": false
+    },
+    {
+      "key": "Clue scroll (master) - Anger Abbot Langley",
+      "tier": "clue_master",
+      "adapters": [
+        "torn"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (master) - Robin wishes to see your finest ranged equipment",
+      "tier": "clue_master",
+      "adapters": [
+        "torn"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "master:mandrith",
+      "tier": "clue_master",
+      "adapters": [
+        "masterPuzzle"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "master:radimus",
+      "tier": "clue_master",
+      "adapters": [
+        "masterPuzzle"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (master) - Falo the bard wants to see you",
+      "tier": "clue_master",
+      "adapters": [
+        "falo"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "Clue scroll (master) - A massive battle rages beneath",
+      "tier": "clue_master",
+      "adapters": [
+        "torn"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "master:sherlock",
+      "tier": "clue_master",
+      "adapters": [
+        "sherlock"
+      ],
+      "eligible": true
+    },
+    {
+      "key": "master:jorral",
+      "tier": "clue_master",
+      "adapters": [],
+      "eligible": false
+    }
+  ],
+  "eligible": 102,
+  "ineligible": [
+    {
+      "key": "Clue scroll (elite) - 02.35S 11.52E",
+      "tier": "elite",
+      "adapters": [],
+      "eligible": false
+    },
+    {
+      "key": "Clue scroll (elite) - 05.07S 13.26E",
+      "tier": "elite",
+      "adapters": [],
+      "eligible": false
+    },
+    {
+      "key": "Clue scroll (master) - 03.26N 12.18E",
+      "tier": "clue_master",
+      "adapters": [],
+      "eligible": false
+    },
+    {
+      "key": "Clue scroll (master) - 03.50N 09.07E",
+      "tier": "clue_master",
+      "adapters": [],
+      "eligible": false
+    },
+    {
+      "key": "master:jorral",
+      "tier": "clue_master",
+      "adapters": [],
+      "eligible": false
+    }
+  ],
+  "definitionsDecoded": 72
+}

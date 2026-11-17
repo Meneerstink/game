@@ -38,6 +38,9 @@ PLUGINS += ['gg.rsmod.plugins.content.scrolls.' + name for name in
             ['TreasureTrailNumberChallengeTests', 'TreasureTrailBasicStepsTests', 'ClueStepSelectionTests',
              'TreasureTrailMapsTests', 'TreasureTrailEmoteTests', 'TreasureTrailUriSourceTests', 'TreasureTrailPuzzleBoxTests']]
 
+CARD_CORE = CORE.copy()
+CARD_PLUGINS = PLUGINS.copy()
+
 if '--basic' in sys.argv:
     CORE = ['gg.rsmod.game.tools.importer.' + name for name in
             ['ClueSearchMenuImportTests', 'ClueCoreCacheTests', 'ClueInterfaceImportTests', 'ClueMapInterfaceImportTests', 'CluePuzzleInterfaceTests']]
@@ -127,12 +130,20 @@ if '--dig-mimic' in sys.argv:
                 ['MimicCandiesTests','MimicAttackTests','MimicEncounterTests','MimicChallengeTests',
                  'MimicRewardsTests','TheMimicCombatDefTests','StrangeCasketTests','WatsonClueTests']]
 
+if '--handoff' in sys.argv:
+    # One combined run for the card, including its shared decoder regressions.
+    # --dig-mimic supplies the later guardian/encounter classes above.
+    CORE = list(dict.fromkeys(CARD_CORE + CORE + ['gg.rsmod.game.tools.importer.' + name for name in
+        ['CluePetDigCacheTests','ClueMimicArenaImportTests']]))
+    PLUGINS = list(dict.fromkeys(CARD_PLUGINS + PLUGINS + ['gg.rsmod.plugins.content.scrolls.' + name for name in
+        ['CluePetDigTests','ClueAdminStepsTests']]))
+
 
 def inputs():
     tracked = subprocess.check_output(['git', 'ls-files'], cwd=ROOT, text=True).splitlines()
     untracked = subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard'], cwd=ROOT, text=True).splitlines()
     allowed = [p for p in sorted(set(tracked + untracked))
-               if p.endswith(('.kt', '.kts', '.gradle')) or p.startswith(('data/cfg/clue/', 'docs/CLUE/sources/Transcript_')) or p in {
+               if p.endswith(('.kt', '.kts', '.gradle')) or p.startswith(('data/cfg/clue/', 'docs/CLUE/cache/', 'docs/CLUE/sources/')) or p in {
                    'data/cfg/objs.yml', 'data/cfg/npcs/combat-defs.json', 'docs/CLUE/cache/stash-chart-baked.json', 'docs/CLUE/cache/hover.json',
                    'docs/CLUE/cache/interfaces.json', 'docs/CLUE/cache/stash-setting.json',
                    'docs/CLUE/cache/map-interfaces.json', 'docs/CLUE/cache/puzzle-interface.json', 'docs/CLUE/cache/puzzle-pictures.json', 'docs/CLUE/cache/uri-source.json',
@@ -167,7 +178,9 @@ def main():
             args += [task]
             for name in names:
                 args += ['--tests', name]
-    args += ['--priority', 'low', '--console=plain']
+    # rbuild.sh supplies --console=plain; Gradle rejects a duplicate value.
+    args += ['--priority', 'low']
+    assert len(subprocess.list2cmdline(args)) < 7800, 'Explicit test filters exceed safe cmd.exe length; split selected modules sequentially'
     (out/'inputs-before.json').write_text(json.dumps(before, indent=2))
     (out/'command.json').write_text(json.dumps(args, indent=2))
     print('Frozen', len(before), 'inputs;', len(CORE), 'core and', len(PLUGINS), 'plugin test classes;', out, flush=True)

@@ -53,6 +53,10 @@ def main():
         libraries += [scrolls/(name+'.kt') for name in ['ClueGuardianProfiles','ClueGuardianCombat','ClueCombatAssets']]
         cohorts=['MimicCandiesTests','MimicAttackTests','MimicEncounterTests','MimicChallengeTests','MimicRewardsTests','TheMimicCombatDefTests']
         tests=[ROOT/'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/areas/watson'/(name+'.kt') for name in cohorts]
+        if '--mimic-arena-staged' in sys.argv:
+            arena=ROOT/'build/clue/mimic-arena/next'
+            libraries=[arena/'MimicEncounter.kt' if p.name=='MimicEncounter.kt' else p for p in libraries]
+            tests=[arena/'MimicEncounterTests.kt' if p.name=='MimicEncounterTests.kt' else p for p in tests]
         inputs=libraries+tests+[ROOT/'data/cfg/clue/mimic-encounter.json']
         names=['gg.rsmod.plugins.content.areas.watson.'+name for name in cohorts]
     if '--dig-guards' in sys.argv:
@@ -72,6 +76,45 @@ def main():
         tests=[ROOT/'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/scrolls/ClueNpcSourcesTests.kt']
         inputs=libraries+tests+[ROOT/'data/cfg/clue/npc-sources.json']
         names=['gg.rsmod.plugins.content.scrolls.ClueNpcSourcesTests']
+    if '--pet-dig-staged' in sys.argv:
+        following=ROOT/'build/clue/pet-dig/next'
+        libraries=[following/'CluePetDig.kt',following/'CluePetDigCacheTool.kt',following/'Pets.kt']
+        tests=[following/'CluePetDigTests.kt',following/'CluePetDigCacheTests.kt']
+        inputs=libraries+tests
+        names=['gg.rsmod.plugins.content.scrolls.CluePetDigTests','gg.rsmod.game.tools.importer.CluePetDigCacheTests']
+    if '--pet-dig-runtime' in sys.argv:
+        libraries=[ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/CluePetDig.kt',
+                   ROOT/'game/src/main/kotlin/gg/rsmod/game/tools/importer/CluePetDigCacheTool.kt',
+                   ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/skills/summoning/Pets.kt']
+        tests=[ROOT/'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/scrolls/CluePetDigTests.kt',
+               ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/CluePetDigCacheTests.kt']
+        inputs=libraries+tests
+        names=['gg.rsmod.plugins.content.scrolls.CluePetDigTests','gg.rsmod.game.tools.importer.CluePetDigCacheTests']
+    if '--clue-admin-staged' in sys.argv:
+        following=ROOT/'build/clue/admin/next'
+        libraries=[following/'ClueAdminSteps.kt',following/'ClueScrollManager.kt']
+        tests=[following/'ClueAdminStepsTests.kt']
+        inputs=libraries+tests
+        names=['gg.rsmod.plugins.content.scrolls.ClueAdminStepsTests']
+    if '--clue-admin-runtime' in sys.argv:
+        main=ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls'
+        libraries=[main/'ClueAdminSteps.kt',main/'ClueScrollManager.kt']
+        tests=[ROOT/'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/scrolls/ClueAdminStepsTests.kt']
+        inputs=libraries+tests
+        names=['gg.rsmod.plugins.content.scrolls.ClueAdminStepsTests']
+    if '--mimic-map-staged' in sys.argv:
+        following=ROOT/'build/clue/mimic-arena/next'
+        libraries=[following/(name+'.kt') for name in ['ModernRegionProbeTool','ClueMimicArenaAssets','OsrsRegionImportTool']]
+        libraries += [ROOT/'game/src/main/kotlin/gg/rsmod/game/tools/importer/Rev667WorldCodec.kt']
+        tests=[following/'ClueMimicArenaImportTests.kt']
+        inputs=libraries+tests+[ROOT/'docs/CLUE/cache/mimic-arena-source.json']
+        names=['gg.rsmod.game.tools.importer.ClueMimicArenaImportTests']
+    if '--mimic-map-runtime' in sys.argv:
+        main=ROOT/'game/src/main/kotlin/gg/rsmod/game/tools/importer'
+        libraries=[main/(name+'.kt') for name in ['ModernRegionProbeTool','ClueMimicArenaAssets','OsrsRegionImportTool','Rev667WorldCodec']]
+        tests=[ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/ClueMimicArenaImportTests.kt']
+        inputs=libraries+tests+[ROOT/'docs/CLUE/cache/mimic-arena-source.json']
+        names=['gg.rsmod.game.tools.importer.ClueMimicArenaImportTests']
     frozen={str(p):sha256(p.read_bytes()).hexdigest() for p in inputs}
     compiler=[jar(m) for m in ['org.jetbrains.kotlin/kotlin-compiler-embeddable/1.8.0',
         'org.jetbrains.kotlin/kotlin-stdlib/1.8.0','org.jetbrains.kotlin/kotlin-script-runtime/1.8.0',
