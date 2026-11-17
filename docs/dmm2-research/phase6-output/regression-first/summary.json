@@ -1,0 +1,9 @@
+{
+  "snapshot": "542fc66c2",
+  "result": "FAILED; not final evidence",
+  "tests": 73,
+  "failures": 9,
+  "errors": 0,
+  "skipped": 0,
+  "cause": "Inventory-only strict mocks failed at getEquipment through an unrelated container identity check; fixed by the explicit worn source route."
+}

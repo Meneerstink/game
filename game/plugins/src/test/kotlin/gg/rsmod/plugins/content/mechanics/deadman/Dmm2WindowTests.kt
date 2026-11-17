@@ -46,6 +46,7 @@ class Dmm2WindowTests {
     init {
         GameframeRebuild.clearForTests()
         every { f.player.interfaces } returns windows
+        every { f.world.plugins.canUnequipSlot(f.player, any()) } returns true
         every { f.player.timers } returns timers
         every { f.player.tile } answers { position }
         every { f.player.write(*anyVararg<Message>()) } answers { sent += firstArg<Array<Message>>().toList() }
@@ -53,7 +54,7 @@ class Dmm2WindowTests {
             queues.queue(f.player, Dispatchers.Unconfined, firstArg(), thirdArg())
         }
         Dmm2Ids.install(listOf("interface\t230\t2000", "interface\t232\t2001", "interface\t819\t2002", "interface\t806\t2003",
-            "npc\t6516\t1600", "npc\t6485\t1601", "npc\t8391\t1602"))
+            "npc\t6516\t1600", "npc\t6485\t1601", "npc\t8391\t1602", "script\t7155\t2100", "script\t7153\t2101", "sprite\t4735\t3100", "sprite\t4737\t3101"))
         listOf(wizard,seer,nigel).forEachIndexed { i,n ->
             every { n.id } returns 1600+i; every { n.tile } returns Tile(3200,3201); every { n.isSpawned() } returns true
         }
@@ -125,6 +126,22 @@ class Dmm2WindowTests {
         io.mockk.verify(exactly = 0) { plugins.executeUnequipSlot(f.player,13) }
     }
 
+    @Test fun `bulk worn deposit respects equipment locks before moving any charged item`() {
+        f.equipment[3] = Item(4151).putAttr(ItemAttribute.CHARGES,321)
+        val plugins = f.world.plugins
+        every { plugins.canUnequipSlot(f.player,3) } returns false
+        safe(); Dmm2SafeDepositUi.depositAll(f.player,true)
+        assertEquals(0,box().occupiedSlotCount)
+        assertEquals(321,f.equipment[3]!!.getAttr(ItemAttribute.CHARGES))
+        assertEquals(1L,count(4151))
+        io.mockk.verify(exactly = 0) { plugins.executeUnequipItem(f.player,4151) }
+        io.mockk.verify(exactly = 0) { plugins.executeUnequipSlot(f.player,3) }
+        every { plugins.canUnequipSlot(f.player,3) } returns true
+        Dmm2SafeDepositUi.depositAll(f.player,true)
+        assertNull(f.equipment[3]); assertEquals(321,box()[0]!!.getAttr(ItemAttribute.CHARGES))
+        assertEquals(1L,count(4151))
+    }
+
     @Test fun `full inventory skull movement death and close invalidate withdrawals without losing safe contents`() {
         f.inventory[0] = Item(4151); safe(); Dmm2SafeDepositUi.depositAll(f.player,false)
         repeat(28) { f.inventory[it] = Item(772) }
@@ -159,6 +176,76 @@ class Dmm2WindowTests {
         f.inventory[0] = Item(995,100)
         queues.submitReturnValue(10); repeat(5) { queues.cycle() }
         assertEquals(0,box().occupiedSlotCount); assertEquals(100L,count(995))
+    }
+
+    @Test fun `raw packet opcode selects before buying and deposits one before five despite packet list positions`() {
+        val packetOpcodes = listOf(10,64,61,4,52,81,18,25,91,20) // data/packets.yml
+        fun packet(opcode: Int): Int {
+            f.attr[gg.rsmod.game.model.attr.INTERACTING_OPCODE_ATTR] = opcode
+            f.attr[gg.rsmod.game.model.attr.INTERACTING_OPT_ATTR] = packetOpcodes.indexOf(opcode)+1
+            return Dmm2Interactions.option(f.player)
+        }
+        // Real IF_BUTTON1 is third in packets.yml, but its operation is Select / Deposit-1.
+        points(30_000); shop()
+        Dmm2RewardUi.product(f.player,3,packet(61))
+        assertEquals(30_000,points()); assertEquals(0L,count(rug))
+        Dmm2RewardUi.product(f.player,3,packet(64)) // Buy-1
+        assertEquals(27_000,points()); assertEquals(1L,count(rug))
+        val slot = f.inventory.rawItems.indexOfFirst { it?.id == rug }
+        Dmm2RewardUi.inventory(f.player,slot,packet(61),rug) // Select does not refund.
+        assertEquals(27_000,points()); assertEquals(1L,count(rug))
+        Dmm2RewardUi.sellSelected(f.player,0)
+        assertEquals(30_000,points()); assertEquals(0L,count(rug))
+        Dmm2RewardUi.close(f.player)
+        f.inventory[0] = Item(995,100); safe()
+        Dmm2SafeDepositUi.click(f.player,false,0,packet(61),995)
+        assertEquals(1,box().occupiedSlotCount); assertEquals(99,f.inventory[0]!!.amount)
+        Dmm2SafeDepositUi.click(f.player,false,0,packet(64),995)
+        assertEquals(6,box().occupiedSlotCount); assertEquals(94,f.inventory[0]!!.amount)
+        assertEquals(3,packet(4)); assertEquals(4,packet(52)); assertEquals(5,packet(81)); assertEquals(10,packet(25))
+        assertEquals(0,packet(-1))
+        assertEquals(100L,count(995))
+    }
+
+    @Test fun `normal desktop shop hides expanded header and retains footer currency and balance`() {
+        points(2110); shop()
+        val hides = sent.filterIsInstance<gg.rsmod.game.message.impl.IfSetHideMessage>()
+        assertTrue(hides.any { it.hash == (2002 shl 16 or 14) && it.hidden })
+        val text = sent.filterIsInstance<IfSetTextMessage>()
+        assertTrue(text.any { it.parent == 2002 && it.child == 33 && it.text == "2,110" })
+        assertTrue(text.any { it.parent == 2002 && it.child == 32 && it.text == "Deadman Points" })
+    }
+
+    @Test fun `View expands source cards Help clears selection and details close returns to expanded grid`() {
+        points(30_000); shop()
+        Dmm2RewardUi.toggleView(f.player)
+        val layouts = sent.filterIsInstance<gg.rsmod.game.message.impl.RunClientScriptMessage>().filter { it.id == 2100 }
+        assertTrue(layouts.any { it.args.toList() == listOf((2002 shl 16) or 15,6,6,12,38,1,1,0,2) })
+        fun hidden(component: Int): Boolean = sent.filterIsInstance<gg.rsmod.game.message.impl.IfSetHideMessage>()
+            .last { it.hash == ((2002 shl 16) or component) }.hidden
+        assertTrue(hidden(9)); assertTrue(hidden(gg.rsmod.game.tools.importer.Dmm2WindowPort.REWARD_FIRST+11))
+        assertFalse(hidden(14)); assertFalse(hidden(12))
+        assertEquals("Expand",sent.filterIsInstance<gg.rsmod.game.message.impl.RunClientScriptMessage>().last { it.id == 2101 }.args.last())
+        Dmm2RewardUi.product(f.player,3,1)
+        assertFalse(hidden(9)); assertEquals(30_000,points())
+        Dmm2RewardUi.help(f.player)
+        Dmm2RewardUi.buySelected(f.player,0)
+        assertEquals(30_000,points()); assertEquals(0L,count(rug))
+        Dmm2RewardUi.closeDetails(f.player); assertTrue(hidden(9))
+        Dmm2RewardUi.toggleView(f.player)
+        assertFalse(hidden(9)); assertTrue(hidden(14)); assertTrue(hidden(12))
+        assertFalse(hidden(gg.rsmod.game.tools.importer.Dmm2WindowPort.REWARD_FIRST+11))
+        Dmm2RewardUi.product(f.player,3,1); Dmm2RewardUi.buySelected(f.player,0)
+        assertEquals(27_000,points()); assertEquals(1L,count(rug))
+        Dmm2RewardUi.close(f.player); Dmm2RewardUi.toggleView(f.player); Dmm2RewardUi.help(f.player)
+        assertFalse(windows.isVisible(2002)); assertEquals(27_000,points())
+    }
+
+    @Test fun `View refuses a missing layout bridge without guessing any clientscript id or changing points`() {
+        points(30_000); shop(); val before = sent.size
+        Dmm2Ids.install(listOf("interface\t819\t2002","interface\t806\t2003"))
+        Dmm2RewardUi.toggleView(f.player)
+        assertEquals(before,sent.size); assertEquals(30_000,points())
     }
 
     @Test fun `all seven products buy and refund through real mapped windows without item or point inflation`() {

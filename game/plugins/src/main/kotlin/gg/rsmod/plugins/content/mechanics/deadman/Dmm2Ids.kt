@@ -33,7 +33,7 @@ object Dmm2Ids {
             val fields = line.split('\t')
             require(fields.size == 3) { "DMM2 id row must be kind, source, local" }
             val source = fields[1].toInt(); val local = fields[2].toInt()
-            require(source > 0 && local > 0 && fields[0] in setOf("item", "npc", "seq", "spotanim", "synth", "loc", "interface"))
+            require(source > 0 && local > 0 && fields[0] in setOf("item", "npc", "seq", "spotanim", "synth", "loc", "interface", "script", "sprite"))
             require(out.put("${fields[0]}:$source", local) == null) { "Duplicate DMM2 source id" }
         }
         require(out.filterKeys { it.startsWith("item:") }.values.distinct().size == out.count { it.key.startsWith("item:") })
@@ -51,5 +51,7 @@ object Dmm2Ids {
     fun spot(source: Int): Int? = imported["spotanim:$source"]
     fun loc(source: Int): Int? = imported["loc:$source"]
     fun sound(source: Int): Int? = imported["synth:$source"]
+    fun script(source: Int): Int? = imported["script:$source"]
+    fun sprite(source: Int): Int? = imported["sprite:$source"]
     fun interfaceId(source: Int): Int? = imported["interface:$source"]
 }

@@ -246,9 +246,9 @@ Bronnen, gekozen adviezen en importgrenzen: `PHASE5-SUPPLEMENT.md`. Sinds fase6 
 
 ## 14. Fase6: één ronde voor de werkelijke vensters
 
-Eerst nieuwe servercode mergen en de bestaande `OsrsInterfacePortTool dmm2-ui --reuse` opnieuw plannen/toepassen
-volgens `PHASE6-WINDOWS.md`. Verwacht componentaantallen230=41,232=31,819=193,806=83;
-de oude17/3/55/14 hebben de nieuwe widgets nog niet. Gebruik de actuele mappings, geen PLAN-ids.
+Claude heeft de append-widgets op 17 november om 15:45 al toegepast (`tx-20261117-144453`, dossier 15:4x).
+Na deze serverhervatting is geen extra import nodig voor de worn-slotguard of testfixes. Gebruik de actuele
+mappings en componentaantallen230=41,232=31,819=193,806=83; geen PLAN-ids.
 
 1. `::tele 3151 3513 0`, `::empty`, `::item 995 100`. **Geen skull.** Wizard15314 → Deposit-box:
    Safe Deposit Box met0/10, tien vakken, inventory rechts. Deposit-1,5,10,X,All op coins:
@@ -257,7 +257,9 @@ de oude17/3/55/14 hebben de nieuwe widgets nog niet. Gebruik de actuele mappings
    Vijfmaal heen/terug, ook via Seer15315, steeds100 totaal.
 2. `::empty`, `::item 4151 1`, echte whip equippen. Open box, Deposit worn items: whip naar box,
    speler verliest weapon-bonussen/look. Herhaal met een uitgerust ammo-stack van100: tien in box,
-   negentig blijven uitgerust, geen onterechte volledige unequip. Untradeable (`::item 772 1`) blijft buiten box.
+   negentig blijven uitgerust, geen onterechte volledige unequip. Een door de bestaande unequip-slotguard
+   geblokkeerd item blijft gedragen met dezelfde charges; na opheffen van die guard werkt opslag weer.
+   Untradeable (`::item 772 1`) blijft buiten box.
    Charge-item bewaren/opnemen: exact dezelfde charges. Tel equipment+inventory+box, niet alleen iconen.
 3. Box met whip, inventory vol met nonstackables: withdrawal weigert zonder itemverlies.
    Depositing-X openen, **sluiten/heropenen**, antwoord10: oude prompt mag niets verplaatsen.
@@ -281,3 +283,19 @@ de oude17/3/55/14 hebben de nieuwe widgets nog niet. Gebruik de actuele mappings
 8. Hele ronde Fixed, Resizable en Stretched; X/Esc herstelt normale inventory. Het huidige serverport gebruikt
    desktop normal-view; optional expanded/mobile/hover branches staan expliciet als grens in PHASE6-WINDOWS.
    Native PLAN en unitproeven zijn geen grafische of A9-aftekening.
+
+### 14b. Laatste controls-aanvulling
+
+Na merge van de nieuwe controls moet Claude `dmm2-ui --reuse` opnieuw plannen/applyen:819=211,
+script7155=layoutbridge en7153=op-caption/graphicbridge, plus4735/4737/8386/8387/788. Kopieer de echte interface-map naar
+`cfg/dmm2/interfaces.tsv` in de testdata;151basisids hoeven niet opnieuw genummerd te worden.
+
+- Open Nigel normaal: footer-DP, grijze `No filters available` met pijl; geen actieve filterkeuzes.
+- View-pijl (Compact): zeven kleine iconen in het compacte raster, namen verborgen, DP-header bovenaan; selecteren
+  opent Item Info in eigen steelframe. Koop1/5/10/50 rekent dezelfde DP-prijzen. Close van Item Info
+  keert terug naar de compacte producten en sluit niet onbedoeld de hele winkel.
+- Help toont de echte Help-tekst; Buy na Help doet niets zolang er geen product is geselecteerd.
+- View terug: portretraster, namen, rechterpaneel en footer hersteld. Vijf keer heen/terug, daarna
+  kopen/refund, hoofd-X/Esc, relog; geen selectie of ander accountsaldo dat doorlekt.
+- Fixed/Resizable/Stretched: borders, dropdown, beide view-iconen en Helphover naast OSRS;
+  controleer geen overlap, afgesneden tekst of onjuiste kliklagen. Core-/breektests vervangen dit niet.

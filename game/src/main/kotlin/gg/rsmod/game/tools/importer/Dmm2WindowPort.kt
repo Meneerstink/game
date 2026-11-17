@@ -21,6 +21,59 @@ object Dmm2WindowPort {
     const val SIDE_OWNED = 44
     const val SIDE_VALUE = 45
     const val SIDE_CLOSE_TEXT = 46
+    const val VIEW_ICON = 193
+    const val HELP_ICON = 194
+    const val FILTER_ARROW = 197
+    const val FILTER_LABEL = 198
+    const val INFO_FRAME_FIRST = 199
+    const val INFO_FRAME_TITLE = 200
+    const val INFO_FRAME_CLOSE = 210
+    /** Server translation of 7155/7142 layout, allocated by the existing importer; never a guessed local script id. */
+    const val LAYOUT_SOURCE = 7155
+    const val CONTROL_SOURCE = 7153
+    data class Rect(val x: Int, val y: Int, val w: Int, val h: Int)
+    fun cardLayout(expanded: Boolean, index: Int): List<Rect> {
+        require(index in 0..6)
+        // Cache7144: grid width / nominal card width,3px gaps; expanded cards omit the name and are50px high.
+        val grid = if (expanded) 437 else 231
+        val columns = grid / (if (expanded) 54 else 110)
+        val width = (grid - (columns + 1)*3) / columns
+        val height = if (expanded) 50 else 74
+        val x = index%columns*(width+3)+3; val y = index/columns*(height+3)+3
+        return listOf(Rect(x+1,y+1,width-2,height-2),Rect(x+4,y+4,width-8,height-8),
+            Rect(x+4,y,width-8,4),Rect(x+4,y+height-4,width-8,4),Rect(x,y+4,4,height-8),Rect(x+width-4,y+4,4,height-8),
+            Rect(x,y,4,4),Rect(x+width-4,y,4,4),Rect(x,y+height-4,4,4),Rect(x+width-4,y+height-4,4,4),
+            Rect(x+width/2-18+2,y+7+(if (expanded) 2 else 0),36,32),Rect(x+7,y+34,width-14,40))
+    }
+
+    /** 667 IF_SETPOSITION/IF_SETSIZE bridge; same footer/primitive format as DeathsOffice.scrollScript.
+     * Args: component,x,y,width,height,widthMode,heightMode,xMode,yMode. Geometry comes from source7142/7144.
+     */
+    fun layoutScript(): ByteArray {
+        val bytes = java.io.ByteArrayOutputStream()
+        val out = java.io.DataOutputStream(bytes)
+        out.writeByte(0)
+        fun local(index: Int) { out.writeShort(33); out.writeInt(index) }
+        listOf(1,2,7,8,0).forEach(::local); out.writeShort(2000); out.writeByte(0)
+        listOf(3,4,5,6,0).forEach(::local); out.writeShort(2001); out.writeByte(0)
+        out.writeShort(21); out.writeByte(0)
+        out.writeInt(13); listOf(9,0,0,9,0,0).forEach(out::writeShort)
+        out.writeByte(0); out.writeShort(1)
+        return bytes.toByteArray()
+    }
+
+    /** Args: operation-layer,graphic-child,local-sprite + source7153 caption (Compact/Expand). */
+    fun controlScript(): ByteArray {
+        val bytes = java.io.ByteArrayOutputStream(); val out = java.io.DataOutputStream(bytes)
+        out.writeByte(0)
+        fun op(code: Int, value: Int) { out.writeShort(code); out.writeInt(value) }
+        op(0,1); op(35,0); op(33,0); out.writeShort(2300); out.writeByte(0)
+        op(33,2); op(33,1); out.writeShort(2105); out.writeByte(0)
+        out.writeShort(21); out.writeByte(0)
+        out.writeInt(8); listOf(3,1,0,3,1,0).forEach(out::writeShort)
+        out.writeByte(0); out.writeShort(1)
+        return bytes.toByteArray()
+    }
 
     fun append(group: Int, list: MutableList<C>, sprites: MutableSet<Int>, extras: MutableList<String>, fonts: Map<Int, Int>) {
         fun add(type: Int, x: Int, y: Int, w: Int, h: Int, parent: Int, sprite: Int = -1, text: String = "", ops: List<String> = emptyList(),
@@ -77,6 +130,9 @@ object Dmm2WindowPort {
                 check(list.size == 55)
                 // 7142, desktop normal view: 200px info pane; left grid is 231px = two 111px cards.
                 layer(9, 12, 35, 200, 53)
+                layer(10, 6, 6, 218, 20)
+                val filter = byId(13)
+                list[list.indexOf(filter)] = C(13,0,0,0,26,0,10,1,1,0,0,false)
                 layer(15, 6, 6, 218, 38)
                 layer(14, 206, 0, 218, 20)
                 // 228(title,16): desktop steel frame, divider and close.
@@ -139,8 +195,28 @@ object Dmm2WindowPort {
         }
         if (group == 819) {
             repeat(4) { i -> button(26+i,51,18,listOf("1","5","10","50")[i]) }
-            add(4,0,0,0,0,13,text="No filters available",font=494,wm=1,hm=1,colour=0x9f9f9f)
-            extras += "DMM2 OMNISHOP buttons156..191 nofilters192"
+            add(5,0,0,0,0,13,sprite=297,wm=1,hm=1) //192: source5771 backing before label
+            check(add(5,2,2,16,16,11,sprite=4735) == VIEW_ICON)
+            check(add(5,0,0,20,20,12,sprite=8386) == HELP_ICON)
+            sprites += setOf(4737,8387)
+            list += C(list.size,3,0,0,0,0,13,1,1,1,1,false,colour=0x0e0e0c)
+            list += C(list.size,3,0,0,2,2,13,1,1,1,1,false,colour=0x474745)
+            check(list.size == FILTER_ARROW)
+            sprites += 788
+            list += C(list.size,5,2,2,16,16,13,0,0,2,0,false,sprite=788,opacity=125)
+            check(add(4,2,2,4,0,13,text="No filters available",font=494,wm=1,hm=1,colour=0x9f9f9f) == FILTER_LABEL)
+            // 7147 -> 228: expanded selection/help has its own steel frame on native layer20.
+            check(add(5,0,0,2,2,20,sprite=297,wm=1,hm=1,xm=1,ym=1) == INFO_FRAME_FIRST)
+            check(add(4,0,6,12,24,20,text="Help",wm=1,xm=1) == INFO_FRAME_TITLE)
+            listOf(intArrayOf(0,0,25,30,310,0,0,0,0), intArrayOf(0,0,25,30,311,0,0,2,0),
+                intArrayOf(0,0,25,30,312,0,0,0,2), intArrayOf(0,0,25,30,313,0,0,2,2),
+                intArrayOf(-15,0,36,60,172,0,1,0,1),intArrayOf(-15,0,36,60,315,0,1,2,1),
+                intArrayOf(0,-15,50,36,314,1,0,1,0),intArrayOf(0,-15,50,36,173,1,0,1,2),
+                intArrayOf(0,14,10,26,2546,1,0,1,0)).forEach { a ->
+                add(5,a[0],a[1],a[2],a[3],20,sprite=a[4],wm=a[5],hm=a[6],xm=a[7],ym=a[8])
+            }
+            check(add(5,3,6,26,23,20,sprite=535,ops=listOf("Close"),xm=2) == INFO_FRAME_CLOSE)
+            extras += "DMM2 OMNISHOP buttons156..191 filterbacking192 controls193..198 expandedframe199..210; layout bridge source7155"
         }
     }
 }

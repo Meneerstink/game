@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests" tests="17" skipped="0" failures="0" errors="0" timestamp="2026-11-17T16:26:45" hostname="KNMI-5CG6051R99" time="2.997">
+  <properties/>
+  <testcase name="unlocked reward cannot be sold or consumed again after logout" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests" time="2.124"/>
+  <testcase name="POH construction logout before completion consumes nothing and a completed rug cannot pay twice" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests" time="0.327"/>
+  <testcase name="starter reclaim reload duplicates neither unopened equipment pack nor introduction cash" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests" time="0.027"/>
+  <testcase name="real PvM death execution transfers carried trinkets to the grave once and never touches safe copies" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests" time="0.123"/>
+  <testcase name="fire recipe in a full inventory consumes its exact inputs once across relog and repeated completion" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests" time="0.029"/>
+  <testcase name="independent combat and hitpoints locks survive repeated reconnects without changing DP" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests" time="0.011"/>
+  <testcase name="ten physical safe slots full inventory and stale withdrawals conserve every unit after reload" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests" time="0.015"/>
+  <testcase name="charged scythe refuses safe storage without charge loss then empty form is storable" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests" time="0.012"/>
+  <testcase name="pending blood money with full inventory bank and max stack remains payable once after reload" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests" time="0.031"/>
+  <testcase name="Nigel armour refuses zero blood money and never spends DP then survives relog and retries" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests" time="0.009"/>
+  <testcase name="advanced trinket interrupted reload and retry with full inventory yields exactly one of eight weapons" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests" time="0.015"/>
+  <testcase name="OSRS blood money cannot enter safe deposit box before or after relog" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests" time="0.016"/>
+  <testcase name="all six carried trinkets are counted once and every safe copy is excluded from each death context" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests" time="0.036"/>
+  <testcase name="safebox fortuity cannot grant an effect or refund while skull relog and death preserve it" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests" time="0.01"/>
+  <testcase name="relog preserves shared undead cooldown without persisting a stale summon actor" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests" time="0.153"/>
+  <testcase name="migration reload retry twice preserves exactly one credit and the complete audit" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests" time="0.013"/>
+  <testcase name="all seven reward purchase refund loops conserve DP value through relog and stale sell packets" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests" time="0.043"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/a/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+]]></system-err>
+</testsuite>

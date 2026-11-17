@@ -4,6 +4,7 @@ import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.plugins.api.ext.getInteractingOpcode
 import gg.rsmod.plugins.api.ext.closeMainInterface
 import java.lang.ref.WeakReference
 
@@ -23,6 +24,9 @@ object Dmm2Interactions {
     @Volatile var rewardUi: RewardUi? = null
     private val SAFE_NPC = AttributeKey<WeakReference<Npc>>(resetOnDeath = true)
     private val REWARD_NPC = AttributeKey<WeakReference<Npc>>(resetOnDeath = true)
+    /** Imported IF3 menus use the real client opcode; packets.yml position is not the menu operation. */
+    fun option(player: Player): Int = gg.rsmod.plugins.content.inter.slayer.SlayerRewardsUi.opOf(player.getInteractingOpcode())
+
     fun near(player: Player, npc: Npc): Boolean = npc.isSpawned() && !player.isDead() && npc.tile.height == player.tile.height &&
         player.tile.isWithinRadius(npc.tile, 2)
     fun isFinancial(npc: Npc): Boolean = npc.id in listOfNotNull(Dmm2Ids.npc(6516), Dmm2Ids.npc(6485))

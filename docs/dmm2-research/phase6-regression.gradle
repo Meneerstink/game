@@ -1,0 +1,32 @@
+// Standard module compilation and real Gradle/JUnit tests; no stale class snapshots or removed task dependencies.
+// Only the nine DMM2 binding scripts are compiled. Every requested test class belongs to DMM2 changes.
+gradle.projectsEvaluated {
+    def root = gradle.rootProject
+    def scripts = root.project(':game:plugins:scripts')
+    scripts.sourceSets.main.kotlin.setIncludes([
+        'gg/rsmod/plugins/content/combat/specialattack/weapons/nightmare_staves.plugin.kts',
+        'gg/rsmod/plugins/content/items/osrs/powered_staves.plugin.kts',
+        'gg/rsmod/plugins/content/magic/teleports/home_teleport_spells.plugin.kts',
+        'gg/rsmod/plugins/content/mechanics/deadman/dmm2.plugin.kts',
+        'gg/rsmod/plugins/content/mechanics/pvp/breach/breach_points.plugin.kts',
+        'gg/rsmod/plugins/content/mechanics/pvp/breach/breach_shop.plugin.kts',
+        'gg/rsmod/plugins/content/mechanics/store/store.plugin.kts',
+        'gg/rsmod/plugins/content/npcs/definitions/humanoids/infernal_mage_level_66.plugin.kts',
+        'gg/rsmod/plugins/content/starter/starter_kit.plugin.kts'
+    ])
+    [':game', ':game:plugins'].each { name ->
+        def task = root.project(name).tasks.getByName('test')
+        task.systemProperty 'rsps.data', root.file('data').absolutePath
+        // --tests filters JUnit execution after Gradle discovers candidates. Limit class discovery too:
+        // otherwise forkEvery=1 can start an empty JVM for every unrelated test class.
+        def ownClasses = name == ':game' ? ['Dmm2UiPlanTests'] : [
+            'Dmm2WindowTests', 'Dmm2InteractionTests', 'SafeDepositBoxTests', 'NigelRewardStoreTests',
+            'Dmm2BootTests', 'Dmm2BreakTests', 'Dmm2WeaponPresentationTests'
+        ]
+        task.setIncludes(ownClasses.collect { '**/' + it + '.class' } as Set)
+        task.forkEvery = name == ':game' ? 0 : 1
+        task.doFirst { println '[DMM2] discovered classes restricted to: ' + ownClasses.join(', ') }
+        task.testLogging.events('passed', 'failed', 'skipped')
+        task.outputs.upToDateWhen { false } // Fresh XML for the complete eight-class handoff, without recompiling unchanged modules.
+    }
+}

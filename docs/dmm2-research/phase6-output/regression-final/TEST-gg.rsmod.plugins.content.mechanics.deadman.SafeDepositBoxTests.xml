@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-11-17T16:26:23" hostname="KNMI-5CG6051R99" time="2.5">
+  <properties/>
+  <testcase name="GE exclusion alone does not prevent safekeeping but fully retired items are refused" classname="gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests" time="2.085"/>
+  <testcase name="untradeables and notes of untradeables cannot be stored" classname="gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests" time="0.009"/>
+  <testcase name="new skull invalidates an open session for deposits withdrawals and reads" classname="gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests" time="0.009"/>
+  <testcase name="registered container roundtrips in player JSON with attributes and stays outside usable items" classname="gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests" time="0.082"/>
+  <testcase name="notes count per unit and keep their form on withdrawal" classname="gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests" time="0.006"/>
+  <testcase name="loot key skull blocks access even without a skull timer" classname="gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests" time="0.005"/>
+  <testcase name="Wizard close then Seer reopen shares one box while accounts stay separate" classname="gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests" time="0.013"/>
+  <testcase name="ten coins occupy ten slots and a full box never consumes another unit" classname="gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests" time="0.005"/>
+  <testcase name="invalid packets and stale ids are noops" classname="gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests" time="0.01"/>
+  <testcase name="charges survive deposit and withdrawal without aliasing or creation redirects" classname="gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests" time="0.009"/>
+  <testcase name="PvM and PvP death resolution never includes stored items or makes them carried keeps" classname="gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests" time="0.016"/>
+  <testcase name="full inventory and max stack leave box untouched then allow exact stack merge" classname="gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests" time="0.006"/>
+  <testcase name="repeated roundtrips conserve quantity and never duplicate a stored item" classname="gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests" time="0.242"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/a/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+]]></system-err>
+</testsuite>

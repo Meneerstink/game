@@ -1,14 +1,13 @@
 param()
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
-if (-not (Test-Path -LiteralPath (Join-Path $taskRoot 'build/dmm2/phase5-classes/gg/rsmod/plugins/content/mechanics/deadman/Dmm2Ids.class'))) {
-    throw 'Missing validated phase5 dependency snapshot. Run RUN-PHASE5-TESTS.ps1 first in this worktree.'
-}
 $runArgs = @(':game:test', '--tests', '*Dmm2UiPlanTests', ':game:plugins:scripts:compileKotlin', ':game:plugins:test')
-foreach ($name in @('Dmm2WindowTests','Dmm2InteractionTests','SafeDepositBoxTests','NigelRewardStoreTests','Dmm2BootTests','Dmm2BreakTests')) {
+foreach ($name in @('Dmm2WindowTests','Dmm2InteractionTests','SafeDepositBoxTests','NigelRewardStoreTests','Dmm2BootTests','Dmm2BreakTests','Dmm2WeaponPresentationTests')) {
     $runArgs += @('--tests', ('*' + $name))
 }
-$runArgs += @('--continue', '--priority', 'low', '--no-parallel', '-I', 'docs/dmm2-research/phase6-tests.gradle')
+# Gradle7.6 DaemonBuildOptions.PriorityOption maps org.gradle.priority to the same low-priority setting.
+# Use the property because rbuild also injects --priority low when the owner's laptop is active.
+$runArgs += @('--offline', '--continue', '-Dorg.gradle.priority=low', '--no-parallel', '-I', 'docs/dmm2-research/phase6-regression.gradle')
 Push-Location $taskRoot
-try { & .\gradlew.bat @runArgs; $testExit = $LASTEXITCODE } finally { Pop-Location }
+try { & C:/RSPS/tools/remote/rgradle.cmd @runArgs; $testExit = $LASTEXITCODE } finally { Pop-Location }
 exit $testExit
