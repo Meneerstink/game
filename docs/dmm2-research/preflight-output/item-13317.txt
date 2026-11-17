@@ -1,0 +1,14 @@
+DRY_RUN_ONLY kind=item upstream=[13317] targets=[C:\RSPS\work\gpt-a\build\dmm2\cache-plan\game\game\data/cache, C:\RSPS\work\gpt-a\build\dmm2\cache-plan/file-server/cache]
+NOTE Deadman's chest (13317) has no upstream noted variant; only the item is imported
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[05:58:29.064 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS proven_free_holes=752 item_candidates=65100 safe_free=64348
+PLAN item 24634 'Deadman's chest' <- upstream_item:13317 bytes=94 models=[upstream_model:29749->65536, upstream_model:29637->65537, upstream_model:29636->65538, upstream_model:29745->65539, upstream_model:29744->65540, upstream_model:151->29538]
+  OPCODES 1=65536 2="Deadman's chest" 4=1158 5=488 6=0 7=65535 8=7 12=0x00000001 23=65537 24=65538 25=65539 26=65540 78=29538 36="Wear" 39="Destroy" 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {0=0, 1=0, 2=0, 3=0, 4=0, 5=21, 6=20, 7=12, 8=3, 9=20, 11=0}
+DROPPED model 29745: face z-offsets (not representable in 667)
+TRANSACTION tx-20261117-045837 applied=false finalized=0 recovered=0

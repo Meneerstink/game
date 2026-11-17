@@ -1,0 +1,14 @@
+DRY_RUN_ONLY kind=item upstream=[34422] targets=[C:\RSPS\work\gpt-a\build\dmm2\cache-plan\game\game\data/cache, C:\RSPS\work\gpt-a\build\dmm2\cache-plan/file-server/cache]
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[06:15:19.620 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS proven_free_holes=752 item_candidates=65100 safe_free=64348
+PLAN item 24634 'Fire ruby' <- upstream_item:34422 bytes=52 models=[upstream_model:61875->65536]
+  OPCODES 1=65536 2="Fire ruby" 4=780 5=200 6=317 95=1860 7=0 8=65522 12=0x00004e20 16=FLAG 40=0x01007f03a3 65=FLAG 97=24635
+  UPSTREAM_PARAMS {}
+PLAN item 24635 'Fire ruby (noted)' <- upstream_item:34423 bytes=7 models=[]
+  OPCODES 97=24634 98=799
+TRANSACTION tx-20261117-051530 applied=false finalized=0 recovered=0

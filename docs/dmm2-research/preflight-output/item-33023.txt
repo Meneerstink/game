@@ -1,0 +1,14 @@
+DRY_RUN_ONLY kind=item upstream=[33023] targets=[C:\RSPS\work\gpt-a\build\dmm2\cache-plan\game\game\data/cache, C:\RSPS\work\gpt-a\build\dmm2\cache-plan/file-server/cache]
+NOTE Crystal body (33023) has no upstream noted variant; only the item is imported
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[06:10:55.972 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS proven_free_holes=752 item_candidates=65100 safe_free=64348
+PLAN item 24634 'Crystal body' <- upstream_item:33023 bytes=98 models=[upstream_model:59961->65536, upstream_model:59940->65537, upstream_model:59954->65538, upstream_model:151->29538]
+  OPCODES 1=65536 2="Crystal body" 4=1284 5=488 6=0 7=65535 8=5 12=0x0016e360 16=FLAG 23=65537 25=65538 24=29538 36="Wear" 37="Check" 38="Revert" 127=0x02002d 129=0x010033 249=0x0101000210436865636b00
+  UPSTREAM_PARAMS {0=0, 1=0, 2=0, 3=-18, 4=31, 5=46, 6=38, 7=48, 8=44, 9=68, 11=3, 434=1, 435=16, 436=70, 437=50, 451=Check, 1564=4, 2257=4337}
+DROPPED Crystal body: OSRS opcode 160 (meaning unverified) not encoded
+TRANSACTION tx-20261117-051104 applied=false finalized=0 recovered=0

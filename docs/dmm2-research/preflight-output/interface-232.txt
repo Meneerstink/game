@@ -1,0 +1,4 @@
+DRY_RUN_ONLY kind=interface upstream=[232] targets=[C:\RSPS\work\gpt-a\build\dmm2\cache-plan\game\game\data/cache, C:\RSPS\work\gpt-a\build\dmm2\cache-plan/file-server/cache]
+PLAN osrs 232 -> interface 1185: 3 components
+PREFLIGHT transaction=tx-20261117-052430 mutations=3 outcomes={CREATE=6}
+DRY_RUN interfaces 1185..1185 sprites null..null

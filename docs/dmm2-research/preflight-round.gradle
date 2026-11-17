@@ -1,0 +1,49 @@
+// One machine-wide build slot covers compilation AND all sequential cache plans.
+gradle.projectsEvaluated {
+    def root = gradle.rootProject
+    root.tasks.register('dmm2CachePlans') {
+        doLast {
+            def sandbox = root.file('build/dmm2/cache-plan')
+            def out = root.file('build/dmm2/cache-plan-runner'); out.mkdirs()
+            def cp = root.files(root.file('game/build/classes/kotlin/main'), root.fileTree('game/build/install/game/lib') { include '*.jar' }).asPath
+            root.exec { commandLine new File(System.getProperty('java.home'), 'bin/javac.exe').path, '-cp', cp, '-d', out.path, root.file('docs/dmm2-research/Dmm2PreflightRunner.java').path }
+            def manifest = new groovy.json.JsonSlurper().parse(root.file('build/dmm2/cache-plan/commands.json'))
+            def results = []
+            def previousFile = root.file('docs/dmm2-research/preflight-output/results.json')
+            def previous = previousFile.exists() ? new groovy.json.JsonSlurper().parse(previousFile) : []
+            def executeStep = { step ->
+                def log = root.file('docs/dmm2-research/preflight-output/' + step.name + '.txt')
+                def done = previous.find { it.name == step.name && (it.exit == 0 || root.hasProperty('dmm2RetainLimitations')) }
+                // Resume the interrupted round only against the identical proven-unchanged snapshot.
+                if (root.hasProperty('dmm2Resume') && done && log.exists()) {
+                    results.add(done)
+                    println '[DMM2 PLAN] ' + step.name + ' retained (completed dry-run exit=' + done.exit + ')'
+                    return
+                }
+                log.parentFile.mkdirs()
+                println '[DMM2 PLAN] ' + step.name + ' (copy only; no apply)'
+                def rc
+                log.withOutputStream { stream ->
+                    rc = root.exec {
+                        commandLine new File(System.getProperty('java.home'), 'bin/java.exe').path, '-Xmx768m', '-Drsps.root=' + sandbox.path,
+                            '-Drsps.data=' + new File(sandbox, 'game/game/data').path, '-cp', out.path + File.pathSeparator + cp,
+                            'Dmm2PreflightRunner', step.kind, step.ids, sandbox.path
+                        environment 'RSPS_OSRS_SOURCE_CACHE', 'C:/RSPS/import-source/openrs2-2686/cache'
+                        environment 'RSPS_OSRS_SOURCE_TAG', ''
+                        standardOutput = stream; errorOutput = stream; ignoreExitValue = true
+                    }.exitValue
+                }
+                results.add([name:step.name, exit:rc, log:log.name])
+                previousFile.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(results + previous.findAll { old -> !results.any { it.name == old.name } }))
+                println '[DMM2 PLAN] ' + step.name + ' exit=' + rc
+            }
+            manifest.each(executeStep)
+            // The Wisp sidecar must use THIS round's freshly observed skeletal-plan IDs.
+            // Never derive local IDs from a previous checkout's committed evidence during prepare().
+            root.exec { commandLine 'python', root.file('docs/dmm2-research/preflight_round.py').path, 'add-bundles' }
+            def extended = new groovy.json.JsonSlurper().parse(root.file('build/dmm2/cache-plan/commands.json'))
+            extended.findAll { step -> !manifest.any { it.name == step.name } }.each(executeStep)
+            root.file('docs/dmm2-research/preflight-output/results.json').text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(results))
+        }
+    }
+}

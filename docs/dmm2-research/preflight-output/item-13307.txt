@@ -1,0 +1,31 @@
+DRY_RUN_ONLY kind=item upstream=[13307] targets=[C:\RSPS\work\gpt-a\build\dmm2\cache-plan\game\game\data/cache, C:\RSPS\work\gpt-a\build\dmm2\cache-plan/file-server/cache]
+NOTE Blood money (13307) has no upstream noted variant; only the item is imported
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[05:58:06.429 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS proven_free_holes=752 item_candidates=65100 safe_free=64348
+PLAN item 24634 'Blood money count 13308' <- upstream_item:13308 bytes=40 models=[upstream_model:2485->65536]
+  OPCODES 1=65536 2="null" 4=710 5=184 6=2012 7=3 8=0 11=FLAG 12=0x00000001 40=0x011fc003b3
+PLAN item 24635 'Blood money count 13309' <- upstream_item:13309 bytes=40 models=[upstream_model:2486->65537]
+  OPCODES 1=65537 2="null" 4=710 5=184 6=2012 7=3 8=0 11=FLAG 12=0x00000001 40=0x011fc003b3
+PLAN item 24636 'Blood money count 13310' <- upstream_item:13310 bytes=40 models=[upstream_model:2487->65538]
+  OPCODES 1=65538 2="null" 4=710 5=184 6=2012 7=3 8=0 11=FLAG 12=0x00000001 40=0x011fc003b3
+PLAN item 24637 'Blood money count 13311' <- upstream_item:13311 bytes=40 models=[upstream_model:2488->65539]
+  OPCODES 1=65539 2="null" 4=710 5=184 6=2012 7=3 8=0 11=FLAG 12=0x00000001 40=0x011fc003b3
+PLAN item 24638 'Blood money count 13312' <- upstream_item:13312 bytes=40 models=[upstream_model:2667->65540]
+  OPCODES 1=65540 2="null" 4=710 5=184 6=2012 7=3 8=0 11=FLAG 12=0x00000001 40=0x011fc003b3
+PLAN item 24639 'Blood money count 13313' <- upstream_item:13313 bytes=40 models=[upstream_model:2825->65541]
+  OPCODES 1=65541 2="null" 4=710 5=184 6=2012 7=3 8=0 11=FLAG 12=0x00000001 40=0x011fc003b3
+PLAN item 24640 'Blood money count 13314' <- upstream_item:13314 bytes=40 models=[upstream_model:2423->65542]
+  OPCODES 1=65542 2="null" 4=650 5=160 6=2044 7=2 8=65534 11=FLAG 12=0x00000001 40=0x011fc003b3
+PLAN item 24641 'Blood money count 13315' <- upstream_item:13315 bytes=40 models=[upstream_model:2710->65543]
+  OPCODES 1=65543 2="null" 4=980 5=172 6=64 7=11 8=13 11=FLAG 12=0x00000001 40=0x011fc003b3
+PLAN item 24642 'Blood money count 13316' <- upstream_item:13316 bytes=40 models=[upstream_model:2775->65544]
+  OPCODES 1=65544 2="null" 4=1000 5=168 6=80 7=11 8=0 11=FLAG 12=0x00000001 40=0x011fc003b3
+PLAN item 24643 'Blood money' <- upstream_item:13307 bytes=92 models=[upstream_model:2484->65545]
+  OPCODES 1=65545 2="Blood money" 4=710 5=184 6=2012 7=3 8=0 11=FLAG 12=0x00000001 40=0x011fc003b3 100=0x603a0002 101=0x603b0003 102=0x603c0004 103=0x603d0005 104=0x603e0019 105=0x603f0064 106=0x604000fa 107=0x604103e8 108=0x60422710
+  UPSTREAM_PARAMS {}
+TRANSACTION tx-20261117-045813 applied=false finalized=0 recovered=0

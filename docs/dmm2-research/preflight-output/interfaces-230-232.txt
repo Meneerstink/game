@@ -1,0 +1,6 @@
+DRY_RUN_ONLY kind=interface upstream=[230, 232] targets=[C:\RSPS\work\gpt-a\build\dmm2\cache-plan\game\game\data/cache, C:\RSPS\work\gpt-a\build\dmm2\cache-plan/file-server/cache]
+Exception in thread "main" java.lang.IllegalStateException: group 230: OSRS font 645 has no 667 counterpart
+	at gg.rsmod.game.tools.importer.OsrsInterfacePortTool.port$font(OsrsInterfacePortTool.kt:162)
+	at gg.rsmod.game.tools.importer.OsrsInterfacePortTool.port(OsrsInterfacePortTool.kt:230)
+	at gg.rsmod.game.tools.importer.OsrsInterfacePortTool.main(OsrsInterfacePortTool.kt:703)
+	at Dmm2PreflightRunner.main(Dmm2PreflightRunner.java:45)

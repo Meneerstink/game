@@ -1,0 +1,15 @@
+DRY_RUN_ONLY kind=npc upstream=[15570] targets=[C:\RSPS\work\gpt-a\build\dmm2\cache-plan\game\game\data/cache, C:\RSPS\work\gpt-a\build\dmm2\cache-plan/file-server/cache]
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[06:18:11.502 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS npc_model_candidates=65100 next npc=15081 bas=2398 seq=16221 frameset=4574 base=3580 synth=10561
+PLAN npc 15570 'null' -> 15081 bas=2398 models=[24602, 24605, 24606]->[31472, 31466, 31461] heads=[]->[] seqs={6236=15878} ops=[null, null, null, null, null]
+DROPPED model 24602: face z-offsets (not representable in 667)
+DROPPED npc 15570: ambient 30 -> 20 (OSRS additive -> 667 multiplicative lighting)
+DROPPED npc 15570: category 1540
+DROPPED npc 15570: params (2)
+PREFLIGHT transaction=tx-20261117-051819 mutations=5 outcomes={NO_OP=6, CREATE=4}
+DRY_RUN records=2

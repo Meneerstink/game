@@ -1,0 +1,310 @@
+DRY_RUN_ONLY kind=item upstream=[13307, 13317, 13318, 13319, 13660, 22331, 22333, 22335, 26149, 28531, 28534, 28537, 28540, 28543, 28545, 28547, 28549, 28561, 28567, 29599, 29602, 29605, 29607, 29609, 29611, 29613, 29615, 29617, 29619, 29622, 29625, 29628, 33012, 33015, 33018, 33021, 33023, 33025, 33027, 33029, 33031, 33033, 33035, 33036, 33041, 33050, 33063, 33122, 34422, 34425, 13658] targets=[C:\RSPS\work\gpt-a\build\dmm2\cache-plan\game\game\data/cache, C:\RSPS\work\gpt-a\build\dmm2\cache-plan/file-server/cache]
+NOTE Blood money (13307) has no upstream noted variant; only the item is imported
+NOTE Deadman's chest (13317) has no upstream noted variant; only the item is imported
+NOTE Deadman's legs (13318) has no upstream noted variant; only the item is imported
+NOTE Deadman's cape (13319) has no upstream noted variant; only the item is imported
+NOTE Chronicle (13660) has no upstream noted variant; only the item is imported
+NOTE Starter sword (22331) has no upstream noted variant; only the item is imported
+NOTE Starter bow (22333) has no upstream noted variant; only the item is imported
+NOTE Starter staff (22335) has no upstream noted variant; only the item is imported
+NOTE Tuna (26149) has no upstream noted variant; only the item is imported
+NOTE Corrupted scythe of vitur (28543) has no upstream noted variant; only the item is imported
+NOTE Corrupted tumeken's shadow (28547) has no upstream noted variant; only the item is imported
+NOTE Armadyl godsword (Deadman) (29605) has no upstream noted variant; only the item is imported
+NOTE Voidwaker (Deadman) (29607) has no upstream noted variant; only the item is imported
+NOTE Volatile Nightmare staff (Deadman) (29609) has no upstream noted variant; only the item is imported
+NOTE Dark bow (Deadman) (29611) has no upstream noted variant; only the item is imported
+NOTE Imbued Zamorak cape (Deadman) (29613) has no upstream noted variant; only the item is imported
+NOTE Imbued Guthix cape (Deadman) (29615) has no upstream noted variant; only the item is imported
+NOTE Imbued Saradomin cape (Deadman) (29617) has no upstream noted variant; only the item is imported
+NOTE Bow of Faerdhinen (c) (33021) has no upstream noted variant; only the item is imported
+NOTE Crystal body (33023) has no upstream noted variant; only the item is imported
+NOTE Crystal body (inactive) (33025) has no upstream noted variant; only the item is imported
+NOTE Crystal legs (33027) has no upstream noted variant; only the item is imported
+NOTE Crystal legs (inactive) (33029) has no upstream noted variant; only the item is imported
+NOTE Crystal helm (33031) has no upstream noted variant; only the item is imported
+NOTE Crystal helm (inactive) (33033) has no upstream noted variant; only the item is imported
+NOTE Toxic staff (uncharged) (33035) has no upstream noted variant; only the item is imported
+NOTE Toxic staff (Deadman) (33036) has no upstream noted variant; only the item is imported
+NOTE Starter cape (33063) has no upstream noted variant; only the item is imported
+NOTE Annihilation exit portal blueprints (33122) has no upstream noted variant; only the item is imported
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[06:22:25.235 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS proven_free_holes=752 item_candidates=65100 safe_free=64348
+PLAN item 24634 'Blood money count 13308' <- upstream_item:13308 bytes=40 models=[upstream_model:2485->65536]
+  OPCODES 1=65536 2="null" 4=710 5=184 6=2012 7=3 8=0 11=FLAG 12=0x00000001 40=0x011fc003b3
+PLAN item 24635 'Blood money count 13309' <- upstream_item:13309 bytes=40 models=[upstream_model:2486->65537]
+  OPCODES 1=65537 2="null" 4=710 5=184 6=2012 7=3 8=0 11=FLAG 12=0x00000001 40=0x011fc003b3
+PLAN item 24636 'Blood money count 13310' <- upstream_item:13310 bytes=40 models=[upstream_model:2487->65538]
+  OPCODES 1=65538 2="null" 4=710 5=184 6=2012 7=3 8=0 11=FLAG 12=0x00000001 40=0x011fc003b3
+PLAN item 24637 'Blood money count 13311' <- upstream_item:13311 bytes=40 models=[upstream_model:2488->65539]
+  OPCODES 1=65539 2="null" 4=710 5=184 6=2012 7=3 8=0 11=FLAG 12=0x00000001 40=0x011fc003b3
+PLAN item 24638 'Blood money count 13312' <- upstream_item:13312 bytes=40 models=[upstream_model:2667->65540]
+  OPCODES 1=65540 2="null" 4=710 5=184 6=2012 7=3 8=0 11=FLAG 12=0x00000001 40=0x011fc003b3
+PLAN item 24639 'Blood money count 13313' <- upstream_item:13313 bytes=40 models=[upstream_model:2825->65541]
+  OPCODES 1=65541 2="null" 4=710 5=184 6=2012 7=3 8=0 11=FLAG 12=0x00000001 40=0x011fc003b3
+PLAN item 24640 'Blood money count 13314' <- upstream_item:13314 bytes=40 models=[upstream_model:2423->65542]
+  OPCODES 1=65542 2="null" 4=650 5=160 6=2044 7=2 8=65534 11=FLAG 12=0x00000001 40=0x011fc003b3
+PLAN item 24641 'Blood money count 13315' <- upstream_item:13315 bytes=40 models=[upstream_model:2710->65543]
+  OPCODES 1=65543 2="null" 4=980 5=172 6=64 7=11 8=13 11=FLAG 12=0x00000001 40=0x011fc003b3
+PLAN item 24642 'Blood money count 13316' <- upstream_item:13316 bytes=40 models=[upstream_model:2775->65544]
+  OPCODES 1=65544 2="null" 4=1000 5=168 6=80 7=11 8=0 11=FLAG 12=0x00000001 40=0x011fc003b3
+PLAN item 24643 'Blood money' <- upstream_item:13307 bytes=92 models=[upstream_model:2484->65545]
+  OPCODES 1=65545 2="Blood money" 4=710 5=184 6=2012 7=3 8=0 11=FLAG 12=0x00000001 40=0x011fc003b3 100=0x603a0002 101=0x603b0003 102=0x603c0004 103=0x603d0005 104=0x603e0019 105=0x603f0064 106=0x604000fa 107=0x604103e8 108=0x60422710
+  UPSTREAM_PARAMS {}
+PLAN item 24644 'Deadman's chest' <- upstream_item:13317 bytes=94 models=[upstream_model:29749->65546, upstream_model:29637->65547, upstream_model:29636->65548, upstream_model:29745->65549, upstream_model:29744->65550, upstream_model:151->29538]
+  OPCODES 1=65546 2="Deadman's chest" 4=1158 5=488 6=0 7=65535 8=7 12=0x00000001 23=65547 24=65548 25=65549 26=65550 78=29538 36="Wear" 39="Destroy" 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {0=0, 1=0, 2=0, 3=0, 4=0, 5=21, 6=20, 7=12, 8=3, 9=20, 11=0}
+PLAN item 24645 'Deadman's legs' <- upstream_item:13318 bytes=78 models=[upstream_model:29752->65551, upstream_model:29020->65552, upstream_model:29743->65553]
+  OPCODES 1=65551 2="Deadman's legs" 4=1740 5=444 6=0 7=0 8=12 12=0x00000001 23=65552 25=65553 36="Wear" 39="Destroy" 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {0=0, 1=0, 2=0, 3=0, 4=0, 5=11, 6=10, 7=10, 8=2, 9=10, 11=0}
+PLAN item 24646 'Deadman's cape' <- upstream_item:13319 bytes=78 models=[upstream_model:29748->65554, upstream_model:29633->65555, upstream_model:29725->65556]
+  OPCODES 1=65554 2="Deadman's cape" 4=1537 5=292 6=1245 7=7 8=37 12=0x00000002 23=65555 25=65556 36="Wear" 39="Destroy" 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {0=0, 1=0, 2=0, 3=0, 4=0, 5=0, 6=1, 7=1, 8=0, 9=2, 10=0, 11=0, 13=0, 14=0}
+PLAN item 24647 'Chronicle' <- upstream_item:13660 bytes=146 models=[upstream_model:31245->65557, upstream_model:31193->65558, upstream_model:31194->65559]
+  OPCODES 1=65557 2="Chronicle" 4=830 5=332 6=69 7=1 8=65532 12=0x000000c8 23=65558 25=65559 36="Wield" 37="Teleport" 38="Check charges" 39="Destroy" 40=0x03139a0067003d2ba9286f003d 127=0x02002d 129=0x010033 249=0x0201000210436865636b2043686172676573000100021154656c65706f727400
+  UPSTREAM_PARAMS {295=1, 451=Check Charges, 452=Teleport}
+PLAN item 24648 'Starter sword' <- upstream_item:22331 bytes=92 models=[upstream_model:49503->65560, upstream_model:49484->65561, upstream_model:49483->65562]
+  OPCODES 1=65560 2="Starter sword" 4=1040 5=352 6=1185 7=65534 8=65535 12=0x00000001 23=65561 25=65562 36="Wield" 39="Destroy" 40=0x03003d2b392bc0005013920050 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {0=5, 1=21, 2=-2, 6=1, 10=20, 14=4, 295=1}
+PLAN item 24649 'Starter bow' <- upstream_item:22333 bytes=105 models=[upstream_model:49505->65563, upstream_model:49486->65564, upstream_model:49482->65565]
+  OPCODES 1=65563 2="Starter bow" 4=1316 5=508 6=124 7=11 8=65533 12=0x00000001 23=65564 25=65565 36="Wield" 37="Check" 39="Destroy" 40=0x021a122b39003d0050 127=0x02002d 129=0x010033 249=0x0101000210436865636b00
+  UPSTREAM_PARAMS {4=20, 12=7, 13=7, 14=4, 295=1, 451=Check}
+PLAN item 24650 'Starter staff' <- upstream_item:22335 bytes=106 models=[upstream_model:49504->65566, upstream_model:49481->65567, upstream_model:49485->65568]
+  OPCODES 1=65566 2="Starter staff" 4=1316 5=790 6=1172 95=117 7=1 8=65533 12=0x00000001 23=65567 25=65568 36="Wield" 37="Check" 39="Destroy" 40=0x011ba12b39 127=0x02002d 129=0x010033 249=0x0101000210436865636b00
+  UPSTREAM_PARAMS {3=10, 5=2, 6=3, 7=1, 8=10, 13=6, 14=5, 295=1, 451=Check}
+PLAN item 24651 'Tuna' <- upstream_item:26149 bytes=49 models=[upstream_model:2355->66609]
+  OPCODES 1=66609 2="Tuna" 4=1340 5=464 6=1920 7=0 8=3 12=0x00000001 16=FLAG 35="Eat" 40=0x02003d04bb006704ca
+  UPSTREAM_PARAMS {}
+PLAN item 24652 'Corrupted voidwaker' <- upstream_item:28531 bytes=80 models=[upstream_model:49500->65569, upstream_model:49472->65570, upstream_model:49471->65571]
+  OPCODES 1=65569 2="Corrupted voidwaker" 4=1723 5=539 6=678 7=1 8=65535 12=0x0003d090 16=FLAG 23=65570 25=65571 36="Wield" 65=FLAG 97=24653 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {0=70, 1=80, 2=-2, 3=5, 4=0, 5=0, 6=1, 7=0, 8=2, 9=0, 10=68, 11=0, 13=0, 14=4, 434=0, 436=65, 568=3, 1564=3}
+PLAN item 24653 'Corrupted voidwaker (noted)' <- upstream_item:28532 bytes=7 models=[]
+  OPCODES 97=24652 98=799
+PLAN item 24654 'Corrupted dragon claws' <- upstream_item:28534 bytes=83 models=[upstream_model:49496->65572, upstream_model:49468->65573, upstream_model:49467->65574]
+  OPCODES 1=65572 2="Corrupted dragon claws" 4=886 5=349 6=15 7=65535 8=8 12=0x0003d090 16=FLAG 23=65573 25=65574 36="Wield" 65=FLAG 97=24655 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {0=41, 1=57, 2=-4, 5=13, 6=26, 7=7, 10=48, 14=4, 434=0, 436=40, 568=3, 1564=3}
+PLAN item 24655 'Corrupted dragon claws (noted)' <- upstream_item:28535 bytes=7 models=[]
+  OPCODES 97=24654 98=799
+PLAN item 24656 'Corrupted armadyl godsword' <- upstream_item:28537 bytes=91 models=[upstream_model:49502->65575, upstream_model:49469->65576, upstream_model:49470->65577]
+  OPCODES 1=65575 2="Corrupted armadyl godsword" 4=1957 5=498 6=484 7=65535 8=65535 12=0x0003d090 16=FLAG 23=65576 25=65577 36="Wield" 65=FLAG 97=24657 125=0x000200 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {0=0, 1=132, 2=80, 3=0, 4=0, 5=0, 6=0, 7=0, 8=0, 9=0, 10=112, 11=7, 13=0, 14=6, 434=0, 436=65, 568=3, 1564=3}
+PLAN item 24657 'Corrupted armadyl godsword (noted)' <- upstream_item:28538 bytes=7 models=[]
+  OPCODES 97=24656 98=799
+PLAN item 24658 'Corrupted twisted bow' <- upstream_item:28540 bytes=82 models=[upstream_model:49499->65578, upstream_model:49473->65579, upstream_model:49474->65580]
+  OPCODES 1=65578 2="Corrupted twisted bow" 4=2000 5=720 6=1500 7=65533 8=1 12=0x0003d090 16=FLAG 23=65579 25=65580 36="Wield" 65=FLAG 97=24659 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {4=70, 11=0, 13=10, 14=6, 23=70, 189=5, 434=4, 436=70, 568=3, 1562=3, 1563=70, 1564=3}
+PLAN item 24659 'Corrupted twisted bow (noted)' <- upstream_item:28541 bytes=7 models=[]
+  OPCODES 97=24658 98=799
+PLAN item 24660 'Corrupted scythe of vitur' <- upstream_item:28543 bytes=111 models=[upstream_model:49497->65581, upstream_model:49478->65582, upstream_model:49476->65583]
+  OPCODES 1=65581 2="Corrupted scythe of vitur" 4=2105 5=327 6=23 7=1 8=17 12=0x0003d090 16=FLAG 23=65582 25=65583 36="Wield" 37="Check" 38="Uncharge" 127=0x02002d 129=0x010033 249=0x0101000210436865636b00
+  UPSTREAM_PARAMS {0=70, 1=125, 2=30, 3=-6, 4=0, 5=-2, 6=8, 7=10, 8=0, 9=0, 10=64, 11=0, 13=0, 14=5, 434=0, 435=2, 436=60, 437=70, 451=Check, 568=3, 1564=3}
+PLAN item 24661 'Corrupted scythe of vitur (uncharged)' <- upstream_item:28545 bytes=98 models=[upstream_model:49501->65584, upstream_model:49475->65585, upstream_model:49477->65586]
+  OPCODES 1=65584 2="Corrupted scythe of vitur (uncharged)" 4=2105 5=327 6=23 7=1 8=17 12=0x0003d090 16=FLAG 23=65585 25=65586 36="Wield" 65=FLAG 97=24662 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {0=50, 1=75, 2=10, 3=-6, 4=0, 5=-2, 6=6, 7=0, 8=0, 9=0, 10=43, 11=0, 13=0, 14=5, 568=3}
+PLAN item 24662 'Corrupted scythe of vitur (uncharged) (noted)' <- upstream_item:28546 bytes=7 models=[]
+  OPCODES 97=24661 98=799
+PLAN item 24663 'Corrupted tumeken's shadow' <- upstream_item:28547 bytes=123 models=[upstream_model:49498->65587, upstream_model:49479->65588, upstream_model:49480->65589]
+  OPCODES 1=65587 2="Corrupted tumeken's shadow" 4=1960 5=465 6=1481 95=290 7=65525 8=16 12=0x0003d090 16=FLAG 23=65588 25=65589 36="Wield" 37="Check" 38="Charge" 39="Uncharge" 127=0x02002d 129=0x010033 249=0x0101000210436865636b00
+  UPSTREAM_PARAMS {3=35, 8=20, 11=1, 13=8, 14=5, 434=6, 436=75, 451=Check, 568=3, 2257=4329}
+PLAN item 24664 'Corrupted tumeken's shadow (uncharged)' <- upstream_item:28549 bytes=110 models=[upstream_model:49498->65587, upstream_model:49479->65588, upstream_model:49480->65589]
+  OPCODES 1=65587 2="Corrupted tumeken's shadow (uncharged)" 4=1960 5=465 6=1481 95=290 7=65525 8=16 12=0x0003d090 16=FLAG 23=65588 25=65589 36="Wield" 37="Charge" 65=FLAG 97=24665 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {3=35, 8=20, 11=1, 13=8, 14=5, 434=6, 436=75, 568=3}
+PLAN item 24665 'Corrupted tumeken's shadow (uncharged) (noted)' <- upstream_item:28550 bytes=7 models=[]
+  OPCODES 97=24664 98=799
+PLAN item 24666 'Trinket of vengeance' <- upstream_item:28561 bytes=57 models=[upstream_model:49495->63903]
+  OPCODES 1=63903 2="Trinket of vengeance" 4=1414 5=324 6=95 7=0 8=16 12=0x000186a0 16=FLAG 35="Cast" 65=FLAG 97=24667
+  UPSTREAM_PARAMS {568=1}
+PLAN item 24667 'Trinket of vengeance (noted)' <- upstream_item:28562 bytes=7 models=[]
+  OPCODES 97=24666 98=799
+PLAN item 24668 'Trinket of advanced weaponry' <- upstream_item:28567 bytes=68 models=[upstream_model:49493->65590]
+  OPCODES 1=65590 2="Trinket of advanced weaponry" 4=1414 5=324 6=95 7=0 8=16 12=0x000186a0 16=FLAG 35="Open" 65=FLAG 97=24669
+  UPSTREAM_PARAMS {568=3}
+PLAN item 24669 'Trinket of advanced weaponry (noted)' <- upstream_item:28568 bytes=7 models=[]
+  OPCODES 97=24668 98=799
+PLAN item 24670 'Corrupted dark bow' <- upstream_item:29599 bytes=79 models=[upstream_model:54205->65591, upstream_model:54213->65592, upstream_model:54212->65593]
+  OPCODES 1=65591 2="Corrupted dark bow" 4=2128 5=591 6=1034 7=0 8=0 12=0x0003d090 16=FLAG 23=65592 25=65593 36="Wield" 65=FLAG 97=24671 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {4=89, 13=6, 14=7, 23=60, 434=4, 436=50, 568=3, 1562=3, 1563=60, 1564=3}
+PLAN item 24671 'Corrupted dark bow (noted)' <- upstream_item:29600 bytes=7 models=[]
+  OPCODES 97=24670 98=799
+PLAN item 24672 'Corrupted Volatile Nightmare staff' <- upstream_item:29602 bytes=95 models=[upstream_model:54204->65594, upstream_model:54210->65595, upstream_model:54214->65596]
+  OPCODES 1=65594 2="Corrupted Volatile Nightmare staff" 4=2064 5=404 6=1050 7=65531 8=13 12=0x0003d090 16=FLAG 23=65595 25=65596 36="Wield" 65=FLAG 97=24673 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {3=16, 8=14, 14=5, 299=150, 434=6, 435=3, 436=50, 437=20, 568=3, 603=1, 1564=3}
+PLAN item 24673 'Corrupted Volatile Nightmare staff (noted)' <- upstream_item:29603 bytes=7 models=[]
+  OPCODES 97=24672 98=799
+PLAN item 24674 'Armadyl godsword (Deadman)' <- upstream_item:29605 bytes=87 models=[upstream_model:49502->65575, upstream_model:49469->65576, upstream_model:49470->65577]
+  OPCODES 1=65575 2="Armadyl godsword (Deadman)" 4=1957 5=498 6=484 7=65535 8=65535 12=0x001312d0 16=FLAG 23=65576 25=65577 36="Wield" 125=0x000200 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {0=0, 1=132, 2=80, 3=0, 4=0, 5=0, 6=0, 7=0, 8=0, 9=0, 10=132, 11=8, 13=0, 14=6, 434=0, 436=75, 1564=3}
+PLAN item 24675 'Voidwaker (Deadman)' <- upstream_item:29607 bytes=76 models=[upstream_model:49500->65569, upstream_model:49472->65570, upstream_model:49471->65571]
+  OPCODES 1=65569 2="Voidwaker (Deadman)" 4=1723 5=539 6=678 7=1 8=65535 12=0x001e8480 16=FLAG 23=65570 25=65571 36="Wield" 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {0=70, 1=80, 2=-2, 3=5, 4=0, 5=0, 6=1, 7=0, 8=2, 9=0, 10=80, 11=0, 13=0, 14=4, 434=0, 436=75, 1564=3}
+PLAN item 24676 'Volatile Nightmare staff (Deadman)' <- upstream_item:29609 bytes=91 models=[upstream_model:54204->65594, upstream_model:54210->65595, upstream_model:54214->65596]
+  OPCODES 1=65594 2="Volatile Nightmare staff (Deadman)" 4=2064 5=404 6=1050 7=65531 8=13 12=0x004630c0 16=FLAG 23=65595 25=65596 36="Wield" 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {3=16, 8=14, 14=5, 299=150, 434=6, 435=3, 436=82, 437=50, 603=1, 1564=3}
+PLAN item 24677 'Dark bow (Deadman)' <- upstream_item:29611 bytes=79 models=[upstream_model:54205->65591, upstream_model:54213->65592, upstream_model:54212->65593]
+  OPCODES 1=65591 2="Dark bow (Deadman)" 4=2128 5=591 6=1034 7=0 8=0 12=0x0001d4c2 16=FLAG 23=65592 25=65593 36="Wield" 126=0x000600 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {4=95, 13=10, 14=9, 23=60, 434=4, 436=60, 1562=3, 1563=60, 1564=3}
+PLAN item 24678 'Imbued Zamorak cape (Deadman)' <- upstream_item:29613 bytes=95 models=[upstream_model:54203->65597, upstream_model:54216->65598, upstream_model:54215->65599]
+  OPCODES 1=65597 2="Imbued Zamorak cape (Deadman)" 4=2039 5=471 6=1273 7=3 8=6 12=0x00013880 16=FLAG 23=65598 25=65599 36="Wear" 40=0x0202b1074402b10744 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {3=15, 5=3, 6=3, 7=3, 8=15, 9=0, 41=1, 295=1, 299=20, 434=6, 436=75, 1564=1}
+PLAN item 24679 'Imbued Guthix cape (Deadman)' <- upstream_item:29615 bytes=130 models=[upstream_model:54203->65597, upstream_model:54216->65598, upstream_model:54215->65599]
+  OPCODES 1=65597 2="Imbued Guthix cape (Deadman)" 4=2039 5=471 6=1273 7=3 8=6 12=0x00013880 16=FLAG 23=65598 25=65599 36="Wear" 40=0x0b02b163a502b563a9012b5d2902b163a502b563a902985e9a01125512012b5d2900255425001a541a0012541a 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {3=15, 5=3, 6=3, 7=3, 8=15, 9=0, 42=1, 295=1, 299=20, 434=6, 436=75, 1564=1}
+PLAN item 24680 'Imbued Saradomin cape (Deadman)' <- upstream_item:29617 bytes=133 models=[upstream_model:54203->65597, upstream_model:54216->65598, upstream_model:54215->65599]
+  OPCODES 1=65597 2="Imbued Saradomin cape (Deadman)" 4=2039 5=471 6=1273 7=3 8=6 12=0x00013880 16=FLAG 23=65598 25=65599 36="Wear" 40=0x0b02b1a2c602b5a2ce012ba12902b1a2c602b5a2ce0298a1290112a118012ba1290025a8250021a81a0012a812 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {3=15, 5=3, 6=3, 7=3, 8=15, 9=0, 40=1, 295=1, 299=20, 434=6, 436=75, 1564=1}
+PLAN item 24681 'Armageddon rug' <- upstream_item:29619 bytes=50 models=[upstream_model:54208->65600]
+  OPCODES 1=65600 2="Armageddon rug" 4=2086 5=332 6=1290 7=65528 8=0 12=0x000061a8 16=FLAG 65=FLAG 97=24682 113=0x09
+  UPSTREAM_PARAMS {295=1}
+PLAN item 24682 'Armageddon rug (noted)' <- upstream_item:29620 bytes=7 models=[]
+  OPCODES 97=24681 98=799
+PLAN item 24683 'Armageddon teleport scroll' <- upstream_item:29622 bytes=84 models=[upstream_model:54206->65601, upstream_model:54211->65602]
+  OPCODES 1=65601 2="Armageddon teleport scroll" 4=1118 5=589 6=505 7=0 8=1 12=0x000061a8 16=FLAG 23=65602 25=65602 35="Read" 65=FLAG 97=24684 113=0x09 126=0x000600
+  UPSTREAM_PARAMS {295=1}
+PLAN item 24684 'Armageddon teleport scroll (noted)' <- upstream_item:29623 bytes=7 models=[]
+  OPCODES 97=24683 98=799
+PLAN item 24685 'Armageddon weapon scroll' <- upstream_item:29625 bytes=71 models=[upstream_model:54207->65603]
+  OPCODES 1=65603 2="Armageddon weapon scroll" 4=1738 5=388 6=1978 95=1953 7=65535 8=6 12=0x000061a8 16=FLAG 35="Read" 65=FLAG 97=24686 113=0x0c 114=0x0a
+  UPSTREAM_PARAMS {295=1}
+PLAN item 24686 'Armageddon weapon scroll (noted)' <- upstream_item:29626 bytes=7 models=[]
+  OPCODES 97=24685 98=799
+PLAN item 24687 'Armageddon cape fabric' <- upstream_item:29628 bytes=62 models=[upstream_model:54201->65604]
+  OPCODES 1=65604 2="Armageddon cape fabric" 4=1360 5=576 6=90 7=1 8=6 12=0x000061a8 16=FLAG 35="Read" 65=FLAG 97=24688
+  UPSTREAM_PARAMS {295=1}
+PLAN item 24688 'Armageddon cape fabric (noted)' <- upstream_item:29629 bytes=7 models=[]
+  OPCODES 97=24687 98=799
+PLAN item 24689 'Annihilation weapon scroll' <- upstream_item:33012 bytes=73 models=[upstream_model:54207->65603]
+  OPCODES 1=65603 2="Annihilation weapon scroll" 4=1738 5=388 6=1978 95=1953 7=65535 8=6 12=0x000061a8 16=FLAG 35="Read" 65=FLAG 97=24690 113=0x0c 114=0x0a
+  UPSTREAM_PARAMS {295=1}
+PLAN item 24690 'Annihilation weapon scroll (noted)' <- upstream_item:33013 bytes=7 models=[]
+  OPCODES 97=24689 98=799
+PLAN item 24691 'Annihilation blueprints' <- upstream_item:33015 bytes=63 models=[upstream_model:28470->65605]
+  OPCODES 1=65605 2="Annihilation blueprints" 4=2184 5=364 6=1454 7=0 8=0 12=0x000061a8 16=FLAG 35="Read" 65=FLAG 97=24692
+  UPSTREAM_PARAMS {295=1}
+PLAN item 24692 'Annihilation blueprints (noted)' <- upstream_item:33016 bytes=7 models=[]
+  OPCODES 97=24691 98=799
+PLAN item 24693 'Annihilation teleport scroll' <- upstream_item:33018 bytes=86 models=[upstream_model:54206->65601, upstream_model:54211->65602]
+  OPCODES 1=65601 2="Annihilation teleport scroll" 4=1118 5=589 6=505 7=0 8=1 12=0x000061a8 16=FLAG 23=65602 25=65602 35="Read" 65=FLAG 97=24694 113=0x09 126=0x000600
+  UPSTREAM_PARAMS {295=1}
+PLAN item 24694 'Annihilation teleport scroll (noted)' <- upstream_item:33019 bytes=7 models=[]
+  OPCODES 97=24693 98=799
+PLAN item 24695 'Bow of Faerdhinen (c)' <- upstream_item:33021 bytes=88 models=[upstream_model:28476->65606, upstream_model:59942->65607, upstream_model:59943->65608]
+  OPCODES 1=65606 2="Bow of Faerdhinen (c)" 4=2000 5=561 6=15 7=65535 8=4 12=0x004c4b40 16=FLAG 23=65607 25=65608 36="Wield" 38="Uncharge" 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {4=128, 12=106, 13=10, 14=5, 23=80, 258=20, 434=4, 435=16, 436=80, 437=70}
+PLAN item 24696 'Crystal body' <- upstream_item:33023 bytes=98 models=[upstream_model:59961->65609, upstream_model:59940->65610, upstream_model:59954->65611, upstream_model:151->29538]
+  OPCODES 1=65609 2="Crystal body" 4=1284 5=488 6=0 7=65535 8=5 12=0x0016e360 16=FLAG 23=65610 25=65611 24=29538 36="Wear" 37="Check" 38="Revert" 127=0x02002d 129=0x010033 249=0x0101000210436865636b00
+  UPSTREAM_PARAMS {0=0, 1=0, 2=0, 3=-18, 4=31, 5=46, 6=38, 7=48, 8=44, 9=68, 11=3, 434=1, 435=16, 436=70, 437=50, 451=Check, 1564=4, 2257=4337}
+PLAN item 24697 'Crystal body (inactive)' <- upstream_item:33025 bytes=92 models=[upstream_model:59962->65612, upstream_model:59941->65613, upstream_model:59955->65614, upstream_model:151->29538]
+  OPCODES 1=65612 2="Crystal body (inactive)" 4=1284 5=488 6=0 7=65535 8=5 12=0x0016e360 16=FLAG 23=65613 25=65614 24=29538 36="Wear" 38="Revert" 113=0xee 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {0=0, 1=0, 2=0, 3=0, 4=0, 5=0, 6=0, 7=0, 8=0, 9=0, 11=0}
+PLAN item 24698 'Crystal legs' <- upstream_item:33027 bytes=95 models=[upstream_model:59959->65615, upstream_model:59938->65616, upstream_model:59952->65617]
+  OPCODES 1=65615 2="Crystal legs" 4=2168 5=444 6=0 7=0 8=0 12=0x000f4240 16=FLAG 23=65616 25=65617 36="Wear" 37="Check" 38="Revert" 127=0x02002d 129=0x010033 249=0x0101000210436865636b00
+  UPSTREAM_PARAMS {0=0, 1=0, 2=0, 3=-12, 4=18, 5=26, 6=21, 7=30, 8=34, 9=38, 11=2, 434=1, 435=16, 436=70, 437=50, 451=Check, 1564=7, 2257=4337}
+PLAN item 24699 'Crystal legs (inactive)' <- upstream_item:33029 bytes=89 models=[upstream_model:59960->65618, upstream_model:59939->65619, upstream_model:59953->65620]
+  OPCODES 1=65618 2="Crystal legs (inactive)" 4=2168 5=444 6=0 7=0 8=0 12=0x000f4240 16=FLAG 23=65619 25=65620 36="Wear" 38="Revert" 113=0xee 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {0=0, 1=0, 2=0, 3=0, 4=0, 5=0, 6=0, 7=0, 8=0, 9=0, 11=0}
+PLAN item 24700 'Crystal helm' <- upstream_item:33031 bytes=110 models=[upstream_model:59957->65621, upstream_model:59935->65622, upstream_model:59949->65623, upstream_model:59930->65624, upstream_model:59932->65625]
+  OPCODES 1=65621 2="Crystal helm" 4=716 5=157 6=103 95=13 7=0 8=3 12=0x0007a120 16=FLAG 23=65622 25=65623 90=65624 91=65625 36="Wear" 37="Check" 38="Revert" 127=0x02002d 129=0x010033 249=0x0101000210436865636b00
+  UPSTREAM_PARAMS {0=0, 1=0, 2=0, 3=-10, 4=9, 5=12, 6=8, 7=14, 8=10, 9=18, 11=2, 434=1, 435=16, 436=70, 437=50, 451=Check, 1564=0, 2257=4337}
+PLAN item 24701 'Crystal helm (inactive)' <- upstream_item:33033 bytes=104 models=[upstream_model:59958->65626, upstream_model:59936->65627, upstream_model:59950->65628, upstream_model:59931->65629, upstream_model:59933->65630]
+  OPCODES 1=65626 2="Crystal helm (inactive)" 4=716 5=157 6=103 95=13 7=0 8=3 12=0x0007a120 16=FLAG 23=65627 25=65628 90=65629 91=65630 36="Wear" 38="Revert" 113=0xee 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {0=0, 1=0, 2=0, 3=0, 4=0, 5=0, 6=0, 7=0, 8=0, 9=0, 11=0}
+PLAN item 24702 'Toxic staff (uncharged)' <- upstream_item:33035 bytes=89 models=[upstream_model:28897->65631, upstream_model:59946->65632, upstream_model:59947->65633]
+  OPCODES 1=65631 2="Toxic staff (uncharged)" 4=2150 5=512 6=1010 95=229 7=0 8=0 12=0x000f4246 16=FLAG 23=65632 25=65633 36="Wield" 40=0x01443b55bb 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {0=55, 1=70, 3=17, 6=3, 7=3, 8=17, 10=72, 41=1, 299=150, 434=0, 435=6, 436=75, 437=75, 1737=1}
+PLAN item 24703 'Toxic staff (Deadman)' <- upstream_item:33036 bytes=116 models=[upstream_model:41576->65634, upstream_model:59944->65635, upstream_model:59945->65636]
+  OPCODES 1=65634 2="Toxic staff (Deadman)" 4=2150 5=512 6=1010 95=229 7=0 8=0 12=0x000f4246 16=FLAG 23=65635 25=65636 36="Wield" 37="Check" 39="Uncharge" 40=0x01443b55bb 127=0x02002d 129=0x010033 249=0x0101000210436865636b00
+  UPSTREAM_PARAMS {0=55, 1=70, 3=25, 6=3, 7=3, 8=17, 10=72, 41=1, 299=150, 346=1, 434=0, 435=6, 436=75, 437=75, 451=Check, 1564=3, 1737=1, 2257=4334}
+PLAN item 24704 'Thunder khopesh' <- upstream_item:33041 bytes=102 models=[upstream_model:55637->65637, upstream_model:55757->65638, upstream_model:55756->65639]
+  OPCODES 1=65637 2="Thunder khopesh" 4=1809 5=613 6=2020 95=34 7=2 8=3 12=0x000f4240 16=FLAG 23=65638 25=65639 36="Wield" 37="Inspect" 40=0x030021007f0018a8334bd003c8 65=FLAG 97=24705 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {0=65, 1=110, 2=0, 3=0, 4=0, 5=0, 6=0, 7=0, 8=0, 9=0, 10=100, 11=0, 14=4, 434=0, 436=60, 568=1, 701=1}
+PLAN item 24705 'Thunder khopesh (noted)' <- upstream_item:33042 bytes=7 models=[]
+  OPCODES 97=24704 98=799
+PLAN item 24706 'Trinket of fortuity (active)' <- upstream_item:33050 bytes=72 models=[upstream_model:28474->65640]
+  OPCODES 1=65640 2="Trinket of fortuity (active)" 4=1414 5=324 6=95 7=0 8=16 12=0x000186a0 16=FLAG 35="Uncharge" 65=FLAG 97=24707
+  UPSTREAM_PARAMS {568=1}
+PLAN item 24707 'Trinket of fortuity (active) (noted)' <- upstream_item:33051 bytes=7 models=[]
+  OPCODES 97=24706 98=799
+PLAN item 24708 'Starter cape' <- upstream_item:33063 bytes=72 models=[upstream_model:37197->65641, upstream_model:37019->65642, upstream_model:37051->65643]
+  OPCODES 1=65641 2="Starter cape" 4=2130 5=361 6=47 7=3 8=12 12=0x00000001 16=FLAG 23=65642 25=65643 36="Wear" 126=0x000300 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {0=5, 1=5, 2=5, 3=5, 4=5}
+PLAN item 24709 'Annihilation exit portal blueprints' <- upstream_item:33122 bytes=65 models=[upstream_model:28470->65605]
+  OPCODES 1=65605 2="Annihilation exit portal blueprints" 4=2184 5=364 6=1454 7=0 8=0 12=0x00000001 16=FLAG
+  UPSTREAM_PARAMS {295=1}
+PLAN item 24710 'Fire ruby' <- upstream_item:34422 bytes=52 models=[upstream_model:61875->65644]
+  OPCODES 1=65644 2="Fire ruby" 4=780 5=200 6=317 95=1860 7=0 8=65522 12=0x00004e20 16=FLAG 40=0x01007f03a3 65=FLAG 97=24711
+  UPSTREAM_PARAMS {}
+PLAN item 24711 'Fire ruby (noted)' <- upstream_item:34423 bytes=7 models=[]
+  OPCODES 97=24710 98=799
+PLAN item 24712 'Amulet of fire' <- upstream_item:34425 bytes=80 models=[upstream_model:61877->65645, upstream_model:61881->65646, upstream_model:61884->65647]
+  OPCODES 1=65645 2="Amulet of fire" 4=700 5=432 6=133 7=2 8=4 12=0x00005208 16=FLAG 23=65646 25=65647 36="Wear" 40=0x01007f03a3 65=FLAG 97=24713 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {3=10}
+PLAN item 24713 'Amulet of fire (noted)' <- upstream_item:34426 bytes=7 models=[]
+  OPCODES 97=24712 98=799
+PLAN item 24714 'Teleport card' <- upstream_item:13658 bytes=55 models=[upstream_model:31242->65648]
+  OPCODES 1=65648 2="Teleport card" 4=789 5=443 6=0 7=0 8=65535 12=0x00000064 39="Destroy" 65=FLAG 97=24715
+  UPSTREAM_PARAMS {295=1}
+PLAN item 24715 'Teleport card (noted)' <- upstream_item:13659 bytes=7 models=[]
+  OPCODES 97=24714 98=799
+DROPPED model 29745: face z-offsets (not representable in 667)
+DROPPED model 29748: face z-offsets (not representable in 667)
+DROPPED model 29633: face z-offsets (not representable in 667)
+DROPPED model 29725: face z-offsets (not representable in 667)
+DROPPED model 49497: face z-offsets (not representable in 667)
+DROPPED model 49478: face z-offsets (not representable in 667)
+DROPPED model 49476: face z-offsets (not representable in 667)
+DROPPED model 49501: face z-offsets (not representable in 667)
+DROPPED model 49475: face z-offsets (not representable in 667)
+DROPPED model 49477: face z-offsets (not representable in 667)
+DROPPED model 49498: face z-offsets (not representable in 667)
+DROPPED model 49479: face z-offsets (not representable in 667)
+DROPPED model 49480: face z-offsets (not representable in 667)
+DROPPED model 54204: face z-offsets (not representable in 667)
+DROPPED model 54210: face z-offsets (not representable in 667)
+DROPPED model 54214: face z-offsets (not representable in 667)
+DROPPED model 54203: face z-offsets (not representable in 667)
+DROPPED model 54216: face z-offsets (not representable in 667)
+DROPPED model 54215: face z-offsets (not representable in 667)
+DROPPED model 54207: face z-offsets (not representable in 667)
+DROPPED model 28470: face z-offsets (not representable in 667)
+DROPPED model 59952: face z-offsets (not representable in 667)
+DROPPED model 59953: face z-offsets (not representable in 667)
+DROPPED model 59935: face z-offsets (not representable in 667)
+DROPPED model 59949: face z-offsets (not representable in 667)
+DROPPED model 59930: face z-offsets (not representable in 667)
+DROPPED model 59932: face z-offsets (not representable in 667)
+DROPPED model 59936: face z-offsets (not representable in 667)
+DROPPED model 59950: face z-offsets (not representable in 667)
+DROPPED model 59931: face z-offsets (not representable in 667)
+DROPPED model 59933: face z-offsets (not representable in 667)
+DROPPED model 28897: face z-offsets (not representable in 667)
+DROPPED model 59946: face z-offsets (not representable in 667)
+DROPPED model 59947: face z-offsets (not representable in 667)
+DROPPED model 41576: face z-offsets (not representable in 667)
+DROPPED model 59944: face z-offsets (not representable in 667)
+DROPPED model 59945: face z-offsets (not representable in 667)
+DROPPED model 37197: face z-offsets (not representable in 667)
+DROPPED model 37019: face z-offsets (not representable in 667)
+DROPPED model 37051: face z-offsets (not representable in 667)
+DROPPED model 31242: face z-offsets (not representable in 667)
+DROPPED Starter bow: OSRS opcode 160 (meaning unverified) not encoded
+DROPPED Starter staff: OSRS opcode 160 (meaning unverified) not encoded
+DROPPED Corrupted scythe of vitur: OSRS opcode 160 (meaning unverified) not encoded
+DROPPED Corrupted tumeken's shadow: OSRS opcode 160 (meaning unverified) not encoded
+DROPPED Armageddon rug: ambient 15 -> 9 (OSRS additive -> 667 multiplicative lighting)
+DROPPED Armageddon teleport scroll: ambient 15 -> 9 (OSRS additive -> 667 multiplicative lighting)
+DROPPED Armageddon weapon scroll: ambient 20 -> 12 (OSRS additive -> 667 multiplicative lighting)
+DROPPED Annihilation weapon scroll: ambient 20 -> 12 (OSRS additive -> 667 multiplicative lighting)
+DROPPED Annihilation teleport scroll: ambient 15 -> 9 (OSRS additive -> 667 multiplicative lighting)
+DROPPED Crystal body: OSRS opcode 160 (meaning unverified) not encoded
+DROPPED Crystal body (inactive): ambient -30 -> -18 (OSRS additive -> 667 multiplicative lighting)
+DROPPED Crystal legs: OSRS opcode 160 (meaning unverified) not encoded
+DROPPED Crystal legs (inactive): ambient -30 -> -18 (OSRS additive -> 667 multiplicative lighting)
+DROPPED Crystal helm: OSRS opcode 160 (meaning unverified) not encoded
+DROPPED Crystal helm (inactive): ambient -30 -> -18 (OSRS additive -> 667 multiplicative lighting)
+DROPPED Toxic staff (Deadman): OSRS opcode 160 (meaning unverified) not encoded
+TRANSACTION tx-20261117-052247 applied=false finalized=0 recovered=0

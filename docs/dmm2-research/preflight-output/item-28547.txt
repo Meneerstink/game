@@ -1,0 +1,17 @@
+DRY_RUN_ONLY kind=item upstream=[28547] targets=[C:\RSPS\work\gpt-a\build\dmm2\cache-plan\game\game\data/cache, C:\RSPS\work\gpt-a\build\dmm2\cache-plan/file-server/cache]
+NOTE Corrupted tumeken's shadow (28547) has no upstream noted variant; only the item is imported
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[06:03:15.539 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS proven_free_holes=752 item_candidates=65100 safe_free=64348
+PLAN item 24634 'Corrupted tumeken's shadow' <- upstream_item:28547 bytes=123 models=[upstream_model:49498->65536, upstream_model:49479->65537, upstream_model:49480->65538]
+  OPCODES 1=65536 2="Corrupted tumeken's shadow" 4=1960 5=465 6=1481 95=290 7=65525 8=16 12=0x0003d090 16=FLAG 23=65537 25=65538 36="Wield" 37="Check" 38="Charge" 39="Uncharge" 127=0x02002d 129=0x010033 249=0x0101000210436865636b00
+  UPSTREAM_PARAMS {3=35, 8=20, 11=1, 13=8, 14=5, 434=6, 436=75, 451=Check, 568=3, 2257=4329}
+DROPPED model 49498: face z-offsets (not representable in 667)
+DROPPED model 49479: face z-offsets (not representable in 667)
+DROPPED model 49480: face z-offsets (not representable in 667)
+DROPPED Corrupted tumeken's shadow: OSRS opcode 160 (meaning unverified) not encoded
+TRANSACTION tx-20261117-050324 applied=false finalized=0 recovered=0

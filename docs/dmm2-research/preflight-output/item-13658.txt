@@ -1,0 +1,15 @@
+DRY_RUN_ONLY kind=item upstream=[13658] targets=[C:\RSPS\work\gpt-a\build\dmm2\cache-plan\game\game\data/cache, C:\RSPS\work\gpt-a\build\dmm2\cache-plan/file-server/cache]
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[06:16:04.170 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS proven_free_holes=752 item_candidates=65100 safe_free=64348
+PLAN item 24634 'Teleport card' <- upstream_item:13658 bytes=55 models=[upstream_model:31242->65536]
+  OPCODES 1=65536 2="Teleport card" 4=789 5=443 6=0 7=0 8=65535 12=0x00000064 39="Destroy" 65=FLAG 97=24635
+  UPSTREAM_PARAMS {295=1}
+PLAN item 24635 'Teleport card (noted)' <- upstream_item:13659 bytes=7 models=[]
+  OPCODES 97=24634 98=799
+DROPPED model 31242: face z-offsets (not representable in 667)
+TRANSACTION tx-20261117-051611 applied=false finalized=0 recovered=0

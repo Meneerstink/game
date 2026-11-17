@@ -1,0 +1,13 @@
+DRY_RUN_ONLY kind=item upstream=[29611] targets=[C:\RSPS\work\gpt-a\build\dmm2\cache-plan\game\game\data/cache, C:\RSPS\work\gpt-a\build\dmm2\cache-plan/file-server/cache]
+NOTE Dark bow (Deadman) (29611) has no upstream noted variant; only the item is imported
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[06:06:24.687 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS proven_free_holes=752 item_candidates=65100 safe_free=64348
+PLAN item 24634 'Dark bow (Deadman)' <- upstream_item:29611 bytes=79 models=[upstream_model:54205->65536, upstream_model:54213->65537, upstream_model:54212->65538]
+  OPCODES 1=65536 2="Dark bow (Deadman)" 4=2128 5=591 6=1034 7=0 8=0 12=0x0001d4c2 16=FLAG 23=65537 25=65538 36="Wield" 126=0x000600 127=0x02002d 129=0x010033
+  UPSTREAM_PARAMS {4=95, 13=10, 14=9, 23=60, 434=4, 436=60, 1562=3, 1563=60, 1564=3}
+TRANSACTION tx-20261117-050634 applied=false finalized=0 recovered=0
