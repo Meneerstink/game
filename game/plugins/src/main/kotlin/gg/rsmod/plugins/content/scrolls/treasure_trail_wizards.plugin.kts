@@ -10,7 +10,8 @@ TreasureTrailWizards.profiles.forEach { p ->
         NpcAttacks.register(TreasureTrailWizards.attackRow(p))
         world.definitions.get(NpcDef::class.java,id).examine=p.examine
         check(ClueGuardianDropCatalogue.register(world,p.source,id))
-        on_npc_pre_death(id) { TreasureTrailGuardians.killed(npc) }
+        println("CLUE wizard ${p.source} bound to local $id")
+        on_npc_pre_death(id) { println("CLUE wizard pre-death ${npc.id}"); TreasureTrailGuardians.killed(npc) }
         on_npc_death(id) { TreasureTrailAgents.dropOwner(npc)?.let { owner -> ClueGuardianDropCatalogue.drop(world,owner,id,npc.tile) } }
     }
 }

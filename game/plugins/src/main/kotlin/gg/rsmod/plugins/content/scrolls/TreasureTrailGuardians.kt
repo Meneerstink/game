@@ -102,6 +102,7 @@ object TreasureTrailGuardians {
      * A dead actor callback can repeat (pre-death / death); it must never count twice.
      */
     fun killed(npc: Npc, onAgentReady: (Player, TreasureTrailSourceStep) -> Unit = { _, _ -> }): Boolean {
+        println("PROBLEM CLUE guard killed() called for ${npc.id} dead=${npc.isDead()} sessions=${sessions.size}")
         if (!npc.isDead()) return false
         val session = sessions.values.firstOrNull { it.actors.any { actor -> actor === npc } } ?: run { println("PROBLEM CLUE guard killed ${npc.id} without a session (sessions=${sessions.size})"); return false }
         if (!session.player.isOnline || !session.contract.valid(session.player)) { println("PROBLEM CLUE guard killed ${npc.id} but contract invalid for ${session.player.username}"); remove(session.player); return false }
