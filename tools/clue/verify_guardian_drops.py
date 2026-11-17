@@ -23,6 +23,15 @@ def main():
     libraries=[NEXT/'ClueGuardianDrops.kt'] if staged else [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/ClueGuardianDrops.kt']
     tests=[NEXT/'ClueGuardianDropsTests.kt'] if staged else [ROOT/'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/scrolls/ClueGuardianDropsTests.kt']
     inputs=libraries+tests+[ROOT/'data/cfg/clue/guardian-drops.json']
+    names=['gg.rsmod.plugins.content.scrolls.ClueGuardianDropsTests']
+    if '--hotcold' in sys.argv:
+        following=ROOT/'build/clue/hotcold/next'
+        libraries=[following/(name+'.kt') for name in ['TreasureTrailHotCold','TreasureTrailHotColdDialogue',
+                    'TreasureTrailWizards','TreasureTrailAgents']]
+        libraries += [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/ClueGuardianDrops.kt']
+        tests=[following/(name+'.kt') for name in ['TreasureTrailHotColdTests','TreasureTrailWizardTests']]
+        inputs=libraries+tests+[ROOT/'build/clue/hotcold/hotcold.json']
+        names=['gg.rsmod.plugins.content.scrolls.'+name for name in ['TreasureTrailHotColdTests','TreasureTrailWizardTests']]
     frozen={str(p):sha256(p.read_bytes()).hexdigest() for p in inputs}
     compiler=[jar(m) for m in ['org.jetbrains.kotlin/kotlin-compiler-embeddable/1.8.0',
         'org.jetbrains.kotlin/kotlin-stdlib/1.8.0','org.jetbrains.kotlin/kotlin-script-runtime/1.8.0',
@@ -42,7 +51,7 @@ def main():
     run([JAVA/'java.exe','-Xmx512m','-cp',';'.join(compiler),'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler','@'+str(argfile)])
     with (OUT/'tests.txt').open('w') as stream:
         result=subprocess.run([str(JAVA/'java.exe'),'-Xmx256m','-Drsps.data='+str(ROOT/'data'),'-cp',';'.join(cp),
-                              'org.junit.runner.JUnitCore','gg.rsmod.plugins.content.scrolls.ClueGuardianDropsTests'],
+                              'org.junit.runner.JUnitCore']+names,
                              cwd=ROOT,stdout=stream,stderr=subprocess.STDOUT,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
     output=(OUT/'tests.txt').read_text(errors='replace');print(output[-6500:],flush=True)
     assert result.returncode==0

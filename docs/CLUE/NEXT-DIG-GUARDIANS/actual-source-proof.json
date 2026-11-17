@@ -1,0 +1,14 @@
+{
+  "inputs": {
+    "C:\\RSPS\\work\\gpt-b\\build\\clue\\hotcold\\next\\TreasureTrailHotCold.kt": "da77c66e14118a4640c5281049b3c0a6b97d0bd6338a8d2837432d031f96938e",
+    "C:\\RSPS\\work\\gpt-b\\build\\clue\\hotcold\\next\\TreasureTrailHotColdDialogue.kt": "517ede6df1446201218c5c5b6be5041cbfa77ae72f70d5761be367ca4755f040",
+    "C:\\RSPS\\work\\gpt-b\\build\\clue\\hotcold\\next\\TreasureTrailWizards.kt": "035bef86bf0d3a38f858bca020f2c4eee1f83eeca2168d6e45b475de0032a0aa",
+    "C:\\RSPS\\work\\gpt-b\\build\\clue\\hotcold\\next\\TreasureTrailAgents.kt": "3ee48fdbc6df9c232274d7debe9ef64f350557c1ebe035f64f8aded52579e09b",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueGuardianDrops.kt": "5ec481b1a439d0421a75df87d5241a80af38f4a1431702709f323dd1c930959f",
+    "C:\\RSPS\\work\\gpt-b\\build\\clue\\hotcold\\next\\TreasureTrailHotColdTests.kt": "c04f8bb7e8f1e0a918973bc3ae2626f457e8eb91fde963aa3c8fd1e2c1613874",
+    "C:\\RSPS\\work\\gpt-b\\build\\clue\\hotcold\\next\\TreasureTrailWizardTests.kt": "b2628ad9ae9ca09d054c8614f525cefc22fc6413b308ae3dbae96ee16ab6cffa",
+    "C:\\RSPS\\work\\gpt-b\\build\\clue\\hotcold\\hotcold.json": "016e46afcd7993173652765f53eb809b1e870e4604d34c67cd2a57150837d831"
+  },
+  "unchanged": true,
+  "tests": "JUnit version 4.13.2\n......PROBLEM CLUE unknown saved hot/cold target-923; scroll retained\n...PROBLEM CLUE coordinate wizard unavailable atTile{x=3081, z=3209, height=0}; clue retained\n...\nTime: 33,159\n\nOK (12 tests)\n\n"
+}

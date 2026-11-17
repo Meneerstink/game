@@ -6,6 +6,11 @@ Do not interpret a successful cache preflight as a completed gameplay chain.
 All cache application, testserver/client operation, merge and release belong to Claude.
 
 Current continuation/results: `LIGHTBOX-SOURCE-AUDIT.md` and `GUARDIAN-SOURCE-AUDIT.md`; earlier details: `REVIEW-B-16NOV.md` / `REVIEW-B-7.md`.
+Cache roster ready as of9e7b09eda:248items/10NPCs/23STASHunits/26maps.
+Claude may apply these prepared batches in order now; rerun each allocator after
+its predecessors. The unfinished guardian/Mimic runtime does not require waiting
+to import these identities. Full gameplay/client/release acceptance remains open.
+
 The older checkpoints below are
 historical evidence, with remaining gates explicitly superseded by later entries.
 
@@ -50,9 +55,10 @@ Source28964 uses physical plane1/effective plane0, just like the earlier
 Wizards' Tower bridge case. Claude must inspect placement/collision and both
 accounts' personal built/filled states, fill/withdraw/full-inventory/relog.
 23base+26shared-form definitions now replace the historical17base+22forms.
-The ordinary item247/NPC10 importer lists remain unchanged; UI source coverage
-is still being reconciled with the20 deferred original steps. This is not a
-request to apply a partial clue bundle.
+Historical checkpoint: later entries supersede this count. The current item/NPC
+rosters below are ready for Claude to preflight/apply independently; gameplay
+readiness checks still protect unfinished encounters. Cache preparation is not
+whole-card merge/release acceptance.
 
 ## Current map extension, B16-Nov22:42
 
@@ -82,7 +88,7 @@ Rerun each batch against the caches produced by preceding batches; commit its
 regenerated runtime mapping before continuing. This refreshes every allocator,
 including sprites after the CoX8954 allocation.
 
-1. Combined247-item roster and generated YAML metadata; refresh items.tsv and
+1. Combined248-item roster and generated YAML metadata (17-Nov guardian seed); refresh items.tsv and
    reward/log mappings. Then rerun the core-item patch, including source19835/19836
    and the owner's 78 names/Gold-onyx presentation described below.
 2. Current10-NPC clue-steps batch; regenerate the complete verified npcs.tsv.
