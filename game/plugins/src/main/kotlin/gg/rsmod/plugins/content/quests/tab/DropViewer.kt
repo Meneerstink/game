@@ -303,11 +303,12 @@ object DropViewer {
     /**
      * CoX (16-11): the Great Olm npc (OSRS 7554) is an invisible 8-vertex box (model 27997, alpha 254) - the head players see is the loc
      * OLM_HEAD 29881 (gameval ObjectID; its first model = the head). So the CoX entry shows that loc's model. `::dvzoom` with 7 numbers
-     * tunes zoom / xan / yan live (values ONZEKER until checked in a client next to the wiki picture).
+     * tunes zoom / xan / yan live. 17-11 (testclient next to wiki File:Great_Olm.png, screens/GRAFISCH/dvolm/crops*.png): 4200/0 = head
+     * straight on, larger zooms clip the model away; 5000/160/512 = three-quarter view like the wiki picture's head.
      */
-    @Volatile var COX_ZOOM = 4200
+    @Volatile var COX_ZOOM = 5000
     @Volatile var COX_XAN = 160
-    @Volatile var COX_YAN = 0
+    @Volatile var COX_YAN = 512
 
     /** Model camera distance (client zoom2d: bigger = further away): base + per extra tile of npc size. `::dvzoom` tunes it live. */
     @Volatile var THUMB_BASE = 1500
