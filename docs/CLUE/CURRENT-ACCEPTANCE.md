@@ -72,8 +72,13 @@ originals plus69unique additions,29easy/29medium/25hard/12elite/12master. Three
 master torn parts are one choice, hence105grouped choices before predicates.
 This is NOT a claim of active-world counts. All applied-asset/readiness checks
 still apply. The new offline execution of14freshly compiled predicate classes
-against72actual target definitions admits102records/100grouped choices
-(validation/applied-step-predicates.json). It does not prove spawn registration,
+against72actual target definitions admits102records/100grouped choices.
+Fresh read-only repeat17-Nov22:59 recompiles14current predicate implementations:
+29easy/29medium/25hard/10elite/9master records; the master torn group makes
+those9records into7choices. Proof and exact source hashes:
+validation/applied-step-predicates-20261117-215753.json. This includes64available
+new records plus38originals; five of the69new records remain explicitly gated.
+It does not prove spawn registration,
 scene traversal or boot. The first84/101results used wrong item paging/older
 jars and were discarded. Five records require unresolved primary evidence:
 

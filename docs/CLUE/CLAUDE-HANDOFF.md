@@ -78,7 +78,12 @@ verwerving, Watson, STASH, Falo/Sherlock en puzzels zijn gekoppeld.
 107 bronrecords = 38 bronvaste oorspronkelijke + 69 unieke toevoegingen;
 29/29/25/12/12 per niveau. Drie torn parts vormen samen een keuze. Offline
 bronpredicaten + 72 gedecodeerde echte definities lieten 102 records / 100
-gegroepeerde keuzes toe. Dat is geen boot-, registratie- of clientbewijs.
+gegroepeerde keuzes toe. Verse herhaling22:59 met14huidige bronpredicaten:
+29easy/29medium/25hard/10elite/9master records (7masterkeuzes na torn-grouping).
+Dit zijn38oorspronkelijke+64beschikbare nieuwe records; vijf van69toevoegingen
+zijn bewust uitgeschakeld. Exacte hashes/bewijs:
+`validation/applied-step-predicates-20261117-215753.json`.
+Dat is geen boot-, registratie- of clientbewijs.
 `STEP-HANDLER-AUDIT.json`, `ORIGINAL-POOL-AUDIT.json`, `EXCLUDED-AREAS.tsv`
 en `NPC-SOURCE-GAPS.json` noemen de overige bron-/gebiedsuitsluitingen.
 
