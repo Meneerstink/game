@@ -252,10 +252,24 @@ object OsrsWeaponLooks {
     }
 
     /** Every imported OSRS weapon with its own OSRS look (guard: `OsrsWeaponLooksTests`). */
-    val COVERED: Set<Int> get() = looks.keys + Items.OSMUMTENS_FANG
+    val COVERED: Set<Int> get() = looks.keys + fangIds + lateLooks.keys
 
     /** Osmumten's fang: only the stab styles have their own sequence; Slash keeps the sword slash (combat-logger: HUMAN_SWORD_SLASH). */
     private val fangStab = OsrsSeq.HUMAN_OSMUMTENS_FANG
+
+    /**
+     * N630 (17-11, class of N629: imported weapons without a row fell back to 667 HD sequences): raid imports have no Items constant,
+     * their local ids come from the raid id tables (data/cfg/toa|cox/ids.tsv), resolved on first use.
+     *  - Osmumten's fang (or) = OSRS 27246 (ToA): the fang's own rules (HUMAN_OSMUMTENS_FANG 9471 on stab, block 4177, stab-sword sounds).
+     *  - Elder maul = OSRS 21003 (CoX): HUMAN_ELDER_MAUL_ATTACK 7516 / HUMAN_ELDER_MAUL_BLOCK 7517 (RuneLite gameval; imported as
+     *    OsrsSeq.ELDER_MAUL_ATTACK/DEFEND for the Colossal blade).
+     */
+    private val fangIds: Set<Int> by lazy { setOfNotNull(Items.OSMUMTENS_FANG, gg.rsmod.plugins.content.activity.toa.ToaIds.item(27246)) }
+    private val lateLooks: Map<Int, Look> by lazy {
+        listOfNotNull(
+            gg.rsmod.plugins.content.activity.cox.CoxIds.item(21003)?.let { it to Look(all(OsrsSeq.ELDER_MAUL_ATTACK), block = OsrsSeq.ELDER_MAUL_DEFEND) },
+        ).toMap()
+    }
 
     fun attackAnimation(
         weaponId: Int,
@@ -263,14 +277,14 @@ object OsrsWeaponLooks {
         againstNpc: Boolean,
         stabStyle: Boolean,
     ): Int? {
-        if (weaponId == Items.OSMUMTENS_FANG) return if (stabStyle) fangStab else null
-        val look = looks[weaponId] ?: return null
+        if (weaponId in fangIds) return if (stabStyle) fangStab else null
+        val look = looks[weaponId] ?: lateLooks[weaponId] ?: return null
         val table = if (againstNpc) look.attackPvn ?: look.attack else look.attack
         return table[styleIndex.coerceIn(0, 3)]
     }
 
     /** The fang's block: RuneLite replacer set "Osmumten's Fang" DEFEND 4177 (N34). */
-    fun blockAnimation(weaponId: Int): Int? = looks[weaponId]?.block ?: OsrsSeq.WARGUILD_PARRY_DEFEND.takeIf { weaponId == Items.OSMUMTENS_FANG }
+    fun blockAnimation(weaponId: Int): Int? = (looks[weaponId] ?: lateLooks[weaponId])?.block ?: OsrsSeq.WARGUILD_PARRY_DEFEND.takeIf { weaponId in fangIds }
 
     /**
      * The weapon's own OSRS attack sound (Jagex config names, OSRS Wiki "List of sound IDs"), or null for the item's 667 attack audio.
@@ -284,7 +298,7 @@ object OsrsWeaponLooks {
             Items.DUAL_MACUAHUITL -> OsrsSfx.MACUAHUITL_CRUSH
             // Owner 2026-09-18 "uses special sound for a non special hit": OSRS Wiki sound list - stab plays stabsword_stab 2549,
             // slash stabsword_slash 2548; a_r_osmumtens_fang_sword_stab_01 (9366) is part 2 of the special only.
-            Items.OSMUMTENS_FANG -> if (attackAnimation == fangStab) gg.rsmod.plugins.api.cfg.Sfx.STABSWORD_STAB else gg.rsmod.plugins.api.cfg.Sfx.STABSWORD_SLASH
+            in fangIds -> if (attackAnimation == fangStab) gg.rsmod.plugins.api.cfg.Sfx.STABSWORD_STAB else gg.rsmod.plugins.api.cfg.Sfx.STABSWORD_SLASH
             // Owner 2026-09-19 "noxious halberd makes no sound": OSRS Wiki "Noxious halberd" sounds - stab staff_stab 2562, slash
             // scythe_slash 2524 (same ids/names in the 667 sound table). Its sequences 428 / 440 carry no frame sounds.
             Items.NOXIOUS_HALBERD -> if (attackAnimation == HUMAN_SCYTHE_SWEEP) gg.rsmod.plugins.api.cfg.Sfx.SCYTHE_SLASH else gg.rsmod.plugins.api.cfg.Sfx.STAFF_STAB
