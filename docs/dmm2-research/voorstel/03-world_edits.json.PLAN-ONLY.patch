@@ -1,0 +1,14 @@
+--- a/data/world_edits.json
++++ b/data/world_edits.json
+@@ -8992,6 +8992,10 @@
+       "rot": 1,
+       "note": "N360 invisible wall left where the removed city guards stood (owner 2026-10-24)",
+       "group": 759
+-    }
++    },
++    {"op": "npc_spawn", "id": 15083, "x": 3152, "z": 3512, "level": 0, "type": 10, "rot": 4, "note": "DMM2 Nigel: wiki GE map3152/3512; rotation chosen for our plaza", "group": 760},
++    {"op": "npc_spawn", "id": 15081, "x": 3150, "z": 3512, "level": 0, "type": 10, "rot": 4, "note": "DMM2 Financial Wizard: owner GE relocation; proposed tile, collision check required", "group": 761},
++    {"op": "npc_spawn", "id": 15082, "x": 3150, "z": 3514, "level": 0, "type": 10, "rot": 4, "note": "DMM2 Financial Seer: owner GE relocation; proposed tile, collision check required", "group": 762},
++    {"op": "npc_remove", "id": 14478, "x": 3168, "z": 3497, "level": 0, "type": 10, "rot": 0, "note": "DMM2 release only: retired Breach Trader after migration/reward destinations reviewed", "group": 763}
+   ]
+ }

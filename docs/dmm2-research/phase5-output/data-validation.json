@@ -1,0 +1,15 @@
+{
+  "mapping_rows": 143,
+  "native_metadata_rows": 73,
+  "corrupted_bonus_states": 10,
+  "no_id_collisions": true,
+  "native_appearance_preserved": true,
+  "exact_native_tradeability": true,
+  "nigel_wizard_seer_single_spawn": true,
+  "provenance": {
+    "C:\\RSPS\\game\\game\\data\\cfg\\dmm2\\ids.tsv": "e7efbb117ec161980fe20e20d232da8e8c92ecd8c34fdd71d71795866084c7d4",
+    "C:\\RSPS\\work\\claude-dmm2\\build\\dmm2-apply-20261117-071856\\items.generated.yml": "4f6fe3f285456477963acce10a289e109f31766253de526e73f102f0520182c9",
+    "data\\cfg\\dmm2\\ids.tsv": "e7efbb117ec161980fe20e20d232da8e8c92ecd8c34fdd71d71795866084c7d4",
+    "data\\cfg\\dmm2\\skins.tsv": "20c56c679b2b4dd11e1c50fe09b8840d86c744e57f0d079ee0db58be999a3957"
+  }
+}

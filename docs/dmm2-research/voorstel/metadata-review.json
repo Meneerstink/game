@@ -1,0 +1,514 @@
+{
+  "plan_only": true,
+  "source_stat_overrides": [
+    {
+      "source": 28531,
+      "field": "attack_stab",
+      "cache2686": 70,
+      "wiki": 56
+    },
+    {
+      "source": 28531,
+      "field": "attack_slash",
+      "cache2686": 80,
+      "wiki": 64
+    },
+    {
+      "source": 28531,
+      "field": "attack_magic",
+      "cache2686": 5,
+      "wiki": 4
+    },
+    {
+      "source": 28531,
+      "field": "melee_strength",
+      "cache2686": 68,
+      "wiki": 64
+    },
+    {
+      "source": 28534,
+      "field": "attack_stab",
+      "cache2686": 41,
+      "wiki": 33
+    },
+    {
+      "source": 28534,
+      "field": "attack_slash",
+      "cache2686": 57,
+      "wiki": 46
+    },
+    {
+      "source": 28534,
+      "field": "defence_stab",
+      "cache2686": 13,
+      "wiki": 11
+    },
+    {
+      "source": 28534,
+      "field": "defence_slash",
+      "cache2686": 26,
+      "wiki": 21
+    },
+    {
+      "source": 28534,
+      "field": "defence_crush",
+      "cache2686": 7,
+      "wiki": 6
+    },
+    {
+      "source": 28537,
+      "field": "attack_slash",
+      "cache2686": 132,
+      "wiki": 106
+    },
+    {
+      "source": 28537,
+      "field": "attack_crush",
+      "cache2686": 80,
+      "wiki": 64
+    },
+    {
+      "source": 28537,
+      "field": "melee_strength",
+      "cache2686": 112,
+      "wiki": 106
+    },
+    {
+      "source": 28540,
+      "field": "attack_ranged",
+      "cache2686": 70,
+      "wiki": 56
+    },
+    {
+      "source": 28540,
+      "field": "ranged_strength",
+      "cache2686": 5,
+      "wiki": 2
+    },
+    {
+      "source": 28543,
+      "field": "attack_audio",
+      "status": "Native -1 retained; Claude must prove/install AV before release"
+    },
+    {
+      "source": 28543,
+      "field": "attack_stab",
+      "cache2686": 70,
+      "wiki": 56
+    },
+    {
+      "source": 28543,
+      "field": "attack_slash",
+      "cache2686": 125,
+      "wiki": 88
+    },
+    {
+      "source": 28543,
+      "field": "attack_crush",
+      "cache2686": 30,
+      "wiki": 24
+    },
+    {
+      "source": 28543,
+      "field": "defence_slash",
+      "cache2686": 8,
+      "wiki": 7
+    },
+    {
+      "source": 28543,
+      "field": "defence_crush",
+      "cache2686": 10,
+      "wiki": 8
+    },
+    {
+      "source": 28543,
+      "field": "melee_strength",
+      "cache2686": 64,
+      "wiki": 60
+    },
+    {
+      "source": 28545,
+      "field": "attack_audio",
+      "status": "Native -1 retained; Claude must prove/install AV before release"
+    },
+    {
+      "source": 28545,
+      "field": "attack_stab",
+      "cache2686": 50,
+      "wiki": 40
+    },
+    {
+      "source": 28545,
+      "field": "attack_slash",
+      "cache2686": 75,
+      "wiki": 60
+    },
+    {
+      "source": 28545,
+      "field": "attack_crush",
+      "cache2686": 10,
+      "wiki": 8
+    },
+    {
+      "source": 28545,
+      "field": "defence_slash",
+      "cache2686": 6,
+      "wiki": 5
+    },
+    {
+      "source": 28545,
+      "field": "melee_strength",
+      "cache2686": 43,
+      "wiki": 40
+    },
+    {
+      "source": 29599,
+      "field": "attack_ranged",
+      "cache2686": 89,
+      "wiki": 95
+    }
+  ],
+  "plan_metadata_collisions": [
+    {
+      "id": 24649,
+      "existing": "Keris partisan",
+      "proposed": "Starter bow"
+    },
+    {
+      "id": 24650,
+      "existing": "Keris partisan of breaching",
+      "proposed": "Starter staff"
+    },
+    {
+      "id": 24651,
+      "existing": "Keris partisan of corruption",
+      "proposed": "Tuna"
+    },
+    {
+      "id": 24652,
+      "existing": "Keris partisan of the sun",
+      "proposed": "Corrupted voidwaker"
+    },
+    {
+      "id": 24653,
+      "existing": "Keris partisan of amascut",
+      "proposed": "Corrupted voidwaker"
+    },
+    {
+      "id": 24654,
+      "existing": "Breach of the Scarab",
+      "proposed": "Corrupted dragon claws"
+    },
+    {
+      "id": 24655,
+      "existing": "Eye of the Corruptor",
+      "proposed": "Corrupted dragon claws"
+    },
+    {
+      "id": 24656,
+      "existing": "Jewel of the Sun",
+      "proposed": "Corrupted armadyl godsword"
+    },
+    {
+      "id": 24657,
+      "existing": "Jewel of Amascut",
+      "proposed": "Corrupted armadyl godsword"
+    },
+    {
+      "id": 24658,
+      "existing": "Tumeken's shadow",
+      "proposed": "Corrupted twisted bow"
+    },
+    {
+      "id": 24659,
+      "existing": "Tumeken's shadow (uncharged)",
+      "proposed": "Corrupted twisted bow"
+    },
+    {
+      "id": 24660,
+      "existing": "Tumeken's shadow (uncharged)",
+      "proposed": "Corrupted Scythe of Vitur"
+    },
+    {
+      "id": 24661,
+      "existing": "Osmumten's fang (or)",
+      "proposed": "Corrupted Scythe of Vitur (uncharged)"
+    },
+    {
+      "id": 24662,
+      "existing": "Cursed phalanx",
+      "proposed": "Corrupted Scythe of Vitur (uncharged)"
+    },
+    {
+      "id": 24663,
+      "existing": "Masori armour set (f)",
+      "proposed": "Corrupted tumeken's shadow"
+    },
+    {
+      "id": 24664,
+      "existing": "Masori armour set (f)",
+      "proposed": "Corrupted tumeken's shadow (uncharged)"
+    },
+    {
+      "id": 24665,
+      "existing": "Remnant of Akkha",
+      "proposed": "Corrupted tumeken's shadow (uncharged)"
+    },
+    {
+      "id": 24666,
+      "existing": "Remnant of Ba-Ba",
+      "proposed": "Trinket of vengeance"
+    },
+    {
+      "id": 24667,
+      "existing": "Remnant of Kephri",
+      "proposed": "Trinket of vengeance"
+    },
+    {
+      "id": 24668,
+      "existing": "Remnant of Zebak",
+      "proposed": "Trinket of advanced weaponry"
+    },
+    {
+      "id": 24669,
+      "existing": "Ancient remnant",
+      "proposed": "Trinket of advanced weaponry"
+    },
+    {
+      "id": 24670,
+      "existing": "Icthlarin's shroud (tier 1)",
+      "proposed": "Corrupted dark bow"
+    },
+    {
+      "id": 24671,
+      "existing": "Icthlarin's shroud (tier 2)",
+      "proposed": "Corrupted dark bow"
+    },
+    {
+      "id": 24672,
+      "existing": "Icthlarin's shroud (tier 3)",
+      "proposed": "Corrupted Volatile Nightmare staff"
+    },
+    {
+      "id": 24673,
+      "existing": "Icthlarin's shroud (tier 4)",
+      "proposed": "Corrupted Volatile Nightmare staff"
+    },
+    {
+      "id": 24674,
+      "existing": "Icthlarin's shroud (tier 5)",
+      "proposed": "Armadyl godsword (Deadman)"
+    },
+    {
+      "id": 24675,
+      "existing": "Mask of Rebirth",
+      "proposed": "Voidwaker (Deadman)"
+    },
+    {
+      "id": 24676,
+      "existing": "Supplies",
+      "proposed": "Volatile Nightmare staff (Deadman)"
+    },
+    {
+      "id": 24677,
+      "existing": "Nectar (4)",
+      "proposed": "Dark bow (Deadman)"
+    },
+    {
+      "id": 24678,
+      "existing": "Nectar (4)",
+      "proposed": "Imbued Zamorak cape (Deadman)"
+    },
+    {
+      "id": 24679,
+      "existing": "Nectar (3)",
+      "proposed": "Imbued Guthix cape (Deadman)"
+    },
+    {
+      "id": 24680,
+      "existing": "Nectar (3)",
+      "proposed": "Imbued Saradomin cape (Deadman)"
+    },
+    {
+      "id": 24681,
+      "existing": "Nectar (2)",
+      "proposed": "Armageddon rug"
+    },
+    {
+      "id": 24682,
+      "existing": "Nectar (2)",
+      "proposed": "Armageddon rug"
+    },
+    {
+      "id": 24683,
+      "existing": "Nectar (1)",
+      "proposed": "Armageddon teleport scroll"
+    },
+    {
+      "id": 24684,
+      "existing": "Nectar (1)",
+      "proposed": "Armageddon teleport scroll"
+    },
+    {
+      "id": 24685,
+      "existing": "Silk dressing (2)",
+      "proposed": "Armageddon weapon scroll"
+    },
+    {
+      "id": 24686,
+      "existing": "Silk dressing (2)",
+      "proposed": "Armageddon weapon scroll"
+    },
+    {
+      "id": 24687,
+      "existing": "Silk dressing (1)",
+      "proposed": "Armageddon cape fabric"
+    },
+    {
+      "id": 24688,
+      "existing": "Silk dressing (1)",
+      "proposed": "Armageddon cape fabric"
+    },
+    {
+      "id": 24689,
+      "existing": "Tears of Elidinis (4)",
+      "proposed": "Annihilation weapon scroll"
+    },
+    {
+      "id": 24690,
+      "existing": "Tears of Elidinis (4)",
+      "proposed": "Annihilation weapon scroll"
+    },
+    {
+      "id": 24691,
+      "existing": "Tears of Elidinis (3)",
+      "proposed": "Annihilation blueprints"
+    },
+    {
+      "id": 24692,
+      "existing": "Tears of Elidinis (3)",
+      "proposed": "Annihilation blueprints"
+    },
+    {
+      "id": 24693,
+      "existing": "Tears of Elidinis (2)",
+      "proposed": "Annihilation teleport scroll"
+    },
+    {
+      "id": 24694,
+      "existing": "Tears of Elidinis (2)",
+      "proposed": "Annihilation teleport scroll"
+    },
+    {
+      "id": 24695,
+      "existing": "Tears of Elidinis (1)",
+      "proposed": "Bow of Faerdhinen (c)"
+    },
+    {
+      "id": 24696,
+      "existing": "Tears of Elidinis (1)",
+      "proposed": "Crystal body"
+    },
+    {
+      "id": 24697,
+      "existing": "Blessed crystal scarab (2)",
+      "proposed": "Crystal body (inactive)"
+    },
+    {
+      "id": 24698,
+      "existing": "Blessed crystal scarab (2)",
+      "proposed": "Crystal legs"
+    },
+    {
+      "id": 24699,
+      "existing": "Blessed crystal scarab (1)",
+      "proposed": "Crystal legs (inactive)"
+    },
+    {
+      "id": 24700,
+      "existing": "Blessed crystal scarab (1)",
+      "proposed": "Crystal helm"
+    },
+    {
+      "id": 24701,
+      "existing": "Liquid adrenaline (2)",
+      "proposed": "Crystal helm (inactive)"
+    },
+    {
+      "id": 24702,
+      "existing": "Liquid adrenaline (2)",
+      "proposed": "Toxic staff (uncharged)"
+    },
+    {
+      "id": 24703,
+      "existing": "Liquid adrenaline (1)",
+      "proposed": "Toxic staff (Deadman)"
+    },
+    {
+      "id": 24704,
+      "existing": "Liquid adrenaline (1)",
+      "proposed": "Thunder khopesh"
+    },
+    {
+      "id": 24705,
+      "existing": "Smelling salts (2)",
+      "proposed": "Thunder khopesh"
+    },
+    {
+      "id": 24706,
+      "existing": "Smelling salts (2)",
+      "proposed": "Trinket of fortuity (active)"
+    },
+    {
+      "id": 24707,
+      "existing": "Smelling salts (1)",
+      "proposed": "Trinket of fortuity (active)"
+    },
+    {
+      "id": 24708,
+      "existing": "Smelling salts (1)",
+      "proposed": "Starter cape"
+    },
+    {
+      "id": 24709,
+      "existing": "Ambrosia (2)",
+      "proposed": "Annihilation exit portal blueprints"
+    },
+    {
+      "id": 24710,
+      "existing": "Ambrosia (2)",
+      "proposed": "Fire ruby"
+    },
+    {
+      "id": 24711,
+      "existing": "Ambrosia (1)",
+      "proposed": "Fire ruby"
+    },
+    {
+      "id": 24712,
+      "existing": "Ambrosia (1)",
+      "proposed": "Amulet of fire"
+    },
+    {
+      "id": 24713,
+      "existing": "Honey locust",
+      "proposed": "Amulet of fire"
+    },
+    {
+      "id": 24714,
+      "existing": "Cache of runes",
+      "proposed": "Teleport card"
+    },
+    {
+      "id": 24715,
+      "existing": "Water container",
+      "proposed": "Teleport card"
+    }
+  ],
+  "note": "PLAN patches are for review only; regenerate using actual ids.tsv AND native items.generated.yml after apply.",
+  "reserved_sha256": {
+    "data/cfg/items.yml": "0eac485d6a53106f80b386a9107ccd0169a5a2402a50201d0c09ca22be99a64b",
+    "game/plugins/src/main/kotlin/gg/rsmod/plugins/api/cfg/Items.kt": "a6c343d115f72c2b2773bd1364c747628b0db8efeacd63dfbc2cbb64efea8c92",
+    "data/world_edits.json": "1aa325836290da624fa2eaa44aff897005fb8bb1641bfd914c4bc85b2b78f393"
+  }
+}
