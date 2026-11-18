@@ -190,6 +190,8 @@ listOfNotNull(Dmm2Ids.npc(6516), Dmm2Ids.npc(6485)).distinct().forEach { id ->
                         chatNpc("We will look after your items and money for you. Leave your valuables with us if you want to keep them safe.", npc = id)
                         return@queue
                     }
+                    // Transcript:Financial_Seer / Transcript:Financial_Wizard: the player first repeats the chosen question (Claude 18-11).
+                    chatPlayer(if (seer) "What's a Financial Seer?" else "What's a Financial Wizard?")
                     if (seer) chatNpc("In towns elsewhere in the world, there are bankers who look after your items. Among them are Financial Wizards, who are able to access your safe deposit box on Deadman Worlds.", npc = id)
                     chatNpc(if (seer) "Although we Fremenniks have little interest in magic, I can nevertheless access your safe deposit box on this Deadman World. Would you like to do that now?"
                         else "Ah, we're special bankers who can access your safe deposit box on Deadman Worlds. Would you like to do that now?", npc = id)
