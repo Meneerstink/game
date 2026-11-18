@@ -67,8 +67,9 @@ object TreasureTrailEmotes {
         val session = sessions[player] ?: return false
         if (session.uri !== uri || session.settled || !session.secondEmote ||
             !session.contract.valid(player) || !attire(player, session.step.source)) return false
-        // Transcript:Uri ends with 'You have been given a [new clue/casket]!' (not the dig line).
-        if (!session.contract.advance(player, messages = "You have been given a new clue!" to "You have been given a casket!")) return false
+        // Transcript:Uri ends with the tbox 'You have been given a [new clue/casket]!' AFTER the player's 'What?' -> no chat line here,
+        // [talk] shows the box (Claude 18-11: the line came as a chat message before Uri spoke).
+        if (!session.contract.advance(player, messages = "" to "")) return false
         session.settled = true
         return true
     }
@@ -84,9 +85,11 @@ object TreasureTrailEmotes {
             return true
         }
         val phrase = dialogue.phrases.random(Random.Default)
+        val casket = session.step.tier.casketId >= 0 && player.inventory.contains(session.step.tier.casketId)
         player.queue {
             chatNpc(phrase, npc=uri.id, wrap=true)
             chatPlayer(dialogue.playerReply, wrap=true)
+            messageBox(if (casket) "You have been given a casket!" else "You have been given a new clue!")
             if (sessions[player] === session) remove(player)
         }
         return true

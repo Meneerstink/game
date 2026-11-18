@@ -151,10 +151,10 @@ class ClueScrollManager(
             if (completed >= length) {
                 player.attr.remove(progressAttrs.getValue(tier))
                 player.attr.remove(lengthAttrs.getValue(tier))
-                player.message(messages?.second ?: "You've found a casket!")
+                (messages?.second ?: "You've found a casket!").takeIf { it.isNotEmpty() }?.let { player.message(it) } // "" = the caller says it (Uri tbox)
             } else {
                 player.attr[progressAttrs.getValue(tier)] = completed
-                player.message(messages?.first ?: "You've found another clue scroll!")
+                (messages?.first ?: "You've found another clue scroll!").takeIf { it.isNotEmpty() }?.let { player.message(it) }
             }
             return true
         }
