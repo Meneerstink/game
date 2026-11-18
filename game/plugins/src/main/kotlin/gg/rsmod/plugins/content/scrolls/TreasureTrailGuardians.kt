@@ -103,8 +103,8 @@ object TreasureTrailGuardians {
      */
     fun killed(npc: Npc, onAgentReady: (Player, TreasureTrailSourceStep) -> Unit = { _, _ -> }): Boolean {
         if (!npc.isDead()) return false
-        val session = sessions.values.firstOrNull { it.actors.any { actor -> actor === npc } } ?: run { println("PROBLEM CLUE guard killed ${npc.id} without a session (sessions=${sessions.size})"); return false }
-        if (!session.player.isOnline || !session.contract.valid(session.player)) { println("PROBLEM CLUE guard killed ${npc.id} but contract invalid for ${session.player.username}"); remove(session.player); return false }
+        val session = sessions.values.firstOrNull { it.actors.any { actor -> actor === npc } } ?: return false
+        if (!session.player.isOnline || !session.contract.valid(session.player)) { remove(session.player); return false }
         if (!session.killed(npc)) return false
         if (!session.defeated) return true
         val player = session.player
@@ -125,7 +125,7 @@ object TreasureTrailGuardians {
 
     fun cycle() {
         sessions.values.toList().forEach {
-            if (!it.contract.valid(it.player) || !it.player.isOnline) { println("PROBLEM CLUE guard session dropped: contract invalid for ${it.player.username}"); remove(it.player) }
+            if (!it.contract.valid(it.player) || !it.player.isOnline) remove(it.player)
             // Removal without death (despawn/escape) cannot satisfy a kill.
             else if (it.alive().any { actor -> !actor.isSpawned() }) remove(it.player)
         }
