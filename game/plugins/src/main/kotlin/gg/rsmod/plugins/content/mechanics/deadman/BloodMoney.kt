@@ -2,7 +2,7 @@ package gg.rsmod.plugins.content.mechanics.deadman
 
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.container.ItemContainer
-import gg.rsmod.game.model.entity.GroundItem
+import gg.rsmod.plugins.content.mechanics.death.PvpLootTimes
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.ext.persistNow
@@ -19,7 +19,7 @@ object BloodMoney {
     fun onJudgedKill(killer: Player, victim: Player, verdict: ValidPkKill.Verdict, release: Boolean = BreachRetirement.enabled) {
         if (!release || killer === victim || !verdict.valid) return
         val id = Dmm2Ids.ItemId.BLOOD_MONEY.local
-        if (id != null) killer.world.spawn(GroundItem(id, 1, victim.tile, killer))
+        if (id != null) killer.world.spawn(PvpLootTimes.groundItem(id, 1, victim.tile, killer))
         else {
             val pending = killer.attr[PENDING] ?: 0
             check(pending < Int.MAX_VALUE) { "Blood money pending balance overflow" }

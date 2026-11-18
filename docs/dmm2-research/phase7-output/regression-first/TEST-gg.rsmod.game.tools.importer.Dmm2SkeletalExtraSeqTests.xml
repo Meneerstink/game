@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.game.tools.importer.Dmm2SkeletalExtraSeqTests" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-17T20:37:50" hostname="KNMI-5CG6051R99" time="0.136">
+  <properties/>
+  <testcase name="extra sidecar refuses changes to shared skin rig or existing sequence entry" classname="gg.rsmod.game.tools.importer.Dmm2SkeletalExtraSeqTests" time="0.064"/>
+  <testcase name="extra sidecar creates clip reuses skin and rig and only appends the shared index" classname="gg.rsmod.game.tools.importer.Dmm2SkeletalExtraSeqTests" time="0.055"/>
+  <testcase name="extra sequence asset keys cannot collide with movement slots or other NPCs" classname="gg.rsmod.game.tools.importer.Dmm2SkeletalExtraSeqTests" time="0.0"/>
+  <testcase name="frozen base preserves rotation translation and optional scale positions" classname="gg.rsmod.game.tools.importer.Dmm2SkeletalExtraSeqTests" time="0.016"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

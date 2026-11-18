@@ -1,0 +1,50 @@
+{
+  "batchcomplete": true,
+  "query": {
+    "pages": [
+      {
+        "ns": 120,
+        "title": "Transcript:Trinket of undead",
+        "missing": true
+      },
+      {
+        "pageid": 314820,
+        "ns": 0,
+        "title": "Resurrect Greater Ghost",
+        "revisions": [
+          {
+            "revid": 15300140,
+            "parentid": 15125112,
+            "timestamp": "2026-08-14T04:43:09Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Infobox Spell\n|name = Resurrect Greater Ghost\n|image = [[File:Resurrect Greater Ghost.png]]\n|release = [[16 June]] [[2021]]\n|update = A Kingdom Divided\n|members = Yes\n|level = 76\n|spellbook = Arceuus\n|type = Combat\n|exp = 88\n|cost = {{RuneReq|Fire=10|Blood=5|Cosmic=1}} <sup>6</sup> {{SCP|Prayer}} {{plinkp|Book of the Dead}}\n|speed = 4 ticks\n|cooldown = 16 ticks\n|quest = [[A Kingdom Divided]]\n|description = Calls upon a greater ghostly thrall to fight alongside you\n|anim = [[File:Resurrect Ghost.gif|300px]]\n|sound = [[File:Resurrect Greater Ghost.ogg]]\n}}\n[[File:Resurrect Greater Ghost icon (mobile).png|left]]\n'''Resurrect Greater Ghost''' is a [[resurrection spells|resurrection spell]] within the [[Arceuus spellbook]] that requires level 76 [[Magic]] and the completion of [[A Kingdom Divided]] to be cast. In addition to the required runes, casting this spell requires six [[prayer points]] and having the [[Book of the Dead]] equipped or in the player's inventory.\n\nThe spell will summon a [[greater ghostly thrall]], which has an [[attack speed]] of 4 (attacking every 2.4 seconds) and attacks using [[Magic]] (with a max hit of 3), ignoring any accuracy checks in the process. They will attack the same target that the player is attacking, and cannot be damaged. However, they '''cannot''' attack other players. Damage dealt by the thrall counts as damage dealt by the player that summoned it.\n\nThralls will remain for a set amount of time (<math>0.6 * CurrentMagicLevel</math> seconds), but players can cast resurrection spells again after 10 seconds, albeit the existing thrall will disappear if players do so.\n\nSummoned [[thrall]]s last twice as long as normal after claiming the [[Master Combat Achievements]] rewards. \n\n==Cost==\n{{Spell cost table\n|nooffhand = 0\n|Rune1 = fire\n|Rune1num = 10\n|Rune2 = blood\n|Rune2num = 5\n|Rune3 = cosmic\n|Rune3num = 1\n}}\n\n{{Arceuus spellbook}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "pageid": 393460,
+        "ns": 0,
+        "title": "Trinket of undead",
+        "revisions": [
+          {
+            "revid": 15298165,
+            "parentid": 15191599,
+            "timestamp": "2026-08-13T23:52:21Z",
+            "slots": {
+              "main": {
+                "contentmodel": "wikitext",
+                "contentformat": "text/x-wiki",
+                "content": "{{Deadman permanent}}\n{{Infobox Item\n|name = Trinket of undead\n|image = [[File:Trinket of undead.png]]\n|release = [[23 August]] [[2023]]\n|update = Deadman: Apocalypse - Friday 25th August\n|members = Yes\n|quest = No\n|tradeable = Yes\n|equipable = No\n|stackable = No\n|noteable = \n|options = Summon Lil Zuk, Summon Lil Kal, Summon Lil Wisp, Drop\n|examine = A magic rock! This one gives you random thralls.\n|value = 100000\n|weight = 1.000\n|exchange = dmm\n|id = 28570\n}}\n[[File:Trinket of undead detail.png|left|130px]]\nThe '''trinket of undead''' is an item in [[Deadman Mode]] that allows players to summon a special [[thrall]] of the player's choice, being either [[TzRek-Zuk]], the [[Kalphite Princess#Flying|Kalphite Princess]], or [[Wisp]]. These thralls function the same as greater thralls, functioning as a melee, ranged, or magic thrall respectively. Though the trinket has no requirements to use, it does have a 10 second cooldown.\n\nBeing identical to regular greater thralls, the trinket's thralls always deal [[successful hit]]s, with the damage roll ranging from 0-3. The damage roll can be increased to 0-15 with the [[sigil of the augmented thrall]].\n\nIt can be acquired as a drop from monsters found during [[breach]]es, as well as from looting the [[Deadman's chest (scenery)|Deadman's chest]].\n\n==Item sources==\n{{Drop sources|Trinket of undead}}\n\n==Changes==\n{{Subject changes header}}\n{{Subject changes\n|date = 21 January 2026\n|update = Holy Moleys and the Hooded Slayer Helm are Here!\n|change = * Players can now choose what thrall to summon and the thralls summoned by the trinket have different models.\n* The trinket's value was increased from 10,000 to 100,000.\n}}\n{{Subject changes\n|date = 12 March 2025\n|update = Permanent Deadman: World 345 Improvements\n|change = Trinkets are now available in permanent Deadman Mode.\n}}\n{{Subject changes footer}}\n\n==Trivia==\n* The special thralls summoned by the trinket all have unique examine text, though this can only be seen in the cache and not in-game as the thralls lack an 'Examine' option:\n** TzRek-Zuk: \"Probably couldn't break through a wall at this size.\"\n** Kalphite Princess: \"I might need more than 10k.\"\n** Wisp: \"Wispy.\"\n\n{{Deadman Mode}}\n{{Deadman: Annihilation}}\n{{Deadman: Armageddon}}\n{{Deadman: Apocalypse}}"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

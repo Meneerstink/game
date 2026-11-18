@@ -4,6 +4,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlin.test.assertFailsWith
 
 class Dmm2ImportBatchTests {
     @Test fun itemBatchPreservesProvenAllocationOrderAndNotes() {
@@ -23,6 +24,14 @@ class Dmm2ImportBatchTests {
     @Test fun unsupportedWispIsOnlyInSkeletalRoute() {
         assertEquals(listOf(6516, 6485, 8391, 8390, 15569, 15570), OsrsNpcImportTool.BATCHES.getValue("dmm2-npcs"))
         assertEquals(listOf(15571 to emptyList<Int>()), OsrsPetImportTool.SKELETAL_NPC_BATCHES.getValue("dmm2-wisp"))
+    }
+
+    @Test fun advancedLootObjectBatchKeepsTheSourceAnimationSeparateFromAnUnprovenPlayerPose() {
+        assertEquals(listOf(10426), OsrsFxImportTool.SEQ_BATCHES.getValue("dmm2-advanced-loot"))
+        assertEquals(listOf(49564, 49565), OsrsLocImportTool.BATCHES.getValue("dmm2-advanced-loot"))
+        assertFalse(OsrsFxImportTool.BATCHES.containsKey("dmm2-advanced-loot"))
+        assertFailsWith<IllegalStateException> { OsrsLocImportTool.requireMarkerSequence("dmm2-advanced-loot", emptyMap()) }
+        OsrsLocImportTool.requireMarkerSequence("dmm2-advanced-loot", mapOf("seq:10426" to 30000))
     }
 
     @Test fun fxNamespacesAndBlockedFontStaySeparate() {

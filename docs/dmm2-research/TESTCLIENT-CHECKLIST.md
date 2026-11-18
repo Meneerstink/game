@@ -299,3 +299,38 @@ script7155=layoutbridge en7153=op-caption/graphicbridge, plus4735/4737/8386/8387
   kopen/refund, hoofd-X/Esc, relog; geen selectie of ander accountsaldo dat doorlekt.
 - Fixed/Resizable/Stretched: borders, dropdown, beide view-iconen en Helphover naast OSRS;
   controleer geen overlap, afgesneden tekst of onjuiste kliklagen. Core-/breektests vervangen dit niet.
+
+
+## 15. Fase 7 serverbewijs en resterende beeldronde
+
+De actuele verse uitslag per testklasse staat in `phase7-output/regression/` en `PHASE7-VALIDATION.json`.
+Een unit-PASS bewijst geen clientbeeld of A9. Brongaten staan in `PHASE7-SOURCES.md`.
+
+| Kaartpunt | Verwacht en serverproeven | Resterend beeldbewijs |
+|---|---|---|
+|7.4a valuta/migratie|V1/KOERS bovenaan dossier: **200 BP -> 1 DP, naar boven**, eenmaal; geen blood-money-conversie. Dmm2CurrencyTests + Dmm2BreakTests: disabled/retry/reload/overflow, alle ongeldige verdicts, pending claim, owned drop. Nieuwe D5-proef: 1 munt, slachtoffertegel, eigenaar,100/500 of100/6100 ticks.|Bij releasevlag login van echt legacy-testaccount: DP eenmaal, oudebalans/audit intact bij overflow. Same-IP/practice/self0munten; geldige PK1ownedmunt. Geen saves handmatig veranderen.|
+|7.4b Nigel armour/rewards|Dmm2CurrencyTests/BreakTests: elk stuk1bloodmoney, permanenteunlock, gratisreclaim, dubbelunlock/volleinv/geenmunt. Dmm2BootTests: alle3 echte IDs D2/D4, unlock blijft. Dmm2WindowTests/NigelRewardStoreTests: alle7rewards, stale/refund/0/MAX/vol/relog.|Nigel armour na dood gratisclaim; Reward Store vaste/uitgebreideview+sellback, saldo blijft DP.|
+|7.4c acht corrupted weapons|Dmm2WeaponPresentationTests/Dmm2ItemServicesTests: basisaanvalsgeluid, vijf echte specialroutes via SpecialAttacks, geen special voor tbow/scythe/shadow, charges/depletion/PvPconversie. Bot+::spec blijft ongeldig specbewijs.|Spawn via testclient_commands.py --group weapons, normale swing per melee/ranged/magic; hoor/trace dezelfde cue als basis. Special met echte player UI, niet botpad.|
+|7.4d trinkets|Dmm2ItemServicesTests/SourcePolicyTests/BreakTests: Fortuity exact10M/refund/MAX, avarice GE-stackthresholdclamp+pickup, fairies gate, vengeance/cooldown, carriedvsbox, D14burden/kits bestaande doodtests.|Avarice Value-menu/invoer; fairies beide reisroutes; vengeance juiste melding/animatie; Fortuity hover/chargecheck; advanced AV nog ONZEKER.|
+|7.4e starter/Chronicle|DeadmanStarterPackTests/StarterPackInteractionsTests/BreakTests: geen dubbeleintro/reclaim, chargesaccount1000max, kaart13658dezelfdeaccountteller, verlies/destroygeenreset, spendidentity/Wilderness. Nieuw:0chargesmelding werkt ook zolang AV ontbreekt.|Chronicle Teleport heeft nog geen volledig bewezen AV/timingcontract; verwacht tot die import GEEN teleport. Niet als spelerklaar afvinken. Pack11slots-vs21inhoud blijft bronconflict zoals dossier18:5x.|
+|7.4f Fire ruby/POH|Dmm2ItemServicesTests/BreakTests/NigelHouseRewardsTests/NigelRewardStoreTests: level/ingredients/completion, exact125XP, rug/portal5ticks materiaal, interrupted/full/relog, homekeuzepermanent.|Fire Altar met Fire ruby + rubyamulet +100firerunes,21RC: juiste LVL3anim/gfx/geluid; rug/exitportal/wildernessstyle+estateagent en beide homeanimaties naast OSRS.|
+
+7.1 BEWEZEN DOOR CLAUDE: dossier17nov22:52/22:5x, Wisp15320/seq17773 elke4ticks,
+projectiel3472 + impact3473; beeld f8-wisp-sheet.png/f8-wisp-zoom.png zonder misvormde skin.
+De cache-import hoeft niet opnieuw. Alleen als de mergebundel het thrallpad verandert:
+`testclient_commands.py --group trinkets` -> Lil Wisp -> levend doel op1en6tegels (KQ1158 +god,
+geen kip die in1ticksterft); transparantie/idle/walk/volgen/4tickattack behouden.
+Keuze MAGIC01 blijft expliciet advies, geen OSRS-DMM-thrallvideobewijs.
+
+VOOR CLAUDE TESTCLIENT 7.2: Chronicle zonderlading moet de transcriptmelding tonen; in Wilderness weigeren zonderchargeverlies.
+Geladen Chronicle blijft ONZEKER totdat ononderbroken OSRS-timing + seq/gfx-match bewezen is; video's/tijdstempels in PHASE7-SOURCES.
+
+VOOR CLAUDE TESTCLIENT 7.3: advanced bij muur of andere speler binnen1tegel ->
+'You must have nothing surrounding you to open this trinket.' en item blijft. Vrijveld blijft AV-ONZEKER.
+Pas bij bewezen AV-contract: noorden/animatie en precies1van8wapens, scythe/shadow ongeladen; geen gratis herhaalde opening.
+Cachebron is inmiddels deels opgelost: loc49564/49565 en locanim10426, benoemde batch `dmm2-advanced-loot`.
+Dit is scenery, geen playerseq; spelerpose/plaatsing/serverduur blijven ONZEKER. Zie PHASE7-ADVANCED-PLAN.md.
+
+Undead-weigertekst: API18nov bevestigt dat Transcript:Trinket of undead ontbreekt; alle9784client-scriptgroepen
+in cache2686 bevatten geen bron voor COOLDOWN/NO_TRINKET/NOT_READY. Stilleweigering blijft het gelabelde advies;
+geen zelfbedachte OSRS-melding verwachten. Details + hashes in PHASE7-SOURCES.md.

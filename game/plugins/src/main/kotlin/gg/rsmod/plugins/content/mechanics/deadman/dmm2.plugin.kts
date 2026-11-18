@@ -296,16 +296,21 @@ fun clearSurroundings(player: Player): Boolean =
 
 Dmm2Ids.ItemId.ADVANCED_WEAPONRY.local?.let { id -> itemOption(id, "Open") {
     on_item_option(id, "Open") {
-        val appearance = DeadmanTrinkets.advancedAppearance ?: return@on_item_option
         val slot = player.getInteractingItemSlot()
         if (!clearSurroundings(player)) {
             player.message("You must have nothing surrounding you to open this trinket.")
             return@on_item_option
         }
+        // Claude 18-11 (lead, advice): the OSRS opening effect (scenery 49564/49565 + objectanim 10426, player pose, duration) is not
+        // proven yet (PHASE7-ADVANCED-PLAN). Until it is, the trinket still works - reward and message without an invented animation -
+        // instead of doing nothing at all. With a proven appearance the effect plays first.
+        val appearance = DeadmanTrinkets.advancedAppearance
         val tile = Tile(player.tile)
         player.queue(TaskPriority.WEAK) {
-            player.faceTile(tile.transform(0, 1)); player.animate(appearance.animation)
-            wait(appearance.ticks)
+            if (appearance != null) {
+                player.faceTile(tile.transform(0, 1)); player.animate(appearance.animation)
+                wait(appearance.ticks)
+            }
             if (player.tile == tile && !player.isDead() &&
                 DeadmanTrinkets.openAdvanced(player, slot, id, clearSurroundings(player)) { bound -> world.random.nextInt(bound) } == DeadmanTrinkets.Result.OK) {
                 val reward = player.inventory[slot] ?: return@queue

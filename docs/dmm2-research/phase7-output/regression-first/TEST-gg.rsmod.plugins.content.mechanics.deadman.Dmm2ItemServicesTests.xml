@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" tests="19" skipped="0" failures="0" errors="0" timestamp="2026-11-17T20:50:27" hostname="KNMI-5CG6051R99" time="4.181">
+  <properties/>
+  <testcase name="fire altar preview spends nothing and completion rechecks both a lost boost and removed ingredients" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="3.179"/>
+  <testcase name="khopesh passive magic bolt does not inherit melee protection from the triggering swing" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.439"/>
+  <testcase name="fortuity boosts boss kills once but not ordinary or breach monster kills" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.216"/>
+  <testcase name="undead has a persistent shared summon cooldown and never displaces the familiar" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.101"/>
+  <testcase name="scythe independent max splits batches last charge and non well uncharge destroy charges" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.016"/>
+  <testcase name="saved charged scythe with no charges cannot borrow charged bonuses for a free swing" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.017"/>
+  <testcase name="corrupted shadow is separate tier with unchanged costs and reduced multiplier model" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.052"/>
+  <testcase name="fortuity conserves ten million across charge refund and repeats" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.014"/>
+  <testcase name="mapping validates duplicate and unknown ids without using source ids as local items" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.007"/>
+  <testcase name="fortuity no money overflow and full inventory rollback and bank confers no effect" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.008"/>
+  <testcase name="khopesh uses snapshot tile and four pvp bolt times" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.006"/>
+  <testcase name="scythe cleave covers three adjacent squares for each facing without reaching behind or across planes" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.007"/>
+  <testcase name="fire altar recipe is atomic costs exact ingredients and never succeeds twice" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.008"/>
+  <testcase name="missing advanced weaponry mapping reserves its rare weight instead of increasing other breach rewards" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.01"/>
+  <testcase name="advanced weaponry has eight outcomes empty charged weapons and stale double click safety" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.015"/>
+  <testcase name="well refunds only whole hundred charge batches and overflow rolls back the complete scythe" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.006"/>
+  <testcase name="PvP loss converts charged corrupted weapons and fortuity to exact loot without changing the source items" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.062"/>
+  <testcase name="avarice handles bones notes full inventory threshold and never grants from the bank" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.008"/>
+  <testcase name="vengeance uses the same spell cooldown without consuming the trinket" classname="gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/a/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+]]></system-err>
+</testsuite>

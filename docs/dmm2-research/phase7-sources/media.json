@@ -1,0 +1,36 @@
+{
+  "batchcomplete": true,
+  "query": {
+    "pages": [
+      {
+        "pageid": 643847,
+        "ns": 6,
+        "title": "File:Trinket of advanced weaponry opening.webm",
+        "imagerepository": "local",
+        "imageinfo": [
+          {
+            "timestamp": "2026-02-08T11:29:28Z",
+            "size": 1432782,
+            "width": 450,
+            "height": 600,
+            "duration": 6.583,
+            "url": "https://oldschool.runescape.wiki/images/Trinket_of_advanced_weaponry_opening.webm?8dd72",
+            "descriptionurl": "https://oldschool.runescape.wiki/w/File:Trinket_of_advanced_weaponry_opening.webm",
+            "descriptionshorturl": "https://oldschool.runescape.wiki/index.php?curid=643847",
+            "extmetadata": {
+              "DateTime": {
+                "value": "2026-02-08T11:29:28Z",
+                "source": "mediawiki-metadata",
+                "hidden": ""
+              },
+              "ObjectName": {
+                "value": "Trinket of advanced weaponry opening",
+                "source": "mediawiki-metadata"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

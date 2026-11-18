@@ -9,26 +9,45 @@ gradle.projectsEvaluated {
             def libs = root.fileTree('game/build/install/game/lib').matching { include '*.jar' }.files.toList() + jars('junit/junit') + jars('org.hamcrest') + jars('org.jetbrains.kotlin/kotlin-test/1.8.0') + jars('org.jetbrains.kotlin/kotlin-test-junit/1.8.0')
             def existing = root.files('game/build/classes/kotlin/main', 'util/build/classes/kotlin/main', libs)
             def output = root.file('build/dmm2/phase7-plan-classes'); output.mkdirs()
-            def sources = ['OsrsPetImportTool', 'SkeletalBakeTool', 'SkeletalSidecarExportTool'].collect { root.file('game/src/main/kotlin/gg/rsmod/game/tools/importer/' + it + '.kt').path }
+            def sources = ['OsrsPetImportTool', 'SkeletalBakeTool', 'SkeletalSidecarExportTool', 'OsrsFxImportTool', 'OsrsLocImportTool', 'Rev667WorldCodec', 'OsrsInterfacePortTool'].collect { root.file('game/src/main/kotlin/gg/rsmod/game/tools/importer/' + it + '.kt').path }
             sources.add(root.file('game/src/test/kotlin/gg/rsmod/game/tools/importer/Dmm2SkeletalExtraSeqTests.kt').path)
+            sources.add(root.file('game/src/test/kotlin/gg/rsmod/game/tools/importer/Dmm2ImportBatchTests.kt').path)
             root.exec {
                 commandLine([new File(System.getProperty('java.home'), 'bin/java.exe').path, '-Xmx768m', '-cp', root.files(compiler).asPath,
                     'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler', '-no-stdlib', '-no-reflect', '-jvm-target', '11', '-nowarn', '-module-name', 'game',
                     '-Xfriend-paths=' + root.file('game/build/classes/kotlin/main').path, '-cp', existing.asPath, '-d', output.path] + sources)
             }
-            def box = root.file('build/dmm2/phase7-plan')
+            def box = root.file(root.findProperty('dmm2PlanBox') ?: 'build/dmm2/phase7-plan')
+            if (!box.canonicalPath.startsWith(root.file('build/dmm2').canonicalPath + File.separator)) throw new GradleException('PLAN root must be an isolated worktree build/dmm2 directory')
             if (!new File(box, 'game/game/data/cache/main_file_cache.dat2').isFile()) throw new GradleException('Missing isolated phase7 snapshot')
-            def out = root.file('docs/dmm2-research/phase7-output'); out.mkdirs()
-            def cp = root.files(output, existing).asPath
-            def jobs = [
+            def out = root.file(root.hasProperty('dmm2AdvancedOnly') ? 'docs/dmm2-research/phase7-output/advanced-final' : 'docs/dmm2-research/phase7-output'); out.mkdirs()
+            // rgradle retrieves current distribution jars, not local compileKotlin directories.
+            // Prefer those jars for unchanged dependencies; the freshly compiled tools remain first.
+            def cp = root.files(output, libs, 'game/build/classes/kotlin/main', 'util/build/classes/kotlin/main').asPath
+            def jobs = root.hasProperty('dmm2AdvancedOnly') ? [
+                ['advanced-batch-tests', 'org.junit.runner.JUnitCore', 'gg.rsmod.game.tools.importer.Dmm2ImportBatchTests'],
+                ['advanced-seq', 'gg.rsmod.game.tools.importer.OsrsFxImportTool', 'dmm2-advanced-loot'],
+                ['advanced-locs', 'gg.rsmod.game.tools.importer.OsrsLocImportTool', 'dmm2-advanced-loot']
+            ] : [
                 ['tests', 'org.junit.runner.JUnitCore', 'gg.rsmod.game.tools.importer.Dmm2SkeletalExtraSeqTests'],
                 ['wisp-extra', 'gg.rsmod.game.tools.importer.OsrsPetImportTool', 'skeletal-npc-extra-seq', '15571', '10241']
             ]
             jobs.each { job ->
+                if (job[0] == 'advanced-locs') {
+                    // PLAN never publishes a mapping. Seed only this isolated ledger with the preceding PLAN allocation,
+                    // so the dependent loc PLAN can encode its animation without applying either cache batch.
+                    def allocation = new File(out, 'advanced-seq.txt').text =~ /(?m)^PLAN seq 10426 -> (\d+)$/
+                    if (!allocation.find()) throw new GradleException('Missing preceding source seq10426 PLAN')
+                    def local = allocation.group(1).toInteger()
+                    def ledger = new File(box, 'OSRS_IMPORT_MASTER.yml')
+                    if (ledger.text.contains('upstream_fx_id: 10426')) throw new GradleException('Dependency seed already exists; use a fresh isolated PLAN directory')
+                    ledger.append('\n  - fx_kind: seq\n    upstream_fx_id: 10426\n    local_fx_id: ' + local + '\n    status: PLAN_ONLY_DEPENDENCY_NOT_APPLIED\n', 'UTF-8')
+                    new File(out, 'dependency.json').text = groovy.json.JsonOutput.toJson([source:10426, planLocal:local, ledger:ledger.path, applied:false])
+                }
                 def main = job[1]; def args = job.drop(2)
                 assert !args.contains('--apply')
                 def argv = [new File(System.getProperty('java.home'), 'bin/java.exe').path, '-Xmx768m']
-                if (job[0] != 'tests') argv += ['-Drsps.root=' + box.path, '-Drsps.data=' + new File(box, 'game/game/data').path]
+                if (!job[0].endsWith('tests')) argv += ['-Drsps.root=' + box.path, '-Drsps.data=' + new File(box, 'game/game/data').path]
                 argv += ['-cp', cp, main] + args
                 def rc
                 new File(out, job[0] + '.txt').withOutputStream { stream ->

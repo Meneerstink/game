@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.game.tools.importer.Dmm2ImportBatchTests" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-17T20:37:50" hostname="KNMI-5CG6051R99" time="0.185">
+  <properties/>
+  <testcase name="fxNamespacesAndBlockedFontStaySeparate" classname="gg.rsmod.game.tools.importer.Dmm2ImportBatchTests" time="0.131"/>
+  <testcase name="itemBatchPreservesProvenAllocationOrderAndNotes" classname="gg.rsmod.game.tools.importer.Dmm2ImportBatchTests" time="0.031"/>
+  <testcase name="unsupportedWispIsOnlyInSkeletalRoute" classname="gg.rsmod.game.tools.importer.Dmm2ImportBatchTests" time="0.022"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

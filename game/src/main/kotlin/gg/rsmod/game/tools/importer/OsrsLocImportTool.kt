@@ -17,12 +17,17 @@ object OsrsLocImportTool {
         if (batch == "toa-akkha-markers") check(imported.containsKey("seq:9759")) {
             "Akkha markers require seq9759; apply OsrsFxImportTool toa-akkha-marker-seq first (refusing static markers)."
         }
+        if (batch == "dmm2-advanced-loot") check(imported.containsKey("seq:10426")) {
+            "Deadman loot objects require seq10426; apply OsrsFxImportTool dmm2-advanced-loot first (refusing static loot)."
+        }
     }
 
     val BATCHES: Map<String, List<Int>> =
         mapOf(
             // DMM2: three OSRS Armageddon rug pieces (cache 2686); no custom POH assets.
             "dmm2-locs" to listOf(54114, 54115, 54116),
+            // Cache2686/gameval: Loot! cycling and chosen-weapon objects. Import seq10426 first; no guessed player animation.
+            "dmm2-advanced-loot" to listOf(49564, 49565),
             // Apply OsrsFxImportTool toa-akkha-marker-seq first; reuses these four existing loc/model ids and restores seq9759.
             "toa-akkha-markers" to listOf(45868, 45869, 45870, 45871),
             // N462 07-11: the empty rocks of the OSRS ore rocks imported with the Necropolis (RuneLite gameval ObjectID ROCKS1 11390 /
