@@ -4,6 +4,7 @@ import gg.rsmod.game.model.ExamineEntityType
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.game.tools.importer.Dmm2WindowPort as W
 import gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool
 import gg.rsmod.plugins.api.InterfaceDestination
@@ -33,8 +34,28 @@ object Dmm2RewardUi : Dmm2Interactions.RewardUi {
         var expanded = false
         var details = false
         var carried: List<Item?> = emptyList()
+        var shownPoints = -1
     }
     private val VIEW = AttributeKey<View>(resetOnDeath = true)
+
+    /**
+     * Claude 18-11 (testclient: 8 Deadman Tasks paid 110 DP while the store was open, the footer kept 67,000): OSRS shows the balance
+     * live, so while the store is open the footer is compared with the balance every 2 ticks and redrawn when another source changed it.
+     */
+    val POINTS_TIMER = TimerKey()
+    fun tickPoints(player: Player) {
+        val view = player.attr[VIEW] ?: return
+        if (!visible(player)) return
+        val balance = NigelRewardStore.balance(player)
+        if (balance != view.shownPoints) drawPoints(player, view, balance)
+        player.timers[POINTS_TIMER] = 2
+    }
+    private fun drawPoints(player: Player, view: View, balance: Int) {
+        view.shownPoints = balance
+        val points = number(balance)
+        player.setComponentText(view.main, 33, points)
+        player.setComponentText(view.main, 46, points)
+    }
     private fun number(value: Int) = String.format(Locale.ENGLISH, "%,d", value)
     fun ready() = Dmm2Ids.interfaceId(MAIN_SOURCE) != null && Dmm2Ids.interfaceId(SIDE_SOURCE) != null
 
@@ -64,6 +85,7 @@ object Dmm2RewardUi : Dmm2Interactions.RewardUi {
         scroll(player, main, 35, 36, 300)
         scroll(player, side, 6, 7, 160)
         refresh(player, store)
+        player.timers[POINTS_TIMER] = 2
     }
 
     private fun layout(player: Player, component: Int, x: Int, y: Int, w: Int, h: Int,
@@ -141,9 +163,7 @@ object Dmm2RewardUi : Dmm2Interactions.RewardUi {
         player.setComponentHidden(view.main,9,view.expanded && !view.details)
         player.setComponentHidden(view.main,20,!view.expanded)
         player.setComponentText(view.main,W.INFO_FRAME_TITLE,if (view.selected == null) "Help" else "Item Info")
-        val points = number(NigelRewardStore.balance(player))
-        player.setComponentText(view.main, 33, points)
-        player.setComponentText(view.main, 46, points)
+        drawPoints(player, view, NigelRewardStore.balance(player))
         PRODUCTS.forEachIndexed { index, reward ->
             val id = store.contract.rewards[reward] ?: return@forEachIndexed
             val first = W.REWARD_FIRST + index*W.REWARD_STRIDE

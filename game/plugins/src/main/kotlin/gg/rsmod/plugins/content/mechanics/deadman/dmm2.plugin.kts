@@ -136,15 +136,17 @@ listOfNotNull(Dmm2Ids.npc(8391), Dmm2Ids.npc(8390)).distinct().forEach { id ->
                 }
             }
         }
+        // Transcript:Nigel 'Using Armageddon cape fabric / Annihilation weapon scroll on Nigel' (Dmm2ScrollText); teleport scrolls are read.
         store.contract.rewards.forEach { (reward, item) ->
-            if (reward.key != null && reward != NigelRewardStore.Reward.BLUEPRINTS) {
-                fun redeem(player: Player) {
-                    val npc = player.getInteractingNpc(); val slot = player.getInteractingItemSlot()
-                    player.queue {
-                        if (options("Yes.", "No.", title = "This will consume the scroll.") == 1 && Dmm2Interactions.near(player, npc)) store.unlock(player, reward, slot, item)
+            val unlockOption = Dmm2ScrollText.nigelOption(reward) ?: return@forEach
+            on_item_on_npc(item = item, npc = id) {
+                val npc = player.getInteractingNpc(); val slot = player.getInteractingItemSlot()
+                player.queue {
+                    if (options(unlockOption, "Cancel.", title = "This will consume the scroll.") == 1 && Dmm2Interactions.near(player, npc) &&
+                        store.unlock(player, reward, slot, item) == NigelRewardStore.Result.OK) {
+                        Dmm2ScrollText.nigelReply(reward)?.let { chatNpc(it, npc = npc.id) }
                     }
                 }
-                on_item_on_npc(item = item, npc = id) { redeem(player) }
             }
         }
     }
@@ -158,10 +160,25 @@ NigelRewardStore.active?.let { store -> store.contract.rewards.forEach { (reward
                 "You can use this on Nigel in Lumbridge to unlock the Deadman: Armageddon ornament theme for your capes."
                 else "You can hand this in to an Estate Agent to unlock the Wilderness theme for your player-owned house.", item = item) }
         }
+    } else if (Dmm2ScrollText.weaponRead(reward) != null) itemOption(item, "Read") {
+        // Transcript:<weapon scroll>: Read only explains; the scroll is used on Nigel.
+        on_item_option(item, "Read") { player.queue { itemMessageBox(Dmm2ScrollText.weaponRead(reward)!!, item = item) } }
     } else if (reward.key != null) itemOption(item, "Read") {
         on_item_option(item, "Read") {
             val slot = player.getInteractingItemSlot()
-            player.queue { if (options("Yes.", "No.", title = "This will consume the scroll.") == 1) store.unlock(player, reward, slot, item) }
+            val text = Dmm2ScrollText.teleport(reward) ?: return@on_item_option
+            player.queue {
+                if (NigelRewardStore.unlocked(player, reward)) {
+                    text.already?.let { itemMessageBox(it, item = item) }
+                    return@queue
+                }
+                itemMessageBox(text.ask, item = item)
+                if (options(text.option, "Cancel.", title = "This will consume the scroll.") == 1 &&
+                    store.unlock(player, reward, slot, item) == NigelRewardStore.Result.OK) {
+                    player.message(text.unlocked)
+                    itemMessageBox(text.learned, item = item)
+                }
+            }
         }
     }
 } }
@@ -339,3 +356,6 @@ Dmm2Ids.ItemId.SCYTHE_EMPTY.local?.let { empty -> Dmm2Ids.ItemId.SCYTHE.local?.l
         } }
     }
 } }
+
+// Claude 18-11: the Reward Store footer follows the Deadman Points balance while the store is open (Dmm2RewardUi.tickPoints).
+on_timer(Dmm2RewardUi.POINTS_TIMER) { Dmm2RewardUi.tickPoints(player) }
