@@ -162,8 +162,10 @@ class DeadmanBreachTests {
     fun `loot table weights, eligibility and chitin replacement follow the wiki`() {
         assertEquals(BreachLoot.REGULAR_TOTAL, BreachLoot.REGULAR.sumOf { it.weight })
         assertEquals(133, BreachLoot.RARE_TRIGGER, "listed x/9576 weights: about 1/72")
-        // Owner 2026-09-19: no trinkets - their slots are gone, the six weapons (10/10/3/3/3/3) fill the rare table.
-        assertEquals(32, BreachLoot.RARE_TOTAL)
+        // DMM2 (owner 16-11, V10 'alle trinkets'): the five OSRS trinket weights 60/20/10/10/1 are back next to the six weapons
+        // (10/10/3/3/3/3 = 32), so the rare table is the full 133 again (an unmapped trinket keeps its weight as no reward).
+        assertEquals(BreachLoot.RARE_TRIGGER, BreachLoot.RARE_TOTAL)
+        assertEquals(32 + 60 + 20 + 10 + 10 + 1, BreachLoot.RARE_TOTAL)
         val trinkets = BreachLoot.EXCLUDED_TRINKETS
         // Owner 2026-10-17 (N101): the Trinket of fairies is part of the Deadman chest list; DMM2 V10 ('alle trinkets', owner 16-11) dropped
         // the remaining exclusion of avarice / undead / fortuity (BreachLoot.EXCLUDED_TRINKETS = emptySet()).
