@@ -312,7 +312,10 @@ object OsrsRegionImportTool {
             // (OsrsTextureImportTool 51 17 51) on slot 212, freed first (OverlaySlotFreeTool 212 211: its one tile in m54_58 -> the
             // same-colour 211). Re-tile only. ORDER: texture import -> slot free -> this batch.
             "watson-floor" to Batch(listOf(6455), emptyList(), "Watson's house floor: OSRS wood texture 51 on overlay 212 (N633)",
-                retileTargets = true, newOverlaySlots = listOf(212), texturedOverlays = mapOf(51 to 1426)), // OSRS overlay DEF 51 = tile value 52 (plan 02:04: 262 tiles tex 51)
+                retileTargets = true, newOverlaySlots = listOf(212), texturedOverlays = mapOf(51 to 1426), // OSRS overlay DEF 51 = tile value 52 (plan 02:04: 262 tiles tex 51)
+                // N633 18-11 02:3x: the Hosidius river + lake (OSRS water def 5 = 919 tiles, deep-water 444/447/450 = 255 tiles) fell to the
+                // nearest colour (grey 133 / green 161). Same water class as the Necropolis -> rev-667 blue water 111 (60769a tex 669).
+                overlayOverrides = NECROPOLIS_SEA),
             // CoX raid map: the room template banks x 51-52 y 80-89 (RuneLite InstanceTemplates + tsps CoxLayout: rooms chunk x 408/412/416,
             // chunk y 644-712, wall chunk 416,647) and the Olm's chamber 12889 (chunks 402..406 x 713..719). 7 of them are rev-667 squares in
             // use (13138 13140 13141 13145 13393 13401 12889) -> the whole block moves +0,+24 squares (= +1536 tiles, same z-offset as ToA) to
