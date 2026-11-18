@@ -14,8 +14,10 @@ class ClueHelperTests {
     @Test fun `every helper row names an existing step and nearly every step has RuneLite help`() {
         assertTrue(rows.keys.all { k -> steps.any { it.key == k } })
         val missing = steps.map { it.key }.filter { it !in rows }
-        // Only these two have no RuneLite entry (generator output 18-11): they show our own hint.
-        assertEquals(setOf("Clue scroll (medium) - To the east of the Ranging guild", "master:jorral"), missing.toSet())
+        // Only these have no RuneLite entry (generator output 18-11 nachtrun): they show our own hint.
+        assertEquals(setOf("Clue scroll (medium) - To the east of the Ranging guild", "master:jorral",
+            "Clue scroll (hard) - AIQ0440", "Clue scroll (hard) - ALP1140", "Clue scroll (hard) - BIP7013",
+            "Clue scroll (hard) - BJR1123", "Clue scroll (hard) - BLP6200"), missing.toSet())
     }
 
     @Test fun `anagram names the npc, the area and the challenge answer`() {

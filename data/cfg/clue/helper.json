@@ -377,11 +377,6 @@
    ]
   },
   {
-   "key": "Clue scroll (medium) - Miscellania",
-   "title": "Map Clue",
-   "solution": "Miscellania. Fairy ring CIP"
-  },
-  {
    "key": "Clue scroll (medium) - Mort Myre Swamp",
    "title": "Map Clue",
    "solution": "Mort Myre Swamp, west of Mort'ton. Fairy ring BIP"
@@ -478,11 +473,6 @@
    "key": "Clue scroll (hard) - 02.39N 29.58E",
    "title": "Coordinate Clue",
    "solution": "Behind Emir's Arena."
-  },
-  {
-   "key": "Clue scroll (hard) - 02.48N 08.05E",
-   "title": "Coordinate Clue",
-   "solution": "Little island (AIR)."
   },
   {
    "key": "Clue scroll (hard) - BLUE GRIM GUIDED",
@@ -638,10 +628,6 @@
    ]
   },
   {
-   "key": "Clue scroll (elite) - 02.35S 11.52E",
-   "title": "Coordinate Clue"
-  },
-  {
    "key": "Clue scroll (elite) - 05.07S 13.26E",
    "title": "Coordinate Clue",
    "solution": "North-east corner in Shilo Village."
@@ -762,6 +748,414 @@
    "title": "Cryptic Clue",
    "npc": "Sherlock",
    "solution": "Sherlock is located to the east of the Sorcerer's tower in Seers' Village."
+  },
+  {
+   "key": "Clue scroll (easy) - Dig under Ithoi's cabin",
+   "title": "Cryptic Clue",
+   "solution": "Dig under Ithoi's cabin in the Corsair Cove."
+  },
+  {
+   "key": "Clue scroll (easy) - Dig where only the skilled, wealthy, or brave can choose not to visit again",
+   "title": "Cryptic Clue",
+   "solution": "Dig at Lumbridge spawn"
+  },
+  {
+   "key": "Clue scroll (elite) - A ring of water surrounds 4 powerful rings",
+   "title": "Cryptic Clue",
+   "solution": "Dig by the ladder leading to the Dagannoth Kings room in the Waterbirth Island Dungeon. Bring a pet rock and rune thrownaxe OR have 85 agility."
+  },
+  {
+   "key": "Clue scroll (elite) - Dig under Razorlor's toad batta",
+   "title": "Cryptic Clue",
+   "solution": "Dig on the toad batta spawn in Tarn's Lair."
+  },
+  {
+   "key": "Clue scroll (elite) - Dig where the forces of Zamorak and Saradomin collide",
+   "title": "Cryptic Clue",
+   "solution": "Dig next to the law rift in the Abyss."
+  },
+  {
+   "key": "Clue scroll (elite) - Green is the colour of my death",
+   "title": "Cryptic Clue",
+   "solution": "Slide down to where Trollweiss grows on Trollweiss Mountain. Bring a sled."
+  },
+  {
+   "key": "Clue scroll (elite) - Right on the blessed border, cursed by the evil ones",
+   "title": "Cryptic Clue",
+   "solution": "Dig right under the fairy ring BIP."
+  },
+  {
+   "key": "Clue scroll (elite) - More resources than I can handle",
+   "title": "Cryptic Clue"
+  },
+  {
+   "key": "Clue scroll (hard) - 02.48N 34.33E",
+   "title": "Coordinate Clue",
+   "solution": "North-east of Burgh de Rott."
+  },
+  {
+   "key": "Clue scroll (hard) - 02.56N 34.30E",
+   "title": "Coordinate Clue",
+   "solution": "North-east of Burgh de Rott."
+  },
+  {
+   "key": "Clue scroll (hard) - 03.18N 12.31E",
+   "title": "Coordinate Clue",
+   "solution": "Crandor island."
+  },
+  {
+   "key": "Clue scroll (hard) - 04.03S 03.11E",
+   "title": "Coordinate Clue",
+   "solution": "Gu'Tanoth, may require 20gp."
+  },
+  {
+   "key": "Clue scroll (hard) - 04.05S 04.24E",
+   "title": "Coordinate Clue",
+   "solution": "Gu'Tanoth island, enter cave north-west of Feldip Hills (AKS)."
+  },
+  {
+   "key": "Clue scroll (hard) - 04.16S 16.16E",
+   "title": "Coordinate Clue",
+   "solution": "Ship yard (DKP)."
+  },
+  {
+   "key": "Clue scroll (hard) - 04.41N 03.09W",
+   "title": "Coordinate Clue",
+   "solution": "East of Prifddinas on Arandar mountain pass."
+  },
+  {
+   "key": "Clue scroll (hard) - 05.37N 31.15E",
+   "title": "Coordinate Clue",
+   "solution": "Nature Spirit's grotto (BIP)."
+  },
+  {
+   "key": "Clue scroll (hard) - 05.50S 10.05E",
+   "title": "Coordinate Clue",
+   "solution": "Cairn Isle, west of Shilo Village (CKR)."
+  },
+  {
+   "key": "Clue scroll (hard) - 06.11S 15.07E",
+   "title": "Coordinate Clue",
+   "solution": "On the southern part of eastern Karamja, west of the gnome glider."
+  },
+  {
+   "key": "Clue scroll (hard) - 07.43S 12.26E",
+   "title": "Coordinate Clue",
+   "solution": "Kharazi Jungle, near water pool (CKR)."
+  },
+  {
+   "key": "Clue scroll (hard) - 08.03N 31.16E",
+   "title": "Coordinate Clue",
+   "solution": "Mort Myre Swamp (BKR)."
+  },
+  {
+   "key": "Clue scroll (hard) - 13.46N 21.01E",
+   "title": "Coordinate Clue",
+   "solution": "Wilderness. South-west of Ferox Enclave (level 11)."
+  },
+  {
+   "key": "Clue scroll (hard) - 16.03N 14.07E",
+   "title": "Coordinate Clue",
+   "solution": "On the summit of Trollheim."
+  },
+  {
+   "key": "Clue scroll (hard) - 16.07N 22.45E",
+   "title": "Coordinate Clue",
+   "solution": "Wilderness. Graveyard of Shadows."
+  },
+  {
+   "key": "Clue scroll (hard) - 16.31N 12.54E",
+   "title": "Coordinate Clue",
+   "solution": "Entrance to the troll Stronghold."
+  },
+  {
+   "key": "Clue scroll (hard) - 16.35N 27.01E",
+   "title": "Coordinate Clue",
+   "solution": "Wilderness. West of eastern green dragons."
+  },
+  {
+   "key": "Clue scroll (hard) - 16.43N 19.13E",
+   "title": "Coordinate Clue",
+   "solution": "Wilderness. Bandit Camp."
+  },
+  {
+   "key": "Clue scroll (hard) - 16.43N 26.56E",
+   "title": "Coordinate Clue",
+   "solution": "Wilderness. West of eastern green dragons."
+  },
+  {
+   "key": "Clue scroll (hard) - 17.50N 08.30E",
+   "title": "Coordinate Clue",
+   "solution": "North-east of Rellekka (DKS)."
+  },
+  {
+   "key": "Clue scroll (hard) - 18.22N 16.33E",
+   "title": "Coordinate Clue",
+   "solution": "Wilderness. Forgotten Cemetery."
+  },
+  {
+   "key": "Clue scroll (hard) - 19.00N 27.13E",
+   "title": "Coordinate Clue",
+   "solution": "Wilderness. South of the Silk Chasm (Venenatis)."
+  },
+  {
+   "key": "Clue scroll (hard) - 19.09N 21.58E",
+   "title": "Coordinate Clue",
+   "solution": "In level 32 Wilderness, by the black chinchompa hunting area."
+  },
+  {
+   "key": "Clue scroll (hard) - 19.43N 25.07E",
+   "title": "Coordinate Clue",
+   "solution": "Wilderness. South-east of Lava Dragon Isle by some Chaos Dwarves."
+  },
+  {
+   "key": "Clue scroll (hard) - 20.05N 21.52E",
+   "title": "Coordinate Clue",
+   "solution": "Wilderness. North of black chinchompa hunter area."
+  },
+  {
+   "key": "Clue scroll (hard) - 20.33N 15.48E",
+   "title": "Coordinate Clue",
+   "solution": "Wilderness. Chaos Temple (level 38)."
+  },
+  {
+   "key": "Clue scroll (hard) - 21.24N 17.54E",
+   "title": "Coordinate Clue",
+   "solution": "Wilderness. West of Lava Maze, before KBD's lair."
+  },
+  {
+   "key": "Clue scroll (hard) - 22.35N 19.18E",
+   "title": "Coordinate Clue",
+   "solution": "Wilderness. Near runite ore north of Lava Maze."
+  },
+  {
+   "key": "Clue scroll (hard) - 22.45N 26.33E",
+   "title": "Coordinate Clue",
+   "solution": "Wilderness. Demonic Ruins."
+  },
+  {
+   "key": "Clue scroll (hard) - 23.30N 16.33E",
+   "title": "Coordinate Clue",
+   "solution": "Frozen Waste Plateau, south-west of Wilderness Agility Course."
+  },
+  {
+   "key": "Clue scroll (hard) - 24.24N 26.24E",
+   "title": "Coordinate Clue",
+   "solution": "Wilderness. Rogues' Castle."
+  },
+  {
+   "key": "Clue scroll (hard) - 24.56N 22.28E",
+   "title": "Coordinate Clue",
+   "solution": "Wilderness. North of Deserted Keep, west of Resource Area."
+  },
+  {
+   "key": "Clue scroll (hard) - 24.58N 18.43E",
+   "title": "Coordinate Clue",
+   "solution": "Wilderness. Pirates' Hideout."
+  },
+  {
+   "key": "Clue scroll (hard) - 25.03N 17.05E",
+   "title": "Coordinate Clue",
+   "solution": "Wilderness. West of Wilderness Agility Course."
+  },
+  {
+   "key": "Clue scroll (hard) - 25.03N 23.24E",
+   "title": "Coordinate Clue",
+   "solution": "Wilderness. North of Resource Area, near magic axe hut."
+  },
+  {
+   "key": "Clue scroll (hard) - And so on, and so on, and so on",
+   "title": "Cryptic Clue",
+   "solution": "Dig on Etceteria next to the Evergreen tree in front of the castle walls."
+  },
+  {
+   "key": "Clue scroll (hard) - Come to the evil ledge",
+   "title": "Cryptic Clue",
+   "solution": "Dig in Edgeville, just east of the Southern Yew tree."
+  },
+  {
+   "key": "Clue scroll (hard) - Covered in shadows",
+   "title": "Cryptic Clue",
+   "solution": "Dig in the centre of Mort'ton, where the roads intersect."
+  },
+  {
+   "key": "Clue scroll (hard) - Dig where 4 siblings and I all live with our evil overlord",
+   "title": "Cryptic Clue",
+   "solution": "Dig in the chicken pen inside the Champions' Guild"
+  },
+  {
+   "key": "Clue scroll (hard) - I am a token of the greatest love",
+   "title": "Cryptic Clue",
+   "solution": "Dig by the gate in the basement of the West Varrock bank."
+  },
+  {
+   "key": "Clue scroll (hard) - I lie lonely and forgotten in mid wilderness",
+   "title": "Cryptic Clue",
+   "solution": "Directly under the crossbow respawn in the Graveyard of Shadows in level 18 Wilderness."
+  },
+  {
+   "key": "Clue scroll (hard) - Mine was the strangest birth under the sun",
+   "title": "Cryptic Clue",
+   "solution": "Inside Karamja Volcano, dig directly underneath the Red spiders' eggs respawn."
+  },
+  {
+   "key": "Clue scroll (hard) - My giant guardians below the market streets",
+   "title": "Cryptic Clue",
+   "solution": "Dig near the cauldron by Moss Giants under Varrock Sewers"
+  },
+  {
+   "key": "Clue scroll (hard) - THEY'RE EVERYWHERE!!!!",
+   "title": "Cryptic Clue",
+   "solution": "Dig at Barbarian Village, next to the Stronghold of Security."
+  },
+  {
+   "key": "Clue scroll (hard) - The beasts to my east snap claws and tails",
+   "title": "Cryptic Clue",
+   "solution": "Dig by the torch in the Ardougne Zoo, between the penguins and the scorpions."
+  },
+  {
+   "key": "Clue scroll (hard) - Where the best are commemorated",
+   "title": "Cryptic Clue",
+   "solution": "Dig at the Clan Cup Trophy south-west of Citharede Abbey."
+  },
+  {
+   "key": "Clue scroll (medium) - 00.05S 01.13E",
+   "title": "Coordinate Clue",
+   "solution": "South of fruit tree patch, west of Tree Gnome Village."
+  },
+  {
+   "key": "Clue scroll (medium) - 00.18S 09.28E",
+   "title": "Coordinate Clue",
+   "solution": "Entrance of Brimhaven dungeon."
+  },
+  {
+   "key": "Clue scroll (medium) - 01.18S 14.15E",
+   "title": "Coordinate Clue",
+   "solution": "Near Karambwan fishing spot (DKP)."
+  },
+  {
+   "key": "Clue scroll (medium) - 01.35S 07.28E",
+   "title": "Coordinate Clue",
+   "solution": "North of Hazelmere's house (CLS)."
+  },
+  {
+   "key": "Clue scroll (medium) - 02.16N 12.07E",
+   "title": "Coordinate Clue",
+   "solution": "Southern coast of Crandor."
+  },
+  {
+   "key": "Clue scroll (medium) - 02.43S 33.26E",
+   "title": "Coordinate Clue",
+   "solution": "East of Uzer (DLQ)."
+  },
+  {
+   "key": "Clue scroll (medium) - 02.50N 06.20E",
+   "title": "Coordinate Clue",
+   "solution": "South of Ardougne Zoo, North of Tower of Life (DJP)."
+  },
+  {
+   "key": "Clue scroll (medium) - 03.35S 13.35E",
+   "title": "Coordinate Clue",
+   "solution": "North of nature altar, north of Shilo Village (CKR)."
+  },
+  {
+   "key": "Clue scroll (medium) - 04.00S 12.46E",
+   "title": "Coordinate Clue",
+   "solution": "West of nature altar, north of Shilo Village (CKR)."
+  },
+  {
+   "key": "Clue scroll (medium) - 04.13N 12.45E",
+   "title": "Coordinate Clue",
+   "solution": "North of Crandor island."
+  },
+  {
+   "key": "Clue scroll (medium) - 05.20S 04.28E",
+   "title": "Coordinate Clue",
+   "solution": "Feldip Hills, south-east of Gu'Tanoth (AKS)."
+  },
+  {
+   "key": "Clue scroll (medium) - 06.41N 27.15E",
+   "title": "Coordinate Clue",
+   "solution": "North-west of Exam Centre, on the hill."
+  },
+  {
+   "key": "Clue scroll (medium) - 06.58N 21.16E",
+   "title": "Coordinate Clue",
+   "solution": "North-east of Draynor Manor, near River Lum."
+  },
+  {
+   "key": "Clue scroll (medium) - 07.05N 30.56E",
+   "title": "Coordinate Clue",
+   "solution": "West of Mort Myre Swamp (BKR)."
+  },
+  {
+   "key": "Clue scroll (medium) - 07.33N 15.00E",
+   "title": "Coordinate Clue",
+   "solution": "South-east of Taverley, near Lady of the Lake."
+  },
+  {
+   "key": "Clue scroll (medium) - 08.11S 04.48E",
+   "title": "Coordinate Clue",
+   "solution": "South-east of Feldip Hills, by the crimson swifts (AKS)."
+  },
+  {
+   "key": "Clue scroll (medium) - 08.33N 01.39W",
+   "title": "Coordinate Clue",
+   "solution": "West of Tree Gnome Stronghold, near the pen containing terrorbirds."
+  },
+  {
+   "key": "Clue scroll (medium) - 09.33N 02.15E",
+   "title": "Coordinate Clue"
+  },
+  {
+   "key": "Clue scroll (medium) - 09.35N 01.50W",
+   "title": "Coordinate Clue",
+   "solution": "West of Tree Gnome Stronghold, north of the pen with terrorbirds."
+  },
+  {
+   "key": "Clue scroll (medium) - 09.48N 17.39E",
+   "title": "Coordinate Clue",
+   "solution": "Ice Mountain, west of Edgeville Monastery."
+  },
+  {
+   "key": "Clue scroll (medium) - 10.45N 04.31E",
+   "title": "Coordinate Clue",
+   "solution": "By the shore line north of the Coal Trucks."
+  },
+  {
+   "key": "Clue scroll (medium) - 11.03N 31.20E",
+   "title": "Coordinate Clue",
+   "solution": "South of Slayer Tower (CKS)."
+  },
+  {
+   "key": "Clue scroll (medium) - 11.05N 00.45W",
+   "title": "Coordinate Clue",
+   "solution": "Tree Gnome Stronghold, west of Grand Tree, near swamp."
+  },
+  {
+   "key": "Clue scroll (medium) - 11.18N 30.54E",
+   "title": "Coordinate Clue",
+   "solution": "South of Slayer Tower (CKS)."
+  },
+  {
+   "key": "Clue scroll (medium) - 11.41N 14.58E",
+   "title": "Coordinate Clue",
+   "solution": "East of Burthorpe pub."
+  },
+  {
+   "key": "Clue scroll (medium) - 12.28N 34.37E",
+   "title": "Coordinate Clue",
+   "solution": "Inside Fenkenstrain's Castle."
+  },
+  {
+   "key": "Clue scroll (medium) - 14.54N 09.13E",
+   "title": "Coordinate Clue",
+   "solution": "East of Rellekka, north-west of Golden Apple Tree (AJR)."
+  },
+  {
+   "key": "Clue scroll (medium) - 15.22N 07.31E",
+   "title": "Coordinate Clue",
+   "solution": "Rellekka, in the garden of the south-east house."
   }
  ]
 }
