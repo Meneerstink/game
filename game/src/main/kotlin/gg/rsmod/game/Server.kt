@@ -351,6 +351,13 @@ class Server {
         if (devProps != null && Files.exists(devProps)) {
             devProperties.loadYaml(devProps.toFile())
         }
+        // DMM2 (Claude 18-11, eigenaar 'volg je adviezen'): dev-settings.yml 'dmm2-release: true' is the live switch for the DMM2
+        // release (blood money + Deadman Points, breach points retired, see BreachRetirement). It ships with every release, so
+        // no VPS service change is needed; an explicit -Drsps.dmm2.release=... on the command line always wins.
+        if (System.getProperty("rsps.dmm2.release") == null && devProperties.getOrDefault("dmm2-release", false)) {
+            System.setProperty("rsps.dmm2.release", "true")
+            logger.info("DMM2 release switch ON (dev-settings.yml dmm2-release).")
+        }
 
         logger.info("Loaded properties for ${gameProperties.get<String>("name")!!}.")
 

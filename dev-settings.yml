@@ -14,3 +14,6 @@ debug-interactions: false
 # ./npc_inventory.csv once on every boot, after world init - no owner login needed.
 # Audit S-12: off by default (it wrote CSVs on every production boot).
 debug-npc-census: false
+# DMM2 (Claude 18-11): live switch for the DMM2 release - blood money + Deadman Points, breach points retired and converted
+# once per player at login (200 breach = 1 DP, rounded up). false = old breach economy. -Drsps.dmm2.release wins.
+dmm2-release: true
