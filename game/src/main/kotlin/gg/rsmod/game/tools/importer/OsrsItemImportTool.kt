@@ -308,11 +308,11 @@ object OsrsItemImportTool {
             //  - Osmumten's fang (or): the fang's own client params (Eviscerate 687) with OSRS 436 = Attack 82.
             "toa-items" to
                 listOf(
-                    Spec(25979, rev667Params = mapOf(686 to 5), weaponType = 5), // Keris partisan
-                    Spec(25981, rev667Params = mapOf(686 to 5, 749 to 0, 750 to 80), weaponType = 5), // Keris partisan of breaching
-                    Spec(27287, rev667Params = mapOf(686 to 5, 749 to 0, 750 to 80), weaponType = 5), // Keris partisan of corruption
-                    Spec(27291, rev667Params = mapOf(686 to 5, 749 to 0, 750 to 80), weaponType = 5), // Keris partisan of the sun
-                    Spec(30891, rev667Params = mapOf(686 to 5, 749 to 0, 750 to 80), weaponType = 5), // Keris partisan of amascut
+                    Spec(25979, rev667Params = mapOf(686 to 28), weaponType = 28), // Keris partisan - N631: Partisan style set 28 (PartisanStyleSetTool)
+                    Spec(25981, rev667Params = mapOf(686 to 28, 749 to 0, 750 to 80), weaponType = 28), // Keris partisan of breaching
+                    Spec(27287, rev667Params = mapOf(686 to 28, 749 to 0, 750 to 80), weaponType = 28), // Keris partisan of corruption
+                    Spec(27291, rev667Params = mapOf(686 to 28, 749 to 0, 750 to 80), weaponType = 28), // Keris partisan of the sun
+                    Spec(30891, rev667Params = mapOf(686 to 28, 749 to 0, 750 to 80), weaponType = 28), // Keris partisan of amascut
                     Spec(27283), Spec(27285), Spec(27289), Spec(30893), // Breach of the Scarab, Eye of the Corruptor, Jewel of the Sun, Jewel of Amascut
                     Spec(27275, rev667Params = staffParams(85), weaponType = 1), // Tumeken's shadow
                     Spec(27277, noted = true, rev667Params = staffParams(85), weaponType = 1), // Tumeken's shadow (uncharged)

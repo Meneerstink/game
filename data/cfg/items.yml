@@ -291001,7 +291001,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: 5
+    weapon_type: 28
     attack_speed: 4
     attack_stab: 58
     attack_slash: -2
@@ -291034,7 +291034,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: 5
+    weapon_type: 28
     attack_speed: 4
     attack_stab: 58
     attack_slash: -2
@@ -291068,7 +291068,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: 5
+    weapon_type: 28
     attack_speed: 4
     attack_stab: 58
     attack_slash: -2
@@ -291102,7 +291102,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: 5
+    weapon_type: 28
     attack_speed: 4
     attack_stab: 58
     attack_slash: -2
@@ -291136,7 +291136,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: 5
+    weapon_type: 28
     attack_speed: 4
     attack_stab: 58
     attack_slash: -2

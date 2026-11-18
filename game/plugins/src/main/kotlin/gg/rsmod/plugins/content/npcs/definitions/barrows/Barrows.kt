@@ -883,6 +883,7 @@ object Barrows {
         // wait(2) moved the player one tick after the click with the dig animation barely started. wait(1) absorbs that cycle.
         player.lockingQueue(lockState = gg.rsmod.game.model.LockState.FULL) {
             player.animate(Anims.DIG_SPADE)
+            player.playSound(Sfx.DIGSPADE) // 18-11: spade sound (wiki Spade SFX "Digging"), seq 830 has none
             wait(1)
             wait(DIG_DELAY_TICKS)
             player.message("You've broken into a crypt!")

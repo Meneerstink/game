@@ -3028,3 +3028,7 @@ ascent:
   index: 1024
   areas:
     - region: 4919
+beyond_the_meadow:  # N632 OSRS Wiki 'heard around the Mess and Watson''s house' (cacheid 707)
+  index: 1028
+  areas:
+    - region: 6455

@@ -87,6 +87,8 @@ object CorporealBeastCombatScript : CombatScript() {
         "Bronze halberd", "Iron halberd", "Steel halberd", "Black halberd", "White halberd", "Mithril halberd", "Adamant halberd",
         "Rune halberd", "Dragon halberd", "Crystal halberd", "Noxious halberd",
         "Osmumten's fang", "Thunder khopesh", "King's barrage",
+        // N623: OSRS Wiki Osmumten's fang (or): 'a cosmetic variant ... It retains all the effects of the original variant.'
+        "Osmumten's fang (or)",
     )
 
     private val POISON_OR_DEGRADE_SUFFIX = Regex("""( \((p|p\+|p\+\+|kp|deg)\)| (100|75|50|25|0))$""")

@@ -278,6 +278,10 @@ fun Pawn.dealHit(
         }
         damage = gg.rsmod.plugins.content.combat.scripts.impl.TormentedDemonCombatScript.modifyIncomingDamage(target, this, style, damage.toInt(), weapon).toDouble()
     }
+    // N635: Salarin the twisted only takes Strike spells (always the highest unlocked Bolt's max), recoil and venom (OSRS Wiki).
+    if (target is Npc && gg.rsmod.plugins.content.combat.scripts.impl.SalarinTheTwisted.isSalarin(target)) {
+        damage = gg.rsmod.plugins.content.combat.scripts.impl.SalarinTheTwisted.modifyIncomingDamage(target, this, hitType, damage.toInt(), landHit, sourceSpellId).toDouble()
+    }
     // Corporeal Beast: melee and ranged damage is halved unless dealt with a Corpbane weapon on the stab style (OSRS Wiki).
     if (target is Npc && target.id == gg.rsmod.plugins.api.cfg.Npcs.CORPOREAL_BEAST && damage > 0) {
         damage = gg.rsmod.plugins.content.combat.scripts.impl.CorporealBeastCombatScript.modifyIncomingDamage(this, hitType, damage.toInt()).toDouble()

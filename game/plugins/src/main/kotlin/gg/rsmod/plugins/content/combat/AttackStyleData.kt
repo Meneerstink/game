@@ -153,6 +153,16 @@ enum class WeaponCombatData(
         AttackStyleData(CombatStyle.THIRD, WeaponStyle.DEFENSIVE, StyleType.CRUSH, XpMode.DEFENCE_XP),
     ),
 
+    // N631: OSRS Wiki Weapons/Categories "Partisan": Stab (stab, accurate, Attack) / Lunge (stab, aggressive, Strength) /
+    // Pound (crush, aggressive, Strength) / Block (stab, defensive, Defence).
+    PARTISAN(
+        arrayOf(WeaponType.PARTISAN),
+        AttackStyleData(CombatStyle.FIRST, WeaponStyle.ACCURATE, StyleType.STAB, XpMode.ATTACK_XP),
+        AttackStyleData(CombatStyle.SECOND, WeaponStyle.AGGRESSIVE, StyleType.STAB, XpMode.STRENGTH_XP),
+        AttackStyleData(CombatStyle.THIRD, WeaponStyle.AGGRESSIVE, StyleType.CRUSH, XpMode.STRENGTH_XP),
+        AttackStyleData(CombatStyle.FOURTH, WeaponStyle.DEFENSIVE, StyleType.STAB, XpMode.DEFENCE_XP),
+    ),
+
     SLING(
         arrayOf(WeaponType.SLING),
         AttackStyleData(CombatStyle.FIRST, WeaponStyle.ACCURATE, StyleType.RANGED, XpMode.RANGED_XP),
