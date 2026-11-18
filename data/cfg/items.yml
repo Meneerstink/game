@@ -296401,6 +296401,30 @@
     equip_slot: 1
     equip_type: -1
     appearance_id: 6938
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
 - id: 24742
   name: "Justiciar's hand"
   examine: "The hand of a Saradominist justiciar."
@@ -296489,6 +296513,7 @@
     ranged_strength: 0
     magic_damage: 0.0
     attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -296507,7 +296532,27 @@
     equip_slot: 0
     equip_type: -1
     appearance_id: 6939
-    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -296534,12 +296579,6 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 0
-    attack_ranged: 0
-    defence_stab: 0
-    defence_slash: 0
-    defence_crush: 0
-    defence_magic: 0
     attack_magic: 15
     attack_ranged: 0
     defence_stab: 3
@@ -296551,8 +296590,9 @@
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 0.0
+    magic_damage: 2.0
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -296727,9 +296767,27 @@
     equip_slot: 10
     equip_type: -1
     appearance_id: 6944
-    magic_damage: 2.0
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
     attack_audio: -1
-    skill_reqs: [{'skill': 6, 'level': 75}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -296756,19 +296814,20 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 0
+    attack_magic: 15
     attack_ranged: 0
-    defence_stab: 0
-    defence_slash: 0
-    defence_crush: 0
-    defence_magic: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 15
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
-    prayer: 3
+    prayer: 0
     ranged_strength: 0
-    magic_damage: 0.0
+    magic_damage: 2.0
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -296918,20 +296977,19 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 15
+    attack_magic: 0
     attack_ranged: 0
-    defence_stab: 3
-    defence_slash: 3
-    defence_crush: 3
-    defence_magic: 15
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
     prayer: 0
     ranged_strength: 0
-    magic_damage: 2.0
+    magic_damage: 0.0
     attack_audio: -1
-    skill_reqs: [{'skill': 6, 'level': 75}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -296978,16 +297036,6 @@
     defence_magic: 0
     defence_ranged: 0
     summoning: 0
-    melee_strength: 0
-    prayer: 0
-    ranged_strength: 0
-    magic_damage: 0.0
-    attack_audio: -1
-    absorb_melee: 0
-    absorb_magic: 0
-    absorb_ranged: 0
-- id: 25283
-  name: "Cyclops head"
     melee_strength: 147
     prayer: 0
     ranged_strength: 0
@@ -296997,6 +297045,12 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+- id: 25283
+  name: "Cyclops head"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
 - id: 24937
   name: "Elder maul"
   examine: "Swamp this note at any bank for the equivalent item"
@@ -297038,6 +297092,10 @@
     absorb_ranged: 0
 - id: 25285
   name: "Nunchaku"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
 - id: 24938
   name: "Dinh's bulwark"
   examine: "Is it... looking at me?"
@@ -299277,6 +299335,30 @@
     equip_slot: 3
     equip_type: 5
     appearance_id: 7003
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 8
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
 - id: 24755
   name: "Kindling"
   examine: "It feels weak, but it might be okay for burning."
@@ -300194,8 +300276,8 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: 0
-    attack_ranged: 8
+    attack_magic: 2
+    attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -300234,7 +300316,6 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_magic: 2
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
@@ -300499,6 +300580,30 @@
     equip_slot: 4
     equip_type: -1
     appearance_id: 7011
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -2
+    attack_ranged: 2
+    defence_stab: 8
+    defence_slash: 9
+    defence_crush: 10
+    defence_magic: 4
+    defence_ranged: 9
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
 - id: 24918
   name: "Xeric's talisman"
   examine: "An enervated relic of the ancient times of Kourend."
@@ -300516,13 +300621,13 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
-    attack_magic: -2
-    attack_ranged: 2
-    defence_stab: 8
-    defence_slash: 9
-    defence_crush: 10
-    defence_magic: 4
-    defence_ranged: 9
+    attack_magic: 3
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 1
+    defence_ranged: 0
     summoning: 0
     melee_strength: 0
     prayer: 0
@@ -300790,13 +300895,11 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_magic: 3
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
     defence_magic: 0
-    defence_magic: 1
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
@@ -300991,6 +301094,8 @@
   name: "Mimic scroll case"
   examine: "Maybe I should open it..."
   tradeable: false
+  weight: 0.02
+  equipment: null
 - id: 24924
   name: "Antipoison (-)(1)"
   examine: "The potion purges the lizardmen's poison. It was mixed particularly badly."
