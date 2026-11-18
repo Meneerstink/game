@@ -73,7 +73,7 @@ suspend fun redecorate(task: QueueTask) {
     task.chatPlayer("I'd like to redecorate.", facialExpression = FacialExpression.NORMAL)
     task.chatNpc("Of course. Which style would you like?", facialExpression = FacialExpression.HAPPY)
 
-    val styles = PlayerHouse.Style.values().filter { it != current }
+    val styles = PlayerHouse.Style.values().filter { it != current && (it != PlayerHouse.Style.WILDERNESS || wildernessOffered(player)) }
     var page = 0
     while (true) {
         val slice = styles.drop(page * 4).take(4)
@@ -81,7 +81,7 @@ suspend fun redecorate(task: QueueTask) {
             return
         }
         val more = styles.size > (page + 1) * 4
-        val labels = slice.map { "${it.displayName} (${it.cost} coins)" } + (if (more) "More..." else "Cancel")
+        val labels = slice.map { "${it.displayName} (${styleCost(player, it)})" } + (if (more) "More..." else "Cancel")
         val pick = task.options(*labels.toTypedArray(), title = "Redecorate my house")
         if (pick < 1) {
             return
@@ -107,6 +107,9 @@ suspend fun applyStyle(
             "I'm afraid ${style.displayName.lowercase()} needs ${style.level} Construction. Come back when you've learned a little more.",
             facialExpression = FacialExpression.SAD,
         )
+        return
+    }
+    if (style == PlayerHouse.Style.WILDERNESS && !unlockWilderness(task)) {
         return
     }
     if (player.inventory.getItemCount(Items.COINS_995) < style.cost) {
@@ -146,4 +149,37 @@ suspend fun moveHouse(task: QueueTask) {
     player.attr[PlayerHouse.LOCATION_ATTR] = town.ordinal
     player.message("Your house location has been set to ${town.displayName}.")
     task.chatNpc("Your house is now in ${town.displayName}. Its portal there will take you home.", facialExpression = FacialExpression.HAPPY)
+}
+
+/*
+ * DMM2 punt 4 (Claude 18-11, wiki Annihilation blueprints): "Having the Estate agent re-decorate your house into the Wilderness house
+ * style while having the blueprints in the inventory will consume them and permanently unlock the house style", and the exit portal
+ * blueprints replace them in the inventory. The style is listed once it is unlocked or the blueprints are carried (no OSRS line is
+ * known for asking without them, so it is simply not offered then), and only while the Deadman reward store runs.
+ */
+fun blueprintsId(): Int? = gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStore.active?.contract?.rewards?.get(gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStore.Reward.BLUEPRINTS)
+
+fun wildernessUnlocked(player: gg.rsmod.game.model.entity.Player) =
+    gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStore.unlocked(player, gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStore.Reward.BLUEPRINTS)
+
+fun wildernessOffered(player: gg.rsmod.game.model.entity.Player): Boolean {
+    val id = blueprintsId() ?: return false
+    return wildernessUnlocked(player) || player.inventory.contains(id)
+}
+
+fun styleCost(player: gg.rsmod.game.model.entity.Player, style: PlayerHouse.Style): String =
+    when {
+        style != PlayerHouse.Style.WILDERNESS -> "${style.cost} coins"
+        wildernessUnlocked(player) -> "unlocked"
+        else -> "Annihilation blueprints"
+    }
+
+/** Consumes the carried blueprints (exit portal blueprints in their place) unless the style is already unlocked. */
+suspend fun unlockWilderness(task: QueueTask): Boolean {
+    val player = task.player
+    if (wildernessUnlocked(player)) return true
+    val store = gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStore.active ?: return false
+    val id = blueprintsId() ?: return false
+    val slot = (0 until player.inventory.capacity).firstOrNull { player.inventory[it]?.id == id } ?: return false
+    return store.unlockWildernessStyle(player, slot, id) == gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStore.Result.OK
 }

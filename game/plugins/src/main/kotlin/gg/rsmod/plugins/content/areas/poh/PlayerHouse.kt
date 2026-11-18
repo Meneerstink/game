@@ -91,6 +91,13 @@ object PlayerHouse {
         FREMENNIK_WOOD("Fremennik-style wood", 1856, 5056, 3, 13111, Objs.STAINEDGLASS_WINDOW_13246, 30, 10_000),
         TROPICAL_WOOD("Tropical wood", 1920, 5056, 0, 13011, Objs.STAINEDGLASS_WINDOW, 40, 15_000),
         FANCY_STONE("Fancy stone", 1920, 5056, 1, 13116, Objs.STAINEDGLASS_WINDOW_13264, 50, 25_000),
+        /**
+         * DMM2 punt 4 (Claude 18-11): OSRS 'Wilderness theme' (wiki House styles: Construction 1 + Annihilation blueprints, no coins).
+         * Template = OSRS region 8302 plane 0, imported 1:1 (OsrsRegionImportTool batch dmm2-poh-wilderness): the same room chunks as
+         * the 7503 styles, the 2006 hotspots kept on their own ids; wall 60252 -> 67056, chapel window 60651 -> 67077. Offered by the
+         * Estate agent only when the Deadman reward store is running ([wildernessAvailable]). Appended last: styles persist by ordinal.
+         */
+        WILDERNESS("Wilderness theme", 2048, 7040, 0, 67056, 67077, 1, 0),
         ;
 
         /** The lawn (chunk 1,0), which fills every instance chunk the house's rooms do not. */
