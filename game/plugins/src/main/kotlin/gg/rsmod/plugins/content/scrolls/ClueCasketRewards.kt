@@ -142,7 +142,7 @@ object ClueCasketRewards {
         // Treasure! jingle above as its sound. Advice chosen by Claude 18-11 (no OSRS casket effect exists); the owner may swap it.
         if (plan.tier == ClueScrollTier.MASTER) player.graphic(gg.rsmod.plugins.api.cfg.Gfx.LEVEL_UP_FIREWORKS)
         player.message("Well done, you've completed the Treasure Trail!")
-        player.message("<col=ff0000>You have completed $count ${plan.tier.displayName.lowercase()} Treasure Trails.</col>")
+        player.message("<col=ff0000>You have completed $count ${plan.tier.displayName.lowercase()} Treasure Trail${if (count == 1) "" else "s"}.</col>") // singular at 1: RuneLite LootTrackerPlugin CLUE_SCROLL_PATTERN "... Treasure Trails?\."
         // Claude 18-11 (wiki Reward casket: {{Mes|Your treasure is worth around 217,997 coins!|colour=Red}}): OSRS shows the reward value.
         // The price basis has no source - advice chosen: the server's GE guide price (OSRS hourly price, else cache value), noted = its item.
         // The value line is cosmetic: a missing GE service/definition must never undo or block the award (Claude 18-11, tests).
