@@ -14965,3 +14965,156 @@
   examine: "Looks gross."
 - id: 15175
   examine: "An ancient body of power."
+# N634 deel 2 (Claude 18-11): niet-vechtende CoX/ToA/DMM2-npc examines (wiki infobox_npc)
+- id: 15246
+  examine: "An indigenous inhabitant of the caves."
+- id: 15247
+  examine: "An indigenous inhabitant of the caves."
+- id: 15248
+  examine: "An indigenous inhabitant of the caves."
+- id: 15249
+  examine: "An indigenous inhabitant of the caves."
+- id: 15274
+  examine: "Grotesque."
+- id: 15285
+  examine: "Aww, cute."
+- id: 15286
+  examine: "The gems on its rocky carapace are glowing dimly."
+- id: 15287
+  examine: "The gems on its rocky carapace are glowing red."
+- id: 15288
+  examine: "The gems on its rocky carapace are glowing green."
+- id: 15289
+  examine: "The gems on its rocky carapace are glowing blue."
+- id: 15290
+  examine: "A white focus of energy."
+- id: 15291
+  examine: "A red focus of energy."
+- id: 15292
+  examine: "A green focus of energy."
+- id: 15293
+  examine: "A blue focus of energy."
+- id: 15297
+  examine: "Maybe it's tasty."
+- id: 15298
+  examine: "Maybe it's tasty."
+- id: 15299
+  examine: "Maybe it's tasty."
+- id: 15300
+  examine: "Maybe it's tasty."
+- id: 15301
+  examine: "Maybe it's tasty."
+- id: 15302
+  examine: "Maybe it's tasty."
+- id: 15303
+  examine: "Maybe it's tasty."
+- id: 15304
+  examine: "Its bulbous eyes and pasty colour are typical of these underground creatures."
+- id: 15305
+  examine: "A high ranking officer of the Shayzien Army."
+- id: 15306
+  examine: "An experienced mountaineer."
+- id: 15307
+  examine: "An experienced mountaineer."
+- id: 15308
+  examine: "Smells like lizard, talks like people."
+- id: 15309
+  examine: "Imprisonment has reduced it to a feral creature of pure instinct."
+- id: 15310
+  examine: "Imprisonment has reduced it to a feral creature of pure instinct."
+- id: 15138
+  examine: "Tumeken's avatar of companionship."
+- id: 15139
+  examine: "Tumeken's avatar of resourcefulness."
+- id: 15140
+  examine: "Tumeken's avatar of isolation."
+- id: 15141
+  examine: "Tumeken's avatar of health."
+- id: 15142
+  examine: "A long-dead pharaoh."
+- id: 15143
+  examine: "A long-dead pharaoh."
+- id: 15144
+  examine: "A long-dead spirit."
+- id: 15145
+  examine: "A long-dead pharaoh."
+- id: 15146
+  examine: "A long-dead pharaoh."
+- id: 15147
+  examine: "He's here to help."
+- id: 15148
+  examine: "Eeek! A ghost!"
+- id: 15149
+  examine: "The all-powerful Devourer."
+- id: 15152
+  examine: "It needs a lot more water."
+- id: 15153
+  examine: "It needs a lot more water."
+- id: 15154
+  examine: "It needs more water."
+- id: 15155
+  examine: "It needs a bit more water."
+- id: 15156
+  examine: "A healthy and nourished palm."
+- id: 15158
+  examine: "It looks to be glimmering slightly."
+- id: 15159
+  examine: "The cracks are starting to show."
+- id: 15160
+  examine: "A magical orb."
+- id: 15163
+  examine: "Doesn't look tasty."
+- id: 15164
+  examine: "Doesn't look tasty."
+- id: 15166
+  examine: "Wet."
+- id: 15167
+  examine: "Wet and bloody."
+- id: 15170
+  examine: "What?"
+- id: 15171
+  examine: "Wait... what?"
+- id: 15174
+  examine: "An ancient body of power."
+- id: 15176
+  examine: "An ancient body of power."
+- id: 15198
+  examine: "The heart of an ancient automaton."
+- id: 15178
+  examine: "A throbbing energy source."
+- id: 15180
+  examine: "I should stop examining this and get out of the way!"
+- id: 15181
+  examine: "I should stop examining this and get out of the way!"
+- id: 15187
+  examine: "A magical orb."
+- id: 15188
+  examine: "A magical orb."
+- id: 15189
+  examine: "A magical orb."
+- id: 15190
+  examine: "A magical orb."
+- id: 15191
+  examine: "A magical orb."
+- id: 15194
+  examine: "A spy from Al Kharid."
+- id: 15195
+  examine: "A spy from Al Kharid."
+- id: 15217
+  examine: "She's a bit dead."
+- id: 15218
+  examine: "A big dead croc."
+- id: 15219
+  examine: "Scaley."
+- id: 15220
+  examine: "An ancient automaton imbued with the power of Elidinis."
+- id: 15221
+  examine: "An ancient automaton imbued with the power of Tumeken."
+- id: 15315
+  examine: "A mistress of the arcane arts - aka finance."
+- id: 15314
+  examine: "A master of the arcane arts - aka finance."
+- id: 15317
+  examine: "Looks like a guy not to be messed with."
+- id: 15316
+  examine: "Looks like a guy not to be messed with."
