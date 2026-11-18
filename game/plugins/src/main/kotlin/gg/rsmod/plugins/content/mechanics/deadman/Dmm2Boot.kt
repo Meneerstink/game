@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.deadman
 
 import gg.rsmod.game.RspsPaths
+import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.content.combat.createProjectile
 import gg.rsmod.plugins.content.starter.DeadmanStarterPack
 import java.io.File
@@ -195,6 +196,9 @@ object Dmm2Boot {
      * (RuneLite gameval names). Missing any of them keeps the weapon's extras off, as before.
      * ONZEKER (no OSRS timing source yet, phase-3 advice): the bolt lands with the melee hit (delay 1); measure in an OSRS video.
      */
+    /** Korasi's Disrupt sound (667 cache 3853), owner's choice 18-11 for the Thunder khopesh special. */
+    const val KHOPESH_SPECIAL_SOUND = 3853
+
     private fun khopeshAppearance(): ThunderKhopesh.Appearance? {
         val specialSeq = Dmm2Ids.seq(11812) ?: return null
         val specialGfx = Dmm2Ids.spot(3030) ?: return null
@@ -207,6 +211,9 @@ object Dmm2Boot {
                 if (!special) return // ordinary swings keep the sword animation from CorruptedWeapons
                 player.animate(specialSeq)
                 player.graphic(specialGfx)
+                // Owner 18-11 (no OSRS source: wiki silent, seq 11812 has no frame sound, gameval has no khopesh sound):
+                // the special plays Korasi's Disrupt lightning sound 3853, as in melee_specials KORASI_DISRUPT_SOUND.
+                player.playSound(KHOPESH_SPECIAL_SOUND)
             }
             override fun bolt(player: gg.rsmod.game.model.entity.Player, tile: gg.rsmod.game.model.Tile, special: Boolean) {
                 player.world.spawn(gg.rsmod.game.model.TileGraphic(tile, if (special) specialBolt else basic, 0))
