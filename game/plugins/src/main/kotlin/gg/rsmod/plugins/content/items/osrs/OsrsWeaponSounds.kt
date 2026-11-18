@@ -61,6 +61,12 @@ object OsrsWeaponSounds {
         register(SWORD, Items.ARCLIGHT, Items.ARCLIGHT_INACTIVE, Items.EMBERLIGHT)
         register(AXE, Items.THIRDAGE_AXE, Items.GILDED_AXE)
         register(PICKAXE, Items.THIRDAGE_PICKAXE, Items.GILDED_PICKAXE, Items.DRAGON_PICKAXE_OR, Items.DRAGON_PICKAXE_OR_UPGRADED)
+        // 18-11 (server logs: 360x 'silent swing' weapon=15259 anim=395): OSRS Wiki Dragon pickaxe 'combatstyle = Pickaxe' - the whole
+        // pickaxe family (the category sound only plays when the attack sequence itself is silent).
+        register(
+            PICKAXE, Items.BRONZE_PICKAXE, Items.IRON_PICKAXE, Items.STEEL_PICKAXE, Items.MITHRIL_PICKAXE, Items.ADAMANT_PICKAXE,
+            Items.RUNE_PICKAXE, Items.DRAGON_PICKAXE, Items.GILDED_DRAGON_PICKAXE,
+        )
         register(SPEAR, Items.DRAGON_HUNTER_LANCE, Items.GILDED_SPEAR, Items.GILDED_HASTA)
         register(KERIS, Items.KERIS, Items.KERIS_P, Items.KERIS_P_10583, Items.KERIS_P_10584)
         // Bladed staves (xrsps: "Bladed staff" -> staff sounds), staves and wands (xrsps: Kodai / 3rd age wand -> staff sounds). The
