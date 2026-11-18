@@ -47,6 +47,7 @@ class NpcKillerTests {
                 .flatMap { file -> file.readLines().map { file.path to it } }
                 .filter { (_, line) -> "npc.killer()" in line }
                 .filterNot { (_, line) -> "?: return@on_npc_death" in line || "?: return@on_npc_pre_death" in line }
+                .filterNot { (_, line) -> "npc.killer() !==" in line } // identity compare with a player is null-safe (MageArena)
                 .map { it.first }
                 .distinct()
 

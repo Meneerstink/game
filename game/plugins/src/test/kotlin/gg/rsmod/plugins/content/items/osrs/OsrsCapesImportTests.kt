@@ -15,7 +15,7 @@ import kotlin.test.assertTrue
 class OsrsCapesImportTests {
     @Test
     fun `every max cape variant combines with the 667 max cape and keeps its component's effects`() {
-        assertEquals(9, MaxCapes.VARIANTS.size, "3 imbued god, assembler, Masori assembler, Dizana's, fire, infernal, accumulator")
+        assertEquals(10, MaxCapes.VARIANTS.size, "3 imbued god, assembler, Masori assembler, Dizana's, fire, infernal, accumulator, ancient")
         // Night run 2026-09-19 (OSRS Wiki pages the owner linked): fire / infernal / accumulator max capes on their components.
         assertEquals(Items.FIRE_CAPE, MaxCapes.forCape(Items.FIRE_MAX_CAPE)?.component)
         assertEquals(Items.INFERNAL_CAPE, MaxCapes.forCape(Items.INFERNAL_MAX_CAPE)?.component)

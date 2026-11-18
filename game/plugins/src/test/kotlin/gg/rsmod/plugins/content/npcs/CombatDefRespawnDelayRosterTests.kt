@@ -19,8 +19,10 @@ class CombatDefRespawnDelayRosterTests {
             val defs = Regex("""(?m)^\s*set_combat_def\(""").findAll(text).count()
             if (defs == 0) return@forEach
             total += defs
+            // a set_combat_def(id, Helper.definition(..)) call has no inline block: the helper file builds it with its own respawnDelay
+            val inline = Regex("""(?m)^\s*set_combat_def\([^,]*\)\s*\{\s*$""").findAll(text).count()
             val delays = Regex("""respawnDelay\s*=""").findAll(text).count()
-            if (delays < defs) offenders += "${file.relativeTo(root)} defs=$defs respawnDelay=$delays"
+            if (delays < inline) offenders += "${file.relativeTo(root)} defs=$inline respawnDelay=$delays"
         }
         assertTrue(total >= 226, "combat definitions found: $total")
         assertTrue(offenders.isEmpty(), "combat definitions without respawnDelay: $offenders")

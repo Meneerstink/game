@@ -63,6 +63,8 @@ class ItemAttachSoundsTests {
         mapOf(
             "items/combine/item_combination.plugin.kts" to "binds CombinationData rows to CombinationAction, which sounds (guarded above)",
             "items/gut_fish.plugin.kts" to "food preparation",
+            "items/osrs/ancient_cape.plugin.kts" to "a confirmed one-way conversion (Ancient fabric), not an attach; no sourced OSRS sound id yet (Mage Arena 2)",
+            "items/osrs/masori_fortify.plugin.kts" to "crafting with hammer + plates; no sourced OSRS sound id yet",
             "items/osrs/crystal.plugin.kts" to "crystal shards charge crystal equipment",
             "items/osrs/demonbane.plugin.kts" to "ancient shards charge Arclight (creation is at an altar)",
             "items/osrs/locator_orb.plugin.kts" to "crafting: a glassblowing pipe blows the inert orb out of a dragonstone (N446), nothing is attached",

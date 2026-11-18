@@ -162,6 +162,7 @@ class DuelArenaRulesTests {
             "inter/attack/attack_tab.plugin.kts" to "SPECIAL_ATTACK",
             "magic/PawnExt.kt" to "TELEPORT",
             "skills/summoning/Familiar.kt" to "SUMMON",
+            "magic/alchemy/alchemy.plugin.kts" to "UTILITY_SPELL",
         )
         val missing = consumers.filter { (path, action) ->
             !File(main, path).readText().contains(Regex("""ActivityRestrictions\.refus(e|al)\(\s*\w+,\s*gg\.rsmod\.plugins\.content\.mechanics\.restrictions\.RestrictedAction\.$action"""))

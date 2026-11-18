@@ -20,6 +20,7 @@ class MixedLifepointUnitTests {
     private val allowed = mapOf(
         "home_pool.plugin.kts" to "heal(9999) is a heal-to-full sentinel, capped at the maximum",
         "FightCaveCombatScripts.kt" to "PARKED minigame (Fight Caves): Yt-HurKot +100 heal recorded, not in scope",
+        "VespulaRoom.kt" to "Chambers of Xeric Vespula grubs: 125 hp is the OSRS wiki value 1:1, not an x10 donor figure",
         "hitsplat_test.plugin.kts" to "admin ::hitsplats check: keeps its locked test npc far above any hit on purpose, never a player path",
     )
 

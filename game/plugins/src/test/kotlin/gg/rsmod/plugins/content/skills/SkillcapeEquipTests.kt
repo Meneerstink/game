@@ -77,7 +77,7 @@ class SkillcapeEquipTests {
 
     @Test
     fun `every max cape hood locked and look variant requires all 24 skills but no Dungeoneering`() {
-        assertEquals(28, maxItems.size)
+        assertEquals(30, maxItems.size) // 28 + the Ancient max cape pair (Mage Arena 2)
         maxItems.forEach { id ->
             assertEquals((0..23).associate { it.toByte() to 99.toByte() }, items.getValue(id).skillReqs!!.toMap(), "item $id")
             val p = player()

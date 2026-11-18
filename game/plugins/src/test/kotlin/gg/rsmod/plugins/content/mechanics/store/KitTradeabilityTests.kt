@@ -58,7 +58,9 @@ class KitTradeabilityTests {
     @Test
     fun `every kit is sold in one of the three stores`() {
         val sold = StoreCatalogue.ENTRIES.filter { it.kind == StoreCatalogue.Kind.KIT }.map { it.purchaseItem }.toSet()
-        val missing = (OrnamentKitRules.KITS - sold).sorted()
+        // ToA raid-reward kits (breaching / corruption / the sun / amascut keris partisan kits, Osmumten's fang (or) kit): obtained only from the Tombs of Amascut chest, as in OSRS.
+        val raidRewardKits = setOf(24654, 24655, 24656, 24657, 24662)
+        val missing = (OrnamentKitRules.KITS - sold - raidRewardKits).sorted()
         assertTrue(missing.isEmpty(), "kits in no store: $missing")
     }
 }

@@ -79,6 +79,8 @@ class PotionRosterTests {
         Blocked("SEPARATE BATCH A3-c: brewed keg/mature ales (food/drink table, Void MatureAle)", named("Asgarnian ale", "Mind bomb", "Dwarven stout", "Greenman's ale", "Dragon bitter", "Moonlight mead", "Axeman's folly", "Chef's delight", "Slayer's respite", "Cider")),
         Blocked("SOURCE_BLOCKED: Herblore Habitat juju/scentless/god potions have no donor effect", named("Juju", "Scentless potion", "Saradomin's blessing", "Guthix's gift", "Zamorak's favour")),
         Blocked("SOURCE_CONFLICT: Guthix rest empty container (Void data: empty = vial, excess = empty_cup)", named("Guthix rest")),
+        Blocked("RAID SUPPLIES: ToA Nectar/Tears/Ambrosia/Liquid adrenaline are drunk through ToaConsumables (raid only)", named("Nectar", "Tears of Elidinis", "Ambrosia", "Liquid adrenaline")),
+        Blocked("RAID SUPPLIES: CoX Elder/Twisted/Kodai/Revitalisation/Prayer enhance/Xeric's aid/Overload/Antipoison are drunk through CoxPotions (raid only)", named("Elder (", "Elder potion", "Twisted (", "Twisted potion", "Kodai (", "Kodai potion", "Revitalisation (", "Revitalisation potion", "Prayer enhance", "Xeric's aid", "Overload (", "Antipoison (", "Antipoison potion")),
         Blocked("OWNER_REMOVED: extreme 125-stat/ranged, overload, prayer renewal, recover special, divine potions and blighted overload") { it.id in RemovedPotions.itemIds },
     )
 
