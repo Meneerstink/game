@@ -106,13 +106,18 @@ class NigelRewardStoreTests {
         assertEquals(850, f.inventory[0]?.id)
         assertEquals(Result.OK, store.reclaimExitBlueprints(f.player))
         assertEquals(2L, f.count(850)); assertEquals(100_000, NigelRewardStore.balance(f.player))
-        assertEquals(Result.LOCKED, store.selectTeleport(f.player, Teleport.ANNIHILATION))
-        assertEquals(Teleport.DEFAULT, store.selectedTeleport(f.player))
+        // Spellbook 'Animation' toggles (wiki Animation overrides): locked styles refused, several on at once, the last one stays on.
+        assertEquals(Result.LOCKED, store.toggleTeleport(f.player, Teleport.ANNIHILATION))
+        assertEquals(listOf(Teleport.DEFAULT), store.teleportsOn(f.player))
+        assertEquals(listOf(Teleport.DEFAULT), store.teleportStyles(f.player))
         f.attr[Reward.ANNIHILATION_TELEPORT.unlock!!] = 1
-        assertEquals(Result.OK, store.selectTeleport(f.player, Teleport.ANNIHILATION))
-        assertEquals(Teleport.ANNIHILATION, store.selectedTeleport(f.player))
-        assertEquals(Result.OK, store.selectTeleport(f.player, Teleport.DEFAULT))
-        assertEquals(Teleport.DEFAULT, store.selectedTeleport(f.player))
+        assertEquals(listOf(Teleport.DEFAULT, Teleport.ANNIHILATION), store.teleportStyles(f.player))
+        assertEquals(Result.OK, store.toggleTeleport(f.player, Teleport.ANNIHILATION))
+        assertEquals(listOf(Teleport.DEFAULT, Teleport.ANNIHILATION), store.teleportsOn(f.player))
+        assertEquals(Result.OK, store.toggleTeleport(f.player, Teleport.DEFAULT))
+        assertEquals(listOf(Teleport.ANNIHILATION), store.teleportsOn(f.player))
+        assertEquals(Result.LAST_TELEPORT_ON, store.toggleTeleport(f.player, Teleport.ANNIHILATION))
+        assertEquals(listOf(Teleport.ANNIHILATION), store.teleportsOn(f.player))
     }
 
     @Test fun `missing local ids fail closed without phantom item or point changes`() {

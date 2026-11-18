@@ -31,6 +31,7 @@ LEGACY_AUTOCAST_OPS.forEach { (book, legacy) ->
             wait(1)
             if (!p.isOnline) return@queue
             components.forEach { (component, events) -> p.setInterfaceEvents(book, component, -1..-1, events) }
+            gg.rsmod.plugins.content.mechanics.deadman.DeadmanHomeTeleport.refreshOp(p)
         }
     }
 }

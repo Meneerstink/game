@@ -187,6 +187,7 @@ listOfNotNull(Dmm2Ids.npc(8391), Dmm2Ids.npc(8390)).distinct().forEach { id ->
                 player.queue {
                     if (options(unlockOption, "Cancel.", title = "This will consume the scroll.") == 1 && Dmm2Interactions.near(player, npc) &&
                         store.unlock(player, reward, slot, item) == NigelRewardStore.Result.OK) {
+                        DeadmanHomeTeleport.refreshOp(player)
                         Dmm2ScrollText.nigelReply(reward)?.let { chatNpc(it, npc = npc.id) }
                     }
                 }
@@ -219,6 +220,7 @@ NigelRewardStore.active?.let { store -> store.contract.rewards.forEach { (reward
                 if (options(text.option, "Cancel.", title = "This will consume the scroll.") == 1 &&
                     store.unlock(player, reward, slot, item) == NigelRewardStore.Result.OK) {
                     player.message(text.unlocked)
+                    DeadmanHomeTeleport.refreshOp(player)
                     itemMessageBox(text.learned, item = item)
                 }
             }

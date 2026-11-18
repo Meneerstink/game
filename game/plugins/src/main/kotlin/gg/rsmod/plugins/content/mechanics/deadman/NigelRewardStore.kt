@@ -44,11 +44,14 @@ class NigelRewardStore(contract: Contract) {
     }
 
     enum class Result { OK, NOT_READY, INVALID_AMOUNT, INVALID_SLOT, ITEM_CHANGED, NOT_ENOUGH_POINTS,
-        NO_SPACE, POINT_OVERFLOW, ALREADY_UNLOCKED, LOCKED, UNSUPPORTED, NOTED_OR_MODIFIED }
+        NO_SPACE, POINT_OVERFLOW, ALREADY_UNLOCKED, LOCKED, UNSUPPORTED, NOTED_OR_MODIFIED, LAST_TELEPORT_ON }
 
     companion object {
         private val POINTS = StoreCatalogue.Currency.DEADMAN.attr
+        /** Before 18-11 (Nigel 'Home Teleport animation'): ONE chosen style; only read to seed [TELEPORT_TOGGLES]. */
         val TELEPORT_SELECTION = AttributeKey<Int>("dmm2_home_teleport_selection")
+        /** Bit (1 shl Teleport.value) per style toggled on (spellbook 'Animation', DeadmanHomeTeleport.toggleMenu). */
+        val TELEPORT_TOGGLES = AttributeKey<Int>("dmm2_home_teleport_toggles")
         @Volatile var active: NigelRewardStore? = null
             private set
         fun install(contract: Contract) { active = NigelRewardStore(contract) }
@@ -179,13 +182,23 @@ class NigelRewardStore(contract: Contract) {
     enum class Teleport(val value: Int, val reward: Reward?) {
         DEFAULT(0, null), ARMAGEDDON(1, Reward.ARMAGEDDON_TELEPORT), ANNIHILATION(2, Reward.ANNIHILATION_TELEPORT)
     }
-    fun selectTeleport(player: Player, teleport: Teleport): Result {
+    /** Default plus every unlocked style. */
+    fun teleportStyles(player: Player): List<Teleport> = Teleport.values().filter { it.reward == null || unlocked(player, it.reward) }
+
+    /** The styles toggled on (OSRS: at least one, the default counts); a player from before 18-11 keeps their Nigel choice. */
+    fun teleportsOn(player: Player): List<Teleport> {
+        val mask = player.attr[TELEPORT_TOGGLES] ?: (1 shl (player.attr[TELEPORT_SELECTION] ?: 0))
+        return teleportStyles(player).filter { mask and (1 shl it.value) != 0 }.ifEmpty { listOf(Teleport.DEFAULT) }
+    }
+
+    /** Spellbook 'Animation' toggle: on <-> off; the last style on stays on (LAST_TELEPORT_ON). */
+    fun toggleTeleport(player: Player, teleport: Teleport): Result {
         if (teleport.reward?.let { !unlocked(player, it) } == true) return Result.LOCKED
-        player.attr[TELEPORT_SELECTION] = teleport.value
+        val on = teleportsOn(player)
+        val next = if (teleport in on) on - teleport else on + teleport
+        if (next.isEmpty()) return Result.LAST_TELEPORT_ON
+        player.attr[TELEPORT_TOGGLES] = next.fold(0) { mask, t -> mask or (1 shl t.value) }
         player.persistNow()
         return Result.OK
     }
-    fun selectedTeleport(player: Player): Teleport = Teleport.values().firstOrNull {
-        it.value == player.attr[TELEPORT_SELECTION] && (it.reward == null || unlocked(player, it.reward))
-    } ?: Teleport.DEFAULT
 }

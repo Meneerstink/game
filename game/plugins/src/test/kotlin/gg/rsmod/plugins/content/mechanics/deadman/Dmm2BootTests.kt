@@ -27,7 +27,7 @@ class Dmm2BootTests {
 
     @Test fun `published transaction mappings install starter rewards NPCs and exact cosmetic states`() {
         val parsed = Dmm2Ids.parse(File(directory, "ids.tsv").readLines())
-        assertEquals(158, parsed.size) // 170 published lines, 12 comments/blank lines; Claude's Wisp round tx-20261117-205101.
+        assertEquals(159, parsed.size) // 171 published lines, 12 comments/blank lines; + loc 60789 exit portal (tx-20261118-143614).
         assertEquals(86, parsed.keys.count { it.startsWith("item:") })
         Dmm2Ids.install(emptyList()) // A prior lookup must not hide the subsequently published file.
         val store = boot()

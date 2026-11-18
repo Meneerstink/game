@@ -29,6 +29,11 @@ val HOME_TELEPORT_GRAPHICS = intArrayOf(775, 800, 801, 802, 803, 804, 1703, 1704
 HomeTeleport.values.forEach { teleport ->
 
     on_magic_spell_button(teleport.spellName) {
+        // DMM2 punt 2: the second op 'Animation' (enabled only with an unlocked Deadman style) opens the toggle list.
+        if (player.getInteractingOpcode() == gg.rsmod.plugins.content.mechanics.deadman.DeadmanHomeTeleport.OP_ANIMATION) {
+            player.queue { with(gg.rsmod.plugins.content.mechanics.deadman.DeadmanHomeTeleport) { toggleMenu() } }
+            return@on_magic_spell_button
+        }
         if (player.timers.has(HOME_TELEPORT_TIMER) && player.privilege.id != 2) {
             // N590 (owner 2026-11-05 'couple of seconds ... waarom'): OSRS Wiki Lumbridge Home Teleport - the player "is notified with
             // the remaining time in minutes". Whole minutes rounded UP (100 ticks = 1 minute), so the last minute reads '1 minute'
