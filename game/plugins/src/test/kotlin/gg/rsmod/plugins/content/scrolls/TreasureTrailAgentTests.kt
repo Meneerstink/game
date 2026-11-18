@@ -42,7 +42,7 @@ class TreasureTrailAgentTests {
         every { ClueScrollManager.activeStep(player, any()) } returns null
         every { ClueScrollManager.activeStep(player, tier) } returns step
         every { ClueScrollManager.progress(player, tier) } returns 1
-        every { ClueScrollManager.advance(player, any(), any(), any(), any()) } returns true
+        every { ClueScrollManager.advance(player, any(), any(), any(), any(), any()) } returns true
         accounts += player
         return player to step
     }
@@ -62,7 +62,7 @@ class TreasureTrailAgentTests {
                 spawn = { _, _ -> fights++; null }, uri = { player, active -> TreasureTrailEmotes.afterGuardian(player, active) { _, _ -> uri } }))
             assertEquals(0, fights)
             assertSame(uri, TreasureTrailEmotes.session(p)!!.uri)
-            verify(exactly = 0) { ClueScrollManager.advance(p, any(), any(), any(), any()) }
+            verify(exactly = 0) { ClueScrollManager.advance(p, any(), any(), any(), any(), any()) }
         }
     }
 

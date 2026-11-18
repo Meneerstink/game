@@ -40,7 +40,7 @@ class TreasureTrailEmoteTests {
         every { ClueScrollManager.activeStep(p, any()) } returns null
         every { ClueScrollManager.activeStep(p, row.tier) } returns step
         every { ClueScrollManager.progress(p, row.tier) } returns 0
-        every { ClueScrollManager.advance(p, row.tier, scroll, 0, emptyList()) } returns true
+        every { ClueScrollManager.advance(p, row.tier, scroll, 0, emptyList(), any()) } returns true
         accounts += p
         val uri = mockk<Npc>(relaxed=true)
         every { uri.world } returns world
@@ -69,13 +69,13 @@ class TreasureTrailEmoteTests {
             assertTrue(TreasureTrailEmotes.perform(p, row.firstEmote!!, spawn))
             assertTrue(TreasureTrailEmotes.perform(p, row.firstEmote!!, spawn))
             assertEquals(1,spawned)
-            verify(exactly=0) { ClueScrollManager.advance(p,any(),any(),any(),any()) }
+            verify(exactly=0) { ClueScrollManager.advance(p,any(),any(),any(),any(),any()) }
             p.equipment[0]=null
             assertFalse(TreasureTrailEmotes.finish(p,uri))
             p.equipment[0]=gear
             assertTrue(TreasureTrailEmotes.finish(p,uri))
             assertFalse(TreasureTrailEmotes.finish(p,uri))
-            verify(exactly=1) { ClueScrollManager.advance(p,row.tier,any(),0,emptyList()) }
+            verify(exactly=1) { ClueScrollManager.advance(p,row.tier,any(),0,emptyList(), any()) }
         }
     }
 
@@ -120,11 +120,11 @@ class TreasureTrailEmoteTests {
         val scroll=p.inventory[0]!!
         (1..27).forEach { p.inventory[it]=Item(995) }
         assertTrue(TreasureTrailEmotes.perform(p,row.firstEmote!!){_,_->uri})
-        every { ClueScrollManager.advance(p,row.tier,scroll,0,emptyList()) } returns false
+        every { ClueScrollManager.advance(p,row.tier,scroll,0,emptyList(), any()) } returns false
         assertFalse(TreasureTrailEmotes.finish(p,uri))
         assertSame(scroll,p.inventory[0])
         assertFalse(TreasureTrailEmotes.session(p)!!.settled)
-        every { ClueScrollManager.advance(p,row.tier,scroll,0,emptyList()) } returns true
+        every { ClueScrollManager.advance(p,row.tier,scroll,0,emptyList(), any()) } returns true
         assertTrue(TreasureTrailEmotes.finish(p,uri))
     }
 
@@ -135,7 +135,7 @@ class TreasureTrailEmoteTests {
         assertTrue(TreasureTrailEmotes.perform(p,row.firstEmote!!){_,_->null})
         assertNull(TreasureTrailEmotes.session(p))
         assertSame(scroll,p.inventory[0])
-        verify(exactly=0) { ClueScrollManager.advance(p,any(),any(),any(),any()) }
+        verify(exactly=0) { ClueScrollManager.advance(p,any(),any(),any(),any(),any()) }
         assertTrue(TreasureTrailEmotes.perform(p,row.firstEmote!!){_,_->uri})
         assertTrue(TreasureTrailEmotes.finish(p,uri))
     }
