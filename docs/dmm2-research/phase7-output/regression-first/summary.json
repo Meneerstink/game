@@ -1,0 +1,226 @@
+{
+  "snapshot": "526a563e1",
+  "script_scope": "nine DMM2 bindings only; interim installDist",
+  "jar_pull_warning": "File exists during installed library retrieval; final distribution check required",
+  "suites": [
+    {
+      "name": "gg.rsmod.game.tools.importer.Dmm2SkeletalExtraSeqTests",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:37:50",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.game.tools.importer.Dmm2ImportBatchTests",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:37:50",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.game.tools.importer.Dmm2UiPlanTests",
+      "tests": "7",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:37:50",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2BootTests",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:49:26",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2BreakTests",
+      "tests": "17",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:49:39",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2CosmeticsTests",
+      "tests": "6",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:49:52",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2CurrencyTests",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:50:03",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2InteractionTests",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:50:15",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2ItemServicesTests",
+      "tests": "19",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:50:27",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2SourcePolicyTests",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:50:39",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2WeaponPresentationTests",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:50:53",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.Dmm2WindowTests",
+      "tests": "18",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:51:06",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.plugins.content.starter.StarterWeaponCombatTests",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:52:58",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.plugins.content.starter.StarterPackInteractionsTests",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:52:45",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.plugins.content.starter.DeadmanStarterPackTests",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:52:32",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.NigelHouseRewardsTests",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:51:23",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStoreTests",
+      "tests": "8",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:51:37",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.SafeDepositBoxTests",
+      "tests": "13",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:51:50",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.deadman.DeadmanExperienceExtensionTests",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:49:16",
+      "details": []
+    },
+    {
+      "name": "gg.rsmod.plugins.content.magic.teleports.HomeTeleportDeadmanGateTests",
+      "tests": "6",
+      "failures": "5",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:49:05",
+      "details": [
+        "java.io.FileNotFoundException: File[path=C:\\RSPS\\work\\gpt-a\\game\\plugins\\..\\..\\data\\cache\\main_file_cache.dat2] could not be found.",
+        "java.io.FileNotFoundException: File[path=C:\\RSPS\\work\\gpt-a\\game\\plugins\\..\\..\\data\\cache\\main_file_cache.dat2] could not be found.",
+        "java.io.FileNotFoundException: File[path=C:\\RSPS\\work\\gpt-a\\game\\plugins\\..\\..\\data\\cache\\main_file_cache.dat2] could not be found.",
+        "java.io.FileNotFoundException: File[path=C:\\RSPS\\work\\gpt-a\\game\\plugins\\..\\..\\data\\cache\\main_file_cache.dat2] could not be found.",
+        "java.io.FileNotFoundException: File[path=C:\\RSPS\\work\\gpt-a\\game\\plugins\\..\\..\\data\\cache\\main_file_cache.dat2] could not be found."
+      ]
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakablesTests",
+      "tests": "1",
+      "failures": "1",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:52:03",
+      "details": [
+        "java.io.FileNotFoundException: File[path=C:\\RSPS\\work\\gpt-a\\game\\plugins\\..\\..\\data\\cache\\main_file_cache.dat2] could not be found."
+      ]
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtectionTests",
+      "tests": "1",
+      "failures": "1",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:52:24",
+      "details": [
+        "java.io.FileNotFoundException: File[path=C:\\RSPS\\work\\gpt-a\\game\\plugins\\..\\..\\data\\cache\\main_file_cache.dat2] could not be found."
+      ]
+    },
+    {
+      "name": "gg.rsmod.plugins.content.mechanics.death.PvpLootTimesTests",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "timestamp": "2026-11-17T20:52:12",
+      "details": []
+    }
+  ],
+  "tests": 150,
+  "failures": 7
+}

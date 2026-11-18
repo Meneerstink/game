@@ -1,0 +1,22 @@
+LOCTYPES=66996 failures=0 maxId=67003
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[22:07:40.410 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+PROBLEM census: interface 1209 component 1 undecodable (76 bytes): Index 76 out of bounds for length 76
+PROBLEM census: interface 1209 component 2 undecodable (76 bytes): Index 76 out of bounds for length 76
+PROBLEM census: interface 1209 component 3 undecodable (76 bytes): Index 76 out of bounds for length 76
+PROBLEM census: interface 1209 component 4 undecodable (76 bytes): Index 76 out of bounds for length 76
+PROBLEM census: interface 1235 component 81 undecodable (74 bytes): Index 74 out of bounds for length 74
+PROBLEM census: interface 1209 component 1 undecodable (76 bytes): null
+PROBLEM census: interface 1209 component 2 undecodable (76 bytes): null
+PROBLEM census: interface 1209 component 3 undecodable (76 bytes): null
+PROBLEM census: interface 1209 component 4 undecodable (76 bytes): null
+PROBLEM census: interface 1235 component 81 undecodable (74 bytes): null
+PLAN loc 49564 'Loot!' -> 67004 models=[49489, 59964]->[67496, 67497] size=1x1 interact=0 anim=-1 options=[null, null, null, null, null]
+PLAN loc 49565 'Loot!' -> 67005 models=[49491, 59964]->[67498, 67497] size=1x1 interact=0 anim=-1 options=[null, null, null, null, null]
+DROPPED loc 49564: animation 10426 (not an imported classic sequence)
+PREFLIGHT transaction=tx-20261117-210752 mutations=5 outcomes={CREATE=10}
+DRY_RUN records=5

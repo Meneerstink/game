@@ -50,3 +50,18 @@ in Claude's eigen cache-ronde. Geen volledige `skeletal-npc dmm2-wisp`-herimport
 Neem de werkelijk gerapporteerde EXTRA_SEQ-local op als `seq<TAB>10241<TAB>local` in ids.tsv;
 PLAN-id17773 is geen vast productie-id. Dmm2Boot gebruikt uitsluitend Dmm2Ids.seq(10241), ontbrekend=null.
 Controleer daarna Lil Wisp magic op1/6tegels, transparantie, idle/walk,4tickaanvallen, geen misvormde skin.
+
+## Afhandeling door Claude (dossier, 17 november)
+
+- 21:4x: de twee checksum-bewaakte index-appends expliciet goedgekeurd als minimale noodzakelijke uitbreiding.
+- 21:51: toegepast door Claude, tx-20261117-205101, 100 writes/VERIFY_OK, werkelijke seq10241 ->17773.
+- 22:52: servertrace Wisp15320/anim17773 op cycle588 en592, projectiel3472 + impact3473/delay30 tegen KQ.
+- 22:5x: beeld door Claude vergeleken met OSRS-Wisp, doorschijnend paarsblauw/tentakels/cyaangloed,
+  idle/walk/volgen zonder misvormde skin. Bewijs: screens/DMM-PAKKET-2/f8-wisp-sheet.png en f8-wisp-zoom.png.
+
+Deze externe voortgang is geen testclientactie van GPT-A. Geen herimport nodig. De hier gepubliceerde
+ids.tsv bevat170regels, bytegelijk aan claude/dmm2-integratie, SHA256
+`dcd2930d403ceb1d06fcd4d14d6aa60aec6ecf90005283ffe20e455074f461bc`.
+Dmm2Boot blijft uitsluitend Dmm2Ids.seq(WISP_MAGIC_ATTACK) gebruiken; unit-test dekt ook ontbrekende mapping.
+De oorspronkelijke keuze MAGIC01 blijft gelabeld advies: de echte OSRS-DMM-thrallvariant is niet uit
+een OSRS-opname vastgesteld. Claude's beeldbewijs bewijst ons renderpad, niet die laatste brontoewijzing.

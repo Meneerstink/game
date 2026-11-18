@@ -294,12 +294,12 @@ fun clearSurroundings(player: Player): Boolean =
 
 Dmm2Ids.ItemId.ADVANCED_WEAPONRY.local?.let { id -> itemOption(id, "Open") {
     on_item_option(id, "Open") {
-        val appearance = DeadmanTrinkets.advancedAppearance ?: return@on_item_option
         val slot = player.getInteractingItemSlot()
         if (!clearSurroundings(player)) {
             player.message("You must have nothing surrounding you to open this trinket.")
             return@on_item_option
         }
+        val appearance = DeadmanTrinkets.advancedAppearance ?: return@on_item_option
         val tile = Tile(player.tile)
         player.queue(TaskPriority.WEAK) {
             player.faceTile(tile.transform(0, 1)); player.animate(appearance.animation)

@@ -1,0 +1,19 @@
+// Read only completed JUnit evidence through the sanctioned wrapper when report retrieval is slow.
+gradle.projectsEvaluated {
+    gradle.rootProject.tasks.register('dmm2Phase7ReportProbe') {
+        doLast {
+            [ 'game', 'game/plugins' ].each { module ->
+                def dir = gradle.rootProject.file(module + '/build/test-results/test')
+                dir.listFiles()?.findAll { it.name.startsWith('TEST-') && it.name.endsWith('.xml') }?.each { file ->
+                    def suite = new XmlSlurper().parse(file)
+                    if (suite.@timestamp.text() < '2026-11-18') return
+                    println '[DMM2 report] ' + suite.@name + ' tests=' + suite.@tests + ' failures=' + suite.@failures + ' errors=' + suite.@errors + ' timestamp=' + suite.@timestamp
+                    if (suite.@name.text().endsWith('.Dmm2ItemServicesTests')) suite.testcase.findAll { it.failure.size() > 0 }.each { test ->
+                        println '[DMM2 failure] ' + test.@name
+                        println test.failure.text()
+                    }
+                }
+            }
+        }
+    }
+}

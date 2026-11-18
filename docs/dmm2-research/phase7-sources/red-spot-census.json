@@ -1,0 +1,3481 @@
+{
+  "decoded_spot_models": 1844,
+  "unsupported_spots": {
+    "3882": "unsupported spot opcode 10",
+    "3883": "unsupported spot opcode 10",
+    "3884": "unsupported spot opcode 10",
+    "3885": "unsupported spot opcode 10",
+    "3886": "unsupported spot opcode 10",
+    "3887": "unsupported spot opcode 10",
+    "3888": "unsupported spot opcode 10",
+    "3889": "unsupported spot opcode 10",
+    "3890": "unsupported spot opcode 10",
+    "3898": "unsupported spot opcode 10",
+    "3899": "unsupported spot opcode 10",
+    "3900": "unsupported spot opcode 10",
+    "3901": "unsupported spot opcode 10",
+    "3902": "unsupported spot opcode 10",
+    "3903": "unsupported spot opcode 10",
+    "3904": "unsupported spot opcode 10",
+    "3905": "unsupported spot opcode 10",
+    "3909": "unsupported spot opcode 10",
+    "3910": "unsupported spot opcode 10",
+    "3911": "unsupported spot opcode 10",
+    "3912": "unsupported spot opcode 10",
+    "3913": "unsupported spot opcode 10",
+    "3914": "unsupported spot opcode 10",
+    "3915": "unsupported spot opcode 10",
+    "3916": "unsupported spot opcode 10",
+    "3917": "unsupported spot opcode 10",
+    "3918": "unsupported spot opcode 10",
+    "3919": "unsupported spot opcode 10",
+    "3920": "unsupported spot opcode 10",
+    "3921": "unsupported spot opcode 10",
+    "3922": "unsupported spot opcode 10",
+    "3923": "unsupported spot opcode 10",
+    "3924": "unsupported spot opcode 10",
+    "3925": "unsupported spot opcode 10",
+    "3926": "unsupported spot opcode 10",
+    "3927": "unsupported spot opcode 10",
+    "3928": "unsupported spot opcode 10",
+    "3944": "unsupported spot opcode 10",
+    "3945": "unsupported spot opcode 10"
+  },
+  "red_candidates": [
+    {
+      "model": 16932,
+      "spots": [
+        754
+      ],
+      "red_fraction": 1.0,
+      "vertices": 231,
+      "faces": 231
+    },
+    {
+      "model": 4036,
+      "spots": [
+        844,
+        1292,
+        1450
+      ],
+      "red_fraction": 1.0,
+      "vertices": 112,
+      "faces": 216
+    },
+    {
+      "model": 29207,
+      "spots": [
+        1171
+      ],
+      "red_fraction": 1.0,
+      "vertices": 120,
+      "faces": 216
+    },
+    {
+      "model": 32648,
+      "spots": [
+        1369
+      ],
+      "red_fraction": 1.0,
+      "vertices": 87,
+      "faces": 162
+    },
+    {
+      "model": 33007,
+      "spots": [
+        1376,
+        1580,
+        1594,
+        1596,
+        1737,
+        1744,
+        2181,
+        2208,
+        2534,
+        2536,
+        3027,
+        3029
+      ],
+      "red_fraction": 1.0,
+      "vertices": 260,
+      "faces": 680
+    },
+    {
+      "model": 33013,
+      "spots": [
+        1377
+      ],
+      "red_fraction": 1.0,
+      "vertices": 129,
+      "faces": 258
+    },
+    {
+      "model": 33198,
+      "spots": [
+        1389
+      ],
+      "red_fraction": 1.0,
+      "vertices": 1015,
+      "faces": 1590
+    },
+    {
+      "model": 34617,
+      "spots": [
+        1455,
+        1458,
+        1461,
+        1464,
+        2903,
+        2904,
+        2905,
+        2906
+      ],
+      "red_fraction": 1.0,
+      "vertices": 110,
+      "faces": 224
+    },
+    {
+      "model": 34618,
+      "spots": [
+        1456,
+        1459,
+        1462,
+        1465,
+        1490,
+        1640,
+        1965
+      ],
+      "red_fraction": 1.0,
+      "vertices": 247,
+      "faces": 496
+    },
+    {
+      "model": 34616,
+      "spots": [
+        1467
+      ],
+      "red_fraction": 1.0,
+      "vertices": 210,
+      "faces": 408
+    },
+    {
+      "model": 35031,
+      "spots": [
+        1489,
+        1636,
+        1705,
+        1706,
+        1999,
+        2081
+      ],
+      "red_fraction": 1.0,
+      "vertices": 60,
+      "faces": 114
+    },
+    {
+      "model": 34548,
+      "spots": [
+        1519
+      ],
+      "red_fraction": 1.0,
+      "vertices": 160,
+      "faces": 216
+    },
+    {
+      "model": 34547,
+      "spots": [
+        1520
+      ],
+      "red_fraction": 1.0,
+      "vertices": 242,
+      "faces": 324
+    },
+    {
+      "model": 35395,
+      "spots": [
+        1579,
+        1591,
+        1592,
+        2293,
+        3982,
+        3983,
+        3984
+      ],
+      "red_fraction": 1.0,
+      "vertices": 192,
+      "faces": 281
+    },
+    {
+      "model": 35344,
+      "spots": [
+        1605
+      ],
+      "red_fraction": 1.0,
+      "vertices": 190,
+      "faces": 460
+    },
+    {
+      "model": 38607,
+      "spots": [
+        1700
+      ],
+      "red_fraction": 1.0,
+      "vertices": 182,
+      "faces": 268
+    },
+    {
+      "model": 40673,
+      "spots": [
+        1708
+      ],
+      "red_fraction": 1.0,
+      "vertices": 184,
+      "faces": 400
+    },
+    {
+      "model": 40670,
+      "spots": [
+        1712
+      ],
+      "red_fraction": 1.0,
+      "vertices": 60,
+      "faces": 80
+    },
+    {
+      "model": 39133,
+      "spots": [
+        1758,
+        2024
+      ],
+      "red_fraction": 1.0,
+      "vertices": 190,
+      "faces": 376
+    },
+    {
+      "model": 39198,
+      "spots": [
+        1779,
+        1780
+      ],
+      "red_fraction": 1.0,
+      "vertices": 49,
+      "faces": 72
+    },
+    {
+      "model": 44780,
+      "spots": [
+        2085,
+        2086,
+        2087,
+        2088,
+        2089,
+        2090,
+        2091,
+        2092,
+        2093,
+        2094,
+        2095,
+        2096
+      ],
+      "red_fraction": 1.0,
+      "vertices": 192,
+      "faces": 352
+    },
+    {
+      "model": 45288,
+      "spots": [
+        2125
+      ],
+      "red_fraction": 1.0,
+      "vertices": 226,
+      "faces": 488
+    },
+    {
+      "model": 45333,
+      "spots": [
+        2137
+      ],
+      "red_fraction": 1.0,
+      "vertices": 535,
+      "faces": 968
+    },
+    {
+      "model": 45312,
+      "spots": [
+        2141,
+        2142,
+        2143,
+        2144
+      ],
+      "red_fraction": 1.0,
+      "vertices": 1153,
+      "faces": 1542
+    },
+    {
+      "model": 46405,
+      "spots": [
+        2146,
+        2150
+      ],
+      "red_fraction": 1.0,
+      "vertices": 821,
+      "faces": 1020
+    },
+    {
+      "model": 46406,
+      "spots": [
+        2149,
+        2151
+      ],
+      "red_fraction": 1.0,
+      "vertices": 821,
+      "faces": 1020
+    },
+    {
+      "model": 46418,
+      "spots": [
+        2166
+      ],
+      "red_fraction": 1.0,
+      "vertices": 360,
+      "faces": 600
+    },
+    {
+      "model": 45302,
+      "spots": [
+        2204
+      ],
+      "red_fraction": 1.0,
+      "vertices": 135,
+      "faces": 250
+    },
+    {
+      "model": 45311,
+      "spots": [
+        2229,
+        2230,
+        2231,
+        2232,
+        2233
+      ],
+      "red_fraction": 1.0,
+      "vertices": 381,
+      "faces": 680
+    },
+    {
+      "model": 45310,
+      "spots": [
+        2234
+      ],
+      "red_fraction": 1.0,
+      "vertices": 96,
+      "faces": 154
+    },
+    {
+      "model": 45298,
+      "spots": [
+        2235
+      ],
+      "red_fraction": 1.0,
+      "vertices": 185,
+      "faces": 426
+    },
+    {
+      "model": 47225,
+      "spots": [
+        2341,
+        2342
+      ],
+      "red_fraction": 1.0,
+      "vertices": 42,
+      "faces": 42
+    },
+    {
+      "model": 47366,
+      "spots": [
+        2343
+      ],
+      "red_fraction": 1.0,
+      "vertices": 263,
+      "faces": 406
+    },
+    {
+      "model": 47398,
+      "spots": [
+        2352,
+        2353
+      ],
+      "red_fraction": 1.0,
+      "vertices": 458,
+      "faces": 912
+    },
+    {
+      "model": 49487,
+      "spots": [
+        2519,
+        2522,
+        2553
+      ],
+      "red_fraction": 1.0,
+      "vertices": 773,
+      "faces": 798
+    },
+    {
+      "model": 49488,
+      "spots": [
+        2554,
+        2555,
+        2556,
+        2557,
+        2558
+      ],
+      "red_fraction": 1.0,
+      "vertices": 566,
+      "faces": 551
+    },
+    {
+      "model": 51213,
+      "spots": [
+        2685
+      ],
+      "red_fraction": 1.0,
+      "vertices": 340,
+      "faces": 496
+    },
+    {
+      "model": 54236,
+      "spots": [
+        2823,
+        3941
+      ],
+      "red_fraction": 1.0,
+      "vertices": 174,
+      "faces": 336
+    },
+    {
+      "model": 54235,
+      "spots": [
+        2833
+      ],
+      "red_fraction": 1.0,
+      "vertices": 224,
+      "faces": 360
+    },
+    {
+      "model": 54221,
+      "spots": [
+        2916
+      ],
+      "red_fraction": 1.0,
+      "vertices": 115,
+      "faces": 184
+    },
+    {
+      "model": 9433,
+      "spots": [
+        3278,
+        3285,
+        3286,
+        3287
+      ],
+      "red_fraction": 1.0,
+      "vertices": 1559,
+      "faces": 2458
+    },
+    {
+      "model": 14814,
+      "spots": [
+        3279,
+        3284
+      ],
+      "red_fraction": 1.0,
+      "vertices": 1152,
+      "faces": 1536
+    },
+    {
+      "model": 56530,
+      "spots": [
+        3361,
+        3362,
+        3363
+      ],
+      "red_fraction": 1.0,
+      "vertices": 1561,
+      "faces": 2841
+    },
+    {
+      "model": 57136,
+      "spots": [
+        3381
+      ],
+      "red_fraction": 1.0,
+      "vertices": 157,
+      "faces": 279
+    },
+    {
+      "model": 59440,
+      "spots": [
+        3461,
+        3466,
+        3467,
+        3468,
+        3469
+      ],
+      "red_fraction": 1.0,
+      "vertices": 192,
+      "faces": 281
+    },
+    {
+      "model": 59441,
+      "spots": [
+        3462,
+        3463,
+        3464,
+        3465
+      ],
+      "red_fraction": 1.0,
+      "vertices": 192,
+      "faces": 281
+    },
+    {
+      "model": 57706,
+      "spots": [
+        3487,
+        3488,
+        3489,
+        3490,
+        3491,
+        3492,
+        3493,
+        3494
+      ],
+      "red_fraction": 1.0,
+      "vertices": 26,
+      "faces": 48
+    },
+    {
+      "model": 60314,
+      "spots": [
+        3583
+      ],
+      "red_fraction": 1.0,
+      "vertices": 707,
+      "faces": 1196
+    },
+    {
+      "model": 60315,
+      "spots": [
+        3584
+      ],
+      "red_fraction": 1.0,
+      "vertices": 358,
+      "faces": 706
+    },
+    {
+      "model": 60109,
+      "spots": [
+        3592,
+        3595,
+        3598,
+        3601
+      ],
+      "red_fraction": 1.0,
+      "vertices": 341,
+      "faces": 624
+    },
+    {
+      "model": 60327,
+      "spots": [
+        3613
+      ],
+      "red_fraction": 1.0,
+      "vertices": 588,
+      "faces": 1071
+    },
+    {
+      "model": 60398,
+      "spots": [
+        3646
+      ],
+      "red_fraction": 1.0,
+      "vertices": 114,
+      "faces": 224
+    },
+    {
+      "model": 60412,
+      "spots": [
+        3647,
+        3648,
+        3649,
+        3650,
+        3651,
+        3652
+      ],
+      "red_fraction": 1.0,
+      "vertices": 72,
+      "faces": 132
+    },
+    {
+      "model": 60226,
+      "spots": [
+        3660
+      ],
+      "red_fraction": 1.0,
+      "vertices": 31,
+      "faces": 50
+    },
+    {
+      "model": 60224,
+      "spots": [
+        3661
+      ],
+      "red_fraction": 1.0,
+      "vertices": 326,
+      "faces": 494
+    },
+    {
+      "model": 60375,
+      "spots": [
+        3677
+      ],
+      "red_fraction": 1.0,
+      "vertices": 276,
+      "faces": 368
+    },
+    {
+      "model": 60232,
+      "spots": [
+        3682
+      ],
+      "red_fraction": 1.0,
+      "vertices": 184,
+      "faces": 400
+    },
+    {
+      "model": 60370,
+      "spots": [
+        3684
+      ],
+      "red_fraction": 1.0,
+      "vertices": 60,
+      "faces": 80
+    },
+    {
+      "model": 60371,
+      "spots": [
+        3689
+      ],
+      "red_fraction": 1.0,
+      "vertices": 218,
+      "faces": 338
+    },
+    {
+      "model": 60402,
+      "spots": [
+        3697
+      ],
+      "red_fraction": 1.0,
+      "vertices": 245,
+      "faces": 408
+    },
+    {
+      "model": 60387,
+      "spots": [
+        3698,
+        3700
+      ],
+      "red_fraction": 1.0,
+      "vertices": 585,
+      "faces": 990
+    },
+    {
+      "model": 60388,
+      "spots": [
+        3699
+      ],
+      "red_fraction": 1.0,
+      "vertices": 585,
+      "faces": 990
+    },
+    {
+      "model": 60234,
+      "spots": [
+        3702
+      ],
+      "red_fraction": 1.0,
+      "vertices": 202,
+      "faces": 344
+    },
+    {
+      "model": 60389,
+      "spots": [
+        3704
+      ],
+      "red_fraction": 1.0,
+      "vertices": 270,
+      "faces": 480
+    },
+    {
+      "model": 60390,
+      "spots": [
+        3721
+      ],
+      "red_fraction": 1.0,
+      "vertices": 128,
+      "faces": 288
+    },
+    {
+      "model": 60394,
+      "spots": [
+        3723
+      ],
+      "red_fraction": 1.0,
+      "vertices": 28,
+      "faces": 48
+    },
+    {
+      "model": 60392,
+      "spots": [
+        3725
+      ],
+      "red_fraction": 1.0,
+      "vertices": 160,
+      "faces": 280
+    },
+    {
+      "model": 61535,
+      "spots": [
+        3849
+      ],
+      "red_fraction": 1.0,
+      "vertices": 225,
+      "faces": 426
+    },
+    {
+      "model": 60641,
+      "spots": [
+        3856,
+        3857,
+        3858,
+        3859,
+        3860
+      ],
+      "red_fraction": 1.0,
+      "vertices": 1591,
+      "faces": 1178
+    },
+    {
+      "model": 61533,
+      "spots": [
+        3906,
+        3907
+      ],
+      "red_fraction": 1.0,
+      "vertices": 321,
+      "faces": 632
+    },
+    {
+      "model": 61520,
+      "spots": [
+        3929,
+        3930,
+        3932,
+        3935,
+        3937,
+        3939
+      ],
+      "red_fraction": 1.0,
+      "vertices": 439,
+      "faces": 866
+    },
+    {
+      "model": 61524,
+      "spots": [
+        3931,
+        3936,
+        3938,
+        3940
+      ],
+      "red_fraction": 1.0,
+      "vertices": 425,
+      "faces": 851
+    },
+    {
+      "model": 61521,
+      "spots": [
+        3933,
+        3934
+      ],
+      "red_fraction": 1.0,
+      "vertices": 439,
+      "faces": 872
+    },
+    {
+      "model": 61536,
+      "spots": [
+        3942,
+        3943
+      ],
+      "red_fraction": 1.0,
+      "vertices": 97,
+      "faces": 176
+    },
+    {
+      "model": 61525,
+      "spots": [
+        3946,
+        3947
+      ],
+      "red_fraction": 1.0,
+      "vertices": 428,
+      "faces": 856
+    },
+    {
+      "model": 61490,
+      "spots": [
+        3955
+      ],
+      "red_fraction": 1.0,
+      "vertices": 707,
+      "faces": 1196
+    },
+    {
+      "model": 55529,
+      "spots": [
+        3079,
+        3080,
+        3081,
+        3082,
+        3083,
+        3084,
+        3085,
+        3086,
+        3087
+      ],
+      "red_fraction": 0.9992104224240032,
+      "vertices": 1407,
+      "faces": 2533
+    },
+    {
+      "model": 61566,
+      "spots": [
+        3985
+      ],
+      "red_fraction": 0.9991889699918897,
+      "vertices": 1865,
+      "faces": 1233
+    },
+    {
+      "model": 61606,
+      "spots": [
+        4008
+      ],
+      "red_fraction": 0.998972250770812,
+      "vertices": 717,
+      "faces": 973
+    },
+    {
+      "model": 51219,
+      "spots": [
+        2731,
+        2732,
+        2733,
+        2805,
+        2908,
+        3277
+      ],
+      "red_fraction": 0.9988465974625144,
+      "vertices": 607,
+      "faces": 867
+    },
+    {
+      "model": 14813,
+      "spots": [
+        3271,
+        3272,
+        3273
+      ],
+      "red_fraction": 0.9981916817359855,
+      "vertices": 1353,
+      "faces": 2212
+    },
+    {
+      "model": 53324,
+      "spots": [
+        2814
+      ],
+      "red_fraction": 0.9978308026030369,
+      "vertices": 654,
+      "faces": 922
+    },
+    {
+      "model": 60401,
+      "spots": [
+        3676
+      ],
+      "red_fraction": 0.9977728285077951,
+      "vertices": 231,
+      "faces": 449
+    },
+    {
+      "model": 43111,
+      "spots": [
+        2015
+      ],
+      "red_fraction": 0.9971830985915493,
+      "vertices": 255,
+      "faces": 355
+    },
+    {
+      "model": 53145,
+      "spots": [
+        2804
+      ],
+      "red_fraction": 0.9969167523124358,
+      "vertices": 668,
+      "faces": 973
+    },
+    {
+      "model": 61527,
+      "spots": [
+        3881
+      ],
+      "red_fraction": 0.9969167523124358,
+      "vertices": 668,
+      "faces": 973
+    },
+    {
+      "model": 46793,
+      "spots": [
+        2273,
+        2275,
+        2277,
+        2279
+      ],
+      "red_fraction": 0.9960337134357957,
+      "vertices": 1123,
+      "faces": 2017
+    },
+    {
+      "model": 48343,
+      "spots": [
+        2482,
+        2485
+      ],
+      "red_fraction": 0.995850622406639,
+      "vertices": 499,
+      "faces": 723
+    },
+    {
+      "model": 48337,
+      "spots": [
+        2491,
+        2686
+      ],
+      "red_fraction": 0.995850622406639,
+      "vertices": 499,
+      "faces": 723
+    },
+    {
+      "model": 48340,
+      "spots": [
+        2488
+      ],
+      "red_fraction": 0.9958041958041958,
+      "vertices": 483,
+      "faces": 715
+    },
+    {
+      "model": 61528,
+      "spots": [
+        3867,
+        3868,
+        3869,
+        3870,
+        3871,
+        3872,
+        3873,
+        3874,
+        3875,
+        3876,
+        3877,
+        3878,
+        3879,
+        3880
+      ],
+      "red_fraction": 0.9937106918238994,
+      "vertices": 178,
+      "faces": 318
+    },
+    {
+      "model": 60330,
+      "spots": [
+        3621
+      ],
+      "red_fraction": 0.9925373134328358,
+      "vertices": 1012,
+      "faces": 1072
+    },
+    {
+      "model": 39171,
+      "spots": [
+        1759
+      ],
+      "red_fraction": 0.9917355371900827,
+      "vertices": 164,
+      "faces": 242
+    },
+    {
+      "model": 60329,
+      "spots": [
+        3623
+      ],
+      "red_fraction": 0.9914529914529915,
+      "vertices": 433,
+      "faces": 585
+    },
+    {
+      "model": 51234,
+      "spots": [
+        2710
+      ],
+      "red_fraction": 0.9896907216494846,
+      "vertices": 55,
+      "faces": 97
+    },
+    {
+      "model": 61497,
+      "spots": [
+        3847,
+        3848
+      ],
+      "red_fraction": 0.9869678540399652,
+      "vertices": 657,
+      "faces": 1151
+    },
+    {
+      "model": 60631,
+      "spots": [
+        3794
+      ],
+      "red_fraction": 0.9850249584026622,
+      "vertices": 822,
+      "faces": 1202
+    },
+    {
+      "model": 8951,
+      "spots": [
+        3378
+      ],
+      "red_fraction": 0.9832402234636871,
+      "vertices": 96,
+      "faces": 179
+    },
+    {
+      "model": 48264,
+      "spots": [
+        2370
+      ],
+      "red_fraction": 0.9824561403508771,
+      "vertices": 428,
+      "faces": 684
+    },
+    {
+      "model": 61498,
+      "spots": [
+        3953
+      ],
+      "red_fraction": 0.9801324503311258,
+      "vertices": 170,
+      "faces": 302
+    },
+    {
+      "model": 38603,
+      "spots": [
+        1698,
+        1699
+      ],
+      "red_fraction": 0.9795918367346939,
+      "vertices": 78,
+      "faces": 98
+    },
+    {
+      "model": 35729,
+      "spots": [
+        1542
+      ],
+      "red_fraction": 0.9782608695652174,
+      "vertices": 153,
+      "faces": 276
+    },
+    {
+      "model": 42282,
+      "spots": [
+        1902
+      ],
+      "red_fraction": 0.9782608695652174,
+      "vertices": 153,
+      "faces": 276
+    },
+    {
+      "model": 45241,
+      "spots": [
+        2224,
+        2225
+      ],
+      "red_fraction": 0.9772151898734177,
+      "vertices": 314,
+      "faces": 790
+    },
+    {
+      "model": 61516,
+      "spots": [
+        3795
+      ],
+      "red_fraction": 0.9763387297633873,
+      "vertices": 2802,
+      "faces": 1606
+    },
+    {
+      "model": 61529,
+      "spots": [
+        3896,
+        3897
+      ],
+      "red_fraction": 0.975609756097561,
+      "vertices": 244,
+      "faces": 82
+    },
+    {
+      "model": 53283,
+      "spots": [
+        2847,
+        2849,
+        2850,
+        2852
+      ],
+      "red_fraction": 0.9717514124293786,
+      "vertices": 1213,
+      "faces": 2301
+    },
+    {
+      "model": 42719,
+      "spots": [
+        1956,
+        1962
+      ],
+      "red_fraction": 0.9716666666666667,
+      "vertices": 715,
+      "faces": 1200
+    },
+    {
+      "model": 14807,
+      "spots": [
+        3237
+      ],
+      "red_fraction": 0.97165991902834,
+      "vertices": 475,
+      "faces": 741
+    },
+    {
+      "model": 60328,
+      "spots": [
+        3622
+      ],
+      "red_fraction": 0.9682675814751286,
+      "vertices": 1277,
+      "faces": 1166
+    },
+    {
+      "model": 45309,
+      "spots": [
+        2121
+      ],
+      "red_fraction": 0.9639498432601881,
+      "vertices": 732,
+      "faces": 1276
+    },
+    {
+      "model": 45295,
+      "spots": [
+        2214
+      ],
+      "red_fraction": 0.9583333333333334,
+      "vertices": 471,
+      "faces": 888
+    },
+    {
+      "model": 45296,
+      "spots": [
+        2215
+      ],
+      "red_fraction": 0.9583333333333334,
+      "vertices": 471,
+      "faces": 888
+    },
+    {
+      "model": 39815,
+      "spots": [
+        1813
+      ],
+      "red_fraction": 0.9563182527301092,
+      "vertices": 450,
+      "faces": 641
+    },
+    {
+      "model": 46794,
+      "spots": [
+        2272,
+        2274,
+        2276,
+        2278
+      ],
+      "red_fraction": 0.952112676056338,
+      "vertices": 820,
+      "faces": 1420
+    },
+    {
+      "model": 33008,
+      "spots": [
+        1380
+      ],
+      "red_fraction": 0.9513888888888888,
+      "vertices": 208,
+      "faces": 576
+    },
+    {
+      "model": 28964,
+      "spots": [
+        1041
+      ],
+      "red_fraction": 0.9452054794520548,
+      "vertices": 194,
+      "faces": 292
+    },
+    {
+      "model": 45243,
+      "spots": [
+        2226
+      ],
+      "red_fraction": 0.9433962264150944,
+      "vertices": 162,
+      "faces": 318
+    },
+    {
+      "model": 60152,
+      "spots": [
+        3717
+      ],
+      "red_fraction": 0.937984496124031,
+      "vertices": 1309,
+      "faces": 1806
+    },
+    {
+      "model": 60642,
+      "spots": [
+        3861
+      ],
+      "red_fraction": 0.932475884244373,
+      "vertices": 1629,
+      "faces": 1244
+    },
+    {
+      "model": 60151,
+      "spots": [
+        3715,
+        3716
+      ],
+      "red_fraction": 0.9316081330868762,
+      "vertices": 1149,
+      "faces": 1623
+    },
+    {
+      "model": 32777,
+      "spots": [
+        1318
+      ],
+      "red_fraction": 0.9293478260869565,
+      "vertices": 198,
+      "faces": 368
+    },
+    {
+      "model": 51225,
+      "spots": [
+        2792
+      ],
+      "red_fraction": 0.9286775631500743,
+      "vertices": 466,
+      "faces": 673
+    },
+    {
+      "model": 35159,
+      "spots": [
+        1526,
+        1527,
+        1528
+      ],
+      "red_fraction": 0.9285714285714286,
+      "vertices": 114,
+      "faces": 224
+    },
+    {
+      "model": 50040,
+      "spots": [
+        2600
+      ],
+      "red_fraction": 0.9285714285714286,
+      "vertices": 89,
+      "faces": 168
+    },
+    {
+      "model": 50041,
+      "spots": [
+        2601
+      ],
+      "red_fraction": 0.9285714285714286,
+      "vertices": 89,
+      "faces": 168
+    },
+    {
+      "model": 60316,
+      "spots": [
+        3608
+      ],
+      "red_fraction": 0.9201331114808652,
+      "vertices": 280,
+      "faces": 601
+    },
+    {
+      "model": 54209,
+      "spots": [
+        2909,
+        2910,
+        2911,
+        2912,
+        2913,
+        2914
+      ],
+      "red_fraction": 0.9182561307901907,
+      "vertices": 424,
+      "faces": 367
+    },
+    {
+      "model": 42722,
+      "spots": [
+        1957,
+        1963
+      ],
+      "red_fraction": 0.9179746835443038,
+      "vertices": 1086,
+      "faces": 1975
+    },
+    {
+      "model": 60317,
+      "spots": [
+        3576
+      ],
+      "red_fraction": 0.9153737658674189,
+      "vertices": 334,
+      "faces": 709
+    },
+    {
+      "model": 53392,
+      "spots": [
+        2821,
+        2869
+      ],
+      "red_fraction": 0.9130434782608695,
+      "vertices": 150,
+      "faces": 276
+    },
+    {
+      "model": 46420,
+      "spots": [
+        2164
+      ],
+      "red_fraction": 0.9090909090909091,
+      "vertices": 70,
+      "faces": 132
+    },
+    {
+      "model": 56534,
+      "spots": [
+        3310
+      ],
+      "red_fraction": 0.9076704545454546,
+      "vertices": 354,
+      "faces": 704
+    },
+    {
+      "model": 17012,
+      "spots": [
+        3246,
+        3304
+      ],
+      "red_fraction": 0.9040902679830748,
+      "vertices": 365,
+      "faces": 709
+    },
+    {
+      "model": 52529,
+      "spots": [
+        2786,
+        2788
+      ],
+      "red_fraction": 0.9039093898428937,
+      "vertices": 1389,
+      "faces": 2737
+    },
+    {
+      "model": 42715,
+      "spots": [
+        1954,
+        1960
+      ],
+      "red_fraction": 0.9031657355679702,
+      "vertices": 655,
+      "faces": 1074
+    },
+    {
+      "model": 42713,
+      "spots": [
+        1953,
+        1959
+      ],
+      "red_fraction": 0.9027484143763214,
+      "vertices": 589,
+      "faces": 946
+    },
+    {
+      "model": 61510,
+      "spots": [
+        3796,
+        3797,
+        3798,
+        3799,
+        3800,
+        3801
+      ],
+      "red_fraction": 0.9016393442622951,
+      "vertices": 401,
+      "faces": 732
+    },
+    {
+      "model": 42721,
+      "spots": [
+        1952,
+        1958
+      ],
+      "red_fraction": 0.9013157894736842,
+      "vertices": 575,
+      "faces": 912
+    },
+    {
+      "model": 56535,
+      "spots": [
+        3309,
+        3322
+      ],
+      "red_fraction": 0.8981958762886598,
+      "vertices": 405,
+      "faces": 776
+    },
+    {
+      "model": 55962,
+      "spots": [
+        3212,
+        3213,
+        3214,
+        3215,
+        3216,
+        3217,
+        3224
+      ],
+      "red_fraction": 0.8974641675854466,
+      "vertices": 504,
+      "faces": 907
+    },
+    {
+      "model": 56536,
+      "spots": [
+        3303,
+        3318,
+        3320,
+        3321
+      ],
+      "red_fraction": 0.8893280632411067,
+      "vertices": 392,
+      "faces": 759
+    },
+    {
+      "model": 42712,
+      "spots": [
+        1955,
+        1961
+      ],
+      "red_fraction": 0.8890814558058926,
+      "vertices": 691,
+      "faces": 1154
+    },
+    {
+      "model": 45327,
+      "spots": [
+        2132,
+        2133,
+        2134,
+        2136
+      ],
+      "red_fraction": 0.8850574712643678,
+      "vertices": 399,
+      "faces": 696
+    },
+    {
+      "model": 45330,
+      "spots": [
+        2135
+      ],
+      "red_fraction": 0.8850574712643678,
+      "vertices": 399,
+      "faces": 696
+    },
+    {
+      "model": 60360,
+      "spots": [
+        3701,
+        3703
+      ],
+      "red_fraction": 0.883357041251778,
+      "vertices": 1000,
+      "faces": 1406
+    },
+    {
+      "model": 51229,
+      "spots": [
+        2725,
+        2727,
+        2729,
+        2734
+      ],
+      "red_fraction": 0.8795007201152184,
+      "vertices": 1283,
+      "faces": 2083
+    },
+    {
+      "model": 60230,
+      "spots": [
+        3653,
+        3751
+      ],
+      "red_fraction": 0.8776978417266187,
+      "vertices": 203,
+      "faces": 556
+    },
+    {
+      "model": 55473,
+      "spots": [
+        3013
+      ],
+      "red_fraction": 0.8694885361552028,
+      "vertices": 342,
+      "faces": 567
+    },
+    {
+      "model": 53394,
+      "spots": [
+        2896
+      ],
+      "red_fraction": 0.8611111111111112,
+      "vertices": 40,
+      "faces": 72
+    },
+    {
+      "model": 32802,
+      "spots": [
+        1351
+      ],
+      "red_fraction": 0.8316326530612245,
+      "vertices": 191,
+      "faces": 392
+    },
+    {
+      "model": 39168,
+      "spots": [
+        1760
+      ],
+      "red_fraction": 0.8316326530612245,
+      "vertices": 191,
+      "faces": 392
+    },
+    {
+      "model": 35937,
+      "spots": [
+        1617,
+        1628
+      ],
+      "red_fraction": 0.8274932614555256,
+      "vertices": 439,
+      "faces": 742
+    },
+    {
+      "model": 16986,
+      "spots": [
+        3254,
+        3554
+      ],
+      "red_fraction": 0.8212083847102343,
+      "vertices": 418,
+      "faces": 811
+    },
+    {
+      "model": 55577,
+      "spots": [
+        3078
+      ],
+      "red_fraction": 0.8202247191011236,
+      "vertices": 93,
+      "faces": 178
+    },
+    {
+      "model": 45287,
+      "spots": [
+        2145
+      ],
+      "red_fraction": 0.8193548387096774,
+      "vertices": 474,
+      "faces": 775
+    },
+    {
+      "model": 16989,
+      "spots": [
+        3253
+      ],
+      "red_fraction": 0.8176100628930818,
+      "vertices": 887,
+      "faces": 1431
+    },
+    {
+      "model": 60414,
+      "spots": [
+        3680
+      ],
+      "red_fraction": 0.8135593220338984,
+      "vertices": 100,
+      "faces": 236
+    },
+    {
+      "model": 14824,
+      "spots": [
+        3280
+      ],
+      "red_fraction": 0.8129032258064516,
+      "vertices": 1037,
+      "faces": 1550
+    },
+    {
+      "model": 29269,
+      "spots": [
+        1247
+      ],
+      "red_fraction": 0.805668016194332,
+      "vertices": 326,
+      "faces": 494
+    },
+    {
+      "model": 60417,
+      "spots": [
+        3719
+      ],
+      "red_fraction": 0.7973568281938326,
+      "vertices": 127,
+      "faces": 227
+    },
+    {
+      "model": 41554,
+      "spots": [
+        1875
+      ],
+      "red_fraction": 0.7960629921259843,
+      "vertices": 839,
+      "faces": 1270
+    },
+    {
+      "model": 60418,
+      "spots": [
+        3718
+      ],
+      "red_fraction": 0.7929515418502202,
+      "vertices": 127,
+      "faces": 227
+    },
+    {
+      "model": 60416,
+      "spots": [
+        3720
+      ],
+      "red_fraction": 0.7916666666666666,
+      "vertices": 87,
+      "faces": 96
+    },
+    {
+      "model": 16988,
+      "spots": [
+        3255,
+        3262,
+        3555,
+        3735,
+        3736,
+        3737
+      ],
+      "red_fraction": 0.7840565085771948,
+      "vertices": 1175,
+      "faces": 1982
+    },
+    {
+      "model": 60321,
+      "spots": [
+        3606
+      ],
+      "red_fraction": 0.7787610619469026,
+      "vertices": 236,
+      "faces": 452
+    },
+    {
+      "model": 16992,
+      "spots": [
+        3268,
+        3269
+      ],
+      "red_fraction": 0.7762619372442019,
+      "vertices": 911,
+      "faces": 1466
+    },
+    {
+      "model": 16991,
+      "spots": [
+        3267
+      ],
+      "red_fraction": 0.7760989010989011,
+      "vertices": 909,
+      "faces": 1456
+    },
+    {
+      "model": 56538,
+      "spots": [
+        3306,
+        3336,
+        3337
+      ],
+      "red_fraction": 0.7729468599033816,
+      "vertices": 255,
+      "faces": 414
+    },
+    {
+      "model": 55946,
+      "spots": [
+        3229
+      ],
+      "red_fraction": 0.7668449197860963,
+      "vertices": 563,
+      "faces": 935
+    },
+    {
+      "model": 56537,
+      "spots": [
+        3323
+      ],
+      "red_fraction": 0.7648040033361134,
+      "vertices": 714,
+      "faces": 1199
+    },
+    {
+      "model": 53282,
+      "spots": [
+        2848
+      ],
+      "red_fraction": 0.7646520146520146,
+      "vertices": 650,
+      "faces": 1092
+    },
+    {
+      "model": 17013,
+      "spots": [
+        3282
+      ],
+      "red_fraction": 0.7646520146520146,
+      "vertices": 650,
+      "faces": 1092
+    },
+    {
+      "model": 32778,
+      "spots": [
+        1317,
+        1320
+      ],
+      "red_fraction": 0.7636363636363637,
+      "vertices": 57,
+      "faces": 110
+    },
+    {
+      "model": 32776,
+      "spots": [
+        1319
+      ],
+      "red_fraction": 0.7636363636363637,
+      "vertices": 57,
+      "faces": 110
+    },
+    {
+      "model": 60322,
+      "spots": [
+        3755,
+        3756,
+        3757,
+        3758,
+        3759,
+        3760,
+        3761,
+        3762
+      ],
+      "red_fraction": 0.7618705035971223,
+      "vertices": 1543,
+      "faces": 2780
+    },
+    {
+      "model": 60324,
+      "spots": [
+        3581
+      ],
+      "red_fraction": 0.752895752895753,
+      "vertices": 690,
+      "faces": 1036
+    },
+    {
+      "model": 54306,
+      "spots": [
+        2931,
+        2932,
+        2933,
+        3802,
+        3803
+      ],
+      "red_fraction": 0.7484874675885912,
+      "vertices": 776,
+      "faces": 1157
+    },
+    {
+      "model": 60380,
+      "spots": [
+        3612
+      ],
+      "red_fraction": 0.7471264367816092,
+      "vertices": 865,
+      "faces": 1392
+    },
+    {
+      "model": 52513,
+      "spots": [
+        2799
+      ],
+      "red_fraction": 0.7461538461538462,
+      "vertices": 126,
+      "faces": 260
+    },
+    {
+      "model": 60333,
+      "spots": [
+        3614
+      ],
+      "red_fraction": 0.7443237907206318,
+      "vertices": 730,
+      "faces": 1013
+    },
+    {
+      "model": 16990,
+      "spots": [
+        3247,
+        3248,
+        3624
+      ],
+      "red_fraction": 0.7435344827586207,
+      "vertices": 865,
+      "faces": 1392
+    },
+    {
+      "model": 32073,
+      "spots": [
+        2928
+      ],
+      "red_fraction": 0.7384503455802109,
+      "vertices": 2328,
+      "faces": 2749
+    },
+    {
+      "model": 35022,
+      "spots": [
+        1495
+      ],
+      "red_fraction": 0.734375,
+      "vertices": 139,
+      "faces": 256
+    },
+    {
+      "model": 14386,
+      "spots": [
+        3241
+      ],
+      "red_fraction": 0.7311715481171548,
+      "vertices": 588,
+      "faces": 956
+    },
+    {
+      "model": 14178,
+      "spots": [
+        3283
+      ],
+      "red_fraction": 0.7311715481171548,
+      "vertices": 588,
+      "faces": 956
+    },
+    {
+      "model": 51252,
+      "spots": [
+        2750
+      ],
+      "red_fraction": 0.7286158631415242,
+      "vertices": 1675,
+      "faces": 1286
+    },
+    {
+      "model": 33017,
+      "spots": [
+        1382,
+        2238
+      ],
+      "red_fraction": 0.7272727272727273,
+      "vertices": 48,
+      "faces": 88
+    },
+    {
+      "model": 37332,
+      "spots": [
+        1686
+      ],
+      "red_fraction": 0.7272727272727273,
+      "vertices": 69,
+      "faces": 132
+    },
+    {
+      "model": 60323,
+      "spots": [
+        3579
+      ],
+      "red_fraction": 0.7235555555555555,
+      "vertices": 701,
+      "faces": 1125
+    },
+    {
+      "model": 51224,
+      "spots": [
+        2794
+      ],
+      "red_fraction": 0.7228070175438597,
+      "vertices": 778,
+      "faces": 1140
+    },
+    {
+      "model": 16987,
+      "spots": [
+        3251
+      ],
+      "red_fraction": 0.720444154147616,
+      "vertices": 947,
+      "faces": 1531
+    },
+    {
+      "model": 46338,
+      "spots": [
+        2237
+      ],
+      "red_fraction": 0.7183098591549296,
+      "vertices": 195,
+      "faces": 426
+    },
+    {
+      "model": 51255,
+      "spots": [
+        2772,
+        2773
+      ],
+      "red_fraction": 0.7155309033280507,
+      "vertices": 1541,
+      "faces": 2524
+    },
+    {
+      "model": 35400,
+      "spots": [
+        1604
+      ],
+      "red_fraction": 0.7149321266968326,
+      "vertices": 415,
+      "faces": 884
+    },
+    {
+      "model": 54031,
+      "spots": [
+        2855
+      ],
+      "red_fraction": 0.7103145574250183,
+      "vertices": 742,
+      "faces": 1367
+    },
+    {
+      "model": 34481,
+      "spots": [
+        1501
+      ],
+      "red_fraction": 0.7083333333333334,
+      "vertices": 52,
+      "faces": 96
+    },
+    {
+      "model": 12846,
+      "spots": [
+        1505
+      ],
+      "red_fraction": 0.7083333333333334,
+      "vertices": 26,
+      "faces": 48
+    },
+    {
+      "model": 34484,
+      "spots": [
+        1509
+      ],
+      "red_fraction": 0.7083333333333334,
+      "vertices": 26,
+      "faces": 48
+    },
+    {
+      "model": 45290,
+      "spots": [
+        2239
+      ],
+      "red_fraction": 0.7,
+      "vertices": 52,
+      "faces": 100
+    },
+    {
+      "model": 47227,
+      "spots": [
+        2354,
+        2355
+      ],
+      "red_fraction": 0.6988636363636364,
+      "vertices": 328,
+      "faces": 704
+    },
+    {
+      "model": 60409,
+      "spots": [
+        3644,
+        3645
+      ],
+      "red_fraction": 0.6955266955266955,
+      "vertices": 661,
+      "faces": 1386
+    },
+    {
+      "model": 35728,
+      "spots": [
+        1539,
+        1899
+      ],
+      "red_fraction": 0.6931818181818182,
+      "vertices": 146,
+      "faces": 264
+    },
+    {
+      "model": 33259,
+      "spots": [
+        1409
+      ],
+      "red_fraction": 0.6931567328918322,
+      "vertices": 290,
+      "faces": 453
+    },
+    {
+      "model": 41556,
+      "spots": [
+        1862
+      ],
+      "red_fraction": 0.6894484412470024,
+      "vertices": 533,
+      "faces": 834
+    },
+    {
+      "model": 59508,
+      "spots": [
+        3501
+      ],
+      "red_fraction": 0.684931506849315,
+      "vertices": 83,
+      "faces": 146
+    },
+    {
+      "model": 60237,
+      "spots": [
+        3681
+      ],
+      "red_fraction": 0.6802721088435374,
+      "vertices": 207,
+      "faces": 294
+    },
+    {
+      "model": 46992,
+      "spots": [
+        2290,
+        2292,
+        3754
+      ],
+      "red_fraction": 0.68,
+      "vertices": 27,
+      "faces": 50
+    },
+    {
+      "model": 53323,
+      "spots": [
+        2811,
+        2812,
+        2813
+      ],
+      "red_fraction": 0.6798516687268232,
+      "vertices": 468,
+      "faces": 809
+    },
+    {
+      "model": 40988,
+      "spots": [
+        2582,
+        2634
+      ],
+      "red_fraction": 0.6798469387755102,
+      "vertices": 919,
+      "faces": 1568
+    },
+    {
+      "model": 53292,
+      "spots": [
+        2889,
+        2890,
+        2891
+      ],
+      "red_fraction": 0.6774193548387096,
+      "vertices": 156,
+      "faces": 248
+    },
+    {
+      "model": 47410,
+      "spots": [
+        2282,
+        2283
+      ],
+      "red_fraction": 0.676829268292683,
+      "vertices": 152,
+      "faces": 328
+    },
+    {
+      "model": 49466,
+      "spots": [
+        2559
+      ],
+      "red_fraction": 0.6727272727272727,
+      "vertices": 287,
+      "faces": 550
+    },
+    {
+      "model": 56282,
+      "spots": [
+        3250
+      ],
+      "red_fraction": 0.6697713801862828,
+      "vertices": 648,
+      "faces": 1181
+    },
+    {
+      "model": 56485,
+      "spots": [
+        3389,
+        3397
+      ],
+      "red_fraction": 0.6666666666666666,
+      "vertices": 35,
+      "faces": 66
+    },
+    {
+      "model": 56484,
+      "spots": [
+        3392,
+        3400
+      ],
+      "red_fraction": 0.6666666666666666,
+      "vertices": 35,
+      "faces": 66
+    },
+    {
+      "model": 55976,
+      "spots": [
+        3209
+      ],
+      "red_fraction": 0.6640316205533597,
+      "vertices": 165,
+      "faces": 253
+    },
+    {
+      "model": 60153,
+      "spots": [
+        3710,
+        3711,
+        3712
+      ],
+      "red_fraction": 0.6640316205533597,
+      "vertices": 165,
+      "faces": 253
+    },
+    {
+      "model": 56482,
+      "spots": [
+        3391,
+        3399
+      ],
+      "red_fraction": 0.6607142857142857,
+      "vertices": 30,
+      "faces": 56
+    },
+    {
+      "model": 56481,
+      "spots": [
+        3393,
+        3401
+      ],
+      "red_fraction": 0.6607142857142857,
+      "vertices": 30,
+      "faces": 56
+    },
+    {
+      "model": 52622,
+      "spots": [
+        2662
+      ],
+      "red_fraction": 0.6593406593406593,
+      "vertices": 42,
+      "faces": 91
+    },
+    {
+      "model": 60214,
+      "spots": [
+        3741,
+        3742,
+        3743,
+        3744,
+        3745,
+        3746
+      ],
+      "red_fraction": 0.6581632653061225,
+      "vertices": 540,
+      "faces": 784
+    },
+    {
+      "model": 56474,
+      "spots": [
+        3369
+      ],
+      "red_fraction": 0.6581141757536882,
+      "vertices": 943,
+      "faces": 1559
+    },
+    {
+      "model": 55960,
+      "spots": [
+        3218,
+        3308
+      ],
+      "red_fraction": 0.6541554959785523,
+      "vertices": 648,
+      "faces": 1119
+    },
+    {
+      "model": 55961,
+      "spots": [
+        3219,
+        3220
+      ],
+      "red_fraction": 0.6541554959785523,
+      "vertices": 648,
+      "faces": 1119
+    },
+    {
+      "model": 56480,
+      "spots": [
+        3395,
+        3403
+      ],
+      "red_fraction": 0.6527777777777778,
+      "vertices": 38,
+      "faces": 72
+    },
+    {
+      "model": 56483,
+      "spots": [
+        3394,
+        3402
+      ],
+      "red_fraction": 0.6447368421052632,
+      "vertices": 40,
+      "faces": 76
+    },
+    {
+      "model": 50021,
+      "spots": [
+        2603
+      ],
+      "red_fraction": 0.6435272045028143,
+      "vertices": 246,
+      "faces": 533
+    },
+    {
+      "model": 61565,
+      "spots": [
+        3850,
+        3851
+      ],
+      "red_fraction": 0.6420722135007849,
+      "vertices": 781,
+      "faces": 1274
+    },
+    {
+      "model": 45244,
+      "spots": [
+        2126
+      ],
+      "red_fraction": 0.6415094339622641,
+      "vertices": 271,
+      "faces": 530
+    },
+    {
+      "model": 50029,
+      "spots": [
+        2605
+      ],
+      "red_fraction": 0.6403695806680881,
+      "vertices": 765,
+      "faces": 1407
+    },
+    {
+      "model": 55490,
+      "spots": [
+        3020,
+        3021
+      ],
+      "red_fraction": 0.6396588486140725,
+      "vertices": 442,
+      "faces": 938
+    },
+    {
+      "model": 33542,
+      "spots": [
+        1406
+      ],
+      "red_fraction": 0.6355810616929699,
+      "vertices": 419,
+      "faces": 697
+    },
+    {
+      "model": 60228,
+      "spots": [
+        3662
+      ],
+      "red_fraction": 0.6354748603351955,
+      "vertices": 855,
+      "faces": 1432
+    },
+    {
+      "model": 29266,
+      "spots": [
+        1248
+      ],
+      "red_fraction": 0.6256983240223464,
+      "vertices": 855,
+      "faces": 1432
+    },
+    {
+      "model": 45245,
+      "spots": [
+        2127
+      ],
+      "red_fraction": 0.625,
+      "vertices": 146,
+      "faces": 288
+    },
+    {
+      "model": 35034,
+      "spots": [
+        1481,
+        1482,
+        1491,
+        1535,
+        1637,
+        1784,
+        2075,
+        2167,
+        2266,
+        3809
+      ],
+      "red_fraction": 0.6224489795918368,
+      "vertices": 210,
+      "faces": 392
+    },
+    {
+      "model": 47222,
+      "spots": [
+        2337
+      ],
+      "red_fraction": 0.6219081272084805,
+      "vertices": 253,
+      "faces": 566
+    },
+    {
+      "model": 47223,
+      "spots": [
+        2340
+      ],
+      "red_fraction": 0.6219081272084805,
+      "vertices": 253,
+      "faces": 566
+    },
+    {
+      "model": 29361,
+      "spots": [
+        416,
+        417
+      ],
+      "red_fraction": 0.6210045662100456,
+      "vertices": 119,
+      "faces": 219
+    },
+    {
+      "model": 33015,
+      "spots": [
+        1378
+      ],
+      "red_fraction": 0.6140350877192983,
+      "vertices": 60,
+      "faces": 114
+    },
+    {
+      "model": 53320,
+      "spots": [
+        2808,
+        2809
+      ],
+      "red_fraction": 0.6117021276595744,
+      "vertices": 99,
+      "faces": 188
+    },
+    {
+      "model": 29360,
+      "spots": [
+        1240
+      ],
+      "red_fraction": 0.6049382716049383,
+      "vertices": 166,
+      "faces": 324
+    },
+    {
+      "model": 46431,
+      "spots": [
+        2201
+      ],
+      "red_fraction": 0.603448275862069,
+      "vertices": 123,
+      "faces": 232
+    },
+    {
+      "model": 46432,
+      "spots": [
+        2202
+      ],
+      "red_fraction": 0.603448275862069,
+      "vertices": 123,
+      "faces": 232
+    },
+    {
+      "model": 46433,
+      "spots": [
+        3975,
+        3976,
+        3977,
+        3978
+      ],
+      "red_fraction": 0.603448275862069,
+      "vertices": 123,
+      "faces": 232
+    },
+    {
+      "model": 42553,
+      "spots": [
+        1905
+      ],
+      "red_fraction": 0.6015228426395939,
+      "vertices": 902,
+      "faces": 1576
+    },
+    {
+      "model": 31497,
+      "spots": [
+        1301
+      ],
+      "red_fraction": 0.6,
+      "vertices": 17,
+      "faces": 30
+    },
+    {
+      "model": 52832,
+      "spots": [
+        2660,
+        2661
+      ],
+      "red_fraction": 0.6,
+      "vertices": 77,
+      "faces": 150
+    },
+    {
+      "model": 52610,
+      "spots": [
+        2740
+      ],
+      "red_fraction": 0.5977961432506887,
+      "vertices": 385,
+      "faces": 726
+    },
+    {
+      "model": 60436,
+      "spots": [
+        3767,
+        3768,
+        3769,
+        3770,
+        3771,
+        3772,
+        3773,
+        3774
+      ],
+      "red_fraction": 0.596964586846543,
+      "vertices": 389,
+      "faces": 593
+    },
+    {
+      "model": 54032,
+      "spots": [
+        2881,
+        2882
+      ],
+      "red_fraction": 0.5930232558139535,
+      "vertices": 394,
+      "faces": 774
+    },
+    {
+      "model": 50023,
+      "spots": [
+        2619,
+        2620
+      ],
+      "red_fraction": 0.5917366946778712,
+      "vertices": 867,
+      "faces": 1428
+    },
+    {
+      "model": 47221,
+      "spots": [
+        2338
+      ],
+      "red_fraction": 0.5910290237467019,
+      "vertices": 361,
+      "faces": 758
+    },
+    {
+      "model": 54456,
+      "spots": [
+        2969,
+        2970
+      ],
+      "red_fraction": 0.5909090909090909,
+      "vertices": 1334,
+      "faces": 2376
+    },
+    {
+      "model": 60336,
+      "spots": [
+        3609,
+        3610
+      ],
+      "red_fraction": 0.5882352941176471,
+      "vertices": 79,
+      "faces": 238
+    },
+    {
+      "model": 50024,
+      "spots": [
+        2608,
+        2609,
+        2612,
+        2613,
+        2614,
+        2621,
+        2797,
+        2798,
+        3060,
+        3064,
+        3066,
+        3204,
+        3205
+      ],
+      "red_fraction": 0.5868580060422961,
+      "vertices": 803,
+      "faces": 1324
+    },
+    {
+      "model": 56486,
+      "spots": [
+        3390,
+        3398
+      ],
+      "red_fraction": 0.5853658536585366,
+      "vertices": 43,
+      "faces": 82
+    },
+    {
+      "model": 50025,
+      "spots": [
+        2607,
+        3319
+      ],
+      "red_fraction": 0.5849858356940509,
+      "vertices": 358,
+      "faces": 706
+    },
+    {
+      "model": 50022,
+      "spots": [
+        2615
+      ],
+      "red_fraction": 0.5849858356940509,
+      "vertices": 358,
+      "faces": 706
+    },
+    {
+      "model": 47224,
+      "spots": [
+        2339
+      ],
+      "red_fraction": 0.5788043478260869,
+      "vertices": 352,
+      "faces": 736
+    },
+    {
+      "model": 50026,
+      "spots": [
+        2606,
+        2610,
+        2611,
+        3068
+      ],
+      "red_fraction": 0.5760869565217391,
+      "vertices": 707,
+      "faces": 1196
+    },
+    {
+      "model": 60410,
+      "spots": [
+        3625,
+        3626,
+        3627,
+        3628,
+        3629,
+        3630,
+        3631,
+        3632,
+        3641,
+        3750
+      ],
+      "red_fraction": 0.5754527162977867,
+      "vertices": 470,
+      "faces": 994
+    },
+    {
+      "model": 42923,
+      "spots": [
+        1976
+      ],
+      "red_fraction": 0.5689058171745153,
+      "vertices": 1959,
+      "faces": 2888
+    },
+    {
+      "model": 37812,
+      "spots": [
+        1727
+      ],
+      "red_fraction": 0.568217054263566,
+      "vertices": 809,
+      "faces": 1290
+    },
+    {
+      "model": 42924,
+      "spots": [
+        1977
+      ],
+      "red_fraction": 0.5653266331658291,
+      "vertices": 1713,
+      "faces": 2786
+    },
+    {
+      "model": 56479,
+      "spots": [
+        3388,
+        3396
+      ],
+      "red_fraction": 0.5609756097560976,
+      "vertices": 43,
+      "faces": 82
+    },
+    {
+      "model": 50027,
+      "spots": [
+        2616,
+        2617,
+        2853,
+        2854,
+        2856,
+        3065
+      ],
+      "red_fraction": 0.5581081081081081,
+      "vertices": 373,
+      "faces": 740
+    },
+    {
+      "model": 42918,
+      "spots": [
+        1978
+      ],
+      "red_fraction": 0.5580842391304348,
+      "vertices": 1819,
+      "faces": 2944
+    },
+    {
+      "model": 53319,
+      "spots": [
+        2806,
+        2807
+      ],
+      "red_fraction": 0.5540106951871657,
+      "vertices": 691,
+      "faces": 935
+    },
+    {
+      "model": 32679,
+      "spots": [
+        1323
+      ],
+      "red_fraction": 0.5538461538461539,
+      "vertices": 132,
+      "faces": 260
+    },
+    {
+      "model": 42926,
+      "spots": [
+        1974
+      ],
+      "red_fraction": 0.5528949249463903,
+      "vertices": 1715,
+      "faces": 2798
+    },
+    {
+      "model": 42925,
+      "spots": [
+        1980
+      ],
+      "red_fraction": 0.5528949249463903,
+      "vertices": 1715,
+      "faces": 2798
+    },
+    {
+      "model": 45303,
+      "spots": [
+        2216,
+        2217
+      ],
+      "red_fraction": 0.552319309600863,
+      "vertices": 958,
+      "faces": 1854
+    },
+    {
+      "model": 45297,
+      "spots": [
+        2218
+      ],
+      "red_fraction": 0.552319309600863,
+      "vertices": 952,
+      "faces": 1854
+    },
+    {
+      "model": 45289,
+      "spots": [
+        2219
+      ],
+      "red_fraction": 0.5503246753246753,
+      "vertices": 328,
+      "faces": 616
+    },
+    {
+      "model": 34180,
+      "spots": [
+        1416,
+        1417,
+        1418,
+        1419,
+        1420,
+        1421,
+        1422,
+        1423
+      ],
+      "red_fraction": 0.5501066098081023,
+      "vertices": 442,
+      "faces": 938
+    },
+    {
+      "model": 33709,
+      "spots": [
+        1410
+      ],
+      "red_fraction": 0.5488029465930019,
+      "vertices": 330,
+      "faces": 543
+    },
+    {
+      "model": 53321,
+      "spots": [
+        2810
+      ],
+      "red_fraction": 0.5458913983661701,
+      "vertices": 1508,
+      "faces": 2081
+    },
+    {
+      "model": 55947,
+      "spots": [
+        3227
+      ],
+      "red_fraction": 0.5433436532507739,
+      "vertices": 724,
+      "faces": 1292
+    },
+    {
+      "model": 52607,
+      "spots": [
+        2745
+      ],
+      "red_fraction": 0.5425055928411633,
+      "vertices": 469,
+      "faces": 894
+    },
+    {
+      "model": 34120,
+      "spots": [
+        1412
+      ],
+      "red_fraction": 0.5360824742268041,
+      "vertices": 112,
+      "faces": 194
+    },
+    {
+      "model": 60334,
+      "spots": [
+        3577
+      ],
+      "red_fraction": 0.5360443622920518,
+      "vertices": 646,
+      "faces": 1082
+    },
+    {
+      "model": 41982,
+      "spots": [
+        1863
+      ],
+      "red_fraction": 0.5345405767940979,
+      "vertices": 870,
+      "faces": 1491
+    },
+    {
+      "model": 47204,
+      "spots": [
+        2347
+      ],
+      "red_fraction": 0.5342960288808665,
+      "vertices": 738,
+      "faces": 1108
+    },
+    {
+      "model": 47205,
+      "spots": [
+        2345
+      ],
+      "red_fraction": 0.5306930693069307,
+      "vertices": 681,
+      "faces": 1010
+    },
+    {
+      "model": 55944,
+      "spots": [
+        3226
+      ],
+      "red_fraction": 0.5254237288135594,
+      "vertices": 606,
+      "faces": 1062
+    },
+    {
+      "model": 53424,
+      "spots": [
+        2835
+      ],
+      "red_fraction": 0.5108695652173914,
+      "vertices": 94,
+      "faces": 184
+    },
+    {
+      "model": 33006,
+      "spots": [
+        1375,
+        2261,
+        2381,
+        2382,
+        3294
+      ],
+      "red_fraction": 0.5011627906976744,
+      "vertices": 356,
+      "faces": 860
+    },
+    {
+      "model": 29311,
+      "spots": [
+        1246
+      ],
+      "red_fraction": 0.5,
+      "vertices": 26,
+      "faces": 40
+    },
+    {
+      "model": 14804,
+      "spots": [
+        3239
+      ],
+      "red_fraction": 0.4995121951219512,
+      "vertices": 771,
+      "faces": 1025
+    },
+    {
+      "model": 51237,
+      "spots": [
+        2709
+      ],
+      "red_fraction": 0.4948453608247423,
+      "vertices": 55,
+      "faces": 97
+    },
+    {
+      "model": 60320,
+      "spots": [
+        3607
+      ],
+      "red_fraction": 0.49423076923076925,
+      "vertices": 966,
+      "faces": 1560
+    },
+    {
+      "model": 36300,
+      "spots": [
+        699,
+        1629
+      ],
+      "red_fraction": 0.4909090909090909,
+      "vertices": 116,
+      "faces": 220
+    },
+    {
+      "model": 46366,
+      "spots": [
+        2253
+      ],
+      "red_fraction": 0.4842105263157895,
+      "vertices": 97,
+      "faces": 190
+    },
+    {
+      "model": 45240,
+      "spots": [
+        2246
+      ],
+      "red_fraction": 0.4766355140186916,
+      "vertices": 90,
+      "faces": 107
+    },
+    {
+      "model": 32826,
+      "spots": [
+        306,
+        1370,
+        1371,
+        1372,
+        2637
+      ],
+      "red_fraction": 0.4732142857142857,
+      "vertices": 116,
+      "faces": 224
+    },
+    {
+      "model": 60363,
+      "spots": [
+        3695
+      ],
+      "red_fraction": 0.47019867549668876,
+      "vertices": 593,
+      "faces": 906
+    },
+    {
+      "model": 60148,
+      "spots": [
+        3672,
+        3673,
+        3674,
+        3675
+      ],
+      "red_fraction": 0.46886446886446886,
+      "vertices": 1008,
+      "faces": 1638
+    },
+    {
+      "model": 61593,
+      "spots": [
+        3843,
+        3972,
+        3973,
+        3974
+      ],
+      "red_fraction": 0.45560747663551404,
+      "vertices": 254,
+      "faces": 428
+    },
+    {
+      "model": 48324,
+      "spots": [
+        2391
+      ],
+      "red_fraction": 0.4511930585683297,
+      "vertices": 1488,
+      "faces": 2766
+    },
+    {
+      "model": 33711,
+      "spots": [
+        1411
+      ],
+      "red_fraction": 0.45066666666666666,
+      "vertices": 194,
+      "faces": 375
+    },
+    {
+      "model": 37138,
+      "spots": [
+        1676
+      ],
+      "red_fraction": 0.44093178036605657,
+      "vertices": 636,
+      "faces": 1202
+    },
+    {
+      "model": 16996,
+      "spots": [
+        3270
+      ],
+      "red_fraction": 0.4371517027863777,
+      "vertices": 909,
+      "faces": 1615
+    },
+    {
+      "model": 41555,
+      "spots": [
+        1872
+      ],
+      "red_fraction": 0.4330195510499638,
+      "vertices": 780,
+      "faces": 1381
+    },
+    {
+      "model": 56478,
+      "spots": [
+        3409,
+        3410,
+        3411,
+        3413
+      ],
+      "red_fraction": 0.4209341586944288,
+      "vertices": 1160,
+      "faces": 1777
+    },
+    {
+      "model": 33264,
+      "spots": [
+        1390,
+        1391
+      ],
+      "red_fraction": 0.41972843450479236,
+      "vertices": 1239,
+      "faces": 2504
+    },
+    {
+      "model": 33883,
+      "spots": [
+        1393,
+        1394
+      ],
+      "red_fraction": 0.41968911917098445,
+      "vertices": 524,
+      "faces": 772
+    },
+    {
+      "model": 52507,
+      "spots": [
+        2800,
+        2801
+      ],
+      "red_fraction": 0.4171974522292994,
+      "vertices": 473,
+      "faces": 942
+    },
+    {
+      "model": 47475,
+      "spots": [
+        2364
+      ],
+      "red_fraction": 0.4166666666666667,
+      "vertices": 108,
+      "faces": 96
+    },
+    {
+      "model": 46425,
+      "spots": [
+        2147
+      ],
+      "red_fraction": 0.4143396226415094,
+      "vertices": 748,
+      "faces": 1325
+    },
+    {
+      "model": 52588,
+      "spots": [
+        2677,
+        2678
+      ],
+      "red_fraction": 0.4131679389312977,
+      "vertices": 589,
+      "faces": 1048
+    },
+    {
+      "model": 56491,
+      "spots": [
+        3385,
+        3387
+      ],
+      "red_fraction": 0.40893470790378006,
+      "vertices": 465,
+      "faces": 873
+    },
+    {
+      "model": 60220,
+      "spots": [
+        3693
+      ],
+      "red_fraction": 0.4076655052264808,
+      "vertices": 170,
+      "faces": 287
+    },
+    {
+      "model": 29218,
+      "spots": [
+        1238
+      ],
+      "red_fraction": 0.4057971014492754,
+      "vertices": 146,
+      "faces": 276
+    },
+    {
+      "model": 33258,
+      "spots": [
+        1407
+      ],
+      "red_fraction": 0.4057649667405765,
+      "vertices": 289,
+      "faces": 451
+    },
+    {
+      "model": 41539,
+      "spots": [
+        1865,
+        1866
+      ],
+      "red_fraction": 0.3956140350877193,
+      "vertices": 745,
+      "faces": 1140
+    },
+    {
+      "model": 46422,
+      "spots": [
+        2148
+      ],
+      "red_fraction": 0.3921832884097035,
+      "vertices": 854,
+      "faces": 1484
+    },
+    {
+      "model": 57705,
+      "spots": [
+        3541
+      ],
+      "red_fraction": 0.3881199538638985,
+      "vertices": 1034,
+      "faces": 1734
+    },
+    {
+      "model": 41559,
+      "spots": [
+        1864
+      ],
+      "red_fraction": 0.38809946714031973,
+      "vertices": 665,
+      "faces": 1126
+    },
+    {
+      "model": 41557,
+      "spots": [
+        1878,
+        1880
+      ],
+      "red_fraction": 0.38030560271646857,
+      "vertices": 337,
+      "faces": 589
+    },
+    {
+      "model": 56498,
+      "spots": [
+        3384,
+        3386,
+        3404
+      ],
+      "red_fraction": 0.3772269558481797,
+      "vertices": 724,
+      "faces": 1291
+    },
+    {
+      "model": 39205,
+      "spots": [
+        1782,
+        2468,
+        2469
+      ],
+      "red_fraction": 0.37660485021398005,
+      "vertices": 519,
+      "faces": 701
+    },
+    {
+      "model": 55689,
+      "spots": [
+        3072,
+        3075
+      ],
+      "red_fraction": 0.37593984962406013,
+      "vertices": 73,
+      "faces": 133
+    },
+    {
+      "model": 51228,
+      "spots": [
+        2726,
+        2728,
+        2730
+      ],
+      "red_fraction": 0.37253960633701394,
+      "vertices": 1283,
+      "faces": 2083
+    },
+    {
+      "model": 29621,
+      "spots": [
+        2925
+      ],
+      "red_fraction": 0.3657865786578658,
+      "vertices": 981,
+      "faces": 1818
+    },
+    {
+      "model": 50028,
+      "spots": [
+        2618
+      ],
+      "red_fraction": 0.3617626154939588,
+      "vertices": 765,
+      "faces": 1407
+    },
+    {
+      "model": 37255,
+      "spots": [
+        1680
+      ],
+      "red_fraction": 0.36084452975047987,
+      "vertices": 532,
+      "faces": 1042
+    },
+    {
+      "model": 36301,
+      "spots": [
+        28,
+        697
+      ],
+      "red_fraction": 0.358974358974359,
+      "vertices": 41,
+      "faces": 78
+    },
+    {
+      "model": 36299,
+      "spots": [
+        1630
+      ],
+      "red_fraction": 0.358974358974359,
+      "vertices": 41,
+      "faces": 78
+    },
+    {
+      "model": 60431,
+      "spots": [
+        3765
+      ],
+      "red_fraction": 0.35511363636363635,
+      "vertices": 1116,
+      "faces": 1760
+    },
+    {
+      "model": 61574,
+      "spots": [
+        3864,
+        3865
+      ],
+      "red_fraction": 0.3469387755102041,
+      "vertices": 106,
+      "faces": 196
+    },
+    {
+      "model": 60367,
+      "spots": [
+        3665,
+        3666
+      ],
+      "red_fraction": 0.3320522674865488,
+      "vertices": 713,
+      "faces": 1301
+    },
+    {
+      "model": 49870,
+      "spots": [
+        2578,
+        2579
+      ],
+      "red_fraction": 0.3317972350230415,
+      "vertices": 480,
+      "faces": 868
+    },
+    {
+      "model": 51253,
+      "spots": [
+        2777
+      ],
+      "red_fraction": 0.33116883116883117,
+      "vertices": 1213,
+      "faces": 1848
+    },
+    {
+      "model": 51181,
+      "spots": [
+        2795,
+        2796
+      ],
+      "red_fraction": 0.3291139240506329,
+      "vertices": 44,
+      "faces": 79
+    },
+    {
+      "model": 60365,
+      "spots": [
+        3694
+      ],
+      "red_fraction": 0.32756132756132755,
+      "vertices": 852,
+      "faces": 1386
+    },
+    {
+      "model": 32685,
+      "spots": [
+        1331
+      ],
+      "red_fraction": 0.3210702341137124,
+      "vertices": 163,
+      "faces": 299
+    },
+    {
+      "model": 59722,
+      "spots": [
+        3476
+      ],
+      "red_fraction": 0.3183673469387755,
+      "vertices": 124,
+      "faces": 245
+    },
+    {
+      "model": 45292,
+      "spots": [
+        2240
+      ],
+      "red_fraction": 0.3076923076923077,
+      "vertices": 67,
+      "faces": 130
+    },
+    {
+      "model": 53422,
+      "spots": [
+        2843,
+        2876
+      ],
+      "red_fraction": 0.3076923076923077,
+      "vertices": 71,
+      "faces": 130
+    },
+    {
+      "model": 51268,
+      "spots": [
+        2746,
+        2747,
+        2748
+      ],
+      "red_fraction": 0.3046007403490217,
+      "vertices": 1354,
+      "faces": 1891
+    }
+  ]
+}

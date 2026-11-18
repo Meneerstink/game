@@ -15,5 +15,12 @@
   "source_seq": 10241,
   "source_clip": "224:0",
   "source_rig": 2138,
-  "output_sha256": "f27370e41ffe9b0c06c55e0e5b61826ddf07f062cb904fb344dac0f451e51586"
+  "output_sha256": "f27370e41ffe9b0c06c55e0e5b61826ddf07f062cb904fb344dac0f451e51586",
+  "mutation_indices": [
+    0,
+    4,
+    10,
+    20
+  ],
+  "no_model_npc_bas_base_mutations": true
 }

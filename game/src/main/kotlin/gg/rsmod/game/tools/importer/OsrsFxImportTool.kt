@@ -258,6 +258,9 @@ object OsrsFxImportTool {
     val SEQ_BATCHES: Map<String, List<Int>> =
         mapOf(
             // DMM2: cache 2686 source IDs, same order as the phase-3 bundle plan.
+            // Cache2686 loc49564 DEADMAN_BLIGHTED_WEAPONS_LOOT_CYCLE references this classic five-tick object animation.
+            // This is the object half only; the player's opening pose is still unproven (PHASE7-SOURCES).
+            "dmm2-advanced-loot" to listOf(10426),
             "dmm2-seqs" to listOf(11444, 11810, 11811, 11812, 11935, 11936, 11937, 13701, 13702, 13703, 13704, 13705, 13706, 13707, 13708, 13709, 13710, 13711, 13712, 13713, 13714, 14497),
             "dmm2-weapon-av" to listOf(721, 8056, 8057), // HUMAN_ENCHANTAMULETLVL3, SCYTHE_OF_VITUR_ATTACK/READY.
             // DMM2 fase 7 (Claude 17-11): thrall attack seqs on the pet skeletons of NPC 15569/15570/15571 (ZUKREK_ATTACK 7978, KALPHITE_UPDATE_FLYING_QUEEN_RANGED_ATTACK 6234, ONZEKER: no OSRS video of the trinket thralls; the attack seq of each pet skeleton. The Wisp attack is skeletal: OsrsPetImportTool "dmm2-wisp").

@@ -27,7 +27,7 @@ class Dmm2BootTests {
 
     @Test fun `published transaction mappings install starter rewards NPCs and exact cosmetic states`() {
         val parsed = Dmm2Ids.parse(File(directory, "ids.tsv").readLines())
-        assertEquals(151, parsed.size)
+        assertEquals(158, parsed.size) // 170 published lines, 12 comments/blank lines; Claude's Wisp round tx-20261117-205101.
         assertEquals(86, parsed.keys.count { it.startsWith("item:") })
         Dmm2Ids.install(emptyList()) // A prior lookup must not hide the subsequently published file.
         val store = boot()
@@ -51,6 +51,63 @@ class Dmm2BootTests {
         assertEquals(16, store.contract.skins.size)
         assertEquals(setOf(24980,24981,24982,24983,24984,24985,24986,25001,25002,25003,25004,25005,25006,25007,25008,25009),
             store.contract.skins.map { it.cosmetic }.toSet())
+    }
+
+    @Test fun `Wisp magic swing uses only the source mapping and safely omits a missing animation`() {
+        val temp = kotlin.io.path.createTempDirectory("dmm2-wisp-boot").toFile()
+        try {
+            // Exercise absence even after Claude publishes this optional sequence; do not append a duplicate mapping.
+            val published = File(directory, "ids.tsv").readLines()
+                .filterNot { it.startsWith("seq\t${Dmm2Boot.WISP_MAGIC_ATTACK}\t") }.joinToString("\n") + "\n"
+            for (mapped in listOf(false, true)) {
+                File(temp, "ids.tsv").writeText(published + if (mapped) "\nseq\t${Dmm2Boot.WISP_MAGIC_ATTACK}\t30000\n" else "")
+                Dmm2Boot.install(temp)
+                val f = DeadmanPlayerFixture()
+                val actor = io.mockk.mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
+                val target = io.mockk.mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
+                every { actor.world } returns f.world
+                every { actor.tile } returns Tile(3200, 3200)
+                every { target.tile } returns Tile(3201, 3200)
+                assertEquals(1, assertNotNull(UndeadThralls.appearance).attack(actor, target, UndeadThralls.Choice.WISP))
+                io.mockk.verify(exactly = if (mapped) 1 else 0) { actor.animate(30000, 0, false, true) }
+                if (!mapped) io.mockk.verify(exactly = 0) { actor.animate(any(), any(), any(), any()) }
+            }
+        } finally {
+            temp.listFiles()?.forEach { it.delete() }; temp.delete()
+            Dmm2Boot.install(directory)
+        }
+    }
+
+    @Test fun `all three published Nigel armour items follow D2 D4 and preserve their permanent unlocks`() {
+        boot()
+        val f = DeadmanPlayerFixture()
+        val armour = BloodMoney.Armour.values().map { it.item.local!! }.toSet()
+        armour.forEachIndexed { slot, id ->
+            f.define(id).also { it.tradeable = false; it.cost = 1000 }
+            f.inventory[slot] = Item(id)
+        }
+        every { f.definitions.getNullable(ItemDef::class.java, any()) } answers { f.defs[secondArg()] }
+        BloodMoney.Armour.values().forEach { f.attr[it.unlocked] = 1 }
+        for (id in armour) for (deep in listOf(false, true)) {
+            assertTrue(gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtection.handles(f.definitions, id))
+            val fate = gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtection.fateOf(f.definitions, Item(id), deep)
+            assertEquals(gg.rsmod.plugins.content.mechanics.death.UntradeableFate.LOST_FOR_COINS, fate.fate)
+            assertEquals(gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtection.lostCoins(f.definitions, Item(id)), fate.killerCoins)
+        }
+        for (context in gg.rsmod.plugins.content.mechanics.death.DeathContext.values()) for (skull in listOf(false, true)) {
+            val result = gg.rsmod.plugins.content.mechanics.death.DeathResolver.resolve(f.player, null, skull,
+                gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider { 1000L }, contextOverride = context).itemRisk
+            val kept = if (context == gg.rsmod.plugins.content.mechanics.death.DeathContext.PVM_SAFE && !skull) 3 else 0
+            assertEquals(kept, result.protected.size); assertEquals(3 - kept, result.lost.size)
+            assertEquals(armour, (result.protected + result.lost).map { it.item.id }.toSet())
+            BloodMoney.Armour.values().forEach { assertEquals(1, f.attr[it.unlocked]) }
+        }
+        for (id in armour) for (deep in listOf(false, true)) {
+            val fate = gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtection.fateOf(f.definitions, Item(id), deep)
+            assertEquals(gg.rsmod.plugins.content.mechanics.death.UntradeableFate.LOST_FOR_COINS, fate.fate)
+            assertEquals(600L, fate.killerCoins) // 60% of the fixture value, existing D4 policy.
+        }
+        assertEquals(3, f.inventory.occupiedSlotCount)
     }
 
     @Test fun `drop viewer defaults use the actual roll rate for bosses and ordinary NPCs independently`() {

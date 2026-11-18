@@ -1,0 +1,31 @@
+// Standard module compilation and real Gradle/JUnit tests; no stale class snapshots or removed task dependencies.
+// Normal installDist compiles every binding script; an explicit dmm2FocusedScripts property is for interim tests only.
+// Every requested test class belongs to DMM2 changes.
+gradle.projectsEvaluated {
+    def root = gradle.rootProject
+    def scripts = root.project(':game:plugins:scripts')
+    if (root.hasProperty('dmm2FocusedScripts')) scripts.sourceSets.main.kotlin.setIncludes([
+        'gg/rsmod/plugins/content/combat/specialattack/weapons/nightmare_staves.plugin.kts',
+        'gg/rsmod/plugins/content/items/osrs/powered_staves.plugin.kts',
+        'gg/rsmod/plugins/content/magic/teleports/home_teleport_spells.plugin.kts',
+        'gg/rsmod/plugins/content/mechanics/deadman/dmm2.plugin.kts',
+        'gg/rsmod/plugins/content/mechanics/pvp/breach/breach_points.plugin.kts',
+        'gg/rsmod/plugins/content/mechanics/pvp/breach/breach_shop.plugin.kts',
+        'gg/rsmod/plugins/content/mechanics/store/store.plugin.kts',
+        'gg/rsmod/plugins/content/npcs/definitions/humanoids/infernal_mage_level_66.plugin.kts',
+        'gg/rsmod/plugins/content/starter/starter_kit.plugin.kts'
+    ])
+    [':game', ':game:plugins'].each { name ->
+        def task = root.project(name).tasks.getByName('test')
+        task.systemProperty 'rsps.data', root.file('data').absolutePath
+        // --tests filters JUnit execution after Gradle discovers candidates. Limit class discovery too:
+        // otherwise forkEvery=1 can start an empty JVM for every unrelated test class.
+        def key = name == ':game' ? 'dmm2CoreTests' : 'dmm2PluginTests'
+        def ownClasses = root.findProperty(key)?.toString()?.split(',')?.toList() ?: []
+        task.setIncludes(ownClasses.collect { '**/' + it + '.class' } as Set)
+        task.forkEvery = name == ':game' ? 0 : 1
+        task.doFirst { println '[DMM2] discovered classes restricted to: ' + ownClasses.join(', ') }
+        task.testLogging.events('passed', 'failed', 'skipped')
+        task.outputs.upToDateWhen { false } // Fresh XML for the explicitly selected phase7 classes, without recompiling unchanged modules.
+    }
+}

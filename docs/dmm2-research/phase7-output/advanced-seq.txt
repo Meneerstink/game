@@ -1,0 +1,20 @@
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[22:07:01.599 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+PROBLEM census: interface 1209 component 1 undecodable (76 bytes): Index 76 out of bounds for length 76
+PROBLEM census: interface 1209 component 2 undecodable (76 bytes): Index 76 out of bounds for length 76
+PROBLEM census: interface 1209 component 3 undecodable (76 bytes): Index 76 out of bounds for length 76
+PROBLEM census: interface 1209 component 4 undecodable (76 bytes): Index 76 out of bounds for length 76
+PROBLEM census: interface 1235 component 81 undecodable (74 bytes): Index 74 out of bounds for length 74
+PROBLEM census: interface 1209 component 1 undecodable (76 bytes): null
+PROBLEM census: interface 1209 component 2 undecodable (76 bytes): null
+PROBLEM census: interface 1209 component 3 undecodable (76 bytes): null
+PROBLEM census: interface 1209 component 4 undecodable (76 bytes): null
+PROBLEM census: interface 1235 component 81 undecodable (74 bytes): null
+CENSUS spotanim_model_holes=63576 next spot=3475 seq=17773 frameset=6016 base=3848 synth=10846
+PLAN seq 10426 -> 17773
+PREFLIGHT transaction=tx-20261117-210715 mutations=11 outcomes={CREATE=22}
+DRY_RUN records=3
