@@ -93,7 +93,7 @@ object OsrsWeaponSounds {
     }
 
     /** Every weapon this table gives a swing sound (guard: `OsrsWeaponSoundsTests`). */
-    val COVERED: Set<Int> get() = byWeapon.keys
+    val COVERED: Set<Int> get() = byWeapon.keys + kerisPartisans
 
     /** The swing sound of [weaponId] for an attack of [style], or null when the table does not cover the weapon. */
     fun melee(
