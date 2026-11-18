@@ -75,6 +75,8 @@ object OsrsWeaponSounds {
             // Revenant sceptres (OSRS Wiki category "Powered Staff"): their staff bash like the tridents above.
             Items.THAMMARONS_SCEPTRE, Items.THAMMARONS_SCEPTRE_U, Items.THAMMARONS_SCEPTRE_A, Items.THAMMARONS_SCEPTRE_AU,
             Items.ACCURSED_SCEPTRE, Items.ACCURSED_SCEPTRE_U, Items.ACCURSED_SCEPTRE_A, Items.ACCURSED_SCEPTRE_AU,
+            // 18-11 (MA2 naspel trace 'silent swing' weapon=8841 anim=419): OSRS Wiki Void knight mace 'combatstyle = Staff'.
+            Items.VOID_KNIGHT_MACE,
         )
         // Revenant chainmaces (OSRS Wiki category "Spiked"): the crush sequence (OSRS 245) carries its own OSRS frame sounds, the
         // stab sequence (OSRS 246) none - the stab takes the category sound (only played for a silent sequence, MeleeCombatStrategy).
