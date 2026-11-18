@@ -288,7 +288,7 @@ class DeadmanChestTests {
     fun `defaults - no bracket boost, breach monsters roll the chest list on top and the fairies trinket is no longer excluded`() {
         assertFalse(DeadmanChestConfig.BRACKET_BOOST)
         assertFalse(Items.TRINKET_OF_FAIRIES in BreachLoot.EXCLUDED_TRINKETS)
-        assertTrue(Items.TRINKET_OF_AVARICE in BreachLoot.EXCLUDED_TRINKETS && Items.TRINKET_OF_UNDEAD in BreachLoot.EXCLUDED_TRINKETS)
+        assertTrue(BreachLoot.EXCLUDED_TRINKETS.isEmpty(), "DMM2 V10 ('alle trinkets'): no trinket is excluded any more")
         // nextInt(BREACH_EXTRA_CHANCE) == 0 is the extra chest-list roll: with every draw forced to 0 the first list entry comes out.
         val drops = BreachLoot.roll(fixed(0))
         val first = DeadmanChestLoot.FIXED.first()
