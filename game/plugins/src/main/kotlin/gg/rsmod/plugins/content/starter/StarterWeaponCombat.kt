@@ -41,6 +41,10 @@ object StarterWeaponCombat : CombatStrategy {
         player.stopMovement()
         player.animate(look.animation)
         player.graphic(look.cast, 96) // N628: hand height, like CombatSpell.FIRE_STRIKE (22 = knees, owner 17-11)
+        // Claude 18-11 (testclient: 'silent swing'): the built-in Fire Strike plays Fire Strike's own sounds like every cast spell
+        // (MagicCombatStrategy): cast cue to the caster and bystanders, impact or splash when it arrives.
+        val sounds = gg.rsmod.plugins.content.combat.strategy.magic.SpellSounds.of(gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.FIRE_STRIKE)
+        sounds?.cast?.takeIf { it > 0 }?.let { player.playSound(it); player.soundToBystanders(it) }
         val projectile = player.createProjectile(target, look.projectile, ProjectileType.MAGIC)
         player.world.spawn(projectile)
         val landed = gg.rsmod.plugins.content.items.osrs.ConflictionGauntlets.roll(
@@ -50,6 +54,11 @@ object StarterWeaponCombat : CombatStrategy {
         val hit = player.dealHit(target = target, maxHit = MagicCombatFormula.getMaxHit(player, target),
             landHit = landed, delay = MagicCombatStrategy.getHitDelay(player.getCentreTile(), target.getCentreTile()), hitType = HitType.MAGIC)
         val damage = hit.hit.hitmarks.sumOf { it.damage }
+        val hitDelay = MagicCombatStrategy.getHitDelay(player.getCentreTile(), target.getCentreTile())
+        (if (landed) sounds?.impact else gg.rsmod.plugins.content.combat.strategy.magic.SpellSounds.SPLASH)?.takeIf { it > 0 }?.let {
+            player.playSound(it, delay = hitDelay * 30)
+            (target as? Player)?.playSound(it, delay = hitDelay * 30)
+        }
         val longrange = CombatConfigs.getAttackStyle(player) == gg.rsmod.game.model.combat.WeaponStyle.LONG_RANGE
         if (landed) hit.hit.addAction { gg.rsmod.plugins.content.items.osrs.SerpentineHelm.rollVenom(player, target) }
         consume(player, weapon)
