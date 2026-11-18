@@ -19,6 +19,31 @@ STEPS = ROOT / 'data/cfg/clue/steps.json'
 # Dig points that are terrain-blocked in our 667 map (tools/cache667/terrain_flags.py, 18-11): not diggable here.
 EXCLUDE = {'Clue scroll (elite) - Observing someone in a swamp', 'Clue scroll (hard) - CKP0224', 'Clue scroll (hard) - DKS2310',
            'Clue scroll (hard) - The Big High War God left his mark on this place'}
+# Dig points with NO map loaded on the server (testserver 'tp' refused 'no map loaded there', 18-11 nachtrun): the player cannot stand there -> removed/not added.
+UNMAPPED = {
+    'Clue scroll (elite) - 02.35S 11.52E',
+    'Clue scroll (elite) - The beasts retreat, for their Queen is gone',
+    'Clue scroll (hard) - 00.00N 07.13W',
+    'Clue scroll (hard) - 01.24N 08.05W',
+    'Clue scroll (hard) - 02.48N 08.05E',
+    'Clue scroll (hard) - 03.45S 22.45E',
+    'Clue scroll (hard) - 06.00S 21.48E',
+    'Clue scroll (hard) - 08.05S 15.56E',
+    'Clue scroll (hard) - 08.26S 10.28E',
+    'Clue scroll (hard) - 16.45N 03.05W',
+    'Clue scroll (hard) - 18.50N 20.26E',
+    'Clue scroll (hard) - 23.03N 02.01E',
+    'Clue scroll (hard) - AIR2331',
+    'Clue scroll (hard) - DIP8511',
+    'Clue scroll (hard) - Rotting next to a ditch',
+    'Clue scroll (medium) - 01.26N 08.01E',
+    'Clue scroll (medium) - 03.07S 03.41W',
+    'Clue scroll (medium) - 06.31N 01.46W',
+    'Clue scroll (medium) - 11.33N 02.24W',
+    'Clue scroll (medium) - 22.30N 03.01E',
+    'Clue scroll (medium) - Miscellania',
+}
+EXCLUDE |= UNMAPPED
 WIZARDS = {'Saradomin wizard': [2955], 'Zamorak wizard': [2954]}
 
 
@@ -34,7 +59,7 @@ def main():
     pins = {row['file']: row for row in manifest['pages'] if 'file' in row}
     guide_manifest = json.loads((SOURCES / 'manifest.json').read_text(encoding='utf8'))
     guide_pins = {row['file']: row for row in guide_manifest['pages'] if 'file' in row}
-    existing = json.loads(STEPS.read_text(encoding='utf8'))
+    existing = [r for r in json.loads(STEPS.read_text(encoding='utf8')) if r['key'] not in UNMAPPED]
     have = {r['key'] for r in existing}
     tables = {}
     for tier in ('medium', 'hard'):

@@ -44,9 +44,9 @@ class TreasureTrailStepCatalogueTests {
 
     @Test fun `selected steps keep their tiers exceptional fights and master puzzle gates`() {
         val selection = rows
-        assertEquals(mapOf(ClueScrollTier.EASY to 29, ClueScrollTier.MEDIUM to 29, ClueScrollTier.HARD to 25,
-            ClueScrollTier.ELITE to 12, ClueScrollTier.MASTER to 12), selection.groupingBy { it.tier }.eachCount())
-        assertEquals(107, selection.map { it.id }.toSet().size)
+        assertEquals(mapOf(ClueScrollTier.EASY to 31, ClueScrollTier.MEDIUM to 56, ClueScrollTier.HARD to 75,
+            ClueScrollTier.ELITE to 17, ClueScrollTier.MASTER to 12), selection.groupingBy { it.tier }.eachCount())
+        assertEquals(191, selection.map { it.id }.toSet().size)
         val arena = selection.single { it.key.endsWith("02.39N 29.58E") }
         assertEquals(TreasureTrailStepCatalogue.Challenge.NONE, arena.challenge)
         assertTrue(arena.guards.isEmpty())

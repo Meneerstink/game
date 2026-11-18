@@ -1,0 +1,8 @@
+{
+  "8635": {"verified": true, "attack": 390, "block": 424, "death": 836,
+    "note": "Third Age Warrior: standard human slash/block/death anims (OSRS HUMAN_SWORD_SLASH/UNARMEDBLOCK/DEATH); no projectile (melee)."},
+  "8636": {"verified": true, "attack": 426, "block": 424, "death": 836,
+    "note": "Third Age Ranger: HUMAN_BOW anim; projectile id NOT sourced (wiki/RuneLite silent) -> none drawn, damage still lands."},
+  "8637": {"verified": true, "attack": 1162, "block": 424, "death": 836,
+    "note": "Third Age Mage: HUMAN_CASTSTRIKE_STAFF anim; spotanim/projectile NOT sourced -> none drawn, damage still lands."}
+}
