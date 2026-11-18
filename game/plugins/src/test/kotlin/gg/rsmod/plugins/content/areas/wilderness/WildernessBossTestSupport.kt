@@ -121,6 +121,8 @@ internal object WildernessBossTestSupport {
         val expected = File("src/test/resources/wilderness-bosses/${wiki.replace(' ', '_')}.tsv").readLines()
             .filter { it.isNotBlank() && !it.startsWith('#') }.map { it.split('\t') }
             .filter { it[0] !in unsupported }
+            // Clue scrolls of sourced clue NPCs drop through the clue scroll boxes (ClueNpcSources, the Drop Viewer shows the box line instead).
+            .filterNot { it[0].startsWith("Clue scroll") && gg.rsmod.plugins.content.scrolls.ClueNpcSources.has(id) }
             .filterNot { it[0] == "Bones" && wiki in setOf("Callisto", "Vetion", "Venenatis") } // group recipient, not solo MvP
             .groupBy { Triple(canonical(it[0]), q(it[1]), "(noted)" in it[1]) }
         expected.forEach { (key, rows) ->
