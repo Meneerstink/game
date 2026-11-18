@@ -48,10 +48,14 @@ object TreasureTrailFaloDialogue {
             }
             chatNpc("Yes yes yes! That is it, thank you so much ${player.username}. The memories have come flooding back. I get why the lyrics are what they are now.", npc = npc.id, wrap = true)
             if (terminated) return@queue
-            if (!TreasureTrailFalo.finish(player, offer, shown)) {
+            // Transcript:Falo_the_Bard: after his line the item box 'You've been given a new clue!' (Claude 18-11: it was the dig chat line);
+            // a casket has no transcribed line -> the standard casket line stays.
+            if (!TreasureTrailFalo.finish(player, offer, shown, messages = "" to "You've found a casket!")) {
                 if (offer.contract.valid(player)) println("PROBLEM CLUE Falo next clue/casket unavailable; held items retained")
                 return@queue
             }
+            val tier = offer.contract.step.tier
+            if (!(tier.casketId >= 0 && player.inventory.contains(tier.casketId))) itemMessageBox("You've been given a new clue!", tier.scrollId)
             chatPlayer("I'm glad to have helped, hopefully you'll never forget again!", wrap = true)
         }
     }

@@ -32,6 +32,6 @@ object TreasureTrailFalo {
         return if (!shown.getDef(player.world.definitions).noted && offer.task.accepts(shown.id)) Match.CORRECT else Match.WRONG
     }
 
-    fun finish(player: Player, offer: Offer, shown: Item): Boolean =
-        match(player, offer, shown) == Match.CORRECT && offer.contract.advance(player)
+    fun finish(player: Player, offer: Offer, shown: Item, messages: Pair<String, String>? = null): Boolean =
+        match(player, offer, shown) == Match.CORRECT && offer.contract.advance(player, messages = messages)
 }
