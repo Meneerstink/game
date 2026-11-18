@@ -15,6 +15,23 @@ import gg.rsmod.plugins.content.skills.runecrafting.Altar
 
 // No spawns here: Claude alone changes world_edits. Native bank Collect is already bound by banker_collect.plugin.kts.
 Dmm2Boot.install()
+// Deadman rug in the house (DeadmanPohAdapter): Build on a rug space, Remove on a built piece - building mode only.
+if (DeadmanPohAdapter.pieces().size == 2) {
+    gg.rsmod.plugins.content.areas.poh.PlayerHouse.RUG_SPOTS.forEach { spot ->
+        on_obj_option(obj = spot, option = "build") { player.queue { DeadmanPohAdapter.build(this) } }
+    }
+    DeadmanPohAdapter.pieces().forEach { piece ->
+        on_obj_option(obj = piece, option = "remove") { player.queue { DeadmanPohAdapter.remove(this) } }
+    }
+}
+// Annihilation exit portal (garden centrepiece space, building mode with the blueprints): Build / Remove; Enter = leave the house.
+DeadmanPohAdapter.exitPortal()?.let { portal ->
+    on_obj_option(obj = gg.rsmod.plugins.content.areas.poh.PlayerHouse.EXIT_PORTAL_SPOT, option = "build") { player.queue { DeadmanPohAdapter.buildExitPortal(this) } }
+    if (world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, portal).options.any { it.equals("enter", true) })
+        on_obj_option(obj = portal, option = "enter") { player.moveTo(gg.rsmod.plugins.content.areas.poh.PlayerHouse.locationOf(player).exit) }
+    if (world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, portal).options.any { it.equals("remove", true) })
+        on_obj_option(obj = portal, option = "remove") { player.queue { DeadmanPohAdapter.removeExitPortal(this) } }
+}
 Dmm2Ids.interfaceId(230)?.let { root ->
     on_interface_close(root) { Dmm2SafeDepositUi.close(player) }
     on_button(root, Dmm2SafeDepositUi.CLOSE) { player.closeInterface(root) }

@@ -46,6 +46,7 @@ object Dmm2Boot {
                 skins += NigelRewardStore.Skin(NigelRewardStore.Reward.CAPE_FABRIC, baseAncient, ancient)
             NigelRewardStore.install(NigelRewardStore.Contract(rewards, skins, Dmm2Ids.item(33122)))
         }
+        DeadmanPohAdapter.install()
         ThunderKhopesh.appearance = khopeshAppearance()
         ThunderKhopesh.register()
         UndeadThralls.appearance = thrallAppearance()

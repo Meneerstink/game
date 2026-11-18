@@ -508,6 +508,26 @@ object PlayerHouse {
             48662 to 13282,
         )
 
+    /** The rug spots the house fills with the opulent rug: 15273 the side, 15274 the corner (see [SPOT_REPLACEMENTS]). */
+    val RUG_SPOTS = setOf(15273, 15274)
+
+    /** The garden's centrepiece space: the exit portal (A25). */
+    const val EXIT_PORTAL_SPOT = 15361
+
+    /** The spots the DMM2 hook ([deadmanSpot]) may fill. */
+    val DEADMAN_SPOTS = RUG_SPOTS + EXIT_PORTAL_SPOT
+
+    /** [deadmanSpot] answer: leave the Rug space in place (building mode, nothing built yet) so its Build can be clicked. */
+    const val KEEP_HOTSPOT = -1
+
+    /**
+     * DMM2 hook (DeadmanPohAdapter, set at boot when the Nigel reward store is active): for a [DEADMAN_SPOTS] spot of [Room] it
+     * returns the loc to place (Deadman rug piece / Annihilation exit portal), [KEEP_HOTSPOT], or null for the house's own piece
+     * (opulent rug / exit portal). Null hook = DMM2 off.
+     */
+    @Volatile
+    var deadmanSpot: ((player: Player, buildMode: Boolean, room: Room, spot: Int) -> Int?)? = null
+
     /** Every loc a house places (hotspot replacements and the hand-placed pieces) - the guard test checks each option has a route. */
     val PLACED_OBJECTS: Set<Int>
         get() = SPOT_REPLACEMENTS.values.toSet() + setOf(ARMOUR_STAND, JEWELLERY_BOX, GLORY, OBELISK, PORTAL, SPIRITUAL_FAIRY_TREE, POOL, OCCULT_ALTAR) +
@@ -689,6 +709,7 @@ object PlayerHouse {
         garden: Tile,
     ) {
         fun nameOf(id: Int) = world.definitions.get(ObjectDef::class.java, id).name.lowercase()
+        val roomOfChunk = Room.values().zip(roomCorners).associate { (room, corner) -> corner.chunkCoords to room }
 
         val spots =
             roomCorners.flatMap { corner ->
@@ -732,8 +753,12 @@ object PlayerHouse {
                 // when it needs no extra room), fixed like the rest of the house.
                 obj.id == BELL_PULL_SPACE -> world.spawn(DynamicObject(BELL_PULL, obj.type, obj.rot, obj.tile))
                 else -> {
+                    // DMM2 rewards ([deadmanSpot]): the Deadman rug / Annihilation exit portal a player built here, or the space kept for Build.
+                    val rugChoice = if (obj.id in DEADMAN_SPOTS) roomOfChunk[obj.tile.chunkCoords]?.let { deadmanSpot?.invoke(player, buildMode, it, obj.id) } else null
+                    if (rugChoice == KEEP_HOTSPOT) return@forEach
                     world.remove(obj)
                     when {
+                        rugChoice != null -> world.spawn(DynamicObject(rugChoice, obj.type, obj.rot, obj.tile))
                         name == "window space" -> world.spawn(DynamicObject(style.stainedGlass, obj.type, obj.rot, obj.tile))
                         else -> SPOT_REPLACEMENTS[obj.id]?.let { world.spawn(DynamicObject(it, obj.type, obj.rot, obj.tile)) }
                     }

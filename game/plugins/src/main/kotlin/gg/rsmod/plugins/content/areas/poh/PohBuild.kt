@@ -68,8 +68,8 @@ object PohBuild {
         )
 
     /** Darkan `House.build`: furniture 3683, plants 2293; `removeBuild` 3685. */
-    private const val BUILD_ANIM = 3683
-    private const val REMOVE_ANIM = 3685
+    const val BUILD_ANIM = 3683
+    const val REMOVE_ANIM = 3685
 
     private val WATERING_CANS = (Items.WATERING_CAN_1..Items.WATERING_CAN_8).toList()
 
@@ -131,9 +131,9 @@ object PohBuild {
         }
     }
 
-    private suspend fun confirmRemove(task: QueueTask): Boolean = task.options("Yes", "No", title = "Really remove it?") == 1
+    internal suspend fun confirmRemove(task: QueueTask): Boolean = task.options("Yes", "No", title = "Really remove it?") == 1
 
-    private suspend fun choose(
+    internal suspend fun choose(
         task: QueueTask,
         pieces: List<Piece>,
         title: String,
@@ -164,7 +164,7 @@ object PohBuild {
     ): String = if (item == ANY_NAILS) "nails" else player.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, item).name
 
     /** Level, materials and tools, with 2009scape `ConstructionInterface`'s messages. */
-    private suspend fun canBuild(
+    internal suspend fun canBuild(
         task: QueueTask,
         piece: Piece,
     ): Boolean {
