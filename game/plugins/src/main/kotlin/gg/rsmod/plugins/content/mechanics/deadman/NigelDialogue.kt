@@ -8,6 +8,7 @@ import gg.rsmod.plugins.api.ext.*
 object NigelDialogue {
     suspend fun talk(task: QueueTask, npc: Npc) = with(task) {
         if (!Dmm2Interactions.near(player, npc) || !Dmm2Interactions.isNigel(npc)) return@with
+        chatPlayer("Hey, who are you?") // Transcript:Nigel 'Standard dialogue' opens with the player's question.
         chatNpc("I'm Nigel. It is my job to tell you about Deadman Mode.", npc = npc.id)
         when (options("Can I purchase some Deadman rewards?", "Could you stop me from gaining XP?", "Deadman armour.", "Cosmetic rewards.", "Goodbye.")) {
             1 -> Dmm2Interactions.openRewards(player, npc)

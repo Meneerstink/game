@@ -117,13 +117,39 @@ listOfNotNull(Dmm2Ids.npc(8391), Dmm2Ids.npc(8390)).distinct().forEach { id ->
         player.queue { NigelDialogue.talk(this, npc) }
     }
     on_npc_option(id, "Trade", lineOfSightDistance = 2) { Dmm2Interactions.openRewards(player, player.getInteractingNpc()) }
+    // Transcript:Nigel 'Using blood money on Nigel' (all 3 / 2 / 1 / no items available), verbatim.
     Dmm2Ids.ItemId.BLOOD_MONEY.local?.let { money ->
         on_item_on_npc(item = money, npc = id) {
             val npc = player.getInteractingNpc()
             player.queue {
-                val choice = options("Deadman's chest.", "Deadman's legs.", "Deadman's cape.", "Never mind.") - 1
-                val armour = BloodMoney.Armour.values().getOrNull(choice) ?: return@queue
-                if (Dmm2Interactions.near(player, npc)) BloodMoney.unlock(player, armour)
+                val left = BloodMoney.Armour.values().filter { player.attr[it.unlocked] != 1 }
+                fun label(a: BloodMoney.Armour) = when (a) {
+                    BloodMoney.Armour.CHEST -> "Deadman's chest"; BloodMoney.Armour.LEGS -> "Deadman's legs"; BloodMoney.Armour.CAPE -> "Deadman's cape"
+                }
+                fun reward(a: BloodMoney.Armour) = when (a) {
+                    BloodMoney.Armour.CHEST -> "Nigel rewards you with the Deadman's chest armour."
+                    BloodMoney.Armour.LEGS -> "Nigel rewards you with the Deadman's leg armour."
+                    BloodMoney.Armour.CAPE -> "Nigel rewards you with the Deadman's cape."
+                }
+                val armour = when (left.size) {
+                    0 -> {
+                        chatNpc("More blood money! I can only commend you on your prowess. Alas, I have no more armour to give to you at this time.", npc = npc.id)
+                        return@queue
+                    }
+                    1 -> {
+                        chatNpc("More blood money! Truly the blood lust is strong in you. Here, take this final item. You deserve it!", npc = npc.id)
+                        left.single()
+                    }
+                    else -> {
+                        chatNpc(if (left.size == 3) "Aha, blood money, the currency of a warrior! You must be rewarded! What would you like?"
+                            else "More blood money! I commend you on your strength. What item would you like this time?", npc = npc.id)
+                        left.getOrNull(options(*left.map(::label).toTypedArray(), title = "Select an Option") - 1) ?: return@queue
+                    }
+                }
+                if (!Dmm2Interactions.near(player, npc)) return@queue
+                armour.item.local?.let { item ->
+                    if (BloodMoney.unlock(player, armour) == BloodMoney.Result.OK) itemMessageBox(reward(armour), item = item)
+                }
             }
         }
     }
