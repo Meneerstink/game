@@ -15400,3 +15400,20 @@
   examine: "A messy bird."
 - id: 13246
   examine: "An ugly, smelly creature, with a spear."
+# N634 deel 5 (Claude 18-11): ambiguous names via a twin npc (same name + same models) that already has an examine
+- id: 4456
+  examine: "He looks a little piratey."
+- id: 5148
+  examine: "Freshly sheared."
+- id: 5149
+  examine: "Freshly sheared."
+- id: 5156
+  examine: "White and fluffy."
+- id: 5157
+  examine: "White and fluffy."
+- id: 5160
+  examine: "White and fluffy."
+- id: 5161
+  examine: "White and fluffy."
+- id: 6116
+  examine: "A messy bird."
