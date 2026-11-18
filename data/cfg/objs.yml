@@ -72667,3 +72667,298 @@
   examine: "I used to be able to access my bank from here. It's no longer working."
 - id: 66834
   examine: "I can access my bank from here!"
+# N634 (Claude 18-11): ToA loc examines from the OSRS Wiki infobox versions (loc_examines.py)
+- id: 65330
+  examine: "All the leaves have fallen off."
+- id: 65331
+  examine: "A succulent cactus."
+- id: 65343
+  examine: "This one's not very fresh."
+- id: 65344
+  examine: "A tall, skinny."
+- id: 65355
+  examine: "Pile of sacks."
+- id: 65356
+  examine: "Pile of sacks."
+- id: 65361
+  examine: "A beautiful old teak tree."
+- id: 65785
+  examine: "What could be inside?"
+- id: 65362
+  examine: "There's a pickaxe stuck in one of them."
+- id: 65363
+  examine: "Good for digging with."
+- id: 65364
+  examine: "There's an assortment of camping equipment here."
+- id: 65375
+  examine: "Amazing how these survive the harsh desert."
+- id: 65376
+  examine: "Amazing how these survive the harsh desert."
+- id: 65377
+  examine: "Amazing how these survive the harsh desert."
+- id: 65382
+  examine: "Better than sitting on sand."
+- id: 65384
+  examine: "A succulent cactus."
+- id: 65798
+  examine: "What could be inside?"
+- id: 65799
+  examine: "It's been opened."
+- id: 65800
+  examine: "It's been opened."
+- id: 65801
+  examine: "It's been opened."
+- id: 65802
+  examine: "It's been opened."
+- id: 65803
+  examine: "It's been opened."
+- id: 65804
+  examine: "It's been opened."
+- id: 65806
+  examine: "A place for the dead."
+- id: 65807
+  examine: "A place for the dead."
+- id: 65808
+  examine: "It's been opened."
+- id: 65884
+  examine: "Use with caution..."
+- id: 65885
+  examine: "Use with caution..."
+- id: 64628
+  examine: "A mural of Scabaras and Kephri."
+- id: 64672
+  examine: "Someone had quite a journey."
+- id: 64673
+  examine: "Someone had quite a journey."
+- id: 64674
+  examine: "Someone had quite a journey."
+- id: 64678
+  examine: "Someone had quite a journey."
+- id: 64679
+  examine: "Someone had quite a journey."
+- id: 64680
+  examine: "Someone had quite a journey."
+- id: 65916
+  examine: "Push me."
+- id: 65918
+  examine: "I can probably depress this by standing on it."
+- id: 65921
+  examine: "I can probably depress this by standing on it."
+- id: 65922
+  examine: "A tile."
+- id: 65923
+  examine: "A tile."
+- id: 65924
+  examine: "A tile."
+- id: 65925
+  examine: "A tile."
+- id: 65926
+  examine: "A tile."
+- id: 65927
+  examine: "A tile."
+- id: 65928
+  examine: "A tile."
+- id: 65929
+  examine: "A tile."
+- id: 65930
+  examine: "A tile."
+- id: 64697
+  examine: "Looks sturdy enough."
+- id: 64699
+  examine: "A surprising flow of clear water."
+- id: 65964
+  examine: "No water is running."
+- id: 65989
+  examine: "The statue of Het is holding out a bronze pickaxe."
+- id: 65990
+  examine: "The statue of Het is holding out a bronze pickaxe."
+- id: 65991
+  examine: "The statue of Het is holding out an iron pickaxe."
+- id: 65992
+  examine: "The statue of Het is holding out a steel pickaxe."
+- id: 65993
+  examine: "The statue of Het is holding out a black pickaxe."
+- id: 65994
+  examine: "The statue of Het is holding out a mithril pickaxe."
+- id: 65995
+  examine: "The statue of Het is holding out an adamant pickaxe."
+- id: 65996
+  examine: "The statue of Het is holding out a rune pickaxe."
+- id: 65997
+  examine: "The statue of Het is holding out a gilded rune pickaxe."
+- id: 65998
+  examine: "The statue of Het is holding out a dragon pickaxe."
+- id: 65999
+  examine: "The statue of Het is holding out a dragon pickaxe."
+- id: 66000
+  examine: "The statue of Het is holding out a dragon pickaxe."
+- id: 66001
+  examine: "The statue of Het is holding out a 3rd age pickaxe."
+- id: 66002
+  examine: "The statue of Het is holding out an infernal pickaxe."
+- id: 66003
+  examine: "The statue of Het is holding out a crystal pickaxe."
+- id: 66004
+  examine: "The statue of Het is holding out a trailblazer pickaxe."
+- id: 66005
+  examine: "A statue holding a shield."
+- id: 66006
+  examine: "It seems to be casting some sort of energy beam!"
+- id: 66009
+  examine: "The remains of a once powerful seal."
+- id: 66011
+  examine: "The remains of a once powerful seal."
+- id: 64754
+  examine: "Use with caution..."
+- id: 64755
+  examine: "Use with caution..."
+- id: 64813
+  examine: "Use with caution..."
+- id: 64840
+  examine: "Someone had quite a journey."
+- id: 64933
+  examine: "Doom."
+- id: 64934
+  examine: "Doom."
+- id: 64935
+  examine: "Doom."
+- id: 66058
+  examine: "Doom."
+- id: 64936
+  examine: "Doom."
+- id: 64937
+  examine: "Doom."
+- id: 64938
+  examine: "Doom."
+- id: 66059
+  examine: "Doom."
+- id: 64939
+  examine: "Doom."
+- id: 64940
+  examine: "Doom."
+- id: 64941
+  examine: "Doom."
+- id: 64942
+  examine: "Doom."
+- id: 64943
+  examine: "Doom."
+- id: 64946
+  examine: "Use with caution..."
+- id: 66073
+  examine: "Looks slippery."
+- id: 64947
+  examine: "Doubles as a toilet."
+- id: 65041
+  examine: "Use with caution..."
+- id: 65042
+  examine: "A mural of Het and Akkha."
+- id: 65226
+  examine: "Maybe I can form a party here."
+- id: 66096
+  examine: "Maybe I can form a party here."
+- id: 65228
+  examine: "Check your performance here."
+- id: 65229
+  examine: "Displays information on invocations."
+- id: 65230
+  examine: "Full of animal feed."
+- id: 65232
+  examine: "A mysterious chest."
+- id: 66102
+  examine: "A mysterious chest."
+- id: 66103
+  examine: "Contains spoils from the tombs."
+- id: 66104
+  examine: "A fake door... I wonder if it will open?"
+- id: 66106
+  examine: "A wooden crate."
+- id: 66107
+  examine: "A wooden crate."
+- id: 65272
+  examine: "Walk the Path of Scabaras?"
+- id: 66118
+  examine: "Another path has been started."
+- id: 66119
+  examine: "The Path of Scabaras has been completed."
+- id: 65273
+  examine: "Walk the Path of Apmeken?"
+- id: 66120
+  examine: "Another path has been started."
+- id: 66121
+  examine: "The Path of Apmeken has been completed."
+- id: 65274
+  examine: "Walk the Path of Crondis?"
+- id: 66122
+  examine: "Another path has been started."
+- id: 66123
+  examine: "The Path of Crondis has been completed."
+- id: 65275
+  examine: "Walk the Path of Het?"
+- id: 66124
+  examine: "Another path has been started."
+- id: 66125
+  examine: "The Path of Het has been completed."
+- id: 66142
+  examine: "I wonder what's inside?"
+- id: 66143
+  examine: "I wonder what's inside?"
+- id: 66145
+  examine: "A strange tablet with a hole in the middle."
+- id: 66146
+  examine: "A strange tablet with a hole in the middle."
+- id: 62747
+  examine: "A source of terrible things...."
+- id: 62748
+  examine: "Something wicked this way comes!"
+- id: 66147
+  examine: "There's nothing here, but I feel like it would fit my pickaxe perfectly."
+- id: 66148
+  examine: "Wait, isn't it my iron pickaxe?"
+- id: 66149
+  examine: "Wait, isn't it my steel pickaxe?"
+- id: 66150
+  examine: "Wait, isn't it my black pickaxe?"
+- id: 66151
+  examine: "Wait, isn't it my mithril pickaxe?"
+- id: 66152
+  examine: "Wait, isn't it my adamant pickaxe?"
+- id: 66153
+  examine: "Wait, isn't it my rune pickaxe?"
+- id: 66154
+  examine: "Wait, isn't it my gilded rune pickaxe?"
+- id: 66155
+  examine: "Wait, isn't it my dragon pickaxe?"
+- id: 66156
+  examine: "Wait, isn't it my dragon pickaxe?"
+- id: 66157
+  examine: "Wait, isn't it my dragon pickaxe?"
+- id: 66158
+  examine: "Wait, isn't it my 3rd age pickaxe?"
+- id: 66159
+  examine: "Wait, isn't it my infernal pickaxe?"
+- id: 66160
+  examine: "Wait, isn't it my crystal pickaxe?"
+- id: 66161
+  examine: "Wait, isn't it my trailblazer pickaxe?"
+- id: 66162
+  examine: "This pot will let me deposit food and drinks back into the bank."
+- id: 65767
+  examine: "This would be good to sleep under."
+- id: 65768
+  examine: "This would be good to sleep under."
+- id: 65769
+  examine: "This would be good to sleep under."
+- id: 66180
+  examine: "They could do with a wash."
+- id: 66181
+  examine: "A wooden wheelbarrow."
+- id: 66288
+  examine: "A rolled up magic carpet."
+- id: 66289
+  examine: "Prepared hides hang here drying."
+- id: 66290
+  examine: "Better than sitting on sand."
+- id: 66291
+  examine: "Better than sitting on sand."
+- id: 66292
+  examine: "Better than sitting on sand."

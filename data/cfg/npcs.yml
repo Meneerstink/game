@@ -15343,3 +15343,60 @@
   examine: "Slightly magical."
 - id: 14400
   examine: "Slightly magical."
+# N634 deel 4 (Claude 18-11): ambiguous names resolved by combat level (npc_examines_ambigu.py)
+- id: 4387
+  examine: "Eeek! A ghost!"
+- id: 4392
+  examine: "Dead man walking."
+- id: 4393
+  examine: "Dead man walking."
+- id: 4394
+  examine: "The walking dead."
+- id: 4401
+  examine: "Incey wincey... with a nasty bite."
+- id: 4409
+  examine: "An ugly green creature."
+- id: 4410
+  examine: "An ugly green creature."
+- id: 4411
+  examine: "These goblins have grown strong."
+- id: 4412
+  examine: "An ugly green creature."
+- id: 4413
+  examine: "Not man's best friend."
+- id: 4414
+  examine: "Not man's best friend."
+- id: 4418
+  examine: "Gorak by name, Gorak by nature."
+- id: 5349
+  examine: "Eeek! A ghost!"
+- id: 5350
+  examine: "Eeek! A ghost!"
+- id: 5351
+  examine: "Eeek! A ghost!"
+- id: 5352
+  examine: "Eeek! A ghost!"
+- id: 5369
+  examine: "Eeek! A ghost!"
+- id: 5370
+  examine: "Eeek! A ghost!"
+- id: 5371
+  examine: "Eeek! A ghost!"
+- id: 5375
+  examine: "Dead man walking."
+- id: 5376
+  examine: "Dead man walking."
+- id: 5377
+  examine: "Dead man walking."
+- id: 5378
+  examine: "Dead man walking."
+- id: 5379
+  examine: "The walking dead."
+- id: 5380
+  examine: "The walking dead."
+- id: 6047
+  examine: "A social killer."
+- id: 6115
+  examine: "A messy bird."
+- id: 13246
+  examine: "An ugly, smelly creature, with a spear."
