@@ -6,6 +6,7 @@ revision: 667
 
 commandServer:
     tcpPort: 50017
+    token: "ce4fe3a2c06e28c01f5a9e349be60f61601d7b5d13f1718ae9ff97dfc52d4e70"
 
 # The coordinates for the home location.
 # BATCH 1: home-z moved from 3640 to 3616 so the enclave's centre sits 24 tiles further south
@@ -66,6 +67,12 @@ services:
   # smtp-host: "smtp-relay.brevo.com" / smtp-port: 465 / smtp-user / smtp-password / mail-from / public-url.
   - class: gg.rsmod.game.service.recovery.AccountRecoveryService
     http-port: 50078
+
+  # Voting system (owner 2026-10-10): the toplists' callback page, see data/cfg/votes.yml. Callback URL per site:
+  # https://<vps-domain>/vote/<secret>/<site id>. http-bind 127.0.0.1 = behind the VPS's HTTPS reverse proxy.
+  - class: gg.rsmod.game.service.vote.VoteService
+    http-port: 50079
+    secret: "ucBHCDMcC0ERRyDcewGflzd2lEzlo8ua"
 
   - class: gg.rsmod.game.service.rsa.RsaService
 

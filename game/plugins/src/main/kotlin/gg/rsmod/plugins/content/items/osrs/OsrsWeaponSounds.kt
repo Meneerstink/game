@@ -40,6 +40,15 @@ object OsrsWeaponSounds {
     /** OSRS Wiki "Spiked" category (maces): the Jagex mace_stab 2509 / mace_crush 2508 of the same name in this cache. */
     val SPIKED = Category(stab = Sfx.MACE_STAB, crush = Sfx.MACE_CRUSH)
 
+    /**
+     * N631 18-11 (Claude testclient: 'silent swing' weapon=24649 after the Partisan weapon type 28): OSRS has the Keris's own swing
+     * sounds - RuneLite gameval SoundEffectID KERIS_CRUSH 2505 / KERIS_SLASH 2506 / KERIS_STAB 2507, same ids and names in this cache.
+     */
+    val KERIS = Category(stab = Sfx.KERIS_STAB, slash = Sfx.KERIS_SLASH, crush = Sfx.KERIS_CRUSH)
+
+    /** Keris partisan + 4 ornaments: local ids come from the ToA id table at runtime (OsrsWeaponLooks.kerisIds). */
+    private val kerisPartisans: Set<Int> by lazy { OsrsWeaponLooks.kerisIds().toSet() }
+
     private val byWeapon = mutableMapOf<Int, Category>()
 
     private fun register(
@@ -52,7 +61,14 @@ object OsrsWeaponSounds {
         register(SWORD, Items.ARCLIGHT, Items.ARCLIGHT_INACTIVE, Items.EMBERLIGHT)
         register(AXE, Items.THIRDAGE_AXE, Items.GILDED_AXE)
         register(PICKAXE, Items.THIRDAGE_PICKAXE, Items.GILDED_PICKAXE, Items.DRAGON_PICKAXE_OR, Items.DRAGON_PICKAXE_OR_UPGRADED)
+        // 18-11 (server logs: 360x 'silent swing' weapon=15259 anim=395): OSRS Wiki Dragon pickaxe 'combatstyle = Pickaxe' - the whole
+        // pickaxe family (the category sound only plays when the attack sequence itself is silent).
+        register(
+            PICKAXE, Items.BRONZE_PICKAXE, Items.IRON_PICKAXE, Items.STEEL_PICKAXE, Items.MITHRIL_PICKAXE, Items.ADAMANT_PICKAXE,
+            Items.RUNE_PICKAXE, Items.DRAGON_PICKAXE, Items.GILDED_DRAGON_PICKAXE,
+        )
         register(SPEAR, Items.DRAGON_HUNTER_LANCE, Items.GILDED_SPEAR, Items.GILDED_HASTA)
+        register(KERIS, Items.KERIS, Items.KERIS_P, Items.KERIS_P_10583, Items.KERIS_P_10584)
         // Bladed staves (xrsps: "Bladed staff" -> staff sounds), staves and wands (xrsps: Kodai / 3rd age wand -> staff sounds). The
         // powered staves only melee here because this server gives them staff styles; their bash uses the staff sounds (ADAPTED).
         register(
@@ -65,6 +81,8 @@ object OsrsWeaponSounds {
             // Revenant sceptres (OSRS Wiki category "Powered Staff"): their staff bash like the tridents above.
             Items.THAMMARONS_SCEPTRE, Items.THAMMARONS_SCEPTRE_U, Items.THAMMARONS_SCEPTRE_A, Items.THAMMARONS_SCEPTRE_AU,
             Items.ACCURSED_SCEPTRE, Items.ACCURSED_SCEPTRE_U, Items.ACCURSED_SCEPTRE_A, Items.ACCURSED_SCEPTRE_AU,
+            // 18-11 (MA2 naspel trace 'silent swing' weapon=8841 anim=419): OSRS Wiki Void knight mace 'combatstyle = Staff'.
+            Items.VOID_KNIGHT_MACE,
         )
         // Revenant chainmaces (OSRS Wiki category "Spiked"): the crush sequence (OSRS 245) carries its own OSRS frame sounds, the
         // stab sequence (OSRS 246) none - the stab takes the category sound (only played for a silent sequence, MeleeCombatStrategy).
@@ -83,11 +101,11 @@ object OsrsWeaponSounds {
     }
 
     /** Every weapon this table gives a swing sound (guard: `OsrsWeaponSoundsTests`). */
-    val COVERED: Set<Int> get() = byWeapon.keys
+    val COVERED: Set<Int> get() = byWeapon.keys + kerisPartisans
 
     /** The swing sound of [weaponId] for an attack of [style], or null when the table does not cover the weapon. */
     fun melee(
         weaponId: Int,
         style: StyleType,
-    ): Int? = byWeapon[weaponId]?.of(style)
+    ): Int? = (byWeapon[weaponId] ?: KERIS.takeIf { weaponId in kerisPartisans })?.of(style)
 }
