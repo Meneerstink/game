@@ -57,7 +57,7 @@ object TreasureTrailNpcSteps {
         val row = (before.step as? TreasureTrailSourceStep)?.source ?: return null
         if (!supports(row)) return null
         val text = lines.getValue(row.npcName!!)
-        if (!before.advance(player)) return null
+        if (!before.advance(player, messages = "" to "")) return null // the item box below is the only line (no extra chat line)
         return if (ClueScrollManager.progress(player, row.tier) == 0) Receipt(row.tier.casketId, text.casket)
                else Receipt(row.tier.scrollId, text.next)
     }

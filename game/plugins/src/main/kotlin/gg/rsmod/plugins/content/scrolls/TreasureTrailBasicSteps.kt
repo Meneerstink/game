@@ -92,9 +92,15 @@ object TreasureTrailBasicSteps {
                 else -> return false
             }
             val contract = ClueStepContract.capture(player, step) ?: return false
+            // Transcript:Vannaka / Transcript:Captain_Tobias: item box 'You've found another clue!' / 'You've obtained a casket!' (Claude
+            // 18-11; it was a chat line). Luthas is {{tmissing}} on the wiki -> his standard chat line stays.
+            val boxed = row.npcName != "Luthas"
             player.queue {
                 chatNpc(line, npc = npc.id, wrap = true)
-                if (!terminated) contract.advance(player)
+                if (!terminated && contract.advance(player, messages = if (boxed) "" to "" else null) && boxed) {
+                    val casket = tier.casketId >= 0 && player.inventory.contains(tier.casketId)
+                    if (casket) itemMessageBox("You've obtained a casket!", tier.casketId) else itemMessageBox("You've found another clue!", tier.scrollId)
+                }
             }
             return true
         }
