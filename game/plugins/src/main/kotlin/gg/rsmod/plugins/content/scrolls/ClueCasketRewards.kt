@@ -139,6 +139,15 @@ object ClueCasketRewards {
         player.playJingle(193)
         player.message("Well done, you've completed the Treasure Trail!")
         player.message("<col=ff0000>You have completed $count ${plan.tier.displayName.lowercase()} Treasure Trails.</col>")
+        // Claude 18-11 (wiki Reward casket: {{Mes|Your treasure is worth around 217,997 coins!|colour=Red}}): OSRS shows the reward value.
+        // The price basis has no source - advice chosen: the server's GE guide price (OSRS hourly price, else cache value), noted = its item.
+        val exchange = player.world.getService(gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeService::class.java)
+        val worth = plan.rewards.sumOf { reward ->
+            val def = player.world.definitions.get(ItemDef::class.java, reward.id)
+            val base = if (def.noted && def.noteLinkId > 0) player.world.definitions.get(ItemDef::class.java, def.noteLinkId) else def
+            (exchange?.seedPrice(base) ?: base.cost).toLong() * reward.amount
+        }
+        player.message("<col=ff0000>Your treasure is worth around ${"%,d".format(java.util.Locale.US, worth)} coins!</col>")
         overflow.forEach { player.world.spawn(ClueGroundItems.configure(GroundItem(it, player.tile, player))) }
         runCatching { CollectionLog.record(player, plan.tier.key, plan.rewards.map { it.id to it.amount }) }
             .onFailure { gg.rsmod.game.model.Trace.crash("clue collection log", it) }
