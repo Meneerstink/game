@@ -23,3 +23,10 @@ on_command("cluestep", Privilege.ADMIN_POWER) {
         player.message("Carry exactly one ordinary clue of that tier, with no pending challenge, puzzle or guardian fight.")
     }
 }
+
+// Claude 18-11 (eigenaar 'volg je adviezen'): TEST SERVER ONLY - show the gold 78 mega-rare world message without a real roll.
+on_command("cluemega", Privilege.ADMIN_POWER) {
+    if (System.getProperty("rsps.testServer") != "true") { player.message("Only on the test server."); return@on_command }
+    val id = player.getCommandArgs().getOrNull(0)?.toIntOrNull() ?: 20011
+    gg.rsmod.plugins.content.scrolls.ClueCasketRewards.broadcastMegaRare(player, id)
+}

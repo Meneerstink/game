@@ -107,6 +107,13 @@ object ClueCasketRewards {
      * casket object, not just its item ID; a stale dialogue cannot spend it twice.
      * Overflow is private ground loot (Wiki The Fremennik Trials casket section).
      */
+    /** Gold world message for a mega-rare from a Reward casket (78); also used by the test-server command ::cluemega. */
+    fun broadcastMegaRare(player: Player, id: Int) {
+        val name = player.world.definitions.get(ItemDef::class.java, id).name
+        val line = "<col=ffd700>${gg.rsmod.util.Misc.formatForDisplay(player.username)} has received $name from a Reward casket (78)!</col>"
+        player.world.players.forEach { it.message(line) }
+    }
+
     fun award(player: Player, slot: Int, source: Item, plan: Plan): Award? {
         if (slot !in 0 until player.inventory.capacity || player.inventory[slot] !== source || source.amount < 1) return null
         if (source.id != plan.tier.casketId) {
@@ -162,11 +169,7 @@ object ClueCasketRewards {
         plan.rewards.forEach { ClueOwnership.tier(it.id)?.let { tier -> player.inventory.firstOrNull { it?.id == tier.scrollId }?.let { ClueScrollManager.prepare(player, it, tier) } } }
         if (plan.bloodhound) Pets.award(player, "Bloodhound", source = plan.tier.key)
         if (plan.tier == ClueScrollTier.MASTER) {
-            plan.megaRare.forEach { id ->
-                val name = player.world.definitions.get(ItemDef::class.java, id).name
-                val line = "<col=ffd700>${gg.rsmod.util.Misc.formatForDisplay(player.username)} has received $name from a Reward casket (78)!</col>"
-                player.world.players.forEach { it.message(line) }
-            }
+            plan.megaRare.forEach { id -> broadcastMegaRare(player, id) }
         }
         return Award(count, plan.rewards.map { Item(it) }, overflow)
     }
