@@ -362,7 +362,7 @@ object DropViewer {
             gg.rsmod.plugins.content.activity.cox.CoxIds.loc(29881)?.let { N108Ui.locModel(world, it) } ?: -1
         } else -1
         if (source.modelItem >= 0) {
-            N108Ui.item(player, i, V.MODEL, source.modelItem, 1)
+            N108Ui.item(player, i, V.MODEL, source.modelItem, N108Ui.NO_COUNT)
             N108Ui.anim(player, i, V.MODEL, -1)
             N108Ui.hidden(player, i, V.MODEL, false)
         } else if (coxModel >= 0) {
