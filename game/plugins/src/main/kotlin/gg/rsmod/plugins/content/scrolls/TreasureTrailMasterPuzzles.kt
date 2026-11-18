@@ -17,7 +17,7 @@ object TreasureTrailMasterPuzzles {
         row.key in setOf("master:mandrith", "master:radimus") && row.action == TreasureTrailStepCatalogue.Action.TALK &&
         row.challenge == TreasureTrailStepCatalogue.Challenge.PUZZLE_CHOICE &&
         row.puzzles == setOf(TreasureTrailStepCatalogue.Challenge.LIGHT_BOX, TreasureTrailStepCatalogue.Challenge.SLIDING_PUZZLE)
-    fun available(world: World, row: TreasureTrailStepCatalogue.Step): Boolean = supports(row) &&
+    fun available(world: World, row: TreasureTrailStepCatalogue.Step): Boolean = TreasureTrailPuzzleBoxes.SLIDING_ENABLED && supports(row) &&
         ClueInterfaces.of(306) != null && TreasureTrailLightBoxes.available(world) &&
         sourceItems.all { source -> ClueItems.local(source)?.let { world.definitions.getNullable(ItemDef::class.java, it) } != null } &&
         row.existingNpcs.any { world.definitions.getNullable(NpcDef::class.java, it)?.let { npc ->

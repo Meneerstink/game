@@ -116,7 +116,7 @@ class TreasureTrailPuzzleBoxTests {
         assertFalse(TreasureTrailPuzzleBoxes.available(world, step.source))
         val npc = gg.rsmod.game.fs.def.NpcDef(607).also { it.name = "Gunnjorn"; it.options[0] = "Talk-to" }
         every { defs.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, 607) } returns npc
-        assertTrue(TreasureTrailPuzzleBoxes.available(world, step.source))
+        assertEquals(TreasureTrailPuzzleBoxes.SLIDING_ENABLED, TreasureTrailPuzzleBoxes.available(world, step.source))
         npc.options[0] = "Trade"
         assertFalse(TreasureTrailPuzzleBoxes.available(world, step.source))
         npc.options[0] = "Talk-to"; box.name = "Another box"

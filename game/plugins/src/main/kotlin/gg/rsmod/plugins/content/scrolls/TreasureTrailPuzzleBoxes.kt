@@ -49,7 +49,10 @@ object TreasureTrailPuzzleBoxes {
         else -> null
     }
 
-    fun available(world: World, row: TreasureTrailStepCatalogue.Step): Boolean =
+    /** 18-11 (eigenaar: wat werkt gaat live): sliding puzzle UIT tot de lijst-fout (1 rij te hoog, CLUE.txt) opgelost is. */
+    const val SLIDING_ENABLED = false
+
+    fun available(world: World, row: TreasureTrailStepCatalogue.Step): Boolean = SLIDING_ENABLED &&
         row.challenge == TreasureTrailStepCatalogue.Challenge.SLIDING_PUZZLE && ClueInterfaces.of(306) != null &&
             TreasureTrailPuzzleDialogue.npcs(row).any { id -> world.definitions.getNullable(NpcDef::class.java, id)?.let { npc ->
                 npc.name.equals(row.npcName, true) && npc.options.any { it.equals("Talk-to", true) }
