@@ -71,6 +71,14 @@ object OsrsRegionImportTool {
         /** OSRS loc types left out of the squares (the server places its own working copy, or the content is not ours). */
         val excludeOsrsLocs: Set<Int> = emptySet(),
         /**
+         * DMM2 punt 4 (POH style template): OSRS loc ids BELOW this bound that our cache already has under the same id and the same
+         * name are written as that rev-667 loc instead of being imported (the 2006 POH hotspots 15xxx, doors and spaces are the same
+         * objects in both caches, and PlayerHouse keys its spots by those ids). 0 = off (every loc imported, as before).
+         */
+        val nativeLocsBelow: Int = 0,
+        /** OSRS loc ids imported without their right-click ops (a fixed piece whose OSRS 'Remove' belongs to build mode only). */
+        val stripOps: Set<Int> = emptySet(),
+        /**
          * N462 ToA (2026-11-06): write every square this many squares (dx, dz) away from its OSRS position - a whole block moves by one
          * offset, so squares keep their OSRS neighbours and every coordinate inside stays OSRS + (64*dx, 64*dz). For OSRS squares whose
          * own position is taken by rev-667 content in use (the ToA raid rooms sit on rev-667 dungeons). Null = OSRS position.
@@ -299,6 +307,13 @@ object OsrsRegionImportTool {
             "web-chasm" to Batch(listOf(6580), listOf(47078), "Web Chasm (Spindel)"),
             // CoX (owner 2026-11-15 14:3x 'chambers of xeric volledig zoals toa'; dossier COX.txt): entrance Mount Quidamortem 4919 (ingang
             // 1245,3557) + the fairy ring BLS route 5174 (ring 1295,3493) + 4918/5175 between them - all four absent from our 667 map, in place.
+            // DMM2 punt 4 (Claude 18-11, wiki 'Wilderness (theme)' / 'Annihilation blueprints'): the OSRS Deadman house style template,
+            // region 8302 plane 0 (DEADMAN_POH_WALL 60252, POH_FLOORDECOR_DEADMAN 60272, chapel window hotspot 60660) - the same room
+            // chunks as the 7503 templates PlayerHouse.Style reads (garden 0,1 / chapel 2,5 / portal chamber 1,4 / dining 4,7 / lawn 1,0).
+            // + 60651 'Stained-glass window' = the style's chapel window (OSRS order shuttered 60649 / decorative 60650 / stained 60651,
+            // the same slot as Fremennik 13244/13245/13246 -> Style.stainedGlass 13246).
+            "dmm2-poh-wilderness" to Batch(listOf(8302), listOf(60651), "DMM2 Wilderness (Deadman) house style template, OSRS 8302 plane 0",
+                nativeLocsBelow = 15500, stripOps = setOf(60651)),
             "cox-entrance" to Batch(listOf(4918, 4919, 5174, 5175), emptyList(), "Chambers of Xeric entrance: Mount Quidamortem + fairy ring BLS",
                 clearTileFlags = 0x8, dropHiddenOverlays = true),
             // CoX 15-11 18:3x (test client screens\COX\pad-midden.png: the lake south of the mountain drew as a flat dark-grey plate while the
@@ -752,7 +767,14 @@ object OsrsRegionImportTool {
                 (regions.flatMap { (sq, r) -> r.locs.filter { batch.inPatch(sq, it.localX, it.localZ) && it.id !in batch.excludeOsrsLocs }.map { it.id } }.distinct().sorted() + batch.extraLocTypes).forEach { id ->
                     if (id in locIdMap) return@forEach
                     val def = ModernObjectDef.decode(id, modernLocDefs[id] ?: error("modern loc $id missing"))
+                    val native = localTypes[id]
+                    if (id < batch.nativeLocsBelow && native != null && (native.name.takeIf { it != "null" } ?: "") == (def.name?.takeIf { it != "null" } ?: "")) {
+                        locIdMap[id] = id
+                        println("NATIVE loc $id '${def.name}' kept as the rev-667 loc")
+                        return@forEach
+                    }
                     locIdMap[id] = nextLocId++
+                    if (id in batch.stripOps) def.options.indices.forEach { def.options[it] = null }
                     importedDefs[id] = def
                     neededModels.addAll(def.models)
                 }
