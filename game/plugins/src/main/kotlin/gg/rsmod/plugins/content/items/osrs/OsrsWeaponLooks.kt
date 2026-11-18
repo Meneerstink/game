@@ -129,6 +129,8 @@ object OsrsWeaponLooks {
             Look(intArrayOf(HUMAN_SWORD_SLASH, HUMAN_SWORD_SLASH, HUMAN_SWORD_STAB, HUMAN_SWORD_SLASH), block = HUMAN_SWORD_DEF),
             Items.THIRDAGE_LONGSWORD, Items.GILDED_SCIMITAR, Items.KATANA, Items.DRAGON_SCIMITAR_OR, Items.ARCLIGHT, Items.ARCLIGHT_INACTIVE,
             Items.EMBERLIGHT, Items.VOIDWAKER, Items.RUNE_SCIMITAR_GUTHIX, Items.RUNE_SCIMITAR_SARADOMIN, Items.RUNE_SCIMITAR_ZAMORAK,
+            // Claude 18-11 (DMM2 weapon-look round: block fell back to the HD 15074): OSRS Wiki Thunder khopesh 'combatstyle = Slash Sword'.
+            Items.DMM2_THUNDER_KHOPESH_OSRS_33041,
         )
         // Stab sword (OSRS Wiki "Belle's folly": Accurate stab / Lunge stab / Slash / Block stab). Owner 2026-09-29 ("a weird lunge
         // attack"): the wiki says "the attack animation for Belle's folly is identical to the Ghrazi rapier" - the rapier set is stab
