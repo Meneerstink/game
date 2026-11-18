@@ -1,0 +1,767 @@
+{
+ "source": "RuneLite cluescrolls (BSD-2) C:/RSPS/reference/runelite-cluescrolls",
+ "rows": [
+  {
+   "key": "Clue scroll (easy) - Dance at the crossroads north of Draynor",
+   "title": "Emote Clue",
+   "area": "Draynor Village",
+   "emotes": [
+    "Dance"
+   ],
+   "items": [
+    "Iron chainbody",
+    "Sapphire ring",
+    "Longbow"
+   ]
+  },
+  {
+   "key": "Clue scroll (easy) - Headbang in the mine north of Al Kharid",
+   "title": "Emote Clue",
+   "area": "Al Kharid mine",
+   "emotes": [
+    "Headbang"
+   ],
+   "items": [
+    "Desert shirt",
+    "Leather gloves",
+    "Leather boots"
+   ]
+  },
+  {
+   "key": "Clue scroll (easy) - Cheer at the Druids' Circle",
+   "title": "Emote Clue",
+   "area": "Taverley stone circle",
+   "emotes": [
+    "Cheer"
+   ],
+   "items": [
+    "Blue wizard hat",
+    "Bronze 2h sword",
+    "Ham boots"
+   ]
+  },
+  {
+   "key": "Clue scroll (easy) - Clap on the causeway to the Wizards' Tower",
+   "title": "Emote Clue",
+   "area": "Wizards' Tower",
+   "emotes": [
+    "Clap"
+   ],
+   "items": [
+    "Iron med helm",
+    "Emerald ring",
+    "White apron"
+   ]
+  },
+  {
+   "key": "Clue scroll (easy) - Jump for joy at the beehives",
+   "title": "Emote Clue",
+   "area": "Catherby",
+   "emotes": [
+    "Jump for joy"
+   ],
+   "items": [
+    "Desert shirt",
+    "Green robe bottoms",
+    "Steel axe"
+   ]
+  },
+  {
+   "key": "Clue scroll (easy) - At the standing stones north of Falador",
+   "title": "Map Clue",
+   "solution": "At the standing stones north of Falador"
+  },
+  {
+   "key": "Clue scroll (easy) - Brother Galahad's house",
+   "title": "Map Clue",
+   "solution": "Brother Galahad's house, West of McGrubor's Wood."
+  },
+  {
+   "key": "Clue scroll (easy) - Directly behind the Wizards' Tower",
+   "title": "Map Clue",
+   "solution": "On the south side of the Wizards' Tower (DIS)"
+  },
+  {
+   "key": "Clue scroll (easy) - Dig between some ominous stones in Falador",
+   "title": "Cryptic Clue",
+   "solution": "Three standing stones inside a walled area. East of the northern Falador gate."
+  },
+  {
+   "key": "Clue scroll (easy) - Dig near some giant mushrooms",
+   "title": "Cryptic Clue",
+   "solution": "Dig near the red mushrooms northwest of the Grand Tree."
+  },
+  {
+   "key": "Clue scroll (easy) - I wonder how many bronze shortswords he has handed out",
+   "title": "Cryptic Clue",
+   "npc": "Vannaka",
+   "solution": "Talk to Vannaka. He can be found in Edgeville Dungeon."
+  },
+  {
+   "key": "Clue scroll (easy) - One of the sailors in Port Sarim",
+   "title": "Cryptic Clue",
+   "npc": "Captain Tobias",
+   "solution": "Speak to Captain Tobias on the docks of Port Sarim."
+  },
+  {
+   "key": "Clue scroll (easy) - Search the crate in Rommiks crafting shop in Rimmington",
+   "title": "Cryptic Clue",
+   "solution": "The crates in Rommik's Crafty Supplies in Rimmington."
+  },
+  {
+   "key": "Clue scroll (easy) - Search for a crate in Varrock Castle",
+   "title": "Cryptic Clue",
+   "solution": "Search the crate in the corner of the kitchen in Varrock Castle."
+  },
+  {
+   "key": "Clue scroll (easy) - Search the bucket in the Port Sarim jail",
+   "title": "Cryptic Clue",
+   "solution": "Talk to Shantay & identify yourself as an outlaw, refuse to pay the 5gp fine twice and you will be sent to the Port Sarim jail."
+  },
+  {
+   "key": "Clue scroll (easy) - Dance a jig by the entrance to the Fishing Guild",
+   "title": "Emote Clue",
+   "area": "Fishing Guild",
+   "emotes": [
+    "Jig"
+   ],
+   "items": [
+    "Emerald ring",
+    "Sapphire amulet",
+    "Bronze chainbody"
+   ]
+  },
+  {
+   "key": "Clue scroll (easy) - Dance in the shack in Lumbridge Swamp",
+   "title": "Emote Clue",
+   "area": "Lumbridge swamp",
+   "emotes": [
+    "Dance"
+   ],
+   "items": [
+    "Bronze dagger",
+    "Iron full helm",
+    "Gold ring"
+   ]
+  },
+  {
+   "key": "Clue scroll (easy) - Dance in the Party Room",
+   "title": "Emote Clue",
+   "area": "Falador Party Room",
+   "emotes": [
+    "Dance"
+   ],
+   "items": [
+    "Steel full helm",
+    "Steel platebody",
+    "Iron plateskirt"
+   ]
+  },
+  {
+   "key": "Clue scroll (easy) - Cheer for the monks at Port Sarim",
+   "title": "Emote Clue",
+   "area": "Port Sarim",
+   "emotes": [
+    "Cheer"
+   ],
+   "items": [
+    "Coif",
+    "Steel plateskirt",
+    "Sapphire necklace"
+   ]
+  },
+  {
+   "key": "Clue scroll (easy) - North of Falador.",
+   "title": "Map Clue",
+   "solution": "North of Falador."
+  },
+  {
+   "key": "Clue scroll (easy) - West of the Champions' Guild",
+   "title": "Map Clue",
+   "solution": "West of the Champions' Guild"
+  },
+  {
+   "key": "Clue scroll (easy) - South-east Varrock mine",
+   "title": "Map Clue",
+   "solution": "Outside Varrock East Mine"
+  },
+  {
+   "key": "Clue scroll (easy) - Speak to Hans to solve the clue",
+   "title": "Cryptic Clue",
+   "npc": "Hans",
+   "solution": "Hans can be found at Lumbridge Castle."
+  },
+  {
+   "key": "Clue scroll (easy) - Speak to Doric, who lives north of Falador",
+   "title": "Cryptic Clue",
+   "npc": "Doric",
+   "solution": "Doric is found north of Falador and east of the Taverley gate."
+  },
+  {
+   "key": "Clue scroll (easy) - Speak to Arhein in Catherby",
+   "title": "Cryptic Clue",
+   "npc": "Arhein",
+   "solution": "Arhein is just south of the Catherby bank."
+  },
+  {
+   "key": "Clue scroll (easy) - Speak to Ellis in Al Kharid",
+   "title": "Cryptic Clue",
+   "npc": "Ellis",
+   "solution": "Ellis is tanner just north of Al Kharid bank."
+  },
+  {
+   "key": "Clue scroll (easy) - Speak to Ned in Draynor Village",
+   "title": "Cryptic Clue",
+   "npc": "Ned",
+   "solution": "Ned is found north of the Draynor bank."
+  },
+  {
+   "key": "Clue scroll (easy) - Speak to Gaius in Taverley",
+   "title": "Cryptic Clue",
+   "npc": "Gaius",
+   "solution": "Gaius is found at the northwest corner in Taverley."
+  },
+  {
+   "key": "Clue scroll (easy) - Talk to Cassie in Falador",
+   "title": "Cryptic Clue",
+   "npc": "Cassie",
+   "solution": "Cassie is found just south-east of the northern Falador gate."
+  },
+  {
+   "key": "Clue scroll (medium) - Cheer in the Edgeville general store",
+   "title": "Emote Clue",
+   "area": "Edgeville",
+   "emotes": [
+    "Cheer",
+    "Dance"
+   ],
+   "items": [
+    "Brown apron",
+    "Leather boots",
+    "Leather gloves"
+   ]
+  },
+  {
+   "key": "Clue scroll (medium) - Shrug in Catherby bank",
+   "title": "Emote Clue",
+   "area": "Catherby",
+   "emotes": [
+    "Shrug",
+    "Yawn"
+   ],
+   "items": [
+    "Maple longbow",
+    "Green d'hide chaps",
+    "Iron med helm"
+   ]
+  },
+  {
+   "key": "Clue scroll (medium) - Yawn in the Castle Wars lobby",
+   "title": "Emote Clue",
+   "area": "Castle Wars",
+   "emotes": [
+    "Yawn",
+    "Shrug"
+   ],
+   "items": [
+    "Ruby amulet",
+    "Mithril scimitar",
+    "Team-1 cape / Team-2 cape / Team-3 cape / Team-4 cape / Team-5 cape / Team-6 cape / Team-7 cape / Team-8 cape / Team-9 cape / Team-10 cape / Team-11 cape / Team-12 cape / Team-13 cape / Team-14 cape / Team-15 cape / Team-16 cape / Team-17 cape / Team-18 cape / Team-19 cape / Team-20 cape / Team-21 cape / Team-22 cape / Team-23 cape / Team-24 cape / Team-25 cape / Team-26 cape / Team-27 cape / Team-28 cape / Team-29 cape / Team-30 cape / Team-31 cape / Team-32 cape / Team-33 cape / Team-34 cape / Team-35 cape / Team-36 cape / Team-37 cape / Team-38 cape / Team-39 cape / Team-40 cape / Team-41 cape / Team-42 cape / Team-43 cape / Team-44 cape / Team-45 cape / Team-46 cape / Team-47 cape / Team-48 cape / Team-49 cape / Team-50 cape / Team cape zero / Team cape x / Team cape i"
+   ]
+  },
+  {
+   "key": "Clue scroll (medium) - Spin on the bridge by the Barbarian Village",
+   "title": "Emote Clue",
+   "area": "Barbarian Village",
+   "emotes": [
+    "Spin",
+    "Salute"
+   ],
+   "items": [
+    "Purple gloves",
+    "Steel kiteshield / Steel kiteshield / Steel kiteshield / Steel kiteshield / Steel kiteshield / Steel kiteshield / Steel kiteshield / Steel kiteshield / Steel kiteshield / Steel kiteshield / Steel kiteshield / Steel kiteshield / Steel kiteshield / Steel kiteshield / Steel kiteshield / Steel kiteshield / Steel kiteshield",
+    "Mithril full helm"
+   ]
+  },
+  {
+   "key": "Clue scroll (medium) - 00.13S 13.58E",
+   "title": "Coordinate Clue",
+   "solution": "West of Banana plantation on Karamja."
+  },
+  {
+   "key": "Clue scroll (medium) - 00.20S 23.15E",
+   "title": "Coordinate Clue",
+   "solution": "South of Lumbridge Swamp."
+  },
+  {
+   "key": "Clue scroll (medium) - 00.30N 24.16E",
+   "title": "Coordinate Clue",
+   "solution": "East of Lumbridge Swamp."
+  },
+  {
+   "key": "Clue scroll (medium) - A BAKER",
+   "title": "Anagram Clue",
+   "npc": "Baraek",
+   "area": "Varrock square",
+   "answer": "5",
+   "question": "How many stalls are there in Varrock Square?"
+  },
+  {
+   "key": "Clue scroll (medium) - HALT US",
+   "title": "Anagram Clue",
+   "npc": "Luthas",
+   "area": "Banana plantation, Karamja"
+  },
+  {
+   "key": "Clue scroll (medium) - AREA CHEF TREK",
+   "title": "Anagram Clue",
+   "npc": "Father Aereck",
+   "area": "Lumbridge Church",
+   "question": "How many gravestones are in the church graveyard?"
+  },
+  {
+   "key": "Clue scroll (medium) - GUHCHO",
+   "title": "Cipher Clue",
+   "area": "Paterdomus",
+   "answer": "7",
+   "question": "Please solve this for x: 7x - 28=21"
+  },
+  {
+   "key": "Clue scroll (medium) - XJABSE USBJCPSO",
+   "title": "Cipher Clue",
+   "area": "First floor of Wizards Tower. Fairy ring DIS",
+   "answer": "3150",
+   "question": "How many air runes would I need to cast 630 wind waves?"
+  },
+  {
+   "key": "Clue scroll (medium) - South of Draynor Village bank",
+   "title": "Map Clue",
+   "solution": "South of Draynor Village Bank"
+  },
+  {
+   "key": "Clue scroll (medium) - Behind the Chemist's house in Rimmington",
+   "title": "Map Clue",
+   "solution": "Behind the Chemist's house in Rimmington."
+  },
+  {
+   "key": "Clue scroll (medium) - North of the Tower of Life",
+   "title": "Map Clue",
+   "solution": "North of the Tower of Life. Fairy ring DJP"
+  },
+  {
+   "key": "Clue scroll (medium) - Cheer in the Barbarian Agility Arena",
+   "title": "Emote Clue",
+   "area": "Barbarian Outpost",
+   "emotes": [
+    "Cheer",
+    "Headbang"
+   ],
+   "items": [
+    "Steel platebody",
+    "Maple shortbow / Maple shortbow",
+    "Team-1 cape / Team-2 cape / Team-3 cape / Team-4 cape / Team-5 cape / Team-6 cape / Team-7 cape / Team-8 cape / Team-9 cape / Team-10 cape / Team-11 cape / Team-12 cape / Team-13 cape / Team-14 cape / Team-15 cape / Team-16 cape / Team-17 cape / Team-18 cape / Team-19 cape / Team-20 cape / Team-21 cape / Team-22 cape / Team-23 cape / Team-24 cape / Team-25 cape / Team-26 cape / Team-27 cape / Team-28 cape / Team-29 cape / Team-30 cape / Team-31 cape / Team-32 cape / Team-33 cape / Team-34 cape / Team-35 cape / Team-36 cape / Team-37 cape / Team-38 cape / Team-39 cape / Team-40 cape / Team-41 cape / Team-42 cape / Team-43 cape / Team-44 cape / Team-45 cape / Team-46 cape / Team-47 cape / Team-48 cape / Team-49 cape / Team-50 cape / Team cape zero / Team cape x / Team cape i"
+   ]
+  },
+  {
+   "key": "Clue scroll (medium) - Jump for joy in Yanille bank",
+   "title": "Emote Clue",
+   "area": "Yanille",
+   "emotes": [
+    "Jump for Joy",
+    "Jig"
+   ],
+   "items": [
+    "Brown apron",
+    "Adamant med helm",
+    "Snakeskin chaps"
+   ]
+  },
+  {
+   "key": "Clue scroll (medium) - Miscellania",
+   "title": "Map Clue",
+   "solution": "Miscellania. Fairy ring CIP"
+  },
+  {
+   "key": "Clue scroll (medium) - Mort Myre Swamp",
+   "title": "Map Clue",
+   "solution": "Mort Myre Swamp, west of Mort'ton. Fairy ring BIP"
+  },
+  {
+   "key": "Clue scroll (medium) - At the entrance to the Ourania Cave",
+   "title": "Map Clue",
+   "solution": "At the entrance to the Ourania Cave."
+  },
+  {
+   "key": "Clue scroll (medium) - South-east of the Lighthouse",
+   "title": "Map Clue",
+   "solution": "South-east of the Lighthouse. Fairy ring ALP"
+  },
+  {
+   "key": "Clue scroll (medium) - Between Seers' Village and Rellekka",
+   "title": "Map Clue",
+   "solution": "Between Seers' Village and Rellekka. South-west of Fairy ring CJR"
+  },
+  {
+   "key": "Clue scroll (medium) - West of the Crafting Guild",
+   "title": "Map Clue",
+   "solution": "West of the Crafting Guild"
+  },
+  {
+   "key": "Clue scroll (medium) - The crate in McGrubor's Wood",
+   "title": "Map Clue",
+   "solution": "The crate in McGrubor's Wood. Fairy ring ALS"
+  },
+  {
+   "key": "Clue scroll (medium) - The crate west of the Clock Tower",
+   "title": "Map Clue",
+   "solution": "The crate west of the Clocktower."
+  },
+  {
+   "key": "Clue scroll (medium) - 00.31S 17.43E",
+   "title": "Coordinate Clue",
+   "solution": "Near the entrance to the Asgarnian Ice Dungeon, south of Port Sarim (AIQ)."
+  },
+  {
+   "key": "Clue scroll (medium) - 02.48N 22.30E",
+   "title": "Coordinate Clue",
+   "solution": "West of trapdoor leading to H.A.M Hideout."
+  },
+  {
+   "key": "Clue scroll (medium) - 05.43N 23.05E",
+   "title": "Coordinate Clue",
+   "solution": "In the cow pen north of the Lumbridge windmill."
+  },
+  {
+   "key": "Clue scroll (hard) - Salute in the banana plantation",
+   "title": "Emote Clue",
+   "area": "Karamja",
+   "emotes": [
+    "Salute"
+   ],
+   "items": [
+    "Diamond ring",
+    "Amulet of power / Amulet of power"
+   ]
+  },
+  {
+   "key": "Clue scroll (hard) - Blow a raspberry in the Fishing Guild bank",
+   "title": "Emote Clue",
+   "area": "Fishing Guild",
+   "emotes": [
+    "Raspberry"
+   ],
+   "items": [
+    "Elemental shield",
+    "Blue d'hide chaps / Blue d'hide chaps",
+    "Rune warhammer"
+   ]
+  },
+  {
+   "key": "Clue scroll (hard) - Yawn in the rogues' general store",
+   "title": "Emote Clue",
+   "area": "Rogues general store",
+   "emotes": [
+    "Yawn"
+   ],
+   "items": [
+    "Adamant sq shield",
+    "Blue d'hide vambraces",
+    "Rune pickaxe"
+   ]
+  },
+  {
+   "key": "Clue scroll (hard) - 01.30N 20.01E",
+   "title": "Coordinate Clue",
+   "solution": "Small Island (CLP)."
+  },
+  {
+   "key": "Clue scroll (hard) - 02.39N 29.58E",
+   "title": "Coordinate Clue",
+   "solution": "Behind Emir's Arena."
+  },
+  {
+   "key": "Clue scroll (hard) - 02.48N 08.05E",
+   "title": "Coordinate Clue",
+   "solution": "Little island (AIR)."
+  },
+  {
+   "key": "Clue scroll (hard) - BLUE GRIM GUIDED",
+   "title": "Anagram Clue",
+   "npc": "Lumbridge Guide",
+   "area": "Lumbridge"
+  },
+  {
+   "key": "Clue scroll (hard) - DO SAY MORE",
+   "title": "Anagram Clue",
+   "npc": "Doomsayer",
+   "area": "East of Lumbridge Castle",
+   "answer": "95",
+   "question": "What is 40 divided by 1/2 plus 15?"
+  },
+  {
+   "key": "Clue scroll (hard) - RAT MAT WITHIN",
+   "title": "Anagram Clue",
+   "npc": "Martin Thwait",
+   "area": "Rogues' Den",
+   "answer": "2",
+   "question": "How many natural fires burn in Rogue's Den?"
+  },
+  {
+   "key": "Clue scroll (hard) - IWPPLQTP",
+   "title": "Cipher Clue",
+   "area": "Barbarian Outpost Agility course"
+  },
+  {
+   "key": "Clue scroll (hard) - ZHLUG ROG PDQ",
+   "title": "Cipher Clue",
+   "area": "Kalphite Lair entrance. Fairy ring BIQ",
+   "answer": "150",
+   "question": "SIX LEGS! All of them have 6! There are 25 of them! How many legs?"
+  },
+  {
+   "key": "Clue scroll (hard) - Yanille anvils",
+   "title": "Map Clue",
+   "solution": "Yanille anvils, south of the bank. You can dig from inside the building."
+  },
+  {
+   "key": "Clue scroll (hard) - A crate in the Lumber Yard",
+   "title": "Map Clue",
+   "solution": "A crate in the Lumber Yard, north-east of Varrock."
+  },
+  {
+   "key": "Clue scroll (hard) - 46 is my number",
+   "title": "Cryptic Clue",
+   "solution": "Sapphire respawn in the Spider's Nest, lvl 46 Wilderness. Dig under the sapphire spawn."
+  },
+  {
+   "key": "Clue scroll (hard) - Aggie I see",
+   "title": "Cryptic Clue",
+   "solution": "Dig outside the window of Aggie's house in Draynor Village."
+  },
+  {
+   "key": "Clue scroll (hard) - South-east of the Wilderness Agility Course",
+   "title": "Map Clue",
+   "solution": "South-east of the Wilderness Agility Course in level 50 Wilderness."
+  },
+  {
+   "key": "Clue scroll (hard) - South of the Legends' Guild",
+   "title": "Map Clue",
+   "solution": "South of the Legends' Guild. Fairy ring BLR"
+  },
+  {
+   "key": "Clue scroll (hard) - In the western section of West Ardougne",
+   "title": "Map Clue",
+   "solution": "In the western section of West Ardougne."
+  },
+  {
+   "key": "Clue scroll (hard) - In a crate by the stairs to the Observatory Dungeon",
+   "title": "Map Clue",
+   "solution": "In a crate by the stairs to the Observatory Dungeon."
+  },
+  {
+   "key": "Clue scroll (hard) - In a crate at the Dark Warriors' Fortress",
+   "title": "Map Clue",
+   "solution": "In a crate at the Dark Warriors' Fortress in level 14 Wilderness."
+  },
+  {
+   "key": "Clue scroll (hard) - BY LOOK",
+   "title": "Anagram Clue",
+   "npc": "Bolkoy",
+   "area": "Tree Gnome Village general store",
+   "answer": "13",
+   "question": "How many flowers are there in the clearing below this platform?"
+  },
+  {
+   "key": "Clue scroll (hard) - C ON GAME HOC",
+   "title": "Anagram Clue",
+   "npc": "Gnome Coach",
+   "area": "Gnome Ball course",
+   "answer": "6",
+   "question": "How many gnomes on the Gnome ball field have red patches on their uniforms?"
+  },
+  {
+   "key": "Clue scroll (hard) - MOTHERBOARD",
+   "title": "Anagram Clue",
+   "npc": "Brother Omad",
+   "area": "Monastery south of Ardougne",
+   "answer": "129",
+   "question": "What is the next number? 12, 13, 15, 17, 111, 113, 117, 119, 123....?"
+  },
+  {
+   "key": "Clue scroll (hard) - SLIDE WOMAN",
+   "title": "Anagram Clue",
+   "npc": "Wise Old Man",
+   "area": "Draynor Village",
+   "answer": "28",
+   "question": "How many bookcases are in the Wise Old Man's house?"
+  },
+  {
+   "key": "Clue scroll (hard) - UZZU MUJHRKYYKJ",
+   "title": "Cipher Clue",
+   "area": "Otto's Grotto",
+   "answer": "3",
+   "question": "How many pyre sites are found around this lake?"
+  },
+  {
+   "key": "Clue scroll (elite) - Bow upstairs in the Edgeville Monastery",
+   "title": "Emote Clue",
+   "area": "Edgeville Monastery",
+   "emotes": [
+    "Bow"
+   ],
+   "items": [
+    "Holy book / Unholy book / Unholy book / Book of Balance / Book of War / Book of Law / Book of Darkness"
+   ]
+  },
+  {
+   "key": "Clue scroll (elite) - Salute in the Warriors' guild bank",
+   "title": "Emote Clue",
+   "area": "Warriors' guild",
+   "emotes": [
+    "Salute"
+   ],
+   "items": [
+    "Black salamander"
+   ]
+  },
+  {
+   "key": "Clue scroll (elite) - Laugh in front of the gem store in Ardougne market",
+   "title": "Emote Clue",
+   "area": "Ardougne",
+   "emotes": [
+    "Laugh"
+   ],
+   "items": [
+    "Castle wars bracelet(1) / Castle wars bracelet(2) / Castle wars bracelet(3)",
+    "Dragonstone amulet",
+    "Ring of forging"
+   ]
+  },
+  {
+   "key": "Clue scroll (elite) - 02.35S 11.52E",
+   "title": "Coordinate Clue"
+  },
+  {
+   "key": "Clue scroll (elite) - 05.07S 13.26E",
+   "title": "Coordinate Clue",
+   "solution": "North-east corner in Shilo Village."
+  },
+  {
+   "key": "Clue scroll (elite) - DR HITMAN",
+   "title": "Anagram Clue",
+   "npc": "Mandrith",
+   "area": "Wilderness Resource Area",
+   "answer": "28",
+   "question": "How many scorpions live under the pit?"
+  },
+  {
+   "key": "Clue scroll (elite) - COOL NERD",
+   "title": "Anagram Clue",
+   "npc": "Old crone",
+   "area": "East of the Slayer Tower",
+   "answer": "619",
+   "question": "What is the combined combat level of each species that live in Slayer tower?"
+  },
+  {
+   "key": "Clue scroll (elite) - W marks the spot",
+   "title": "Cryptic Clue",
+   "solution": "Dig in the middle of the Warriors' Guild entrance hall."
+  },
+  {
+   "key": "Clue scroll (elite) - Three rule below and three sit at top",
+   "title": "Cryptic Clue",
+   "solution": "Dig in front of the entrance to the Waterbirth Island Dungeon."
+  },
+  {
+   "key": "Clue scroll (elite) - South-west of Tree Gnome Village",
+   "title": "Map Clue",
+   "solution": "South-west of Tree Gnome Village."
+  },
+  {
+   "key": "Clue scroll (elite) - Ghostly bones",
+   "title": "Cryptic Clue",
+   "solution": "Kill an Ankou."
+  },
+  {
+   "key": "Clue scroll (elite) - Show this to Sherlock",
+   "title": "Cryptic Clue",
+   "npc": "Sherlock",
+   "solution": "Sherlock is located to the east of the Sorcerer's tower in Seers' Village."
+  },
+  {
+   "key": "Clue scroll (master) - Show your anger at the Wise old man",
+   "title": "Emote Clue",
+   "area": "Draynor Village",
+   "emotes": [
+    "Angry"
+   ],
+   "items": [
+    "Abyssal whip / Abyssal whip / Abyssal tentacle / Abyssal whip (or) / Abyssal tentacle (or) / Frozen abyssal whip / Volcanic abyssal whip",
+    "Cape of legends",
+    "Spined chaps"
+   ]
+  },
+  {
+   "key": "Clue scroll (master) - Clap in the magic axe hut",
+   "title": "Emote Clue",
+   "area": "Magic axe hut",
+   "emotes": [
+    "Clap"
+   ],
+   "items": [
+    "Flared trousers"
+   ]
+  },
+  {
+   "key": "Clue scroll (master) - 03.26N 12.18E",
+   "title": "Coordinate Clue",
+   "solution": "Crandor island."
+  },
+  {
+   "key": "Clue scroll (master) - 03.50N 09.07E",
+   "title": "Coordinate Clue",
+   "solution": "Witchaven."
+  },
+  {
+   "key": "Clue scroll (master) - Anger Abbot Langley",
+   "title": "Cryptic Clue",
+   "npc": "Abbot Langley",
+   "solution": "Speak to Abbot Langley in the Edgeville Monastery while you have a negative prayer bonus (currently only possible with an Ancient staff or Ancient sceptre)."
+  },
+  {
+   "key": "Clue scroll (master) - Robin wishes to see your finest ranged equipment",
+   "title": "Cryptic Clue",
+   "npc": "Robin",
+   "solution": "Robin at the inn in Port Phasmatys. Speak to him with +180 in ranged attack bonus. Bonus granted by the toxic blowpipe is ignored."
+  },
+  {
+   "key": "master:mandrith",
+   "title": "Anagram Clue",
+   "npc": "Mandrith",
+   "area": "Wilderness Resource Area"
+  },
+  {
+   "key": "master:radimus",
+   "title": "Anagram Clue",
+   "npc": "Radimus Erkle",
+   "area": "Legends' Guild"
+  },
+  {
+   "key": "Clue scroll (master) - Falo the bard wants to see you",
+   "title": "Cryptic Clue",
+   "npc": "Falo the Bard",
+   "solution": "Speak to Falo the Bard located between Seers' Village and Rellekka. Southwest of fairy ring CJR."
+  },
+  {
+   "key": "Clue scroll (master) - A massive battle rages beneath",
+   "title": "Cryptic Clue",
+   "solution": "NE of the God Wars Dungeon entrance, climb the rocky handholds & dig by large crossbow."
+  },
+  {
+   "key": "master:sherlock",
+   "title": "Cryptic Clue",
+   "npc": "Sherlock",
+   "solution": "Sherlock is located to the east of the Sorcerer's tower in Seers' Village."
+  }
+ ]
+}

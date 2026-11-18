@@ -1,0 +1,32 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[16 June]] [[2021]]
+|update = A Kingdom Divided
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 25789
+|leagueRegion = Kourend
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 818
+|text = The cryptic reveals where to search:<br><br>Search the crates in the fruit store just east of the Hosidius town centre.
+|notes = Search the crates in the back room of the [[Hosidius]] fruit store.
+|map = {{Map|1799,3613|mtype=pin|plane=0|mapID=-1}}
+}}
+
+== Transportation ==
+
+* [[Fairy ring]] code {{fairycode|akr}} and run north.

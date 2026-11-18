@@ -1,0 +1,28 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 12174
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 771
+|text = The cryptic reveals where to search:<br><br>Search the Coffin in Edgeville.
+|notes = Search the coffin located by the [[Edgeville]] [[Wilderness]] [[Lever (Edgeville)|teleport lever]].
+|map = {{Map|3091,3477|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.skills.crafting.leather
 
+import gg.rsmod.plugins.content.scrolls.TreasureTrailSherlock as ClueTasks
+
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.Skills
@@ -51,7 +53,8 @@ object LeatherAction {
                 inventory.remove(Items.THREAD, assureFullRemoval = true)
                 player.filterableMessage("You use up one of your reels of thread.")
             }
-            inventory.add(item, assureFullInsertion = true)
+            val made = inventory.add(item, assureFullInsertion = true)
+            if (made.hasSucceeded() && item == Items.GREEN_DHIDE_BODY) ClueTasks.succeeded(player, ClueTasks.Action.GREEN_DHIDE_BODY)
             player.addXp(Skills.CRAFTING, leatherItem.experience)
             player.filterableMessage(
                 "You make ${Misc.formatWithIndefiniteArticle(

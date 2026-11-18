@@ -1,0 +1,30 @@
+{{Infobox Item
+|name = Mimic scroll case
+|image = [[File:Mimic scroll case.png]]
+|release = [[2 July]] [[2025]]
+|update = Stackable Clues are here!
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Open, Destroy
+|destroy = You'll need to complete another master clue scroll to get it back.
+|examine = Maybe I should open it...
+|value = 1
+|alchable = No
+|weight = 0.020
+|id = 30926
+|leagueRegion = No
+}}
+[[File:Mimic scroll case detail.png|150px|left]]
+The '''Mimic scroll case''' is a type of [[scroll case]] awarded from defeating [[the Mimic]] boss (elite or master casket mimic) and then opening the [[Reward casket (elite)|elite]]/[[Reward casket (master)|master reward casket]] it came from, which raises the cap on the number of scroll boxes for all tiers by 1. Opening the case results in the message {{mes|You have increased the capacity for all of your clue scrolls by one!}} in the chatbox.
+
+If the player has defeated the Mimic boss ''before'' the update that added scroll cases on [[2 July]] [[2025]], this scroll case will be automatically added to the [[collection log]] and its benefits will already be applied to their scroll box capacity.
+
+==Item sources==
+{{Drop sources|Mimic scroll case}}
+
+{{Treasure Trails}}
+[[Category:Collection log items]]

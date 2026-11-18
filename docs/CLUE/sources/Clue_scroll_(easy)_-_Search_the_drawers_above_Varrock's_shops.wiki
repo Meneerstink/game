@@ -1,0 +1,30 @@
+{{External|rs=Clue scroll (easy) - Search the drawers above the shops in Varrock}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 2708
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 786
+|text = The cryptic reveals where to search:<br><br>Search the drawers above Varrock's shops.
+|items = 
+|notes = Search the drawers near located upstairs in [[Thessalia's Fine Clothes]] shop in [[Varrock]].
+|map = {{Map|3206,3419|mtype=pin|plane=1|mapID=-1}}
+}}

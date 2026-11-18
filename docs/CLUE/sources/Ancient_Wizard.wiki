@@ -1,0 +1,146 @@
+{{Infobox Monster
+|version1 = Mage
+|version2 = Ranger
+|version3 = Melee
+|name = Ancient Wizard
+|image1 = [[File:Ancient Wizard (magic).png|170px]]
+|image2 = [[File:Ancient Wizard (ranged).png|170px]]
+|image3 = [[File:Ancient Wizard (melee).png|170px]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|combat1 = 98
+|combat2 = 98
+|combat3 = 112
+|size = 1
+|examine = He may be old, but you made him mad.
+|xpbonus1 = 0.0
+|xpbonus2 = 0.0
+|xpbonus3 = 5
+|max hit1 = 18
+|max hit2 = 23
+|max hit3 = 36
+|aggressive = Yes
+|poisonous1 = No
+|poisonous2 = No
+|poisonous3 = Yes (8)
+|attack style1 = [[Magic]]
+|attack style2 = [[Ranged]]
+|attack style3 = [[Stab]]
+|attack speed = 4
+|slayxp = None
+|hitpoints = 80
+|att1 = 50
+|att2 = 50
+|att3 = 120
+|str1 = 30
+|str2 = 30
+|str3 = 150
+|def = 20
+|mage1 = 150
+|mage2 = 80
+|mage3 = 80
+|range1 = 1
+|range2 = 150
+|range3 = 1
+|attbns1 = 0
+|attbns2 = 0
+|attbns3 = 80
+|strbns1 = 0
+|strbns2 = 0
+|strbns3 = 80
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns1 = 0
+|rngbns2 = 30
+|rngbns3 = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|poisonresistance = 0
+|venomresistance = 0
+|id1 = 7307
+|id2 = 7308
+|id3 = 7309
+}}
+[[File:Ancient Wizard chathead.png|left]]
+'''Ancient Wizards''' appear when doing [[master clue scroll]]s after the player digs for a clue directed by the [[strange device]] or coordinates in [[multicombat area]]s. Each wizard uses a different attack style and can hit fairly high, requiring players to be prepared for a three-on-one fight.
+
+==Strategy==
+The wizards are ''much'' more threatening than their combat levels suggest, as most of their combat levels are due to their offensive stat levels.  The goal should be to kill them as quickly as possible, especially if there are no obstacles to get two of three wizards stuck behind. A [[super combat potion]], bossing food such as [[shark]]s or [[tuna potato]]es, a strong special attack weapon such as a [[dragon dagger]] or [[granite maul]], and food for [[Tick_manipulation|combo eating]] such as [[karambwan]] and/or [[pineapple pizza]] are highly advisable.
+
+Ancient Wizards have low [[Defence]], so [[melee]] or [[Ranged]] is advised. Magic is not advised as they are resistant due to their high Magic level. The melee-using wizard has a significantly higher maximum hit than the rest of the wizards, so activating [[Protect from Melee]] is '''highly recommended''' while under attack by this wizard. Armour such as [[dragonhide armour]] is recommended.
+
+You can use a [[staircase]] or [[ladder]] if one's nearby and upon returning they '''won't be aggressive''' and you can kill them one by one.
+
+If available, the player should make use of nearby obstacles to limit the number of wizards able to attack the player at once. '''The other wizards cannot be used to safespot the melee wizard''', he will simply walk through them. It is advised to kill the wizards in this order: Melee (if he cannot be safespotted), Ranged, and finally Magic, using the equivalent protection [[Prayer]] matching the style of the target wizard each time.
+
+A form of [[antipoison]] is recommended as the melee-using wizard is capable of poisoning the player through [[Protect from Melee]], and the poison has a starting value of 8.
+
+For Ancient Wizards fought in the [[Wilderness]], bring items you are prepared to lose.
+
+A [[Dwarf multicannon|cannon]] set up in the area before digging at the coordinates is recommended for lower level players as it makes defeating all three wizards much easier. If the player manages to trap all the wizards behind a tall-enough obstacle/safespot so that they're unable to attack from a distance, the cannon will quickly dispatch them while the player isn't attacked at all; the player will only be attacked in the moments right after digging the clue spot. Remember to '''turn off auto-retaliate''' and to make sure that the '''cannon is spinning''' before digging the clue spot.
+
+[[File:Zarosian ambush.png|thumb|left|350px|Ancient wizards ambush the player.]]
+{{clear|left}}
+
+==Drops==
+{{DropLogProject|kills=202394}}
+===100%===
+{{DropsTableHead|leagueRegion=General}}
+{{DropsLine|name=Bones|quantity=1|rarity=Always}}
+{{DropsTableBottom}}
+
+===Weapons===
+{{DropsTableHead|leagueRegion=General}}
+{{DropsLine|name=Fire battlestaff|quantity=1|rarity=1/50}}
+{{DropsLine|name=Staff of fire|quantity=1|rarity=1/50}}
+{{DropsTableBottom}}
+
+===Runes and ammunition===
+{{DropsTableHead|leagueRegion=General}}
+{{DropsLine|name=Air rune|quantity=5-24|rarity=5/50}}
+{{DropsLine|name=Fire rune|quantity=5-24|rarity=5/50}}
+{{DropsLine|name=Death rune|quantity=5-24|rarity=5/50}}
+{{DropsLine|name=Runite bolts|quantity=1-5|rarity=5/50}}
+{{DropsTableBottom}}
+
+===Herbs===
+{{HerbDropTableInfo|5/50}}
+{{DropsTableHead|leagueRegion=General}}
+{{HerbDropLines|5/50}}
+{{DropsTableBottom}}
+
+===Seeds===
+{{AllotmentSeedDropTableInfo|3/50}}
+{{DropsTableHead|leagueRegion=General}}
+{{AllotmentSeedDropLines|3/50}}
+{{DropsTableBottom}}
+
+===Other===
+{{DropsTableHead|leagueRegion=General}}
+{{DropsLine|name=Coins|quantity=50-249|rarity=10/50|gemw=No}}
+{{DropsLine|name=Prayer potion(4)|quantity=1|rarity=2/50}}
+{{DropsLine|name=Pure essence|quantity=25 (noted)|rarity=7/50}}
+{{DropsLine|name=Runite crossbow (u)|quantity=1|rarity=1/50}}
+{{DropsTableBottom}}
+
+===Tertiary===
+{{DropsTableHead}}
+{{DropsLine|name=Looting bag|quantity=1|rarity=1/3|raritynotes=<ref group=d>Looting bags are only dropped by those found in the [[Wilderness]].</ref>|gemw=No|leagueRegion=Wilderness}}
+{{DropsTableBottom}}
+{{Reflist|group=d}}
+
+==Dialogue==
+{{Hastranscript|npc}}
+
+==Trivia==
+*The poison inflicted by the melee-using Ancient Wizard who uses a poisoned [[dragon dagger]] starts at 8, which is more than a dragon dagger (p++) available to players, which starts at 6.
+
+{{Treasure Trails}}
+[[Category:Zarosians]]

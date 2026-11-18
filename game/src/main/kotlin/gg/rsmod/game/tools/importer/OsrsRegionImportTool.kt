@@ -71,6 +71,14 @@ object OsrsRegionImportTool {
         /** OSRS loc types left out of the squares (the server places its own working copy, or the content is not ours). */
         val excludeOsrsLocs: Set<Int> = emptySet(),
         /**
+         * DMM2 punt 4 (POH style template): OSRS loc ids BELOW this bound that our cache already has under the same id and the same
+         * name are written as that rev-667 loc instead of being imported (the 2006 POH hotspots 15xxx, doors and spaces are the same
+         * objects in both caches, and PlayerHouse keys its spots by those ids). 0 = off (every loc imported, as before).
+         */
+        val nativeLocsBelow: Int = 0,
+        /** OSRS loc ids imported without their right-click ops (a fixed piece whose OSRS 'Remove' belongs to build mode only). */
+        val stripOps: Set<Int> = emptySet(),
+        /**
          * N462 ToA (2026-11-06): write every square this many squares (dx, dz) away from its OSRS position - a whole block moves by one
          * offset, so squares keep their OSRS neighbours and every coordinate inside stays OSRS + (64*dx, 64*dz). For OSRS squares whose
          * own position is taken by rev-667 content in use (the ToA raid rooms sit on rev-667 dungeons). Null = OSRS position.
@@ -117,6 +125,9 @@ object OsrsRegionImportTool {
          * underlays of 'toa-map-floors' (one of them is exactly OSRS 123 b8b098).
          */
         val underlayCandidates: Set<Int>? = null,
+        /** CLUE uses the owner-pinned cache 2686, whose maps need no XTEA keys. */
+        val sourceCache: String = FeroxImportTool.MODERN_CACHE,
+        val sourceKeys: String = FeroxImportTool.MODERN_KEYS,
     ) {
         init {
             require(squareOffset == null || (replaceSquares.isEmpty() && patch == null && locsOnlyWithout == null && !tilesOnly)) {
@@ -252,6 +263,10 @@ object OsrsRegionImportTool {
 
     val BATCHES: Map<String, Batch> =
         mapOf(
+            "clue-mimic-arena" to Batch(listOf(10819), note = "The Mimic arena, source2686 m42_67 relocated to unused m16_64",
+                squareOffset = -26 to -3,
+                sourceCache = gg.rsmod.game.RspsPaths.root("import-source/openrs2-2686/cache"),
+                sourceKeys = gg.rsmod.game.RspsPaths.root("import-source/openrs2-2686/keys.json")),
             // N522 bundle 2: OSRS Wiki "Scorpia" (cave in the Scorpion Pit, x 3233 y 10341 -> square 12961, empty in the 667 map) and
             // the three surface entrances "Cavern" 26762 (OSRS square 12861: 3231,3936 / 3231,3951 / 3241,3949); the exits "Crevice"
             // 26763 are inside 12961. Transports: Kronos-184 activities/wilderness/Scorpia.java.
@@ -299,6 +314,13 @@ object OsrsRegionImportTool {
             "web-chasm" to Batch(listOf(6580), listOf(47078), "Web Chasm (Spindel)"),
             // CoX (owner 2026-11-15 14:3x 'chambers of xeric volledig zoals toa'; dossier COX.txt): entrance Mount Quidamortem 4919 (ingang
             // 1245,3557) + the fairy ring BLS route 5174 (ring 1295,3493) + 4918/5175 between them - all four absent from our 667 map, in place.
+            // DMM2 punt 4 (Claude 18-11, wiki 'Wilderness (theme)' / 'Annihilation blueprints'): the OSRS Deadman house style template,
+            // region 8302 plane 0 (DEADMAN_POH_WALL 60252, POH_FLOORDECOR_DEADMAN 60272, chapel window hotspot 60660) - the same room
+            // chunks as the 7503 templates PlayerHouse.Style reads (garden 0,1 / chapel 2,5 / portal chamber 1,4 / dining 4,7 / lawn 1,0).
+            // + 60651 'Stained-glass window' = the style's chapel window (OSRS order shuttered 60649 / decorative 60650 / stained 60651,
+            // the same slot as Fremennik 13244/13245/13246 -> Style.stainedGlass 13246).
+            "dmm2-poh-wilderness" to Batch(listOf(8302), listOf(60651), "DMM2 Wilderness (Deadman) house style template, OSRS 8302 plane 0",
+                nativeLocsBelow = 15500, stripOps = setOf(60651)),
             "cox-entrance" to Batch(listOf(4918, 4919, 5174, 5175), emptyList(), "Chambers of Xeric entrance: Mount Quidamortem + fairy ring BLS",
                 clearTileFlags = 0x8, dropHiddenOverlays = true),
             // CoX 15-11 18:3x (test client screens\COX\pad-midden.png: the lake south of the mountain drew as a flat dark-grey plate while the
@@ -518,11 +540,11 @@ object OsrsRegionImportTool {
         name: String,
         batch: Batch,
     ): Plan {
-        val keys = ModernRegionProbeTool.loadKeys(File(FeroxImportTool.MODERN_KEYS))
+        val keys = ModernRegionProbeTool.loadKeys(File(batch.sourceKeys))
         val seqs = OsrsFxImportTool.existingFx(File(FeroxImportTool.ASSET_MAP)).filterKeys { it.startsWith("seq:") }
         val mutations = ArrayList<CacheMutation>()
         val dropped = ArrayList<String>()
-        ModernCacheReader(File(FeroxImportTool.MODERN_CACHE)).use { modern ->
+        ModernCacheReader(File(batch.sourceCache)).use { modern ->
             val library = CacheLibrary(FeroxImportTool.GAME_CACHE)
             try {
                 val maps = library.index(FeroxImportTool.MAP_INDEX)
@@ -589,7 +611,11 @@ object OsrsRegionImportTool {
                     }
 
                 // ---- loc types: every one imported new ----
-                val regions = batch.squares.associateWith { ModernRegion.load(modern, it, keys[it] ?: error("No modern key for $it")) }
+                val regions = batch.squares.associateWith {
+                    val key = keys[it]
+                    check(key != null || !modern.index(5).hasNames) { "No modern key for $it" }
+                    ModernRegion.load(modern, it, key)
+                }
                 batch.newUnderlaySlots?.let { slots ->
                     val underlayIndex = library.index(Rev667RegionProbeTool.CONFIG_INDEX).archive(Rev667RegionProbeTool.UNDERLAY_GROUP)!!
                     slots.forEach { check(it in 0..173) { "underlay $it is not a tile value (opcode - 81 <= 174)" } }
@@ -752,7 +778,14 @@ object OsrsRegionImportTool {
                 (regions.flatMap { (sq, r) -> r.locs.filter { batch.inPatch(sq, it.localX, it.localZ) && it.id !in batch.excludeOsrsLocs }.map { it.id } }.distinct().sorted() + batch.extraLocTypes).forEach { id ->
                     if (id in locIdMap) return@forEach
                     val def = ModernObjectDef.decode(id, modernLocDefs[id] ?: error("modern loc $id missing"))
+                    val native = localTypes[id]
+                    if (id < batch.nativeLocsBelow && native != null && (native.name.takeIf { it != "null" } ?: "") == (def.name?.takeIf { it != "null" } ?: "")) {
+                        locIdMap[id] = id
+                        println("NATIVE loc $id '${def.name}' kept as the rev-667 loc")
+                        return@forEach
+                    }
                     locIdMap[id] = nextLocId++
+                    if (id in batch.stripOps) def.options.indices.forEach { def.options[it] = null }
                     importedDefs[id] = def
                     neededModels.addAll(def.models)
                 }
@@ -777,7 +810,13 @@ object OsrsRegionImportTool {
                 check(missingSeqs.isEmpty()) { "loc animations not imported yet (add an OsrsFxImportTool SEQ_BATCHES entry): $missingSeqs" }
                 if (!batch.retileTargets) importedDefs.forEach { (modernId, def) ->
                     val localId = locIdMap.getValue(modernId)
-                    val bytes = Rev667LocType.encodeFromModern(def, { modelIdMap.getValue(it) }, dropped) { seqs["seq:$it"] }
+                    val encoded = Rev667LocType.encodeFromModern(def, { modelIdMap.getValue(it) }, dropped) { seqs["seq:$it"] }
+                    val bytes = if (name == "clue-mimic-arena" && def.ambientSoundId >= 0) {
+                        val sound = def.ambientSoundId
+                        val other = ModernCacheReader(File(FeroxImportTool.FILE_SERVER_CACHE)).use { it.file(4,sound,0) }
+                        ClueMimicArenaAssets.preserveAmbient(encoded,def,modern.file(4,sound,0),listOf(library.data(4,sound,0),other))
+                            .also { dropped.remove("loc ${def.id}: ambient sound") }
+                    } else encoded
                     val decoded = Rev667LocType.decode(localId, bytes)
                     check(decoded.allModels == def.models.map { modelIdMap.getValue(it) }) { "loc $modernId encode/decode model mismatch" }
                     if (def.animationId != -1) check(decoded.animation == seqs["seq:${def.animationId}"]) { "loc $modernId animation ${def.animationId} not imported" }
@@ -893,6 +932,7 @@ object OsrsRegionImportTool {
                 dropped.distinct().forEach { println("DROPPED $it") }
                 underlayMap.forEach { (m, l) -> println("FLOOR underlay osrs=${m - 1} rgb=${Integer.toHexString(modernUnderlays[m - 1]?.rgb ?: -1)} -> local ${l - 1} rgb=${Integer.toHexString(newUnderlays[l - 1] ?: localUnderlays[l - 1] ?: -1)}${if (newUnderlays.containsKey(l - 1)) " NEW plain" else ""}") }
                 overlayMap.forEach { (m, l) -> println("FLOOR overlay osrs=${m - 1} tiles=${overlayUse[m] ?: 0} rgb=${Integer.toHexString(modernOverlays[m - 1]?.rgb ?: -1)} tex=${modernOverlays[m - 1]?.texture} -> local ${l - 1} rgb=${Integer.toHexString((newOverlays[l - 1] ?: localOverlays[l - 1])?.rgb ?: -1)} tex=${(newOverlays[l - 1] ?: localOverlays[l - 1])?.texture}${if (newOverlays.containsKey(l - 1)) " NEW" else ""}") }
+                if (name == "clue-mimic-arena") modelIdMap.forEach { (upstream, local) -> println("MODEL osrs=$upstream -> $local") }
                 println("PLAN $name squares=${batch.squares} types=${importedDefs.size} models=${modelIdMap.size} floors underlay=${underlayMap.size} overlay=${overlayMap.size} mutations=${mutations.size}")
                 val planned =
                     when {
@@ -946,7 +986,7 @@ object OsrsRegionImportTool {
         val sb = StringBuilder()
         sb.appendLine("  - name: OSRS region import '$name' - ${batch.note.replace(": ", ", ")} (squares ${batch.squares}, ${batch.squareOffset?.let { "moved ${it.first},${it.second} squares -> ${batch.squares.map { s -> batch.target(s) }}" } ?: "same coordinates"})")
         sb.appendLine("    transaction_id: $transactionId")
-        sb.appendLine("    source: OpenRS2 cache 2499, map squares ${plan.squareGroups.entries.joinToString { "${it.key} -> groups ${it.value.first}/${it.value.second}" }}")
+        sb.appendLine("    source: ${batch.sourceCache}, map squares ${plan.squareGroups.entries.joinToString { "${it.key} -> groups ${it.value.first}/${it.value.second}" }}")
         sb.appendLine("    loc_ids:")
         plan.locIdMap.forEach { (modern, local) -> sb.appendLine("      - { upstream_id: $modern, local_id: $local, mode: IMPORT }") }
         sb.appendLine("    models:")

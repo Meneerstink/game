@@ -1,0 +1,38 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10182
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is an [[emote clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+The items can be stored in a [[STASH]] crate on the northern part of the bridge. It requires {{SCP|Construction|27|link=yes}}, a [[hammer]], [[saw]], 2 [[Plank|planks]] and 10 [[Nails]] to build. Building the STASH rewards the player with 150 Construction XP.
+
+==Clue info==
+{{Clue info
+|id = 287
+|tier = easy
+|emote = Clap
+|text = The emote reveals <br><br>Clap on the causeway to the Wizards' Tower. Equip an iron medium helmet, emerald ring and a white apron.
+|location = On the bridge to the [[Wizards' Tower]]
+|items = Equip an [[iron med helmet]], [[emerald ring]] and a [[white apron]].
+|equipment1 = Iron med helm
+|equipment2 = Emerald ring
+|equipment3 = White apron
+|notes = Perform the [[clap]] emote near on the bridge to the [[Misthalin]] [[Wizards' Tower]] ([[fairy ring]] {{Fairycode|DIS}}).
+|map = {{Map|3113,3196|mtype=pin|plane=0|mapID=-1}}
+}}

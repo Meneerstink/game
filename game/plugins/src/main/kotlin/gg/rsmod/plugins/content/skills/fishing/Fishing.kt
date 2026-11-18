@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.skills.fishing
 
+import gg.rsmod.plugins.content.scrolls.TreasureTrailSherlock as ClueTasks
+
 import gg.rsmod.plugins.content.skills.summoning.SummoningBoosts
 
 import gg.rsmod.game.model.attr.learnedBarbarianRod
@@ -116,8 +118,10 @@ object Fishing {
         val firstBaitIdInInventory = tool.baitId?.firstOrNull { baitId -> player.inventory.contains(baitId) }
 
         firstBaitIdInInventory?.let { player.inventory.remove(it) }
-        player.inventory.add(fish.id)
+        val caught = player.inventory.add(fish.id)
+        if (caught.hasSucceeded() && fish.id == gg.rsmod.plugins.api.cfg.Items.RAW_SHARK) ClueTasks.succeeded(player, ClueTasks.Action.SHARK)
         gg.rsmod.plugins.content.skills.summoning.SkillingPets.fishing(player, fish)
+        gg.rsmod.plugins.content.scrolls.ClueSkilling.fishing(player, fish)
 
         player.addXp(Skills.FISHING, fish.xp, checkBrawlingGloves = true)
         fish.strengthXp?.let { player.addXp(Skills.STRENGTH, it) }

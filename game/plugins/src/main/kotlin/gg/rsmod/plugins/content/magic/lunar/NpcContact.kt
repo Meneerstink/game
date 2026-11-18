@@ -44,6 +44,8 @@ object NpcContact {
             Contact("Duradel", 23, 45, listOf(Npcs.DURADEL_8466)),
             Contact("Lapalok", 25, 36, listOf(Npcs.DURADEL_8466)),
             Contact("Dark mage", 30, 47, listOf(Npcs.DARK_MAGE_2262)),
+            // Watson's OSRS remote service checks the four deposited clue tiers.
+            Contact("Watson", 31, 49, listOf(Npcs.WATSON)),
         )
 
     /** Void's hidden contacts (no content behind them here yet): Honest Jimmy, Bert, Advisor Ghrim, Spria, Lanthus, Achtryn, Cyrisus, Larry. */
@@ -60,6 +62,11 @@ object NpcContact {
     fun open(player: Player) {
         player.openInterface(INTERFACE, InterfaceDestination.MAIN_SCREEN)
         HIDDEN.forEach { player.setComponentHidden(INTERFACE, it, true) }
+        // Reuse the existing hidden 667 contact slot, as Krystilia does below.
+        player.setComponentHidden(INTERFACE, 31, false)
+        player.setComponentHidden(INTERFACE, 49, false)
+        player.setComponentNpcHead(INTERFACE, 31, Npcs.WATSON)
+        player.setComponentText(INTERFACE, 49, "Watson")
         // Void: "The cache reuses Murphy's slot; replace him with the Abyss's dark mage".
         player.setComponentNpcHead(INTERFACE, 30, Npcs.DARK_MAGE_2262)
         player.setComponentText(INTERFACE, 47, "Dark mage")
@@ -84,6 +91,10 @@ object NpcContact {
 
     fun contact(player: Player, contact: Contact) {
         player.closeInterface(INTERFACE)
+        if (Npcs.WATSON in contact.npcIds) {
+            gg.rsmod.plugins.content.areas.watson.WatsonDialogue.check(player)
+            return
+        }
         val npc = contact.npcIds.firstNotNullOfOrNull { id -> player.world.npcs.firstOrNull { it.id == id } }
         val option = npc?.let { talkOption(player, it.id) } ?: -1
         if (npc == null || option < 0) {

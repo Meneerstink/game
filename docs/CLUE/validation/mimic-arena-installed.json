@@ -1,0 +1,42 @@
+{
+  "verified": true,
+  "region": 4160,
+  "placements": 250,
+  "namedDefinitions": 6,
+  "targets": [
+    {
+      "locGroup": 6947,
+      "hashes": {
+        "loc34727": "3d787dbb90c7c4cf08d4f8a71ad24036da568aa58c755b09c78460b339bc731a",
+        "loc34728": "9ac34dd5e56a70900428ece524587a2c8c324e1e2666994e227c853174126bad",
+        "loc34729": "e58f1486ce93d361f1d41b4d48996da90f5da3c0b3c4facd421f67484e01af10",
+        "loc34730": "c76c17a6e302a97cac44c30e9c737bf332ec5550cff834fe0e8fab6015276f24",
+        "loc34731": "4a3a863bd482aac6886e6727f6a7d1b912b8e3b75f5521251e81ec2045c2ec2a",
+        "loc34732": "2a45682934a8de419a28a25167fc90a3dc9953dd6c37225b8491ce4521f80a02",
+        "locations": "42e1eaaa3941b9966e7109e7b598f806966ed74f59889a79c13b046683d2a117",
+        "terrain": "a95c8cc0630af1f5eeca748d16356dbb9f6d9d495e0010d48efb276b3008a369"
+      },
+      "terrainGroup": 6946,
+      "cache": "C:/RSPS/game/game/data/cache"
+    },
+    {
+      "locGroup": 6947,
+      "hashes": {
+        "loc34727": "3d787dbb90c7c4cf08d4f8a71ad24036da568aa58c755b09c78460b339bc731a",
+        "loc34728": "9ac34dd5e56a70900428ece524587a2c8c324e1e2666994e227c853174126bad",
+        "loc34729": "e58f1486ce93d361f1d41b4d48996da90f5da3c0b3c4facd421f67484e01af10",
+        "loc34730": "c76c17a6e302a97cac44c30e9c737bf332ec5550cff834fe0e8fab6015276f24",
+        "loc34731": "4a3a863bd482aac6886e6727f6a7d1b912b8e3b75f5521251e81ec2045c2ec2a",
+        "loc34732": "2a45682934a8de419a28a25167fc90a3dc9953dd6c37225b8491ce4521f80a02",
+        "locations": "42e1eaaa3941b9966e7109e7b598f806966ed74f59889a79c13b046683d2a117",
+        "terrain": "a95c8cc0630af1f5eeca748d16356dbb9f6d9d495e0010d48efb276b3008a369"
+      },
+      "terrainGroup": 6946,
+      "cache": "C:/RSPS/file-server/cache"
+    }
+  ],
+  "readOnly": true,
+  "mappingPublished": false,
+  "command": "python tools/clue/build_mimic_arena_mapping.py",
+  "verifiedAt": "2026-11-17T20:34:46+01:00"
+}

@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.skills.runecrafting
 
+import gg.rsmod.plugins.content.scrolls.TreasureTrailSherlock as ClueTasks
+
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.Graphic
 import gg.rsmod.game.model.queue.QueueTask
@@ -132,7 +134,8 @@ object RunecraftAction {
         val count = rune.getAmount(player.skills.getCurrentLevel(Skills.RUNECRAFTING), player, transaction.items.size)
 
         if (transaction.hasSucceeded()) {
-            player.inventory.add(rune.id, count)
+            val made = player.inventory.add(rune.id, count)
+            if (made.hasSucceeded() && rune == Rune.NATURE) ClueTasks.succeeded(player, ClueTasks.Action.NATURE_RUNE)
             player.addXp(Skills.RUNECRAFTING, rune.xp * essAmount)
             // OSRS Wiki Rift guardian: the pet rolls per essence, in the altar's colour; a following rift guardian takes that colour.
             gg.rsmod.plugins.content.skills.summoning.SkillingPets.runecraft(player, rune, essAmount)

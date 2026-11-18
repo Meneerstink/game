@@ -77,6 +77,11 @@ object OsrsLocImportTool {
             // N522 nachtrun deel 3: Larran's small chest 33343 (closed) / 34828 (open) and Larran's big chest 34829 / 34830 (OSRS Wiki
             // infobox ids; Unlock / Check on the closed ones).
             "larran" to listOf(33343, 34828, 34829, 34830),
+            // DMM2 Deadman rug (wiki 'Deadman rug': objects 54114-54116, built in a rug space with the Armageddon rug; Claude 18-11).
+            "dmm2-deadman-rug" to listOf(54114, 54115, 54116),
+            // DMM2 Annihilation exit portal (wiki 'Annihilation exit portal blueprints': built in the garden centrepiece space with
+            // 10 iron bars + the blueprints; RuneLite gameval POH_EXIT_PORTAL_WILDERNESS = 60789; Claude 18-11).
+            "dmm2-exit-portal" to listOf(60789),
             // N462 ToA: every TOA_ / WARDENS / AKKHA / KEPHRI loc of RuneLite gameval ObjectID that the 'toa-map' region import did not
             // bring (not placed on the map - the raid places/swaps them: open/closed path doors, Wardens door open 46168, vault chests and
             // sarcophagi, Het mirrors/barriers/statues, Scabaras tiles/buttons, Kephri dung, Zebak water, Wardens platforms/warning tiles,

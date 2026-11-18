@@ -1,0 +1,58 @@
+{{Transcript|npc}}
+{{incomplete|Thieving cape claim is missing}}
+==Standard dialogue==
+* '''Martin Thwait:''' You know it's sometimes funny how things work out, I lose some gold but find an item, or I lose an item and find some gold... no-one ever knows what's gone where ya know.
+* {{topt|Yeah I know what you mean, found anything recently?}}
+** {{tcond|If the player doesn't have at least level 50 Thieving:}}
+*** '''Martin Thwait:''' Sorry, mate. Train up your Thieving skill to at least 50 and I might be able to help you out.
+*** {{tact|end}}
+** {{tcond|If the player has between level 50-98 Thieving, but doesn't have at least level 50 Agility:}}
+*** '''Martin Thwait:''' Sorry, mate. Train up your Agility skill to at least 50 and I might be able to help you out.
+*** {{tact|end}}
+** {{tcond|If the player has over level 50 Thieving and Agility, or level 99 Thieving outright:}}
+*** {{tact|opens=Martin Thwait's Lost and Found.}}
+* {{topt|Can you tell me about your cape?}}
+** '''Player:''' Can you tell me about your cape?
+** '''Martin Thwait:''' Certainly! Skillcapes are a symbol of achievement. Only people who have mastered a skill and reached level 99 can get their hands on them and gain the benefits they carry.
+** '''Martin Thwait:''' The Cape of Thieving provides a nice boost to your chances of pickpocketing when worn. Is there anything else I can help you with?
+** {{topt|Have you found anything recently?}}
+*** {{tact|above}}
+** {{topt|No thank you.}}
+*** '''Player:''' No thank you.
+*** {{tact|end}}
+* {{topt|Okay... I'll be going now.}}
+** '''Player:''' Okay... I'll be going now.
+** {{tact|end}}
+
+==Right-click Trade option==
+* {{tcond|If the player doesn't have at least level 50 Thieving:}}
+** '''Martin Thwait:''' Sorry, mate. Train up your Thieving skill to at least 50 and I might be able to help you out.
+** {{tact|end}}
+* {{tcond|If the player has between level 50-98 Thieving, but doesn't have at least 50 Agility:}}
+** '''Martin Thwait:''' Sorry, mate. Train up your Agility skill to at least 50 and I might be able to help you out.
+** {{tact|end}}
+* {{tcond|If the player has over level 50 Thieving and Agility, or 99 Thieving outright:}}
+** {{tact|opens=Martin Thwait's Lost and Found.}}
+
+==Treasure Trails==
+* '''Martin Thwait:''' Ah! Here you go!
+* '''Player:''' What?
+* '''Martin Thwait:''' I need you to answer this for me.
+* {{tbox|pic=Clue scroll (hard) detail.png|Martin has given you a challenge scroll!}}
+* {{tact|end}}
+
+====When spoken to again====
+* '''Martin Thwait:''' Please enter the answer to the question.
+* {{tcond|When given the wrong answer:}}
+** '''Martin Thwait:''' How can that be? Go check again!
+** {{tact|end}}
+* {{tcond|When given the correct answer:}}
+** '''Martin Thwait:''' Spot on!
+** {{tcond|When given another clue scroll:}}
+*** {{tbox|pic=Clue scroll (hard) detail.png|Martin has given you another clue scroll!}}
+*** {{tact|receives=a clue scroll}}
+*** {{tact|end}}
+** {{tcond|When given a reward casket:}}
+*** {{tbox|pic=Reward casket (hard) detail.png|You've obtained a casket!}}
+*** {{tact|receives=a reward casket}}
+*** {{tact|end}}

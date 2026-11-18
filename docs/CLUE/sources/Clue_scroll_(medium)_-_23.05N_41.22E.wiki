@@ -1,0 +1,40 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Hess!
+|value = 20
+|weight = 0.020
+|id = 23137
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[coordinate clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 429
+|text = The coordinate reveals where to dig:<br><br>23.05N 41.22E
+|items = 
+|notes = On the small island north-east of [[Fossil Island]]'s [[mushroom forest]].
+|map = {{Map|3764,3900|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 20 August 2025
+|update = More Doom Tweaks, Poll 84, & Summer Sweep Up Changes
+|change = 
+* The clue scroll step has been moved west slightly along with the island.
+** The previous location was 23 degrees 1 minute north, 41 degrees 22 minutes east.
+}}
+{{Subject changes footer}}

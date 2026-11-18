@@ -1,0 +1,32 @@
+'''Reward caskets''' are chests found at the end of every [[Treasure Trails|Treasure Trail]]. They contain the [[Treasure Trails#Rewards|rewards]] for that trail.
+
+The player can possess unlimited amounts of reward caskets up to the [[Stackable_items#Limit_of_a_stack|stack limit]]. Players are eligible to receive more clue scrolls regardless of how many reward caskets are in the player's possession. In other words, caskets don't count towards the [[Scroll_box|scroll box capacity]].
+
+There are six tiers of reward caskets:
+*[[Reward casket (beginner)]]
+*[[Reward casket (easy)]]
+*[[Reward casket (medium)]]
+*[[Reward casket (hard)]]
+*[[Reward casket (elite)]]
+*[[Reward casket (master)]]
+
+Reward caskets that are opened on [[Entrana]] will exclude certain classes of items from the random roll{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1276268920270393348|date=25 Jun 2020|archiveurl=https://reldo.runescape.wiki/i/104301|archivedate=9 Dec 2020|quote=It rolls the table without such items being included, yeah. That also includes most equippable items, even items without stats such as Bob shirts. But it's a useful place to go if you want prayerbook pages.|notes=In response to the question: "I've seen some old posts about how clue caskets opened on entrana will reroll items that are banned on the island such as armour and weapons. Can you confirm this?"}}, such as tier-specific uniques and weapons and armour, with the exception of [[Reward casket (beginner)|beginner ]] and [[master casket]]s which cannot be opened on Entrana whatsoever. Opening caskets from easy clues on Entrana is a popular way for Ironman accounts to get pages for [[god book]]s.
+
+As untradeable items, reward caskets that are dropped will not be visible to other players and will stay on the ground for 3 minutes until they despawn. This may be useful in the [[Wilderness]] if encountering [[player killers]], saving the casket to be opened later in a safe location.
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 11 April 2019
+|update = Treasure Trails Expansion and Easter 2019
+|change = All tiers of reward casket are now stackable.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+* Attempting to cast a [[High Level Alchemy]] spell on a reward casket will result in the message, "Wouldn't you rather solve the clue?"
+
+==References==
+{{Reflist}}
+
+{{Treasure Trails}}

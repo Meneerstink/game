@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 23146
+|leagueRegion = Wilderness
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[coordinate clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 511
+|text = The coordinate reveals where to dig:<br><br>17.58N 19.05E
+|items = 
+|notes = East of the [[Wilderness Obelisk]] in level 28 [[Wilderness]].
+
+The clue has an additional challenge:
+
+Kill an [[Armadylean guard]] or a [[Bandosian guard]]
+|map = {{Map|3051,3736|mtype=pin|plane=0|mapID=-1}}
+}}

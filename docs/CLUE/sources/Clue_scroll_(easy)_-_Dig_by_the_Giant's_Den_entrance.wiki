@@ -1,0 +1,36 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[16 June]] [[2021]]
+|update = A Kingdom Divided
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 25788
+|leagueRegion = Kourend
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 849
+|text = The cryptic reveals where to dig:<br><br>Dig by the Giant's Den entrance, looking out over Lake Molch.
+|notes = Dig near the south-east of [[Lake Molch]] in [[Zeah]], outside the [[Giants' Den]] cave entrance.
+|map = {{Map|1418,3591|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+*[[Lovakengj Minecart Network]] to Shayzien West.
+*[[Fairy ring]] {{fairycode|djr}} and run south-west.
+*[[Kharedst's memoirs]] or [[Book of the Dead]] teleport with [[History and Hearsay]].
+*[[Xeric's talisman]] to [[Xeric's Lookout]].
+*[[Rada's blessing]] teleport to the [[Kourend Woodland]] and run north-west.
+*[[Kourend Castle Teleport]] and run south-west to [[Shayzien]].

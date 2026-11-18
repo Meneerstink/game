@@ -1,0 +1,41 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 374
+|tier = master
+|emote = Dance
+|text = The clue reveals <br><br>Dance in the King Black Dragon's lair. Beware of double agents! Equip a black dragonhide body, black dragonhide vambraces and a black dragon mask.
+|location=South-east corner of the [[King Black Dragon Lair]]
+|items = Equip a [[black d'hide body]], [[black d'hide vambraces]] and a [[black dragon mask]].
+|equipment1 = Black d'hide body
+|equipment1alt1 = Black d'hide body (t)
+|equipment1alt2 = Black d'hide body (g)
+|equipment2 = Black d'hide vambraces
+|equipment3 = Black dragon mask
+|notes = Perform the [[dance]] emote in the [[King Black Dragon]]'s [[King Black Dragon Lair|lair]].
+The clue has an additional challenge:
+
+Kill a [[double agent]].
+
+This must be done in the public instance of the KBD lair.
+|map = {{Map|2271,4680|mtype=pin|plane=0|mapID=-1}}
+}}

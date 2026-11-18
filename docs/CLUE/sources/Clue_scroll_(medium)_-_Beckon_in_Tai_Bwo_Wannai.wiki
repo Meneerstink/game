@@ -1,0 +1,38 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10260
+|leagueRegion = Karamja
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[emote clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 310
+|tier = medium
+|emote = Beckon
+|emote2 = Clap
+|text = The emote reveals <br><br>Beckon in Tai Bwo Wannai. Clap before you talk to me. Equip green dragonhide chaps, a ring of dueling and a mithril medium helmet.
+|location = West of the [[Tai Bwo Wannai]] [[hardwood grove]], south-east of the [[Tribal Statue]]
+|items = Equip [[green dragonhide chaps]], a [[ring of dueling]] and a [[Mithril med helm|mithril medium helmet]].
+|equipment1= Green d'hide chaps
+|equipment2 = Ring of dueling
+|equipment2price1 = Ring of dueling(8)
+|equipment3 = Mithril med helm
+|notes = Perform the [[beckon]] and [[clap]] emotes south of the shrine in [[Tai Bwo Wannai]].
+|map = {{Map|2803,3073|mtype=pin|plane=0|mapID=-1}}
+}}

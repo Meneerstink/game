@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Instructions I need to follow.
+|value = 20
+|weight = 0.020
+|id = 19806
+|leagueRegion = Fremennik
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 899
+|text = The cryptic reveals <br><br>Surround my bones in fire, ontop the wooden pyre. Finally lay me to rest, before my one last test.
+|items = 
+|notes = Construct and burn a [[pyre ship]] with [[mangled bones]] (dropped by [[Confused barbarian|confused]] or [[lost barbarian]]s), then kill the [[ferocious barbarian spirit]] that spawns to receive the next clue.
+|map = 
+}}

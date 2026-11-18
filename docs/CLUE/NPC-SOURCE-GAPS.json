@@ -1,0 +1,5487 @@
+[
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Cave goblin (monster)",
+      "page": "Cave goblin (monster)",
+      "url": "https://oldschool.runescape.wiki/w/Cave_goblin_(monster)",
+      "variant": null,
+      "method": "combat",
+      "levels": "3",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Sand Crab",
+      "page": "Sand Crab",
+      "url": "https://oldschool.runescape.wiki/w/Sand_Crab",
+      "variant": null,
+      "method": "combat",
+      "levels": "15",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Screaming banshee",
+      "page": "Screaming banshee",
+      "url": "https://oldschool.runescape.wiki/w/Screaming_banshee",
+      "variant": null,
+      "method": "combat",
+      "levels": "70",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Lobstrosity",
+      "page": "Lobstrosity",
+      "url": "https://oldschool.runescape.wiki/w/Lobstrosity",
+      "variant": null,
+      "method": "combat",
+      "levels": "68",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Ammonite Crab",
+      "page": "Ammonite Crab",
+      "url": "https://oldschool.runescape.wiki/w/Ammonite_Crab",
+      "variant": null,
+      "method": "combat",
+      "levels": "25",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Swamp Crab",
+      "page": "Swamp Crab",
+      "url": "https://oldschool.runescape.wiki/w/Swamp_Crab",
+      "variant": null,
+      "method": "combat",
+      "levels": "55",
+      "quantity": "1",
+      "fractions": [
+        "1/96"
+      ],
+      "rarity": "1/96"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Skeleton (Tarn's Lair) Low level",
+      "page": "Skeleton (Tarn's Lair)",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_(Tarn%27s_Lair)#Low_level",
+      "variant": "Low level",
+      "method": "combat",
+      "levels": "42; 59",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Skeleton (Tarn's Lair) Medium level",
+      "page": "Skeleton (Tarn's Lair)",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_(Tarn%27s_Lair)#Medium_level",
+      "variant": "Medium level",
+      "method": "combat",
+      "levels": "40; 63; 72; 77",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Skeleton (Tarn's Lair) Level 81",
+      "page": "Skeleton (Tarn's Lair)",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_(Tarn%27s_Lair)#Level_81",
+      "variant": "Level 81",
+      "method": "combat",
+      "levels": "81",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Sourhog",
+      "page": "Sourhog",
+      "url": "https://oldschool.runescape.wiki/w/Sourhog",
+      "variant": null,
+      "method": "combat",
+      "levels": "37",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Vardorvis",
+      "page": "Vardorvis",
+      "url": "https://oldschool.runescape.wiki/w/Vardorvis",
+      "variant": null,
+      "method": "combat",
+      "levels": "572; 784; 1136",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Vardorvis",
+      "page": "Vardorvis",
+      "url": "https://oldschool.runescape.wiki/w/Vardorvis",
+      "variant": null,
+      "method": "combat",
+      "levels": "572; 784; 1136",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Vardorvis",
+      "page": "Vardorvis",
+      "url": "https://oldschool.runescape.wiki/w/Vardorvis",
+      "variant": null,
+      "method": "combat",
+      "levels": "572; 784; 1136",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Vardorvis",
+      "page": "Vardorvis",
+      "url": "https://oldschool.runescape.wiki/w/Vardorvis",
+      "variant": null,
+      "method": "combat",
+      "levels": "572; 784; 1136",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Goblin (Goblin Village) (m)",
+      "page": "Goblin (Goblin Village)",
+      "url": "https://oldschool.runescape.wiki/w/Goblin_(Goblin_Village)",
+      "variant": null,
+      "method": "combat",
+      "levels": "5",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Goblin (Vault of War) (m)",
+      "page": "Goblin (Vault of War)",
+      "url": "https://oldschool.runescape.wiki/w/Goblin_(Vault_of_War)",
+      "variant": null,
+      "method": "combat",
+      "levels": "5\u201325",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Goblin (God Wars Dungeon)",
+      "page": "Goblin (God Wars Dungeon)",
+      "url": "https://oldschool.runescape.wiki/w/Goblin_(God_Wars_Dungeon)",
+      "variant": null,
+      "method": "combat",
+      "levels": "12; 13; 15; 17",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Lynx",
+      "page": "Lynx",
+      "url": "https://oldschool.runescape.wiki/w/Lynx",
+      "variant": null,
+      "method": "combat",
+      "levels": "21; 24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Barbarian (Barbarian Camp) Low level",
+      "page": "Barbarian (Barbarian Camp)",
+      "url": "https://oldschool.runescape.wiki/w/Barbarian_(Barbarian_Camp)#Low_level",
+      "variant": "Low level",
+      "method": "combat",
+      "levels": "9; 10",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Barbarian (Barbarian Camp) High level",
+      "page": "Barbarian (Barbarian Camp)",
+      "url": "https://oldschool.runescape.wiki/w/Barbarian_(Barbarian_Camp)#High_level",
+      "variant": "High level",
+      "method": "combat",
+      "levels": "15",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Duke Sucellus",
+      "page": "Duke Sucellus",
+      "url": "https://oldschool.runescape.wiki/w/Duke_Sucellus",
+      "variant": null,
+      "method": "combat",
+      "levels": "538; 758; 1099",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Duke Sucellus",
+      "page": "Duke Sucellus",
+      "url": "https://oldschool.runescape.wiki/w/Duke_Sucellus",
+      "variant": null,
+      "method": "combat",
+      "levels": "538; 758; 1099",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Duke Sucellus",
+      "page": "Duke Sucellus",
+      "url": "https://oldschool.runescape.wiki/w/Duke_Sucellus",
+      "variant": null,
+      "method": "combat",
+      "levels": "538; 758; 1099",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Duke Sucellus",
+      "page": "Duke Sucellus",
+      "url": "https://oldschool.runescape.wiki/w/Duke_Sucellus",
+      "variant": null,
+      "method": "combat",
+      "levels": "538; 758; 1099",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "The Whisperer",
+      "page": "The Whisperer",
+      "url": "https://oldschool.runescape.wiki/w/The_Whisperer",
+      "variant": null,
+      "method": "combat",
+      "levels": "587; 791; 1146",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "The Whisperer",
+      "page": "The Whisperer",
+      "url": "https://oldschool.runescape.wiki/w/The_Whisperer",
+      "variant": null,
+      "method": "combat",
+      "levels": "587; 791; 1146",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "The Whisperer",
+      "page": "The Whisperer",
+      "url": "https://oldschool.runescape.wiki/w/The_Whisperer",
+      "variant": null,
+      "method": "combat",
+      "levels": "587; 791; 1146",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "The Whisperer",
+      "page": "The Whisperer",
+      "url": "https://oldschool.runescape.wiki/w/The_Whisperer",
+      "variant": null,
+      "method": "combat",
+      "levels": "587; 791; 1146",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "The Leviathan",
+      "page": "The Leviathan",
+      "url": "https://oldschool.runescape.wiki/w/The_Leviathan",
+      "variant": null,
+      "method": "combat",
+      "levels": "593; 798; 1157",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "The Leviathan",
+      "page": "The Leviathan",
+      "url": "https://oldschool.runescape.wiki/w/The_Leviathan",
+      "variant": null,
+      "method": "combat",
+      "levels": "593; 798; 1157",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "The Leviathan",
+      "page": "The Leviathan",
+      "url": "https://oldschool.runescape.wiki/w/The_Leviathan",
+      "variant": null,
+      "method": "combat",
+      "levels": "593; 798; 1157",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "The Leviathan",
+      "page": "The Leviathan",
+      "url": "https://oldschool.runescape.wiki/w/The_Leviathan",
+      "variant": null,
+      "method": "combat",
+      "levels": "593; 798; 1157",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Thief (Varlamore)",
+      "page": "Thief (Varlamore)",
+      "url": "https://oldschool.runescape.wiki/w/Thief_(Varlamore)",
+      "variant": null,
+      "method": "combat",
+      "levels": "16",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Frost Crab",
+      "page": "Frost Crab",
+      "url": "https://oldschool.runescape.wiki/w/Frost_Crab",
+      "variant": null,
+      "method": "combat",
+      "levels": "15",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Dolphin",
+      "page": "Dolphin",
+      "url": "https://oldschool.runescape.wiki/w/Dolphin",
+      "variant": null,
+      "method": "combat",
+      "levels": "22",
+      "quantity": "1",
+      "fractions": [
+        "~1/55"
+      ],
+      "rarity": "1/55"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Tern",
+      "page": "Tern",
+      "url": "https://oldschool.runescape.wiki/w/Tern",
+      "variant": null,
+      "method": "combat",
+      "levels": "20",
+      "quantity": "1",
+      "fractions": [
+        "~1/125"
+      ],
+      "rarity": "1/125"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Eagle ray",
+      "page": "Eagle ray",
+      "url": "https://oldschool.runescape.wiki/w/Eagle_ray",
+      "variant": null,
+      "method": "combat",
+      "levels": "44",
+      "quantity": "1",
+      "fractions": [
+        "~1/75"
+      ],
+      "rarity": "1/75"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "easy",
+    "source": {
+      "name": "Brutus (m)",
+      "page": "Brutus",
+      "url": "https://oldschool.runescape.wiki/w/Brutus",
+      "variant": null,
+      "method": "combat",
+      "levels": "30",
+      "quantity": "1",
+      "fractions": [
+        "1/40"
+      ],
+      "rarity": "1/40"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Feral Vampyre",
+      "page": "Feral Vampyre",
+      "url": "https://oldschool.runescape.wiki/w/Feral_Vampyre",
+      "variant": null,
+      "method": "combat",
+      "levels": "61\u2013130",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Dark warrior Great Kourend",
+      "page": "Dark warrior",
+      "url": "https://oldschool.runescape.wiki/w/Dark_warrior#Great_Kourend",
+      "variant": "Great Kourend",
+      "method": "combat",
+      "levels": "37; 51; 62",
+      "quantity": "1",
+      "fractions": [
+        "1/96"
+      ],
+      "rarity": "1/96"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 192,
+        "name": "Dark warrior",
+        "level": 8,
+        "sha256": "b9dc12bcb5307bc11e79c4d030537df69130d783a4e1d51ec22970759f882d14"
+      },
+      {
+        "npc": 15088,
+        "name": "Dark warrior",
+        "level": 145,
+        "sha256": "cca2632fe859c6cfce5036a7969970754211ca08caa57f1939971ad5a35d868d"
+      }
+    ]
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Mummy (Ancient Pyramid)",
+      "page": "Mummy (Ancient Pyramid)",
+      "url": "https://oldschool.runescape.wiki/w/Mummy_(Ancient_Pyramid)",
+      "variant": null,
+      "method": "combat",
+      "levels": "103",
+      "quantity": "1",
+      "fractions": [
+        "1/513"
+      ],
+      "rarity": "1/513"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Guard (Burthorpe)",
+      "page": "Guard (Burthorpe)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Burthorpe)",
+      "variant": null,
+      "method": "combat",
+      "levels": "37",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Warrior (Rellekka)",
+      "page": "Warrior (Rellekka)",
+      "url": "https://oldschool.runescape.wiki/w/Warrior_(Rellekka)",
+      "variant": null,
+      "method": "combat",
+      "levels": "48",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Dagannoth (Waterbirth Island) Level 88",
+      "page": "Dagannoth (Waterbirth Island)",
+      "url": "https://oldschool.runescape.wiki/w/Dagannoth_(Waterbirth_Island)#Level_88",
+      "variant": "Level 88",
+      "method": "combat",
+      "levels": "88",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Dagannoth (Waterbirth Island) Level 90",
+      "page": "Dagannoth (Waterbirth Island)",
+      "url": "https://oldschool.runescape.wiki/w/Dagannoth_(Waterbirth_Island)#Level_90",
+      "variant": "Level 90",
+      "method": "combat",
+      "levels": "90",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Skeleton heavy",
+      "page": "Skeleton heavy",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_heavy",
+      "variant": null,
+      "method": "combat",
+      "levels": "130",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 6106,
+        "name": "Skeleton heavy",
+        "level": 132,
+        "sha256": "91300a4c999551d922bdc8dbd9ca9e43d6f46a3cce531b5d68bb54ca5d619911"
+      }
+    ]
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Skeleton hero",
+      "page": "Skeleton hero",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_hero",
+      "variant": null,
+      "method": "combat",
+      "levels": "146",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 6103,
+        "name": "Skeleton hero",
+        "level": 149,
+        "sha256": "56f9030e6da7e1082aa97b63e32a0ab3e9589f6455e8ab32bc78b928bea8e499"
+      }
+    ]
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Skeleton thug",
+      "page": "Skeleton thug",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_thug",
+      "variant": null,
+      "method": "combat",
+      "levels": "130",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 6107,
+        "name": "Skeleton thug",
+        "level": 132,
+        "sha256": "08b40fe3674ed101a26d46e809ff6df94f33d5b80e0ea6163a21d8fc8848b193"
+      }
+    ]
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Giant skeleton (Tarn's Lair)",
+      "page": "Giant skeleton (Tarn's Lair)",
+      "url": "https://oldschool.runescape.wiki/w/Giant_skeleton_(Tarn%27s_Lair)",
+      "variant": null,
+      "method": "combat",
+      "levels": "100",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Giant skeleton (Shadow Dungeon)",
+      "page": "Giant skeleton (Shadow Dungeon)",
+      "url": "https://oldschool.runescape.wiki/w/Giant_skeleton_(Shadow_Dungeon)",
+      "variant": null,
+      "method": "combat",
+      "levels": "80",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Guard (Shayzien)",
+      "page": "Guard (Shayzien)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Shayzien)",
+      "variant": null,
+      "method": "combat",
+      "levels": "21",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Head Guard",
+      "page": "Head Guard",
+      "url": "https://oldschool.runescape.wiki/w/Head_Guard",
+      "variant": null,
+      "method": "combat",
+      "levels": "84",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "King Sand Crab",
+      "page": "King Sand Crab",
+      "url": "https://oldschool.runescape.wiki/w/King_Sand_Crab",
+      "variant": null,
+      "method": "combat",
+      "levels": "107",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Flaming pyrelord",
+      "page": "Flaming pyrelord",
+      "url": "https://oldschool.runescape.wiki/w/Flaming_pyrelord",
+      "variant": null,
+      "method": "combat",
+      "levels": "97",
+      "quantity": "1",
+      "fractions": [
+        "10/128",
+        "10/64"
+      ],
+      "rarity": "10/128 ; 10/64"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 14451,
+        "name": "Flaming pyrelord",
+        "level": 338,
+        "sha256": "f707966ff50723d59c97238bf3a8bed4ec909310073b1d0f7984ffee99c59aba"
+      }
+    ]
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Cockathrice",
+      "page": "Cockathrice",
+      "url": "https://oldschool.runescape.wiki/w/Cockathrice",
+      "variant": null,
+      "method": "combat",
+      "levels": "89",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Soldier (Shayzien)",
+      "page": "Soldier (Shayzien)",
+      "url": "https://oldschool.runescape.wiki/w/Soldier_(Shayzien)",
+      "variant": null,
+      "method": "combat",
+      "levels": "21",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Ancient Zygomite",
+      "page": "Ancient Zygomite",
+      "url": "https://oldschool.runescape.wiki/w/Ancient_Zygomite",
+      "variant": null,
+      "method": "combat",
+      "levels": "109",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Skeleton (mage)",
+      "page": "Skeleton (mage)",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_(mage)",
+      "variant": null,
+      "method": "combat",
+      "levels": "94",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 94,
+        "name": "Skeleton Mage",
+        "level": 16,
+        "sha256": "139dda779fb310ee562d6f5df0ca11ed9dcf1b2427b2be17054489c5eda9f6fb"
+      },
+      {
+        "npc": 3851,
+        "name": "Skeleton Mage",
+        "level": 83,
+        "sha256": "cbefda97a10108502217c5407ff92e4f4c0d7ac894f75c679a966d9a9224f802"
+      }
+    ]
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Sulphur Lizard",
+      "page": "Sulphur Lizard",
+      "url": "https://oldschool.runescape.wiki/w/Sulphur_Lizard",
+      "variant": null,
+      "method": "combat",
+      "levels": "50",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 14456,
+        "name": "Sulphur Lizard",
+        "level": 257,
+        "sha256": "1e2ffaa32bb204eafb664635333edb6d74f5050f3948a7c8c6621e26b108a423"
+      }
+    ]
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Sergeant (Shayzien)",
+      "page": "Sergeant (Shayzien)",
+      "url": "https://oldschool.runescape.wiki/w/Sergeant_(Shayzien)",
+      "variant": null,
+      "method": "combat",
+      "levels": "84",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Guard (Hosidius)",
+      "page": "Guard (Hosidius)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Hosidius)",
+      "variant": null,
+      "method": "combat",
+      "levels": "19; 22",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Pyrelord",
+      "page": "Pyrelord",
+      "url": "https://oldschool.runescape.wiki/w/Pyrelord",
+      "variant": null,
+      "method": "combat",
+      "levels": "60",
+      "quantity": "1",
+      "fractions": [
+        "1/104"
+      ],
+      "rarity": "1/104"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 7378,
+        "name": "Pyrelord",
+        "level": 70,
+        "sha256": "dfa12c823c413dd94e93d768f33219107608ccee6fa55b78bd912e2e36537057"
+      }
+    ]
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Infernal pyrelord",
+      "page": "Infernal pyrelord",
+      "url": "https://oldschool.runescape.wiki/w/Infernal_pyrelord",
+      "variant": null,
+      "method": "combat",
+      "levels": "134",
+      "quantity": "1",
+      "fractions": [
+        "10/104"
+      ],
+      "rarity": "10/104"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Necromancer (Great Kourend)",
+      "page": "Necromancer (Great Kourend)",
+      "url": "https://oldschool.runescape.wiki/w/Necromancer_(Great_Kourend)",
+      "variant": null,
+      "method": "combat",
+      "levels": "68",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Lynx Tamer",
+      "page": "Lynx Tamer",
+      "url": "https://oldschool.runescape.wiki/w/Lynx_Tamer",
+      "variant": null,
+      "method": "combat",
+      "levels": "21",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Bandit (Shayzien)",
+      "page": "Bandit (Shayzien)",
+      "url": "https://oldschool.runescape.wiki/w/Bandit_(Shayzien)",
+      "variant": null,
+      "method": "combat",
+      "levels": "22",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Tribeswoman",
+      "page": "Tribeswoman",
+      "url": "https://oldschool.runescape.wiki/w/Tribeswoman",
+      "variant": null,
+      "method": "combat",
+      "levels": "32",
+      "quantity": "1",
+      "fractions": [
+        "1/138"
+      ],
+      "rarity": "1/138"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Guard (Port Sarim jail) (m)",
+      "page": "Guard (Port Sarim jail)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Port_Sarim_jail)",
+      "variant": null,
+      "method": "combat",
+      "levels": "21",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Guard (Doric's hut) (m)",
+      "page": "Guard (Doric's hut)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Doric%27s_hut)",
+      "variant": null,
+      "method": "combat",
+      "levels": "19",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Scurrius MVP",
+      "page": "Scurrius",
+      "url": "https://oldschool.runescape.wiki/w/Scurrius#MVP",
+      "variant": "MVP",
+      "method": "combat",
+      "levels": "200; 250",
+      "quantity": "1",
+      "fractions": [
+        "1/25"
+      ],
+      "rarity": "1/25"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Bandit (Varlamore)",
+      "page": "Bandit (Varlamore)",
+      "url": "https://oldschool.runescape.wiki/w/Bandit_(Varlamore)",
+      "variant": null,
+      "method": "combat",
+      "levels": "23",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Knight of Varlamore",
+      "page": "Knight of Varlamore",
+      "url": "https://oldschool.runescape.wiki/w/Knight_of_Varlamore",
+      "variant": null,
+      "method": "combat",
+      "levels": "46",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Guard (Varlamore)",
+      "page": "Guard (Varlamore)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Varlamore)",
+      "variant": null,
+      "method": "combat",
+      "levels": "21",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Agility dispenser All Laps",
+      "page": "Agility dispenser",
+      "url": "https://oldschool.runescape.wiki/w/Agility_dispenser#All_Laps",
+      "variant": "All Laps",
+      "method": "combat",
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/40",
+        "1/20"
+      ],
+      "rarity": "1/40 ; 1/20"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Emissary Chosen",
+      "page": "Emissary Chosen",
+      "url": "https://oldschool.runescape.wiki/w/Emissary_Chosen",
+      "variant": null,
+      "method": "combat",
+      "levels": "76",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Emissary Acolyte",
+      "page": "Emissary Acolyte",
+      "url": "https://oldschool.runescape.wiki/w/Emissary_Acolyte",
+      "variant": null,
+      "method": "combat",
+      "levels": "34",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Emissary Ascended",
+      "page": "Emissary Ascended",
+      "url": "https://oldschool.runescape.wiki/w/Emissary_Ascended",
+      "variant": null,
+      "method": "combat",
+      "levels": "117",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Guard (Aldarin)",
+      "page": "Guard (Aldarin)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Aldarin)",
+      "variant": null,
+      "method": "combat",
+      "levels": "21",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Hammerhead shark",
+      "page": "Hammerhead shark",
+      "url": "https://oldschool.runescape.wiki/w/Hammerhead_shark",
+      "variant": null,
+      "method": "combat",
+      "levels": "90",
+      "quantity": "1",
+      "fractions": [
+        "~1/100"
+      ],
+      "rarity": "1/100"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Guard (Auburnvale)",
+      "page": "Guard (Auburnvale)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Auburnvale)",
+      "variant": null,
+      "method": "combat",
+      "levels": "21",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Guard (Tlati Rainforest) (m)",
+      "page": "Guard (Tlati Rainforest)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Tlati_Rainforest)",
+      "variant": null,
+      "method": "combat",
+      "levels": "21",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/106"
+      ],
+      "rarity": "1/128 ; 1/106"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Osprey",
+      "page": "Osprey",
+      "url": "https://oldschool.runescape.wiki/w/Osprey",
+      "variant": null,
+      "method": "combat",
+      "levels": "63",
+      "quantity": "1",
+      "fractions": [
+        "~1/200"
+      ],
+      "rarity": "1/200"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Bull shark",
+      "page": "Bull shark",
+      "url": "https://oldschool.runescape.wiki/w/Bull_shark",
+      "variant": null,
+      "method": "combat",
+      "levels": "65",
+      "quantity": "1",
+      "fractions": [
+        "~1/100"
+      ],
+      "rarity": "1/100"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Butterfly ray",
+      "page": "Butterfly ray",
+      "url": "https://oldschool.runescape.wiki/w/Butterfly_ray",
+      "variant": null,
+      "method": "combat",
+      "levels": "68",
+      "quantity": "1",
+      "fractions": [
+        "~1/85"
+      ],
+      "rarity": "1/85"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Guard (Port Roberts) (m)",
+      "page": "Guard (Port Roberts)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Port_Roberts)",
+      "variant": null,
+      "method": "combat",
+      "levels": "21",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/106"
+      ],
+      "rarity": "1/128 ; 1/106"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "medium",
+    "source": {
+      "name": "Mad Angel",
+      "page": "Mad Angel",
+      "url": "https://oldschool.runescape.wiki/w/Mad_Angel",
+      "variant": null,
+      "method": "combat",
+      "levels": "270; 588",
+      "quantity": "1",
+      "fractions": [
+        "1/25"
+      ],
+      "rarity": "1/25"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Green dragon Wilderness Slayer Cave",
+      "page": "Green dragon",
+      "url": "https://oldschool.runescape.wiki/w/Green_dragon#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "method": "combat",
+      "levels": "88",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 941,
+        "name": "Green dragon",
+        "level": 79,
+        "sha256": "d181858957ebdf92addd5ac55ed3d17e431fe8e0f10b8adaf8874576bc6b9c54"
+      },
+      {
+        "npc": 4677,
+        "name": "Green dragon",
+        "level": 79,
+        "sha256": "33a1d3503955f210ed2bfd2f035e144b9044afcb3fc811523be1c8939225cd11"
+      },
+      {
+        "npc": 4678,
+        "name": "Green dragon",
+        "level": 79,
+        "sha256": "7b77b486c835cbfd39d3bf576b40527fcba8a3a5ac62fd7806c036094bd83858"
+      },
+      {
+        "npc": 4679,
+        "name": "Green dragon",
+        "level": 79,
+        "sha256": "09830f638607bc0a986910a19325aa2bdb471c82fbd5cb26d7eca4abbb38c9a1"
+      },
+      {
+        "npc": 4680,
+        "name": "Green dragon",
+        "level": 79,
+        "sha256": "12453d9e520f3fdd9649fc540debcff3e34bcbfc2d4cb48b5962efcec94f1920"
+      },
+      {
+        "npc": 10604,
+        "name": "Green dragon",
+        "level": 73,
+        "sha256": "8b0f06f9bb000c14e31dfc45b2761d4cdc02dcf1260884fc055499252343d333"
+      },
+      {
+        "npc": 10605,
+        "name": "Green dragon",
+        "level": 97,
+        "sha256": "5e2bf8d5067a733c046222e8cd8f98cb3ddccf9076b11916d6c30490014c8513"
+      },
+      {
+        "npc": 10606,
+        "name": "Green dragon",
+        "level": 120,
+        "sha256": "4efc49a15f242b89bc4d8d1ce1a51c9ca914bc204c9dbcc0626a7650ce69f906"
+      },
+      {
+        "npc": 10607,
+        "name": "Green dragon",
+        "level": 153,
+        "sha256": "8748c549818278f6b55adf33d3c843fb0b4885db57267ed3149df5df799b0066"
+      },
+      {
+        "npc": 10608,
+        "name": "Green dragon",
+        "level": 193,
+        "sha256": "c0cf203d0555d006f58e20cf85b909ef72eb627171dccdab2c2d0bf3cd7198b0"
+      },
+      {
+        "npc": 10609,
+        "name": "Green dragon",
+        "level": 240,
+        "sha256": "d6a57fd10cd371139e119037214e6eaa1c2a97ec6cca501ba79d017b06c274ad"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Jelly Wilderness Slayer Cave",
+      "page": "Jelly",
+      "url": "https://oldschool.runescape.wiki/w/Jelly#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "method": "combat",
+      "levels": "78",
+      "quantity": "1",
+      "fractions": [
+        "1/64",
+        "1/32"
+      ],
+      "rarity": "1/64 ; 1/32"
+    },
+    "reason": "Source wilderness-cave variants11241..11245 absent; original667Jellies are regular",
+    "candidates": [
+      {
+        "npc": 1637,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "96951e4885f6ecba22fb71974ea1bc4390ec3de1ba1c5b79c90dbd32214763ed"
+      },
+      {
+        "npc": 1638,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "c97a8a08a392afb9b7f30deb55b2cd71c9ec31b773c8b0b204630eda8ca4b2c4"
+      },
+      {
+        "npc": 1639,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "ac9a75acc78fdbb1dcb3ea809e537b2e93e1c1be97a6d194ff5f73dab46c6a16"
+      },
+      {
+        "npc": 1640,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "842de9cafcecbded476710ddd2a31c57bbc61aed78ca9cec9c24247dfb4f5467"
+      },
+      {
+        "npc": 1641,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "005a80c3505ff03e0376d464363c64fefb008c7e0843fc2058cda3f94a097c5d"
+      },
+      {
+        "npc": 1642,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "690e86fd61e5afeac7cf64c7afbc7229430a023ab417a55143dd02b378069a07"
+      },
+      {
+        "npc": 7459,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "7d4bb24bcd459e13c3703e0e9b6042ba0c4d5c589edc1d6157f523a23e1ecd97"
+      },
+      {
+        "npc": 7460,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "c563041f25129dd8ffb720b452774a3816c28b7a6388b01ce57d3ed1d6cab45b"
+      },
+      {
+        "npc": 8599,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "842de9cafcecbded476710ddd2a31c57bbc61aed78ca9cec9c24247dfb4f5467"
+      },
+      {
+        "npc": 8617,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "e80fc9632970daaab8ab77cf7db4065162a5240e107f1123408f7fb50e14cca6"
+      },
+      {
+        "npc": 10699,
+        "name": "Jelly",
+        "level": 78,
+        "sha256": "aa6151bb7ebea503d6522aec27c6a79fcd5ff9bc3e67f13dce099a6f0900cb75"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Cyclops Warriors' Guild Basement",
+      "page": "Cyclops",
+      "url": "https://oldschool.runescape.wiki/w/Cyclops#Warriors'_Guild_Basement",
+      "variant": "Warriors' Guild Basement",
+      "method": "combat",
+      "levels": "106",
+      "quantity": "1",
+      "fractions": [
+        "1/256"
+      ],
+      "rarity": "1/256"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 116,
+        "name": "Cyclops",
+        "level": 56,
+        "sha256": "3ae96124901038e1aa69ba5fc8f338915d4ad141dc666995d5c722f0a6706317"
+      },
+      {
+        "npc": 4291,
+        "name": "Cyclops",
+        "level": 56,
+        "sha256": "bd6954c5a03f9770a66b1e624e163e3730161c3f6531cd83b59dca88fa5996d2"
+      },
+      {
+        "npc": 4292,
+        "name": "Cyclops",
+        "level": 76,
+        "sha256": "243c07cfc8746da1fbdfa3f3a2b62d002aee5e2a13e0f1e32a063722d1cbfd48"
+      },
+      {
+        "npc": 6078,
+        "name": "Cyclops",
+        "level": 56,
+        "sha256": "4f29cf2b5ee59604c259025720a149f82f9a2fbcbeb2998ef28ce289a652f23d"
+      },
+      {
+        "npc": 6079,
+        "name": "Cyclops",
+        "level": 76,
+        "sha256": "d0bbc0d90be80b883ea51cb9951bba3d2999f7bfa784b9b1e70bba3fe19298a6"
+      },
+      {
+        "npc": 6080,
+        "name": "Cyclops",
+        "level": 56,
+        "sha256": "15e4f568329f6e3b4ef5baf3f1b72498a81daa52c39dd52010fbdd1a3a4b5f00"
+      },
+      {
+        "npc": 6081,
+        "name": "Cyclops",
+        "level": 76,
+        "sha256": "5b4951f645b328eabf32a707389af23cd876c14ad05d4ffd381928f31d3e481c"
+      },
+      {
+        "npc": 6269,
+        "name": "Cyclops",
+        "level": 81,
+        "sha256": "6a6433b60cee565e74da0df7c64fb95535afab78bc067727c7c1212b6a65478e"
+      },
+      {
+        "npc": 6270,
+        "name": "Cyclops",
+        "level": 81,
+        "sha256": "cdf6f6a70a0179abdd7a23ea9d0702e0327a865c72942071263bca947bb5a579"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Greater demon Wilderness Slayer Cave",
+      "page": "Greater demon",
+      "url": "https://oldschool.runescape.wiki/w/Greater_demon#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "method": "combat",
+      "levels": "104",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 83,
+        "name": "Greater demon",
+        "level": 92,
+        "sha256": "6c4f98fded41f4afb1ede08a1f14dc081e4d7bdb8b396fc807378ef402066ce1"
+      },
+      {
+        "npc": 4698,
+        "name": "Greater demon",
+        "level": 92,
+        "sha256": "e67df869d01e2954112a2ea3cb968cf366329829dd8905f9f19b2dba03e3ff3b"
+      },
+      {
+        "npc": 4699,
+        "name": "Greater demon",
+        "level": 92,
+        "sha256": "0b4d363600211d7b9dacad190ed284285ce543274f1616b5955b50364064148c"
+      },
+      {
+        "npc": 4700,
+        "name": "Greater demon",
+        "level": 92,
+        "sha256": "bd2c302dcbb1f8fe186baa210d230f62a256b1c2fa657f1aff1b46c94d715887"
+      },
+      {
+        "npc": 4701,
+        "name": "Greater demon",
+        "level": 92,
+        "sha256": "6defcc0f3b68f8148ce261cf96e4c8483b9f4dd4cfeb85959598a159b46b90a1"
+      },
+      {
+        "npc": 10718,
+        "name": "Greater demon",
+        "level": 92,
+        "sha256": "2dacb1348a43efe2637cd815280eca822addf1a13a1344f2cd7ac1fac7a6ec49"
+      },
+      {
+        "npc": 10719,
+        "name": "Greater demon",
+        "level": 126,
+        "sha256": "f06024fa4a436521489d001e049836a9c7a946905c7bb201935e385951e12714"
+      },
+      {
+        "npc": 10720,
+        "name": "Greater demon",
+        "level": 141,
+        "sha256": "9ad9f689f8e9d3f4735453242931f9c54f323dc9582e08a6a69401dde79e4467"
+      },
+      {
+        "npc": 10721,
+        "name": "Greater demon",
+        "level": 165,
+        "sha256": "c9b8cebb7115a3d259f0a9c529c334859f6b45917cba4b0ee420c909c746046b"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Hellhound Wilderness Slayer Cave",
+      "page": "Hellhound",
+      "url": "https://oldschool.runescape.wiki/w/Hellhound#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "method": "combat",
+      "levels": "136",
+      "quantity": "1",
+      "fractions": [
+        "1/64",
+        "1/32"
+      ],
+      "rarity": "1/64 ; 1/32"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 49,
+        "name": "Hellhound",
+        "level": 122,
+        "sha256": "82ad516aa3d38aaf33ab633e55b6e624177e4af01e72c267a093cc5613cfc42f"
+      },
+      {
+        "npc": 3586,
+        "name": "Hellhound",
+        "level": 122,
+        "sha256": "1d381e68e3ce60a898206bee859184dd246eb066c149cff8e4c81851727cbbd6"
+      },
+      {
+        "npc": 6210,
+        "name": "Hellhound",
+        "level": 127,
+        "sha256": "69ab96808d080e1afe63ec0b66cbea7c794df393a8ea18508d1f2b43406b166e"
+      },
+      {
+        "npc": 9610,
+        "name": "Hellhound",
+        "level": 60,
+        "sha256": "da60abd7147f0557a5b61ae397eac3a7d7341133ff4933039fdbee5cb06340cb"
+      },
+      {
+        "npc": 10188,
+        "name": "Hellhound",
+        "level": 56,
+        "sha256": "f18acf64643290795ce4f85071aa8cd9fa416f9d401a7147a01fefe00a210258"
+      },
+      {
+        "npc": 10189,
+        "name": "Hellhound",
+        "level": 78,
+        "sha256": "637bd9d7ff30ebb5085e041983fd894fcf3c6207bea264b325f60933518b10ab"
+      },
+      {
+        "npc": 10190,
+        "name": "Hellhound",
+        "level": 107,
+        "sha256": "92771935f7597592d648966aa45bf903b3496668e3fe954d98c7a74ee80a755e"
+      },
+      {
+        "npc": 10191,
+        "name": "Hellhound",
+        "level": 126,
+        "sha256": "57f19dcb44391bda41e3ccab78b2a461e535a77f5f301217f82f7cd26e697399"
+      },
+      {
+        "npc": 10192,
+        "name": "Hellhound",
+        "level": 141,
+        "sha256": "484c626a5240feac2f1bdcdb9bbfa61e36ee4c6b4ed3373d9de504b3b2748f6e"
+      },
+      {
+        "npc": 10193,
+        "name": "Hellhound",
+        "level": 161,
+        "sha256": "6f8a524026bae3a361087a42c3150e959269279ee1f6cd7539debd6c06f5f616"
+      },
+      {
+        "npc": 10194,
+        "name": "Hellhound",
+        "level": 175,
+        "sha256": "5d6adf5ecd2afc873cabf4cbcb1aa26de500003d3219cb78689acff3c9943e70"
+      },
+      {
+        "npc": 10195,
+        "name": "Hellhound",
+        "level": 192,
+        "sha256": "1fc6995fed960fd7c43c503f4401d70ed711139bfc546aad17ad41e7b72195e1"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Ankou Wilderness Slayer Cave",
+      "page": "Ankou",
+      "url": "https://oldschool.runescape.wiki/w/Ankou#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "method": "combat",
+      "levels": "98",
+      "quantity": "1",
+      "fractions": [
+        "1/256",
+        "1/128"
+      ],
+      "rarity": "1/256 ; 1/128"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 4381,
+        "name": "Ankou",
+        "level": 75,
+        "sha256": "811918275549c615bf9343aa0cf3e2aec7c7317b36311bbe982e33f6ddde2357"
+      },
+      {
+        "npc": 4382,
+        "name": "Ankou",
+        "level": 82,
+        "sha256": "b52870b9cfa9b40ae43369d5e74d12faf4484104c2edfd12ae04f7428629476d"
+      },
+      {
+        "npc": 4383,
+        "name": "Ankou",
+        "level": 86,
+        "sha256": "df11a6451364c6d3810a1e3ea8bf4838076046a205e882d54f74e57f8998eeb4"
+      },
+      {
+        "npc": 10736,
+        "name": "Ankou",
+        "level": 12,
+        "sha256": "7fc3daa793ec7fa79cb807c7fdae6dd31211ecbf5f0742cfc877e42001d992e1"
+      },
+      {
+        "npc": 10737,
+        "name": "Ankou",
+        "level": 20,
+        "sha256": "a70e5d33b165707480be7736890f799488e116b666097d6c365d1d3fb1c1693d"
+      },
+      {
+        "npc": 10738,
+        "name": "Ankou",
+        "level": 33,
+        "sha256": "e504fac036de7213593ac68ce2ec8534c4eb9449067208a8ac27becc39c8a033"
+      },
+      {
+        "npc": 10739,
+        "name": "Ankou",
+        "level": 47,
+        "sha256": "4cd4089f47086c80a52d84715f487fd3a59bafdcad19e74cc8a0f2713319bbb1"
+      },
+      {
+        "npc": 10740,
+        "name": "Ankou",
+        "level": 64,
+        "sha256": "b55706cdb09f4e60894e1c9e647e31f044a061c83880fea0ed00c137d5098eea"
+      },
+      {
+        "npc": 10741,
+        "name": "Ankou",
+        "level": 89,
+        "sha256": "a9c2fe5d11b5f458f98f854481ffc67270b9eb5bc307943da483fa89eb80244f"
+      },
+      {
+        "npc": 10742,
+        "name": "Ankou",
+        "level": 115,
+        "sha256": "2c5902b7e9fc8157b825c972c39ccbb6724d51a0ea45c2e1a52746aad31f9a30"
+      },
+      {
+        "npc": 10743,
+        "name": "Ankou",
+        "level": 143,
+        "sha256": "3db011de33d3ad569ae7f6ccc7d39c14853a47da7180bed74c5285215475861a"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Black demon Wilderness Slayer Cave",
+      "page": "Black demon",
+      "url": "https://oldschool.runescape.wiki/w/Black_demon#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "method": "combat",
+      "levels": "188",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 84,
+        "name": "Black demon",
+        "level": 172,
+        "sha256": "c432ab32de7e1b016b50b531a35b819c12325fa6034b3187f348d73ed6eab485"
+      },
+      {
+        "npc": 677,
+        "name": "Black demon",
+        "level": 172,
+        "sha256": "690948a9049f45d21c422f483459099694d1e8644b9ad664153f9b43cc0f482f"
+      },
+      {
+        "npc": 4702,
+        "name": "Black demon",
+        "level": 172,
+        "sha256": "ae47882bbbffb95004f7f35b750739e2e14e6a2bd2ac6080debed1260f1121d2"
+      },
+      {
+        "npc": 4703,
+        "name": "Black demon",
+        "level": 172,
+        "sha256": "0babede28d173a3f15b0d9ec704efa9c12dbecc6c71c12483ddff86536498580"
+      },
+      {
+        "npc": 4704,
+        "name": "Black demon",
+        "level": 172,
+        "sha256": "375b884958f34f2e17369cfa5f5ed5badeee6f7a544fd72270278201395455b3"
+      },
+      {
+        "npc": 4705,
+        "name": "Black demon",
+        "level": 172,
+        "sha256": "862bb3388bdcd3ff01123285dda7f7ef43538e8e36fd12a5c4e4e8c24b36e493"
+      },
+      {
+        "npc": 10722,
+        "name": "Black demon",
+        "level": 181,
+        "sha256": "5947d4e0f853f7b13d3b1eaf2e670778e38e1460827674d6d3bbd8cbdcaecc45"
+      },
+      {
+        "npc": 10723,
+        "name": "Black demon",
+        "level": 194,
+        "sha256": "af174ac9162bc72cbb2fc129820d31d0f6cdf7926eb240284a1a93b580238c2e"
+      },
+      {
+        "npc": 10724,
+        "name": "Black demon",
+        "level": 210,
+        "sha256": "0c0f4489d27eff9b73bce3d6d147620af5e126625f9bc772250ce66fe29eb29e"
+      },
+      {
+        "npc": 10725,
+        "name": "Black demon",
+        "level": 226,
+        "sha256": "571da98cfce7806f0a7d8d565388e6e0e6337698ef81a01add06cf2953bf043d"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Black dragon Wilderness Slayer Cave",
+      "page": "Black dragon",
+      "url": "https://oldschool.runescape.wiki/w/Black_dragon#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "method": "combat",
+      "levels": "247",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 54,
+        "name": "Black dragon",
+        "level": 227,
+        "sha256": "c4da1ffad755bef3c89cabe23b20bc3943b9b70665c9f3d1bcd2953b54927986"
+      },
+      {
+        "npc": 4673,
+        "name": "Black dragon",
+        "level": 227,
+        "sha256": "d8630d3cdc657196ace4ce61bf5f33a1bcd66eaaae7bf4d8a06898b3e1c9f276"
+      },
+      {
+        "npc": 4674,
+        "name": "Black dragon",
+        "level": 227,
+        "sha256": "a8f4698edb5e82d6ad5c76e119ead8f4672c3d01c31a236caf8bcf9c21815839"
+      },
+      {
+        "npc": 4675,
+        "name": "Black dragon",
+        "level": 227,
+        "sha256": "537a0976f96a36aa26964f4408fc1a257047397e42176378e153cdc0bdae312e"
+      },
+      {
+        "npc": 4676,
+        "name": "Black dragon",
+        "level": 227,
+        "sha256": "a4ac414a280645e006dc3fd4d6776421cf78364a9379ec5eaffdf926246abece"
+      },
+      {
+        "npc": 10219,
+        "name": "Black dragon",
+        "level": 96,
+        "sha256": "2797aab71f9c23856003a702c88ad6074c1777826c21a5bd65539722706fb8b3"
+      },
+      {
+        "npc": 10220,
+        "name": "Black dragon",
+        "level": 121,
+        "sha256": "ceeb65dc44063ec9d1cc9b7dd373d06c455655849932ac8dd62a26c855a0f6e8"
+      },
+      {
+        "npc": 10221,
+        "name": "Black dragon",
+        "level": 157,
+        "sha256": "04e92708a4f6ed091f7c842ef7b457bfd7ff37bf846bace44eeb89b39b0b692d"
+      },
+      {
+        "npc": 10222,
+        "name": "Black dragon",
+        "level": 202,
+        "sha256": "c6dff6b72a6da45d29709974c83858bc480f6cb7d4e9d32a585008b7ad873b0d"
+      },
+      {
+        "npc": 10223,
+        "name": "Black dragon",
+        "level": 248,
+        "sha256": "77c2b6b074cc404218522e1147be0f5d4c5cc02f84460ebc1c05dac6711af74e"
+      },
+      {
+        "npc": 10224,
+        "name": "Black dragon",
+        "level": 303,
+        "sha256": "98060330b316cb1c17c798b7c9f5e7c3d25bd8a1be9e6031327b5f5f0b7489a1"
+      }
+    ]
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Black dragon Wilderness Slayer Cave",
+      "page": "Black dragon",
+      "url": "https://oldschool.runescape.wiki/w/Black_dragon#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "method": "combat",
+      "levels": "247",
+      "quantity": "1",
+      "fractions": [
+        "1/500",
+        "1/250"
+      ],
+      "rarity": "1/500 ; 1/250"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 54,
+        "name": "Black dragon",
+        "level": 227,
+        "sha256": "c4da1ffad755bef3c89cabe23b20bc3943b9b70665c9f3d1bcd2953b54927986"
+      },
+      {
+        "npc": 4673,
+        "name": "Black dragon",
+        "level": 227,
+        "sha256": "d8630d3cdc657196ace4ce61bf5f33a1bcd66eaaae7bf4d8a06898b3e1c9f276"
+      },
+      {
+        "npc": 4674,
+        "name": "Black dragon",
+        "level": 227,
+        "sha256": "a8f4698edb5e82d6ad5c76e119ead8f4672c3d01c31a236caf8bcf9c21815839"
+      },
+      {
+        "npc": 4675,
+        "name": "Black dragon",
+        "level": 227,
+        "sha256": "537a0976f96a36aa26964f4408fc1a257047397e42176378e153cdc0bdae312e"
+      },
+      {
+        "npc": 4676,
+        "name": "Black dragon",
+        "level": 227,
+        "sha256": "a4ac414a280645e006dc3fd4d6776421cf78364a9379ec5eaffdf926246abece"
+      },
+      {
+        "npc": 10219,
+        "name": "Black dragon",
+        "level": 96,
+        "sha256": "2797aab71f9c23856003a702c88ad6074c1777826c21a5bd65539722706fb8b3"
+      },
+      {
+        "npc": 10220,
+        "name": "Black dragon",
+        "level": 121,
+        "sha256": "ceeb65dc44063ec9d1cc9b7dd373d06c455655849932ac8dd62a26c855a0f6e8"
+      },
+      {
+        "npc": 10221,
+        "name": "Black dragon",
+        "level": 157,
+        "sha256": "04e92708a4f6ed091f7c842ef7b457bfd7ff37bf846bace44eeb89b39b0b692d"
+      },
+      {
+        "npc": 10222,
+        "name": "Black dragon",
+        "level": 202,
+        "sha256": "c6dff6b72a6da45d29709974c83858bc480f6cb7d4e9d32a585008b7ad873b0d"
+      },
+      {
+        "npc": 10223,
+        "name": "Black dragon",
+        "level": 248,
+        "sha256": "77c2b6b074cc404218522e1147be0f5d4c5cc02f84460ebc1c05dac6711af74e"
+      },
+      {
+        "npc": 10224,
+        "name": "Black dragon",
+        "level": 303,
+        "sha256": "98060330b316cb1c17c798b7c9f5e7c3d25bd8a1be9e6031327b5f5f0b7489a1"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Bandit Level 130",
+      "page": "Bandit",
+      "url": "https://oldschool.runescape.wiki/w/Bandit#Level_130",
+      "variant": "Level 130",
+      "method": "combat",
+      "levels": "130",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 195,
+        "name": "Bandit",
+        "level": 22,
+        "sha256": "2d28435ebbc262470c8d5e0a45715889ccb4a35a3a207e768386b57651c24f8d"
+      },
+      {
+        "npc": 1880,
+        "name": "Bandit",
+        "level": 56,
+        "sha256": "9db41f1e27f69a6e940ba05ee12aab291705a5a4789ce07be4de144340958774"
+      },
+      {
+        "npc": 1881,
+        "name": "Bandit",
+        "level": 56,
+        "sha256": "84235418c20bafa4c07a5365c9fae02875015a56850158d424636e225ce5eb70"
+      },
+      {
+        "npc": 1926,
+        "name": "Bandit",
+        "level": 74,
+        "sha256": "04c6178ae15ae4f12fca05a74625675644966be8a6534d2c5d544d14046a06b5"
+      },
+      {
+        "npc": 1931,
+        "name": "Bandit",
+        "level": 57,
+        "sha256": "ba6e1efa539a76c6371ccec66c2c02f8e273a3f7ba9358475fea232c13246de8"
+      },
+      {
+        "npc": 6174,
+        "name": "Bandit",
+        "level": 41,
+        "sha256": "6d7c8aac96bd7683469ae93c1f4e93a3476dbd4280496410005168590f8defc0"
+      },
+      {
+        "npc": 6388,
+        "name": "Bandit",
+        "level": 41,
+        "sha256": "400eeccab7cd9dc5d0a96f37bb81762aacfd92ef2fd31782c1e6e04aed56077e"
+      },
+      {
+        "npc": 7399,
+        "name": "Bandit",
+        "level": 21,
+        "sha256": "cea942513851373281ad859025caa2dcdfdf83c7934122e01032e35d780bf3fa"
+      },
+      {
+        "npc": 7427,
+        "name": "Bandit",
+        "level": 23,
+        "sha256": "f9d02ae44d97936ce267eb77c8447cd0415c21bf4d9fa95ef2a4fc203deb252d"
+      },
+      {
+        "npc": 7428,
+        "name": "Bandit",
+        "level": 21,
+        "sha256": "cea942513851373281ad859025caa2dcdfdf83c7934122e01032e35d780bf3fa"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Spiritual mage Zaros",
+      "page": "Spiritual mage",
+      "url": "https://oldschool.runescape.wiki/w/Spiritual_mage#Zaros",
+      "variant": "Zaros",
+      "method": "combat",
+      "levels": "182",
+      "quantity": "1",
+      "fractions": [
+        "1/96"
+      ],
+      "rarity": "1/96"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 6221,
+        "name": "Spiritual mage",
+        "level": 121,
+        "sha256": "f30fd999eb39ed5a94018cb93f8fd90c47361a2aa36f16e433183715c9e36413"
+      },
+      {
+        "npc": 6231,
+        "name": "Spiritual mage",
+        "level": 122,
+        "sha256": "efd9b893951b71ae1fb5454c8207a741946878a70e98b1ea646845aa25fcd7ea"
+      },
+      {
+        "npc": 6257,
+        "name": "Spiritual mage",
+        "level": 120,
+        "sha256": "587772f2bd9da535a2ff7b7481207450094bf956583dcd085133e5dd7619249c"
+      },
+      {
+        "npc": 6278,
+        "name": "Spiritual mage",
+        "level": 121,
+        "sha256": "abbb8def1a143c4f39e21f71851ccfd33e1d0cdb4d710ffd635b4a70f09cebd1"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Spiritual ranger Zaros",
+      "page": "Spiritual ranger",
+      "url": "https://oldschool.runescape.wiki/w/Spiritual_ranger#Zaros",
+      "variant": "Zaros",
+      "method": "combat",
+      "levels": "158",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 6220,
+        "name": "Spiritual ranger",
+        "level": 118,
+        "sha256": "727e0e06258bdc7d8f2d937197ce024fbeba7df7ebcfbafb0a780ac1e78a59fc"
+      },
+      {
+        "npc": 6230,
+        "name": "Spiritual ranger",
+        "level": 127,
+        "sha256": "0c0c14cc3c51ad6ba180b4cddd8a354af233c8c6cd092e31b01afc2c16f40c8b"
+      },
+      {
+        "npc": 6256,
+        "name": "Spiritual ranger",
+        "level": 122,
+        "sha256": "8346840bc66a4f140fc5f60c1b98fa25d793efbdbd6d524ed52128d5768c3e71"
+      },
+      {
+        "npc": 6276,
+        "name": "Spiritual ranger",
+        "level": 115,
+        "sha256": "1a587228444189dcda998f6fc35574398a78eaf897327d08f68ba59ff1ec8ea0"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Spiritual warrior Zaros",
+      "page": "Spiritual warrior",
+      "url": "https://oldschool.runescape.wiki/w/Spiritual_warrior#Zaros",
+      "variant": "Zaros",
+      "method": "combat",
+      "levels": "158",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 6219,
+        "name": "Spiritual warrior",
+        "level": 115,
+        "sha256": "a10ca3d7864bef826e58d33358222efaeabe97cb019bb66b2daa6894a6b384f5"
+      },
+      {
+        "npc": 6229,
+        "name": "Spiritual warrior",
+        "level": 123,
+        "sha256": "f2bd558b1bebb27b1dc26aa65ee3af83ac96da94b8bc0cd08a788d3e1a90d052"
+      },
+      {
+        "npc": 6255,
+        "name": "Spiritual warrior",
+        "level": 125,
+        "sha256": "7677d86cd1b6f14589df7501699eab1d5de56a6812bb2cb77eb278051b8c4c5f"
+      },
+      {
+        "npc": 6277,
+        "name": "Spiritual warrior",
+        "level": 134,
+        "sha256": "91d7d9916dd7b3b2afa8054fb617e7ad1b3cbf10669a9f5f82a59c8e24979415"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Cave kraken",
+      "page": "Cave kraken",
+      "url": "https://oldschool.runescape.wiki/w/Cave_kraken",
+      "variant": null,
+      "method": "combat",
+      "levels": "127",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Cave kraken",
+      "page": "Cave kraken",
+      "url": "https://oldschool.runescape.wiki/w/Cave_kraken",
+      "variant": null,
+      "method": "combat",
+      "levels": "127",
+      "quantity": "1",
+      "fractions": [
+        "1/1,200"
+      ],
+      "rarity": "1/1,200"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Smoke devil",
+      "page": "Smoke devil",
+      "url": "https://oldschool.runescape.wiki/w/Smoke_devil",
+      "variant": null,
+      "method": "combat",
+      "levels": "160",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 1625,
+        "name": "Smokedevil",
+        "level": 93,
+        "sha256": "42d4e8eda9e2afdc49a2b79f00fab0c84b6c6dd02c0b3312754031801ba6d3bd"
+      },
+      {
+        "npc": 6866,
+        "name": "Smoke devil",
+        "level": 101,
+        "sha256": "123f41e53c0abd5e116fc66a541edae7326d32365c6b1976341a4f58f33c4fce"
+      }
+    ]
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Smoke devil",
+      "page": "Smoke devil",
+      "url": "https://oldschool.runescape.wiki/w/Smoke_devil",
+      "variant": null,
+      "method": "combat",
+      "levels": "160",
+      "quantity": "1",
+      "fractions": [
+        "1/750"
+      ],
+      "rarity": "1/750"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 1625,
+        "name": "Smokedevil",
+        "level": 93,
+        "sha256": "42d4e8eda9e2afdc49a2b79f00fab0c84b6c6dd02c0b3312754031801ba6d3bd"
+      },
+      {
+        "npc": 6866,
+        "name": "Smoke devil",
+        "level": 101,
+        "sha256": "123f41e53c0abd5e116fc66a541edae7326d32365c6b1976341a4f58f33c4fce"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Thermonuclear smoke devil",
+      "page": "Thermonuclear smoke devil",
+      "url": "https://oldschool.runescape.wiki/w/Thermonuclear_smoke_devil",
+      "variant": null,
+      "method": "combat",
+      "levels": "301",
+      "quantity": "1",
+      "fractions": [
+        "1/96"
+      ],
+      "rarity": "1/96"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 14460,
+        "name": "Thermonuclear smoke devil",
+        "level": 313,
+        "sha256": "072760ab06424f06243f135b8751001121bf22be0619390e06080c4f0e39a948"
+      }
+    ]
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Thermonuclear smoke devil",
+      "page": "Thermonuclear smoke devil",
+      "url": "https://oldschool.runescape.wiki/w/Thermonuclear_smoke_devil",
+      "variant": null,
+      "method": "combat",
+      "levels": "301",
+      "quantity": "1",
+      "fractions": [
+        "1/500"
+      ],
+      "rarity": "1/500"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 14460,
+        "name": "Thermonuclear smoke devil",
+        "level": 313,
+        "sha256": "072760ab06424f06243f135b8751001121bf22be0619390e06080c4f0e39a948"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Frost dragon",
+      "page": "Frost dragon",
+      "url": "https://oldschool.runescape.wiki/w/Frost_dragon",
+      "variant": null,
+      "method": "combat",
+      "levels": "202",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 51,
+        "name": "Frost dragon",
+        "level": 166,
+        "sha256": "299bd82f3dd09b14e1fb008f29afc0769a1cc3d33f879b8c058333678ed2f50a"
+      },
+      {
+        "npc": 10770,
+        "name": "Frost dragon",
+        "level": 84,
+        "sha256": "98d9e919a12eb801196a06dd39cb07bca2d72e99f496d230279552242a772a58"
+      },
+      {
+        "npc": 10771,
+        "name": "Frost dragon",
+        "level": 108,
+        "sha256": "88511f9350e6324de8db6d32193e02b531c2035147464fbf9b8ed64e2141e4e3"
+      },
+      {
+        "npc": 10772,
+        "name": "Frost dragon",
+        "level": 132,
+        "sha256": "7810462b1b5527259bd9d6e643ca8a994241130d16a9d143d89e1cc80734b84c"
+      },
+      {
+        "npc": 10773,
+        "name": "Frost dragon",
+        "level": 166,
+        "sha256": "35683fef4e09d562d5a464c46f403039728fc5fa34713046cf5161a505272a0d"
+      },
+      {
+        "npc": 10774,
+        "name": "Frost dragon",
+        "level": 207,
+        "sha256": "b2c1b5aef0fe04c3f1251fa38eaceadd27f7040f9b962c618fc779ce537aa3da"
+      },
+      {
+        "npc": 10775,
+        "name": "Frost dragon",
+        "level": 254,
+        "sha256": "6d2b97127c0012e9c866c447d5fe6dcc49c7ad38f2db8c7b39594617d27ab09a"
+      },
+      {
+        "npc": 11633,
+        "name": "Frost dragon",
+        "level": 166,
+        "sha256": "6b1e311249943c3bf3be8dbe457cc838c52ad941700f78f9d74a0d9f1f9ac715"
+      },
+      {
+        "npc": 11634,
+        "name": "Frost dragon",
+        "level": 166,
+        "sha256": "c2bf7828d528c696c096c2a1219ca9f735d40deed7af27abde5f2025164e4450"
+      },
+      {
+        "npc": 11635,
+        "name": "Frost dragon",
+        "level": 166,
+        "sha256": "62fa62727f18813141a2b4b7e7272176a2b620904dafb719e0216b1ca28dc13c"
+      },
+      {
+        "npc": 11636,
+        "name": "Frost dragon",
+        "level": 166,
+        "sha256": "fddaba83cc7b2e4521107c7749cfa102b6b0df4416c89cfb05597eb719d2c123"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Gangster",
+      "page": "Gangster",
+      "url": "https://oldschool.runescape.wiki/w/Gangster",
+      "variant": null,
+      "method": "combat",
+      "levels": "45; 50",
+      "quantity": "1",
+      "fractions": [
+        "1/65"
+      ],
+      "rarity": "1/65"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Gang boss",
+      "page": "Gang boss",
+      "url": "https://oldschool.runescape.wiki/w/Gang_boss",
+      "variant": null,
+      "method": "combat",
+      "levels": "76; 83",
+      "quantity": "1",
+      "fractions": [
+        "1/65"
+      ],
+      "rarity": "1/65"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Lizardman shaman",
+      "page": "Lizardman shaman",
+      "url": "https://oldschool.runescape.wiki/w/Lizardman_shaman",
+      "variant": null,
+      "method": "combat",
+      "levels": "150",
+      "quantity": "1",
+      "fractions": [
+        "1/200"
+      ],
+      "rarity": "1/200"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 15283,
+        "name": "Lizardman shaman",
+        "level": null,
+        "sha256": "1566d3e5460022da31643c80ac0b659b9d6118e235b7105389b456e617245669"
+      },
+      {
+        "npc": 15284,
+        "name": "Lizardman shaman",
+        "level": null,
+        "sha256": "e766cc1818ad20e58c6729137212762c05c7af6cd569cd21ce457b720f641c41"
+      }
+    ]
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Lizardman shaman",
+      "page": "Lizardman shaman",
+      "url": "https://oldschool.runescape.wiki/w/Lizardman_shaman",
+      "variant": null,
+      "method": "combat",
+      "levels": "150",
+      "quantity": "1",
+      "fractions": [
+        "1/1,200"
+      ],
+      "rarity": "1/1,200"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 15283,
+        "name": "Lizardman shaman",
+        "level": null,
+        "sha256": "1566d3e5460022da31643c80ac0b659b9d6118e235b7105389b456e617245669"
+      },
+      {
+        "npc": 15284,
+        "name": "Lizardman shaman",
+        "level": null,
+        "sha256": "e766cc1818ad20e58c6729137212762c05c7af6cd569cd21ce457b720f641c41"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Tortured gorilla",
+      "page": "Tortured gorilla",
+      "url": "https://oldschool.runescape.wiki/w/Tortured_gorilla",
+      "variant": null,
+      "method": "combat",
+      "levels": "141; 142",
+      "quantity": "1",
+      "fractions": [
+        "1/300"
+      ],
+      "rarity": "1/300"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Tortured gorilla",
+      "page": "Tortured gorilla",
+      "url": "https://oldschool.runescape.wiki/w/Tortured_gorilla",
+      "variant": null,
+      "method": "combat",
+      "levels": "141; 142",
+      "quantity": "1",
+      "fractions": [
+        "1/1,500"
+      ],
+      "rarity": "1/1,500"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Demonic gorilla",
+      "page": "Demonic gorilla",
+      "url": "https://oldschool.runescape.wiki/w/Demonic_gorilla",
+      "variant": null,
+      "method": "combat",
+      "levels": "275",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Demonic gorilla",
+      "page": "Demonic gorilla",
+      "url": "https://oldschool.runescape.wiki/w/Demonic_gorilla",
+      "variant": null,
+      "method": "combat",
+      "levels": "275",
+      "quantity": "1",
+      "fractions": [
+        "1/500"
+      ],
+      "rarity": "1/500"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Brutal blue dragon",
+      "page": "Brutal blue dragon",
+      "url": "https://oldschool.runescape.wiki/w/Brutal_blue_dragon",
+      "variant": null,
+      "method": "combat",
+      "levels": "271",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Brutal blue dragon",
+      "page": "Brutal blue dragon",
+      "url": "https://oldschool.runescape.wiki/w/Brutal_blue_dragon",
+      "variant": null,
+      "method": "combat",
+      "levels": "271",
+      "quantity": "1",
+      "fractions": [
+        "1/750"
+      ],
+      "rarity": "1/750"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Brutal black dragon",
+      "page": "Brutal black dragon",
+      "url": "https://oldschool.runescape.wiki/w/Brutal_black_dragon",
+      "variant": null,
+      "method": "combat",
+      "levels": "318",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Brutal black dragon",
+      "page": "Brutal black dragon",
+      "url": "https://oldschool.runescape.wiki/w/Brutal_black_dragon",
+      "variant": null,
+      "method": "combat",
+      "levels": "318",
+      "quantity": "1",
+      "fractions": [
+        "1/250"
+      ],
+      "rarity": "1/250"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Brutal red dragon",
+      "page": "Brutal red dragon",
+      "url": "https://oldschool.runescape.wiki/w/Brutal_red_dragon",
+      "variant": null,
+      "method": "combat",
+      "levels": "289",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Brutal red dragon",
+      "page": "Brutal red dragon",
+      "url": "https://oldschool.runescape.wiki/w/Brutal_red_dragon",
+      "variant": null,
+      "method": "combat",
+      "levels": "289",
+      "quantity": "1",
+      "fractions": [
+        "1/500"
+      ],
+      "rarity": "1/500"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Deviant spectre",
+      "page": "Deviant spectre",
+      "url": "https://oldschool.runescape.wiki/w/Deviant_spectre",
+      "variant": null,
+      "method": "combat",
+      "levels": "169",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Warped Jelly",
+      "page": "Warped Jelly",
+      "url": "https://oldschool.runescape.wiki/w/Warped_Jelly",
+      "variant": null,
+      "method": "combat",
+      "levels": "112",
+      "quantity": "1",
+      "fractions": [
+        "1/64"
+      ],
+      "rarity": "1/64"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Twisted Banshee",
+      "page": "Twisted Banshee",
+      "url": "https://oldschool.runescape.wiki/w/Twisted_Banshee",
+      "variant": null,
+      "method": "combat",
+      "levels": "89",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Greater Nechryael Regular",
+      "page": "Greater Nechryael",
+      "url": "https://oldschool.runescape.wiki/w/Greater_Nechryael#Regular",
+      "variant": "Regular",
+      "method": "combat",
+      "levels": "200",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Greater Nechryael Wilderness Slayer Cave",
+      "page": "Greater Nechryael",
+      "url": "https://oldschool.runescape.wiki/w/Greater_Nechryael#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "method": "combat",
+      "levels": "200",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Mutated Bloodveld",
+      "page": "Mutated Bloodveld",
+      "url": "https://oldschool.runescape.wiki/w/Mutated_Bloodveld",
+      "variant": null,
+      "method": "combat",
+      "levels": "123",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 7642,
+        "name": "Mutated bloodveld",
+        "level": 126,
+        "sha256": "d81b511e0e6822feb84c46f1095ea460142250e5287f5cc49365283c3fc2d7c8"
+      },
+      {
+        "npc": 7643,
+        "name": "Mutated bloodveld",
+        "level": 146,
+        "sha256": "c5f2c6995a556342b9ec6d7f7d86e49b174da3e10ab2d875e84eb6611b033ffe"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Greater abyssal demon",
+      "page": "Greater abyssal demon",
+      "url": "https://oldschool.runescape.wiki/w/Greater_abyssal_demon",
+      "variant": null,
+      "method": "combat",
+      "levels": "342",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 14449,
+        "name": "Greater abyssal demon",
+        "level": 407,
+        "sha256": "2f09c57d0a10a96f9a5897e6aad77569e40abf179b5a895dc9eab7285f96ab95"
+      }
+    ]
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Greater abyssal demon",
+      "page": "Greater abyssal demon",
+      "url": "https://oldschool.runescape.wiki/w/Greater_abyssal_demon",
+      "variant": null,
+      "method": "combat",
+      "levels": "342",
+      "quantity": "1",
+      "fractions": [
+        "1/120"
+      ],
+      "rarity": "1/120"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 14449,
+        "name": "Greater abyssal demon",
+        "level": 407,
+        "sha256": "2f09c57d0a10a96f9a5897e6aad77569e40abf179b5a895dc9eab7285f96ab95"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Abhorrent spectre",
+      "page": "Abhorrent spectre",
+      "url": "https://oldschool.runescape.wiki/w/Abhorrent_spectre",
+      "variant": null,
+      "method": "combat",
+      "levels": "253",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Night beast",
+      "page": "Night beast",
+      "url": "https://oldschool.runescape.wiki/w/Night_beast",
+      "variant": null,
+      "method": "combat",
+      "levels": "374",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 14457,
+        "name": "Night beast",
+        "level": 332,
+        "sha256": "fbeba860b43e20482ea670ea927f4604c5f045942cad1cf80797e7c6e4a8c348"
+      }
+    ]
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Night beast",
+      "page": "Night beast",
+      "url": "https://oldschool.runescape.wiki/w/Night_beast",
+      "variant": null,
+      "method": "combat",
+      "levels": "374",
+      "quantity": "1",
+      "fractions": [
+        "1/120"
+      ],
+      "rarity": "1/120"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 14457,
+        "name": "Night beast",
+        "level": 332,
+        "sha256": "fbeba860b43e20482ea670ea927f4604c5f045942cad1cf80797e7c6e4a8c348"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "King kurask",
+      "page": "King kurask",
+      "url": "https://oldschool.runescape.wiki/w/King_kurask",
+      "variant": null,
+      "method": "combat",
+      "levels": "295",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Marble gargoyle",
+      "page": "Marble gargoyle",
+      "url": "https://oldschool.runescape.wiki/w/Marble_gargoyle",
+      "variant": null,
+      "method": "combat",
+      "levels": "349",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Nechryarch Normal",
+      "page": "Nechryarch",
+      "url": "https://oldschool.runescape.wiki/w/Nechryarch#Normal",
+      "variant": "Normal",
+      "method": "combat",
+      "levels": "300",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Nechryarch Greater",
+      "page": "Nechryarch",
+      "url": "https://oldschool.runescape.wiki/w/Nechryarch#Greater",
+      "variant": "Greater",
+      "method": "combat",
+      "levels": "300",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Vitreous Jelly",
+      "page": "Vitreous Jelly",
+      "url": "https://oldschool.runescape.wiki/w/Vitreous_Jelly",
+      "variant": null,
+      "method": "combat",
+      "levels": "206",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Cave abomination",
+      "page": "Cave abomination",
+      "url": "https://oldschool.runescape.wiki/w/Cave_abomination",
+      "variant": null,
+      "method": "combat",
+      "levels": "206",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 14452,
+        "name": "Cave abomination",
+        "level": 395,
+        "sha256": "d50465847bf38fad6573f1afacd0f44a106c3f2738826ee14f36141eea6562d7"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Repugnant spectre",
+      "page": "Repugnant spectre",
+      "url": "https://oldschool.runescape.wiki/w/Repugnant_spectre",
+      "variant": null,
+      "method": "combat",
+      "levels": "335",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Insatiable mutated Bloodveld",
+      "page": "Insatiable mutated Bloodveld",
+      "url": "https://oldschool.runescape.wiki/w/Insatiable_mutated_Bloodveld",
+      "variant": null,
+      "method": "combat",
+      "levels": "278",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Insatiable Bloodveld",
+      "page": "Insatiable Bloodveld",
+      "url": "https://oldschool.runescape.wiki/w/Insatiable_Bloodveld",
+      "variant": null,
+      "method": "combat",
+      "levels": "202",
+      "quantity": "1",
+      "fractions": [
+        "10/256"
+      ],
+      "rarity": "10/256"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Nuclear smoke devil",
+      "page": "Nuclear smoke devil",
+      "url": "https://oldschool.runescape.wiki/w/Nuclear_smoke_devil",
+      "variant": null,
+      "method": "combat",
+      "levels": "280",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Nuclear smoke devil",
+      "page": "Nuclear smoke devil",
+      "url": "https://oldschool.runescape.wiki/w/Nuclear_smoke_devil",
+      "variant": null,
+      "method": "combat",
+      "levels": "280",
+      "quantity": "1",
+      "fractions": [
+        "10/750"
+      ],
+      "rarity": "10/750"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Armoured zombie (Zemouregal's Base)",
+      "page": "Armoured zombie (Zemouregal's Base)",
+      "url": "https://oldschool.runescape.wiki/w/Armoured_zombie_(Zemouregal%27s_Base)",
+      "variant": null,
+      "method": "combat",
+      "levels": "82",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Aquanite",
+      "page": "Aquanite",
+      "url": "https://oldschool.runescape.wiki/w/Aquanite",
+      "variant": null,
+      "method": "combat",
+      "levels": "145",
+      "quantity": "1",
+      "fractions": [
+        "~1/125"
+      ],
+      "rarity": "1/125"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 9172,
+        "name": "Aquanite",
+        "level": 114,
+        "sha256": "1f7cf12bdaee8a7d58bc993c61ae26f18b0043030e145a5e73eac464494ffcec"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Spitting Wyvern",
+      "page": "Spitting Wyvern",
+      "url": "https://oldschool.runescape.wiki/w/Spitting_Wyvern",
+      "variant": null,
+      "method": "combat",
+      "levels": "139",
+      "quantity": "1",
+      "fractions": [
+        "1/118"
+      ],
+      "rarity": "1/118"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Taloned Wyvern",
+      "page": "Taloned Wyvern",
+      "url": "https://oldschool.runescape.wiki/w/Taloned_Wyvern",
+      "variant": null,
+      "method": "combat",
+      "levels": "147",
+      "quantity": "1",
+      "fractions": [
+        "1/118"
+      ],
+      "rarity": "1/118"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Long-tailed Wyvern",
+      "page": "Long-tailed Wyvern",
+      "url": "https://oldschool.runescape.wiki/w/Long-tailed_Wyvern",
+      "variant": null,
+      "method": "combat",
+      "levels": "152",
+      "quantity": "1",
+      "fractions": [
+        "1/118"
+      ],
+      "rarity": "1/118"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Vitreous Warped Jelly",
+      "page": "Vitreous Warped Jelly",
+      "url": "https://oldschool.runescape.wiki/w/Vitreous_Warped_Jelly",
+      "variant": null,
+      "method": "combat",
+      "levels": "241",
+      "quantity": "1",
+      "fractions": [
+        "10/64"
+      ],
+      "rarity": "10/64"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 14455,
+        "name": "Vitreous warped Jelly",
+        "level": 283,
+        "sha256": "a6fb12422e7ab50b44b7d23161692c4a435fd681028063b3c992b0b0a8c19b05"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Screaming twisted banshee",
+      "page": "Screaming twisted banshee",
+      "url": "https://oldschool.runescape.wiki/w/Screaming_twisted_banshee",
+      "variant": null,
+      "method": "combat",
+      "levels": "144",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Wyrm",
+      "page": "Wyrm",
+      "url": "https://oldschool.runescape.wiki/w/Wyrm",
+      "variant": null,
+      "method": "combat",
+      "levels": "97",
+      "quantity": "1",
+      "fractions": [
+        "1/256"
+      ],
+      "rarity": "1/256"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Drake",
+      "page": "Drake",
+      "url": "https://oldschool.runescape.wiki/w/Drake",
+      "variant": null,
+      "method": "combat",
+      "levels": "192",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 6114,
+        "name": "Drake",
+        "level": 1,
+        "sha256": "a511c2b7d3d198bf5f4e40e2a54b3d52f529b76e300e66154bb24090267a9621"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Hydra",
+      "page": "Hydra",
+      "url": "https://oldschool.runescape.wiki/w/Hydra",
+      "variant": null,
+      "method": "combat",
+      "levels": "194",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 6812,
+        "name": "Hydra",
+        "level": 141,
+        "sha256": "f3d53e1948dc53f5d939e9de7f3e311982dd1d06ac9bb23f974db4a83cdfe94a"
+      },
+      {
+        "npc": 10610,
+        "name": "Hydra",
+        "level": 11,
+        "sha256": "57166be9e3c11e26823d5d1e7b8e62008fc3fcb14dac747d2af5bc2492ed8e1c"
+      },
+      {
+        "npc": 10611,
+        "name": "Hydra",
+        "level": 16,
+        "sha256": "bc200081d0773e8851230a44b8ed33b025c892177b8dcb69aad9c4d7be5502aa"
+      },
+      {
+        "npc": 10612,
+        "name": "Hydra",
+        "level": 22,
+        "sha256": "3875e3a48bf7cbe184423cdf6f6090edef68bb0356dfae5371bc5c437ef687d1"
+      },
+      {
+        "npc": 10613,
+        "name": "Hydra",
+        "level": 33,
+        "sha256": "8ddd6519d1447dda89adbd5b56085fc35a1e07fac2477a5951e32542f8904b73"
+      },
+      {
+        "npc": 10614,
+        "name": "Hydra",
+        "level": 45,
+        "sha256": "7468dfbd2e73740b1c45affa83f66bf97df08efa5c531dcc88c3596b8deb8003"
+      },
+      {
+        "npc": 10615,
+        "name": "Hydra",
+        "level": 64,
+        "sha256": "9b52984083216ce0948e7cfc97a3dc74bed982cbffb8070d704af3aa35139557"
+      },
+      {
+        "npc": 10616,
+        "name": "Hydra",
+        "level": 83,
+        "sha256": "683191743fa1a25c1d5af522cda6cfceda2ba69bee8d779ae3266e752071bee1"
+      },
+      {
+        "npc": 10617,
+        "name": "Hydra",
+        "level": 110,
+        "sha256": "b32a35e82af04f08aa7b00c22b303e6f5b51af7dfafd258e4f9b4823549fa5fb"
+      },
+      {
+        "npc": 10618,
+        "name": "Hydra",
+        "level": 132,
+        "sha256": "4c67e60680e639cb282701b8b540b37b74885b430c857815bcd6c2511ebb0a27"
+      }
+    ]
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Hydra",
+      "page": "Hydra",
+      "url": "https://oldschool.runescape.wiki/w/Hydra",
+      "variant": null,
+      "method": "combat",
+      "levels": "194",
+      "quantity": "1",
+      "fractions": [
+        "1/512"
+      ],
+      "rarity": "1/512"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 6812,
+        "name": "Hydra",
+        "level": 141,
+        "sha256": "f3d53e1948dc53f5d939e9de7f3e311982dd1d06ac9bb23f974db4a83cdfe94a"
+      },
+      {
+        "npc": 10610,
+        "name": "Hydra",
+        "level": 11,
+        "sha256": "57166be9e3c11e26823d5d1e7b8e62008fc3fcb14dac747d2af5bc2492ed8e1c"
+      },
+      {
+        "npc": 10611,
+        "name": "Hydra",
+        "level": 16,
+        "sha256": "bc200081d0773e8851230a44b8ed33b025c892177b8dcb69aad9c4d7be5502aa"
+      },
+      {
+        "npc": 10612,
+        "name": "Hydra",
+        "level": 22,
+        "sha256": "3875e3a48bf7cbe184423cdf6f6090edef68bb0356dfae5371bc5c437ef687d1"
+      },
+      {
+        "npc": 10613,
+        "name": "Hydra",
+        "level": 33,
+        "sha256": "8ddd6519d1447dda89adbd5b56085fc35a1e07fac2477a5951e32542f8904b73"
+      },
+      {
+        "npc": 10614,
+        "name": "Hydra",
+        "level": 45,
+        "sha256": "7468dfbd2e73740b1c45affa83f66bf97df08efa5c531dcc88c3596b8deb8003"
+      },
+      {
+        "npc": 10615,
+        "name": "Hydra",
+        "level": 64,
+        "sha256": "9b52984083216ce0948e7cfc97a3dc74bed982cbffb8070d704af3aa35139557"
+      },
+      {
+        "npc": 10616,
+        "name": "Hydra",
+        "level": 83,
+        "sha256": "683191743fa1a25c1d5af522cda6cfceda2ba69bee8d779ae3266e752071bee1"
+      },
+      {
+        "npc": 10617,
+        "name": "Hydra",
+        "level": 110,
+        "sha256": "b32a35e82af04f08aa7b00c22b303e6f5b51af7dfafd258e4f9b4823549fa5fb"
+      },
+      {
+        "npc": 10618,
+        "name": "Hydra",
+        "level": 132,
+        "sha256": "4c67e60680e639cb282701b8b540b37b74885b430c857815bcd6c2511ebb0a27"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Alchemical Hydra",
+      "page": "Alchemical Hydra",
+      "url": "https://oldschool.runescape.wiki/w/Alchemical_Hydra",
+      "variant": null,
+      "method": "combat",
+      "levels": "426",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Alchemical Hydra",
+      "page": "Alchemical Hydra",
+      "url": "https://oldschool.runescape.wiki/w/Alchemical_Hydra",
+      "variant": null,
+      "method": "combat",
+      "levels": "426",
+      "quantity": "1",
+      "fractions": [
+        "1/256"
+      ],
+      "rarity": "1/256"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Skeleton (Shayzien Crypts)",
+      "page": "Skeleton (Shayzien Crypts)",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_(Shayzien_Crypts)",
+      "variant": null,
+      "method": "combat",
+      "levels": "132",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Zombie (Shayzien Crypts)",
+      "page": "Zombie (Shayzien Crypts)",
+      "url": "https://oldschool.runescape.wiki/w/Zombie_(Shayzien_Crypts)",
+      "variant": null,
+      "method": "combat",
+      "levels": "132",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Sarachnis",
+      "page": "Sarachnis",
+      "url": "https://oldschool.runescape.wiki/w/Sarachnis",
+      "variant": null,
+      "method": "combat",
+      "levels": "318",
+      "quantity": "1",
+      "fractions": [
+        "1/40"
+      ],
+      "rarity": "1/40"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Sarachnis",
+      "page": "Sarachnis",
+      "url": "https://oldschool.runescape.wiki/w/Sarachnis",
+      "variant": null,
+      "method": "combat",
+      "levels": "318",
+      "quantity": "1",
+      "fractions": [
+        "1/60"
+      ],
+      "rarity": "1/60"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Temple Spider",
+      "page": "Temple Spider",
+      "url": "https://oldschool.runescape.wiki/w/Temple_Spider",
+      "variant": null,
+      "method": "combat",
+      "levels": "75",
+      "quantity": "1",
+      "fractions": [
+        "1/200"
+      ],
+      "rarity": "1/200"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Undead Druid",
+      "page": "Undead Druid",
+      "url": "https://oldschool.runescape.wiki/w/Undead_Druid",
+      "variant": null,
+      "method": "combat",
+      "levels": "105",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Guard (Prifddinas)",
+      "page": "Guard (Prifddinas)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Prifddinas)",
+      "variant": null,
+      "method": "combat",
+      "levels": "108",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Iorwerth Warrior Iorwerth Camp",
+      "page": "Iorwerth Warrior",
+      "url": "https://oldschool.runescape.wiki/w/Iorwerth_Warrior#Iorwerth_Camp",
+      "variant": "Iorwerth Camp",
+      "method": "combat",
+      "levels": "108",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Iorwerth Warrior Iorwerth Dungeon",
+      "page": "Iorwerth Warrior",
+      "url": "https://oldschool.runescape.wiki/w/Iorwerth_Warrior#Iorwerth_Dungeon",
+      "variant": "Iorwerth Dungeon",
+      "method": "combat",
+      "levels": "108",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Iorwerth Archer",
+      "page": "Iorwerth Archer",
+      "url": "https://oldschool.runescape.wiki/w/Iorwerth_Archer",
+      "variant": null,
+      "method": "combat",
+      "levels": "90",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Elf Archer",
+      "page": "Elf Archer",
+      "url": "https://oldschool.runescape.wiki/w/Elf_Archer",
+      "variant": null,
+      "method": "combat",
+      "levels": "90",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Basilisk Knight",
+      "page": "Basilisk Knight",
+      "url": "https://oldschool.runescape.wiki/w/Basilisk_Knight",
+      "variant": null,
+      "method": "combat",
+      "levels": "204",
+      "quantity": "1",
+      "fractions": [
+        "1/192"
+      ],
+      "rarity": "1/192"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Basilisk Sentinel",
+      "page": "Basilisk Sentinel",
+      "url": "https://oldschool.runescape.wiki/w/Basilisk_Sentinel",
+      "variant": null,
+      "method": "combat",
+      "levels": "358",
+      "quantity": "1",
+      "fractions": [
+        "10/192"
+      ],
+      "rarity": "10/192"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Vyrewatch Sentinel",
+      "page": "Vyrewatch Sentinel",
+      "url": "https://oldschool.runescape.wiki/w/Vyrewatch_Sentinel",
+      "variant": null,
+      "method": "combat",
+      "levels": "151",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Shadow Wyrm",
+      "page": "Shadow Wyrm",
+      "url": "https://oldschool.runescape.wiki/w/Shadow_Wyrm",
+      "variant": null,
+      "method": "combat",
+      "levels": "259",
+      "quantity": "1",
+      "fractions": [
+        "10/256"
+      ],
+      "rarity": "10/256"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Spiked Turoth",
+      "page": "Spiked Turoth",
+      "url": "https://oldschool.runescape.wiki/w/Spiked_Turoth",
+      "variant": null,
+      "method": "combat",
+      "levels": "244",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Guardian Drake",
+      "page": "Guardian Drake",
+      "url": "https://oldschool.runescape.wiki/w/Guardian_Drake",
+      "variant": null,
+      "method": "combat",
+      "levels": "376",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Colossal Hydra",
+      "page": "Colossal Hydra",
+      "url": "https://oldschool.runescape.wiki/w/Colossal_Hydra",
+      "variant": null,
+      "method": "combat",
+      "levels": "309",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Colossal Hydra",
+      "page": "Colossal Hydra",
+      "url": "https://oldschool.runescape.wiki/w/Colossal_Hydra",
+      "variant": null,
+      "method": "combat",
+      "levels": "309",
+      "quantity": "1",
+      "fractions": [
+        "10/512"
+      ],
+      "rarity": "10/512"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Albatross",
+      "page": "Albatross",
+      "url": "https://oldschool.runescape.wiki/w/Albatross",
+      "variant": null,
+      "method": "combat",
+      "levels": "110",
+      "quantity": "1",
+      "fractions": [
+        "~1/120"
+      ],
+      "rarity": "1/120"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Araxyte Level 96",
+      "page": "Araxyte",
+      "url": "https://oldschool.runescape.wiki/w/Araxyte#Level_96",
+      "variant": "Level 96",
+      "method": "combat",
+      "levels": "96",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Araxyte Level 146",
+      "page": "Araxyte",
+      "url": "https://oldschool.runescape.wiki/w/Araxyte#Level_146",
+      "variant": "Level 146",
+      "method": "combat",
+      "levels": "146",
+      "quantity": "1",
+      "fractions": [
+        "1/86"
+      ],
+      "rarity": "1/86"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Blood Reaver",
+      "page": "Blood Reaver",
+      "url": "https://oldschool.runescape.wiki/w/Blood_Reaver",
+      "variant": null,
+      "method": "combat",
+      "levels": "161; 174",
+      "quantity": "1",
+      "fractions": [
+        "1/112"
+      ],
+      "rarity": "1/112"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 13458,
+        "name": "Blood reaver",
+        "level": 147,
+        "sha256": "9450856d706f75f41f47ffad286fc9e2350625d680b47d29667f23693e4d1e28"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Phantom Muspah",
+      "page": "Phantom Muspah",
+      "url": "https://oldschool.runescape.wiki/w/Phantom_Muspah",
+      "variant": null,
+      "method": "combat",
+      "levels": "368; 741",
+      "quantity": "1",
+      "fractions": [
+        "1/30"
+      ],
+      "rarity": "1/30"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Phantom Muspah",
+      "page": "Phantom Muspah",
+      "url": "https://oldschool.runescape.wiki/w/Phantom_Muspah",
+      "variant": null,
+      "method": "combat",
+      "levels": "368; 741",
+      "quantity": "1",
+      "fractions": [
+        "1/45"
+      ],
+      "rarity": "1/45"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Cyclops (God Wars Dungeon)",
+      "page": "Cyclops (God Wars Dungeon)",
+      "url": "https://oldschool.runescape.wiki/w/Cyclops_(God_Wars_Dungeon)",
+      "variant": null,
+      "method": "combat",
+      "levels": "81",
+      "quantity": "1",
+      "fractions": [
+        "1/512"
+      ],
+      "rarity": "1/512"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Cyclops (Catacombs of Kourend)",
+      "page": "Cyclops (Catacombs of Kourend)",
+      "url": "https://oldschool.runescape.wiki/w/Cyclops_(Catacombs_of_Kourend)",
+      "variant": null,
+      "method": "combat",
+      "levels": "56; 76",
+      "quantity": "1",
+      "fractions": [
+        "1/512"
+      ],
+      "rarity": "1/512"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Warped Terrorbird",
+      "page": "Warped Terrorbird",
+      "url": "https://oldschool.runescape.wiki/w/Warped_Terrorbird",
+      "variant": null,
+      "method": "combat",
+      "levels": "96; 138",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 6285,
+        "name": "Warped terrorbird",
+        "level": 81,
+        "sha256": "dc0690218b6c2671bfdf8749deb2ade7649d8305ff2aad27d119820243828687"
+      },
+      {
+        "npc": 6286,
+        "name": "Warped terrorbird",
+        "level": 81,
+        "sha256": "452c5d99611fb4378b2fba729cbb1f1fd4a55440dc8c60cf3b1ec833b4d12383"
+      },
+      {
+        "npc": 6287,
+        "name": "Warped terrorbird",
+        "level": 81,
+        "sha256": "1f79a16893f52e8ca0a37c2f7b003ed538184d72e71edbcbf94d0b84b231604f"
+      },
+      {
+        "npc": 6288,
+        "name": "Warped terrorbird",
+        "level": 81,
+        "sha256": "2ec76f747adf38a9fb138bf3bd407b8afd6d91ea9ac98e98985e0134beb41c4b"
+      },
+      {
+        "npc": 6289,
+        "name": "Warped terrorbird",
+        "level": 81,
+        "sha256": "4d493b6fd322d4b436a47d9d8199fbc0bd768a9ab219590f4298d56f3b34fae7"
+      },
+      {
+        "npc": 6290,
+        "name": "Warped terrorbird",
+        "level": 81,
+        "sha256": "dc0690218b6c2671bfdf8749deb2ade7649d8305ff2aad27d119820243828687"
+      },
+      {
+        "npc": 6291,
+        "name": "Warped terrorbird",
+        "level": 81,
+        "sha256": "0f48ce28031d4a5a871103e763be5b42dcf9ca20568b49a5f16235a0d6270221"
+      },
+      {
+        "npc": 6292,
+        "name": "Warped terrorbird",
+        "level": 81,
+        "sha256": "13ca00c34154b385165d03a79a225e2f22b102a0b1dc4ce3778b169e3c63271d"
+      },
+      {
+        "npc": 6293,
+        "name": "Warped terrorbird",
+        "level": 143,
+        "sha256": "f4c145f5d3773876ca692bf4370eb86863f26385b870499f4a1cce595c4d9898"
+      },
+      {
+        "npc": 6294,
+        "name": "Warped terrorbird",
+        "level": 143,
+        "sha256": "e749c8b6eb4e1ad5150b7f2e7296542e1a0c3d1e9ea7cd1ab1a0e8052ab445da"
+      },
+      {
+        "npc": 6295,
+        "name": "Warped terrorbird",
+        "level": 143,
+        "sha256": "4a324895f25e5a89d88accc23771ace3af74891c5c7c6d13601706887cf5cbf6"
+      },
+      {
+        "npc": 6322,
+        "name": "Warped terrorbird",
+        "level": 81,
+        "sha256": "a42d9d97ba7a6d31aa6dd32d3e04907f4044150b524afb2f2ec8092c37d60aad"
+      },
+      {
+        "npc": 6323,
+        "name": "Warped terrorbird",
+        "level": 81,
+        "sha256": "6a926f906ce7f0aad9425d65cbec6fe552d1e00c85bc49a4c815142000c0907f"
+      },
+      {
+        "npc": 6324,
+        "name": "Warped terrorbird",
+        "level": 81,
+        "sha256": "c2489d048ace28764ad5842410823dad0627d3927add7acd8712657e222c7e0c"
+      },
+      {
+        "npc": 6325,
+        "name": "Warped terrorbird",
+        "level": 81,
+        "sha256": "c0cbd2dea9f0c97faa7a8b17115d1861fbf8a15c83732c31064555cb67e5cb45"
+      },
+      {
+        "npc": 6326,
+        "name": "Warped terrorbird",
+        "level": 81,
+        "sha256": "3945df7896f9e0ae014da740a114251d1668d3bff653cc839d4df6b32cfbd4da"
+      },
+      {
+        "npc": 6327,
+        "name": "Warped terrorbird",
+        "level": 81,
+        "sha256": "a42d9d97ba7a6d31aa6dd32d3e04907f4044150b524afb2f2ec8092c37d60aad"
+      },
+      {
+        "npc": 6328,
+        "name": "Warped terrorbird",
+        "level": 81,
+        "sha256": "53a00ac45b89116b7b768f9fb59e6e2759b94dbc85f9f71b7d08580f91c92ed4"
+      },
+      {
+        "npc": 6329,
+        "name": "Warped terrorbird",
+        "level": 81,
+        "sha256": "d084d114de0773867dca667fe3485b7409f8bbd05d0c2d7d8bb13d0951ae6ac3"
+      },
+      {
+        "npc": 6330,
+        "name": "Warped terrorbird",
+        "level": 143,
+        "sha256": "c8b03cac9cf38bce46d02301a2a315641bcdc7947bef8863c3f36fd4892715d4"
+      },
+      {
+        "npc": 6331,
+        "name": "Warped terrorbird",
+        "level": 143,
+        "sha256": "f503f15ff50bb72de12b120c91c76f466e6447e64b7659fb956bcb115b73fbae"
+      },
+      {
+        "npc": 6332,
+        "name": "Warped terrorbird",
+        "level": 143,
+        "sha256": "4b2f34d36ae8653f5c21d054d7c604454031ee8bcaefbca06c16f7a1dedf434b"
+      }
+    ]
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Stingray",
+      "page": "Stingray",
+      "url": "https://oldschool.runescape.wiki/w/Stingray",
+      "variant": null,
+      "method": "combat",
+      "levels": "92",
+      "quantity": "1",
+      "fractions": [
+        "~1/185"
+      ],
+      "rarity": "1/185"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Sulphur Nagua",
+      "page": "Sulphur Nagua",
+      "url": "https://oldschool.runescape.wiki/w/Sulphur_Nagua",
+      "variant": null,
+      "method": "combat",
+      "levels": "98",
+      "quantity": "1",
+      "fractions": [
+        "~1/256"
+      ],
+      "rarity": "1/256"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "The Hueycoatl",
+      "page": "The Hueycoatl",
+      "url": "https://oldschool.runescape.wiki/w/The_Hueycoatl",
+      "variant": null,
+      "method": "combat",
+      "levels": "642",
+      "quantity": "1",
+      "fractions": [
+        "1/50"
+      ],
+      "rarity": "1/50"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Skeleton (Lucien's camp)",
+      "page": "Skeleton (Lucien's camp)",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_(Lucien%27s_camp)",
+      "variant": null,
+      "method": "combat",
+      "levels": "132",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Dreadborn Araxyte",
+      "page": "Dreadborn Araxyte",
+      "url": "https://oldschool.runescape.wiki/w/Dreadborn_Araxyte",
+      "variant": null,
+      "method": "combat",
+      "levels": "281",
+      "quantity": "1",
+      "fractions": [
+        "1/192"
+      ],
+      "rarity": "1/192"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Chilled jelly",
+      "page": "Chilled jelly",
+      "url": "https://oldschool.runescape.wiki/w/Chilled_jelly",
+      "variant": null,
+      "method": "combat",
+      "levels": "112",
+      "quantity": "1",
+      "fractions": [
+        "1/64"
+      ],
+      "rarity": "1/64"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Armoured zombie (Zemouregal's Fort)",
+      "page": "Armoured zombie (Zemouregal's Fort)",
+      "url": "https://oldschool.runescape.wiki/w/Armoured_zombie_(Zemouregal%27s_Fort)",
+      "variant": null,
+      "method": "combat",
+      "levels": "105",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Moss Giant (Iorwerth Dungeon)",
+      "page": "Moss Giant (Iorwerth Dungeon)",
+      "url": "https://oldschool.runescape.wiki/w/Moss_Giant_(Iorwerth_Dungeon)",
+      "variant": null,
+      "method": "combat",
+      "levels": "84",
+      "quantity": "1",
+      "fractions": [
+        "1/200"
+      ],
+      "rarity": "1/200"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Eldric the Ice King",
+      "page": "Eldric the Ice King",
+      "url": "https://oldschool.runescape.wiki/w/Eldric_the_Ice_King",
+      "variant": null,
+      "method": "combat",
+      "levels": "350",
+      "quantity": "1",
+      "fractions": [
+        "1/25"
+      ],
+      "rarity": "1/25"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Eldric the Ice King",
+      "page": "Eldric the Ice King",
+      "url": "https://oldschool.runescape.wiki/w/Eldric_the_Ice_King",
+      "variant": null,
+      "method": "combat",
+      "levels": "350",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Branda the Fire Queen",
+      "page": "Branda the Fire Queen",
+      "url": "https://oldschool.runescape.wiki/w/Branda_the_Fire_Queen",
+      "variant": null,
+      "method": "combat",
+      "levels": "350",
+      "quantity": "1",
+      "fractions": [
+        "1/25"
+      ],
+      "rarity": "1/25"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Branda the Fire Queen",
+      "page": "Branda the Fire Queen",
+      "url": "https://oldschool.runescape.wiki/w/Branda_the_Fire_Queen",
+      "variant": null,
+      "method": "combat",
+      "levels": "350",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Earthen Nagua",
+      "page": "Earthen Nagua",
+      "url": "https://oldschool.runescape.wiki/w/Earthen_Nagua",
+      "variant": null,
+      "method": "combat",
+      "levels": "128",
+      "quantity": "1",
+      "fractions": [
+        "~1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Frigatebird",
+      "page": "Frigatebird",
+      "url": "https://oldschool.runescape.wiki/w/Frigatebird",
+      "variant": null,
+      "method": "combat",
+      "levels": "78",
+      "quantity": "1",
+      "fractions": [
+        "~1/170"
+      ],
+      "rarity": "1/170"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Gryphon",
+      "page": "Gryphon",
+      "url": "https://oldschool.runescape.wiki/w/Gryphon",
+      "variant": null,
+      "method": "combat",
+      "levels": "95",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Lava Strykewyrm",
+      "page": "Lava Strykewyrm",
+      "url": "https://oldschool.runescape.wiki/w/Lava_Strykewyrm",
+      "variant": null,
+      "method": "combat",
+      "levels": "116",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Narwhal",
+      "page": "Narwhal",
+      "url": "https://oldschool.runescape.wiki/w/Narwhal",
+      "variant": null,
+      "method": "combat",
+      "levels": "111",
+      "quantity": "1",
+      "fractions": [
+        "~1/150"
+      ],
+      "rarity": "1/150"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Vitreous Chilled Jelly",
+      "page": "Vitreous Chilled Jelly",
+      "url": "https://oldschool.runescape.wiki/w/Vitreous_Chilled_Jelly",
+      "variant": null,
+      "method": "combat",
+      "levels": "241",
+      "quantity": "1",
+      "fractions": [
+        "10/64"
+      ],
+      "rarity": "10/64"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "hard",
+    "source": {
+      "name": "Manta ray (monster)",
+      "page": "Manta ray (monster)",
+      "url": "https://oldschool.runescape.wiki/w/Manta_ray_(monster)",
+      "variant": null,
+      "method": "combat",
+      "levels": "133",
+      "quantity": "1",
+      "fractions": [
+        "~1/120"
+      ],
+      "rarity": "1/120"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Kraken",
+      "page": "Kraken",
+      "url": "https://oldschool.runescape.wiki/w/Kraken",
+      "variant": null,
+      "method": "combat",
+      "levels": "291",
+      "quantity": "1",
+      "fractions": [
+        "1/500"
+      ],
+      "rarity": "1/500"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Zulrah",
+      "page": "Zulrah",
+      "url": "https://oldschool.runescape.wiki/w/Zulrah",
+      "variant": null,
+      "method": "combat",
+      "levels": "725",
+      "quantity": "1",
+      "fractions": [
+        "1/75"
+      ],
+      "rarity": "1/75"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Cerberus",
+      "page": "Cerberus",
+      "url": "https://oldschool.runescape.wiki/w/Cerberus",
+      "variant": null,
+      "method": "combat",
+      "levels": "318",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    "reason": "Local combat level does not match this Wiki variant",
+    "candidates": [
+      {
+        "npc": 14458,
+        "name": "Cerberus",
+        "level": 413,
+        "sha256": "98a4a29833282c47ccf614f6a89ad2d7d656e9b4c099bb216084cfdb08280696"
+      }
+    ]
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Abyssal Sire",
+      "page": "Abyssal Sire",
+      "url": "https://oldschool.runescape.wiki/w/Abyssal_Sire",
+      "variant": null,
+      "method": "combat",
+      "levels": "350",
+      "quantity": "1",
+      "fractions": [
+        "1/180"
+      ],
+      "rarity": "1/180"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Skotizo",
+      "page": "Skotizo",
+      "url": "https://oldschool.runescape.wiki/w/Skotizo",
+      "variant": null,
+      "method": "combat",
+      "levels": "321",
+      "quantity": "1",
+      "fractions": [
+        "1/5"
+      ],
+      "rarity": "1/5"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Rune dragon",
+      "page": "Rune dragon",
+      "url": "https://oldschool.runescape.wiki/w/Rune_dragon",
+      "variant": null,
+      "method": "combat",
+      "levels": "380",
+      "quantity": "1",
+      "fractions": [
+        "1/300"
+      ],
+      "rarity": "1/300"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Adamant dragon",
+      "page": "Adamant dragon",
+      "url": "https://oldschool.runescape.wiki/w/Adamant_dragon",
+      "variant": null,
+      "method": "combat",
+      "levels": "338",
+      "quantity": "1",
+      "fractions": [
+        "1/320"
+      ],
+      "rarity": "1/320"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Ancient Wyvern",
+      "page": "Ancient Wyvern",
+      "url": "https://oldschool.runescape.wiki/w/Ancient_Wyvern",
+      "variant": null,
+      "method": "combat",
+      "levels": "210",
+      "quantity": "1",
+      "fractions": [
+        "1/350"
+      ],
+      "rarity": "1/350"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Deranged archaeologist",
+      "page": "Deranged archaeologist",
+      "url": "https://oldschool.runescape.wiki/w/Deranged_archaeologist",
+      "variant": null,
+      "method": "combat",
+      "levels": "276",
+      "quantity": "1",
+      "fractions": [
+        "1/200"
+      ],
+      "rarity": "1/200"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Grotesque Guardians",
+      "page": "Grotesque Guardians",
+      "url": "https://oldschool.runescape.wiki/w/Grotesque_Guardians",
+      "variant": null,
+      "method": "combat",
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/230"
+      ],
+      "rarity": "1/230"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Vorkath Post-quest",
+      "page": "Vorkath",
+      "url": "https://oldschool.runescape.wiki/w/Vorkath#Post-quest",
+      "variant": "Post-quest",
+      "method": "combat",
+      "levels": "732",
+      "quantity": "1",
+      "fractions": [
+        "1/65"
+      ],
+      "rarity": "1/65"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Yama",
+      "page": "Yama",
+      "url": "https://oldschool.runescape.wiki/w/Yama",
+      "variant": null,
+      "method": "combat",
+      "levels": "1238",
+      "quantity": "1",
+      "fractions": [
+        "1/30"
+      ],
+      "rarity": "1/30"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "The Nightmare",
+      "page": "The Nightmare",
+      "url": "https://oldschool.runescape.wiki/w/The_Nightmare",
+      "variant": null,
+      "method": "combat",
+      "levels": "814",
+      "quantity": "1",
+      "fractions": [
+        "1/190",
+        "1/200"
+      ],
+      "rarity": "1/190 ; 1/200"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Monumental chest",
+      "page": "Monumental chest",
+      "url": "https://oldschool.runescape.wiki/w/Monumental_chest",
+      "variant": null,
+      "method": "combat",
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/25",
+        "3.5/25"
+      ],
+      "rarity": "1/25 \u2013 3.5/25"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Phosani's Nightmare",
+      "page": "Phosani's Nightmare",
+      "url": "https://oldschool.runescape.wiki/w/Phosani%27s_Nightmare",
+      "variant": null,
+      "method": "combat",
+      "levels": "1024",
+      "quantity": "1",
+      "fractions": [
+        "1/35"
+      ],
+      "rarity": "1/35"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Gold key red",
+      "page": "Gold key red",
+      "url": "https://oldschool.runescape.wiki/w/Gold_key_red",
+      "variant": null,
+      "method": "combat",
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/139"
+      ],
+      "rarity": "1/139"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Gold key brown",
+      "page": "Gold key brown",
+      "url": "https://oldschool.runescape.wiki/w/Gold_key_brown",
+      "variant": null,
+      "method": "combat",
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/139"
+      ],
+      "rarity": "1/139"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Gold key crimson",
+      "page": "Gold key crimson",
+      "url": "https://oldschool.runescape.wiki/w/Gold_key_crimson",
+      "variant": null,
+      "method": "combat",
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/139"
+      ],
+      "rarity": "1/139"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Gold key black",
+      "page": "Gold key black",
+      "url": "https://oldschool.runescape.wiki/w/Gold_key_black",
+      "variant": null,
+      "method": "combat",
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/139"
+      ],
+      "rarity": "1/139"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Gold key purple",
+      "page": "Gold key purple",
+      "url": "https://oldschool.runescape.wiki/w/Gold_key_purple",
+      "variant": null,
+      "method": "combat",
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/139"
+      ],
+      "rarity": "1/139"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Ancient chest",
+      "page": "Ancient chest",
+      "url": "https://oldschool.runescape.wiki/w/Ancient_chest",
+      "variant": null,
+      "method": "combat",
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/12"
+      ],
+      "rarity": "1/12"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Araxxor",
+      "page": "Araxxor",
+      "url": "https://oldschool.runescape.wiki/w/Araxxor",
+      "variant": null,
+      "method": "combat",
+      "levels": "890",
+      "quantity": "1",
+      "fractions": [
+        "1/50"
+      ],
+      "rarity": "1/50"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Amoxliatl Post-quest",
+      "page": "Amoxliatl",
+      "url": "https://oldschool.runescape.wiki/w/Amoxliatl#Post-quest",
+      "variant": "Post-quest",
+      "method": "combat",
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/200"
+      ],
+      "rarity": "1/200"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Doom of Mokhaiotl",
+      "page": "Doom of Mokhaiotl",
+      "url": "https://oldschool.runescape.wiki/w/Doom_of_Mokhaiotl",
+      "variant": null,
+      "method": "combat",
+      "levels": "558\u2013908",
+      "quantity": "1",
+      "fractions": [
+        "1/75",
+        "1/50"
+      ],
+      "rarity": "1/75 ; 1/50"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Great white shark",
+      "page": "Great white shark",
+      "url": "https://oldschool.runescape.wiki/w/Great_white_shark",
+      "variant": null,
+      "method": "combat",
+      "levels": "175",
+      "quantity": "1",
+      "fractions": [
+        "1/200"
+      ],
+      "rarity": "1/200"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Shellbane gryphon",
+      "page": "Shellbane gryphon",
+      "url": "https://oldschool.runescape.wiki/w/Shellbane_gryphon",
+      "variant": null,
+      "method": "combat",
+      "levels": "235",
+      "quantity": "1",
+      "fractions": [
+        "1/200"
+      ],
+      "rarity": "1/200"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Orca",
+      "page": "Orca",
+      "url": "https://oldschool.runescape.wiki/w/Orca",
+      "variant": null,
+      "method": "combat",
+      "levels": "205",
+      "quantity": "1",
+      "fractions": [
+        "~1/130"
+      ],
+      "rarity": "1/130"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Armoured kraken",
+      "page": "Armoured kraken",
+      "url": "https://oldschool.runescape.wiki/w/Armoured_kraken",
+      "variant": null,
+      "method": "combat",
+      "levels": "180",
+      "quantity": "1",
+      "fractions": [
+        "~1/160"
+      ],
+      "rarity": "1/160"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Vampyre kraken",
+      "page": "Vampyre kraken",
+      "url": "https://oldschool.runescape.wiki/w/Vampyre_kraken",
+      "variant": null,
+      "method": "combat",
+      "levels": "211",
+      "quantity": "1",
+      "fractions": [
+        "1/150"
+      ],
+      "rarity": "1/150"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Maggot King",
+      "page": "Maggot King",
+      "url": "https://oldschool.runescape.wiki/w/Maggot_King",
+      "variant": null,
+      "method": "combat",
+      "levels": "741",
+      "quantity": "1",
+      "fractions": [
+        "1/40"
+      ],
+      "rarity": "1/40"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Veiled kraken",
+      "page": "Veiled kraken",
+      "url": "https://oldschool.runescape.wiki/w/Veiled_kraken",
+      "variant": null,
+      "method": "combat",
+      "levels": "210",
+      "quantity": "1",
+      "fractions": [
+        "~1/140"
+      ],
+      "rarity": "1/140"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  },
+  {
+    "tier": "elite",
+    "source": {
+      "name": "Venator",
+      "page": "Venator",
+      "url": "https://oldschool.runescape.wiki/w/Venator",
+      "variant": null,
+      "method": "combat",
+      "levels": "246",
+      "quantity": "1",
+      "fractions": [
+        "~1/1,250"
+      ],
+      "rarity": "1/1,250"
+    },
+    "reason": "NPC/variant absent from local cache",
+    "candidates": []
+  }
+]

@@ -1,0 +1,36 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[10 July]] [[2024]]
+|update = While Guthix Sleeps
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 2841
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[cryptic clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 631
+|text = The clue reveals who to speak to:<br><br>Speak to Uglug Nar.
+|notes = Speak to [[Uglug Nar]] outside [[Jiggig]], south of [[Castle Wars]].
+The clue has an additional challenge:
+
+Question: ''What is 19 to the power of 3?''
+
+Answer: '''6859'''
+|map = {{Map|2444,3049|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Trivia==
+
+*This clue scroll step replaced the now removed [[Clue scroll (medium) - Speak to Hazelmere|Speak to Hazelmere]] step.

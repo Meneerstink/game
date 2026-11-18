@@ -1,0 +1,33 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 3605
+|leagueRegion = Karamja
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[cryptic clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+When searching the drawers, the message "The drawers are locked!  A note left on the drawers reads: Shiver me timbers!" is displayed, hinting that one of the pirates around [[Brimhaven]] must be killed to get the key.
+
+==Clue info==
+{{Clue info
+|id = 745
+|text = The cryptic reveals <br><br>Search the upstairs drawers of a house in a village where pirates are known to have a good time.
+|items = 
+|notes = The house in the south-east corner of [[Brimhaven]], north-east of [[Davon's Amulet Store.]] Kill any pirate located around [[Brimhaven]] to obtain the key.
+|map = {{Map|2809,3165|mtype=pin|plane=1|mapID=-1}}
+{{Map|2794,3185|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,44 @@
+{{External|rs=Clue scroll (hard) - Yawn near the Wilderness Bandit camp obelisk}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10244
+|leagueRegion = Wilderness
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[emote clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 348
+|tier = hard
+|emote = Yawn
+|text = The emote reveals <br><br>Yawn in the rogues' general store. Beware of double agents! Equip an adamant square shield, blue dragon vambraces and a rune pickaxe.
+|location = Inside the [[Bandit Duty Free]] shop in the [[Bandit Camp (Wilderness)|Bandit Camp]] in the [[Wilderness]]
+|items = Equip an [[adamant square shield]], [[blue d'hide vambraces]] and a [[rune pickaxe]].
+|equipment1 = Adamant sq shield
+|equipment2 = Blue d'hide vambraces
+|equipment3 = Rune pickaxe
+|notes = Perform the [[yawn]] emote in [[Noterazzo]]'s shop in the [[Wilderness]].
+The clue has an additional challenge:
+
+Kill a [[Double agent]].
+|map = {{Map|3026,3701|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+*[[Burning amulet]] to [[Bandit Camp (Wilderness)]].
+*[[Wilderness Obelisk]] (level 27).
+*[[Dareeyak Teleport]].

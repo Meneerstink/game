@@ -1,0 +1,94 @@
+{{Infobox Item
+|name = Clue scroll (beginner)
+|image = [[File:Clue scroll (beginner).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = No
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 23182
+}}
+[[File:Clue scroll (beginner) detail.png|left|width=100x86]]
+'''Clue scroll (beginner)''' is a [[hot and cold clue]] obtained from [[Clue scroll (beginner)|beginner]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|text=Buried beneath the ground, who knows where it's found. Lucky for you, A man called Reldo may have a clue.
+|items=[[Spade]], [[strange device]].
+|notes=Speak to [[Reldo]] to receive a [[strange device]] used by [[Hot and cold clues]] to locate the location of the next clue.
+
+Players can immediately start the search without speaking to [[Reldo]] if they already own a [[strange device]].
+
+To find your location, click on the strange device and it will tell you how close you are to the treasure. Its temperature is based on the distance of the treasure from the player, measured in the number of steps it would take to reach the treasure, ignoring any obstacles. Then, teleport or walk to another location, and check to see if the strange device has gotten warmer. Repeat to pinpoint a location. You can also use [[Treasure_Trails/Guide/Hot_Cold#Beginner_Hot_Cold_clue_locations|this list of solutions]] to help you find your location. For each location, there is a 7x7 square in which you can dig to find the treasure.
+|map={{Map|3210,3495|mtype=pin|plane=0|mapID=-1}}}}
+
+==Transportation==
+The following are effective methods of reaching [[Reldo]] to obtain a [[strange device]]:
+
+*[[Varrock Teleport]] and run north to [[Varrock Palace]].
+*[[Achievement diary cape]] teleport to [[Toby]].
+*[[Spirit tree]] to the [[Grand Exchange]].
+*[[Ring of wealth]] teleport to the [[Grand Exchange]].
+*[[Chronicle]] teleport and run north.
+*[[Combat bracelet]] teleport to the [[Champion's Guild]].
+
+==Solutions==
+{|class="wikitable"
+!Map
+!Notes
+!Transportation
+
+|-
+|{{Map|3123,3283|mtype=pin|plane=0|mapID=-1}}
+|[[Draynor Village]] wheat field.
+|
+*[[Amulet of glory]] teleport to [[Draynor Village]].
+*[[Achievement diary cape]] to [[Twiggy O'Korn]].
+*[[Draynor Manor Teleport]] and run south.
+*[[Lumbridge Teleport]] and run west.
+
+|-
+|{{Map|3004,3473|mtype=pin|plane=0|mapID=-1}}
+|Atop [[Ice Mountain]].
+|
+*[[Lassar Teleport]].
+*[[Combat bracelet]] teleport to [[Edgeville Monastery]].
+*[[Mind Altar Teleport]] and optionally use the [[Agility shortcut]] with 68 [[Agility]].
+*[[Skull sceptre (i)]] teleport and run north-west past the [[Body Altar]].
+*[[Amulet of glory]] teleport to [[Edgeville]].
+
+|-
+|{{Map|3177,3339|mtype=pin|plane=0|mapID=-1}}
+|Cow field north of [[Lumbridge]], east of [[Draynor Manor]].
+|
+*[[Draynor Manor Teleport]] and run east.
+*[[Amulet of glory]] to [[Draynor Village]] and run north-east.
+*[[Lumbridge Teleport]] and run north.
+
+|-
+|{{Map|3096,3376|mtype=pin|plane=0|mapID=-1}}
+|Patch of mushrooms just north-west of [[Draynor Manor]]
+|
+*[[Draynor Manor Teleport]].
+*[[Amulet of glory]] to [[Draynor Village]].
+*[[Skull sceptre (i)]] teleport and run south to the entrance of the manor.
+*[[Teleport to Lumbridge]] and run north-west.
+
+|-
+|{{Map|3331,3316|mtype=pin|plane=0|mapID=-1}}
+|North-east of [[Al Kharid Mine]].
+|
+*[[Ring of the elements]] to the [[Fire Altar]].
+*[[Ring of dueling]] to [[Emir's Arena]].
+*[[Senntisten Teleport]] and go west around the fence.
+*[[Chronicle]] and run south-east to the desert.
+*[[Amulet of glory]] to [[Al Kharid]] and run north.
+
+|}

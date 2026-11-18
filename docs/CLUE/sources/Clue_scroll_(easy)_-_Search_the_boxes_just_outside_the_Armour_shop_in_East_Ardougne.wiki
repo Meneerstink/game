@@ -1,0 +1,29 @@
+{{External|rs=Clue scroll (easy) - Search the crates just outside the armour shop in East Ardougne}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 2705
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 800
+|text = The cryptic reveals where to search:<br><br>Search the boxes just outside the Armour shop in East Ardougne.
+|notes = Search the boxes outside [[Zenesha]]'s [[Zenesha's Plate Mail Body Shop.|Plate Mail Body Shop]] in [[East Ardougne]].
+|map = {{Map|2654,3299|mtype=pin|plane=0|mapID=-1}}
+}}

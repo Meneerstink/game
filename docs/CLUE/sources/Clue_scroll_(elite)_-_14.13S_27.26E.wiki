@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[27 April]] [[2022]]
+|update = Beneath Cursed Sands
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 26944
+|leagueRegion = Desert
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[coordinate clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 520
+|text = The coordinate reveals where to dig:<br><br>14.13S 27.26E
+|items = 
+|notes = The [[Necropolis]], South-East of [[Sophanem]].
+
+The clue has an additional challenge:
+
+Kill an [[Armadylean guard]] or a [[Bandosian guard]]
+|map = {{Map|3318,2706|mtype=pin|plane=0|mapID=-1}}
+}}

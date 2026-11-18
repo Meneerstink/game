@@ -1,0 +1,17 @@
+{
+  "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailBasicSteps.kt": "c8f31405943b45db1969329270bcccdcdcbe1b784ae9282ef48d0552fe1604f7",
+  "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailNpcSteps.kt": "a0eb64d3f0c0db94d5c9edce53c973b594bc5cb90c2fc1fb922e27b5c3b805cb",
+  "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailEmotes.kt": "285c24b16c4dcf4a39713c95f70a0c26fe21386874246b38b861d5a1d51bc422",
+  "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailAgents.kt": "fc0a792b10a473219dc629f1deec2f43caa323d320ed0d71acc25b0d4f68163b",
+  "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailWizards.kt": "02bb66f66474f74ade7f02ecd210de3a9c9b082b56a9198e4072789c7f6f10d0",
+  "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailPuzzleBoxes.kt": "fee15c237ef04e70f292b5a4c912388a2ae0f7c50162e7851d1521975adcb9e6",
+  "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailMasterPuzzles.kt": "8963f6041f372a5cfa7aa63280afbd5792328cf8b87c7ecee7760097daa8550b",
+  "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailLightBoxes.kt": "5f3e515d4af1a3001055646fca1f84aca8d18099ebb6bd457331ccb47647e7c2",
+  "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailUri.kt": "e9aaaa915f8c17e6243cf6f1f841daf3dba5f69264f68312b122dab6b238920c",
+  "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueItems.kt": "f324a82260582748e14f8dbe442508c0b19295662abe026913b85218b2b6943a",
+  "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueNpcs.kt": "31e2e2b90b7de3e0aa1c9cbea21e2ac46afad8e01bcf93a7213ba876e570aad9",
+  "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueInterfaces.kt": "52e37afedb7fd246b9f69f84b6155464b21433d3dd788fb81b90ba619cf00ea0",
+  "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailMaps.kt": "203baa5113e701571a5c694e95d020948fa70c20c27016b1df431474aaabe698",
+  "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailStepCatalogue.kt": "9daebba2dfa5d70fb2bf68526867044cdab7b5e0f4facdfd206609c34c0c3584",
+  "build\\clue\\applied-assets\\ClueAppliedAssetAudit.kt": "5171e70df192868b06975ebbdec9b2e4440652980713feee3a941722da999113"
+}

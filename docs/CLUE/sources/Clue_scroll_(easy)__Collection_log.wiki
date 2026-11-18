@@ -1,0 +1,6 @@
+There are a total of 131 items to collect from [[Clue scroll (easy)|easy Treasure Trails]].
+
+{{Sync|checkbox=show}}
+
+{{Collection log list|category=Easy Treasure Trails}}
+<noinclude>[[Category:Clue scrolls]]</noinclude>

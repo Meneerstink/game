@@ -1,0 +1,39 @@
+{{External|rs=Clue scroll (hard) - Bow or curtsy at the top of the Lighthouse}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10238
+|leagueRegion = Fremennik
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[emote clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 10238
+|tier = hard
+|emote = Bow
+|text = The emote reveals <br><br>Bow at the top of the lighthouse. Beware of double agents! Equip a blue dragonhide body, blue dragonhide vambraces and no jewelry{{sic}}.
+|location = Top floor of the [[Lighthouse]]
+|items = Equip a [[blue dragonhide body]], [[blue dragonhide vambraces]] and no jewelry.
+|equipment1 = Blue d'hide body
+|equipment2 = Blue d'hide vambraces
+|notes = Perform the [[Bow (emote)|bow]] emote on the top floor of the [[lighthouse]] west of [[Rellekka]]. Must partially complete [[Horror from the Deep]], at least to point of repairing the light, before the clue will function.
+
+The clue has an additional challenge:
+
+Kill a [[Double agent]].
+|map = {{Map|2511,3641|mtype=pin|plane=2|mapID=-1}}
+}}

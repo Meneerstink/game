@@ -1,0 +1,37 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 12073
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[emote clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 364
+|tier = elite
+|emote = Spin
+|text = The emote reveals <br><br>Spin in West Ardougne Church. Equip a dragon spear and red dragonhide chaps.
+|reference = A poisoned dragon spear of any tier will '''NOT''' work for these steps.
+|location = Inside [[West Ardougne]]'s church
+|items = Equip a [[dragon spear]] and [[red dragonhide chaps]].
+|equipment1 = Dragon spear
+|equipment1alt1 = Dragon spear (cr)
+|equipment1alt1price1 = Dragon spear
+|equipment2 = Red d'hide chaps
+|notes = Perform the [[spin]] emote in the chapel in [[West Ardougne]].
+|map = {{Map|2530,3290|mtype=pin|plane=0|mapID=-1}}
+}}

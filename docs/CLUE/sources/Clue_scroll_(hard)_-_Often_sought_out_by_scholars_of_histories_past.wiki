@@ -1,0 +1,30 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 3566
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]]. Interestingly, the [[Examiner#Pigtails|examiner with blue clothes and pigtails]] does not work to complete this clue.
+
+==Clue info==
+{{Clue info
+|id = 710
+|text = The cryptic reveals who to speak to:<br><br>Often sought out by scholars of histories past, find me where words of wisdom speak volumes.
+|items = 
+|notes = Speak to [[Examiner]] in the [[digsite]] [[exam centre]].
+|map = {{Map|3362,3341|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,22 @@
+{{Transcript|npc}}
+
+==Standard dialogue==
+* '''Player:''' Hey, who're you?
+* '''Sherlock:''' I'm Sherlock, master of clues and challenges.
+* '''Player:''' Clues and challenges?
+* '''Sherlock:''' If you find a scroll that requires my attention, bring it to me and I shall handle it.
+* '''Player:''' I will! but...
+* '''Player:''' You're not wearing a shirt?
+* '''Sherlock:''' Yeah, no shirt Sherlock.....
+* {{tact|end}}
+
+==Treasure Trails==
+===Skill Challenge===
+* '''Sherlock:''' Ah, just what I was looking for. I have a challenge for you. If you complete it, I'll give you something.
+{{mes|You have completed your elite/master level challenge!|color=red}}
+* '''Sherlock:''' Fantastic! Here, have this.
+* {{tact|end}}
+
+==Using non-requested items on Sherlock==
+* '''Sherlock:''' That's nice, but.... I don't really need one of those.
+* {{tact|end}}

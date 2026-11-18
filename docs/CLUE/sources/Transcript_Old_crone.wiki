@@ -1,0 +1,34 @@
+{{Transcript|npc}}
+{{incomplete|Casket receiving dialogue is missing}}
+
+==Standard dialogue==
+===Before any quests===
+* '''Player:''' Hello, old woman.
+* '''Old crone:''' I'm over 100 years old, you know.
+* {{tact|end}}
+
+===After Animal Magnetism and Ghosts Ahoy===
+* {{topt|I'm here about Necrovarus.}}
+** '''Player:''' I'm here about Necrovarus.
+** '''Player:''' Good news - the enchantment worked!
+** '''Old crone:''' So Necrovarus has let the ghosts go free.... You have achieved many wonderful things, my young friend.
+** {{tact|end}}
+* {{topt|I'm here about the farmers east of here.}}
+** '''Player:''' I'm here about the farmers east of here.
+** '''Player:''' Hello there, just dropping in to thank you again. It all went perfectly. Alice and her husband can communicate again.
+** '''Old crone:''' I can't help but shed a tear about my own family. My sisters are so vile, I refuse to talk to them these days.
+** '''Player:''' Sorry to hear that.
+** '''Old crone:''' Never mind; we've reunited a happy family of farmers; that's enough for me.
+** {{tact|end}}
+
+==Treasure Trails==
+===Elite===
+* '''Old crone:''' Answer this, please.
+* {{tact|receives=a challenge scroll}}
+* {{tbox|You've been given a challenge scroll!}}
+* {{tact|end}}
+====When given the correct answer====
+* '''Old crone:''' Well done.
+* {{tact|receives=[another clue scroll/a casket]}}
+* {{tbox|You've been given a new clue!}}
+* {{tact|end}}

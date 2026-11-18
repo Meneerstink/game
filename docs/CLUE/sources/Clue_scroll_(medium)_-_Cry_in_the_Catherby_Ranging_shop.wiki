@@ -1,0 +1,37 @@
+{{External|rs=Clue scroll (medium) - Cry in the Catherby archery shop}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10276
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[emote clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 318
+|tier = medium
+|emote = Cry
+|emote2 = Bow
+|text = The emote reveals <br><br>Cry in the Catherby Ranging shop. Bow before you talk to me. Equip blue gnome boots, a hard leather body and an unblessed silver sickle.
+|location = Inside [[Hickton's Archery Emporium]] in [[Catherby]]
+|items = Equip [[Blue boots|blue gnome boots]], a [[hard leather body]] and an unblessed [[silver sickle]].
+|equipment1 = Blue boots
+|equipment2 = Hardleather body
+|equipment3 = Silver sickle
+|notes = Perform the [[cry]] and [[Bow (emote)|bow]] emotes near [[Hickton's Archery Emporium.]]
+|map = {{Map|2823,3443|mtype=pin|plane=0|mapID=-1}}
+}}

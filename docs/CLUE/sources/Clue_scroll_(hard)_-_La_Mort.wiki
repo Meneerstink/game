@@ -1,0 +1,32 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 23179
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[music clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 623
+|text = The clue reveals who to speak to:<br><br>I'd like to hear some music.
+Come and see me on the bridge in
+Falador Park, and play:
+La Mort
+Thanks,
+Cecilia
+|notes = Speak to [[Cecilia]] on the bridge in Falador Park. Play the [[music]] track [[La Mort]].
+|map = {{Map|2990,3384|mtype=pin|plane=0|mapID=-1}}
+}}

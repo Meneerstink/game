@@ -1,0 +1,37 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10268
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[emote clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 326
+|tier = medium
+|emote = Jump for Joy
+|emote2 = Jig
+|text = The emote reveals <br><br>Jump for joy in Yanille bank. Dance a jig before you talk to me. Equip a brown apron, adamantite medium helmet and snakeskin chaps.
+|location = Outside of [[Yanille]] bank, by the entrance to the [[Wizards' Guild]]
+|items = Equip a [[brown apron]], [[adamant med helm]] and [[snakeskin chap]]s.
+|equipment1 = Brown apron
+|equipment2 = Adamant med helm
+|equipment3 = Snakeskin chaps
+|notes = Perform the [[jump for joy]] and [[jig]] emotes near outside [[Yanille]] bank.
+|map = {{Map|2610,3092|mtype=pin|plane=0|mapID=-1}}
+}}

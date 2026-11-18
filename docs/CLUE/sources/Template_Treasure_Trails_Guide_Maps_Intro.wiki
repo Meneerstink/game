@@ -1,0 +1,6 @@
+{{mainonly|[[Category:Treasure Trails]]}}
+'''Map''' clues are an image of a location the player needs to search to advance along their trail. Maps are found across all [[clue scroll]] difficulties. They are rough pictures of a very local area. If the map leads to an X, the player needs to take a [[spade]] to the place indicated on the map with the X and dig there. If the map leads to a crate, it must simply be searched. Sometimes, players may find a small pile of crates, or a multitude of them. Search all of them until the next clue or the reward is found. Maps can include landmarks such as buildings, fish to indicate fishing spots, roads, rivers, bridges, and so on.
+
+Digging in the location pointed to by a map clue will '''never''' spawn any [[monster]]s.
+
+Maps are sorted by boxes and then by X, and then from left to right based on the location of the mark.

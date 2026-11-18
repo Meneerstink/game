@@ -1340,7 +1340,15 @@ object OsrsItemImportTool {
     @JvmStatic
     fun main(args: Array<String>) {
         val batchName = args.firstOrNull { !it.startsWith("--") } ?: error("Usage: <batch> [--apply] [--yml-out=<file>]")
-        val specs = BATCHES[batchName] ?: error("Unknown batch '$batchName' (known: ${BATCHES.keys}).")
+        val specs = if (batchName == "clue") {
+            val roster = args.firstOrNull { it.startsWith("--clue-roster=") }?.substringAfter('=')
+                ?: error("clue requires --clue-roster=<reviewed import-items.tsv>")
+            File(roster).readLines().filter { it.isNotBlank() && !it.startsWith("#") }.map { line ->
+                val fields = line.split('\t')
+                require(fields.size == 3 && fields[1] in listOf("true", "false")) { "Invalid CLUE roster row: $line" }
+                Spec(fields[0].toInt(), noted = fields[1].toBoolean())
+            }.also { require(it.isNotEmpty() && it.map { spec -> spec.upstreamId }.distinct().size == it.size) }
+        } else BATCHES[batchName] ?: error("Unknown batch '$batchName' (known: ${BATCHES.keys}).")
         specs.firstOrNull { it.upstreamId in SAME_NAME_COPIES || it.upstreamId in SAME_NAME_COPIES_WITHOUT_MAIN }?.let {
             error("upstream ${it.upstreamId} is a same-name copy (owner answer: map to the main item, do not import)")
         }
@@ -1452,8 +1460,21 @@ object OsrsItemImportTool {
                             // The cuff of an OSRS glove sits inside the thicker 667 forearm unless fitted (OsrsWristFit).
                             return OsrsWristFit.fitBytes(bytes, forearmPieces.first { it.female == handsFemale })
                         }
-                        val models = modelIds.map { ImportBatchOrchestrator.ModelSource("upstream_model:$it", "model", converted(it)) }
-                        val forearm = if (removesArms(entry.def)) forearmOps(entry.def, forearmPieces, ::converted) else emptyMap()
+                        val fullSlots = if (removesArms(entry.def)) forearmPieces.filter { piece ->
+                            val ids = if (piece.female) listOf(entry.def.femaleModel0, entry.def.femaleModel1, entry.def.femaleModel2)
+                                else listOf(entry.def.maleModel0, entry.def.maleModel1, entry.def.maleModel2)
+                            ids.all { it >= 0 } && WornForearm.leavesForearmGap(ids.map { Rev667ModelDecoder.decode(converted(it)) }, piece.kitForearmEnd)
+                        } else emptyList()
+                        val merged = fullSlots.associateBy { if (it.female) entry.def.femaleModel0 else entry.def.maleModel0 }
+                        check(merged.size == fullSlots.size) { "${entry.name}: one primary wear model shared by both genders needs separate identities" }
+                        check(entry.def.inventoryModel !in merged) { "${entry.name}: forearm merge must not change the inventory model" }
+                        val models = modelIds.map { model ->
+                            val piece = merged[model]
+                            ImportBatchOrchestrator.ModelSource("upstream_model:$model",
+                                if (piece == null) "model" else "clue_body_forearm_${if (piece.female) "female" else "male"}",
+                                if (piece == null) converted(model) else ClueForearmModel.appendBytes(converted(model), piece))
+                        }
+                        val forearm = if (removesArms(entry.def)) forearmOps(entry.def, forearmPieces - fullSlots.toSet(), ::converted) else emptyMap()
                         forearm.values.forEach { piece ->
                             check(models.none { it.sourceIdentity == piece.sourceIdentity }) { "${entry.name}: model id clash with ${piece.sourceIdentity}" }
                         }

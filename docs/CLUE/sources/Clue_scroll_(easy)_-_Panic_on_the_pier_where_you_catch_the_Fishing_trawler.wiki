@@ -1,0 +1,32 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10224
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is an [[emote clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 299
+|tier = easy
+|emote = Panic
+|text = The emote reveals <br><br>Panic on the pier where you catch the Fishing trawler. Have nothing equipped at all when you do.
+|items = Have nothing equipped at all.
+|notes = Perform the [[panic]] emote near [[Port Khazard]] docks.
+|map = {{Map|2676,3169|mtype=pin|plane=0|mapID=-1}}
+}}

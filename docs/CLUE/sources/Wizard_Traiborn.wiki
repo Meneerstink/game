@@ -1,0 +1,85 @@
+{{External|rs|rsc=Traiborn the wizard}}
+{{Infobox NPC
+|name = Wizard Traiborn
+|image = [[File:Wizard Traiborn.png|250x250px]]
+|release = [[4 January]] [[2001]]
+|update = Runescape beta is now online!
+|members = No
+|race = [[Human]]
+|quest = {{*}} [[Demon Slayer]]<br/>{{*}} [[Recipe for Disaster]]<br/>{{*}} [[Temple of the Eye]]
+|location = [[Wizards' Tower]] {{FloorNumber|uk=1}}
+|gender = Male
+|options = Talk-to
+|examine = An old wizard.
+|map = {{Map|name=Wizard Traiborn|x=3112|y=3157|plane=1|r=3|mtype=square}}
+|id = 5081
+|leagueRegion = Misthalin
+}}
+[[File:Wizard Traiborn chathead.png|left]]
+'''Wizard Traiborn''' is a peculiar wizard who resides on the {{FloorNumber|uk=1}} of the [[Wizards' Tower]]. He often addresses people as "thingummywuts" and claims to see these indescribable creatures everywhere, claiming they cause minor havoc in the tower. Despite these seemingly mad theories and his goofy look, Traiborn is one of the Senior Wizards of the tower and possesses considerable magical skill. He is involved in the [[Recipe for Disaster]], [[Demon Slayer]], and [[Temple of the Eye]] [[quests]].
+
+==Treasure Trails==
+{{Cipher|Wizard Traiborn|medium|[[Clue scroll (medium) - XJABSE USBJCPSO|XJABSE USBJCPSO]]}}. The answer to his challenge: ''How many air runes would I need to cast 630 wind waves?'' is: ''3150''.
+
+==Dialogue==
+{{Hastranscript|npc}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 6 July 2022
+|update = PvP Arena: Soft Launch
+|change = Medium clue scroll cipher was changed to XJABSE USBJCPSO to reflect Wizard Traiborn's name change. The cipher was previously USBJCPSO.
+}}
+{{Subject changes
+|date = 13 April 2022
+|update = Easter 2022
+|change = Wizard Traiborn will now have two dialogue options for players working on Demon Slayer and Temple of the Eye at the same time.
+}}
+{{Subject changes
+|date = 23 March 2022
+|update = Guardians of the Rift Launch
+|change = The NPC's name was changed from "Traiborn" to "Wizard Traiborn".
+}}
+{{Subject changes
+|date = 5 December 2006
+|update = Treasure Trails, spiders and sheep
+|change = The NPC's eyes were fixed.
+}}
+{{Subject changes
+|date = 29 August 2006
+|update = Demons, Dragons and Giants
+|change = The NPC was graphically updated with the rework of Demon Slayer.
+}}
+{{Subject changes footer}}
+===Gallery (historical)===
+{|style="text-align: center" cellpadding="15"
+|[[File:Wizard Traiborn (historical).png|center|300x150px]]
+|[[File:Wizard Traiborn.png|center|300x150px]]
+|[[File:Wizard Traiborn.png|center|300x150px]]
+|-
+|[[File:Wizard Traiborn chathead (historical v1).png|center]]
+|[[File:Wizard Traiborn chathead (historical v2).png|center]]
+|[[File:Wizard Traiborn chathead.png|center]]
+|-
+|29 March 2004 –<br/>29 August 2006
+|29 August 2006 –<br/>5 December 2006
+|5 December 2006 –<br/>present
+|}
+
+==Trivia==
+* "Traiborn" rearranged spells "brain rot".
+* The bookcase in his room can be searched to find the following books that the player finds interesting:
+** ''101 Ways to Impress your Mates with Magic''
+** ''The Dark Arts of Magical Wands''
+** ''Fire, Earth and Water - What's it all about?''
+** ''How to become the Ultimate Wizard of the Universe''
+** ''The Life & Times of a Thingummywut by Traiborn the Wizard''
+** ''Living with a Wizard Husband - A housewife's Story''
+** ''So you think you're a Mage? Volume 28''
+** ''Wind Strike for Beginners''
+
+{{Demon Slayer}}
+{{Freeing the Lumbridge Guide}}
+{{Temple of the Eye}}
+{{Wizards' Tower}}

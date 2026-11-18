@@ -1,0 +1,67 @@
+{
+  "model:3395": {
+    "sourceSha256": "946f17668e9f676001da2f5c52c94c1ed5b1467505b3cb2bdc986c52cc40aca4",
+    "targetSha256": "e5d572ac02a76fe9614a2882902295e3fe5c78bb9e5d919ce17d829b5e1a3f47",
+    "differences": [
+      "vertexX",
+      "vertexY",
+      "vertexZ",
+      "faceTexture"
+    ]
+  },
+  "model:1226": {
+    "sourceSha256": "3afcbfe9c21eae315ee3dbe5d11b2ff29219b99075918ed48b64d533fec7db1a",
+    "targetSha256": "699ad627b3eacb0f2e3709a9f4c90eb15b0ca755a6225717c5695a19b6242014",
+    "differences": [
+      "vertexCount",
+      "faceCount",
+      "texSpaceCount",
+      "vertexX",
+      "vertexY",
+      "vertexZ",
+      "faceA",
+      "faceB",
+      "faceC",
+      "faceColour",
+      "facePriority",
+      "shadingType",
+      "faceTexture",
+      "faceTexSpace",
+      "texMappingType"
+    ]
+  },
+  "model:3438": {
+    "sourceSha256": "c1931a6765fb267b5297802dedecd003329a1cc6cfef5927b2e6d97822aa57ba",
+    "targetSha256": "e319ae2a7463de321c6fd384c12a110b3c393bfc8fddaa8f2f5e7f5dc923c729",
+    "differences": [
+      "vertexCount",
+      "vertexX",
+      "vertexY",
+      "vertexZ",
+      "faceColour",
+      "faceTexture"
+    ]
+  },
+  "model:4695": {
+    "sourceSha256": "ba0ae62fa1106cfed9720645a87c0c50c389bee2f95ed5798bd6424e58c3832f",
+    "targetSha256": "21cd391ecc3fb9248b8eb4c643a8f38491e76fa776cc25239ea289de7bf40ade",
+    "differences": [
+      "faceTexture"
+    ]
+  },
+  "8:539": {
+    "sourceSha256": "29873e0ad863794f6a0d009b9533be4f2afd8527a7b7df9eb597207cd46d4b99",
+    "targetSha256": "6fb2a0a651d4bdf7563e9a859324b88ff9b065320c486ea7acf16b1d0093abe6",
+    "identical": false
+  },
+  "8:540": {
+    "sourceSha256": "10143d96a1f9f8b71adee83b298134255e833e4a4a3654c198c35ce9ffc09cff",
+    "targetSha256": "8984c98b98e58f3965b7082efcb85de796aa71868fe7c7d904547a4fb575897e",
+    "identical": false
+  },
+  "11:193": {
+    "sourceSha256": "b16c26f35d53799ff189e62e99a8b5fcf8468527d75de7dc54de054c0501a192",
+    "targetSha256": "b16c26f35d53799ff189e62e99a8b5fcf8468527d75de7dc54de054c0501a192",
+    "identical": true
+  }
+}

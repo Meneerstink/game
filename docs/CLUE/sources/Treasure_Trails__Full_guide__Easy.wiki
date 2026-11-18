@@ -1,0 +1,60 @@
+{{ToC|right}}
+{{Shortcut|ttfg1}}
+
+For the main article, see [[Treasure Trails]].
+
+==Preparation==
+{{See also|Treasure Trails/Guide/Emote clues/Items}}
+[[Clue scroll (easy)|Easy clue scrolls]] can be between 2 and 4 steps long with few or no [[quest]] requirements.
+
+{|class="wikitable align-center-1"
+! colspan=2 | Item
+! Description
+|-
+| {{plinkt|Clue scroll (easy)|txt=Clue scroll}}
+| Must be in the inventory in order to receive the next step or reward.
+|-
+| {{plinkp|Spade}} {{plinkp|Eastfloor spade}}
+| [[Spade]] or [[Eastfloor spade]]
+| Digging in certain locations is required for some clues.
+|-
+| {{plinkp|Law rune}} {{plinkp|Amulet of glory(4)}}
+| [[Teleportation]] [[runes]] and enchanted [[jewellery]]
+| Use this to travel over large distances.
+|-
+| {{plinkp|Energy potion}}{{plinkp|Super energy}}{{plinkp|Stamina potion}}
+| [[Energy potion]]s ([[Super energy potion|super]]) or [[stamina potion]]s
+| Use these to restore [[energy]].
+|-
+| {{plinkp|Coins|pic=Coins 10000}}
+| [[Coins]]
+| Use this to buy items needed for [[emote clues]] and travel costs.
+|-
+| {{plinkp|Dramen staff}}{{plinkp|Lunar staff}}
+| [[Dramen staff|Dramen]] or [[lunar staff]]
+| Use this to access the [[Fairy ring]] network shortly into [[Fairytale II - Cure a Queen]] (especially useful for [[medium clue]]s).
+|}
+
+==Requirements==
+{{:Clue scroll (easy)}}
+
+==Cryptic clues==
+{{shortcut|ttgcr}}
+{{Treasure Trails Guide Cryptic Clues Intro}}
+{{:Treasure Trails/Guide/Cryptic clues/Easy}}
+
+==Emote clues==
+{{shortcut|ttge}}
+{{Treasure Trails Guide Emote Clues Intro}}
+{{:Treasure Trails/Guide/Emote clues/Easy}}
+
+==Maps==
+{{shortcut|ttgm}}
+{{Treasure Trails Guide Maps Intro}}
+{{:Treasure Trails/Guide/Maps/Easy}}
+
+==References==
+{{Reflist}}
+
+{{Treasure Trails}}
+[[Category:Guides]]

@@ -1,0 +1,4 @@
+# tx-20261116-154712; applied=false; 2 source roster entries including linked notes
+# OSRS id	proposed local id	name	definition bytes	model mappings
+19887	24940	Puzzle box (hard)	50	[upstream_model:4204->66725]
+23173	24941	Puzzle box (hard)	50	[upstream_model:4204->66725]

@@ -1,0 +1,36 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 12025
+|leagueRegion = Kandarin&Tirannwn
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[emote clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 316
+|tier = medium
+|emote = Clap
+|emote2 = Spin
+|text = The emote reveals <br><br>Clap in Seers court house. Spin before you talk to me. Equip an adamant halberd, blue mystic robe bottom and a diamond ring.
+|location = Outside the [[Seers' Village courthouse]]
+|items = Equip an [[adamant halberd]], blue [[mystic robe bottom]] and a [[diamond ring]].
+|equipment1 = Adamant halberd
+|equipment2 = Mystic robe bottom
+|equipment3 = Diamond ring
+|notes = Perform the [[clap]] and [[spin]] emotes in the [[Seers' Village courthouse]].
+|map = {{Map|2735,3469|mtype=pin|plane=0|mapID=-1}}
+}}

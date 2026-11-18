@@ -1,0 +1,45 @@
+{{Infobox Monster
+|name = Third Age Warrior
+|image = [[File:Third Age Warrior.png|180px]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|combat = 83
+|size = 1
+|examine = A reanimated warrior wearing the garb of ancient times.
+|xpbonus = 7.5
+|max hit = 18
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Slash]]
+|attack speed = 5
+|hitpoints = 40
+|att = 90
+|str = 75
+|def = 80
+|mage = 1
+|range = 1
+|attbns = 105
+|strbns = 75
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 96
+|dslash = 108
+|dcrush = 113
+|dmagic = -4
+|dlight = 97
+|dstandard = 97
+|dheavy = 97
+|poisonresistance = 0
+|venomresistance = 0
+|id = 8635
+|leagueRegion = Kourend
+}}
+
+The '''Third Age warrior''' is a monster that is spawned when fighting [[The Mimic]]. It is spawned alongside the [[Third Age Ranger|Third Age ranger]] and [[Third Age Mage|Third Age mage]]. It does not need to be defeated to beat The Mimic.
+
+As the other monsters in the boss room are solid, the warrior is often stuck behind the boss or other Third Age monsters.
+
+{{Treasure Trails}}

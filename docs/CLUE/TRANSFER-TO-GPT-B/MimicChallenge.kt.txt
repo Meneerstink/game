@@ -1,0 +1,51 @@
+package gg.rsmod.plugins.content.areas.watson
+
+import gg.rsmod.game.model.item.Item
+import gg.rsmod.game.model.item.ItemAttribute
+import gg.rsmod.plugins.content.scrolls.ClueScrollTier
+
+/** OSRS Wiki The Mimic: elite five attempts, master six; each failed exit/death costs one reward roll. */
+object MimicChallenge {
+    fun tier(item: Item): ClueScrollTier? = item.getAttr(ItemAttribute.MIMIC_SOURCE_TIER)?.let { value ->
+        ClueScrollTier.values().getOrNull(value)?.takeIf { it == ClueScrollTier.ELITE || it == ClueScrollTier.MASTER }
+    }
+
+    fun create(localItem: Int, source: ClueScrollTier): Item {
+        require(source == ClueScrollTier.ELITE || source == ClueScrollTier.MASTER)
+        return Item(localItem).putAttr(ItemAttribute.MIMIC_SOURCE_TIER, source.ordinal)
+            .putAttr(ItemAttribute.MIMIC_FAILURES, 0)
+    }
+
+    fun defeated(item: Item): Boolean = item.getAttr(ItemAttribute.MIMIC_DEFEATED) == 1
+    fun failures(item: Item): Int = (item.getAttr(ItemAttribute.MIMIC_FAILURES) ?: 0).coerceAtLeast(0)
+    fun maximumAttempts(item: Item): Int = when (tier(item)) {
+        ClueScrollTier.ELITE -> 5
+        ClueScrollTier.MASTER -> 6
+        else -> 0 // A legacy/staff-spawned item has no proven originating tier; never guess it.
+    }
+    fun remaining(item: Item): Int = (maximumAttempts(item) - failures(item)).coerceAtLeast(0)
+
+    fun begin(item: Item): Int? {
+        if (tier(item) == null || defeated(item) || remaining(item) == 0) return null
+        val serial = item.getAttr(ItemAttribute.MIMIC_ATTEMPT_SERIAL) ?: 0
+        val settled = item.getAttr(ItemAttribute.MIMIC_SETTLED_SERIAL) ?: 0
+        if (serial != settled) return null
+        return (serial + 1).also { item.putAttr(ItemAttribute.MIMIC_ATTEMPT_SERIAL, it) }
+    }
+
+    /** Death, logout and exit may all fire; only the active attempt token can spend one roll. */
+    fun settle(item: Item, attempt: Int, bossKilled: Boolean): Boolean {
+        if (tier(item) == null || defeated(item) || remaining(item) == 0) return false
+        if (item.getAttr(ItemAttribute.MIMIC_ATTEMPT_SERIAL) != attempt || (item.getAttr(ItemAttribute.MIMIC_SETTLED_SERIAL) ?: 0) >= attempt) return false
+        item.putAttr(ItemAttribute.MIMIC_SETTLED_SERIAL, attempt)
+        if (bossKilled) item.putAttr(ItemAttribute.MIMIC_DEFEATED, 1)
+        else item.putAttr(ItemAttribute.MIMIC_FAILURES, failures(item) + 1)
+        return true
+    }
+
+    /** Wiki stomp progression per consecutive tick: 1,1,1,2,2,2,...,6,6,...; away resets the caller's counter. */
+    fun stompDamage(consecutiveTick: Int): Int {
+        require(consecutiveTick > 0)
+        return ((consecutiveTick - 1) / 3 + 1).coerceAtMost(6)
+    }
+}

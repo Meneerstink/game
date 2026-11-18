@@ -1,0 +1,30 @@
+{{External|rs=Clue scroll (easy) - Search in the south-east corner of the Artisan Dwarves' workshop in Falador}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 3498
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 794
+|text = The cryptic reveals where to search:<br><br>Search the drawers downstairs of houses in the eastern part of Falador.
+|items = 
+|notes = Search the drawers in the house located east of the eastern [[Falador]] bank and south of the fountain.
+|map = {{Map|3039,3342|mtype=pin|plane=0|mapID=-1}}
+}}

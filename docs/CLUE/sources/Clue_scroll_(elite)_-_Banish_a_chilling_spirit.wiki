@@ -1,0 +1,27 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[25 September]] [[2024]]
+|update = Varlamore: The Rising Darkness is OUT NOW
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = I need to solve this!
+|value = 20
+|weight = 0.020
+|id = 29856
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]]. A [[frost nagua]] or the [[Amoxliatl]] in the [[Ruins of Tapoyauik]] must be defeated. Players who have completed the quest should walk east down the chain to quell the monster.
+
+==Clue info==
+{{Clue info
+|id=981
+|text=The clue reveals <br><br>Banish a chilling spirit.
+|notes=Kill a [[frost nagua]].
+|map={{Map|x:1627,y:9623|x:1627,y:9638|x:1631,y:9618|x:1631,y:9643|x:1633,y:9623|x:1634,y:9638|x:1638,y:9630|x:1639,y:9623|x:1639,y:9636|x:1647,y:9631|x:1652,y:9631|mtype=pin|plane=0|mapID=-1}}
+}}

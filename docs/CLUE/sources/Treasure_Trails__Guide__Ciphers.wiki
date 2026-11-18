@@ -1,0 +1,28 @@
+{{shortcut|ttgci}}
+{{Treasure Trails Guide Ciphers Intro}}
+<noinclude>
+A Caesar shift is a change of location in the regular alphabet, for example ABC becomes BCD if shifted once forwards, or ZAB if shifted once backwards.
+
+Since there are only 25 possible shift distances, brute-forcing all possibilities is easy to do.
+
+===X Marks the Spot===
+{| class="wikitable sortable"
+!Cipher
+!Solution
+!Shift distance
+!Location
+|-
+|ESBZOPS QJH QFO
+|Draynor Pig Pen
+|<nowiki>+1</nowiki>
+|[[Draynor Village]], north of the market.
+|}
+
+===Medium Ciphers===
+{{:Treasure Trails/Guide/Ciphers/Medium}}
+
+===Hard Ciphers===
+{{:Treasure Trails/Guide/Ciphers/Hard}}<noinclude>
+
+{{Treasure Trails}}
+[[Category:Guides]]</noinclude>

@@ -1,0 +1,30 @@
+{{External|rs=Clue scroll (easy) - Search a barrel east of Mission Mistress Fara}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 3503
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 790
+|text = The cryptic reveals where to search:<br><br>Search the tents in the Imperial Guard camp in Burthorpe for some boxes.
+|items = 
+|notes = Search in the tents in the north-west corner of the soldiers' camp in [[Burthorpe]].
+|map = {{Map|2885,3540|mtype=pin|plane=0|mapID=-1}}
+}}

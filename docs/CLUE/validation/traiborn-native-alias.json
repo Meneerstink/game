@@ -1,0 +1,13 @@
+{
+  "tests": 26,
+  "staged": true,
+  "byteIdenticalPromotion": true,
+  "inputs": {
+    "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailNpcSteps.kt": "a0eb64d3f0c0db94d5c9edce53c973b594bc5cb90c2fc1fb922e27b5c3b805cb",
+    "game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailBasicSteps.kt": "c8f31405943b45db1969329270bcccdcdcbe1b784ae9282ef48d0552fe1604f7",
+    "game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailNpcStepsTests.kt": "0199047ee2afd1c28e001d1f03fef1721a675ee101a77c1ccd506a10ea45e232"
+  },
+  "sourceProofSha256": "bb59145a6410f395b611da601e35ba34c7ae8a5f9a4762b3de96a736cfc7eb26",
+  "source": "Clue source changelog6July2022 and dual-cache native881 identity,cache/traiborn-native.json",
+  "note": "No Gradle/script/client acceptance from this proof alone"
+}

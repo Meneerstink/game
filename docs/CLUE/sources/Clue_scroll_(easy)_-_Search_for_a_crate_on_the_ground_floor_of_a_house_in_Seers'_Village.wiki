@@ -1,0 +1,29 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 3509
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 753
+|text = The cryptic reveals where to search:<br><br>Search for a crate on the ground floor of a house in Seers' Village.
+|notes = Search inside [[Phantuwti Fanstuwi Farsight]]'s house, south of the [[Seers%27_Village#Forester's_Arms_Pub|pub]] in [[Seers' Village]].
+|map = {{Map|2699,3470|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 12140
+|leagueRegion = Tirannwn
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 694
+|text = The cryptic reveals who to speak to:<br><br>Has no one told you it is rude to ask a lady her age?
+|items = 
+|notes = Speak to [[Mawrth]] in [[Lletya]].
+|map = {{Map|2333,3165|mtype=pin|plane=0|mapID=-1}}
+}}

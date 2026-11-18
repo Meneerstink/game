@@ -1,0 +1,39 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Narwallus!
+|value = 20
+|weight = 0.020
+|id = 19822
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 675
+|text = The cryptic reveals who to speak to:<br><br>I would make a chemistry joke, but I'm afraid I wouldn't get a reaction.
+|notes = Speak to the [[Chemist]] in [[Rimmington]].
+|map = {{Map|2932,3212|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+*Teleport to Ardougne, charter Captain Barnaby to Rimmington
+*[[Teleport to House]] with a [[player-owned house]] in Rimmington, or [[Construction cape]] teleport to the Rimmington [[house portal]].
+*[[Ring of the elements]] teleport to the [[Air Altar]].
+*[[Skills necklace]] teleport to the [[Crafting Guild]].
+*[[Crafting cape]] teleport to the [[Crafting Guild]].
+*[[Balloon transport system]] to the [[Crafting Guild]].
+*[[Charter ship]] to [[Port Sarim]].
+*[[Fairy ring]] code {{fairycode|aiq}}.
+*[[Falador Teleport]] and run south to Rimmington.

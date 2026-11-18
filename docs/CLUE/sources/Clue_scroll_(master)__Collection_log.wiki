@@ -1,0 +1,5 @@
+There are a total of 94 items to collect from [[Clue scroll (master)|master Treasure Trails]], 49 items from the standard table and 45 rare items.
+{{Sync|checkbox=show}}
+{{Collection log list|category=Master Treasure Trails}}
+{{Collection log list|category=Master Treasure Trails (Rare)}}
+<noinclude>[[Category:Clue scrolls]]</noinclude>

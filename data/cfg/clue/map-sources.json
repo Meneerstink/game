@@ -1,0 +1,236 @@
+[
+  {
+    "key": "Clue scroll (easy) - At the standing stones north of Falador",
+    "group": 351,
+    "close": 59,
+    "wikiImage": "Map clue Falador stones.png",
+    "imageSha256": "5ebe67c0270cb6226dec3d0735ce332283dc27cf7417291eeda12ab154120263",
+    "dbRow": 2231,
+    "dbSha256": "9712aaba9bafc85e016ca1b150a420d8bdc1c51a6003cba095faf4b199d7c762"
+  },
+  {
+    "key": "Clue scroll (easy) - Brother Galahad's house",
+    "group": 354,
+    "close": 82,
+    "wikiImage": "Map clue Galahad.png",
+    "imageSha256": "d70c2fc653be4d39afea1399f221906b74cd944f46df4703036021ef339fe193",
+    "dbRow": 2232,
+    "dbSha256": "e2d2848757b97135e22e8f000d9fec9363280979b895fb39a4286093fe9c9dcd"
+  },
+  {
+    "key": "Clue scroll (easy) - Directly behind the Wizards' Tower",
+    "group": 356,
+    "close": 82,
+    "wikiImage": "Map clue Wizard tower.png",
+    "imageSha256": "340306ddec69da232629a0244eea217376f769669314fc2a978a138323c9d015",
+    "dbRow": 2233,
+    "dbSha256": "e4edf8fc0865d71a2688115c75351ddadfee529a9ae50da31091c84b9407c9da"
+  },
+  {
+    "key": "Clue scroll (medium) - South of Draynor Village bank",
+    "group": 348,
+    "close": 47,
+    "wikiImage": "Map clue Draynor willows.png",
+    "imageSha256": "125986f286cebde762f535b01df497606d7a6934912f6c1eaeb600b9cbc4045a",
+    "dbRow": 2235,
+    "dbSha256": "202dab51a3ef23530a483ff89035eceff1bd48ced57ec580f0e43956fe9b1e91"
+  },
+  {
+    "key": "Clue scroll (medium) - Behind the Chemist's house in Rimmington",
+    "group": 362,
+    "close": 84,
+    "wikiImage": "Map clue Chemist house.png",
+    "imageSha256": "55be4de0ef4d75d1f4a7e4317b2883eee0d2175c44bd732e8710682d1c7eceed",
+    "dbRow": 2240,
+    "dbSha256": "eb0e1176eb26eb647a7ec7a998131b0af13320460514e5adf4d5384226118a4e"
+  },
+  {
+    "key": "Clue scroll (medium) - North of the Tower of Life",
+    "group": 360,
+    "close": 83,
+    "wikiImage": "Map clue Tower of Life.png",
+    "imageSha256": "2464ec251972316ad7beb13ac01999530ec965ca00a9a71bc3d073406861a9d8",
+    "dbRow": 2238,
+    "dbSha256": "2957d8dada791d815e2933edf85d006107bac3e4ff6cb05274510caefb179bf8"
+  },
+  {
+    "key": "Clue scroll (hard) - Yanille anvils",
+    "group": 353,
+    "close": 63,
+    "wikiImage": "Map clue Yanille anvil.png",
+    "imageSha256": "8aad83bae94ac2f733c70c2fd2281b9734a56c427c45caa83ed5c19743a99783",
+    "dbRow": 2248,
+    "dbSha256": "6827f2140a31cf309f78e54dbd6749fecb0637c3c28175d1053bd92192c65c80"
+  },
+  {
+    "key": "Clue scroll (hard) - A crate in the Lumber Yard",
+    "group": 350,
+    "close": 48,
+    "wikiImage": "Map clue Lumberyard.png",
+    "imageSha256": "b502b865f3444a8b9701d32561421d47312d40c5ba5fdea040527c7a613b21ce",
+    "dbRow": 2247,
+    "dbSha256": "f7f7b29f59f50bc8ebbd870982d3a6c1e16257105a7330f669dd1df2a2cb6856"
+  },
+  {
+    "key": "Clue scroll (elite) - South-west of Tree Gnome Village",
+    "group": 86,
+    "close": 118,
+    "wikiImage": "Map clue Castle Wars.png",
+    "imageSha256": "d790e1201e33a2f089741c08f24ede3647636a7b071716a873ece8493ebcc2b8",
+    "dbRow": 2254,
+    "dbSha256": "11e723bde61edc4efa28df9396266027b16e98bfee1652db6872d5a8ee030cd0"
+  },
+  {
+    "key": "Clue scroll (easy) - North of Falador.",
+    "group": 337,
+    "close": 81,
+    "wikiImage": "Map clue Falador statue crossroads.png",
+    "imageSha256": "128e072833279325260dab524d04a42fdfecaf8914292cc3f65ffaaaef6d0244",
+    "dbRow": 2234,
+    "dbSha256": "083cabe09054be3a669a7aefa485b0075a716e3639428a301e6452e236614324"
+  },
+  {
+    "key": "Clue scroll (hard) - South-east of the Wilderness Agility Course",
+    "group": 338,
+    "close": 12,
+    "wikiImage": "Map clue small volcanoes.png",
+    "imageSha256": "15441fad840fc6ce4d142872991c4149b575437a41c1441ebdb18f99a460a053",
+    "dbRow": 2252,
+    "dbSha256": "d030e7a7734a90fcff1eb9bc800f3f8fa303fd6adfbd81cddd38afd987022684"
+  },
+  {
+    "key": "Clue scroll (hard) - South of the Legends' Guild",
+    "group": 339,
+    "close": 51,
+    "wikiImage": "Map clue Picnic tables.png",
+    "imageSha256": "7e9652963d36ec4b1010d2323ef82f52b5770915c900f8b6ac1dd89427d50f7e",
+    "dbRow": 2253,
+    "dbSha256": "7c2d8798591246833aba2532554a2d9d8eabb52de8e857989681b4d1092fb332"
+  },
+  {
+    "key": "Clue scroll (medium) - Miscellania",
+    "group": 340,
+    "close": 85,
+    "wikiImage": "Map clue Miscellania.png",
+    "imageSha256": "6574c41b89357649b883eb19d296109d792c55d89f86f9c99bb8a38a01e32055",
+    "dbRow": 2241,
+    "dbSha256": "aa691385d77deacbbb38e819eb0480befc9b946707db6fdf6d01df44156417e0"
+  },
+  {
+    "key": "Clue scroll (medium) - Mort Myre Swamp",
+    "group": 341,
+    "close": 112,
+    "wikiImage": "Map clue Mort Myre.png",
+    "imageSha256": "84195869118dd3b6d189516194765dc8ef571d5ee82a5bb56da027e08d86068f",
+    "dbRow": 2242,
+    "dbSha256": "fc16a44f6c73509c6947068e1219280434f2d39f088b9275272d6ec92615a784"
+  },
+  {
+    "key": "Clue scroll (medium) - At the entrance to the Ourania Cave",
+    "group": 342,
+    "close": 17,
+    "wikiImage": "Map clue Lava chaos altar.png",
+    "imageSha256": "b9a9321e46b519a8d1cd8c6ebf691c18ba401dc34c118da6f29a537dfc545997",
+    "dbRow": 2243,
+    "dbSha256": "2711bc7a077d64f4901f5d59962c5b05f533607d9f5678d59a9d395e481b907e"
+  },
+  {
+    "key": "Clue scroll (medium) - South-east of the Lighthouse",
+    "group": 343,
+    "close": 146,
+    "wikiImage": "Map clue Lighthouse peninsula.png",
+    "imageSha256": "613c94cf347db5dcbbb919e14438af732104c0ac5e206d5eb3b75fd4dce270c0",
+    "dbRow": 2244,
+    "dbSha256": "0ce277ca6f64ea1f82362940222e7b1f130a2bcecd99fc773e5168cd82fad5c1"
+  },
+  {
+    "key": "Clue scroll (medium) - Between Seers' Village and Rellekka",
+    "group": 344,
+    "close": 107,
+    "wikiImage": "Map clue North Seers.png",
+    "imageSha256": "358a4923ea7f8de3334b9d29890bdeedd66e70efb7a3557fb17b02bad76c526d",
+    "dbRow": 2245,
+    "dbSha256": "a52c45c4323fabd3852fa850e8e292fb4c7ec4014d30c0d1949b67cd6c7bc49a"
+  },
+  {
+    "key": "Clue scroll (easy) - West of the Champions' Guild",
+    "group": 346,
+    "close": 48,
+    "wikiImage": "Map clue Champions guild.png",
+    "imageSha256": "1c9bea96d22d54a5736e3559369a374ed2c655d9c2d8903abcb17ba1bb271311",
+    "dbRow": 2229,
+    "dbSha256": "ea02781f4f358ed20a4d9d15c97668ebc4ea9d09f072f2480a9ce2e8af07605e"
+  },
+  {
+    "key": "Clue scroll (easy) - South-east Varrock mine",
+    "group": 347,
+    "close": 66,
+    "wikiImage": "Map clue South-eastern Varrock Mine.png",
+    "imageSha256": "c0f50ad20ffffd2b03501ec9481a38a9dcc3cecded12038c8c7c505e7e5e7644",
+    "dbRow": 2230,
+    "dbSha256": "15727c151fe6a3c0600469e99420df23dd3e7d2987da80cb3252bb092b64c26a"
+  },
+  {
+    "key": "Clue scroll (medium) - To the east of the Ranging guild",
+    "group": 349,
+    "close": 57,
+    "wikiImage": "Map clue Ranging Guild.png",
+    "imageSha256": "dc6755ce63e8e55f371aa11db27d8cd877c363dd98fd896bef2ad4cd82a36b4a",
+    "dbRow": 2246,
+    "dbSha256": "4cf9af961c5e2a9f269a85733f9d739ca04b52b377aae3eeff41b73549413662"
+  },
+  {
+    "key": "Clue scroll (medium) - West of the Crafting Guild",
+    "group": 352,
+    "close": 69,
+    "wikiImage": "Map clue hobgoblin peninsula.png",
+    "imageSha256": "545099186b8c859e5d3c93aadf274663ee9c62e81cbc44cb9ff72bd9ff1da7f8",
+    "dbRow": 2236,
+    "dbSha256": "cbb4206dbe2d03c748b651a4bb1ea41186af5b7f2f38321bfc4ca7c03ffa0912"
+  },
+  {
+    "key": "Clue scroll (medium) - The crate in McGrubor's Wood",
+    "group": 355,
+    "close": 64,
+    "wikiImage": "Map clue McGrubors.png",
+    "imageSha256": "45444756404684ed08c7e6fe39f6794219c5243886cccb386edb7e8f8141f312",
+    "dbRow": 2237,
+    "dbSha256": "b4e7b6010e0611ad9af984ba5be55aa45e923b7cefa859c2c3611fb98e1f37a8"
+  },
+  {
+    "key": "Clue scroll (hard) - In the western section of West Ardougne",
+    "group": 357,
+    "close": 93,
+    "wikiImage": "Map clue West Ardougne.png",
+    "imageSha256": "441412947429785aa806d97c33dd54e10add398bd103226e8bbb41c01c6165ee",
+    "dbRow": 2249,
+    "dbSha256": "de47911d88f252b6fa0c4c576deee71e3f43179a7bfc6f048e1455a2da0cc161"
+  },
+  {
+    "key": "Clue scroll (hard) - In a crate by the stairs to the Observatory Dungeon",
+    "group": 358,
+    "close": 58,
+    "wikiImage": "Map clue observatory.png",
+    "imageSha256": "385daee178947d7ef1ca79ce83906368db48b53885785f44baae2199f992290f",
+    "dbRow": 2250,
+    "dbSha256": "5f9bef011700ee68e5e4540eeef36abd2aa245b1d57a3f1c69d27c1e7f3cc8ff"
+  },
+  {
+    "key": "Clue scroll (hard) - In a crate at the Dark Warriors' Fortress",
+    "group": 359,
+    "close": 123,
+    "wikiImage": "Map clue Dark Warriors' Fortress.png",
+    "imageSha256": "3cdb261ca5468b8dc4ac2c489e06c2625b4af2572384675d4e563e639ba709a7",
+    "dbRow": 2251,
+    "dbSha256": "e199264acfee535952674a63ba8783c9aa307d9c4b0f620d2ab603ee3fa711ce"
+  },
+  {
+    "key": "Clue scroll (medium) - The crate west of the Clock Tower",
+    "group": 361,
+    "close": 117,
+    "wikiImage": "Map clue Clocktower.png",
+    "imageSha256": "dd80d6ee3f96cea5f1bc472b0fa570175447403073cf4e2144c5c037052f1d83",
+    "dbRow": 2239,
+    "dbSha256": "2450329cdb7808dd566a5b33c4c2c6fb5fadd160e26b1590b665774a0bcf1278"
+  }
+]

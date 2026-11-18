@@ -1,0 +1,69 @@
+{
+  "woodcutting": {
+    "source": "https://oldschool.runescape.wiki/w/Clue_nest",
+    "revision": 15363120,
+    "sha256": "395da0dca2f9f13e4fa1f7105645b75bafe2d4c22190288dd2b1957529c685c7",
+    "activities": {
+      "TREE": 317647,
+      "ACHEY": 317647,
+      "OAK": 361146,
+      "WILLOW": 289286,
+      "TEAK": 264336,
+      "MAPLE": 221918,
+      "HOLLOW": 214367,
+      "MAHOGANY": 220623,
+      "YEW": 145013,
+      "MAGIC": 72321
+    }
+  },
+  "mining": {
+    "source": "https://oldschool.runescape.wiki/w/Clue_geode",
+    "revision": 15394978,
+    "sha256": "3a438572beb7a6a615b97c20965c5eec3c8c0b3666226a87ae0bf27fadb89c0f",
+    "activities": {
+      "CLAY": 741600,
+      "COPPER": 741600,
+      "TIN": 741600,
+      "BLURITE": 741600,
+      "IRON": 741600,
+      "SILVER": 741600,
+      "COAL": 290640,
+      "GOLD": 296640,
+      "MITHRIL": 148320,
+      "ADAMANTITE": 59328,
+      "RUNITE": 42377,
+      "SANDSTONE": 741600,
+      "GRANITE": 741600
+    }
+  },
+  "fishing": {
+    "source": "https://oldschool.runescape.wiki/w/Clue_bottle",
+    "revision": 15207082,
+    "sha256": "d13cbc00ea0f04fce515cb9c857f26904e7a532e3d35d683d3b190499e57673a",
+    "activities": {
+      "SHRIMP": 870330,
+      "ANCHOVIES": 870330,
+      "KARAMBWANJI": 443697,
+      "SARDINE": 1056000,
+      "HERRING": 1056000,
+      "MACKEREL": 1147827,
+      "COD": 1147827,
+      "BASS": 1147827,
+      "TROUT": 923616,
+      "SALMON": 923616,
+      "PIKE": 305792,
+      "RAINBOW_FISH": 137739,
+      "TUNA": 257770,
+      "SWORDFISH": 257770,
+      "LOBSTER": 116129,
+      "CAVE_EEL": 257770,
+      "MONKFISH": 138583,
+      "RAW_KARAMBWAN": 170874,
+      "LEAPING_TROUT": 1280862,
+      "LEAPING_SALMON": 1280862,
+      "LEAPING_STURGEON": 1280862,
+      "SHARK": 82243,
+      "CAVEFISH": 300792
+    }
+  }
+}

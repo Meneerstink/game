@@ -1,0 +1,31 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Part of the world map, but where?
+|value = 20
+|weight = 0.020
+|id = 19782
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[map clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+In order to enter the underwater area, the player must equip a [[fishbowl helmet]] and a [[diving apparatus]] (a [[medallion of the deep]] can replace these two items) and weigh less than 28 kilograms, and speak to [[Murphy]] at [[Port Khazard]] to go diving.
+
+==Clue info==
+{{Clue info
+|id = 133
+|text = The map reveals where to dig:<br><br>In the [[Mogre Camp]], near [[Port Khazard]].
+|items = 
+|notes = Requires [[Diving apparatus]], [[Fishbowl helmet]]
+|map = {{Map|2953,9523|mtype=pin|plane=1|mapID=-1}}
+}}

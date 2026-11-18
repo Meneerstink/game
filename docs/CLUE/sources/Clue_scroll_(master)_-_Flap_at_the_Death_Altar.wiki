@@ -1,0 +1,44 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 376
+|tier = master
+|emote = Flap
+|text = The clue reveals <br><br>Flap at the Death Altar. Beware of double agents! Equip a death tiara, a legend's cape and any ring of wealth.
+|location = North-east corner of the [[Death Altar]]
+|items = Equip a [[death tiara]], a [[legend's cape]] and any [[ring of wealth]].
+|equipment1 = Death tiara
+|equipment2 = Cape of Legends
+|equipment2price1 = Coins
+|equipment2price1qty = 675
+|equipment3 = Ring of wealth
+|equipment3alt1 = Ring of wealth (i)
+|equipment3alt1price1 = Ring of wealth
+|equipment3alt1price2 = Ring of wealth scroll
+|equipment3alt1price3 = Coins
+|equipment3alt1price3qty = 50000
+|notes = Perform the [[flap]] emote near [[death altar]].
+The clue has an additional challenge:
+
+Kill a [[double agent]].
+|map = {{Map|2205,4838|mtype=pin|plane=0|mapID=-1}}
+}}

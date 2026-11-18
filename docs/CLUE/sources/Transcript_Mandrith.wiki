@@ -1,0 +1,39 @@
+{{Transcript|npc}}
+
+==Standard dialogue==
+* '''Player:''' Who are you and what is this place?
+* '''Mandrith:''' My name is Mandrith.
+* '''Mandrith:''' I collect valuable resources and pawn off access to them to foolish adventurers, like yourself.
+* '''Mandrith:''' You should take a look inside my arena. There's an abundance of valuable resources inside.
+* '''Player:''' And I can take whatever I want?
+* '''Mandrith:''' It's all yours. All I ask is you pay the upfront fee.
+* '''Player:''' Will others be able to kill me inside?
+* '''Mandrith:''' Yes. These walls will only hold them back for so long.
+* '''Player:''' You'll stop them though, right?
+* '''Mandrith:''' Haha! For the right price, I won't deny any one access to my arena. Even if their intention is to kill you.
+* '''Player:''' Right...
+* '''Mandrith:''' My arena holds many treasures that I've acquired at great expense, adventurer. Their bounty can come at a price.
+* '''Mandrith:''' One day, adventurer, I will boast ownership of a much larger, much more dangerous arena than this. Take advantage of this offer while it lasts.
+* {{tact|end}}
+
+==Treasure Trails==
+===Elite===
+* '''Mandrith:''' Answer this, please.
+* {{tact|receives=a challenge clue}}
+* '''Mandrith:''' Well done.
+* {{tbox|You've been given a [new clue/casket]!}}
+* {{tact|end}}
+===Master===
+* '''Mandrith:''' Here, solve this.
+* {{tact|receives=a [light/puzzle] box}}
+* {{tbox|Mandrith hands you a [light box/puzzlebox]!}}
+* {{tact|end}}
+====Talking again====
+* {{tcond|If the puzzle is not solved:}}
+** '''Mandrith:''' That doesn't look solved to me.
+** {{tact|end}}
+* {{tcond|If the puzzle is solved:}}
+** '''Mandrith:''' Well done [player name]. Here you go.
+** {{tact|receives=a [new clue/casket]}}
+** {{tbox|You've been given a [new clue/casket]!}}
+** {{tact|end}}

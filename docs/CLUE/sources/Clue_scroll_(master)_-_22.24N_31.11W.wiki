@@ -1,0 +1,30 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Perhaps someone at the observatory can teach me to navigate?
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is a [[coordinate clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 542
+|text = The clue reveals where to dig:<br><br>22.24N 31.11W
+|notes = Dig at the northern area of the [[Lovakengj]] [[sulphur mine]]. A [[facemask]] or [[Slayer helmet]] is recommended.
+The clue has an additional challenge:
+
+Kill a [[Brassican Mage]].
+|map = {{Map|1442,3878|mtype=pin|plane=0|mapID=-1}}
+}}

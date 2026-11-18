@@ -1,0 +1,147 @@
+{{Transcript|npc}}
+
+==Standard dialogue==
+* {{tcond|If the player has not completed [[Barbarian Training]]:}}
+** '''Otto Godblessed:''' Good day to you, hearty warrior! May the spirits guide you.
+** {{tact|continue}}
+* {{tcond|If the player has completed [[Barbarian Training]]:}}
+** '''Otto Godblessed:''' Welcome back, friend of the spirits. I am humbled in your presence. You are no longer the apprentice, but the master. Seek to inspire all with your daring deeds and legendary feats.
+** {{tact|continue}}
+* {{tselect|Select an Option}}
+* {{topt|cond=If the player has not completed [[Barbarian Training]]:|Let's talk about my training.}}
+** {{tact|[[Transcript:Barbarian Training|The player talks to Otto about their progress.]]}}
+* {{topt|cond=If the player does not have [[My notes]]:|Do you have anything for me?}}
+** '''Player:''' Do you have anything for me?
+** '''Otto Godblessed:''' I see you have free space and no way to record any information you may recover from the caverns. Please take this book as a record of your researches.
+** {{tact|receives=[[My notes]]}}
+** '''Player:''' What kind of information are you thinking of?
+** '''Otto Godblessed:''' Those who have previously entered the cavern have not all returned. Some of them seemed intent upon research and discovery as much as loot and daring deeds.
+** '''Otto Godblessed:''' It would be a shame if you were to recover any of their notes and be unable to record them handily. I hope the new book will give you space for such discoveries.
+** {{tact|initial}}
+* {{topt|cond=If the player has a [[Zamorakian spear]], [[Zamorakian hasta]], or [[broken dragon hasta]] in their inventory:|Can you help me with hastae?}}
+** '''Player:''' Can you help me with hastae?
+** '''Otto Godblessed:''' Perhaps. What do you need?
+** {{tselect|Select an Option}}
+** {{topt|Can you forge anything from this broken-looking hasta?}}
+*** '''Player:''' Can you forge anything from this broken-looking hasta?
+*** {{tcond|If the player has not completed the Smithing portion of [[Barbarian Training]]:}}
+**** '''Otto Godblessed:''' Yes, I can work with this, but remember, you cannot comprehend how to wield a hasta until you have learned to create one by following my teachings.
+**** {{tbox|{{Colour|#7f0000|~ WARNING ~ You do not have the requirements to wield a hasta!}}}}
+**** {{tselect|Do you wish to make a dragon hasta?}}
+***** {{topt|Yes}}
+****** {{tact|The player watches Otto smith on an anvil.}}
+****** {{tbox|pic=Dragon hasta detail.png|Otto has created a dragon hasta.}}
+****** {{tact|end}}
+***** {{topt|No}}
+****** '''Player:''' Actually, forget it.
+****** '''Otto Godblessed:''' As you wish.
+****** {{tact|end}}
+*** {{tcond|If the player has completed the Smithing portion of [[Barbarian Training]]:}}
+**** '''Otto Godblessed:''' Yes, I can work with this.
+**** {{tselect|Do you wish to make a dragon hasta?}}
+**** {{topt|Yes.}}
+***** {{tact|The player watches Otto smith on an anvil.}}
+***** {{tbox|pic=Dragon hasta detail.png|Otto has created a dragon hasta.}}
+***** {{tact|end}}
+**** {{topt|No.}}
+***** '''Player:''' Actually, forget I asked.
+***** '''Otto Godblessed:''' As you wish.
+***** {{tact|end}}
+** {{topt|Can you convert Zamorakian spears into hastae?}}
+*** '''Player:''' Can you convert Zamorakian spears into hastae?
+*** '''Otto Godblessed:''' Yes, I can convert a Zamorakian spear into a hasta. The spirits require me to request 300,000 coins from you for this service.
+*** {{tcond|If the player does not have at least 300,000 coins:}}
+**** '''Player:''' I can't afford that. Maybe another time.
+**** {{tact|end}}
+*** {{tcond|If the player has at least 300,000 coins:}}
+**** {{tselect|Do you wish to convert your spear?}}
+**** {{topt|Yes}}
+***** {{tact|The player watches Otto smith on an anvil.}}
+***** {{tbox|pic=Zamorakian hasta detail.png|Otto has converted your spear into a hasta.}}
+***** {{tact|end}}
+**** {{topt|No}}
+***** '''Player:''' Actually, forget it.
+***** '''Otto Godblessed:''' As you wish.
+***** {{tact|end}}
+** {{topt|Can you convert Zamorakian hastae into spears?}}
+*** '''Player:''' Can you convert Zamorakian hastae into spears?
+*** '''Otto Godblessed:''' Yes, I can convert a Zamorakian hasta into a spear. I do not charge for this service.
+*** {{tselect|Do you wish to convert your hasta?}}
+*** {{topt|Yes.}}
+**** {{tact|The player watches Otto smith on an anvil.}}
+**** {{tbox|pic=Zamorakian spear detail.png|Otto has converted your hasta into a spear.}}
+**** {{tact|end}}
+*** {{topt|No.}}
+**** '''Player:''' Actually, forget I asked.
+**** '''Otto Godblessed:''' As you wish.
+**** {{tact|end}}
+** {{topt|Actually, forget it.}}
+*** '''Player:''' Actually, forget it.
+*** '''Otto Godblessed:''' As you wish.
+*** {{tact|end}}
+* {{topt|cond=If the player has plant pot smashing disabled:|I'd like to smash my pots when planting trees again.}}
+** '''Player:''' I'd like to smash my pots when planting trees again.
+** '''Otto Godblessed:''' Consider it done.
+** {{tact|initial}}
+* {{topt|cond=If the player has plant pot smashing enabled:|I'd like to be calmer and not smash my pots.}}
+** '''Player:''' I'd like to be calmer and not smash my pots.
+** '''Otto Godblessed:''' Consider it done.
+** {{tact|initial}}
+* {{topt|Could you tell me more of these spirits you continually refer to?}}
+** '''Player:''' Could you tell me more of these spirits you continually refer to?
+** '''Otto Godblessed:''' Certainly, though it is quite simple - they are the barbarians of the past who have died in the passing of the years. There are three categories which learned sages claim may describe all spirits encountered.
+** '''Otto Godblessed:''' The majority are at peace, having died with their ambitions sated, even if this ambition was as simple as a glorious death. They can contact those in our world in order to spur us on to glory.
+** '''Otto Godblessed:''' Of course, they cannot or will not contact all inhabitants of these lands, for not all are worthy.
+** '''Player:''' So those are the spirits who give us guidance. What of the other sorts?
+** '''Otto Godblessed:''' A second category of spirit is made up of those who are not yet at peace. However, all that is needed is for their mortal remains to be laid to rest and they will join the peaceful majority.
+** '''Player:''' I can see the pyres serve this purpose. The final category is also restless?
+** '''Otto Godblessed:''' Alas, there is a small minority who will never be at rest. These have been slain in moments of insanity by their brothers or by adventurers.
+** '''Otto Godblessed:''' They are not at rest and will attack those they blame for their tortured state. They are not known, however, for being able to determine this blame with any great accuracy, so should be considered dangerous to all.
+** '''Player:''' Thank you Otto. It makes a bit more sense now.
+** {{tact|initial}}
+* {{topt|I'd better get going.}}
+** '''Player:''' I'd better get going.
+** {{tact|end}}
+
+==Treasure Trails==
+===Medium===
+====Getting the challenge====
+* '''Otto Godblessed:''' I have further training for you.
+* {{tbox|pic=Clue scroll (medium) detail.png|Otto has given you a challenge scroll!}}
+* {{tact|end}}
+====Solving the challenge====
+* '''Otto Godblessed:''' Please enter the answer to the question.
+* {{tinput|Enter amount:}}
+* {{tcond|If the answer was incorrect:}}
+** '''Otto Godblessed:''' Wrong! Focus your thoughts.
+** {{tact|end}}
+* {{tcond|If the answer was correct:}}
+** '''Otto Godblessed:''' Correct, you've completed this part of your training.
+** {{tcond|If the player gets another clue:}}
+*** {{tbox|pic=Clue scroll (medium) detail.png|Otto has given you another clue scroll!}}
+*** {{tact|end}}
+** {{tcond|If the player gets a casket:}}
+*** {{tbox|pic=Reward casket (medium) detail.png|You've obtained a casket!}}
+*** {{tact|end}}
+
+===Hard===
+====Getting the challenge====
+* '''Otto Godblessed:''' Ah! Here you go!
+* '''Player:''' What?
+* '''Otto Godblessed:''' I need you to answer this for me.
+* {{tbox|pic=Clue scroll (hard) detail.png|Otto Godblessed has given you a challenge scroll!}}{{^|pic should be Challenge scroll (hard)}}
+* {{tact|end}}
+====Solving the challenge====
+* '''Otto Godblessed:''' Please tell me your answer.
+* {{tinput|Enter amount:}}
+* {{tcond|If the answer was incorrect:}}
+** '''Otto Godblessed:''' Nope, Go check again!
+** {{tact|end}}
+* {{tcond|If the answer was correct:}}
+** '''Otto Godblessed:''' Spot on!
+** {{tcond|If the player gets another clue:}}
+*** {{tbox|pic=Clue scroll (hard) detail.png|Otto Godblessed has given you another clue scroll!}}
+*** {{tact|end}}
+** {{tcond|If the player gets a casket:}}
+*** {{tbox|pic=reward casket (hard) detail.png|You've obtained a casket!}}
+*** {{tact|end}}

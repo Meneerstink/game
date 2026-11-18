@@ -1,0 +1,38 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[20 March]] [[2024]]
+|update = Varlamore: Part One
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 28913
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 967
+|text = The cryptic reveals where to search:<br><br>Search the food barrel{{sic}} at the top of the Hunter Guild
+|notes = Search the filled [[food pot]] at the top of the tree within the [[Hunter Guild]], accessed from climbing the rope inside.
+|map = {{Map|1560,3048|mtype=pin|plane=2|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 15 May 2024
+|update = Further Project Rebalance (Skilling) & Varlamore Changes
+|change = 
+* The location of the clue has been changed from searching a certain bookshelf in [[the Burrow]] to searching a food barrel at the top of the guild's tree, removing the level 46 [[Hunter]] requirement that was deemed too high for easy Treasure Trails.
+* The clue description has been changed; previously, it was ''Search the bookshelf with a skull on it inside the Burrow.''
+}}
+{{Subject changes footer}}

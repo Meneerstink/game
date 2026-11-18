@@ -1,0 +1,37 @@
+{{External|rs=Clue scroll (medium) - Cry on the platform of the south-west tree in the Gnome Agility Arena}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10266
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[emote clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 321
+|tier = medium
+|emote = Cry
+|emote2 = No
+|text = The emote reveals <br><br>Cry on top of the western tree in the Gnome Agility Arena. Indicate 'no' before you talk to me. Equip a steel kiteshield, ring of forging and green dragonhide chaps.
+|location = Top of platform in the [[Gnome Stronghold Agility Course]]
+|items = Equip a [[steel kiteshield]], [[ring of forging]] and [[green dragonhide chaps]].
+|equipment1 = Steel kiteshield
+|equipment2 = Ring of forging
+|equipment3 = Green d'hide chaps
+|notes = Perform the [[cry]] and [[no]] emotes near the [[Balancing rope (Gnome Stronghold Agility Course)|balancing rope]] at the [[Gnome Stronghold Agility Course]].
+|map = {{Map|2473,3420|mtype=pin|plane=2|mapID=-1}}
+}}

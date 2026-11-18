@@ -1,0 +1,8 @@
+{{mainonly|[[Category:Treasure Trails]]}}
+'''Emote clues''' involve equipping certain [[List of items needed for emote clues|items]] in a particular location and performing an [[emote]]. These types of clues are featured in all levels of [[Treasure Trails]]. Once the emote has been performed, [[Uri]] will appear and give the player the next clue (or the reward, if the emote clue was the final step of the Treasure Trail). If the player has been requested to do another emote before talking to Uri, and they forgot to do it, he will say, ''I don't believe we have any business...'' but will not leave. The player can still perform the second emote and then talk to Uri to finish the clue. [[Easy clue]]s require performing one emote, [[medium clue]]s require performing two, and [[Hard clue|hard]] [[Elite clue|and]] [[Master clue|above]] clues require performing one emote, then fighting an enemy such as the [[Double Agent]]. [[Elite clue]]s do not involve fighting the [[Double Agent]].
+
+Note that wearing any version of a required item different than the standard one will not work (for example, a [[Rune platebody (t)]] will not work in place of a [[Rune platebody]]).
+
+For players who do [[Treasure Trails]] frequently, it is not recommended to keep items for all emote clues banked, as hundreds of different items are used across the Treasure Trail levels which take up significant bank space. Players with the appropriate construction level can build [[STASH]] units to store emote clue items near where the emote clue is located, saving bank space.
+
+A list of items used in each level of Treasure Trail can be found [[Treasure Trails/Guide/Emote clues/Items|here]].

@@ -1,0 +1,39 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by I see it all!
+|value = 20
+|weight = 0.020
+|id = 12133
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[anagram clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 79
+|text = The anagram reveals who to speak to:<br><br>MAJORS LAVA BADS AIR
+|notes = Speak to [[Ambassador Alvijar]] in north-east [[Dorgesh-Kaan]].
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''Double the miles before the initial Dorgeshuun veteran.''
+
+Answer: '''2505'''
+
+Note that you must have completed [[Another Slice of H.A.M.]] to prompt the dialogue.
+
+The reasoning behind the answer is that "Double the miles" corresponds to "MM", "initial Dorgeshuun" to "D", and "V" for the Brooch symbol. The Roman numeral MMDV is equal to 2505.{{CiteReddit|author=/u/rashaniquah|url=https://www.reddit.com/r/2007scape/comments/282lio/dorgeshuun_clue_solved/ci6s28w/|title=DORGESHUUN CLUE SOLVED|date=13 June 2014|archiveurl=https://reldo.runescape.wiki/i/27964120|archivedate=15 June 2026}}
+|map = {{Map|2736,5351|mtype=pin|plane=1|mapID=-1}}
+}}
+
+==References==
+{{Reflist}}

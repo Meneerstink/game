@@ -1,0 +1,248 @@
+<noinclude>{{Treasure Trails Guide Anagrams Intro}}
+==Medium Anagrams==
+</noinclude>
+{|class="wikitable" border="2"
+!Anagram
+!Solution
+!Location
+![[Challenge scrolls (Treasure Trails)|Challenge]] answer
+|-
+|'''[[Clue scroll (medium) - A BAKER|A BAKER]]'''
+|[[Baraek]]
+|[[Varrock Square]] ([[Baraek|fur trader]])
+|5
+|-
+|'''[[Clue scroll (medium) - A BAS|A BAS]]'''
+|[[Saba]]
+|Found in the cave on the path towards the [[Death Plateau (location)|Death Plateau]] west of [[Burthorpe]].
+|None
+|-
+|'''[[Clue scroll (medium) - A BASIC ANTI POT|A BASIC ANTI POT]]'''
+|[[Captain Tobias]]
+|[[Port Sarim]]
+|6
+|-
+|'''[[Clue scroll (medium) - AHA JAR|AHA JAR]]'''
+|[[Jaraah]]
+|The hospital of the [[Emir's Arena]].
+|None
+|-
+|'''[[Clue scroll (medium) - A HEART|A HEART]]'''
+|[[Aretha]]
+|[[Soul Altar (Kourend)|Soul Altar]]
+|2
+|-
+|'''[[Clue scroll (medium) - ARC O LINE|ARC O LINE]]'''
+|[[Caroline]]
+|North [[Witchaven]] next to the row boat. After the [[Sea Slug]] quest, she is found wandering the coast.
+|11
+|-
+|'''[[Clue scroll (medium) - AREA CHEF TREK|AREA CHEF TREK]]'''
+|[[Father Aereck]]
+|Found in the church in [[Lumbridge]].
+
+Note: If players failed to save [[Jarvis]] during the [[2017 Halloween event]], the answer is '20' instead of '19'.
+|19
+|-
+|'''[[Clue scroll (medium) - ARE COL|ARE COL]]'''
+|[[Oracle]]
+|The peak of [[Ice Mountain]] west of [[Edgeville]].
+|48
+|-
+|'''[[Clue scroll (medium) - ARMCHAIR THE PELT|ARMCHAIR THE PELT]]'''
+|[[Charlie the Tramp]]
+|Next to the south entrance of [[Varrock]].
+|0
+|-
+|'''[[Clue scroll (medium) - BAIL TRIMS|BAIL TRIMS]]'''
+|[[Brimstail]]
+|In the cave west of the [[Stronghold Slayer Cave]] entrance in the [[Tree Gnome Stronghold]].
+|None
+|-
+|'''[[Clue scroll (medium) - CALAMARI MADE MUD|CALAMARI MADE MUD]]'''
+|[[Madame Caldarium]]
+|Next to a spa in the [[Corsair Cove]].
+|6
+|-
+|'''[[Clue scroll (medium) - CLASH ION|CLASH ION]]'''
+|[[Nicholas]]
+|Most north-eastern point of [[Port Piscarilius]], north of the fishing shop.
+|4
+|-
+|'''[[Clue scroll (medium) - DT RUN B|DT RUN B]]'''
+|[[Brundt the Chieftain]]
+|[[Rellekka]], inside the main hall.
+|5
+|-
+|'''[[Clue scroll (medium) - EEK ZERO OP|EEK ZERO OP]]'''
+|[[Zoo keeper]]
+|[[Ardougne Zoo]]
+
+Note: If the player has completed [[Eagles' Peak]], the answer is '51' instead of '50'.
+|50
+|-
+|'''[[Clue scroll (medium) - EL OW|EL OW]]'''
+|[[Lowe]]
+|[[Varrock]] archery store
+|None
+|-
+|'''[[Clue scroll (medium) - GOBLETS ODD TOES|GOBLETS ODD TOES]]'''
+|[[Otto Godblessed]]
+|South of the [[Barbarian Outpost]], in [[Otto's Grotto]].
+|2
+|-
+|'''[[Clue scroll (medium) - GOBLIN KERN|GOBLIN KERN]]'''
+|[[King Bolren]]
+|[[Tree Gnome Village (location)|Tree Gnome Village]], next to the [[spirit tree]].
+|None
+|-
+|'''[[Clue scroll (medium) - GOT A BOY|GOT A BOY]]'''
+|[[Gabooty]]
+|Centre of [[Tai Bwo Wannai]].
+|11
+|-
+|'''[[Clue scroll (medium) - HALT US|HALT US]]'''
+|[[Luthas]]
+|The owner of the banana plantation on [[Musa Point]] ([[Karamja]]).
+|None
+|-
+|'''[[Clue scroll (medium) - HEORIC|HEORIC]]'''
+|[[Eohric]]
+|[[Burthorpe Castle]], top floor.
+|36
+|-
+|'''[[Clue scroll (medium) -  HICK JET| HICK JET]]'''
+|[[Jethick]]
+|Town square of [[West Ardougne]].
+|38
+|-
+|'''[[Clue scroll (medium) - HIS PHOR|HIS PHOR]]'''
+|[[Horphis]]
+|[[Arceuus Library]]
+|1
+|-
+|'''[[Clue scroll (medium) - I AM SIR|I AM SIR]]'''
+|[[Marisi]]
+|[[Marisi]] is a farmer found in the [[allotment patch]] located within [[Hosidius]].
+|5
+|-
+|'''[[Clue scroll (medium) - ICY FE|ICY FE]]'''
+|[[Fycie]]
+|[[Rantz]]'s cave, south-east of [[Gu'Tanoth]] and far eastern portion of [[Feldip Hills]] (near the coast, north-east of gnome glider and {{Fairycode|AKS}}).
+|None
+|-
+|'''[[Clue scroll (medium) - I DOOM ICON INN|I DOOM ICON INN]]'''
+|[[Dominic Onion]]
+|[[Nightmare Zone]]
+|9,500
+|-
+|'''[[Clue scroll (medium) - I EVEN|I EVEN]]'''
+|[[Nieve]]
+|The [[Slayer master]] in [[Gnome Stronghold]].
+|2
+|-
+|'''[[Clue scroll (medium) - KAY SIR|KAY SIR]]'''
+|[[Sir Kay]]
+|The courtyard in [[Camelot Castle]].
+|6
+|-
+|'''[[Clue scroll (medium) - LAME T|LAME T]]'''
+|[[Metla]]
+|[[Stonecutter Outpost]] in the [[Avium Savannah]].
+|None
+|-
+|'''[[Clue scroll (medium) - LARK IN DOG|LARK IN DOG]]'''
+|[[King Roald]]
+|Ground floor of [[Varrock Palace]].
+|24
+|-
+|'''[[Clue scroll (medium) - LEAKEY|LEAKEY]]'''
+|[[Kaylee]]
+|[[Rising Sun Inn]] in [[Falador]].
+|18
+|-
+|'''[[Clue scroll (medium) - LOW LAG|LOW LAG]]'''
+|[[Gallow]]
+|[[Vinery]] in [[Hosidius]].
+|12
+|-
+|'''[[Clue scroll (medium) - ME IF|ME IF]]'''
+|[[Femi]]
+|Just outside the gates of [[Tree Gnome Stronghold]].
+|None
+|-
+|'''[[Clue scroll (medium) - NOD MED|NOD MED]]'''
+|[[Edmond]]
+|Behind the most north-western house in [[East Ardougne]].
+|3
+|-
+|'''[[Clue scroll (medium) - NOT RAG|NOT RAG]]'''
+|[[Elder Torgan]]
+|To the north-west of the market in [[the Summer Shore]], in the house with the cooking range symbol [[File:Cooking range icon.png]].
+|None
+|-
+|'''[[Clue scroll (medium) - OK CO|OK CO]]'''
+|[[Cook (Lumbridge)|Cook]]
+|Ground floor of [[Lumbridge Castle]].
+|9
+|-
+|'''[[Clue scroll (medium) - PACINNG A TAIE|PACINNG A TAIE]]'''
+|[[Captain Ginea]]
+|East of the War Tent in the [[Shayzien Encampment]].
+|113
+|-
+|'''[[Clue scroll (medium) - PEAK REFLEX|PEAK REFLEX]]'''
+|[[Flax keeper]]
+|[[Flax field]] south of [[Seers' Village]].
+|676
+|-
+|'''[[Clue scroll (medium) - PEATY PERT|PEATY PERT]]'''
+|[[Party Pete]]
+|[[Falador Party Room]]
+|None
+|-
+|'''[[Clue scroll (medium) - QUE SIR|QUE SIR]]'''
+|[[Squire]]
+|[[Falador Castle]] Courtyard
+|654
+|-
+|'''[[Clue scroll (medium) - R AK MI|R AK MI]]'''
+|[[Karim]]
+|[[Al Kharid]] [[kebab shop]] just south of the furnace.
+|5
+|-
+|'''[[Clue scroll (medium) - RATAI|RATAI]]'''
+|[[Taria]]
+|[[Rimmington]] [[bush patch]]
+|7
+|-
+|'''[[Clue scroll (medium) - R SLICER|R SLICER]]'''
+|[[Clerris]]
+|[[Dense essence mine]]
+|738
+|-
+|'''[[Clue scroll (medium) - SAND NUT|SAND NUT]]'''
+|[[Dunstan]]
+|[[Anvil]] in north-eastern [[Burthorpe]].
+|8
+|-
+|'''[[Clue scroll (medium) - TAMED ROCKS|TAMED ROCKS]]'''
+|[[Dockmaster]]
+|[[Port Piscarilius]], building north-east of the general store.
+|5
+|-
+|'''[[Clue scroll (medium) - THICKNO|THICKNO]]'''
+|[[Hickton]]
+|[[Hickton's Archery Emporium]] in [[Catherby]]. Second house east of the bank.
+|2
+|-
+|'''[[Clue scroll (medium) - UESNKRL NRIEDDO|UESNKRL NRIEDDO]]'''
+|[[Drunken soldier]]
+|[[The Cloak and Stagger]] tavern in [[Shayzien]].
+|598
+|-
+|'''[[Clue scroll (medium) - VESTE |VESTE ]]'''
+|[[Steve]]
+|By the entrance to the [[Stronghold Slayer Cave]].
+|2
+|}

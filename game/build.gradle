@@ -10,10 +10,38 @@ mainClassName = 'gg.rsmod.game.Launcher'
 
 run {
     workingDir = rootProject.projectDir
+    // Local runs use this checkout's catalogues; deployed launchers still pass their own rsps.data.
+    systemProperty 'rsps.data', System.getProperty('rsps.data', rootProject.file('data').absolutePath)
     // Audit mode: `gradlew :game:run -Drsmod.tolerateDuplicateBinds=true` logs every duplicate
     // plugin binding (DUPLICATE-BIND) in one boot instead of crashing on the first one.
     def tolerateDups = System.getProperty('rsmod.tolerateDuplicateBinds')
     if (tolerateDups != null) systemProperty 'rsmod.tolerateDuplicateBinds', tolerateDups
+}
+
+test {
+    // Source-backed clue catalogues must never fall back to another branch's data.
+    systemProperty 'rsps.data', rootProject.file('data').absolutePath
+    inputs.dir(rootProject.file('data/cfg/clue')).withPropertyName('clueCatalogues')
+    inputs.files(rootProject.file('docs/CLUE/cache/stash-chart-baked.json'),
+        rootProject.file('docs/CLUE/cache/hover.json'),
+        rootProject.file('docs/CLUE/cache/stash-setting.json'),
+        rootProject.file('docs/CLUE/cache/interfaces.json'),
+        rootProject.file('docs/CLUE/cache/ui-camera-order.json'),
+        rootProject.file('docs/CLUE/cache/map-interfaces.json'),
+        rootProject.file('docs/CLUE/cache/puzzle-interface.json'),
+        rootProject.file('docs/CLUE/cache/puzzle-pictures.json'),
+        rootProject.file('docs/CLUE/cache/uri-source.json'),
+        rootProject.file('docs/CLUE/cache/search-bucket.json'),
+        rootProject.file('docs/CLUE/cache/core-source-items.json'),
+        rootProject.file('docs/CLUE/sources/Clue_scroll_(master).wiki')).withPropertyName('clueStashFixtures')
+}
+
+tasks.register('runClueStashSettingCacheTool', JavaExec) {
+    group = 'tools'
+    description = 'STASH equipped-item setting in native Settings; PLAN/PREFLIGHT unless Claude applies.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'gg.rsmod.game.tools.importer.ClueStashSettingCacheTool'
+    workingDir = rootProject.projectDir
 }
 
 dependencies {
@@ -1140,5 +1168,37 @@ task runToaObjectTexturePlanTool(type: JavaExec) {
     description = 'Read-only ToA OSRS loc/model to 667 texture proposals. Usage: --args="plan"'
     classpath = sourceSets.main.runtimeClasspath
     main = 'gg.rsmod.game.tools.importer.ToaObjectTexturePlanTool'
+    workingDir = rootProject.projectDir
+}
+
+task runClueInterfaceImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'CLUE cache 2686 reward/text interfaces. Defaults to preflight: <source-json> <mapping-tsv> <plan-tsv> [--apply]'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ClueInterfaceImportTool'
+    workingDir = rootProject.projectDir
+}
+
+task runClueStashCacheTool(type: JavaExec) {
+    group = 'tools'
+    description = 'CLUE selected STASH scenery/selectors. Default preflight: <stashes.json> <runtime-mapping.tsv> <plan.tsv> [--apply]'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ClueStashCacheTool'
+    workingDir = rootProject.projectDir
+}
+
+task runClueWatsonCacheTool(type: JavaExec) {
+    group = 'tools'
+    description = 'CLUE personal Watson pre/post-introduction variants. Default preflight: <runtime-mapping.tsv> <plan.tsv> [--apply]'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ClueWatsonCacheTool'
+    workingDir = rootProject.projectDir
+}
+
+task runClueStashChartCacheTool(type: JavaExec) {
+    group = 'tools'
+    description = 'CLUE source 493 STASH chart. Default preflight: <baked.json> <runtime-mapping.tsv> <plan.tsv> [--apply]'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ClueStashChartCacheTool'
     workingDir = rootProject.projectDir
 }

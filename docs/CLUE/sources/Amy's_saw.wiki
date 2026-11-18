@@ -1,0 +1,71 @@
+{{Infobox Item
+|name = Amy's saw
+|image = [[File:Amy's saw.png]]
+|release = [[26 August]] [[2020]]
+|update = Mahogany Homes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = Yes
+|stackable = No
+|noteable = No
+|options = Wield, Swap, Drop
+|examine = She saw scope for improvement.
+|value = 280
+|alchable = No
+|weight = 0.800
+|id = 24880
+|leagueRegion = Asgarnia
+}}
+[[File:Amy's saw detail.png|left|120px]]
+'''Amy's saw''' is an equipable [[saw]] that can be bought from the [[Mahogany Homes Reward Shop]] for 500 [[Carpenter points]]. Unlike the [[crystal saw]], it does not provide any [[Construction]] level boost. 
+
+The saw is wielded in the weapon slot. Its combat bonuses are comparable to bronze weapons—it falls between a [[bronze shortsword]] and [[bronze scimitar]] in offensive bonuses, but its [[attack speed]] is slightly slower.
+
+The saw can be wielded in the [[Shield slot table|shield slot]] by converting it to its [[Amy's saw (off-hand)|off-hand variant]] via the "Swap" option, exactly the same as the [[Imcando hammer]]. This allows the player to wield both tools at the same time, conserving inventory space when using a [[Shipwrights' Workbench]], building furniture in their [[player-owned house]], or during the [[Mahogany Homes]] minigame.
+
+It can be stored in a [[magic wardrobe]] in a player's [[costume room]].
+
+==Combat stats==
+{{Infobox Bonuses
+|astab = 2
+|aslash = 5
+|acrush = -2
+|amagic = 0
+|arange = 0
+|dstab = 0
+|dslash = 2
+|dcrush = 1
+|dmagic = 0
+|drange = 0
+|str = 5
+|rstr = 0
+|mdmg = 0
+|prayer = 0
+|slot = weapon
+|speed = 5
+|attackrange = 1
+|combatstyle = Slash Sword
+|image = [[File:Amy's saw equipped.png|140px]]
+|altimage = [[File:Amy's saw equipped female.png|140px]]
+}}
+
+{{CombatStyles|Slash Sword|speed=5|attackrange=1}}
+
+==Shop locations==
+{{Store locations list|Amy's saw}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 14 August 2024
+|update = Slayer Partners
+|poll = Poll 82 - Minigame Changes
+|change = A "Swap" option has been added, converting the saw to its [[Amy's saw (off-hand)|off-hand variant]].
+}}
+{{Subject changes footer}}
+
+{{Mahogany Homes}}
+{{Tools}}
+[[Category:Items storable in the costume room]]
+[[Category:Collection log items]]

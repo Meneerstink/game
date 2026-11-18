@@ -1,0 +1,52 @@
+{{Transcript|npc}}
+
+==Before [[Tree Gnome Village]]==
+* '''Player:''' Hello there.
+* '''Bolkoy:''' Hello stranger, new to these parts?
+* '''Bolkoy:''' I'm Bolkoy by the way. I'm the village shopkeeper. Would you like to buy something?
+* {{topt|What have you got?}}
+** '''Player:''' What have you got?
+** '''Bolkoy:''' Take a look.
+** {{tact|opens=Bolkoy's Village Shop}}
+* {{topt|No thank you.}}
+** '''Player:''' No thank you.
+** '''Bolkoy:''' Ok, maybe later.
+** {{tact|end}}
+
+==After [[Tree Gnome Village]]==
+* '''Player:''' Hello.
+* '''Bolkoy:''' Welcome, welcome. It's good to see you again. The village is much safer now you have returned the orbs.
+* '''Bolkoy:''' By the way, I'm the village shop keeper. Would you like to buy something?
+* {{topt|What have you got?}}
+** '''Player:''' What have you got?
+** '''Bolkoy:''' Take a look.
+** {{tact|opens=Bolkoy's Village Shop}}
+* {{topt|No thank you.}}
+** '''Player:''' No thank you.
+** '''Bolkoy:''' Ok, maybe later.
+** {{tact|end}}
+
+==Treasure Trails==
+===Hard===
+* '''Bolkoy:''' Hello! I take it you're here about the trail?
+* '''Player:''' Yes, do you have a challenge for me?
+* '''Bolkoy:''' Yes, right here!
+* {{tbox|pic=Clue scroll (hard) detail.png|Bolkoy has given you a challenge scroll!}}
+* {{tact|receives=a challenge scroll}}
+* {{tact|end}}
+
+====Talking to him again====
+* '''Bolkoy:''' Please enter the answer to the question.
+* {{tcond|When given the wrong answer:}}
+** '''Bolkoy:''' What's the matter with you? Can't you count? Try harder!
+** {{tact|end}}
+* {{tcond|When given the right answer:}}
+** '''Bolkoy:''' Lucky for you, that's the right answer!
+** {{tcond|When given another clue scroll:}}
+*** {{tbox|pic=Clue scroll (hard) detail.png|Bolkoy has given you another clue scroll!}}
+*** {{tact|receives=a clue scroll}}
+*** {{tact|end}}
+** {{tcond|When given a reward casket:}}
+*** {{tbox|pic=Reward casket (hard) detail.png|You've obtained a casket!}}
+*** {{tact|receives=a reward casket}}
+*** {{tact|end}}

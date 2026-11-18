@@ -1,0 +1,38 @@
+{{External|rs=Clue scroll (hard) - 04 degrees 05 minutes south, 04 degrees 24 minutes east}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Perhaps someone at the observatory can teach me to navigate?
+|value = 20
+|weight = 0.020
+|id = 3548
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[coordinate clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 440
+|text = The coordinate reveals where to dig:<br><br>04.05S 04.24E
+|items = 
+|notes = [[Gu'Tanoth]] island, enter cave south-west of Gu'Tanoth ([[fairy code]] {{Fairycode|AKS}}).
+
+The clue has an additional challenge:
+
+Kill a [[Saradomin wizard]]
+|map = {{Map|2581,3030|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Gu'Tanoth Island==
+[[File:GuTanoth Island hard clue route.png|thumb|left|Travel route to Gu'Tanoth Island. Run from fairy ring AKS to the cave south west of Gu'Tanoth. This brings you directly to the island.]]
+The ''only'' way to get onto the island is by taking a specific cave entrance, as the broken bridge leading to a small island is ''not'' passable. The correct cave entrance is found south-west of [[Gu'Tanoth]] with four rocks to its west and ruins to its south-east. Note that you do ''not'' need a [[skavid map]] to enter this cave.

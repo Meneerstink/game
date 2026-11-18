@@ -1,0 +1,193 @@
+{{Infobox NPC
+|name = Sherlock
+|image = [[File:Sherlock.png|110px]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|race = [[Human]]
+|location = East of [[Sorcerer's Tower]]
+|gender = Male
+|options = Talk-to
+|examine = Master of all clues.
+|map = {{Map|name=Sherlock|x=2733|y=3413|plane=0|r=5|mtype=square}}
+|id = 6586
+|leagueRegion = Kandarin
+}}
+[[File:Sherlock chathead.png|left]]
+'''Sherlock''' is the [[Treasure Trails]] master, who players must speak to if their [[Clue scroll (elite)|elite]] or [[Clue scroll (master)|master]] clue directs them to do so. He can be found wandering the woodland between the [[Sorcerer's Tower]] and [[Keep Le Faye]]. 
+
+==Transportation==
+*Using the teleport option of the [[Kandarin headgear 3]] or [[Kandarin headgear 4]].
+*Using the [[Quest cape|Quest Cape]] to teleport outside of the [[Legends' Guild]] then heading north above the guild.
+*[[Fairy ring]] code {{Fairycode|blr}} to teleport south-east of the [[Legends' Guild]] then heading north above the guild.
+*[[Skills necklace]] teleport option to the [[Fishing Guild]] and heading east
+*[[Combat bracelet]] teleport option to the [[Ranging Guild]] and heading east
+*[[Camelot teleport]] to Seers' village and head south
+*[[Ardougne cloak 2|Ardougne Cloak 2]] or higher to the [[Ardougne farm]] patch and heading north-east
+
+==Description==
+Sherlock will assign players a skill challenge, which may consist of one of the following ([[temporary skill boost]]s may be used where applicable). Once complete, he will give players their next clue or reward.
+
+Note that for the skill challenge to count as completed, the [[Challenge scroll#Elite|challenge scroll]] '''must be held in the inventory''' when the action is performed. If the challenge is completed but the challenge scroll is not in the player's inventory, it will not be counted and the player must do it again with the challenge scroll in their inventory.
+
+==Overview==
+{{Sync}}
+<tabber>
+|-|
+Elite challenges=
+{| class="diary-table" style="text-align:center;"
+| style="vertical-align:top" |
+{{DiarySkillStats
+|margin=no
+|maxrefs=2
+|boostable=true
+|selectable=true
+|Fishing = 76
+|Hunter = 68
+|Thieving = 72
+|Fletching = 70
+|Magic = 68
+|Herblore = 66
+|Slayer = 65
+|Defence = 65
+|Prayer = 60
+|Mining = 74
+|Smithing = 64
+|Crafting = 63
+|Attack = 60
+|Woodcutting = 60
+|Firemaking = 60
+|Runecraft = 59
+|Agility = 48
+|Sailing = 62
+|Farming = 47
+|Cooking = 45
+|Total = 1265
+}}
+|style="vertical-align:top;" |
+{| class="wikitable lighttable qc-active" style="width:inherit;"
+!Quest requirements
+|- data-rowid="Death to the Dorgeshuun"
+|[[Death to the Dorgeshuun]]
+|- data-rowid="Eagles' Peak"
+|[[Eagles' Peak]]
+|- data-rowid="Lost City"
+|[[Lost City]]
+|- data-rowid="Monkey Madness I"
+|[[Monkey Madness I]]
+|- data-rowid="Priest in Peril"
+|[[Priest in Peril]]
+|}
+| style="vertical-align: top" |
+{| class="wikitable lighttable"
+!Additional requirements
+|-
+|Completion of the [[Knight Waves Training Ground]]
+|}
+
+|-|
+Master challenges=
+{| class="diary-table" style="text-align:center;"
+| style="vertical-align:top" |
+{{DiarySkillStats
+|margin=no
+|maxrefs=2
+|boostable=true
+|selectable=true
+|Firemaking=90
+|Woodcutting=90
+|Magic=90
+|Slayer=85
+|Smithing=88
+|Herblore=87
+|Fishing=87
+|Cooking=72
+|Crafting=87
+|Mining=85
+|Thieving=85
+|Farming=83
+|Fletching=81
+|Agility=80
+|Hunter=79
+|Runecraft=77
+|Attacking=70
+|Total=1362
+}}
+|style="vertical-align:top;" |
+{| class="wikitable lighttable qc-active" style="width:inherit;"
+!Quest requirements
+|- data-rowid="Death to the Dorgeshuun"
+|[[Death to the Dorgeshuun]]
+|- data-rowid="Priest in Peril"
+|[[Priest in Peril]]
+|- data-rowid="Regicide"
+|[[Regicide]]
+|- data-rowid="Shades of Mort'ton"
+|[[Shades of Mort'ton]]
+|- data-rowid="The Tourist Trap"
+|[[The Tourist Trap]]
+|- data-rowid="Tree Gnome Village"
+|[[Tree Gnome Village]]
+|}
+| style="vertical-align: top" |
+{| class="wikitable lighttable"
+!Additional requirements
+|-
+|Started [[Mourning's End Part I]]
+|-
+|Completion of the [[Barbarian Training#Barbarian Herblore|herblore section]] of [[Barbarian Training]]
+|-
+|Access to the [[spiritual mage]]s
+|-
+|Access to the [[Arceuus Spellbook]]
+|}
+
+|-|
+</tabber>
+
+==Elite skill challenges==
+{{:Sherlock/Elite}}
+
+==Master skill challenges==
+{{:Sherlock/Master}}
+
+==Dialogue==
+{{hastranscript|npc}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes 
+|date = 8 December 2016
+|update = Load Test, Tournament World & QOL
+|change = Sherlock now recognizes your completed elite skill challenge when you're carrying an incomplete master skill challenge.
+}}
+{{Subject changes
+|date = 31 March 2016
+|update = Bugfixes & Combining Tentacles
+|change = Sherlock no longer requires you to use a clue scroll on him in order to get a challenge scroll. You can now simply talk to Sherlock with your clue scroll in your inventory. 
+}}
+{{Subject changes
+|date = 17 September 2015
+|update = Angler's Outfit & Slayer
+|change = The 'Wedge' now tells you the correct amount of teleports to Sherlock for completing the Elite Kandarin diary in his reward dialogue.
+}}
+{{Subject changes
+|date = 23 July 2015
+|update = Big Cats & WWF 
+|change = Sherlock's scarf will no longer be visible through the back of the NPC and his waist line will no longer be transparent.
+}}
+{{Subject changes
+|date = 12 March 2015
+|update = Diary Skillcape Emote
+|change = Crafting anything with leather no longer completes an elite skill challenge.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+*The character is a reference to Arthur Conan Doyle's character {{Wp|Sherlock Holmes}}.
+*When your character observes that he has no shirt on, he will reply with "''No shirt, Sherlock''". This is a play on the phrase "''[[wiktionary:no shit, Sherlock|no shit, Sherlock]]''", an insult used when somebody points out an obvious fact.
+*When using an item on Sherlock, he'll say: "That's nice, but... I don't really need one of those."
+
+{{Treasure Trails}}
+[[Category:Achievement diaries]]
+[[Category:Kandarin]]

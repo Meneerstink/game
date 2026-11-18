@@ -1,0 +1,53 @@
+--- a/runescape/src/main/java/Component.java
++++ b/runescape/src/main/java/Component.java
+@@ -71,6 +71,14 @@
+     @OriginalMember(owner = "client!jt", name = "a", descriptor = "Lclient!dla;")
+     public static final ReferenceCache modelCache = new ReferenceCache(50);
+ 
++    static long interfaceModelCacheKey(long crc, int model, int type, int toolkit) {
++        if (type != OBJ_TYPE_MODEL || model < 0 || model > 131071) {
++            throw new IllegalArgumentException("Invalid static interface model");
++        }
++        return crc & 0x3FFFFFFFFFL | (long) (model & 0xFFFF) << 38
++                | (long) type << 54 | (long) (model >>> 16) << 55 | (long) toolkit << 59;
++    }
++
+     @OriginalMember(owner = "client!od", name = "l", descriptor = "Lclient!dla;")
+     public static final ReferenceCache graphicCache = new ReferenceCache(8);
+ 
+@@ -757,6 +765,12 @@
+         /* common */
+ 
+         this.type = packet.g1();
++        // CLUE: archive 37 models use a g4 id; the original IF3 layout stays unchanged.
++        final boolean wideInterfaceModel = (this.type & 0x40) != 0;
++        this.type &= ~0x40;
++        if (wideInterfaceModel && (this.type & 0x7F) != TYPE_MODEL) {
++            throw new IllegalArgumentException("Wide model flag on non-model component");
++        }
+         if ((this.type & 0x80) != 0) {
+             this.type &= 0x7F;
+             this.name = packet.gjstr();
+@@ -816,8 +830,11 @@
+ 
+         if (this.type == TYPE_MODEL) {
+             this.objType = OBJ_TYPE_MODEL;
+-            this.obj = packet.g2();
+-            if (this.obj == 65535) {
++            this.obj = wideInterfaceModel ? packet.g4() : packet.g2();
++            if (wideInterfaceModel && (this.obj < 65536 || this.obj > 131071)) {
++                throw new IllegalArgumentException("Interface model outside archive 37 namespace");
++            }
++            if (!wideInterfaceModel && this.obj == 65535) {
+                 this.obj = -1;
+             }
+ 
+@@ -1236,7 +1253,7 @@
+                 functionMask |= 0x8000;
+             }
+ 
+-            @Pc(271) long key = crc & 0x3FFFFFFFFFL | (long) this.obj << 38 | (long) this.objType << 54 | (long) toolkit.index << 59;
++            @Pc(271) long key = interfaceModelCacheKey(crc, this.obj, this.objType, toolkit.index);
+             @Pc(277) Model model = (Model) modelCache.get(key);
+ 
+             if (model == null || toolkit.compareFunctionMasks(model.ua(), functionMask) != 0) {

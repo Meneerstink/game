@@ -147,7 +147,9 @@ object DeathExecutor {
                 // Owner 2026-09-26: beast-of-burden cargo (and anything else the caller detaches) joins the same gravestone.
                 val extra = extraPvmItems().filterNot { DeathRules.destroyInWilderness(victim, it.id) }
                 if (recoverable.isNotEmpty() || extra.isNotEmpty()) {
-                    createGravestone(victim, recoverable, logger, extra, graveTile)
+                    if (gg.rsmod.plugins.content.areas.watson.MimicEncounter.inArena(victim)) {
+                        gg.rsmod.plugins.content.areas.watson.MimicRecovery.store(victim, recoverable.map { Item(it.item) } + extra)
+                    } else createGravestone(victim, recoverable, logger, extra, graveTile)
                 }
             }
         }

@@ -1,0 +1,51 @@
+package gg.rsmod.plugins.content.areas.watson
+
+import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.model.container.ItemContainer
+import gg.rsmod.game.model.entity.Player
+import gg.rsmod.plugins.content.scrolls.ClueItems
+import gg.rsmod.plugins.content.scrolls.ClueOwnership
+import gg.rsmod.plugins.content.scrolls.ClueScrollTier
+
+/** Wiki Watson: one of each easy/medium/hard/elite, persistent partial deposits, never take duplicates. */
+object WatsonClues {
+    val STORED = AttributeKey<Int>(persistenceKey = "watson_stored_clues")
+    val TIERS = listOf(ClueScrollTier.EASY, ClueScrollTier.MEDIUM, ClueScrollTier.HARD, ClueScrollTier.ELITE)
+    private const val ALL = 15
+
+    enum class Result { NOTHING_NEW, STORED, MASTER_HELD, MASTER_GIVEN, MISSING_IMPORT }
+
+    fun stored(player: Player): Set<ClueScrollTier> {
+        val bits = player.attr[STORED] ?: 0
+        return TIERS.filterIndexed { index, _ -> bits and (1 shl index) != 0 }.toSet()
+    }
+
+    /** No suspensions between snapshot and commit; an interrupted dialogue cannot consume a second clue. */
+    fun offer(player: Player, offered: Set<ClueScrollTier> = TIERS.toSet(), masterId: Int? = ClueItems.local(19835)): Result {
+        if (masterId == null) return Result.MISSING_IMPORT
+        val staged = ItemContainer(player.inventory)
+        var bits = (player.attr[STORED] ?: 0) and ALL
+        val previous = bits
+        TIERS.forEachIndexed { index, tier ->
+            val flag = 1 shl index
+            if (tier !in offered || bits and flag != 0) return@forEachIndexed
+            val slot = staged.rawItems.indexOfFirst { it?.id == tier.scrollId }
+            if (slot < 0) return@forEachIndexed
+            // Remove exactly the scroll selected, including its item-specific step.
+            staged[slot] = null
+            bits = bits or flag
+        }
+        val masterOwned = listOf(player.inventory, player.bank, player.gravestone, player.deathRecovery).any { it.contains(masterId) }
+        val result = if (bits == ALL) {
+            if (masterOwned || !staged.add(masterId, 1, assureFullInsertion = true).hasSucceeded()) Result.MASTER_HELD
+            else { bits = 0; Result.MASTER_GIVEN }
+        } else if (bits != previous) Result.STORED else Result.NOTHING_NEW
+        for (slot in 0 until staged.capacity) {
+            val old = player.inventory[slot]
+            val next = staged[slot]
+            if (old?.id != next?.id || old?.amount != next?.amount || old?.attr != next?.attr) player.inventory[slot] = next
+        }
+        player.attr[STORED] = bits
+        return result
+    }
+}

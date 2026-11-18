@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 12086
+|leagueRegion = Morytania
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[coordinate clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]]. This location is accessed by travelling to [[Mos Le'Harmless]] and either crossing the [[Stepping_Stone_(Mos_Le'Harmless,_level_82)|stepping stones]] (with 82 [[Agility]]) or through the [[Mos Le'Harmless Cave]]. Use of [[Protect from Melee]] or a [[Witchwood icon]] are needed to safely traverse the cave, along with a [[light source]] unless the [[Fire of Eternal Light]] has been built.
+
+==Clue info==
+{{Clue info
+|id = 486
+|text = The coordinate reveals where to dig:<br><br>03.09S 42.50E
+|items = 
+|notes = Small island north-east of [[Mos Le'Harmless]].
+
+The clue has an additional challenge:
+
+Kill an [[Armadylean guard]] or a [[Bandosian guard]]
+|map = {{Map|3811,3060|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,46 @@
+[
+  {
+    "page": "Template:HerbDropLines",
+    "revision": 15325751,
+    "revision_time": "2026-08-31T00:45:43Z",
+    "file": "Template_HerbDropLines.wiki",
+    "sha256": "c2f6beeff9a74c94249c8cd9fb09b07bc8292498aa12621d5a9e1af3e568df7e",
+    "url": "https://oldschool.runescape.wiki/w/Template%3AHerbDropLines"
+  },
+  {
+    "page": "Template:AllotmentSeedDropLines",
+    "revision": 15070951,
+    "revision_time": "2025-11-28T13:46:22Z",
+    "file": "Template_AllotmentSeedDropLines.wiki",
+    "sha256": "02135f37b1802254ece33a898d8323c83dcf7d348b0751d5a87961dad47a014c",
+    "url": "https://oldschool.runescape.wiki/w/Template%3AAllotmentSeedDropLines"
+  },
+  {
+    "page": "Template:GemDropTable",
+    "revision": 15325727,
+    "revision_time": "2026-08-31T00:45:19Z",
+    "file": "Template_GemDropTable.wiki",
+    "sha256": "3e3c606794199c1313848994ad9a67dfa74613f7176a524bede1ceae854ca624",
+    "url": "https://oldschool.runescape.wiki/w/Template%3AGemDropTable"
+  },
+  {
+    "page": "Transcript:Strange device",
+    "missing": true
+  },
+  {
+    "page": "Module:GemDropLines",
+    "revision": 15325728,
+    "revision_time": "2026-08-31T00:45:20Z",
+    "file": "Module_GemDropLines.wiki",
+    "sha256": "c49c68484c5ee2812299b38bd966bff3a8578fdde7b3d3aed15998c75d8486f1",
+    "url": "https://oldschool.runescape.wiki/w/Module%3AGemDropLines"
+  },
+  {
+    "page": "Gem drop table",
+    "revision": 15167578,
+    "revision_time": "2026-04-07T04:42:44Z",
+    "file": "Gem_drop_table.wiki",
+    "sha256": "d7e54e63a55542bd18f8471f104c9dce2e05fae11b8f09f71417d8eee18a1073",
+    "url": "https://oldschool.runescape.wiki/w/Gem_drop_table"
+  }
+]

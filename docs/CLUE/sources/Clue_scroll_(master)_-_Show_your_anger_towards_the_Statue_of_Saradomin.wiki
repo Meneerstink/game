@@ -1,0 +1,36 @@
+{{Redirect|Show your anger|the other master clue step to show your anger|Clue scroll (master) - Show your anger at the Wise old man}}
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 381
+|tier = master
+|emote = Angry
+|text = The clue reveals <br><br>Show your anger towards the Statue of Saradomin in Ellamaria's garden. Beware of double agents! Equip a zamorak godsword.
+|location=By the entrance to Queen [[Ellamaria]]'s garden in [[Varrock Palace]]
+|items = Equip a [[Zamorak godsword]].
+|equipment1 = Zamorak godsword
+|notes = Perform the [[angry]] emote by the bear cage in [[Varrock Palace]] gardens.
+The clue has an additional challenge:
+
+Kill a [[double agent]].
+|map = {{Map|3230,3478|mtype=pin|plane=0|mapID=-1}}
+}}

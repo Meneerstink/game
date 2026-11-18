@@ -1,0 +1,29 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 3501
+|leagueRegion = Desert
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 783
+|text = The cryptic reveals where to search:<br><br>Search the boxes in one of the tents in Al Kharid.
+|notes = Search the boxes in the tent east of the [[Al Kharid]] [[silk trader]].
+|map = {{Map|3308,3206|mtype=pin|plane=0|mapID=-1}}
+}}

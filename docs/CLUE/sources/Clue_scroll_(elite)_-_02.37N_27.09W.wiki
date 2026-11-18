@@ -1,0 +1,30 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[25 September]] [[2024]]
+|update = Varlamore: The Rising Darkness is OUT NOW
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 29855
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[coordinate clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 980
+|text = The clue reveals where to dig:<br><br>02.37N 27.09W
+|notes = Dig on the summit of the [[Proudspire]]
+The clue has an additional challenge:
+
+Kill an [[Armadylean guard]] or [[Bandosian guard]].
+|map = {{Map|1571,3245|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,79 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 375
+|tier = master
+|emote = Jig
+|location = Near the [[Chest (Barrows)|Barrows chest]]
+|text = The clue reveals <br><br>Do a jig at the Barrows chest. Beware of double agents! Equip any full barrows set.
+|items = Equip a full [[Barrows equipment|Barrows set]].
+|set1equipment1 = Ahrim's hood
+|set1equipment2 = Ahrim's staff
+|set1equipment3 = Ahrim's robetop
+|set1equipment4 = Ahrim's robeskirt
+|set1equipment1alt1 = Echo ahrim's hood
+|set1equipment1alt1price1 = Ahrim's hood
+|set1equipment1alt1price2 = Echo ahrim's ornament kit
+|set1equipment2alt1 = Echo ahrim's staff
+|set1equipment2alt1price1 = Ahrim's staff
+|set1equipment2alt1price2 = Echo ahrim's ornament kit
+|set1equipment3alt1 = Echo ahrim's robetop
+|set1equipment3alt1price1 = Ahrim's robetop
+|set1equipment3alt1price2 = Echo ahrim's ornament kit
+|set1equipment4alt1 = Echo ahrim's robeskirt
+|set1equipment4alt1price1 = Ahrim's robeskirt
+|set1equipment4alt1price2 = Echo ahrim's ornament kit
+|set2equipment1 = Dharok's helm
+|set2equipment2 = Dharok's greataxe
+|set2equipment3 = Dharok's platebody
+|set2equipment4 = Dharok's platelegs
+|set3equipment1 = Guthan's helm
+|set3equipment2 = Guthan's platebody
+|set3equipment3 = Guthan's chainskirt
+|set3equipment4 = Guthan's warspear
+|set4equipment1 = Karil's coif
+|set4equipment2 = Karil's leathertop
+|set4equipment3 = Karil's leatherskirt
+|set4equipment4 = Karil's crossbow
+|set5equipment1 = Torag's helm
+|set5equipment2 = Torag's platebody
+|set5equipment3 = Torag's platelegs
+|set5equipment4 = Torag's hammers
+|set6equipment1 = Verac's helm
+|set6equipment2 = Verac's brassard
+|set6equipment3 = Verac's plateskirt
+|set6equipment4 = Verac's flail
+|notes = Perform the [[jig]] emote near the [[Chest (Barrows)|Barrows chest]].
+The clue has an additional challenge:
+
+Kill a [[double agent]].
+|map = {{Map|3551,9694|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 22 January 2025
+|update = Bank QoL & Mini Menu Improvements
+|change = The [[Raging Echoes League]] variant of [[Ahrim the Blighted's equipment|Ahrim's equipment]] can now be correctly used to solve the clue.
+}}
+{{Subject changes footer}}

@@ -1,0 +1,32 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Bosco 6!
+|value = 20
+|weight = 0.020
+|id = 19794
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[anagram clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 81
+|text = The anagram reveals who to speak to:<br><br>OUR OWN NEEDS
+|notes = Speak to [[Nurse Wooned]] in the [[infirmary]] of the [[Shayzien Encampment]].
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''How many wounded soldiers are in the camp?''
+
+Answer: '''16'''
+|map = {{Map|1511,3619|mtype=pin|plane=0|mapID=-1}}
+}}

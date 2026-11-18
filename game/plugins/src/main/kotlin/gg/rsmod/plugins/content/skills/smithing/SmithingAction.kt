@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.skills.smithing
 
+import gg.rsmod.plugins.content.scrolls.TreasureTrailSherlock as ClueTasks
+
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.queue.QueueTask
@@ -38,7 +40,8 @@ class SmithingAction(
             if (player.inventory.remove(product.barType.item, product.smithingType.barRequirement).hasFailed()) {
                 return
             }
-            player.inventory.add(product.result, product.smithingType.producedAmount)
+            val made = player.inventory.add(product.result, product.smithingType.producedAmount)
+            if (made.hasSucceeded() && product.result == gg.rsmod.plugins.api.cfg.Items.RUNE_MED_HELM) ClueTasks.succeeded(player, ClueTasks.Action.RUNE_MED_HELM)
             player.addXp(Skills.SMITHING, product.barType.experience * product.smithingType.barRequirement, checkBrawlingGloves = true)
             task.wait(3)
         }

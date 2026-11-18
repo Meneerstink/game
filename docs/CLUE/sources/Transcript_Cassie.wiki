@@ -1,0 +1,18 @@
+{{Transcript|npc}}
+
+==Standard dialogue==
+* '''Cassie:''' I buy and sell shields, do you want to trade?
+* {{topt|Yes please.}}
+** {{tact|opens=Cassie's Shield Shop}}
+* {{topt|No thank you.}}
+** '''Player:''' No thank you.
+** {{tact|end}}
+
+==Treasure Trails==
+===Easy===
+* {{tcond|When given another clue scroll:}}
+** {{tbox|pic=clue scroll (easy) detail.png|You've been given another clue!}}
+** {{tact|end}}
+* {{tcond|When given a reward casket:}}
+** {{tbox|pic=reward casket (easy) detail.png|You've obtained a casket!}}
+** {{tact|end}}

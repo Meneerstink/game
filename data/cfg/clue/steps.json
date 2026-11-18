@@ -1,0 +1,5018 @@
+[
+  {
+    "key": "Clue scroll (easy) - Dance at the crossroads north of Draynor",
+    "tier": "easy",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Dance at the crossroads north of Draynor. Equip an iron chain body, a sapphire ring and a longbow.",
+    "points": [
+      [
+        3109,
+        3294,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1101,
+          "local": 1101,
+          "name": "Iron chainbody"
+        }
+      ],
+      [
+        {
+          "osrs": 1637,
+          "local": 1637,
+          "name": "Sapphire ring"
+        }
+      ],
+      [
+        {
+          "osrs": 839,
+          "local": 839,
+          "name": "Longbow"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Dance",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Iron chainbody",
+        "equipment2": "Sapphire ring",
+        "equipment3": "Longbow"
+      },
+      "requirements": "Equip an [[iron chainbody]], a [[sapphire ring]] and a [[longbow]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dance_at_the_crossroads_north_of_Draynor",
+    "sourceFile": "Clue_scroll_(easy)_-_Dance_at_the_crossroads_north_of_Draynor.wiki",
+    "sourceSha256": "f8c2643657e7de62efefb7860a0eedfaa92ae1f48f91905ceddb2a8861cc3f73"
+  },
+  {
+    "key": "Clue scroll (easy) - Headbang in the mine north of Al Kharid",
+    "tier": "easy",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Headbang in the mine north of Al Kharid. Equip a desert shirt, leather gloves and leather boots.",
+    "points": [
+      [
+        3299,
+        3289,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1833,
+          "local": 1833,
+          "name": "Desert shirt"
+        }
+      ],
+      [
+        {
+          "osrs": 1059,
+          "local": 1059,
+          "name": "Leather gloves"
+        }
+      ],
+      [
+        {
+          "osrs": 1061,
+          "local": 1061,
+          "name": "Leather boots"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Headbang",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Desert shirt",
+        "equipment2": "Leather gloves",
+        "equipment3": "Leather boots"
+      },
+      "requirements": "Equip a [[desert shirt]], [[leather gloves]] and [[leather boot]]s."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Headbang_in_the_mine_north_of_Al_Kharid",
+    "sourceFile": "Clue_scroll_(easy)_-_Headbang_in_the_mine_north_of_Al_Kharid.wiki",
+    "sourceSha256": "128f2a3b5e78562e8a231fb2e51be6cadaec52c02cfc058a6e7f87f7b1d82cc4"
+  },
+  {
+    "key": "Clue scroll (easy) - Cheer at the Druids' Circle",
+    "tier": "easy",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Cheer at the Druids' Circle. Equip a blue wizard hat, a bronze two-handed sword and HAM boots.",
+    "points": [
+      [
+        2924,
+        3478,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 579,
+          "local": 579,
+          "name": "Blue wizard hat"
+        }
+      ],
+      [
+        {
+          "osrs": 1307,
+          "local": 1307,
+          "name": "Bronze 2h sword"
+        }
+      ],
+      [
+        {
+          "osrs": 4310,
+          "local": 4310,
+          "name": "Ham boots"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Cheer",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Blue wizard hat",
+        "equipment2": "Bronze 2h sword",
+        "equipment3": "Ham boots"
+      },
+      "requirements": "Equip a [[blue wizard hat]], a [[bronze 2h sword]] and [[HAM boots]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Cheer_at_the_Druids%27_Circle",
+    "sourceFile": "Clue_scroll_(easy)_-_Cheer_at_the_Druids'_Circle.wiki",
+    "sourceSha256": "37d68d705b226010b79f4677ebef0ee7dbcc5f0bf0f97ef5e0fe5c5e0ca2ded8"
+  },
+  {
+    "key": "Clue scroll (easy) - Clap on the causeway to the Wizards' Tower",
+    "tier": "easy",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Clap on the causeway to the Wizards' Tower. Equip an iron medium helmet, emerald ring and a white apron.",
+    "points": [
+      [
+        3113,
+        3196,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1137,
+          "local": 1137,
+          "name": "Iron med helm"
+        }
+      ],
+      [
+        {
+          "osrs": 1639,
+          "local": 1639,
+          "name": "Emerald ring"
+        }
+      ],
+      [
+        {
+          "osrs": 1005,
+          "local": 1005,
+          "name": "White apron"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Clap",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Iron med helm",
+        "equipment2": "Emerald ring",
+        "equipment3": "White apron"
+      },
+      "requirements": "Equip an [[iron med helmet]], [[emerald ring]] and a [[white apron]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Clap_on_the_causeway_to_the_Wizards%27_Tower",
+    "sourceFile": "Clue_scroll_(easy)_-_Clap_on_the_causeway_to_the_Wizards'_Tower.wiki",
+    "sourceSha256": "bea869de9294d7096f627e07c4ce45589e619ba45f271d86ae52f642772bac7e"
+  },
+  {
+    "key": "Clue scroll (easy) - Jump for joy at the beehives",
+    "tier": "easy",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Jump for joy at the beehives. Equip a desert shirt, green gnome robe bottoms and a steel axe.",
+    "points": [
+      [
+        2759,
+        3445,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1833,
+          "local": 1833,
+          "name": "Desert shirt"
+        }
+      ],
+      [
+        {
+          "osrs": 648,
+          "local": 648,
+          "name": "Green robe bottoms"
+        }
+      ],
+      [
+        {
+          "osrs": 1353,
+          "local": 1353,
+          "name": "Steel axe"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Jump for joy",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Desert shirt",
+        "equipment2": "Green robe bottoms",
+        "equipment3": "Steel axe"
+      },
+      "requirements": "Equip a [[desert shirt]], [[Green robe bottoms|green gnome robe bottom]]s and a [[steel axe]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Jump_for_joy_at_the_beehives",
+    "sourceFile": "Clue_scroll_(easy)_-_Jump_for_joy_at_the_beehives.wiki",
+    "sourceSha256": "3c1e42a6293205db21d60e955311d90bfabf1106ade8cd1f695de034ba42451a"
+  },
+  {
+    "key": "Clue scroll (easy) - At the standing stones north of Falador",
+    "tier": "easy",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nFile:Map clue Falador stones.png",
+    "points": [
+      [
+        3043,
+        3398,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_At_the_standing_stones_north_of_Falador",
+    "sourceFile": "Clue_scroll_(easy)_-_At_the_standing_stones_north_of_Falador.wiki",
+    "sourceSha256": "f42b420bceb8a3d3bd481c983aa660a965ad106d9e2f0075c5e2713f9027bc65"
+  },
+  {
+    "key": "Clue scroll (easy) - Brother Galahad's house",
+    "tier": "easy",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nFile:Map clue Galahad.png",
+    "points": [
+      [
+        2612,
+        3482,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Brother_Galahad%27s_house",
+    "sourceFile": "Clue_scroll_(easy)_-_Brother_Galahad's_house.wiki",
+    "sourceSha256": "cd59136e4726372aaaa1874718b664d04b48e53c8b47c035202df6a5319dec7f"
+  },
+  {
+    "key": "Clue scroll (easy) - Directly behind the Wizards' Tower",
+    "tier": "easy",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nFile:Map clue Wizard tower.png",
+    "points": [
+      [
+        3109,
+        3153,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Directly_behind_the_Wizards%27_Tower",
+    "sourceFile": "Clue_scroll_(easy)_-_Directly_behind_the_Wizards'_Tower.wiki",
+    "sourceSha256": "1b5a460a4ac0a502a99b25bfe1252896f39eff8c77d5a5e7b8d3d0ce471330ab"
+  },
+  {
+    "key": "Clue scroll (easy) - Dig between some ominous stones in Falador",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "Dig between some ominous stones in Falador.",
+    "points": [
+      [
+        3040,
+        3399,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dig_between_some_ominous_stones_in_Falador",
+    "sourceFile": "Clue_scroll_(easy)_-_Dig_between_some_ominous_stones_in_Falador.wiki",
+    "sourceSha256": "3b2ac8a0fa72996d35057f3647ab1bf0711474cf609f012a89b64155498efa1d"
+  },
+  {
+    "key": "Clue scroll (easy) - Dig near some giant mushrooms",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "Dig near some giant mushrooms, behind the Grand Tree.",
+    "points": [
+      [
+        2458,
+        3504,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dig_near_some_giant_mushrooms",
+    "sourceFile": "Clue_scroll_(easy)_-_Dig_near_some_giant_mushrooms.wiki",
+    "sourceSha256": "33c108294bb85dc89b3130083d202de2108b3d61b2d527a49ad720b5a3019aaa"
+  },
+  {
+    "key": "Clue scroll (easy) - I wonder how many bronze shortswords he has handed out",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "TALK",
+    "hint": "I wonder how many bronze shortswords he has handed out.",
+    "points": [
+      [
+        3146,
+        9913,
+        0
+      ]
+    ],
+    "npcName": "Vannaka",
+    "npcCandidates": [
+      {
+        "id": 1597,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          "Get-task",
+          "Trade",
+          "Rewards"
+        ],
+        "sha256": "bf7f0ef8c14b6bbd612c870e7d312fcbc791547a8ed22bb146388c8fd3cea4a0"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_I_wonder_how_many_bronze_shortswords_he_has_handed_out",
+    "sourceFile": "Clue_scroll_(easy)_-_I_wonder_how_many_bronze_shortswords_he_has_handed_out.wiki",
+    "sourceSha256": "fe3ebe0669171f1fbc8d542a932cc9598e4b42bb4e454f6dd499acd4537f153f"
+  },
+  {
+    "key": "Clue scroll (easy) - One of the sailors in Port Sarim",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "TALK",
+    "hint": "One of the sailors in Port Sarim is your next destination.",
+    "points": [
+      [
+        3026,
+        3216,
+        0
+      ]
+    ],
+    "npcName": "Captain Tobias",
+    "npcCandidates": [
+      {
+        "id": 11700,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          "Pay-fare",
+          null,
+          null
+        ],
+        "sha256": "7f04dc46e099e3f0aa93859cf7d879c2c8aac57c42685c746b5a12c747c83b3c"
+      },
+      {
+        "id": 11703,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          "Pay-fare",
+          null,
+          null
+        ],
+        "sha256": "032eeacf1eed79aad483f0e1a1f2eacd5369f825ddca1db31d56b5ffebb3fa05"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_One_of_the_sailors_in_Port_Sarim",
+    "sourceFile": "Clue_scroll_(easy)_-_One_of_the_sailors_in_Port_Sarim.wiki",
+    "sourceSha256": "ea86453a5fdc80f461438bf4c0294b27bbcad65eb8e4ec1366129d1a7d59ab3d"
+  },
+  {
+    "key": "Clue scroll (easy) - Search the crate in Rommiks crafting shop in Rimmington",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "SEARCH",
+    "hint": "Search the crate in Rommiks crafting shop in Rimmington.",
+    "points": [
+      [
+        2946,
+        3207,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Search_the_crate_in_Rommiks_crafting_shop_in_Rimmington",
+    "sourceFile": "Clue_scroll_(easy)_-_Search_the_crate_in_Rommiks_crafting_shop_in_Rimmington.wiki",
+    "sourceSha256": "67154b405cf7bb51083761f9c9cd25f9871b0afe2b1900104ee55c4770d4d8d5"
+  },
+  {
+    "key": "Clue scroll (easy) - Search for a crate in Varrock Castle",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "SEARCH",
+    "hint": "Search for a crate in Varrock Castle.",
+    "points": [
+      [
+        3224,
+        3492,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Search_for_a_crate_in_Varrock_Castle",
+    "sourceFile": "Clue_scroll_(easy)_-_Search_for_a_crate_in_Varrock_Castle.wiki",
+    "sourceSha256": "9229696b77412936b1c20c7f4e8d9683a9979bf5aa716fee40a043fb09c91938"
+  },
+  {
+    "key": "Clue scroll (easy) - Search the bucket in the Port Sarim jail",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "SEARCH",
+    "hint": "Search the bucket in the Port Sarim jail.",
+    "points": [
+      [
+        3013,
+        3179,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Search_the_bucket_in_the_Port_Sarim_jail",
+    "sourceFile": "Clue_scroll_(easy)_-_Search_the_bucket_in_the_Port_Sarim_jail.wiki",
+    "sourceSha256": "0a9e9bcbe00801fb8e00ff5085331265d5db64e5d09503aad2c69ec8a1c8ccbd"
+  },
+  {
+    "key": "Clue scroll (easy) - Dance a jig by the entrance to the Fishing Guild",
+    "tier": "easy",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Dance a jig by the entrance to the Fishing Guild. Equip an emerald ring, a sapphire amulet, and a bronze chain body.",
+    "points": [
+      [
+        2610,
+        3391,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1639,
+          "local": 1639,
+          "name": "Emerald ring"
+        }
+      ],
+      [
+        {
+          "osrs": 1694,
+          "local": 1694,
+          "name": "Sapphire amulet"
+        }
+      ],
+      [
+        {
+          "osrs": 1103,
+          "local": 1103,
+          "name": "Bronze chainbody"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Jig",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Emerald ring",
+        "equipment2": "Sapphire amulet",
+        "equipment3": "Bronze chainbody"
+      },
+      "requirements": "Equip an [[emerald ring]], a [[sapphire amulet]], and a [[bronze chainbody]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dance_a_jig_by_the_entrance_to_the_Fishing_Guild",
+    "sourceFile": "Clue_scroll_(easy)_-_Dance_a_jig_by_the_entrance_to_the_Fishing_Guild.wiki",
+    "sourceSha256": "246c8a1a7539b00c800ae940ba6d2a305b46f970c78acab6681632add61cf87d",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (easy) - Dance in the shack in Lumbridge Swamp",
+    "tier": "easy",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Dance in the shack in Lumbridge Swamp. Equip a bronze dagger, iron full helmet and a gold ring.",
+    "points": [
+      [
+        3203,
+        3169,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1205,
+          "local": 1205,
+          "name": "Bronze dagger"
+        }
+      ],
+      [
+        {
+          "osrs": 1153,
+          "local": 1153,
+          "name": "Iron full helm"
+        }
+      ],
+      [
+        {
+          "osrs": 1635,
+          "local": 1635,
+          "name": "Gold ring"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Dance",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Bronze dagger",
+        "equipment2": "Iron full helm",
+        "equipment3": "Gold ring"
+      },
+      "requirements": "Equip a [[bronze dagger]], [[iron full helmet]] and a [[gold ring]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dance_in_the_shack_in_Lumbridge_Swamp",
+    "sourceFile": "Clue_scroll_(easy)_-_Dance_in_the_shack_in_Lumbridge_Swamp.wiki",
+    "sourceSha256": "1d9c325c9634d9b1a09c980708b1639f4af287206cf765e38ba276dbf43f49f7",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (easy) - Dance in the Party Room",
+    "tier": "easy",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Dance in the Party Room. Equip a steel full helmet, steel platebody and an iron plateskirt.",
+    "points": [
+      [
+        3045,
+        3376,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1157,
+          "local": 1157,
+          "name": "Steel full helm"
+        }
+      ],
+      [
+        {
+          "osrs": 1119,
+          "local": 1119,
+          "name": "Steel platebody"
+        }
+      ],
+      [
+        {
+          "osrs": 1081,
+          "local": 1081,
+          "name": "Iron plateskirt"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Dance",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Steel full helm",
+        "equipment2": "Steel platebody",
+        "equipment3": "Iron plateskirt"
+      },
+      "requirements": "Equip a [[steel full helmet]], [[steel platebody]] and an [[iron plateskirt]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dance_in_the_Party_Room",
+    "sourceFile": "Clue_scroll_(easy)_-_Dance_in_the_Party_Room.wiki",
+    "sourceSha256": "d213f7b523261163bcd539387d822d2e059569b2ff41d53097c5c5ed67151848",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (easy) - Cheer for the monks at Port Sarim",
+    "tier": "easy",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Cheer for the monks at Port Sarim. Equip a coif, steel plateskirt and a sapphire necklace.",
+    "points": [
+      [
+        3047,
+        3237,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1169,
+          "local": 1169,
+          "name": "Coif"
+        }
+      ],
+      [
+        {
+          "osrs": 1083,
+          "local": 1083,
+          "name": "Steel plateskirt"
+        }
+      ],
+      [
+        {
+          "osrs": 1656,
+          "local": 1656,
+          "name": "Sapphire necklace"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Cheer",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Coif",
+        "equipment2": "Steel plateskirt",
+        "equipment3": "Sapphire necklace"
+      },
+      "requirements": "Equip a [[coif]], [[steel plateskirt]] and a [[sapphire necklace]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Cheer_for_the_monks_at_Port_Sarim",
+    "sourceFile": "Clue_scroll_(easy)_-_Cheer_for_the_monks_at_Port_Sarim.wiki",
+    "sourceSha256": "ab8eb4ccea33071710d356f8859300945a6c4021eb52ff6b4b3ef4d381166327",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (easy) - North of Falador.",
+    "tier": "easy",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nFile:Map clue Falador statue crossroads.png",
+    "points": [
+      [
+        2970,
+        3415,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_North_of_Falador.",
+    "sourceFile": "Clue_scroll_(easy)_-_North_of_Falador..wiki",
+    "sourceSha256": "042ebbb6cec92c14af7be06995dce04c6baa89f4776306318a973c0f3d4ea038",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (easy) - West of the Champions' Guild",
+    "tier": "easy",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nFile:Map clue Champions guild.png",
+    "points": [
+      [
+        3166,
+        3361,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_West_of_the_Champions%27_Guild",
+    "sourceFile": "Clue_scroll_(easy)_-_West_of_the_Champions'_Guild.wiki",
+    "sourceSha256": "8a5f2159f8347f622c537916e4385e135381b91e98811bfa1369832e46d2e56a",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (easy) - South-east Varrock mine",
+    "tier": "easy",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nFile:Map clue South-eastern Varrock Mine.png",
+    "points": [
+      [
+        3290,
+        3373,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_South-east_Varrock_mine",
+    "sourceFile": "Clue_scroll_(easy)_-_South-east_Varrock_mine.wiki",
+    "sourceSha256": "f8aef7d6f7e6d02ecd646f28665ad590686fbc21db7e3fb47307b037f4258c69",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (easy) - Speak to Hans to solve the clue",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "TALK",
+    "hint": "Speak to Hans to solve the clue.",
+    "points": [
+      [
+        3221,
+        3218,
+        0
+      ]
+    ],
+    "npcName": "Hans",
+    "npcCandidates": [
+      {
+        "id": 0,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "53197234405ca41359932b4a687b6032106a65a4ee055e6d874477285be2b562"
+      },
+      {
+        "id": 7935,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "1372e16dfbf82fe76c21a400427cf634e3087e054040ef6e7be719aed25b1caf"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Speak_to_Hans_to_solve_the_clue",
+    "sourceFile": "Clue_scroll_(easy)_-_Speak_to_Hans_to_solve_the_clue.wiki",
+    "sourceSha256": "b113d524e067dd693e08e0406473aae8bed14de065e4d5306df98a82bbfe3474",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (easy) - Speak to Doric, who lives north of Falador",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "TALK",
+    "hint": "Speak to Doric, who lives north of Falador.",
+    "points": [
+      [
+        2951,
+        3450,
+        0
+      ]
+    ],
+    "npcName": "Doric",
+    "npcCandidates": [
+      {
+        "id": 284,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "7ac4f6a6dce55d9fca8362e817432f6c91b9e120e60eb27bc8b61680e72234e1"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Speak_to_Doric%2C_who_lives_north_of_Falador",
+    "sourceFile": "Clue_scroll_(easy)_-_Speak_to_Doric,_who_lives_north_of_Falador.wiki",
+    "sourceSha256": "5f100a2f452e96ad2529eb743f7b61beca7e06dc8199c5c4aede4fb802647184",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (easy) - Speak to Arhein in Catherby",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "TALK",
+    "hint": "Speak to Arhein in Catherby.",
+    "points": [
+      [
+        2803,
+        3430,
+        0
+      ]
+    ],
+    "npcName": "Arhein",
+    "npcCandidates": [
+      {
+        "id": 563,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          "Trade",
+          null,
+          null
+        ],
+        "sha256": "a62b554542acb670a424e0fde5c4a8fa0b4ad683feda86a9f8467433a13c5160"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Speak_to_Arhein_in_Catherby",
+    "sourceFile": "Clue_scroll_(easy)_-_Speak_to_Arhein_in_Catherby.wiki",
+    "sourceSha256": "9b701f12d1137b0c80aeb445f651c572aa246b139a7e19ae1bb8119317828de7",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (easy) - Speak to Ellis in Al Kharid",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "TALK",
+    "hint": "Speak to Ellis in Al Kharid.",
+    "points": [
+      [
+        3276,
+        3191,
+        0
+      ]
+    ],
+    "npcName": "Ellis",
+    "npcCandidates": [
+      {
+        "id": 2824,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          "Trade",
+          null,
+          null
+        ],
+        "sha256": "3b425da1d803bde1ceaa510e8eaf9c7d33a714026b992a782e415d20f81437ed"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Speak_to_Ellis_in_Al_Kharid",
+    "sourceFile": "Clue_scroll_(easy)_-_Speak_to_Ellis_in_Al_Kharid.wiki",
+    "sourceSha256": "b690e3999ef4567594120ac4e53d5acc539741c1941b387fba69767aff1da0ee",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (easy) - Speak to Ned in Draynor Village",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "TALK",
+    "hint": "Speak to Ned in Draynor Village.",
+    "points": [
+      [
+        3098,
+        3258,
+        0
+      ]
+    ],
+    "npcName": "Ned",
+    "npcCandidates": [
+      {
+        "id": 918,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "96090946517ea6c6172d901f7219616897bec56c1758df365c1bf7a42e84e7d6"
+      },
+      {
+        "id": 4475,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "b9e23ea8d91059d79f19bc3364c75749e3c0069ab39eac695e37a60f693015e2"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Speak_to_Ned_in_Draynor_Village",
+    "sourceFile": "Clue_scroll_(easy)_-_Speak_to_Ned_in_Draynor_Village.wiki",
+    "sourceSha256": "50eb1e7c9ba55ba004750cc7847b98132f48c76de4dfc74bab927e92d1c6674a",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (easy) - Speak to Gaius in Taverley",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "TALK",
+    "hint": "Speak to Gaius in Taverley.",
+    "points": [
+      [
+        2884,
+        3450,
+        0
+      ]
+    ],
+    "npcName": "Gaius",
+    "npcCandidates": [
+      {
+        "id": 586,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          "Trade",
+          null,
+          null
+        ],
+        "sha256": "378be220594d2bd01e7d13d220a612c79038e31bdb2cc25074aea9627a0afc76"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Speak_to_Gaius_in_Taverley",
+    "sourceFile": "Clue_scroll_(easy)_-_Speak_to_Gaius_in_Taverley.wiki",
+    "sourceSha256": "88d476012a06dfd1ddf997ebc1c7dbe4163d0da489f135bfac8da4295a2f62c7",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (easy) - Talk to Cassie in Falador",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "TALK",
+    "hint": "Talk to Cassie in Falador.",
+    "points": [
+      [
+        2975,
+        3383,
+        0
+      ]
+    ],
+    "npcName": "Cassie",
+    "npcCandidates": [
+      {
+        "id": 577,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          "Trade",
+          null,
+          null
+        ],
+        "sha256": "7bdf1c3857186323480f5e7801c6eb4fcd3d8c7c9ddfc6c637488bd29342d089"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Talk_to_Cassie_in_Falador",
+    "sourceFile": "Clue_scroll_(easy)_-_Talk_to_Cassie_in_Falador.wiki",
+    "sourceSha256": "83bdafc4afed4c9b86421a15c58acd1d51a05da7d3ebcac737b1a0308703c0b0",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - Cheer in the Edgeville general store",
+    "tier": "medium",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Cheer in the Edgeville general store. Dance before you talk to me. Equip a brown apron, leather boots and leather gloves.",
+    "points": [
+      [
+        3080,
+        3509,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1757,
+          "local": 1757,
+          "name": "Brown apron"
+        }
+      ],
+      [
+        {
+          "osrs": 1061,
+          "local": 1061,
+          "name": "Leather boots"
+        }
+      ],
+      [
+        {
+          "osrs": 1059,
+          "local": 1059,
+          "name": "Leather gloves"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Cheer",
+      "secondEmote": "Dance",
+      "equipment": {
+        "equipment1": "Brown apron",
+        "equipment2": "Leather boots",
+        "equipment3": "Leather gloves"
+      },
+      "requirements": "Equip a [[brown apron]], [[leather boots]] and [[leather gloves]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Cheer_in_the_Edgeville_general_store",
+    "sourceFile": "Clue_scroll_(medium)_-_Cheer_in_the_Edgeville_general_store.wiki",
+    "sourceSha256": "7f32b8d241cef7bb8a5d7f784056925d27b6acaeac4a7a5d1d4bf75c859fa574"
+  },
+  {
+    "key": "Clue scroll (medium) - Shrug in Catherby bank",
+    "tier": "medium",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Shrug in Catherby bank. Yawn before you talk to me. Equip a maple longbow, green d'hide chaps and an iron med helm.",
+    "points": [
+      [
+        2808,
+        3440,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 851,
+          "local": 851,
+          "name": "Maple longbow"
+        }
+      ],
+      [
+        {
+          "osrs": 1099,
+          "local": 1099,
+          "name": "Green d'hide chaps"
+        }
+      ],
+      [
+        {
+          "osrs": 1137,
+          "local": 1137,
+          "name": "Iron med helm"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Shrug",
+      "secondEmote": "Yawn",
+      "equipment": {
+        "equipment1": "Maple longbow",
+        "equipment2": "Green d'hide chaps",
+        "equipment3": "Iron med helm"
+      },
+      "requirements": "Equip a [[maple longbow]], [[green d'hide chaps]] and an [[iron med helm]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Shrug_in_Catherby_bank",
+    "sourceFile": "Clue_scroll_(medium)_-_Shrug_in_Catherby_bank.wiki",
+    "sourceSha256": "65a546cc9b2a41827960206b700249eed18659884bbdb435ba37b1d4469f4183"
+  },
+  {
+    "key": "Clue scroll (medium) - Yawn in the Castle Wars lobby",
+    "tier": "medium",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Yawn in the Castle Wars lobby. Shrug before you talk to me. Equip a ruby amulet, a mithril scimitar and a Wilderness cape.",
+    "points": [
+      [
+        2440,
+        3092,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1698,
+          "local": 1698,
+          "name": "Ruby amulet"
+        }
+      ],
+      [
+        {
+          "osrs": 1329,
+          "local": 1329,
+          "name": "Mithril scimitar"
+        }
+      ],
+      [
+        {
+          "osrs": 4315,
+          "local": 4315,
+          "name": "Team-1 cape"
+        },
+        {
+          "osrs": 4317,
+          "local": 4317,
+          "name": "Team-2 cape"
+        },
+        {
+          "osrs": 4319,
+          "local": 4319,
+          "name": "Team-3 cape"
+        },
+        {
+          "osrs": 4321,
+          "local": 4321,
+          "name": "Team-4 cape"
+        },
+        {
+          "osrs": 4323,
+          "local": 4323,
+          "name": "Team-5 cape"
+        },
+        {
+          "osrs": 4325,
+          "local": 4325,
+          "name": "Team-6 cape"
+        },
+        {
+          "osrs": 4327,
+          "local": 4327,
+          "name": "Team-7 cape"
+        },
+        {
+          "osrs": 4329,
+          "local": 4329,
+          "name": "Team-8 cape"
+        },
+        {
+          "osrs": 4331,
+          "local": 4331,
+          "name": "Team-9 cape"
+        },
+        {
+          "osrs": 4333,
+          "local": 4333,
+          "name": "Team-10 cape"
+        },
+        {
+          "osrs": 4335,
+          "local": 4335,
+          "name": "Team-11 cape"
+        },
+        {
+          "osrs": 4337,
+          "local": 4337,
+          "name": "Team-12 cape"
+        },
+        {
+          "osrs": 4339,
+          "local": 4339,
+          "name": "Team-13 cape"
+        },
+        {
+          "osrs": 4341,
+          "local": 4341,
+          "name": "Team-14 cape"
+        },
+        {
+          "osrs": 4343,
+          "local": 4343,
+          "name": "Team-15 cape"
+        },
+        {
+          "osrs": 4345,
+          "local": 4345,
+          "name": "Team-16 cape"
+        },
+        {
+          "osrs": 4347,
+          "local": 4347,
+          "name": "Team-17 cape"
+        },
+        {
+          "osrs": 4349,
+          "local": 4349,
+          "name": "Team-18 cape"
+        },
+        {
+          "osrs": 4351,
+          "local": 4351,
+          "name": "Team-19 cape"
+        },
+        {
+          "osrs": 4353,
+          "local": 4353,
+          "name": "Team-20 cape"
+        },
+        {
+          "osrs": 4355,
+          "local": 4355,
+          "name": "Team-21 cape"
+        },
+        {
+          "osrs": 4357,
+          "local": 4357,
+          "name": "Team-22 cape"
+        },
+        {
+          "osrs": 4359,
+          "local": 4359,
+          "name": "Team-23 cape"
+        },
+        {
+          "osrs": 4361,
+          "local": 4361,
+          "name": "Team-24 cape"
+        },
+        {
+          "osrs": 4363,
+          "local": 4363,
+          "name": "Team-25 cape"
+        },
+        {
+          "osrs": 4365,
+          "local": 4365,
+          "name": "Team-26 cape"
+        },
+        {
+          "osrs": 4367,
+          "local": 4367,
+          "name": "Team-27 cape"
+        },
+        {
+          "osrs": 4369,
+          "local": 4369,
+          "name": "Team-28 cape"
+        },
+        {
+          "osrs": 4371,
+          "local": 4371,
+          "name": "Team-29 cape"
+        },
+        {
+          "osrs": 4373,
+          "local": 4373,
+          "name": "Team-30 cape"
+        },
+        {
+          "osrs": 4375,
+          "local": 4375,
+          "name": "Team-31 cape"
+        },
+        {
+          "osrs": 4377,
+          "local": 4377,
+          "name": "Team-32 cape"
+        },
+        {
+          "osrs": 4379,
+          "local": 4379,
+          "name": "Team-33 cape"
+        },
+        {
+          "osrs": 4381,
+          "local": 4381,
+          "name": "Team-34 cape"
+        },
+        {
+          "osrs": 4383,
+          "local": 4383,
+          "name": "Team-35 cape"
+        },
+        {
+          "osrs": 4385,
+          "local": 4385,
+          "name": "Team-36 cape"
+        },
+        {
+          "osrs": 4387,
+          "local": 4387,
+          "name": "Team-37 cape"
+        },
+        {
+          "osrs": 4389,
+          "local": 4389,
+          "name": "Team-38 cape"
+        },
+        {
+          "osrs": 4391,
+          "local": 4391,
+          "name": "Team-39 cape"
+        },
+        {
+          "osrs": 4393,
+          "local": 4393,
+          "name": "Team-40 cape"
+        },
+        {
+          "osrs": 4395,
+          "local": 4395,
+          "name": "Team-41 cape"
+        },
+        {
+          "osrs": 4397,
+          "local": 4397,
+          "name": "Team-42 cape"
+        },
+        {
+          "osrs": 4399,
+          "local": 4399,
+          "name": "Team-43 cape"
+        },
+        {
+          "osrs": 4401,
+          "local": 4401,
+          "name": "Team-44 cape"
+        },
+        {
+          "osrs": 4403,
+          "local": 4403,
+          "name": "Team-45 cape"
+        },
+        {
+          "osrs": 4405,
+          "local": 4405,
+          "name": "Team-46 cape"
+        },
+        {
+          "osrs": 4407,
+          "local": 4407,
+          "name": "Team-47 cape"
+        },
+        {
+          "osrs": 4409,
+          "local": 4409,
+          "name": "Team-48 cape"
+        },
+        {
+          "osrs": 4411,
+          "local": 4411,
+          "name": "Team-49 cape"
+        },
+        {
+          "osrs": 4413,
+          "local": 4413,
+          "name": "Team-50 cape"
+        },
+        {
+          "osrs": 20211,
+          "local": null,
+          "name": "Team cape zero"
+        },
+        {
+          "osrs": 20214,
+          "local": null,
+          "name": "Team cape x"
+        },
+        {
+          "osrs": 20217,
+          "local": null,
+          "name": "Team cape i"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Yawn",
+      "secondEmote": "Shrug",
+      "equipment": {
+        "equipment1": "Ruby amulet",
+        "equipment2": "Mithril scimitar",
+        "equipment3": "Team-1 cape",
+        "equipment3alt1": "Team-2 cape",
+        "equipment3alt2": "Team-3 cape",
+        "equipment3alt3": "Team-4 cape",
+        "equipment3alt4": "Team-5 cape",
+        "equipment3alt5": "Team-6 cape",
+        "equipment3alt6": "Team-7 cape",
+        "equipment3alt7": "Team-8 cape",
+        "equipment3alt8": "Team-9 cape",
+        "equipment3alt9": "Team-10 cape",
+        "equipment3alt10": "Team-11 cape",
+        "equipment3alt11": "Team-12 cape",
+        "equipment3alt12": "Team-13 cape",
+        "equipment3alt13": "Team-14 cape",
+        "equipment3alt14": "Team-15 cape",
+        "equipment3alt15": "Team-16 cape",
+        "equipment3alt16": "Team-17 cape",
+        "equipment3alt17": "Team-18 cape",
+        "equipment3alt18": "Team-19 cape",
+        "equipment3alt19": "Team-20 cape",
+        "equipment3alt20": "Team-21 cape",
+        "equipment3alt21": "Team-22 cape",
+        "equipment3alt22": "Team-23 cape",
+        "equipment3alt23": "Team-24 cape",
+        "equipment3alt24": "Team-25 cape",
+        "equipment3alt25": "Team-26 cape",
+        "equipment3alt26": "Team-27 cape",
+        "equipment3alt27": "Team-28 cape",
+        "equipment3alt28": "Team-29 cape",
+        "equipment3alt29": "Team-30 cape",
+        "equipment3alt30": "Team-31 cape",
+        "equipment3alt31": "Team-32 cape",
+        "equipment3alt32": "Team-33 cape",
+        "equipment3alt33": "Team-34 cape",
+        "equipment3alt34": "Team-35 cape",
+        "equipment3alt35": "Team-36 cape",
+        "equipment3alt36": "Team-37 cape",
+        "equipment3alt37": "Team-38 cape",
+        "equipment3alt38": "Team-39 cape",
+        "equipment3alt39": "Team-40 cape",
+        "equipment3alt40": "Team-41 cape",
+        "equipment3alt41": "Team-42 cape",
+        "equipment3alt42": "Team-43 cape",
+        "equipment3alt43": "Team-44 cape",
+        "equipment3alt44": "Team-45 cape",
+        "equipment3alt45": "Team-46 cape",
+        "equipment3alt46": "Team-47 cape",
+        "equipment3alt47": "Team-48 cape",
+        "equipment3alt48": "Team-49 cape",
+        "equipment3alt49": "Team-50 cape",
+        "equipment3alt50": "Team cape zero",
+        "equipment3alt51": "Team cape x",
+        "equipment3alt52": "Team cape i"
+      },
+      "requirements": "Equip a [[ruby amulet]], a [[mithril scimitar]] and a [[Wilderness cape]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Yawn_in_the_Castle_Wars_lobby",
+    "sourceFile": "Clue_scroll_(medium)_-_Yawn_in_the_Castle_Wars_lobby.wiki",
+    "sourceSha256": "a9b5d75cb9970c8c802a74ead0f5a506cd239246d25ff8505949613ee68ba9d2"
+  },
+  {
+    "key": "Clue scroll (medium) - Spin on the bridge by the Barbarian Village",
+    "tier": "medium",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Spin on the bridge by the Barbarian Village. Salute before you talk to me. Equip purple gloves, a steel kiteshield and a mithril full helmet.",
+    "points": [
+      [
+        3105,
+        3420,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 2942,
+          "local": 2942,
+          "name": "Purple gloves"
+        }
+      ],
+      [
+        {
+          "osrs": 1193,
+          "local": 1193,
+          "name": "Steel kiteshield"
+        },
+        {
+          "osrs": 8746,
+          "local": 8746,
+          "name": "Steel kiteshield"
+        },
+        {
+          "osrs": 8748,
+          "local": 8748,
+          "name": "Steel kiteshield"
+        },
+        {
+          "osrs": 8750,
+          "local": 8750,
+          "name": "Steel kiteshield"
+        },
+        {
+          "osrs": 8752,
+          "local": 8752,
+          "name": "Steel kiteshield"
+        },
+        {
+          "osrs": 8754,
+          "local": 8754,
+          "name": "Steel kiteshield"
+        },
+        {
+          "osrs": 8756,
+          "local": 8756,
+          "name": "Steel kiteshield"
+        },
+        {
+          "osrs": 8758,
+          "local": 8758,
+          "name": "Steel kiteshield"
+        },
+        {
+          "osrs": 8760,
+          "local": 8760,
+          "name": "Steel kiteshield"
+        },
+        {
+          "osrs": 8762,
+          "local": 8762,
+          "name": "Steel kiteshield"
+        },
+        {
+          "osrs": 8764,
+          "local": 8764,
+          "name": "Steel kiteshield"
+        },
+        {
+          "osrs": 8766,
+          "local": 8766,
+          "name": "Steel kiteshield"
+        },
+        {
+          "osrs": 8768,
+          "local": 8768,
+          "name": "Steel kiteshield"
+        },
+        {
+          "osrs": 8770,
+          "local": 8770,
+          "name": "Steel kiteshield"
+        },
+        {
+          "osrs": 8772,
+          "local": 8772,
+          "name": "Steel kiteshield"
+        },
+        {
+          "osrs": 8774,
+          "local": 8774,
+          "name": "Steel kiteshield"
+        },
+        {
+          "osrs": 8776,
+          "local": 8776,
+          "name": "Steel kiteshield"
+        }
+      ],
+      [
+        {
+          "osrs": 1159,
+          "local": 1159,
+          "name": "Mithril full helm"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Spin",
+      "secondEmote": "Salute",
+      "equipment": {
+        "equipment1": "Purple gloves",
+        "equipment2": "Steel kiteshield",
+        "equipment3": "Mithril full helm"
+      },
+      "requirements": "Equip [[purple gloves]], a [[steel kiteshield]] and a [[mithril full helmet]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Spin_on_the_bridge_by_the_Barbarian_Village",
+    "sourceFile": "Clue_scroll_(medium)_-_Spin_on_the_bridge_by_the_Barbarian_Village.wiki",
+    "sourceSha256": "a93df32c42e4a5c53ca2faab3c69f6e1111f06d3d749eae3465d18739dae74be"
+  },
+  {
+    "key": "Clue scroll (medium) - 00.13S 13.58E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "00 degrees 13 minutes south<br>13 degrees 58 minutes east",
+    "points": [
+      [
+        2887,
+        3154,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_00.13S_13.58E",
+    "sourceFile": "Clue_scroll_(medium)_-_00.13S_13.58E.wiki",
+    "sourceSha256": "36d947ebd5407c5d54c9439304613e5d4f8b4bf14c295875e986b5ce4e3dede0"
+  },
+  {
+    "key": "Clue scroll (medium) - 00.20S 23.15E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "00 degrees 20 minutes south<br>23 degrees 15 minutes east",
+    "points": [
+      [
+        3184,
+        3150,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_00.20S_23.15E",
+    "sourceFile": "Clue_scroll_(medium)_-_00.20S_23.15E.wiki",
+    "sourceSha256": "78f63c7260b2e158fc5362c981488bde678815992e70aa6496ad3b07e6fbddce"
+  },
+  {
+    "key": "Clue scroll (medium) - 00.30N 24.16E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "00 degrees 30 minutes north<br>24 degrees 16 minutes east",
+    "points": [
+      [
+        3217,
+        3177,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_00.30N_24.16E",
+    "sourceFile": "Clue_scroll_(medium)_-_00.30N_24.16E.wiki",
+    "sourceSha256": "3dd8c97c370153f8bf1fa6ed720857ae8e60f87a40c9d5b028cce78e876ecae0"
+  },
+  {
+    "key": "Clue scroll (medium) - A BAKER",
+    "tier": "medium",
+    "kind": "ANAGRAM",
+    "action": "TALK",
+    "hint": "This anagram reveals who to speak to next: A BAKER",
+    "points": [
+      [
+        3217,
+        3434,
+        0
+      ]
+    ],
+    "npcName": "Baraek",
+    "npcCandidates": [
+      {
+        "id": 547,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "a9508e15aabfb7d19cc27d0db40391957b420d04c0c2fe1c01a355aa83476fc3"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "How many stalls are there in Varrock Square?",
+      "answer": "5"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_A_BAKER",
+    "sourceFile": "Clue_scroll_(medium)_-_A_BAKER.wiki",
+    "sourceSha256": "20f307b692a7581c8bc617b4f82e558128db8e38fe65ff7e3c8c4ec55d189589"
+  },
+  {
+    "key": "Clue scroll (medium) - HALT US",
+    "tier": "medium",
+    "kind": "ANAGRAM",
+    "action": "TALK",
+    "hint": "This anagram reveals who to speak to next: HALT US",
+    "points": [
+      [
+        2938,
+        3152,
+        0
+      ]
+    ],
+    "npcName": "Luthas",
+    "npcCandidates": [
+      {
+        "id": 379,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "6a510982dc958c79503fd5ab66995efec68d4e2bcbe10427deaf63ed37660cf0"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_HALT_US",
+    "sourceFile": "Clue_scroll_(medium)_-_HALT_US.wiki",
+    "sourceSha256": "a8f7babd9d3c16b83eb9dc1803d252e5864dbcb3dd889b5d1ee833f39001fd3f"
+  },
+  {
+    "key": "Clue scroll (medium) - AREA CHEF TREK",
+    "tier": "medium",
+    "kind": "ANAGRAM",
+    "action": "TALK",
+    "hint": "This anagram reveals who to speak to next: AREA CHEF TREK",
+    "points": [
+      [
+        3242,
+        3207,
+        0
+      ]
+    ],
+    "npcName": "Father Aereck",
+    "npcCandidates": [
+      {
+        "id": 456,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "e3200f9ea627d037eae469cdecdeccc197b05f3cafd599ff0dfde46f08d7b5bd"
+      },
+      {
+        "id": 7937,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "08e83fea061eea4b64f3c98926ddcc660b264f84bf29ff6fbd26ca6654be79a7"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "How many gravestones are in the church graveyard?",
+      "answer": "19",
+      "sourceAnswer": "19 or 20",
+      "unavailableEventAnswer": {
+        "answer": 20,
+        "condition": "If players failed to save [[Jarvis]] during the [[2017 Halloween event]], the answer is 20 instead of 19."
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_AREA_CHEF_TREK",
+    "sourceFile": "Clue_scroll_(medium)_-_AREA_CHEF_TREK.wiki",
+    "sourceSha256": "c4c9cf10f2380f0a2512a99d05163ecfda68e171772c582bd8684238d6e73fc0"
+  },
+  {
+    "key": "Clue scroll (medium) - GUHCHO",
+    "tier": "medium",
+    "kind": "CIPHER",
+    "action": "TALK",
+    "hint": "The cipher reveals who to speak to next: GUHCHO",
+    "points": [
+      [
+        3440,
+        9895,
+        0
+      ]
+    ],
+    "npcName": "Drezel",
+    "npcCandidates": [
+      {
+        "id": 1049,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "9054a547edb2beb1a6dd4f5a146297c0a03f63ab7f6e76bc021cfb7ca69fc28a"
+      },
+      {
+        "id": 7690,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "1a430993a7f3c77c3d76cad387ca401b9b7c2dee9d4af607a6f182ef8094b9c7"
+      },
+      {
+        "id": 7707,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "b11217907e48ea07f9fa382487b69d5d47af44b854e7ad475ddacca2edef8b9d"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "Please solve this for x: 7x - 28=21",
+      "answer": "7"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_GUHCHO",
+    "sourceFile": "Clue_scroll_(medium)_-_GUHCHO.wiki",
+    "sourceSha256": "8f055e04aa63aa7035f8d65e58e4924fde3e8bd41fd80c61acbb0ebe215d805b"
+  },
+  {
+    "key": "Clue scroll (medium) - XJABSE USBJCPSO",
+    "tier": "medium",
+    "kind": "CIPHER",
+    "action": "TALK",
+    "hint": "The cipher reveals who to speak to next: XJABSE USBJCPSO",
+    "points": [
+      [
+        3112,
+        3162,
+        1
+      ]
+    ],
+    "npcName": "Wizard Traiborn",
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "How many air runes would I need to cast 630 wind waves?",
+      "answer": "3150"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_XJABSE_USBJCPSO",
+    "sourceFile": "Clue_scroll_(medium)_-_XJABSE_USBJCPSO.wiki",
+    "sourceSha256": "852b0203c6c5d494c82232ad06b0e2528024d41f0b0c8bac370146ba35a9f7a5"
+  },
+  {
+    "key": "Clue scroll (medium) - South of Draynor Village bank",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nFile:Map_clue_Draynor_willows.png",
+    "points": [
+      [
+        3092,
+        3226,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_South_of_Draynor_Village_bank",
+    "sourceFile": "Clue_scroll_(medium)_-_South_of_Draynor_Village_bank.wiki",
+    "sourceSha256": "054f6f23d4c3cae3eeca0253a71e17a8601fdc7e0e4b711f71b7cc992b15920a"
+  },
+  {
+    "key": "Clue scroll (medium) - Behind the Chemist's house in Rimmington",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nBehind the Chemist's house in Rimmington.",
+    "points": [
+      [
+        2924,
+        3209,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Behind_the_Chemist%27s_house_in_Rimmington",
+    "sourceFile": "Clue_scroll_(medium)_-_Behind_the_Chemist's_house_in_Rimmington.wiki",
+    "sourceSha256": "3ee934f53e6cfdde1e36c37b78ac0882173b73fa6f4f5ec4f616b845645cc783"
+  },
+  {
+    "key": "Clue scroll (medium) - North of the Tower of Life",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nNorth of the Tower of Life. Fairy ring {{Fairycode|DJP}}.",
+    "points": [
+      [
+        2650,
+        3231,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_North_of_the_Tower_of_Life",
+    "sourceFile": "Clue_scroll_(medium)_-_North_of_the_Tower_of_Life.wiki",
+    "sourceSha256": "e79b89c6d8f1a4985197cf3e281e0c47edd9cf55e156b3366b57a2a2ecd0d4ba"
+  },
+  {
+    "key": "Clue scroll (medium) - Cheer in the Barbarian Agility Arena",
+    "tier": "medium",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Cheer in the Barbarian Agility Arena. Headbang before you talk to me. Equip a steel platebody, maple shortbow and a Wilderness cape.",
+    "points": [
+      [
+        2552,
+        3556,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1119,
+          "local": 1119,
+          "name": "Steel platebody"
+        }
+      ],
+      [
+        {
+          "osrs": 853,
+          "local": 853,
+          "name": "Maple shortbow"
+        },
+        {
+          "osrs": 20403,
+          "local": 853,
+          "name": "Maple shortbow"
+        }
+      ],
+      [
+        {
+          "osrs": 4315,
+          "local": 4315,
+          "name": "Team-1 cape"
+        },
+        {
+          "osrs": 4317,
+          "local": 4317,
+          "name": "Team-2 cape"
+        },
+        {
+          "osrs": 4319,
+          "local": 4319,
+          "name": "Team-3 cape"
+        },
+        {
+          "osrs": 4321,
+          "local": 4321,
+          "name": "Team-4 cape"
+        },
+        {
+          "osrs": 4323,
+          "local": 4323,
+          "name": "Team-5 cape"
+        },
+        {
+          "osrs": 4325,
+          "local": 4325,
+          "name": "Team-6 cape"
+        },
+        {
+          "osrs": 4327,
+          "local": 4327,
+          "name": "Team-7 cape"
+        },
+        {
+          "osrs": 4329,
+          "local": 4329,
+          "name": "Team-8 cape"
+        },
+        {
+          "osrs": 4331,
+          "local": 4331,
+          "name": "Team-9 cape"
+        },
+        {
+          "osrs": 4333,
+          "local": 4333,
+          "name": "Team-10 cape"
+        },
+        {
+          "osrs": 4335,
+          "local": 4335,
+          "name": "Team-11 cape"
+        },
+        {
+          "osrs": 4337,
+          "local": 4337,
+          "name": "Team-12 cape"
+        },
+        {
+          "osrs": 4339,
+          "local": 4339,
+          "name": "Team-13 cape"
+        },
+        {
+          "osrs": 4341,
+          "local": 4341,
+          "name": "Team-14 cape"
+        },
+        {
+          "osrs": 4343,
+          "local": 4343,
+          "name": "Team-15 cape"
+        },
+        {
+          "osrs": 4345,
+          "local": 4345,
+          "name": "Team-16 cape"
+        },
+        {
+          "osrs": 4347,
+          "local": 4347,
+          "name": "Team-17 cape"
+        },
+        {
+          "osrs": 4349,
+          "local": 4349,
+          "name": "Team-18 cape"
+        },
+        {
+          "osrs": 4351,
+          "local": 4351,
+          "name": "Team-19 cape"
+        },
+        {
+          "osrs": 4353,
+          "local": 4353,
+          "name": "Team-20 cape"
+        },
+        {
+          "osrs": 4355,
+          "local": 4355,
+          "name": "Team-21 cape"
+        },
+        {
+          "osrs": 4357,
+          "local": 4357,
+          "name": "Team-22 cape"
+        },
+        {
+          "osrs": 4359,
+          "local": 4359,
+          "name": "Team-23 cape"
+        },
+        {
+          "osrs": 4361,
+          "local": 4361,
+          "name": "Team-24 cape"
+        },
+        {
+          "osrs": 4363,
+          "local": 4363,
+          "name": "Team-25 cape"
+        },
+        {
+          "osrs": 4365,
+          "local": 4365,
+          "name": "Team-26 cape"
+        },
+        {
+          "osrs": 4367,
+          "local": 4367,
+          "name": "Team-27 cape"
+        },
+        {
+          "osrs": 4369,
+          "local": 4369,
+          "name": "Team-28 cape"
+        },
+        {
+          "osrs": 4371,
+          "local": 4371,
+          "name": "Team-29 cape"
+        },
+        {
+          "osrs": 4373,
+          "local": 4373,
+          "name": "Team-30 cape"
+        },
+        {
+          "osrs": 4375,
+          "local": 4375,
+          "name": "Team-31 cape"
+        },
+        {
+          "osrs": 4377,
+          "local": 4377,
+          "name": "Team-32 cape"
+        },
+        {
+          "osrs": 4379,
+          "local": 4379,
+          "name": "Team-33 cape"
+        },
+        {
+          "osrs": 4381,
+          "local": 4381,
+          "name": "Team-34 cape"
+        },
+        {
+          "osrs": 4383,
+          "local": 4383,
+          "name": "Team-35 cape"
+        },
+        {
+          "osrs": 4385,
+          "local": 4385,
+          "name": "Team-36 cape"
+        },
+        {
+          "osrs": 4387,
+          "local": 4387,
+          "name": "Team-37 cape"
+        },
+        {
+          "osrs": 4389,
+          "local": 4389,
+          "name": "Team-38 cape"
+        },
+        {
+          "osrs": 4391,
+          "local": 4391,
+          "name": "Team-39 cape"
+        },
+        {
+          "osrs": 4393,
+          "local": 4393,
+          "name": "Team-40 cape"
+        },
+        {
+          "osrs": 4395,
+          "local": 4395,
+          "name": "Team-41 cape"
+        },
+        {
+          "osrs": 4397,
+          "local": 4397,
+          "name": "Team-42 cape"
+        },
+        {
+          "osrs": 4399,
+          "local": 4399,
+          "name": "Team-43 cape"
+        },
+        {
+          "osrs": 4401,
+          "local": 4401,
+          "name": "Team-44 cape"
+        },
+        {
+          "osrs": 4403,
+          "local": 4403,
+          "name": "Team-45 cape"
+        },
+        {
+          "osrs": 4405,
+          "local": 4405,
+          "name": "Team-46 cape"
+        },
+        {
+          "osrs": 4407,
+          "local": 4407,
+          "name": "Team-47 cape"
+        },
+        {
+          "osrs": 4409,
+          "local": 4409,
+          "name": "Team-48 cape"
+        },
+        {
+          "osrs": 4411,
+          "local": 4411,
+          "name": "Team-49 cape"
+        },
+        {
+          "osrs": 4413,
+          "local": 4413,
+          "name": "Team-50 cape"
+        },
+        {
+          "osrs": 20211,
+          "local": null,
+          "name": "Team cape zero"
+        },
+        {
+          "osrs": 20214,
+          "local": null,
+          "name": "Team cape x"
+        },
+        {
+          "osrs": 20217,
+          "local": null,
+          "name": "Team cape i"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Cheer",
+      "secondEmote": "Headbang",
+      "equipment": {
+        "equipment1": "Steel platebody",
+        "equipment2": "Maple shortbow",
+        "equipment3": "Team-1 cape",
+        "equipment3alt1": "Team-2 cape",
+        "equipment3alt2": "Team-3 cape",
+        "equipment3alt3": "Team-4 cape",
+        "equipment3alt4": "Team-5 cape",
+        "equipment3alt5": "Team-6 cape",
+        "equipment3alt6": "Team-7 cape",
+        "equipment3alt7": "Team-8 cape",
+        "equipment3alt8": "Team-9 cape",
+        "equipment3alt9": "Team-10 cape",
+        "equipment3alt10": "Team-11 cape",
+        "equipment3alt11": "Team-12 cape",
+        "equipment3alt12": "Team-13 cape",
+        "equipment3alt13": "Team-14 cape",
+        "equipment3alt14": "Team-15 cape",
+        "equipment3alt15": "Team-16 cape",
+        "equipment3alt16": "Team-17 cape",
+        "equipment3alt17": "Team-18 cape",
+        "equipment3alt18": "Team-19 cape",
+        "equipment3alt19": "Team-20 cape",
+        "equipment3alt20": "Team-21 cape",
+        "equipment3alt21": "Team-22 cape",
+        "equipment3alt22": "Team-23 cape",
+        "equipment3alt23": "Team-24 cape",
+        "equipment3alt24": "Team-25 cape",
+        "equipment3alt25": "Team-26 cape",
+        "equipment3alt26": "Team-27 cape",
+        "equipment3alt27": "Team-28 cape",
+        "equipment3alt28": "Team-29 cape",
+        "equipment3alt29": "Team-30 cape",
+        "equipment3alt30": "Team-31 cape",
+        "equipment3alt31": "Team-32 cape",
+        "equipment3alt32": "Team-33 cape",
+        "equipment3alt33": "Team-34 cape",
+        "equipment3alt34": "Team-35 cape",
+        "equipment3alt35": "Team-36 cape",
+        "equipment3alt36": "Team-37 cape",
+        "equipment3alt37": "Team-38 cape",
+        "equipment3alt38": "Team-39 cape",
+        "equipment3alt39": "Team-40 cape",
+        "equipment3alt40": "Team-41 cape",
+        "equipment3alt41": "Team-42 cape",
+        "equipment3alt42": "Team-43 cape",
+        "equipment3alt43": "Team-44 cape",
+        "equipment3alt44": "Team-45 cape",
+        "equipment3alt45": "Team-46 cape",
+        "equipment3alt46": "Team-47 cape",
+        "equipment3alt47": "Team-48 cape",
+        "equipment3alt48": "Team-49 cape",
+        "equipment3alt49": "Team-50 cape",
+        "equipment3alt50": "Team cape zero",
+        "equipment3alt51": "Team cape x",
+        "equipment3alt52": "Team cape i"
+      },
+      "requirements": "Equip a [[steel platebody]], [[maple shortbow]] and a [[Wilderness cape]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Cheer_in_the_Barbarian_Agility_Arena",
+    "sourceFile": "Clue_scroll_(medium)_-_Cheer_in_the_Barbarian_Agility_Arena.wiki",
+    "sourceSha256": "f65ebad4fdab7767bb3cfccfae911f884474b98ffce835470fb1a911540543ff",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - Jump for joy in Yanille bank",
+    "tier": "medium",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Jump for joy in Yanille bank. Dance a jig before you talk to me. Equip a brown apron, adamantite medium helmet and snakeskin chaps.",
+    "points": [
+      [
+        2610,
+        3092,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1757,
+          "local": 1757,
+          "name": "Brown apron"
+        }
+      ],
+      [
+        {
+          "osrs": 1145,
+          "local": 1145,
+          "name": "Adamant med helm"
+        }
+      ],
+      [
+        {
+          "osrs": 6324,
+          "local": 6324,
+          "name": "Snakeskin chaps"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Jump for Joy",
+      "secondEmote": "Jig",
+      "equipment": {
+        "equipment1": "Brown apron",
+        "equipment2": "Adamant med helm",
+        "equipment3": "Snakeskin chaps"
+      },
+      "requirements": "Equip a [[brown apron]], [[adamant med helm]] and [[snakeskin chap]]s."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Jump_for_joy_in_Yanille_bank",
+    "sourceFile": "Clue_scroll_(medium)_-_Jump_for_joy_in_Yanille_bank.wiki",
+    "sourceSha256": "ec8e2c574697f6410f7e6e47bbb3036d4081cd741529622e4475130e949e0a49",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - Miscellania",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nMiscellania. Fairy ring {{Fairycode|CIP}}.",
+    "points": [
+      [
+        2536,
+        3865,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Miscellania",
+    "sourceFile": "Clue_scroll_(medium)_-_Miscellania.wiki",
+    "sourceSha256": "cbed4ac0ebae3b70123cb59b2b3c4081235ebe0aeb5ff6c2e9809bc6ee8910a3",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - Mort Myre Swamp",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nMort Myre Swamp, west of Mort'ton. Fairy ring {{Fairycode|BIP}}.",
+    "points": [
+      [
+        3434,
+        3266,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Mort_Myre_Swamp",
+    "sourceFile": "Clue_scroll_(medium)_-_Mort_Myre_Swamp.wiki",
+    "sourceSha256": "1962cf46d35a18f485b8d9859fa0ba5e8b62f750c36d09018b77f463f1e81c34",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - At the entrance to the Ourania Cave",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nAt the entrance to the Ourania Cave.",
+    "points": [
+      [
+        2454,
+        3230,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_At_the_entrance_to_the_Ourania_Cave",
+    "sourceFile": "Clue_scroll_(medium)_-_At_the_entrance_to_the_Ourania_Cave.wiki",
+    "sourceSha256": "865a1380fc379a31700ddfc8de29743b4e48968c00545aedd8cc109b1b6d3db7",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - South-east of the Lighthouse",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nSouth-east of the Lighthouse. Fairy ring {{Fairycode|ALP}}.",
+    "points": [
+      [
+        2578,
+        3597,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_South-east_of_the_Lighthouse",
+    "sourceFile": "Clue_scroll_(medium)_-_South-east_of_the_Lighthouse.wiki",
+    "sourceSha256": "e6216cea32ba0db44903b12e74570a959091804b13ac4fc324b87d9d8d1ca3f3",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - Between Seers' Village and Rellekka",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nBetween Seers' Village and Rellekka. South-west of Fairy ring {{Fairycode|CJR}}.",
+    "points": [
+      [
+        2667,
+        3562,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Between_Seers%27_Village_and_Rellekka",
+    "sourceFile": "Clue_scroll_(medium)_-_Between_Seers'_Village_and_Rellekka.wiki",
+    "sourceSha256": "0da840aec88209a52f51fb89e63d1c3f846896ef0bd46cf2e52cc6dca67188a4",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - To the east of the Ranging guild",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nTo the east of the Ranging Guild.",
+    "points": [
+      [
+        2702,
+        3429,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_To_the_east_of_the_Ranging_guild",
+    "sourceFile": "Clue_scroll_(medium)_-_To_the_east_of_the_Ranging_guild.wiki",
+    "sourceSha256": "91863fce7972d8b9bfe3ed1c13a7f444ac59f801ef30d2a313e60b690007c89e",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - West of the Crafting Guild",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nWest of the Crafting Guild.",
+    "points": [
+      [
+        2907,
+        3295,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_West_of_the_Crafting_Guild",
+    "sourceFile": "Clue_scroll_(medium)_-_West_of_the_Crafting_Guild.wiki",
+    "sourceSha256": "d0c5ad715cdecbbfc5ae76bc3bff5c9e1e30993ecd7f84c52d5d93074c21bc35",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - The crate in McGrubor's Wood",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "SEARCH",
+    "hint": "The map reveals where to search:\n\nThe crate in McGrubor's Wood. Fairy ring {{Fairycode|ALS}}.",
+    "points": [
+      [
+        2658,
+        3488,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_The_crate_in_McGrubor%27s_Wood",
+    "sourceFile": "Clue_scroll_(medium)_-_The_crate_in_McGrubor's_Wood.wiki",
+    "sourceSha256": "d8a31f7a110dc2f5361807855415c3cdda27617681645359508f32cddc67df18",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - The crate west of the Clock Tower",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "SEARCH",
+    "hint": "The map reveals where to search:\n\nThe crate west of the Clock Tower.",
+    "points": [
+      [
+        2565,
+        3248,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_The_crate_west_of_the_Clock_Tower",
+    "sourceFile": "Clue_scroll_(medium)_-_The_crate_west_of_the_Clock_Tower.wiki",
+    "sourceSha256": "f886e858b8f679e0ef021865a37538e019bf690e21fc04044d5107684eb21efc",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - 00.31S 17.43E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "00 degrees 31 minutes south<br>17 degrees 43 minutes east",
+    "points": [
+      [
+        3007,
+        3144,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_00.31S_17.43E",
+    "sourceFile": "Clue_scroll_(medium)_-_00.31S_17.43E.wiki",
+    "sourceSha256": "4b16b6ef63c12b35d90051b82accbd5503dde6b3ac3ca73f278cc0814d8a08f8",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 02.48N 22.30E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "02 degrees 48 minutes north<br>22 degrees 30 minutes east",
+    "points": [
+      [
+        3160,
+        3251,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_02.48N_22.30E",
+    "sourceFile": "Clue_scroll_(medium)_-_02.48N_22.30E.wiki",
+    "sourceSha256": "a1274c4f9ed7bdfcf04cd3fc932868db50265ef8ef1fadceea383774abf2a4a2",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 05.43N 23.05E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "05 degrees 43 minutes north<br>23 degrees 05 minutes east",
+    "points": [
+      [
+        3179,
+        3344,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_05.43N_23.05E",
+    "sourceFile": "Clue_scroll_(medium)_-_05.43N_23.05E.wiki",
+    "sourceSha256": "7fa49c03efe338e6ef74fb2c31aff3614d28acb568de3c61961da142354454a2",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - Salute in the banana plantation",
+    "tier": "hard",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Salute in the banana plantation. Beware of double agents! Equip a diamond ring, amulet of power, and nothing on your chest and legs.",
+    "points": [
+      [
+        2914,
+        3168,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1643,
+          "local": 1643,
+          "name": "Diamond ring"
+        }
+      ],
+      [
+        {
+          "osrs": 1731,
+          "local": 1731,
+          "name": "Amulet of power"
+        },
+        {
+          "osrs": 20585,
+          "local": 1731,
+          "name": "Amulet of power"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "DOUBLE_AGENT",
+      "emote": "Salute",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Diamond ring",
+        "equipment2": "Amulet of power"
+      },
+      "requirements": "Equip a [[diamond ring]], [[amulet of power]], and nothing on your chest and legs."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": [
+        "BODY",
+        "LEGS"
+      ]
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Salute_in_the_banana_plantation",
+    "sourceFile": "Clue_scroll_(hard)_-_Salute_in_the_banana_plantation.wiki",
+    "sourceSha256": "89d534c745ac0d413da29041fc1a53c62356d046165e1dce2e12d526de58057a"
+  },
+  {
+    "key": "Clue scroll (hard) - Blow a raspberry in the Fishing Guild bank",
+    "tier": "hard",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Blow a raspberry in the Fishing Guild bank. Beware of double agents! Equip an elemental shield, blue dragonhide chaps and a rune warhammer.",
+    "points": [
+      [
+        2588,
+        3419,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 2890,
+          "local": 2890,
+          "name": "Elemental shield"
+        }
+      ],
+      [
+        {
+          "osrs": 2493,
+          "local": 2493,
+          "name": "Blue d'hide chaps"
+        },
+        {
+          "osrs": 20418,
+          "local": 2493,
+          "name": "Blue d'hide chaps"
+        }
+      ],
+      [
+        {
+          "osrs": 1347,
+          "local": 1347,
+          "name": "Rune warhammer"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "DOUBLE_AGENT",
+      "emote": "Raspberry",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Elemental shield",
+        "equipment2": "Blue d'hide chaps",
+        "equipment3": "Rune warhammer"
+      },
+      "requirements": "Equip an [[elemental shield]], [[blue dragonhide chaps]] and a [[rune warhammer]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Blow_a_raspberry_in_the_Fishing_Guild_bank",
+    "sourceFile": "Clue_scroll_(hard)_-_Blow_a_raspberry_in_the_Fishing_Guild_bank.wiki",
+    "sourceSha256": "652f294fe617ebcd6b5fce30d8a0dd48882b4a996676f878912a13f3dd8eb02d"
+  },
+  {
+    "key": "Clue scroll (hard) - Yawn in the rogues' general store",
+    "tier": "hard",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Yawn in the rogues' general store. Beware of double agents! Equip an adamant square shield, blue dragon vambraces and a rune pickaxe.",
+    "points": [
+      [
+        3026,
+        3701,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1183,
+          "local": 1183,
+          "name": "Adamant sq shield"
+        }
+      ],
+      [
+        {
+          "osrs": 2487,
+          "local": 2487,
+          "name": "Blue d'hide vambraces"
+        }
+      ],
+      [
+        {
+          "osrs": 1275,
+          "local": 1275,
+          "name": "Rune pickaxe"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "DOUBLE_AGENT",
+      "emote": "Yawn",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Adamant sq shield",
+        "equipment2": "Blue d'hide vambraces",
+        "equipment3": "Rune pickaxe"
+      },
+      "requirements": "Equip an [[adamant square shield]], [[blue d'hide vambraces]] and a [[rune pickaxe]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Yawn_in_the_rogues%27_general_store",
+    "sourceFile": "Clue_scroll_(hard)_-_Yawn_in_the_rogues'_general_store.wiki",
+    "sourceSha256": "7b155e8713b6febbd0926c45369eb10f817f38f809be76d4f679bae56505806e"
+  },
+  {
+    "key": "Clue scroll (hard) - 01.30N 20.01E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "01 degrees 30 minutes north<br>20 degrees 01 minutes east",
+    "points": [
+      [
+        3081,
+        3209,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_01.30N_20.01E",
+    "sourceFile": "Clue_scroll_(hard)_-_01.30N_20.01E.wiki",
+    "sourceSha256": "0438f4de471240878c52856371350914512e485493ddbbff71bc6873f8d7ba7a"
+  },
+  {
+    "key": "Clue scroll (hard) - 02.39N 29.58E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "02 degrees 39 minutes north<br>29 degrees 58 minutes east",
+    "points": [
+      [
+        3399,
+        3246,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_02.39N_29.58E",
+    "sourceFile": "Clue_scroll_(hard)_-_02.39N_29.58E.wiki",
+    "sourceSha256": "9f8176d0ad1c3e93a52359cd421aa8951e62fc8d5ec3b6b73d07e284b6b54171"
+  },
+  {
+    "key": "Clue scroll (hard) - 02.48N 08.05E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "02 degrees 48 minutes north<br>08 degrees 05 minutes east",
+    "points": [
+      [
+        2699,
+        3251,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_02.48N_08.05E",
+    "sourceFile": "Clue_scroll_(hard)_-_02.48N_08.05E.wiki",
+    "sourceSha256": "565a89763805b6d94e7b1f069cd5c850e3667f73db61f1d04bca2b96393e2117"
+  },
+  {
+    "key": "Clue scroll (hard) - BLUE GRIM GUIDED",
+    "tier": "hard",
+    "kind": "ANAGRAM",
+    "action": "TALK",
+    "hint": "This anagram reveals who to speak to next: BLUE GRIM GUIDED",
+    "points": [
+      [
+        3238,
+        3220,
+        0
+      ]
+    ],
+    "npcName": "Lumbridge Guide",
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "SLIDING_PUZZLE"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_BLUE_GRIM_GUIDED",
+    "sourceFile": "Clue_scroll_(hard)_-_BLUE_GRIM_GUIDED.wiki",
+    "sourceSha256": "8b4ef9f7995008abff4efa491e56d3dd2eb64065707af6112bda3a2cb85b26f1"
+  },
+  {
+    "key": "Clue scroll (hard) - DO SAY MORE",
+    "tier": "hard",
+    "kind": "ANAGRAM",
+    "action": "TALK",
+    "hint": "This anagram reveals who to speak to next: DO SAY MORE",
+    "points": [
+      [
+        3230,
+        3230,
+        0
+      ]
+    ],
+    "npcName": "Doomsayer",
+    "npcCandidates": [
+      {
+        "id": 3777,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          "Toggle-warnings",
+          null,
+          null
+        ],
+        "sha256": "f5bee6855e4cf2468648240ee0983017f8c4235d0e0d79fdb52f3439521683b4"
+      },
+      {
+        "id": 7930,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "5070cd0935455de8f1eb16556413266491f54584fb66ffd272ef14cb3c464603"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "What is 40 divided by 1/2 plus 15?",
+      "answer": "95"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_DO_SAY_MORE",
+    "sourceFile": "Clue_scroll_(hard)_-_DO_SAY_MORE.wiki",
+    "sourceSha256": "a95711d55cf55317a1e66ee756966556f5dfd1abcfb98d8b98e77e807e5c7da0"
+  },
+  {
+    "key": "Clue scroll (hard) - RAT MAT WITHIN",
+    "tier": "hard",
+    "kind": "ANAGRAM",
+    "action": "TALK",
+    "hint": "This anagram reveals who to speak to next: RAT MAT WITHIN",
+    "points": [
+      [
+        3044,
+        4969,
+        1
+      ]
+    ],
+    "npcName": "Martin Thwait",
+    "npcCandidates": [
+      {
+        "id": 2270,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          "Trade",
+          null,
+          null
+        ],
+        "sha256": "f9c0f208a45145341724cb17fa8545cb111892e2b9f5ee1a47689d108546a0b7"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "How many natural fires burn in Rogue's Den?",
+      "answer": "2"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_RAT_MAT_WITHIN",
+    "sourceFile": "Clue_scroll_(hard)_-_RAT_MAT_WITHIN.wiki",
+    "sourceSha256": "21d03afe14e40ca05dfc928352a201c9a325be2a790b31340bd9d9c3c629b20e"
+  },
+  {
+    "key": "Clue scroll (hard) - IWPPLQTP",
+    "tier": "hard",
+    "kind": "CIPHER",
+    "action": "TALK",
+    "hint": "The cipher reveals who to speak to next: IWPPLQTP",
+    "points": [
+      [
+        2541,
+        3548,
+        0
+      ]
+    ],
+    "npcName": "Gunnjorn",
+    "npcCandidates": [
+      {
+        "id": 607,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "2d1e9c775af99931dcf20527bd89a435dd7104d598cd0f22c7ab7deda7ea28a9"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "SLIDING_PUZZLE"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_IWPPLQTP",
+    "sourceFile": "Clue_scroll_(hard)_-_IWPPLQTP.wiki",
+    "sourceSha256": "f694d1768605675c73363c7badcad824f53dbebbd307939b947a3000e441d0d0"
+  },
+  {
+    "key": "Clue scroll (hard) - ZHLUG ROG PDQ",
+    "tier": "hard",
+    "kind": "CIPHER",
+    "action": "TALK",
+    "hint": "The cipher reveals who to speak to next: ZHLUG ROG PDQ",
+    "points": [
+      [
+        3224,
+        3112,
+        0
+      ]
+    ],
+    "npcName": "Weird Old Man",
+    "npcCandidates": [
+      {
+        "id": 1152,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "6d3b4f921a8c24f58fb95d024d776759290a9a2b94da0d34446106c92105dde8"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "SIX LEGS! All of them have 6! There are 25 of them! How many legs?",
+      "answer": "150"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_ZHLUG_ROG_PDQ",
+    "sourceFile": "Clue_scroll_(hard)_-_ZHLUG_ROG_PDQ.wiki",
+    "sourceSha256": "54ee5818a302e4f512e2f6c6cd5f88905e73666cd51b2d1846125f4db97c8927"
+  },
+  {
+    "key": "Clue scroll (hard) - Yanille anvils",
+    "tier": "hard",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nYanille anvils, south of the bank.",
+    "points": [
+      [
+        2616,
+        3077,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Yanille_anvils",
+    "sourceFile": "Clue_scroll_(hard)_-_Yanille_anvils.wiki",
+    "sourceSha256": "a1a2125d26a40e7366552117dd12117f4236333599eaaa38ff72093e1a178b50"
+  },
+  {
+    "key": "Clue scroll (hard) - A crate in the Lumber Yard",
+    "tier": "hard",
+    "kind": "MAP",
+    "action": "SEARCH",
+    "hint": "The map reveals where to search:\n\nA crate in the Lumber Yard, north-east of Varrock.",
+    "points": [
+      [
+        3309,
+        3503,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_A_crate_in_the_Lumber_Yard",
+    "sourceFile": "Clue_scroll_(hard)_-_A_crate_in_the_Lumber_Yard.wiki",
+    "sourceSha256": "525f4bad07c263b68be4dbee7bc0aaa1f0f5b8031fba746ae2ab3afd34a63a68"
+  },
+  {
+    "key": "Clue scroll (hard) - 46 is my number",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "46 is my number. My body is the colour of burnt orange and crawls among those with eight. Three mouths I have, yet I cannot eat. My blinking blue eye hides my grave.",
+    "points": [
+      [
+        3170,
+        3885,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_46_is_my_number",
+    "sourceFile": "Clue_scroll_(hard)_-_46_is_my_number.wiki",
+    "sourceSha256": "04d4d8364669e54f34d3dd5bf90fc8d953299d0207326b374e27337f5c90f852"
+  },
+  {
+    "key": "Clue scroll (hard) - Aggie I see",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "Aggie I see. Lonely and southern I feel. I am neither inside nor outside the house, yet no home would be complete without me. The treasure lies beneath me!",
+    "points": [
+      [
+        3085,
+        3255,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Aggie_I_see",
+    "sourceFile": "Clue_scroll_(hard)_-_Aggie_I_see.wiki",
+    "sourceSha256": "b395b6901d48ce96a709c5933ed81b875a26e318502a76de3865c981652ccd2f"
+  },
+  {
+    "key": "Clue scroll (hard) - South-east of the Wilderness Agility Course",
+    "tier": "hard",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nSouth-east of the Wilderness Agility Course in level 50 Wilderness.",
+    "points": [
+      [
+        3021,
+        3912,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_South-east_of_the_Wilderness_Agility_Course",
+    "sourceFile": "Clue_scroll_(hard)_-_South-east_of_the_Wilderness_Agility_Course.wiki",
+    "sourceSha256": "7adda851eb750bcf917fe97cb752810a482b3bba564680ec03bd8a99227921dc",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (hard) - South of the Legends' Guild",
+    "tier": "hard",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nSouth of the Legends' Guild. Fairy ring {{Fairycode|BLR}}.",
+    "points": [
+      [
+        2722,
+        3338,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_South_of_the_Legends%27_Guild",
+    "sourceFile": "Clue_scroll_(hard)_-_South_of_the_Legends'_Guild.wiki",
+    "sourceSha256": "46f632cbe792592b40f5fd4b895a6099ac862fd78847abccb78969c3fd6aeca5",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (hard) - In the western section of West Ardougne",
+    "tier": "hard",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nIn the western section of West Ardougne.",
+    "points": [
+      [
+        2488,
+        3308,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_In_the_western_section_of_West_Ardougne",
+    "sourceFile": "Clue_scroll_(hard)_-_In_the_western_section_of_West_Ardougne.wiki",
+    "sourceSha256": "56d20159ae790721c0fb7c68b87ffb64b76cf76bfe409ca3b13ba553986fe44c",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (hard) - In a crate by the stairs to the Observatory Dungeon",
+    "tier": "hard",
+    "kind": "MAP",
+    "action": "SEARCH",
+    "hint": "The map reveals where to search:\n\nIn a crate by the stairs to the Observatory Dungeon.",
+    "points": [
+      [
+        2457,
+        3182,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_In_a_crate_by_the_stairs_to_the_Observatory_Dungeon",
+    "sourceFile": "Clue_scroll_(hard)_-_In_a_crate_by_the_stairs_to_the_Observatory_Dungeon.wiki",
+    "sourceSha256": "a975ec676cda6d08ea638685126debfefdbeb54b5d070b844de35643d74b3f46",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (hard) - In a crate at the Dark Warriors' Fortress",
+    "tier": "hard",
+    "kind": "MAP",
+    "action": "SEARCH",
+    "hint": "The map reveals where to search:\n\nIn a crate at the Dark Warriors' Fortress in level 14 Wilderness.",
+    "points": [
+      [
+        3026,
+        3628,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_In_a_crate_at_the_Dark_Warriors%27_Fortress",
+    "sourceFile": "Clue_scroll_(hard)_-_In_a_crate_at_the_Dark_Warriors'_Fortress.wiki",
+    "sourceSha256": "3b4224941b0664ff71cfce9cd7a40f208c1dbc24ae59e3bfeff4d4ef2c306a0a",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (hard) - BY LOOK",
+    "tier": "hard",
+    "kind": "ANAGRAM",
+    "action": "TALK",
+    "hint": "This anagram reveals who to speak to next: BY LOOK",
+    "points": [
+      [
+        2529,
+        3162,
+        0
+      ]
+    ],
+    "npcName": "Bolkoy",
+    "npcCandidates": [
+      {
+        "id": 471,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          "Trade",
+          null,
+          null
+        ],
+        "sha256": "c32257260b16ce3947c25707b40b9eb125e1200f76f250b7a71efc5df7687699"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "How many flowers are there in the clearing below this platform?",
+      "answer": "13"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_BY_LOOK",
+    "sourceFile": "Clue_scroll_(hard)_-_BY_LOOK.wiki",
+    "sourceSha256": "16327e56b2746d092135982534dd1df269ba0d7180d78ad9547318055ef7094d",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - C ON GAME HOC",
+    "tier": "hard",
+    "kind": "ANAGRAM",
+    "action": "TALK",
+    "hint": "This anagram reveals who to speak to next: C ON GAME HOC",
+    "points": [
+      [
+        2395,
+        3486,
+        0
+      ]
+    ],
+    "npcName": "Gnome Coach",
+    "npcCandidates": [
+      {
+        "id": 2802,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "3ff83e10ac1fe073eb117decbfcc692b5fb00900fd75766c3e37aa33411e6e9c"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "How many gnomes on the Gnome ball field have red patches on their uniforms?",
+      "answer": "6"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_C_ON_GAME_HOC",
+    "sourceFile": "Clue_scroll_(hard)_-_C_ON_GAME_HOC.wiki",
+    "sourceSha256": "884d8fb18c627fcdb688a079d3c061b71f27fad8da3c27c6c934a5c1833c5ec4",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - MOTHERBOARD",
+    "tier": "hard",
+    "kind": "ANAGRAM",
+    "action": "TALK",
+    "hint": "This anagram reveals who to speak to next: MOTHERBOARD",
+    "points": [
+      [
+        2606,
+        3211,
+        0
+      ]
+    ],
+    "npcName": "Brother Omad",
+    "npcCandidates": [
+      {
+        "id": 279,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "a5fc63327456c2e7dc9d19e29b853155829458db1c1cafe304d978085060cf94"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "What is the next number? 12, 13, 15, 17, 111, 113, 117, 119, 123....?",
+      "answer": "129"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_MOTHERBOARD",
+    "sourceFile": "Clue_scroll_(hard)_-_MOTHERBOARD.wiki",
+    "sourceSha256": "2b95dde5b6ce32e0382df961bdb40d006c98f32d010c1d0ceef288ad1d01886f",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - SLIDE WOMAN",
+    "tier": "hard",
+    "kind": "ANAGRAM",
+    "action": "TALK",
+    "hint": "This anagram reveals who to speak to next: SLIDE WOMAN",
+    "points": [
+      [
+        3088,
+        3253,
+        0
+      ]
+    ],
+    "npcName": "Wise Old Man",
+    "npcCandidates": [
+      {
+        "id": 2253,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "79bc43568848d73da969b463b995f212f9021995d51ab43536d16e8ce98b95a5"
+      },
+      {
+        "id": 2566,
+        "level": 0,
+        "options": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "2a54edb392c38e57a8ebc704bf844cf03c836b671dd8ab7e64f80288f7000bba"
+      },
+      {
+        "id": 2567,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "f0ed77a25c8a0faeaf001d17d84461762f90477911b0b6f2abb9df5717afb1a0"
+      },
+      {
+        "id": 2633,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "6d792d8f19110161e5f082cd3532a739725536993c9cceab12fa87352ae0f645"
+      },
+      {
+        "id": 3821,
+        "level": 0,
+        "options": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "76147179c82e3b7cdc2dea131ce927e0dcf65eb44d057c7061112fa872844441"
+      },
+      {
+        "id": 3838,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "d7ee13b57476e2d5796a72e1e532ec7336293b7414e2ceaae3ef2efedd7577fc"
+      },
+      {
+        "id": 3839,
+        "level": 0,
+        "options": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "0f33fc29c8480ee8e8f0de4d9280fa30bbee6d137b6f3e94bd4457119ff0eb8f"
+      },
+      {
+        "id": 7090,
+        "level": 0,
+        "options": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "49a435aba5755d91faf5b0ddebbcbf78bc090f8f3c6b99a4f5bf9ce422fac1da"
+      },
+      {
+        "id": 8182,
+        "level": 0,
+        "options": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "2916d54a8708e25ec8b32c7bc421a9d0cc04a919b637abcd5305db39729f19dd"
+      },
+      {
+        "id": 11568,
+        "level": 0,
+        "options": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "60464e29e126f7f1e8b2b924a5f617e9d1ca9555c9ecfbee09d6236496378f52"
+      },
+      {
+        "id": 11569,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "d3ab8540910c4dce2a39d944193e64a52e584551e11eb7cc4be6027d4e46f8ef"
+      },
+      {
+        "id": 11575,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "87a4bb3d416a6273964699f94c2d6cdc79822cd03a042b50d5b775d943b68c0a"
+      },
+      {
+        "id": 11583,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "87a4bb3d416a6273964699f94c2d6cdc79822cd03a042b50d5b775d943b68c0a"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "How many bookcases are in the Wise Old Man's house?",
+      "answer": "28"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_SLIDE_WOMAN",
+    "sourceFile": "Clue_scroll_(hard)_-_SLIDE_WOMAN.wiki",
+    "sourceSha256": "f492efd4b651df6c631ed7ddbb51abcd7a5c048eaa96ecbe1e0d406f14f72939",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - UZZU MUJHRKYYKJ",
+    "tier": "hard",
+    "kind": "CIPHER",
+    "action": "TALK",
+    "hint": "The cipher reveals who to speak to next: UZZU MUJHRKYYKJ",
+    "points": [
+      [
+        2501,
+        3487,
+        0
+      ]
+    ],
+    "npcName": "Otto Godblessed",
+    "npcCandidates": [
+      {
+        "id": 2725,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "46e5d49dd1c85163fbfaac8b6f174a0c71a92ce0adb668e5bfa376600d1e6fd7"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "How many pyre sites are found around this lake?",
+      "answer": "3"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_UZZU_MUJHRKYYKJ",
+    "sourceFile": "Clue_scroll_(hard)_-_UZZU_MUJHRKYYKJ.wiki",
+    "sourceSha256": "6ab0dc56912320400a94d0db1e80a89cae53cce0049054d96d2ab062dc82c00e",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (elite) - Bow upstairs in the Edgeville Monastery",
+    "tier": "elite",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Bow upstairs in the Edgeville Monastery. Equip a completed prayer book.",
+    "points": [
+      [
+        3056,
+        3484,
+        1
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 3840,
+          "local": 3840,
+          "name": "Holy book"
+        },
+        {
+          "osrs": 3842,
+          "local": 3842,
+          "name": "Unholy book"
+        },
+        {
+          "osrs": 27191,
+          "local": 3842,
+          "name": "Unholy book"
+        },
+        {
+          "osrs": 3844,
+          "local": 3844,
+          "name": "Book of Balance"
+        },
+        {
+          "osrs": 12608,
+          "local": 19613,
+          "name": "Book of War"
+        },
+        {
+          "osrs": 12610,
+          "local": 19615,
+          "name": "Book of Law"
+        },
+        {
+          "osrs": 12612,
+          "local": 23846,
+          "name": "Book of Darkness"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Bow",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Holy book",
+        "equipment1price1": "Saradomin page 1",
+        "equipment1price2": "Saradomin page 2",
+        "equipment1price3": "Saradomin page 3",
+        "equipment1price4": "Saradomin page 4",
+        "equipment1alt1": "Unholy book",
+        "equipment1alt1price1": "Zamorak page 1",
+        "equipment1alt1price2": "Zamorak page 2",
+        "equipment1alt1price3": "Zamorak page 3",
+        "equipment1alt1price4": "Zamorak page 4",
+        "equipment1alt2": "Book of Balance",
+        "equipment1alt2price1": "Guthix page 1",
+        "equipment1alt2price2": "Guthix page 2",
+        "equipment1alt2price3": "Guthix page 3",
+        "equipment1alt2price4": "Guthix page 4",
+        "equipment1alt3": "Book of War",
+        "equipment1alt3price1": "Bandos page 1",
+        "equipment1alt3price2": "Bandos page 2",
+        "equipment1alt3price3": "Bandos page 3",
+        "equipment1alt3price4": "Bandos page 4",
+        "equipment1alt4": "Book of Law",
+        "equipment1alt4price1": "Armadyl page 1",
+        "equipment1alt4price2": "Armadyl page 2",
+        "equipment1alt4price3": "Armadyl page 3",
+        "equipment1alt4price4": "Armadyl page 4",
+        "equipment1alt5": "Book of Darkness",
+        "equipment1alt5price1": "Ancient page 1",
+        "equipment1alt5price2": "Ancient page 2",
+        "equipment1alt5price3": "Ancient page 3",
+        "equipment1alt5price4": "Ancient page 4"
+      },
+      "requirements": "Equip a completed [[god book|prayer book]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_Bow_upstairs_in_the_Edgeville_Monastery",
+    "sourceFile": "Clue_scroll_(elite)_-_Bow_upstairs_in_the_Edgeville_Monastery.wiki",
+    "sourceSha256": "bbf07dec80d9540168d7417df92a5513ac6531bcb086387293c46026b12010c4"
+  },
+  {
+    "key": "Clue scroll (elite) - Salute in the Warriors' guild bank",
+    "tier": "elite",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Salute in the Warriors' guild bank. Equip only a black salamander.",
+    "points": [
+      [
+        2844,
+        3542,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 10148,
+          "local": 10148,
+          "name": "Black salamander"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Salute",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Black salamander"
+      },
+      "requirements": "Equip only a [[black salamander]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": true,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_Salute_in_the_Warriors%27_guild_bank",
+    "sourceFile": "Clue_scroll_(elite)_-_Salute_in_the_Warriors'_guild_bank.wiki",
+    "sourceSha256": "561e79b0981e626874a1ffcc36aa3f8c991f1cab7135bb12981e5b2196c8f188"
+  },
+  {
+    "key": "Clue scroll (elite) - Laugh in front of the gem store in Ardougne market",
+    "tier": "elite",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Laugh in front of the gem store in Ardougne market. Equip a Castlewars bracelet, a dragonstone amulet and a ring of forging.",
+    "points": [
+      [
+        2666,
+        3304,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 11083,
+          "local": 11083,
+          "name": "Castle wars bracelet(1)"
+        },
+        {
+          "osrs": 11081,
+          "local": 11081,
+          "name": "Castle wars bracelet(2)"
+        },
+        {
+          "osrs": 11079,
+          "local": 11079,
+          "name": "Castle wars bracelet(3)"
+        }
+      ],
+      [
+        {
+          "osrs": 1702,
+          "local": 1702,
+          "name": "Dragonstone amulet"
+        }
+      ],
+      [
+        {
+          "osrs": 2568,
+          "local": 2568,
+          "name": "Ring of forging"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Laugh",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Castle wars bracelet",
+        "equipment1price1": "Castle wars bracelet(3)",
+        "equipment2": "Dragonstone amulet",
+        "equipment3": "Ring of forging"
+      },
+      "requirements": "Equip a [[Castlewars bracelet]], a [[dragonstone amulet]] and a [[ring of forging]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_Laugh_in_front_of_the_gem_store_in_Ardougne_market",
+    "sourceFile": "Clue_scroll_(elite)_-_Laugh_in_front_of_the_gem_store_in_Ardougne_market.wiki",
+    "sourceSha256": "82bba053e02a275adf684c7f1546efa6a1b7d79c44a3f30bdd152ffd7cd5ddfb"
+  },
+  {
+    "key": "Clue scroll (elite) - 02.35S 11.52E",
+    "tier": "elite",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "02 degrees 35 minutes south<br>11 degrees 52 minutes east",
+    "points": [
+      [
+        2820,
+        3078,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        6587,
+        6588
+      ],
+      "spawnMode": "CHOICE",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Elite.wiki",
+        "sha256": "16fc0867f8a97091cd0b2bd9faace95f552746d9e24c6dc701f1b0d34deab0ec",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Elite"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_02.35S_11.52E",
+    "sourceFile": "Clue_scroll_(elite)_-_02.35S_11.52E.wiki",
+    "sourceSha256": "e744798d9f8d584a09506e87562501ec207f98842398c0413a7bbe685f1055ca"
+  },
+  {
+    "key": "Clue scroll (elite) - 05.07S 13.26E",
+    "tier": "elite",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "05 degrees 07 minutes south<br>13 degrees 26 minutes east",
+    "points": [
+      [
+        2870,
+        2997,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        6587,
+        6588
+      ],
+      "spawnMode": "CHOICE",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Elite.wiki",
+        "sha256": "16fc0867f8a97091cd0b2bd9faace95f552746d9e24c6dc701f1b0d34deab0ec",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Elite"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_05.07S_13.26E",
+    "sourceFile": "Clue_scroll_(elite)_-_05.07S_13.26E.wiki",
+    "sourceSha256": "2917b1aa5d128d8000447a38c08391e13a20a0ae6ca2b77bd7f2f043d611010b"
+  },
+  {
+    "key": "Clue scroll (elite) - DR HITMAN",
+    "tier": "elite",
+    "kind": "ANAGRAM",
+    "action": "TALK",
+    "hint": "This anagram reveals who to speak to next: DR HITMAN",
+    "points": [
+      [
+        3182,
+        3946,
+        0
+      ]
+    ],
+    "npcName": "Mandrith",
+    "npcCandidates": [
+      {
+        "id": 6537,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "a1685062a9150a0f3389c6fb41f7f39759b01d02f5de8a8eb0a46e4808ac664b"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "How many scorpions live under the pit?",
+      "answer": "28"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_DR_HITMAN",
+    "sourceFile": "Clue_scroll_(elite)_-_DR_HITMAN.wiki",
+    "sourceSha256": "e1388e1c37be1b041e5bdc0994bd96acbc36ca126fbe572e537cfd5742e191d5"
+  },
+  {
+    "key": "Clue scroll (elite) - COOL NERD",
+    "tier": "elite",
+    "kind": "ANAGRAM",
+    "action": "TALK",
+    "hint": "This anagram reveals who to speak to next: COOL NERD",
+    "points": [
+      [
+        3462,
+        3557,
+        0
+      ]
+    ],
+    "npcName": "old crone",
+    "npcCandidates": [
+      {
+        "id": 1695,
+        "level": 0,
+        "options": [
+          "Talk-To",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "e70e98676bc216ec8b15333280f922df1bd1a281dbb85d6251e660ac01588b4b"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "What is the combined combat level of each species that live in Slayer tower?",
+      "answer": "619"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_COOL_NERD",
+    "sourceFile": "Clue_scroll_(elite)_-_COOL_NERD.wiki",
+    "sourceSha256": "5bfb03b5624cfc0a3efe41ce9cb7b9ccd7070fa29e866b018860159d7ca692c6"
+  },
+  {
+    "key": "Clue scroll (elite) - W marks the spot",
+    "tier": "elite",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "W marks the spot.",
+    "points": [
+      [
+        2867,
+        3546,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_W_marks_the_spot",
+    "sourceFile": "Clue_scroll_(elite)_-_W_marks_the_spot.wiki",
+    "sourceSha256": "f7fd0c4f0c359e9c1ca7532434c0f5f13f425edc46f13ec6d899328a02b19043"
+  },
+  {
+    "key": "Clue scroll (elite) - Three rule below and three sit at top",
+    "tier": "elite",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "Three rule below and three sit at top. Come dig at my entrance.",
+    "points": [
+      [
+        2523,
+        3739,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_Three_rule_below_and_three_sit_at_top",
+    "sourceFile": "Clue_scroll_(elite)_-_Three_rule_below_and_three_sit_at_top.wiki",
+    "sourceSha256": "ad328f2e21a52d7e2e0907b7f149acb820ac1642900f3f545d7ea5251ff9330b"
+  },
+  {
+    "key": "Clue scroll (elite) - South-west of Tree Gnome Village",
+    "tier": "elite",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nSouth-west of Tree Gnome Village.",
+    "points": [
+      [
+        2449,
+        3130,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_South-west_of_Tree_Gnome_Village",
+    "sourceFile": "Clue_scroll_(elite)_-_South-west_of_Tree_Gnome_Village.wiki",
+    "sourceSha256": "b06c207050f1d4ca62b3c3231def6100569b7e6d441a5dee04141c94f0203d64"
+  },
+  {
+    "key": "Clue scroll (elite) - Ghostly bones",
+    "tier": "elite",
+    "kind": "KILL",
+    "action": "KILL",
+    "hint": "Ghostly bones.",
+    "points": [],
+    "npcName": "Ankou",
+    "npcCandidates": [
+      {
+        "id": 4381,
+        "level": 75,
+        "options": [
+          null,
+          "Attack",
+          null,
+          null,
+          null
+        ],
+        "sha256": "811918275549c615bf9343aa0cf3e2aec7c7317b36311bbe982e33f6ddde2357"
+      },
+      {
+        "id": 4382,
+        "level": 82,
+        "options": [
+          null,
+          "Attack",
+          null,
+          null,
+          null
+        ],
+        "sha256": "b52870b9cfa9b40ae43369d5e74d12faf4484104c2edfd12ae04f7428629476d"
+      },
+      {
+        "id": 4383,
+        "level": 86,
+        "options": [
+          null,
+          "Attack",
+          null,
+          null,
+          null
+        ],
+        "sha256": "df11a6451364c6d3810a1e3ea8bf4838076046a205e882d54f74e57f8998eeb4"
+      },
+      {
+        "id": 10736,
+        "level": 12,
+        "options": [
+          null,
+          "Attack",
+          "Mark",
+          null,
+          null
+        ],
+        "sha256": "7fc3daa793ec7fa79cb807c7fdae6dd31211ecbf5f0742cfc877e42001d992e1"
+      },
+      {
+        "id": 10737,
+        "level": 20,
+        "options": [
+          null,
+          "Attack",
+          "Mark",
+          null,
+          null
+        ],
+        "sha256": "a70e5d33b165707480be7736890f799488e116b666097d6c365d1d3fb1c1693d"
+      },
+      {
+        "id": 10738,
+        "level": 33,
+        "options": [
+          null,
+          "Attack",
+          "Mark",
+          null,
+          null
+        ],
+        "sha256": "e504fac036de7213593ac68ce2ec8534c4eb9449067208a8ac27becc39c8a033"
+      },
+      {
+        "id": 10739,
+        "level": 47,
+        "options": [
+          null,
+          "Attack",
+          "Mark",
+          null,
+          null
+        ],
+        "sha256": "4cd4089f47086c80a52d84715f487fd3a59bafdcad19e74cc8a0f2713319bbb1"
+      },
+      {
+        "id": 10740,
+        "level": 64,
+        "options": [
+          null,
+          "Attack",
+          "Mark",
+          null,
+          null
+        ],
+        "sha256": "b55706cdb09f4e60894e1c9e647e31f044a061c83880fea0ed00c137d5098eea"
+      },
+      {
+        "id": 10741,
+        "level": 89,
+        "options": [
+          null,
+          "Attack",
+          "Mark",
+          null,
+          null
+        ],
+        "sha256": "a9c2fe5d11b5f458f98f854481ffc67270b9eb5bc307943da483fa89eb80244f"
+      },
+      {
+        "id": 10742,
+        "level": 115,
+        "options": [
+          null,
+          "Attack",
+          "Mark",
+          null,
+          null
+        ],
+        "sha256": "2c5902b7e9fc8157b825c972c39ccbb6724d51a0ea45c2e1a52746aad31f9a30"
+      },
+      {
+        "id": 10743,
+        "level": 143,
+        "options": [
+          null,
+          "Attack",
+          "Mark",
+          null,
+          null
+        ],
+        "sha256": "3db011de33d3ad569ae7f6ccc7d39c14853a47da7180bed74c5285215475861a"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_Ghostly_bones",
+    "sourceFile": "Clue_scroll_(elite)_-_Ghostly_bones.wiki",
+    "sourceSha256": "2608cfacc15f126347fb2055423f296f5ac967c3bbe092559e66e2cbf980313f"
+  },
+  {
+    "key": "Clue scroll (elite) - Show this to Sherlock",
+    "tier": "elite",
+    "kind": "SHERLOCK",
+    "action": "SHERLOCK",
+    "hint": "Show this to Sherlock.",
+    "points": [
+      [
+        2733,
+        3415,
+        0
+      ]
+    ],
+    "npcName": "Sherlock",
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_Show_this_to_Sherlock",
+    "sourceFile": "Clue_scroll_(elite)_-_Show_this_to_Sherlock.wiki",
+    "sourceSha256": "c7c77deede6005d268de3d9673b3545852c36d442c8aa44359856e541809a059"
+  },
+  {
+    "key": "Clue scroll (master) - Show your anger at the Wise old man",
+    "tier": "master",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Show your anger at the Wise old man. Beware of double agents! Equip an abyssal whip, a legend's cape and some spined chaps.",
+    "points": [
+      [
+        3088,
+        3254,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 4151,
+          "local": 4151,
+          "name": "Abyssal whip"
+        },
+        {
+          "osrs": 20405,
+          "local": null,
+          "name": "Abyssal whip"
+        },
+        {
+          "osrs": 12006,
+          "local": 22325,
+          "name": "Abyssal tentacle"
+        },
+        {
+          "osrs": 26482,
+          "local": null,
+          "name": "Abyssal whip (or)"
+        },
+        {
+          "osrs": 26484,
+          "local": null,
+          "name": "Abyssal tentacle (or)"
+        },
+        {
+          "osrs": 12774,
+          "local": 23784,
+          "name": "Frozen abyssal whip"
+        },
+        {
+          "osrs": 12773,
+          "local": 23785,
+          "name": "Volcanic abyssal whip"
+        }
+      ],
+      [
+        {
+          "osrs": 1052,
+          "local": 1052,
+          "name": "Cape of legends"
+        }
+      ],
+      [
+        {
+          "osrs": 6135,
+          "local": 6135,
+          "name": "Spined chaps"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "DOUBLE_AGENT",
+      "emote": "Angry",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Abyssal whip",
+        "equipment1alt1": "Abyssal tentacle",
+        "equipment1alt1price1": "Abyssal whip",
+        "equipment1alt1price2": "Kraken tentacle",
+        "equipment1alt2": "Abyssal whip (or)",
+        "equipment1alt2price1": "Abyssal whip",
+        "equipment1alt2price2": "Shattered relics variety ornament kit",
+        "equipment1alt3": "Abyssal tentacle (or)",
+        "equipment1alt3price1": "Abyssal whip",
+        "equipment1alt3price2": "Kraken tentacle",
+        "equipment1alt3price3": "Shattered relics variety ornament kit",
+        "equipment1alt4": "Frozen abyssal whip",
+        "equipment1alt4price1": "Abyssal whip",
+        "equipment1alt4price2": "Frozen whip mix",
+        "equipment1alt5": "Volcanic abyssal whip",
+        "equipment1alt5price1": "Abyssal whip",
+        "equipment1alt5price2": "Volcanic whip mix",
+        "equipment2": "Cape of Legends",
+        "equipment2price1": "Coins",
+        "equipment2price1qty": "675",
+        "equipment3": "Spined chaps"
+      },
+      "requirements": "Equip an [[abyssal whip]], a [[Cape of Legends|legend's cape]] and some [[spined chaps]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29_-_Show_your_anger_at_the_Wise_old_man",
+    "sourceFile": "Clue_scroll_(master)_-_Show_your_anger_at_the_Wise_old_man.wiki",
+    "sourceSha256": "6e53c016fd943950e5d58585abdab23636d73c0058d9b94dafc51f59fcb40087"
+  },
+  {
+    "key": "Clue scroll (master) - Clap in the magic axe hut",
+    "tier": "master",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "Clap in the magic axe hut. Beware of double agents! Equip only some flared trousers.",
+    "points": [
+      [
+        3191,
+        3960,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 10394,
+          "local": 10394,
+          "name": "Flared trousers"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "DOUBLE_AGENT",
+      "emote": "Clap",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Flared trousers",
+        "equipment2": "Lockpick"
+      },
+      "requirements": "Equip only some [[flared trousers]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": true,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29_-_Clap_in_the_magic_axe_hut",
+    "sourceFile": "Clue_scroll_(master)_-_Clap_in_the_magic_axe_hut.wiki",
+    "sourceSha256": "7e8ae84992f8b7f34d6aeb1a05f1dc4a9bedaec4d82ac0ee7bb67c270171d952"
+  },
+  {
+    "key": "Clue scroll (master) - 03.26N 12.18E",
+    "tier": "master",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "03 degrees 26 minutes north<br>12 degrees 18 minutes east",
+    "points": [
+      [
+        2834,
+        3271,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        7310
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Master.wiki",
+        "sha256": "9970aec8d93d41ac4523af8358e027efefd0967a3871e636e61016fa7829d55d",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Master"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29_-_03.26N_12.18E",
+    "sourceFile": "Clue_scroll_(master)_-_03.26N_12.18E.wiki",
+    "sourceSha256": "acb0f3644411927282ba9566ce6ab51cea648919f5b7344b644513e5ec4543e9"
+  },
+  {
+    "key": "Clue scroll (master) - 03.50N 09.07E",
+    "tier": "master",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "03 degrees 50 minutes north<br>09 degrees 07 minutes east",
+    "points": [
+      [
+        2732,
+        3284,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        7310
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Master.wiki",
+        "sha256": "9970aec8d93d41ac4523af8358e027efefd0967a3871e636e61016fa7829d55d",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Master"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29_-_03.50N_09.07E",
+    "sourceFile": "Clue_scroll_(master)_-_03.50N_09.07E.wiki",
+    "sourceSha256": "2de2bb453c0173852079630aaf69154f329241b19b7868777a28d158621d5628"
+  },
+  {
+    "key": "Clue scroll (master) - Anger Abbot Langley",
+    "tier": "master",
+    "kind": "THREE_PART_COMPONENT",
+    "action": "TALK",
+    "hint": "Anger Abbot Langley.",
+    "points": [
+      [
+        3058,
+        3487,
+        0
+      ]
+    ],
+    "npcName": "Abbot Langley",
+    "npcCandidates": [
+      {
+        "id": 801,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "a7ec5145fc7cc2ef2cb511f92438d5b07d8fc30295010b47be281d6b224b38b2"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {
+      "prayerBonusBelow": 0
+    },
+    "requirementsSource": {
+      "file": "Treasure_Trails__Guide__Cryptic_clues__Master.wiki",
+      "sha256": "789fce0ceb7142a9343cb555cf92d6b6f0b51615fcb8db42298c3a428e785701"
+    },
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29_-_Anger_Abbot_Langley",
+    "sourceFile": "Clue_scroll_(master)_-_Anger_Abbot_Langley.wiki",
+    "sourceSha256": "045944d4ed4770b97e40d35aada18d42226d08e4000be8475fc75df792092412"
+  },
+  {
+    "key": "Clue scroll (master) - Robin wishes to see your finest ranged equipment",
+    "tier": "master",
+    "kind": "THREE_PART_COMPONENT",
+    "action": "TALK",
+    "hint": "Robin wishes to see your finest ranged equipment.",
+    "points": [
+      [
+        3673,
+        3492,
+        0
+      ]
+    ],
+    "npcName": "Robin",
+    "npcCandidates": [
+      {
+        "id": 1694,
+        "level": 0,
+        "options": [
+          "Talk-To",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "9bb6a62bfabd6b27bcd740b47bff3596034447be29ee71351b72cf36f8115c8a"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {
+      "rangedBonusAtLeast": 180,
+      "excludeBlowpipeBonus": true
+    },
+    "requirementsSource": {
+      "file": "Treasure_Trails__Guide__Cryptic_clues__Master.wiki",
+      "sha256": "789fce0ceb7142a9343cb555cf92d6b6f0b51615fcb8db42298c3a428e785701"
+    },
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29_-_Robin_wishes_to_see_your_finest_ranged_equipment",
+    "sourceFile": "Clue_scroll_(master)_-_Robin_wishes_to_see_your_finest_ranged_equipment.wiki",
+    "sourceSha256": "4b62d454cfba1031c5b93c358692c4c65682f26ed82985590dbf8ce1ca01c53e"
+  },
+  {
+    "key": "master:mandrith",
+    "tier": "master",
+    "kind": "ANAGRAM",
+    "action": "TALK",
+    "hint": "This anagram reveals who to speak to next: DIM THARN",
+    "points": [],
+    "npcName": "Mandrith",
+    "npcCandidates": [
+      {
+        "id": 6537,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "a1685062a9150a0f3389c6fb41f7f39759b01d02f5de8a8eb0a46e4808ac664b"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "PUZZLE_CHOICE",
+      "alternatives": [
+        "LIGHT_BOX",
+        "SLIDING_PUZZLE"
+      ]
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Anagrams/Master",
+    "sourceFile": "Treasure_Trails__Guide__Anagrams__Master.wiki",
+    "sourceSha256": "10c3d25d65f9db42b9ee7732dc236addba91bd7380cf3404e96db26117b8572b"
+  },
+  {
+    "key": "master:radimus",
+    "tier": "master",
+    "kind": "ANAGRAM",
+    "action": "TALK",
+    "hint": "This anagram reveals who to speak to next: MUS KIL READER",
+    "points": [],
+    "npcName": "Radimus Erkle",
+    "npcCandidates": [
+      {
+        "id": 400,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "50a095c4675424053ef83d5bd80c4b1be50f3e4b8db24997b542f8f84ecc308a"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "PUZZLE_CHOICE",
+      "alternatives": [
+        "LIGHT_BOX",
+        "SLIDING_PUZZLE"
+      ]
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Anagrams/Master",
+    "sourceFile": "Treasure_Trails__Guide__Anagrams__Master.wiki",
+    "sourceSha256": "10c3d25d65f9db42b9ee7732dc236addba91bd7380cf3404e96db26117b8572b"
+  },
+  {
+    "key": "Clue scroll (master) - Falo the bard wants to see you",
+    "tier": "master",
+    "kind": "FALO",
+    "action": "FALO",
+    "hint": "Falo the bard wants to see you.",
+    "points": [
+      [
+        2689,
+        3550,
+        0
+      ]
+    ],
+    "npcName": "Falo the Bard",
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29_-_Falo_the_bard_wants_to_see_you",
+    "sourceFile": "Clue_scroll_(master)_-_Falo_the_bard_wants_to_see_you.wiki",
+    "sourceSha256": "e8d2589131be7b6f8661298c94c76f4a8ba55862d7742a4d189320d0d43ab934"
+  },
+  {
+    "key": "Clue scroll (master) - A massive battle rages beneath",
+    "tier": "master",
+    "kind": "THREE_PART_COMPONENT",
+    "action": "DIG",
+    "hint": "A massive battle rages beneath so be careful when you dig by the large broken crossbow.",
+    "points": [
+      [
+        2927,
+        3761,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29_-_A_massive_battle_rages_beneath",
+    "sourceFile": "Clue_scroll_(master)_-_A_massive_battle_rages_beneath.wiki",
+    "sourceSha256": "75f24146490d5dbc6f6e6d96585cd1fd764ff1c460677d94cf24720b450c1289"
+  },
+  {
+    "key": "master:sherlock",
+    "tier": "master",
+    "kind": "SHERLOCK",
+    "action": "SHERLOCK",
+    "hint": "Show this to Sherlock.",
+    "points": [],
+    "npcName": "Sherlock",
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Cryptic_clues/Master",
+    "sourceFile": "Treasure_Trails__Guide__Cryptic_clues__Master.wiki",
+    "sourceSha256": "789fce0ceb7142a9343cb555cf92d6b6f0b51615fcb8db42298c3a428e785701"
+  },
+  {
+    "key": "master:jorral",
+    "tier": "master",
+    "kind": "HOT_COLD",
+    "action": "HOT_COLD",
+    "hint": "Buried beneath the ground, who knows where it's found.<br><br>Lucky for you, A man called Jorral may have a clue.",
+    "points": [],
+    "npcName": "Jorral",
+    "npcCandidates": [
+      {
+        "id": 2932,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "b4958d98d80f97cdf912dc575e828d34c3c621d3202b37c92515e8a0fca5a257"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Cryptic_clues/Master",
+    "sourceFile": "Treasure_Trails__Guide__Cryptic_clues__Master.wiki",
+    "sourceSha256": "789fce0ceb7142a9343cb555cf92d6b6f0b51615fcb8db42298c3a428e785701"
+  }
+]

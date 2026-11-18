@@ -1,0 +1,39 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[19 November]] [[2025]]
+|update = Sailing is OUT TODAY!
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 997
+|tier = master
+|emote = Bow
+|text = The clue reveals <br><br>Bow in front of the cave on Brittle Isle. Beware of double agents! Equip a [[Medallion of the deep]] and a [[Rosewood blowpipe]].
+|location = In front of the cave on [[Brittle Isle]]
+|items = Equip a [[medallion of the deep]] and a [[rosewood blowpipe]].
+|equipment1 = Medallion of the Deep
+|equipment1price1 = Coins
+|equipment1price1qty = 0
+|equipment2 = Rosewood blowpipe
+|equipment2price1 = Rosewood blowpipe (empty)
+|notes = Perform the [[bow]] emote near in front of the cave on Brittle Isle
+The clue has an additional challenge:
+
+Kill a [[Double agent]].
+|map = {{Map|1946,4074|mtype=pin|plane=0|mapID=-1}}
+}}

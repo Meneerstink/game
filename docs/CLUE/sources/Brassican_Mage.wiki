@@ -1,0 +1,126 @@
+{{External|rs=Cabbagemancer}}
+{{Infobox Monster
+|name = Brassican Mage
+|image = [[File:Brassican Mage.png|200px]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|combat = 140
+|size = 1
+|examine = Rather old and smells of cabbage.
+|xpbonus = 0
+|max hit = 16
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Typeless]] [[Magic]]
+|attack speed = 3
+|hitpoints = 150
+|att = 80
+|str = 70
+|def = 80
+|mage = 170
+|range = 140
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|poisonresistance = 0
+|venomresistance = 0
+|immunecannon = No
+|immunethrall = No
+|id = 7310
+|leagueRegion = Misthalin
+}}
+[[File:Brassican Mage chathead.png|left]]
+'''Brassican Mages''' are followers of [[Brassica Prime]], being among the few known followers of the cabbage deity in ''[[Old School RuneScape]]''.
+
+They appear while doing [[Clue scroll (master)|master clue scrolls]] when the player digs for a clue directed by the [[strange device]] or [[coordinates]] in [[single-way combat]] areas. They attack with [[Typeless]] [[Magic]]{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1234494540670742528|date=2 March 2020|archiveurl=https://reldo.runescape.wiki/i/105592|archivedate=15 August 2021|quote=[How is the Brassican Mage's attack roll calculated, and what defence style does it roll against?] Standard magical accuracy roll against your magical defence.}} and as such it cannot be nullified by [[protection prayers]]. They may call out "Rest in cabbage!" or "Vegetate!", among other things, upon appearing.
+
+==Strategy==
+Brassican Mages have low [[Defence]], so melee or ranged is advised. Magic is not advised as they are resistant due to their high Magic level. Because a player cannot pray against a Brassican Mage's attack, having plenty of [[food]] before the fight is essential, especially if encountering it via the strange device as it damages the player after every use. Wearing high Magic defence armour such as [[Karil the Tainted's equipment|Karil's]] or [[Black dragonhide armour|black dragonhide]] will help defend against its attack. It is recommended to use a weapon with a strong special attack, such as a [[Dragon dagger]].
+
+Although protection prayers do not work against them, it can be useful to use defensive prayers such as [[Steel Skin]] to increase your overall defence. It is even more useful to use [[Piety]] or [[Rigour]] (depending on combat style) to increase both your defence and your melee/range stats.
+
+Wearing [[rings of recoil]] or a charged [[ring of suffering]] is useful in deflecting some damage back onto the Mage. Low level players might want to try poisoning the Mage and hiding behind an obstacle. 
+
+For Brassican Mages fought in the [[Wilderness]], only bring items you are prepared to lose. The fast, typeless attacks can deal a lot of damage very quickly, so it is very easy to die in a short period of time.
+
+==Drops==
+{{DropLogProject|kills=1771328}}
+===100%===
+{{DropsTableHead}}
+{{DropsLine|name=Bones|quantity=1|rarity=Always}}
+{{DropsTableBottom}}
+
+===Weapons===
+{{DropsTableHead}}
+{{DropsLine|name=Staff of earth|quantity=1|rarity=1/50}}
+{{DropsLine|name=Earth battlestaff|quantity=1|rarity=1/50}}
+{{DropsTableBottom}}
+
+===Runes===
+{{DropsTableHead}}
+{{DropsLine|name=Air rune|quantity=5-24|rarity=5/50}}
+{{DropsLine|name=Earth rune|quantity=5-24|rarity=5/50}}
+{{DropsLine|name=Death rune|quantity=5-24|rarity=5/50}}
+{{DropsTableBottom}}
+
+===Herbs===
+{{HerbDropTableInfo|5/50}}
+{{DropsTableHead}}
+{{HerbDropLines|5/50}}
+{{DropsTableBottom}}
+
+===Seeds===
+{{AllotmentSeedDropTableInfo|3/50}}
+{{DropsTableHead}}
+{{AllotmentSeedDropLines|3/50}}
+{{DropsTableBottom}}
+
+===Other===
+{{DropsTableHead}}
+{{DropsLine|name=Cabbage|quantity=10-19|rarity=5/50}}
+{{DropsLine|name=Coins|quantity=50-249|rarity=10/50|gemw=No}}
+{{DropsLine|name=Pure essence|quantity=25 (noted)|rarity=7/50}}
+{{DropsLine|name=Uncut sapphire|quantity=1|rarity=1/50}}
+{{DropsLine|name=Prayer potion(4)|quantity=1|rarity=2/50}}
+{{DropsTableBottom}}
+
+===Tertiary===
+{{DropsTableHead}}
+{{DropsLine|name=Looting bag|quantity=1|rarity=1/3|raritynotes=<ref group=d>Looting bags are only dropped by those found in the [[Wilderness]].</ref>|gemw=No|leagueRegion=Wilderness}}
+{{DropsTableBottom}}
+{{Reflist|group=d}}
+
+==Dialogue==
+{{hastranscript|npc}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 15 October 2025
+|update = Grid Master - Out Today!
+|change = An easter egg was added involving eating a cabbage while next to a Brassican Mage.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+*If the player eats a [[cabbage]] while fighting a Brassican Mage, the mage will say one of various lines praising the player for choosing to eat cabbages. <!--also occurs when eating draynor manor cabbage-->
+*The Brassican Mage's name comes from the genus {{wp|Brassica}}, which includes cabbage.
+*The mage wields a [[cabbage round shield]], which is a possible reward from medium [[Treasure Trails]].
+*The Brassican Mage's dialogue "Die deliciously!" is a reference to the 2015 film {{Wp|The Witch (2015 film)|The Witch}}.
+
+==References==
+{{Reflist}}
+
+{{Treasure Trails}}
+[[Category:Monsters that take priority in combat]]

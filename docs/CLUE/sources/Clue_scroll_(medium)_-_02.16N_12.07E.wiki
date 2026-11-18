@@ -1,0 +1,30 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Hess!
+|value = 20
+|weight = 0.020
+|id = 23136
+|leagueRegion = Karamja
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[coordinate clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 427
+|text = The coordinate reveals where to dig:<br><br>02.16N 12.07E
+|items = 
+|notes = Southern coast of [[Crandor]].
+
+|map = {{Map|2828,3234|mtype=pin|plane=0|mapID=-1}}
+}}

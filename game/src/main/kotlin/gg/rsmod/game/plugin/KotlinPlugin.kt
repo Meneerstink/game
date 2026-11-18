@@ -959,6 +959,8 @@ abstract class KotlinPlugin(
         plugin: Plugin.() -> Boolean,
     ) = r.setGroundItemPickupCondition(item, plugin)
 
+    fun set_ground_item_pickup_amount(item: Int, limit: (Player, Int) -> Int) = r.setGroundItemPickupAmount(item, limit)
+
     /**
      * Invoke [plugin] when a spell is used on an item.
      */

@@ -91,4 +91,35 @@ enum class ItemAttribute {
 
     /** Identifies an instance-owned ToA Supplies bag; preserved by inventory moves and reconnect. */
     TOA_SUPPLY_BAG_TOKEN,
+
+    /** Stable Treasure Trail step key on the scroll itself; survives bank, drop, grave and serialization. */
+    CLUE_STEP_KEY,
+
+    /** Mimic origin: the OSRS reward-casket ID, independent of enum order/local allocation. */
+    MIMIC_SOURCE_TIER,
+    MIMIC_FAILURES,
+    MIMIC_DEFEATED,
+    /** Attempt tokens make exit/death/logout settlement idempotent. */
+    MIMIC_ATTEMPT_SERIAL,
+    MIMIC_SETTLED_SERIAL,
+
+    /** Per-scroll Falo/Sherlock task and successful action. Appended for existing saves. */
+    CLUE_TASK_KEY,
+    CLUE_TASK_COMPLETE,
+
+    /** Guardian victory uses its own fields: hot/cold target and Falo/Sherlock task state must coexist. */
+    CLUE_GUARD_KEY,
+    CLUE_GUARD_PROGRESS,
+
+    /** Persistent light-box network belongs to this physical item; destroying it discards the puzzle. */
+    CLUE_LIGHT_BITS,
+    CLUE_LIGHT_A,
+    CLUE_LIGHT_B,
+    CLUE_LIGHT_C,
+    CLUE_LIGHT_D,
+    CLUE_LIGHT_E,
+    CLUE_LIGHT_F,
+    CLUE_LIGHT_G,
+    CLUE_LIGHT_H,
+
 }

@@ -1,0 +1,32 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Marfn!
+|value = 20
+|weight = 0.020
+|id = 19882
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[anagram clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]]. Solving this clue scroll requires completion of the quest [[Shadow of the Storm]].
+
+==Clue info==
+{{Clue info
+|id = 71
+|text = The anagram reveals<br>who to speak to:<br><br>VEIL VEDA
+|notes = Speak to [[Evil Dave]]
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''What is 333 multiplied by 2?''
+
+Answer: '''666'''
+|map = {{Map|3079,9892|mtype=pin|plane=0|mapID=-1}}
+}}

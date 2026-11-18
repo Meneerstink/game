@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by iKips!
+|value = 20
+|weight = 0.020
+|id = 12159
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 688
+|text = The cryptic reveals who to speak to:<br><br>Speak to a Wyse man.
+|items = 
+|notes = Speak to [[Wyson the gardener]] in [[Falador Park]].
+|map = {{Map|3026,3378|mtype=pin|plane=0|mapID=-1}}
+}}

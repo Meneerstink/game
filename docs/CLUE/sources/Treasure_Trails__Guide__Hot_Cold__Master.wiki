@@ -1,0 +1,803 @@
+<noinclude><!--[[File:Strange device dig locations.png|thumb|right|370px|A map of Gielinor displaying all possible locations pre-Sailing. [{{filepath:Strange_device_dig_locations.png}} Full resolution image].]]-->
+{{Treasure Trails Guide Hot Cold Intro|master}}
+
+__NOTOC__
+</noinclude>
+{| class="messagebox" style="width:80%; margin:1em auto; text-align:center;"
+| '''Jump to'''<br/> [[#Asgarnia|Asgarnia]] {{*}} [[#Desert|Desert]] {{*}} [[#Feldip Hills|Feldip Hills]] {{*}} [[#Fremennik Province|Fremennik Province]] {{*}} [[#Great Kourend|Great Kourend]] {{*}} [[#Kandarin|Kandarin]] {{*}} [[#Karamja|Karamja]] {{*}} [[#Kebos Lowlands|Kebos Lowlands]] {{*}} [[#Misthalin|Misthalin]] {{*}} [[#Morytania|Morytania]] {{*}} [[#Varlamore|Varlamore]] {{*}} [[#Western Provinces|Western Provinces]] {{*}} [[#Wilderness|Wilderness]] {{*}} [[#Islands (Sailing)|Islands (Sailing)]]
+|}
+
+{{map|width=765|height=420|mapid=-1|plane=0|align=center|zoom=-2|x=2496|y=3333|mtype=pin|group=worldmap|caption=A map of Gielinor displaying ''most'' of the possible master clue locations.
+|1762,3850|1777,3864|1699,3880|1599,3837|1490,3877|1498,3855|1432,3869|1505,3812|1466,3709|1489,3694|1681,3793|1768,3711|1709,3700|1724,3646|1661,3615|1654,3573|1802,3518|1556,3621|1496,3628|1488,3598|1331,3717|1203,3736|1190,3579|1681,3106|1696,2986|1536,2992|1471,2934|2099,3950|2087,3913|2157,3865|2213,3816|2315,3852|2376,3850|2390,3811|2529,3867|2614,3868|2337,3688|2364,3567|2296,3526|2178,3277|2269,3242|2368,3317|2335,3165|2207,3157|2200,3056|2187,2800|2532,2900|2574,2917|2590,2898|2614,2953|2555,2973|2487,3001|2414,3054|2455,3106|2594,3133|2528,3164|2465,3228|2519,3251|2670,3242|2713,3307|2533,3320|2587,3374|2459,3368|2414,3431|2446,3507|2535,3546|2532,3477|2723,3781|2719,3687|2802,3669|2603,3650|2587,3598|2724,3590|2738,3486|2657,3488|2775,3433|2909,3617|2857,3560|2915,3431|2783,3210|2913,3171|2717,3161|2962,2977|2906,2923|2784,2898|2914,2734|2985,3110|2977,3240|2917,3295|3034,3308|3033,3369|3035,3438|2975,3489|3160,3425|3304,3483|3225,3355|3168,3276|3096,3236|3241,3165|3138,3908|2976,3810|3157,3791|3295,3815|3313,3773|3377,3732|3174,3730|3228,3675|3041,3614|3169,3556|3505,3541|3612,3495|3804,3530|3813,3568|3762,3385|3601,3326|3501,3423|3417,3371|3441,3262|3546,3254|3743,3043|3669,2973|3353,3292|3276,3264|3300,3109|3435,3109|3163,3050|3286,2977|3365,2904|3227,2819|2138,3562|3249,2349|2078,3665
+}}
+
+====Asgarnia====
+{|class="wikitable"
+!Location
+!Image
+!Map
+!Combat Type
+|-
+|North of the [[Warriors' Guild]] in [[Burthorpe]].
+|[[File:Hot cold clue - north of Warriors Guild.png|centre|300px]]
+|[[File:Hot cold clue - north of Warriors Guild map.png|centre|200px]]
+|Single
+|-
+|East of [[Jatix's Herblore Shop]] in [[Taverley]].
+|[[File:Hot cold clue - east of Taverley herb shop.png|centre|300px]]
+|[[File:Hot cold clue - east of Taverley herb shop map.png|centre|200px]]
+|Single
+|-
+|West of [[Barbarian Village]].
+|[[File:Hot cold clue - west of Barbarian Village.png|centre|300px]]
+|[[File:Hot cold clue - west of Barbarian Village map.png|centre|200px]]
+|Single
+|-
+|North of [[Miazrqa]]'s tower, outside [[Goblin Village]].
+|[[File:Hot cold clue - north of Miazrqa's tower.png|centre|300px]]
+|[[File:Hot cold clue - north of Miazrqa's tower map.png|centre|200px]]
+|Single
+|-
+|In the cow pen north of [[Sarah's Farming Shop]].
+|[[File:Hot cold clue - north of farming shop.png|centre|300px]]
+|[[File:Hot cold clue - north of farming shop map.png|centre|200px]]
+|Multi
+|-
+|Outside the [[Falador Party Room]].
+|[[File:Hot cold clue - outside party room.png|centre|300px]]
+|[[File:Hot cold clue - outside party room map.png|centre|200px]]
+|Single
+|-
+|Outside the [[Crafting Guild]] cow pen.
+|[[File:Hot cold clue - outside Crafting Guild.png|centre|300px]]
+|[[File:Hot cold clue - outside Crafting Guild map.png|centre|200px]]
+|Single
+|-
+|In the centre of the [[Rimmington mine]].
+|[[File:Hot cold clue - rimmington mine centre.png|centre|300px]]
+|[[File:Hot cold clue - rimmington mine centre map.png|centre|200px]]
+|Single
+|-
+|[[Mudskipper Point]], on the starfish in the south-west corner.
+|[[File:Hot cold clue - mudskipper point.png|centre|300px]]
+|[[File:Hot cold clue - mudskipper point map.png|centre|200px]]
+|Single
+|-
+|The [[Troll arena]], where the player fights [[Dad]] during the [[Troll Stronghold]] quest. Bring [[climbing boots]].
+|[[File:Hot cold clue - troll arena.png|centre|300px]]
+|[[File:Hot cold clue - troll arena map.png|centre|200px]]
+|Single
+|}
+
+====Desert====
+{| class="wikitable"
+!Location
+!Image
+!Map
+!Combat Type
+|-
+|West of [[Nardah]] [[Genie (Spirits of the Elid)|genie]] cave.
+|[[File:Hot cold clue - Genie cave.png|centre|300px]]
+|[[File:Hot cold clue - Genie cave map.png|centre|200px]]
+|Single
+|-
+|West of [[Al Kharid mine]].
+|[[File:Hot cold clue - Al Kharid Mines.png|centre|300px]]
+|[[File:Hot cold clue - Al Kharid Mines map.png|centre|200px]]
+|Single
+|-
+|North of [[Menaphos]] gate.
+|[[File:Hot cold clue - Menaphos.png|centre|300px]]
+|[[File:Hot cold clue - Menaphos map.png|centre|200px]]
+|Single
+|-
+|[[Bedabin Camp]], dig around the north tent.
+|[[File:Hot cold clue - Bedabin Camp.png|centre|300px]]
+|[[File:Hot cold clue - Bedabin Camp map.png|centre|200px]]
+|Single
+|-
+|West of the [[Ruins of Uzer]].
+|[[File:Hot cold clue - West of Uzer.png|centre|300px]]
+|[[File:Hot cold clue - West of Uzer map.png|centre|200px]]
+|Single
+|-
+|West of [[Pollnivneach]].
+|[[File:Hot cold clue - west of Pollnivneach.png|centre|300px]]
+|[[File:Hot cold clue - west of Pollnivneach map.png|centre|200px]]
+|Single
+|-
+|Next to [[Mage Training Arena]].
+|[[File:Hot cold clue - Mage Training Arena.png|centre|300px]]
+|[[File:Hot cold clue - Mage Training Arena map.png|centre|200px]]
+|Single
+|-
+|South-west of [[Shantay Pass]].
+|[[File:Hot cold clue - Shantay Pass.png|centre|300px]]
+|[[File:Hot cold clue - Shantay Pass map.png|centre|200px]]
+|Single
+|-
+|South of [[Ruins of Ullek]].
+|[[File:Hot cold clue - south of Ruins of Ullek.png|centre|300px]]
+|[[File:Hot cold clue - south of Ruins of Ullek map.png|centre|200px]]
+|Single
+|}
+
+====Feldip Hills====
+{|class="wikitable"
+!Location
+!Image
+!Map
+!Combat Type
+|-
+|West of [[Jiggig]], east of the [[fairy ring]] {{Fairycode|BKP}}.
+|[[File:Hot cold clue - west of jiggig.png|centre|300px]]
+|[[File:Hot cold clue - west of jiggig map.png|centre|200px]]
+|Single
+|-
+|West of the south-easternmost lake in [[Feldip Hills]]. Clue Helper Location: Feldip Hills (SE)
+|[[File:Hot cold clue - feldip south-eastern lake.png|centre|300px]]
+|[[File:Hot cold clue - feldip south-eastern lake map.png|centre|200px]]
+|Single
+|-
+|East of the [[gnome glider]] (Lemantolly Undri).
+|[[File:Hot cold clue - feldip gnome glider.png|centre|300px]]
+|[[File:Hot cold clue - feldip gnome glider map.png|centre|200px]]
+|Single
+|-
+|South of [[Rantz]], six steps west of the empty glass bottles.
+|[[File:Hot cold clue - south of Rantz.png|centre|300px]]
+|[[File:Hot cold clue - south of Rantz map.png|centre|200px]]
+|Single
+|-
+|South of [[Jiggig]].
+|[[File:Hot cold clue - south of jiggig.png|centre|300px]]
+|[[File:Hot cold clue - south of jiggig map.png|centre|200px]]
+|Single
+|-
+|Outside the [[red chinchompa hunting ground]] entrance, south of the [[Hunting expert]]'s hut. Clue Helper Location: Feldip Hills (red chinchompas)
+|[[File:Hot cold clue - south of hunting expert.png|centre|300px]]
+|[[File:Hot cold clue - south of hunting expert map.png|centre|200px]]
+|Single
+|-
+|South-east of the ∩-shaped lake, near the [[File:Hunter training icon.png]] icon.
+|[[File:Hot cold clue - near hunting icon.png|centre|300px]]
+|[[File:Hot cold clue - near hunting icon map.png|centre|200px]]
+|Single
+|-
+|Directly west of the [[Castle Wars]] balloon.
+|[[File:Hot cold clue - near castle wars.png|centre|300px]]
+|[[File:Hot cold clue - near castle wars map.png|centre|200px]]
+|Single
+|}
+
+====Fremennik Province====
+{|class="wikitable"
+!Location
+!Image
+!Map
+!Combat Type
+|-
+|At the [[Mountain Camp]].
+|[[File:Hot cold clue - Mountain Camp.png|centre|300px]]
+|[[File:Hot cold clue - Mountain Camp map.png|centre|200px]]
+|Single
+|-
+|At the [[Rellekka Hunter area]], near the [[File:Hunter training icon.png]] icon.
+|[[File:Hot cold clue - Polar Hunter area.png|centre|300px]]
+|[[File:Hot cold clue - Polar Hunter area map.png|centre|200px]]
+|Single
+|-
+|West of the [[Keldagrim entrance mine]]. Clue Helper Location: Fremennik Province mine Rellekka (SW)
+|[[File:Hot cold clue - near Keldagrim entrance mine.png|centre|300px]]
+|[[File:Hot cold clue - near Keldagrim entrance mine map.png|centre|200px]]
+|Single
+|-
+|Outside the fence in the south-western corner of [[Rellekka]].
+|[[File:Hot cold clue - outside Rellekka fence.png|centre|300px]]
+|[[File:Hot cold clue - outside Rellekka fence map.png|centre|200px]]
+| Single
+|-
+|South-east of the [[Lighthouse]].
+|[[File:Hot cold clue - south-east of lighthouse.png|centre|300px]]
+|[[File:Hot cold clue - south-east of lighthouse map.png|centre|200px]]
+|Single
+|-
+|Inside [[Etceteria]]'s castle, in the southern staircase.
+|[[File:Hot cold clue - Etceteria.png|centre|300px]]
+|[[File:Hot cold clue - Etceteria map.png|centre|200px]]
+|Single
+|-
+|Outside [[Miscellania]]'s courtyard.
+|[[File:Hot cold clue - Miscellania.png|centre|300px]]
+|[[File:Hot cold clue - Miscellania map.png|centre|200px]]
+| Single
+|-
+|[[Central Fremennik Isles mine]].
+|[[File:Hot cold clue - neit rune rock.png|centre|300px]]
+|[[File:Hot cold clue - neit rune rock map.png|centre|200px]]
+|Multi
+|-
+|[[West Fremennik Isles mine]].
+|[[File:Hot cold clue - West Fremennik Isles mine.png|centre|300px]]
+|[[File:Hot cold clue - West Fremennik Isles mine map.png|centre|200px]]
+|Multi
+|-
+|West of the [[Jatizso mine]] entrance.
+|[[File:Hot cold clue - Jatizso.png|centre|300px]]
+|[[File:Hot cold clue - Jatizso map.png|centre|200px]]
+|Single
+|-
+|[[Pirates' Cove]]
+|[[File:Hot cold clue - Pirates' Cove.png|centre|300px]]
+|[[File:Hot cold clue - Pirates' Cove map.png|centre|200px]]
+|Multi
+|-
+|[[Astral Altar]]
+|[[File:Hot cold clue - Astral Altar.png|centre|300px]]
+|[[File:Hot cold clue - Astral Altar map.png|centre|200px]]
+|Multi
+|-
+|[[Lunar Isle]], inside the village.
+|[[File:Hot cold clue - Lunar Isle.png|centre|300px]]
+|[[File:Hot cold clue - Lunar Isle map.png|centre|200px]]
+|Multi
+|-
+|[[Lunar Isle]], north of the village.
+|[[File:Hot cold clue - Lunar Isle north.png|centre|300px]]
+|[[File:Hot cold clue - Lunar Isle north map.png|centre|200px]]
+|Multi
+|}
+
+====Great Kourend====
+{| class="wikitable"
+!Location
+!Image
+!Map
+!Combat Type
+|-
+|Next to the bank in the [[Lovakengj]] [[blast mine]].
+|[[File:Hot cold clue - blast mine bank chest.png|centre|300px]]
+|[[File:Hot cold clue - blast mine bank chest map.png|centre|200px]]
+|Single
+|-
+|Northern part of the [[Lovakengj]] [[blast mine]].
+|[[File:Hot cold clue - blast mine north.png|centre|300px]]
+|[[File:Hot cold clue - blast mine north map.png|centre|200px]]
+|Single
+|-
+|Next to the [[lovakite]] [[furnace]] in [[Lovakengj]].
+|[[File:Hot cold clue - Lovakengj lovakite furnace.png|centre|300px]]
+|[[File:Hot cold clue - Lovakengj lovakite furnace map.png|centre|200px]]
+|Single
+|-
+|Next to [[mithril rock]] in the [[Lovakengj mine]].
+|[[File:Hot cold clue - Lovakengj mine.png|centre|300px]]
+|[[File:Hot cold clue - Lovakengj mine map.png|centre|200px]]
+|Single
+|-
+|Western entrance in [[Lovakengj]]'s [[sulphur mine]].
+|[[File:Hot cold clue - sulphur mine.png|centre|300px]]
+|[[File:Hot cold clue - sulphur mine map.png|centre|200px]]
+|Single
+|-
+|South-east of the War Tent in the [[Shayzien|Shayzien Encampment]].
+|[[File:Hot cold clue - south-east of Shayzien war tent.png|centre|300px]]
+|[[File:Hot cold clue - south-east of Shayzien war tent map.png|centre|200px]]
+|Single
+|-
+|Overpass between [[Lovakengj]] and [[Shayzien]].
+|[[File:Hot cold clue - between Lovakengj and Shayzien.png|centre|300px]]
+|[[File:Hot cold clue - between Lovakengj and Shayzien map.png|centre|200px]]
+|Single
+|-
+|Within [[Lizardman Canyon]], east of the ladder.
+|[[File:Hot cold clue - Lizardman Canyon.png|centre|300px]]
+|[[File:Hot cold clue - Lizardman Canyon map.png|centre|200px]]
+|Multi
+|-
+|[[Shayzien]], east of the [[Combat Ring (Shayzien)|Combat Ring]].
+|[[File:Hot cold clue - east of the Combat Ring.png|centre|300px]]
+|[[File:Hot cold clue - east of the Combat Ring map.png|centre|200px]]
+|Single
+|-
+|North of the bank, north of the [[Graveyard of Heroes]], in [[Shayzien]].
+|[[File:Hot cold clue - north-west of Shayzien bank.png|centre|300px]]
+|[[File:Hot cold clue - north-west of Shayzien bank map.png|centre|200px]]
+|Single
+|-
+|North-west of the [[Arceuus Library]].
+|[[File:Hot cold clue - north-west of Arceuus library.png|centre|300px]]
+|[[File:Hot cold clue - north-west of Arceuus library map.png|centre|200px]]
+|Single
+|-
+|By the entrance to the [[Arceuus]] church.
+|[[File:Hot cold clue - Arceuus church.png|centre|300px]]
+|[[File:Hot cold clue - Arceuus church map.png|centre|200px]]
+|Multi
+|-
+|West of the [[Dark Altar]].
+|[[File:Hot cold clue - west of Dark Altar.png|centre|300px]]
+|[[File:Hot cold clue - west of Dark Altar map.png|centre|200px]]
+|Single
+|-
+|By the southern entrance to [[Arceuus]].
+|[[File:Hot cold clue - Arceuus entrance.png|centre|300px]]
+|[[File:Hot cold clue - Arceuus entrance map.png|centre|200px]]
+|Single
+|-
+|North-east of the [[dense essence mine]].
+|[[File:Hot cold clue - dense essence mine NE.png|centre|300px]]
+|[[File:Hot cold clue - dense essence mine NE map.png|centre|200px]]
+|Single
+|-
+|South of the [[Piscarilius mine]].
+|[[File:Hot cold clue - Piscarilius mine.png|centre|300px]]
+|[[File:Hot cold clue - Piscarilius mine map.png|centre|200px]]
+|Multi
+|-
+|South of the gravestone in [[Kingstown]].
+|[[File:Hot cold clue - south of Kingstown gravestone.png|centre|300px]]
+|[[File:Hot cold clue - south of Kingstown gravestone map.png|centre|200px]]
+|Single
+|-
+|East of [[Mess]] hall.
+|[[File:Hot cold clue - east of Mess hall.png|centre|300px]]
+|[[File:Hot cold clue - east of Mess hall map.png|centre|200px]]
+|Single
+|-
+|East of [[Watson]]'s house.
+|[[File:Hot cold clue - east of Watson's house.png|centre|300px]]
+|[[File:Hot cold clue - east of Watson's house map.png|centre|200px]]
+|Single
+|-
+|North of the [[Tithe Farm]].
+|[[File:Hot cold clue - north of Tithe Farm.png|centre|300px]]
+|[[File:Hot cold clue - north of Tithe Farm map.png|centre|200px]]
+|Single
+|}
+
+====Kandarin====
+{|class="wikitable"
+!Location
+!Image
+!Map
+!Combat Type
+|-
+|North-west of the [[Sinclair Mansion]], near the log balance shortcut.
+|[[File:Hot cold clue - near Sinclair Mansion.png|centre|300px]]
+|[[File:Hot cold clue - near Sinclair Mansion map.png|centre|200px]]
+|Single
+|-
+|[[Catherby]], between the bank and the beehives, near small rock formation.
+|[[File:Hot cold clue - west of Catherby.png|centre|300px]]
+|[[File:Hot cold clue - west of Catherby map.png|centre|200px]]
+|Single
+|-
+|Grand Tree, just east of the terrorchick gnome enclosure.
+|[[File:Hot cold clue - Grand Tree.png|centre|300px]]
+|[[File:Hot cold clue - Grand Tree map.png|centre|200px]]
+|Single
+|-
+|Between the [[Seers' Village]] bank and [[Camelot]].
+|[[File:Hot cold clue - near Seers' bank.png|centre|300px]]
+|[[File:Hot cold clue - near Seers' bank map.png|centre|200px]]
+|Single
+|-
+|[[McGrubor's Wood]]
+|[[File:Hot cold clue - mcgrubors woods.png|centre|300px]]
+|[[File:Hot cold clue - mcgrubors woods map.png|centre|200px]]
+|Single
+|-
+|South of [[Fishing Guild]]
+|[[File:Hot cold clue - south of Fishing Guild.png|centre|300px]]
+|[[File:Hot cold clue - south of Fishing Guild map.png|centre|200px]]
+|Single
+|-
+|Outside [[Witchaven]], west of [[Jeb]], [[Holgart]], and [[Caroline]].
+|[[File:Hot cold clue - near Witchaven.png|centre|300px]]
+|[[File:Hot cold clue - near Witchaven map.png|centre|200px]]
+|Single
+|-
+|{{FloorNumber|uk=0}} inside the [[Necromancer's Tower]]. Easily accessed by using [[fairy ring]] code {{Fairycode|DJP}}.
+|[[File:Hot cold clue - Necromancer Tower.png|centre|300px]]
+|[[File:Hot cold clue - Necromancer Tower map.png|centre|200px]]
+|Multi
+|-
+|South of the [[Fight Arena (location)|Fight Arena]], north-west of the [[Nightmare Zone]].
+|[[File:Hot cold clue - north-west of NMZ.png|centre|300px]]
+|[[File:Hot cold clue - north-west of NMZ map.png|centre|200px]]
+|Single
+|-
+|[[Tree Gnome Village (location)|Tree Gnome Village]], near the [[File:General store icon.png]] icon.
+|[[File:Hot cold clue - Tree Gnome Village.png|centre|300px]]
+|[[File:Hot cold clue - Tree Gnome Village map.png|centre|200px]]
+|Single
+|-
+|[[Grave of Scorpius]]
+|[[File:Hot cold clue - Grave of Scorpius.png|centre|300px]]
+|[[File:Hot cold clue - Grave of Scorpius map.png|centre|200px]]
+|Single
+|-
+|Khazard [[Battlefield]], in the small ruins south of tracker gnome 2.
+|[[File:Hot cold clue - Khazard Battlefield.png|centre|300px]]
+|[[File:Hot cold clue - Khazard Battlefield map.png|centre|200px]]
+|Single
+|-
+|[[West Ardougne]], near the staircase outside the Civic Office.
+|[[File:Hot cold clue - West Ardougne.png|centre|300px]]
+|[[File:Hot cold clue - West Ardougne map.png|centre|200px]]
+|Single
+|-
+|South-west [[Tree Gnome Stronghold]]
+|[[File:Hot cold clue - south-west Tree Gnome Stronghold.png|centre|300px]]
+|[[File:Hot cold clue - south-west Tree Gnome Stronghold map.png|centre|200px]]
+|Single
+|-
+|South of the [[Tree Gnome Stronghold]], north-east of the [[Outpost]].
+|[[File:Hot cold clue - south of the Tree Gnome Stronghold.png|centre|300px]]
+|[[File:Hot cold clue - south of the Tree Gnome Stronghold map.png|centre|200px]]
+|Single
+|-
+|South-east of [[Almera]]'s house on [[Baxtorian Falls]].
+|[[File:Hot cold clue - south-east of Almera's house.png|centre|300px]]
+|[[File:Hot cold clue - south-east of Almera's house map.png|centre|200px]]
+|Single
+|-
+|Inside the [[Barbarian Agility Course]]. Completion of [[Alfred Grimhand's Barcrawl]] is required.
+|[[File:Hot cold clue - Barbarian agility course.png|centre|300px]]
+|[[File:Hot cold clue - Barbarian agility course map.png|centre|200px]]
+|Single
+|-
+|On the [[Isle of Souls]], by the entrance to the [[Isle of Souls mine|mine]].
+|[[File:Hot cold clue - Isle of Souls mine.png|centre|300px]]
+|[[File:Hot cold clue - Isle of Souls mine map.png|centre|200px]]
+|Single
+|}
+
+====Karamja====
+{|class="wikitable"
+!Location
+!Image
+!Map
+!Combat Type
+|-
+|[[Musa Point]], banana plantation.
+|[[File:Hot cold clue - Musa Point.png|centre|300px]]
+|[[File:Hot cold clue - Musa Point map.png|centre|200px]]
+|Single
+|-
+|[[Brimhaven]], east of the [[fruit tree patch]].
+|[[File:Hot cold clue - Brimhaven docks.png|centre|300px]]
+|[[File:Hot cold clue - Brimhaven docks map.png|centre|200px]]
+|Single
+|-
+|West of [[Brimhaven]].
+|[[File:Hot cold clue - West of Brimhaven.png|centre|300px]]
+|[[File:Hot cold clue - West of Brimhaven map.png|centre|200px]]
+|Single
+|-
+|West of the [[gnome glider]].
+|[[File:Hot cold clue - Karamja gnome glider.png|centre|300px]]
+|[[File:Hot cold clue - Karamja gnome glider map.png|centre|200px]]
+|Single
+|-
+|North-eastern part of [[Kharazi Jungle]].
+|[[File:Hot cold clue - north-western Kharazi Jungle.png|centre|300px]]
+|[[File:Hot cold clue - north-western Kharazi Jungle map.png|centre|200px]]
+|Single
+|-
+|South-western part of [[Kharazi Jungle]].
+|[[File:Hot cold clue - south-western Kharazi Jungle.png|centre|300px]]
+|[[File:Hot cold clue - south-western Kharazi Jungle map.png|centre|200px]]
+|Multi
+|-
+|Northern part of [[Crash Island]].
+|[[File:Hot cold clue - Crash Island.png|centre|300px]]
+|[[File:Hot cold clue - Crash Island map.png|centre|200px]]
+|Single
+|}
+
+====Kebos Lowlands====
+{|class="wikitable"
+!Location
+!Image
+!Map
+!Combat Type
+|-
+|West of the [[Battlefront]].
+|[[File:Hot cold clue - west of Battlefront.png|centre|300px]]
+|[[File:Hot cold clue - west of Battlefront map.png|centre|200px]]
+|Single
+|-
+|West of the [[Farming Guild]].
+|[[File:Hot cold clue - west of Farming Guild.png|centre|300px]]
+|[[File:Hot cold clue - west of Farming Guild map.png|centre|200px]]
+|Single
+|-
+|South-west corner of the [[Kebos Swamp]].
+|[[File:Hot cold clue - south-west Kebos Swamp.png|centre|300px]]
+|[[File:Hot cold clue - south-west Kebos Swamp map.png|centre|200px]]
+|Single
+|}
+
+====Misthalin====
+{|class="wikitable"
+!Location
+!Image
+!Map
+!Combat Type
+|-
+|South of the [[stone circle]] near [[Varrock]]'s entrance.
+|[[File:Hot cold clue - south of varrock.png|centre|300px]]
+|[[File:Hot cold clue - south of varrock map.png|centre|200px]]
+|Single
+|-
+|Just north-west of the [[Lumbridge]] [[Fishing tutor]].
+|[[File:Hot cold clue - Lumbridge Swamp.png|centre|300px]]
+|[[File:Hot cold clue - Lumbridge Swamp map.png|centre|200px]]
+|Single
+|-
+|North of the pond between [[Lumbridge]] and [[Draynor Village]].
+|[[File:Hot cold clue - Lumbridge pond.png|centre|300px]]
+|[[File:Hot cold clue - Lumbridge pond map.png|centre|200px]]
+|Single
+|-
+|North-east of [[Gertrude]]'s house west of [[Varrock]].
+|[[File:Hot cold clue - Gertrude house.png|centre|300px]]
+|[[File:Hot cold clue - Gertrude house map.png|centre|200px]]
+|Single
+|-
+|South of [[Draynor Village]] bank.
+|[[File:Hot cold clue - south of Draynor bank.png|centre|300px]]
+|[[File:Hot cold clue - south of Draynor bank map.png|centre|200px]]
+|Single
+|-
+|South of [[Lumber Yard]], east of [[Assistant Serf]].
+|[[File:Hot cold clue - south of Lumber Yard.png|centre|300px]]
+|[[File:Hot cold clue - south of Lumber Yard map.png|centre|200px]]
+|Single
+|}
+
+====Morytania====
+{|class="wikitable"
+!Location
+!Image
+!Map
+!Combat Type
+|-
+|In the north-east area of [[Burgh de Rott]], by the reverse-L-shaped ruins.
+|[[File:Hot cold clue - Burgh de Rott.png|centre|300px]]
+|[[File:Hot cold clue - Burgh de Rott map.png|centre|200px]]
+|Single
+|-
+|West of [[Port Phasmatys]], south-east of [[fairy ring]].
+|[[File:Hot cold clue - Haunted Woods.png|centre|300px]]
+|[[File:Hot cold clue - Haunted Woods map.png|centre|200px]]
+|Single
+|-
+|Inside [[The Hollows]], south of the bridge which was repaired in a quest.
+|[[File:Hot cold clue - The Hollows bridge.png|centre|300px]]
+|[[File:Hot cold clue - The Hollows bridge map.png|centre|200px]]
+|Single
+|-
+|Inside the [[Mort Myre Swamp]], north-west of the [[Nature Grotto]].
+|[[File:Hot cold clue - Mort Myre Swamp.png|centre|300px]]
+|[[File:Hot cold clue - Mort Myre Swamp map.png|centre|200px]]
+|Single
+|-
+|At [[Haunted Mine]] quest start.
+|[[File:Hot cold clue - Haunted Mine.png|centre|300px]]
+|[[File:Hot cold clue - Haunted Mine map.png|centre|200px]]
+|Single
+|-
+|South of the [[Mausoleum]].
+|[[File:Hot cold clue - Mausoleum.png|centre|300px]]
+|[[File:Hot cold clue - Mausoleum map.png|centre|200px]]
+|Single
+|-
+|North-east of [[Slepe]].
+|[[File:Hot cold clue - Slepe.png|centre|300px]]
+|[[File:Hot cold clue - Slepe map.png|centre|200px]]
+|Single
+|-
+|Northern area of [[Mos Le'Harmless]], between the lakes.
+|[[File:Hot cold clue - northern Mos Le'Harmless.png|centre|300px]]
+|[[File:Hot cold clue - northern Mos Le'Harmless map.png|centre|200px]]
+|Single
+|-
+|Near [[Mos Le'Harmless]] southern bar.
+|[[File:Hot cold clue - Mos Le'Harmless southern bar.png|centre|300px]]
+|[[File:Hot cold clue - Mos Le'Harmless southern bar map.png|centre|200px]]
+|Single
+|-
+|Northern part of [[Dragontooth Island]].
+|[[File:Hot cold clue - north Dragontooth Island.png|centre|300px]]
+|[[File:Hot cold clue - north Dragontooth Island map.png|centre|200px]]
+|Single
+|-
+|Southern part of [[Dragontooth Island]].
+|[[File:Hot cold clue - south Dragontooth Island.png|centre|300px]]
+|[[File:Hot cold clue - south Dragontooth Island map.png|centre|200px]]
+|Single
+|-
+|South-western part of [[Darkmeyer]].
+|[[File:Hot cold clue - Darkmeyer.png|center|300px]]
+|[[File:Hot cold clue - Darkmeyer map.png|center|200px]]
+|Single
+|}
+
+====Varlamore====
+{| class="wikitable"
+!Location
+!Image
+!Map
+!Combat Type
+|-
+|Amongst the trees at the [[Locus Oasis]].
+|[[File:Hot cold clue - Locus Oasis.png|centre|300px]]
+|[[File:Hot cold clue - Locus Oasis map.png|centre|200px]]
+|Single
+|-
+|In the centre of the Bazaar in [[Civitas illa Fortis]].
+|[[File:Hot cold clue - Fortis Bazaar.png|centre|300px]]
+|[[File:Hot cold clue - Fortis Bazaar map.png|centre|200px]]
+|Single
+|-
+|Overlooking the [[Sunset Coast]].
+|[[File:Hot cold clue - Sunset Coast.png|centre|300px]]
+|[[File:Hot cold clue - Sunset Coast map.png|centre|200px]]
+|Multi
+|-
+|On the [[Villa Lucens]] theatre stage in [[Aldarin]]. Completion of [[Death on the Isle]] is required.
+|[[File:Hot cold clue - Villa Lucens theatre stage.png|centre|300px]]
+|[[File:Hot cold clue - Villa Lucens theatre stage map.png|centre|200px]]
+|Single
+|-
+|Directly north-east of the pit in the Tlati Rainforest
+|[[File:Hot Cold clue - Tlati Rainforest.png|centre|300px]]
+|[[File:Hot Cold clue - Tlati Rainforest map.png|centre|200px]]
+|Single
+|}
+
+====Western Provinces====
+{| class="wikitable"
+!Location
+!Image
+!Map
+!Combat Type
+|-
+|North-west of [[Eagles' Peak (mountain)|Eagles' Peak]].
+|[[File:Hot cold clue - Eagles' Peak.png|centre|300px]]
+|[[File:Hot cold clue - Eagles' Peak map.png|centre|200px]]
+|Single
+|-
+|[[Piscatoris Fishing Colony]]
+|[[File:Hot cold clue - Piscatoris Fishing Colony.png|centre|300px]]
+|[[File:Hot cold clue - Piscatoris Fishing Colony map.png|centre|200px]]
+|Multi
+|-
+|Eastern part of [[Piscatoris Hunter area]], south-west of the [[Piscatoris falconry area]].
+|[[File:Hot cold clue - SW of Falconer.png|centre|300px]]
+|[[File:Hot cold clue - SW of Falconer map.png|centre|200px]]
+|Single
+|-
+|South-west of the crystal gate to [[Arandar]].
+
+Note: This area is on a single/multi-combat border. It is recommended to dig in the single combat area, so you get the Brassican Mage instead of the Ancient Wizards.
+|[[File:Hot cold clue - Arandar.png|centre|300px]]
+|[[File:Hot cold clue - Arandar map.png|centre|200px]]
+|
+|-
+|East of [[Iorwerth Camp]].
+|[[File:Hot cold clue - East of Iorwerth Camp.png|centre|300px]]
+|[[File:Hot cold clue - East of Iorwerth Camp map.png|centre|200px]]
+|Single
+|-
+|North-west of [[Iorwerth Camp]].
+|[[File:Hot cold clue - North-west of Iorwerth Camp.png|centre|300px]]
+|[[File:Hot cold clue - North-west of Iorwerth Camp map.png|centre|200px]]
+|Single
+|-
+|In [[Lletya]].
+|[[File:Hot cold clue - Lletya.png|centre|300px]]
+|[[File:Hot cold clue - Lletya map.png|centre|200px]]
+|Single
+|-
+|Near [[Tyras Camp]].
+|[[File:Hot cold clue - Tyras Camp.png|centre|300px]]
+|[[File:Hot cold clue - Tyras Camp map.png|centre|200px]]
+|Single
+|-
+|The northern house at [[Zul-Andra]].
+|[[File:Hot cold clue - Zul-Andra.png|centre|300px]]
+|[[File:Hot cold clue - Zul-Andra map.png|centre|200px]]
+|Single
+|}
+
+====Wilderness====
+{| class="wikitable"
+!Location
+!Image
+!Map
+!Combat Type
+|-
+|Inside the [[Ruins (east)|eastern ruins]] north of the [[Graveyard of Shadows]], level 27 [[Wilderness]]. Clue Helper Location: Wildy (Graveyard of Shadows (N))
+|[[File:Hot cold clue - eastern ruins.png|centre|300px]]
+|[[File:Hot cold clue - eastern ruins map.png|centre|200px]]
+|Single
+|-
+|North of the [[Grand Exchange]], level 5 [[Wilderness]]. Clue Helper Location: Wildy (Air Obelisk)
+|[[File:Hot cold clue - north of GE.png|centre|300px]]
+|[[File:Hot cold clue - north of GE map.png|centre|200px]]
+|Multi
+|-
+|South-east of the [[Dark Warriors' Fortress]], level 12 [[Wilderness]].
+|[[File:Hot cold clue - SE of Dark Warriors' Fortress.png|centre|300px]]
+|[[File:Hot cold clue - SE of Dark Warriors' Fortress map.png|centre|200px]]
+|Multi
+|-
+|East of the [[Corporeal Beast's Lair]], level 20 [[Wilderness]].
+|[[File:Hot cold clue - east of corp cave entrance.png|centre|300px]]
+|[[File:Hot cold clue - east of corp cave entrance map.png|centre|200px]]
+|Multi
+|-
+|South of the [[Silk Chasm]], level 32 [[Wilderness]].
+|[[File:Hot cold clue - south of Silk Chasm.png|centre|300px]]
+|[[File:Hot cold clue - south of Silk Chasm map.png|centre|200px]]
+|Multi
+|-
+|South-east of the [[Silk Chasm]], level 28 [[Wilderness]].
+|[[File:Hot cold clue - south-east of Silk Chasm.png|centre|300px]]
+|[[File:Hot cold clue - south-east of Silk Chasm map.png|centre|200px]]
+|Single
+|-
+|East of the [[Wilderness]] [[canoe]] exit, level 35 Wilderness.
+
+Note: This area is on a single/multi-combat border. It is recommended to dig in the single combat area, so you get the Brassican Mage instead of the Ancient Wizards.
+|[[File:Hot cold clue - east of wilderness canoe exit.png|centre|300px]]
+|[[File:Hot cold clue - east of wilderness canoe exit map.png|centre|200px]]
+|
+|-
+|South-east of the [[Chaos Temple (church)|Chaos Temple]], level 37 [[Wilderness]].
+|[[File:Hot cold clue - SE of Chaos Temple.png|centre|300px]]
+|[[File:Hot cold clue - SE of Chaos Temple map.png|centre|200px]]
+|Single
+|-
+|South of [[Callisto's Den]], level 38 [[Wilderness]].
+|[[File:Hot cold clue - south of Callisto's Den.png|centre|300px]]
+|[[File:Hot cold clue - south of Callisto's Den map.png|centre|200px]]
+|Multi
+|-
+|South-west of the [[Deserted Keep]], level 49 [[Wilderness]].
+|[[File:Hot cold clue - SW of Deserted Keep.png|centre|300px]]
+|[[File:Hot cold clue - SW of Deserted Keep map.png|centre|200px]]
+|Single
+|-
+|West of the [[Wilderness Agility Course]], level 54 [[Wilderness]].
+|[[File:Hot cold clue - west of Wilderness Agility Course.png|centre|300px]]
+|[[File:Hot cold clue - south of Wilderness Agility Course map.png|centre|200px]]
+|Single
+|}
+
+====Islands (Sailing)====
+{| class="wikitable"
+!Location
+!Image
+!Map
+!Combat Type
+|-
+|At the southern part of [[Buccaneers' Haven]]. Note - requires 76 Sailing to disembark on the island.
+|[[File:Hot cold clue - Buccaneers' Haven.png|centre|300px]]
+|[[File:Hot cold clue - Buccaneers' Haven map.png|centre|200px]]
+|Single
+|-
+|In the [[Cape Conch mine]] at the south-eastern part of [[the Great Conch]].
+|[[File:Hot cold clue - Cape Conch mine.png|centre|300px]]
+|[[File:Hot cold clue - Cape Conch mine map.png|centre|200px]]
+|Single
+|-
+|At the northern part of [[Drumstick Isle]].
+|[[File:Hot cold clue - Drumstick Isle.png|centre|300px]]
+|[[File:Hot cold clue - Drumstick Isle map.png|centre|200px]]
+|Single
+|}

@@ -1,0 +1,32 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by iKips!
+|value = 20
+|weight = 0.020
+|id = 12568
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[anagram clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 63
+|text = The anagram reveals who to speak to:<br><br>DRAGONS LAMENT
+|notes = Speak to the [[strange old man]] at the [[Barrows]] in [[Morytania]].
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''One pipe fills a barrel in 1 hour while another pipe can fill the same barrel in 2 hours. How many minutes will it take to fill the tank if both pipes are used?''
+
+Answer: '''40'''
+|map = {{Map|3564,3288|mtype=pin|plane=0|mapID=-1}}
+}}

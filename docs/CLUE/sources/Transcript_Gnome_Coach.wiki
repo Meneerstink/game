@@ -1,0 +1,165 @@
+{{Transcript|npc}}
+
+==Standard dialogue==
+* '''Gnome Coach:''' Run faster! Faster!
+* '''Player:''' Excuse me?
+* '''Gnome Coach:''' Oh, sorry, I didn't notice you there.
+* '''Player:''' I take it you're a coach?
+* '''Gnome Coach:''' That I am. Now get to the point, I'm very busy!
+* {{topt|What's the History of Gnome ball?}}
+** '''Player:''' What's the history of Gnome ball?
+** '''Gnome Coach:''' Be more precise, stranger.
+** {{topt|How did it all start?}}
+*** '''Player:''' How did it all start?
+*** '''Gnome Coach:''' Strangely enough, by accident.
+*** '''Player:''' Accident?
+*** '''Gnome Coach:''' Don't interrupt!
+*** '''Player:''' Sorry.
+*** '''Gnome Coach:''' A great many years ago, before I was even born, there were two young Gnomes. Brothers to be exact.
+*** '''Gnome Coach:''' They were always arguing with each other over the most trivial things - who was the faster runner or who was the tallest.
+*** '''Gnome Coach:''' One day they were up at the swamp throwing stones at the toads.
+*** '''Player:''' As you do.
+*** '''Gnome Coach:''' Yep. You know nothing tastes better than toasted toad?
+*** '''Player:''' Oh, I'm sure
+*** '''Gnome Coach:''' Anyway, they decided to compete to see who could kill the most toads. This gradually became a daily game, to which they invited friends and family to join in.
+*** '''Gnome Coach:''' It all evolved from there. Creating a playing arena, making up teams and leagues.
+*** '''Player:''' Interesting.
+*** '''Gnome Coach:''' Anything else?
+*** {{tact|initial}}
+** {{topt|What is the ball made from?}}
+*** '''Player:''' What is the ball made from?
+*** '''Gnome Coach:''' Toads of course{{sic}}
+*** '''Player:''' Toads?
+*** '''Gnome Coach:''' What with the swamp nearby, and their robust skin, there is nothing better to stretch over some common sand.
+*** '''Player:''' I'd never have guessed.
+*** '''Gnome Coach:''' Well, of course. You humans know nothing!
+*** '''Gnome Coach:''' Anything else?
+*** {{tact|initial}}
+** {{topt|Those nets are strange.}}
+*** '''Player:''' Those nets are strange.
+*** '''Gnome Coach:''' Ah, made from the finest thread in all the land.
+*** '''Player:''' And that is?
+*** '''Gnome Coach:''' Gnome hair.
+*** '''Player:''' You're kidding, right?
+*** '''Gnome Coach:''' I have no time for jokes. It's a serious matter, we go through plenty of nets every day.
+*** '''Player:''' So that's why you don't see many Gnomes with long hair?
+*** '''Gnome Coach:''' Exactly.
+*** '''Player:''' The world makes sense at last.
+*** '''Gnome Coach:''' Anything else?
+*** {{tact|initial}}
+* {{topt|Are there any special tactics?}}
+** '''Player:''' Are there any special tactics?
+** '''Gnome Coach:''' Well of course, like what?
+** {{topt|How about in passing?}}
+*** '''Player:''' How about passing?
+*** '''Gnome Coach:''' There's the good old one-two tactic.
+*** '''Player:''' And that is?
+*** '''Gnome Coach:''' You don't know anything do you? You pass the ball onto a team mate, giving him all the attention of your opposition, and giving you the chance to run further ahead.
+*** '''Player:''' Then what?
+*** '''Gnome Coach:''' Well, he passes back to you and you've made an advantage. It's useful in a variety of situations!
+*** '''Player:''' I'll remember that one.
+*** '''Gnome Coach:''' Anything else?
+*** {{tact|initial}}
+** {{topt|How about teamwork?}}
+*** '''Player:''' How about teamwork?
+*** '''Gnome Coach:''' Well, don't forget that you can block the opposition whilst a team mate has the ball. Very useful if you want to stop or slow down anyone approaching him.
+*** '''Player:''' Block for team mates. Got it.
+*** '''Gnome Coach:''' Anything else?
+*** {{tact|initial}}
+** {{topt|What about my personal physique?}}
+*** '''Player:''' What about my personal physique?
+*** '''Gnome Coach:''' You'd look better if you were shorter.
+*** '''Player:''' I meant in regards to scoring more goals!
+*** '''Gnome Coach:''' I see. Your agility is important if you want to avoid being tackled, so that would be a good attribute to improve. Also many Gnomes say that being able to attack well with a ranged weapon makes you better at
+*** '''Gnome Coach:''' scoring goals.
+*** '''Player:''' I suppose I should go away and work on those skills.
+*** '''Gnome Coach:''' Yes, although playing the game itself will improve these skills too. Also you should remember that your distance from the goal affects your chance of scoring, so get close enough and your ranged ability won't matter as
+*** '''Gnome Coach:''' much.
+*** {{tact|initial}}
+** {{topt|Any information would be appreciated!}}
+*** '''Player:''' Any information would be appreciated!
+*** '''Gnome Coach:''' Hmm, some general facts?
+*** '''Player:''' Please!
+*** '''Gnome Coach:''' OK. Have you noticed the different colour clothes for your opposing Gnomes?
+*** '''Player:''' Nope.
+*** '''Gnome Coach:''' The colours correspond to their skill level. The red ones are the professionals. They've been playing since before you were born! The orange ones are in the middle of their careers, whereas the yellow players know very
+*** '''Gnome Coach:''' little. Just like you!
+*** '''Player:''' Thanks... Anything else?
+*** '''Gnome Coach:''' It's always good to get a group of friends to play with you. That way you can score goals more easily, and if you take it in turns to score the goals you'll all reap the rewards.
+*** {{tact|initial}}
+* {{topt|Does the game bring fame?}}
+** '''Player:''' Does the game bring fame?
+** '''Gnome Coach:''' You mean you've never heard of Speedy Sam The Striker or Norda 'Steal Arms' van Druman?
+** '''Player:''' Afraid not.
+** '''Gnome Coach:''' Not even Great Thunder Legs MacKnee?
+** '''Player:''' Nope.
+** '''Gnome Coach:''' Well, they're all richer than you'll ever be!
+** '''Player:''' Good for them.
+** '''Gnome Coach:''' Indeed, anything else?
+** {{tact|initial}}
+* {{topt|Yawn}}
+** '''Player:''' Yawn.
+** '''Gnome Coach:''' I beg your pardon?
+** '''Player:''' Erm... thanks, catch you later.
+** {{tact|end}}
+
+==Overhead dialogue==
+* {{trandom}}
+* {{topt|Dialogue 1}}
+** '''Gnome Coach:''' {{overhead|Take him out you wuss}}
+* {{topt|Dialogue 2}}
+** '''Gnome Coach:''' {{overhead|One-Two, One-Two!}}
+* {{topt|Dialogue 3}}
+** '''Gnome Coach:''' {{overhead|Hey human, get moving!}}
+* {{topt|Dialogue 4}}
+** '''Gnome Coach:''' {{overhead|Run faster! Don't be so lazy!}}
+* {{topt|Dialogue 5}}
+** '''Gnome Coach:''' {{overhead|Pass to your left! Pass now!}}
+* {{topt|Dialogue 6}}
+** '''Gnome Coach:''' {{overhead|There are others to pass to you know}}
+
+==Gnome Restaurant dialogue==
+* {{tcond|If the player doesn't have the correct item in their inventory:}}
+** {{tbox|Although you have found your customer you don't appear to have brought the correct food with you! You need [a/some] [ordered gnome food/drink item]!}}
+** {{tact|end}}
+* {{tcond|If the player has a premade item in their inventory:}}
+** {{tbox|Premade dishes will not do I'm afraid. Only hand made Gnome Cuisine is good enough for customers of Aluft Aloft.}}
+** {{tact|end}}
+* {{tcond|If the player has the correct item in their inventory:}}
+** {{tbox|You hand over your delivery of [a/some] [ordered gnome food/drink item] to Coach}}
+** '''Gnome Coach:''' Ah, sustenance! Thanks.
+** {{tcond|If the player does not have a reward token available:}}
+*** {{tbox|You have [number] credits towards your free delivery token. You are not eligible to get gnome food delivered to you yet.}}
+*** {{tact|end}}
+** {{tcond|If the player does have a reward token available:}}
+*** {{tbox|You have [number] credits towards your free delivery token. You may get [number] pieces of gnome food delivered to you.}}
+*** {{tcond|If the player has an unclaimed reward token:}}
+**** {{tbox|Don't forget to pick up your free delivery token from Aluft Gianne jnr.}}
+*** {{tcond|If the player has claimed their reward token:}}
+**** {{tact|end}}
+* {{tcond|If the player ran out of time:}}
+** {{tbox|Your delivery is too late! Go back to Aluft jnr. to get another order. You discard your delivery box as you don't need it any more.}}
+** {{tact|end}}
+
+==Treasure Trails==
+* '''Gnome Coach:''' Ah! Here you go!
+* '''Player:''' What?
+* '''Gnome Coach:''' I need you to answer this for me.
+* {{tact|receives=a challenge scroll}}
+* {{tbox|pic=Clue scroll (hard) detail.png|The coach has given you a challenge scroll!}}
+* {{tact|end}}
+
+===When spoken to again===
+* '''Gnome Coach:''' Please enter the answer to the question.
+* {{tcond|When given the wrong answer:}}
+** '''Gnome Coach:''' How can that be? Go check again!
+** {{tact|end}}
+* {{tcond|When given the correct answer:}}
+** '''Gnome Coach:''' Spot on!
+** {{tcond|When given another clue scroll:}}
+*** {{tbox|pic=Clue scroll (hard) detail.png|The coach has given you another clue scroll!}}
+*** {{tact|end}}
+** {{tcond|When given a reward casket:}}
+*** {{tact|receives=a [[reward casket (hard)]]}}
+*** {{tbox|pic=reward casket (hard) detail.png|You've obtained a casket!}}
+*** {{tact|end}}

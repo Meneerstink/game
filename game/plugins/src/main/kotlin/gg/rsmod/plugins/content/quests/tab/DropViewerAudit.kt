@@ -46,7 +46,7 @@ object DropViewerAudit {
                 problems += "${s.name} (${s.key}): $what"
             }
             if (s.name.isBlank()) bad("no name")
-            if (s.kind != DropSources.Kind.CHEST && s.modelNpc <= 0) bad("no model")
+            if (s.kind != DropSources.Kind.CHEST && s.modelNpc <= 0 && s.modelItem < 0) bad("no model")
             if (s.kind == DropSources.Kind.CHEST && DropViewer.chestModel(player) < 0) bad("no chest model")
             val starX = DropViewer.starX(world, DropViewer.headName(world, s.name))
             if (starX > STAR_LIMIT) bad("name + star reach Show on map (star at $starX)")

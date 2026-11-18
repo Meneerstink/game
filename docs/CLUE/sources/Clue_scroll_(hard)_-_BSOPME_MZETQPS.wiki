@@ -1,0 +1,34 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = I need to decipher this.
+|value = 20
+|weight = 0.020
+|id = 23170
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cipher clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]]. Solving this clue requires having completed the [[Swan Song]] quest. Merely starting the quest up to the point of getting to Piscatoris Colony (so as to skip the skill level requirements) will not work, because Arnold will not talk to the player about the clue even when it is in the player's inventory.
+
+==Clue info==
+{{Clue info
+|id = 941
+|text = The cipher reveals who to speak to:<br><br>BSOPME MZETQPS
+|notes = Speak to [[Arnold Lydspor]] at the [[Piscatoris Fishing Colony]] [[Arnold's Eclectic Supplies.|general store]].
+The clue has an additional challenge: A [[puzzle box]].
+|map = {{Map|2329,3689|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+*[[Western Banner 3]] or 4 teleport to [[Piscatoris Fishing Colony]].
+*[[Piscatoris teleport]].
+*[[Fairy ring]] code {{Fairycode|akq}} and run north.

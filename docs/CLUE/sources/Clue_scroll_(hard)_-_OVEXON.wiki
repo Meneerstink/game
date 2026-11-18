@@ -1,0 +1,41 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = I need to decipher this.
+|value = 20
+|weight = 0.020
+|id = 19898
+|leagueRegion = Tirannwn
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cipher clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 934
+|text = The cipher reveals who to speak to:<br><br>OVEXON
+|items = 
+|notes = Speak to [[Eluned]].
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''A question on elven crystal math. I have 5 and 3 crystals, large and small respectively. A large crystal is worth 10,000 coins and a small is worth but 1,000. How much are all my crystals worth?''
+
+Answer: '''53000'''
+
+'''During Song of the Elves:''' Eluned will offer players the next scroll or casket during Song of the Elves at her Underground Pass location, provided the quest has advanced past the battle scene.
+|map = 
+Before completion of [[Song of the Elves]]:
+{{Map|2289,3144|mtype=pin|plane=0|mapID=-1}}
+
+After completion of Song of the Elves:
+{{Map|3230,6061|mtype=pin|plane=0|mapID=-1}}
+}}

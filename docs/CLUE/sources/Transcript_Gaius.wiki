@@ -1,0 +1,22 @@
+{{Transcript|npc}}
+
+==Standard dialogue==
+* '''Gaius:''' Welcome to my two-handed sword shop.
+* {{topt|Let's trade.}}
+** {{tact|opens=Gaius' Two Handed Shop.}}
+* {{topt|Thanks, but not today.}}
+** '''Player:''' Thanks, but not today.
+** '''Gaius:''' Very well, but do please call again.
+** {{tact|end}}
+
+==Treasure Trails==
+===Easy===
+* '''Gaius:''' Here you go.
+* {{tcond|If the reward is another clue scroll:}}
+** {{tact|receives=an [[Clue scroll (easy)|easy clue scroll]]}}
+** {{tbox|pic=clue scroll (easy) detail.png|You've been given another clue!}}
+** {{tact|end}}
+* {{tcond|If the reward is a casket:}}
+** {{tact|receives=an [[Reward casket (easy)|easy reward casket]]}}
+** {{tbox|pic=reward casket (easy) detail.png|You've obtained a casket!}}
+** {{tact|end}}

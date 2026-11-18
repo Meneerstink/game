@@ -1,0 +1,13 @@
+<!--[[File:Strange device dig locations.png|thumb|right|370px|A map of Gielinor displaying all possible master clue locations. [{{filepath:Strange_device_dig_locations.png}} Full resolution image].]]-->
+{{shortcut|ttghc}}
+
+{{Treasure Trails Guide Hot Cold Intro|all}}
+
+==Beginner Hot Cold clue locations==
+{{:Treasure Trails/Guide/Hot Cold/Beginner}}
+
+==Master Hot Cold clue locations==
+{{:Treasure Trails/Guide/Hot Cold/Master}}<noinclude>
+
+{{Treasure Trails}}
+[[Category:Guides]]</noinclude>

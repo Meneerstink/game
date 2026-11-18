@@ -1,0 +1,31 @@
+{{Transcript|npc}}
+
+==Standard dialogue==
+* '''Gunnjorn:''' Haha welcome to my obstacle course. Have fun, but remember this isn't a child's playground. People have died here.
+* '''Gunnjorn:''' The best way to train, is to go round the course in a clockwise direction.
+* {{tact|end}}
+
+==Treasure Trails==
+===Hard===
+* {{tact|receives=a puzzle box}}
+* '''Gunnjorn:''' Please solve this for me. I have other things to be thinking about.
+* Gunnjorn has given you a puzzle box!
+* {{tact|end}}
+====While holding the puzzle box====
+* {{tcond|If the puzzle is not solved:}}
+** '''Gunnjorn:''' Sorry but you haven't solved the puzzle yet.
+** {{tact|end}}
+* {{tcond|If the puzzle is not in the inventory but the clue is:}}
+** '''Player:''' I don't have the puzzle box with me.
+** '''Gunnjorn:''' That's not much use is it, go and fetch it!
+** {{tact|end}}
+* {{tcond|If the puzzle is solved and in the inventory:}}
+** '''Gunnjorn:''' Thanks [player name]!
+** {{tcond|When given another clue scroll:}}
+*** {{tbox|pic=Clue scroll (hard) detail.png|Gunnjorn has given you another clue scroll!}}
+*** {{tact|receives=a [[clue scroll (hard)]]}}
+*** {{tact|end}}
+** {{tcond|When given a reward casket:}}
+*** {{tbox|pic=Reward casket (hard) detail.png|You've obtained a casket!}}
+*** {{tact|receives=a [[reward casket (hard)]]}}
+*** {{tact|end}}

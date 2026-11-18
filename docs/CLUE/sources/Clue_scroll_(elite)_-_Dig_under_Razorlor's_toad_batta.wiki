@@ -1,0 +1,34 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Instructions I need to follow.
+|value = 20
+|weight = 0.020
+|id = 19810
+|leagueRegion = Morytania
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+
+{{Clue info
+|id = 855
+|text = The cryptic reveals where to dig:<br><br>Dig under Razorlor's toad batta.
+|items = 
+|notes = Dig on the [[toad batta]] spawn in [[Tarn's Lair]]. See [[:File:Tarn's Lair map.png|this map]] for directions. From the entrance, follow the route C-K, or, alternatively, D-S-Q-P-O-N-M-L.
+Or faster: (This is U-fall-Q-P-O-N-M-L) from the [[Slayer ring]]'s "Haunted Mine" teleport, east, jump west past mages (right click the pillars), get pushed by wall crushers, south, south, west, west, south, search the tile (floor) to deactivate the log trap and jump over, south, south, "go down", but you'll fall right where the [[toad batta]] is.
+
+{{Tile markers box|align=left|Module:Tile markers/Razorlor's toad batta route.json|showpreview=no}}
+
+|map = [[File:Tarn's_Lair_map.png|center|thumb]]{{Map|3139,4554|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,32 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Jokku23!
+|value = 20
+|weight = 0.020
+|id = 12576
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[anagram clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 62
+|text = The anagram reveals who to speak to:<br><br>DO SAY MORE
+|notes = Speak to [[Doomsayer]] east of [[Lumbridge Castle]].
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''What is 40 divided by 1/2 plus 15?''
+
+Answer: '''95'''
+|map = {{Map|3230,3230|mtype=pin|plane=0|mapID=-1}}
+}}

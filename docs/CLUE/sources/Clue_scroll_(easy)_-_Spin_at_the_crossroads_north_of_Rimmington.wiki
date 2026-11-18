@@ -1,0 +1,38 @@
+{{External|rs=Clue scroll (easy) - Twirl at the crossroads north of Rimmington}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10218
+|leagueRegion = Asgarnia&Kandarin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is an [[emote clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+The items can be stored in a [[STASH]] rock north of the crossroads. It requires {{SCP|Construction|27|link=yes}}, a [[hammer]], [[saw]], 2 [[Plank|planks]] and 10 [[Nails]] to build. Building the STASH rewards the player with 150 Construction XP.
+
+==Clue info==
+{{Clue info
+|id = 301
+|tier = easy
+|emote = Spin
+|text = The emote reveals <br><br>Spin at the crossroads north of Rimmington. Equip a green gnome hat, cream gnome top and leather chaps.
+|location=Crossroads north of [[Rimmington]]
+|items = Equip a [[green hat|green gnome hat]], [[cream gnome top]] and [[leather chap]]s.
+|equipment1 = Green hat
+|equipment2 = Cream robe top
+|equipment3 = Leather chaps
+|notes = Perform the [[spin]] emote near the crossroads north of [[Rimmington]].
+|map = {{Map|2981,3276|mtype=pin|plane=0|mapID=-1}}
+}}

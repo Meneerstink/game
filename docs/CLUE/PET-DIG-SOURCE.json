@@ -1,0 +1,170 @@
+{
+  "cache": 2762,
+  "build": 242,
+  "timestamp": "2026-11-11T11:45:06.321160Z",
+  "sourceSequence": 14498,
+  "name": "DOG_UPDATE_DIG",
+  "sequenceSha256": "a63fb9217b502a54d088bfb190f7782341bbd6b7be6238f0b7085651373955a7",
+  "framesets": [
+    14566
+  ],
+  "bases": [
+    1491
+  ],
+  "sounds": [
+    {
+      "frame": 1,
+      "source": 12114,
+      "weight": 100,
+      "loops": 1,
+      "radius": 5,
+      "retain": 0
+    },
+    {
+      "frame": 3,
+      "source": 12115,
+      "weight": 100,
+      "loops": 1,
+      "radius": 5,
+      "retain": 0
+    },
+    {
+      "frame": 5,
+      "source": 12116,
+      "weight": 100,
+      "loops": 1,
+      "radius": 5,
+      "retain": 0
+    }
+  ],
+  "fixture": "build/clue/pet-dig/source-2762/cache",
+  "containers": [
+    {
+      "index": 0,
+      "group": 14566,
+      "sha256": "518addf06a4e63989d70e0b2b9cd8498118fd5fc8cbce525b341d69eca361e46",
+      "bytes": 409,
+      "url": "https://archive.openrs2.org/caches/runescape/2762/archives/0/groups/14566.dat"
+    },
+    {
+      "index": 1,
+      "group": 1491,
+      "sha256": "e88e23346287c667a596e372776fe80c597675506e443a022f8cd5fbef89da56",
+      "bytes": 596,
+      "url": "https://archive.openrs2.org/caches/runescape/2762/archives/1/groups/1491.dat"
+    },
+    {
+      "index": 2,
+      "group": 12,
+      "sha256": "a1af8db7f0bcdc704676b5eb4afda9336463168295c9bedc17c64931e1e0c8b1",
+      "bytes": 281461,
+      "url": "https://archive.openrs2.org/caches/runescape/2762/archives/2/groups/12.dat"
+    },
+    {
+      "index": 4,
+      "group": 12114,
+      "sha256": "8e105dc79d5394b21bfc5e1e0fdc8575cfa854773e460918ecdbe5d5317b7b06",
+      "bytes": 189,
+      "url": "https://archive.openrs2.org/caches/runescape/2762/archives/4/groups/12114.dat"
+    },
+    {
+      "index": 4,
+      "group": 12115,
+      "sha256": "921096715e44a9f7f63ceb70b755ac4e4b90fd177c7019058067e604aef7594e",
+      "bytes": 189,
+      "url": "https://archive.openrs2.org/caches/runescape/2762/archives/4/groups/12115.dat"
+    },
+    {
+      "index": 4,
+      "group": 12116,
+      "sha256": "7fd34b447c3ca4eb1f15d83aa445570c21bd919f3dd029417917662b7f621336",
+      "bytes": 189,
+      "url": "https://archive.openrs2.org/caches/runescape/2762/archives/4/groups/12116.dat"
+    },
+    {
+      "index": 255,
+      "group": 0,
+      "sha256": "58f8246427130723bdaadd315033fed0f2bd61706fb04c8f7ff866d8af6f7192",
+      "bytes": 100505,
+      "url": "https://archive.openrs2.org/caches/runescape/2762/archives/255/groups/0.dat"
+    },
+    {
+      "index": 255,
+      "group": 1,
+      "sha256": "bc9c5688fbc6272fa3089c137555b1f57e5080ac2611252613b697f80fb4d820",
+      "bytes": 20656,
+      "url": "https://archive.openrs2.org/caches/runescape/2762/archives/255/groups/1.dat"
+    },
+    {
+      "index": 255,
+      "group": 2,
+      "sha256": "e1416319e7b7d31d9908ba261f114eb00cc446b1adac3ee14234ee31a9a4e9b8",
+      "bytes": 1353,
+      "url": "https://archive.openrs2.org/caches/runescape/2762/archives/255/groups/2.dat"
+    },
+    {
+      "index": 255,
+      "group": 4,
+      "sha256": "f65fd1290a56d260d3ecd3e66cd53eeecbe495b337b7990639db3a743a112ed6",
+      "bytes": 95193,
+      "url": "https://archive.openrs2.org/caches/runescape/2762/archives/255/groups/4.dat"
+    }
+  ],
+  "bloodhound2686": {
+    "id": 6296,
+    "name": "Bloodhound",
+    "models": [
+      31740
+    ],
+    "chatheads": [
+      31948
+    ],
+    "size": 1,
+    "stand": 7269,
+    "walk": 7280,
+    "idleTurnLeft": -1,
+    "idleTurnRight": -1,
+    "walk180": -1,
+    "walkLeft": -1,
+    "walkRight": -1,
+    "run": -1,
+    "run180": -1,
+    "runLeft": -1,
+    "runRight": -1,
+    "crawl": -1,
+    "crawl180": -1,
+    "crawlLeft": -1,
+    "crawlRight": -1,
+    "ops": [
+      "Talk-to",
+      null,
+      "Pick-up",
+      null,
+      null
+    ],
+    "recolorFind": [],
+    "recolorReplace": [],
+    "retextures": 0,
+    "minimap": false,
+    "combat": 0,
+    "widthScale": 128,
+    "heightScale": 128,
+    "renderPriority": 0,
+    "ambient": 0,
+    "contrast": 0,
+    "rotationSpeed": 32,
+    "interactable": true,
+    "rotationFlag": true,
+    "follower": false,
+    "height": -1,
+    "footprint": -1,
+    "multiNpc": false,
+    "dropped": [
+      "category 764"
+    ]
+  },
+  "existingReadyBases": [
+    1491
+  ],
+  "sameBase1491Sha256": "9b97d183abedf3b8b800a945c9f61425f708108e3071816053181336db8913b0"
+}

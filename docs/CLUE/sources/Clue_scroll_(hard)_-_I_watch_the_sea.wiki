@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 12581
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 704
+|text = The cryptic reveals who to speak to:<br><br>I watch the sea. I watch you fish. I watch your tree.
+|items = 
+|notes = Speak to [[Ellena]] at the [[Catherby]] [[fruit tree patch]].
+|map = {{Map|2860,3431|mtype=pin|plane=0|mapID=-1}}
+}}

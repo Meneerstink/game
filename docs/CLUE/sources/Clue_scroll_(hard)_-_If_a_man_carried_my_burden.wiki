@@ -1,0 +1,31 @@
+{{External|rs=Clue scroll (hard) - My name's a tirade, fishing is my trade}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 2778
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 709
+|text = The cryptic reveals who to speak to:<br><br>If a man carried my burden, he would break his back. I am not rich, but leave silver in my track. Speak to the keeper of my trail.
+|items = 
+|notes = Speak to [[Gerrant]] in the [[Port Sarim]] [[Gerrant's Fishy Business.|fish shop]]. 
+The clue's text is a reference to him giving you [[blamish snail slime]]: a snail carries its house around as a human cannot, and leaves the silvery slime trail.
+|map = {{Map|3014,3222|mtype=pin|plane=0|mapID=-1}}
+}}

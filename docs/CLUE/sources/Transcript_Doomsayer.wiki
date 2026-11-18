@@ -1,0 +1,131 @@
+{{Transcript|npc}}
+
+==Standard dialogue==
+* '''Doomsayer:''' Dooooom!
+* '''Player:''' Where?
+* '''Doomsayer:''' All around us! I can feel it in the air, hear it on the wind, smell it... also in the air!
+* '''Player:''' Is there anything we can do about this doom?
+* '''Doomsayer:''' There is nothing you need to do my friend, for I am the Doomsayer! I roam the world sensing danger.
+* '''Doomsayer:''' If I find a dangerous area, then I put up warning signs that will tell you what is so dangerous about that area.
+* {{tselect|Select an option}}
+* {{topt|I'd like to get rid of some of your warning signs.}}
+** '''Player:''' I'd like to get rid of some of your warning signs.
+** '''Doomsayer:''' Oh... Very well.
+** {{tact|Reset Warning Messages interface opens}}
+* {{topt|Thanks, I'll remember that if I see any warning signs.}}
+** {{tmissing}}
+
+===Subsequent times===
+* '''Doomsayer:''' Dooooom!
+* {{tselect|Select an option}}
+* {{topt|I'd like to get rid of some of your warning signs.}}
+** {{tact|above}}
+* {{topt|I'd better be off.}}
+** '''Player:''' I'd better be off.
+** {{tact|end}}
+
+==Treasure Trails==
+===Easy===
+* '''Doomsayer:''' You got lucky this time, next time doom will be upon you.
+* {{tcond|When given another clue scroll:}}
+** {{tbox|pic=Clue scroll (easy) detail.png|You've been given another clue!}}
+** {{tact|receives=an [[Clue scroll (easy)|easy clue scroll]]}}
+** {{tact|end}}
+* {{tcond|When given a reward casket:}}
+** {{tbox|pic=Reward casket (easy) detail.png|You've obtained a casket!}}
+** {{tact|receives=an [[Reward casket (easy)|easy reward casket]]}}
+** {{tact|end}}
+
+===Hard===
+* '''Doomsayer:''' Ah! Here you go!
+* '''Player:''' What?
+* '''Doomsayer:''' I need you to answer this for me.
+* {{tbox|pic=Clue scroll (hard) detail.png|The Doomsayer has given you a challenge scroll!}}
+* {{tact|receives=a [[Challenge_scroll#Hard|challenge scroll]]}}
+* {{tact|end}}
+
+====When spoken to again====
+* '''Doomsayer:''' Please enter the answer to the question.
+* {{tcond|When given the wrong answer:}}
+** '''Doomsayer:''' How can that be? Try again!
+** {{tact|end}}
+* {{tcond|When given the correct answer:}}
+** '''Doomsayer:''' Spot on!
+** {{tcond|When given another clue scroll:}}
+*** {{tbox|pic=Clue scroll (hard) detail.png|The Doomsayer has given you another clue scroll!}}
+*** {{tact|receives=a [[Clue scroll (hard)|hard clue scroll]]}}
+*** {{tact|end}}
+** {{tcond|When given a reward casket:}}
+*** {{tbox|pic=Reward casket (hard) detail.png|you've obtained a casket!}}
+*** {{tact|receives=a [[Reward casket (hard)|hard reward casket]]}}
+*** {{tact|end}}
+
+==Deadman Annihilation==
+* {{tselect|Select an option}}
+* {{topt|How am I doing hunting those breach monsters, Doomsayer?}}
+** '''Player:''' How am I doing hunting those breach monsters, Doomsayer?
+** '''Doomsayer:''' You've dished out [X] damage to breach monsters. Keep up the dangerous activities! Anyway...
+** '''Doomsayer:''' Dooooom!
+** {{tact|See standard dialogue above.}}
+* {{topt|Dooooom!}}
+** {{tact|See standard dialogue above.}}
+
+==Deadman Mode worlds==
+* '''Doomsayer:''' Dooooom!
+* '''Player:''' Where?
+* '''Doomsayer:''' All around us! I can feel it in the air, hear it on the wind, smell it... also in the air!
+* {{tselect|Select an option}}
+* {{topt|Is there anything we can do about this doom?}}
+** {{tact|See standard dialogue above.}}
+* {{topt|I'd like to remove my PvP protection.}}
+** '''Player:''' I'd like to remove my PvP protection.
+** {{tcond|No protection left:}}
+*** '''Doomsayer:''' You haven't got any PvP protection. Doom is already upon you.
+*** {{tact|end}}
+** {{tcond|Have less than 5 minutes of protection left:}}
+*** '''Doomsayer:''' That way doom lies, I cannot comply. Your protection will be finished in less than 5 minutes.
+*** {{tact|end}}
+** {{tcond|Have more than 5 minutes of protection left:}}
+*** '''Doomsayer:''' Are you sure? Much doom lies that way and it can not be undone!
+*** {{tselect|Select an option}}
+*** {{topt|Yes, remove my PvP protection right now.}}
+**** '''Player:''' Yes, remove my PvP protection right now.
+**** '''Doomsayer:''' On your head be it!
+**** {{tmissing}}
+*** {{topt|Yes, arrange for my PvP protection to end in 1 minute.}}
+**** '''Player:''' Yes, arrange for my PvP protection to end in 1 minute.
+**** '''Doomsayer:''' Much doom be with you.
+**** {{tbox|You have 1 minute of PvP protection left.}}
+**** {{tact|end}}
+*** {{topt|On second thoughts, leave it.}}
+**** '''Player:''' On second thoughts, leave it.
+**** {{tact|end}}
+
+==Historical dialogue==
+* '''Doomsayer:''' Dooooom!
+* '''Player:''' Where?
+* '''Doomsayer:''' All around us! I can feel it in the air, hear it on the wind, smell it... also in the air!
+* '''Player:''' Is there anything we can do about this doom?
+* '''Doomsayer:''' There is nothing you need to do my friend! I am the Doomsayer, although my real title could be something like the Danger Tutor.
+* '''Player:''' Danger Tutor?
+* '''Doomsayer:''' Yes! I roam the world sensing danger.
+* '''Doomsayer:''' If you see the signs often enough, then you can turn them off; by that time you likely know what the area has in store for you.
+* '''Doomsayer:''' If I find a dangerous area, then I put up warning signs that will tell you what is so dangerous about that area.
+* '''Player:''' But what if I want to see the warnings again?
+* '''Doomsayer:''' That's why I'm waiting here!
+* '''Doomsayer:''' If you want to see the warning messages again, I can turn them back on for you.
+* {{tcond|If the player hasn't disabled any warnings:}}
+** '''Player:''' Thanks, I'll remember that if I see any warning messages.
+** '''Doomsayer:''' You're welcome!
+** {{tact|end}}
+* {{tcond|If the player has disabled some warnings:}}
+** '''Doomsayer:''' Do you need to turn on any warnings right now?
+** {{tselect|Select an Option}}
+** {{topt|Yes, I do.}}
+*** '''Player:''' Yes, I do.
+*** {{tact|end}}
+** {{topt|Not right now.}}
+*** '''Player:''' Not right now.
+*** '''Doomsayer:''' Ok, keep an eye out for the messages though!
+*** '''Player:''' I will.
+*** {{tact|end}}

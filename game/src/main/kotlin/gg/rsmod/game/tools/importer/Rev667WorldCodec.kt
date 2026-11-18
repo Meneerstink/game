@@ -337,14 +337,11 @@ class Rev667LocType(val id: Int) {
                         val n = buf.u8()
                         repeat(n + 1) { buf.u16() }
                     }
-                    // CLUE STASH (client c1de063f LocType 242): multiloc with g4 destination ids - varbit g2, varp g2, fallback g4,
-                    // count g1, count+1 g4 ids. Without it the census stopped at the 23 STASH locs (17-11 'unknown opcode 242').
-                    242 -> {
-                        buf.u16()
-                        buf.u16()
-                        buf.i32()
-                        val n = buf.u8()
-                        repeat(n + 1) { buf.i32() }
+                    ModelArchive.LOC_WIDE_TRANSFORMS -> {
+                        // CLUE STASH (client c1de063f LocType 242): multiloc with g4 destination ids - varbit g2, varp g2, fallback g4,
+                        // count g1, count+1 g4 ids.
+                        buf.u16(); buf.u16(); buf.i32()
+                        repeat(buf.u8() + 1) { buf.i32() }
                     }
                     78 -> {
                         buf.u16()
@@ -576,13 +573,19 @@ class Rev667LocType(val id: Int) {
             }
             if (multiloc != null) {
                 val (varbit, dest) = multiloc
+                require(varbit in 0..65534 && dest.size in 2..257 && dest.all { it >= -1 })
                 val default = dest.last()
-                u8(if (default != -1) 92 else 77)
+                val wide = dest.any { it >= 65535 }
+                u8(if (wide) ModelArchive.LOC_WIDE_TRANSFORMS else if (default != -1) 92 else 77)
                 u16(if (multilocVarp) 0xFFFF else varbit)
                 u16(if (multilocVarp) varbit else 0xFFFF)
-                if (default != -1) u16(default)
+                fun destination(value: Int) {
+                    if (wide) { out.write(value ushr 24); out.write(value ushr 16); out.write(value ushr 8); out.write(value) }
+                    else u16(if (value == -1) 0xFFFF else value)
+                }
+                if (wide || default != -1) destination(default)
                 u8(dest.size - 2)
-                for (i in 0 until dest.size - 1) u16(if (dest[i] == -1) 0xFFFF else dest[i])
+                for (i in 0 until dest.size - 1) destination(dest[i])
             } else if (src.transforms != null) {
                 dropped.add("loc ${src.id}: varbit/varp transform table (base definition used)")
             }

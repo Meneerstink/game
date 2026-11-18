@@ -1,0 +1,24 @@
+<noinclude>{{external|rs=Treasure Trails/Guide/Cryptics}}
+</noinclude>{{shortcut|ttgcr}}
+{{Treasure Trails Guide Cryptic Clues Intro}}
+
+===Beginner Cryptic clues===
+{{:Treasure Trails/Guide/Cryptic clues/Beginner}}
+
+===Easy Cryptic clues===
+{{:Treasure Trails/Guide/Cryptic clues/Easy}}
+
+===Medium Cryptic clues===
+{{:Treasure Trails/Guide/Cryptic clues/Medium}}
+
+===Hard Cryptic Clues===
+{{:Treasure Trails/Guide/Cryptic clues/Hard}}
+
+===Elite Cryptic clues===
+{{:Treasure Trails/Guide/Cryptic clues/Elite}}
+
+===Master Cryptic clues===
+{{:Treasure Trails/Guide/Cryptic clues/Master}}<noinclude>
+
+{{Treasure Trails}}
+[[Category:Guides]]</noinclude>

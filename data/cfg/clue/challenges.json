@@ -1,0 +1,447 @@
+{
+  "falo": [
+    {
+      "key": "67f0698bc390c86d",
+      "lyric": "A blood red weapon, a strong curved sword, found on the island of primate lords.",
+      "items": [
+        {
+          "osrs": 4587,
+          "existingLocal": 4587,
+          "name": "Dragon scimitar"
+        },
+        {
+          "osrs": 20406,
+          "existingLocal": 4587,
+          "name": "Dragon scimitar"
+        },
+        {
+          "osrs": 20000,
+          "existingLocal": 23670,
+          "name": "Dragon scimitar (or)"
+        },
+        {
+          "osrs": 28031,
+          "existingLocal": null,
+          "name": "Dragon scimitar (cr)"
+        }
+      ],
+      "source": {
+        "page": "Falo the Bard",
+        "revision": 15386440,
+        "revision_time": "2026-10-30T15:24:22Z",
+        "file": "Falo_the_Bard.wiki",
+        "sha256": "2ee64013f5d48487c27bb81d34b5a09bbe46d01d785031bf95886fcc7a4fc042",
+        "url": "https://oldschool.runescape.wiki/w/Falo_the_Bard"
+      }
+    },
+    {
+      "key": "c96039de8c07c889",
+      "lyric": "A shiny helmet of flight, to obtain this with melee, struggle you might.",
+      "items": [
+        {
+          "osrs": 11826,
+          "existingLocal": 11718,
+          "name": "Armadyl helmet"
+        }
+      ],
+      "source": {
+        "page": "Falo the Bard",
+        "revision": 15386440,
+        "revision_time": "2026-10-30T15:24:22Z",
+        "file": "Falo_the_Bard.wiki",
+        "sha256": "2ee64013f5d48487c27bb81d34b5a09bbe46d01d785031bf95886fcc7a4fc042",
+        "url": "https://oldschool.runescape.wiki/w/Falo_the_Bard"
+      }
+    },
+    {
+      "key": "7180dceffbe5e471",
+      "lyric": "No attack to wield, only strength is required, made of obsidian, but with no room for a shield.",
+      "items": [
+        {
+          "osrs": 6528,
+          "existingLocal": 6528,
+          "name": "Tzhaar-ket-om"
+        },
+        {
+          "osrs": 23235,
+          "existingLocal": 23770,
+          "name": "Tzhaar-ket-om (t)"
+        }
+      ],
+      "source": {
+        "page": "Falo the Bard",
+        "revision": 15386440,
+        "revision_time": "2026-10-30T15:24:22Z",
+        "file": "Falo_the_Bard.wiki",
+        "sha256": "2ee64013f5d48487c27bb81d34b5a09bbe46d01d785031bf95886fcc7a4fc042",
+        "url": "https://oldschool.runescape.wiki/w/Falo_the_Bard"
+      }
+    },
+    {
+      "key": "a5535d24763a321f",
+      "lyric": "Penance healers runners and more, obtaining this body often gives much deplore.",
+      "items": [
+        {
+          "osrs": 10551,
+          "existingLocal": 10551,
+          "name": "Fighter torso"
+        },
+        {
+          "osrs": 28067,
+          "existingLocal": null,
+          "name": "Fighter torso (or)"
+        }
+      ],
+      "source": {
+        "page": "Falo the Bard",
+        "revision": 15386440,
+        "revision_time": "2026-10-30T15:24:22Z",
+        "file": "Falo_the_Bard.wiki",
+        "sha256": "2ee64013f5d48487c27bb81d34b5a09bbe46d01d785031bf95886fcc7a4fc042",
+        "url": "https://oldschool.runescape.wiki/w/Falo_the_Bard"
+      }
+    },
+    {
+      "key": "c231ff82d9157a47",
+      "lyric": "Strangely found in a chest, many believe these gloves are the best.",
+      "items": [
+        {
+          "osrs": 7462,
+          "existingLocal": 7462,
+          "name": "Barrows gloves"
+        },
+        {
+          "osrs": 23593,
+          "existingLocal": null,
+          "name": "Barrows gloves"
+        }
+      ],
+      "source": {
+        "page": "Falo the Bard",
+        "revision": 15386440,
+        "revision_time": "2026-10-30T15:24:22Z",
+        "file": "Falo_the_Bard.wiki",
+        "sha256": "2ee64013f5d48487c27bb81d34b5a09bbe46d01d785031bf95886fcc7a4fc042",
+        "url": "https://oldschool.runescape.wiki/w/Falo_the_Bard"
+      }
+    },
+    {
+      "key": "72077b5fa072e1e3",
+      "lyric": "These gloves of white won't help you fight, but aid in cooking, they just might.",
+      "items": [
+        {
+          "osrs": 775,
+          "existingLocal": 775,
+          "name": "Cooking gauntlets"
+        }
+      ],
+      "source": {
+        "page": "Falo the Bard",
+        "revision": 15386440,
+        "revision_time": "2026-10-30T15:24:22Z",
+        "file": "Falo_the_Bard.wiki",
+        "sha256": "2ee64013f5d48487c27bb81d34b5a09bbe46d01d785031bf95886fcc7a4fc042",
+        "url": "https://oldschool.runescape.wiki/w/Falo_the_Bard"
+      }
+    },
+    {
+      "key": "386c408bf4052357",
+      "lyric": "To slay a dragon you must first do, before this chest piece can be put on you.",
+      "items": [
+        {
+          "osrs": 1127,
+          "existingLocal": 1127,
+          "name": "Rune platebody"
+        },
+        {
+          "osrs": 20421,
+          "existingLocal": 1127,
+          "name": "Rune platebody"
+        }
+      ],
+      "source": {
+        "page": "Falo the Bard",
+        "revision": 15386440,
+        "revision_time": "2026-10-30T15:24:22Z",
+        "file": "Falo_the_Bard.wiki",
+        "sha256": "2ee64013f5d48487c27bb81d34b5a09bbe46d01d785031bf95886fcc7a4fc042",
+        "url": "https://oldschool.runescape.wiki/w/Falo_the_Bard"
+      }
+    }
+  ],
+  "sherlock": [
+    {
+      "key": "NATURE_RUNE",
+      "tier": "elite",
+      "task": "Craft a nature rune.",
+      "skills": [
+        {
+          "skill": "Runecraft",
+          "level": 44
+        }
+      ],
+      "otherRequirements": "{{NA|None}}",
+      "items": "[[Nature talisman]]/[[Nature tiara]]/[[Catalytic tiara]]/[[Hat of the Eye]]{{efn|name=catalytic|attuned to catalytic tiara}} (not needed if using [[Abyss]]), [[pure essence]]\n'''<u>''Note''</u>''''': Attempting to complete this step by accessing the Nature Altar through [[Guardians of the Rift]] aswell as Crafting a Nature Rune via the [[Ourania Altar]] '''<u>will not work</u>'''.''",
+      "source": {
+        "page": "Sherlock/Elite",
+        "revision": 15399335,
+        "revision_time": "2026-11-11T15:46:49Z",
+        "file": "Sherlock__Elite.wiki",
+        "sha256": "91255401273747243570ededf56863741b7bab6c5839c8517c495c3b28cfa9de",
+        "url": "https://oldschool.runescape.wiki/w/Sherlock/Elite"
+      }
+    },
+    {
+      "key": "SUPER_DEFENCE",
+      "tier": "elite",
+      "task": "Create a super defence potion.",
+      "skills": [
+        {
+          "skill": "Herblore",
+          "level": 66
+        }
+      ],
+      "otherRequirements": "{{NA|None}}",
+      "items": "[[Cadantine potion (unf)]], [[white berries]]",
+      "source": {
+        "page": "Sherlock/Elite",
+        "revision": 15399335,
+        "revision_time": "2026-11-11T15:46:49Z",
+        "file": "Sherlock__Elite.wiki",
+        "sha256": "91255401273747243570ededf56863741b7bab6c5839c8517c495c3b28cfa9de",
+        "url": "https://oldschool.runescape.wiki/w/Sherlock/Elite"
+      }
+    },
+    {
+      "key": "GREEN_DHIDE_BODY",
+      "tier": "elite",
+      "task": "Craft a green dragonhide body.",
+      "skills": [
+        {
+          "skill": "Crafting",
+          "level": 63
+        }
+      ],
+      "otherRequirements": "{{NA|None}}",
+      "items": "[[Needle]], [[thread]], 3 [[green dragon leather]]",
+      "source": {
+        "page": "Sherlock/Elite",
+        "revision": 15399335,
+        "revision_time": "2026-11-11T15:46:49Z",
+        "file": "Sherlock__Elite.wiki",
+        "sha256": "91255401273747243570ededf56863741b7bab6c5839c8517c495c3b28cfa9de",
+        "url": "https://oldschool.runescape.wiki/w/Sherlock/Elite"
+      }
+    },
+    {
+      "key": "YEW_LONGBOW",
+      "tier": "elite",
+      "task": "String a yew longbow.",
+      "skills": [
+        {
+          "skill": "Fletching",
+          "level": 70
+        }
+      ],
+      "otherRequirements": "{{NA|None}}",
+      "items": "[[Bow string]], and an [[Yew longbow (u)|Unstrung yew longbow]] or a [[Knife]] and [[yew logs]].\nAdding bow string to the unstrung yew longbow completes the challenge.",
+      "source": {
+        "page": "Sherlock/Elite",
+        "revision": 15399335,
+        "revision_time": "2026-11-11T15:46:49Z",
+        "file": "Sherlock__Elite.wiki",
+        "sha256": "91255401273747243570ededf56863741b7bab6c5839c8517c495c3b28cfa9de",
+        "url": "https://oldschool.runescape.wiki/w/Sherlock/Elite"
+      }
+    },
+    {
+      "key": "MITHRIL_ORE",
+      "tier": "elite",
+      "task": "Mine a mithril ore.",
+      "skills": [
+        {
+          "skill": "Mining",
+          "level": 55
+        }
+      ],
+      "otherRequirements": "{{NA|None}}",
+      "items": "A [[pickaxe]]",
+      "source": {
+        "page": "Sherlock/Elite",
+        "revision": 15399335,
+        "revision_time": "2026-11-11T15:46:49Z",
+        "file": "Sherlock__Elite.wiki",
+        "sha256": "91255401273747243570ededf56863741b7bab6c5839c8517c495c3b28cfa9de",
+        "url": "https://oldschool.runescape.wiki/w/Sherlock/Elite"
+      }
+    },
+    {
+      "key": "SHARK",
+      "tier": "elite",
+      "task": "Catch a raw shark.",
+      "skills": [
+        {
+          "skill": "Fishing",
+          "level": 76
+        }
+      ],
+      "otherRequirements": "{{NA|None}}",
+      "items": "[[Harpoon]] (if you cannot barbarian fish for them)<br />''Catching a [[big shark]] does not count''",
+      "source": {
+        "page": "Sherlock/Elite",
+        "revision": 15399335,
+        "revision_time": "2026-11-11T15:46:49Z",
+        "file": "Sherlock__Elite.wiki",
+        "sha256": "91255401273747243570ededf56863741b7bab6c5839c8517c495c3b28cfa9de",
+        "url": "https://oldschool.runescape.wiki/w/Sherlock/Elite"
+      }
+    },
+    {
+      "key": "YEW_LOG",
+      "tier": "elite",
+      "task": "Cut a yew log.",
+      "skills": [
+        {
+          "skill": "Woodcutting",
+          "level": 60
+        }
+      ],
+      "otherRequirements": "{{NA|None}}",
+      "items": "An [[axe]]",
+      "source": {
+        "page": "Sherlock/Elite",
+        "revision": 15399335,
+        "revision_time": "2026-11-11T15:46:49Z",
+        "file": "Sherlock__Elite.wiki",
+        "sha256": "91255401273747243570ededf56863741b7bab6c5839c8517c495c3b28cfa9de",
+        "url": "https://oldschool.runescape.wiki/w/Sherlock/Elite"
+      }
+    },
+    {
+      "key": "RUNE_MED_HELM",
+      "tier": "master",
+      "task": "Smith a runite med helm.",
+      "skills": [
+        {
+          "skill": "Smithing",
+          "level": 88
+        }
+      ],
+      "otherRequirements": "{{NA|None}}",
+      "items": "[[Hammer]], [[runite bar]]",
+      "source": {
+        "page": "Sherlock/Master",
+        "revision": 15375230,
+        "revision_time": "2026-10-18T17:47:07Z",
+        "file": "Sherlock__Master.wiki",
+        "sha256": "6a8f3304274149e897fa983ddd84b954d8306e79643cfbd42c563b07f9e0a087",
+        "url": "https://oldschool.runescape.wiki/w/Sherlock/Master"
+      }
+    },
+    {
+      "key": "NECHRYAEL_TOWER",
+      "tier": "master",
+      "task": "Slay a Nechryael in the Slayer Tower.",
+      "skills": [
+        {
+          "skill": "Slayer",
+          "level": 80
+        }
+      ],
+      "otherRequirements": "{{NA|None}}",
+      "items": "None",
+      "source": {
+        "page": "Sherlock/Master",
+        "revision": 15375230,
+        "revision_time": "2026-10-18T17:47:07Z",
+        "file": "Sherlock__Master.wiki",
+        "sha256": "6a8f3304274149e897fa983ddd84b954d8306e79643cfbd42c563b07f9e0a087",
+        "url": "https://oldschool.runescape.wiki/w/Sherlock/Master"
+      }
+    },
+    {
+      "key": "DRAGONSTONE_AMULET",
+      "tier": "master",
+      "task": "Create an unstrung dragonstone amulet at a furnace.",
+      "skills": [
+        {
+          "skill": "Crafting",
+          "level": 80
+        }
+      ],
+      "otherRequirements": "{{NA|None}}",
+      "items": "[[Gold bar]], [[dragonstone]], [[amulet mould]]",
+      "source": {
+        "page": "Sherlock/Master",
+        "revision": 15375230,
+        "revision_time": "2026-10-18T17:47:07Z",
+        "file": "Sherlock__Master.wiki",
+        "sha256": "6a8f3304274149e897fa983ddd84b954d8306e79643cfbd42c563b07f9e0a087",
+        "url": "https://oldschool.runescape.wiki/w/Sherlock/Master"
+      }
+    },
+    {
+      "key": "MAGIC_LOG",
+      "tier": "master",
+      "task": "Burn a magic log.",
+      "skills": [
+        {
+          "skill": "Firemaking",
+          "level": 75
+        }
+      ],
+      "otherRequirements": "{{NA|None}}",
+      "items": "[[Tinderbox]], [[magic logs]]",
+      "source": {
+        "page": "Sherlock/Master",
+        "revision": 15375230,
+        "revision_time": "2026-10-18T17:47:07Z",
+        "file": "Sherlock__Master.wiki",
+        "sha256": "6a8f3304274149e897fa983ddd84b954d8306e79643cfbd42c563b07f9e0a087",
+        "url": "https://oldschool.runescape.wiki/w/Sherlock/Master"
+      }
+    },
+    {
+      "key": "ARDOUGNE_GEM_STALL",
+      "tier": "master",
+      "task": "Steal a gem from the Ardougne market.",
+      "skills": [
+        {
+          "skill": "Thieving",
+          "level": 75
+        }
+      ],
+      "otherRequirements": "{{NA|None}}",
+      "items": "None",
+      "source": {
+        "page": "Sherlock/Master",
+        "revision": 15375230,
+        "revision_time": "2026-10-18T17:47:07Z",
+        "file": "Sherlock__Master.wiki",
+        "sha256": "6a8f3304274149e897fa983ddd84b954d8306e79643cfbd42c563b07f9e0a087",
+        "url": "https://oldschool.runescape.wiki/w/Sherlock/Master"
+      }
+    },
+    {
+      "key": "RUNE_DART",
+      "tier": "master",
+      "task": "Fletch a rune dart.",
+      "skills": [
+        {
+          "skill": "Fletching",
+          "level": 81
+        }
+      ],
+      "otherRequirements": "Partial completion of [[The Tourist Trap]]. [[File:Ironman chat badge.png]] Ironmen may need other high requirements to obtain a [[Rune dart tip]].",
+      "items": "[[Rune dart tip]], [[feather]]",
+      "source": {
+        "page": "Sherlock/Master",
+        "revision": 15375230,
+        "revision_time": "2026-10-18T17:47:07Z",
+        "file": "Sherlock__Master.wiki",
+        "sha256": "6a8f3304274149e897fa983ddd84b954d8306e79643cfbd42c563b07f9e0a087",
+        "url": "https://oldschool.runescape.wiki/w/Sherlock/Master"
+      }
+    }
+  ]
+}

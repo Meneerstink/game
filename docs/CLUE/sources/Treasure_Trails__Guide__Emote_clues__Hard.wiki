@@ -1,0 +1,116 @@
+<noinclude>{{Treasure Trails Guide Emote Clues Intro}}
+
+==Hard Emote clues==
+</noinclude>
+{| class="wikitable lighttable mw-collapsible" width="100%"
+! width="33% " |Clue
+! width="12%" |Items
+! width="40%" |Notes
+! width="15%" |Map
+|-
+|''[[Clue scroll (hard) - Beckon on the east coast of the Kharazi Jungle|Beckon on the east coast of the Kharazi Jungle. Beware of double agents!]]'' 
+''Equip any [[Stole|vestment stole]] and a [[heraldic rune shield]].''
+|{{plinkp|Rune_heraldic_armour#Kiteshield|pic=Rune shield (h1)}} {{plinkp|Stole|pic=Zamorak stole}}
+|Must have started [[Legends' Quest]]. Equipping the [[stole]] requires level 60 [[Prayer]]. The [[heraldic crest]] rune kiteshields do not work.
+'''''Note: An [[axe]] and [[machete]] are required to enter the [[Kharazi Jungle]], or players may also use two vines on either side of the jungle that require 79 [[Agility]].'''''
+|[[File:Emote clue - beckon east kharazi coast.png|150px]]
+|-
+|''[[Clue scroll (hard) - Blow a kiss between the tables in Shilo Village bank|Blow a kiss between the tables in Shilo Village bank. Beware of double agents!]]''
+''Equip a [[Mystic hat|blue mystic hat]], [[bone spear]] and [[rune platebody]].''
+|{{plinkp|Mystic hat}} {{plinkp|Bone spear}} {{plinkp|Rune platebody}}
+|[[Shilo Village (location)|Shilo Village]] is a village on [[Karamja]]. It is only accessible to players that have completed the [[Shilo Village]] quest. The [[Rune platebody (g)|gilded]] and [[Rune platebody (t)|trimmed]] versions of the rune platebody do not work.
+|[[File:Emote clue - kiss shilo village.png|150px]]
+|-
+|''[[Clue scroll (hard) - Blow a raspberry in the Fishing Guild bank|Blow a raspberry in the Fishing Guild bank. Beware of double agents!]]''
+''Equip an [[elemental shield]], [[blue d'hide chaps]] and a [[rune warhammer]].''
+|{{plinkp|Elemental shield}} {{plinkp|Blue d'hide chaps}} {{plinkp|Rune warhammer}}
+|Requires [[Elemental Workshop I]] and 68 fishing to enter the guild (boost allowed)
+|[[File:Emote clue - raspberry fishing guild bank.png|150px]]
+|-
+|''[[Clue scroll (hard) - Bow at the top of the lighthouse|Bow at the top of the lighthouse. Beware of double agents!]]''
+''Equip a [[blue d'hide body]], [[blue d'hide vambraces]] and no jewellery.''
+|{{plinkp|Blue d'hide body}} {{plinkp|Blue d'hide vambraces}}
+|Must have repaired the [[Lighthouse]] lighting mechanism in the [[Horror from the Deep]] quest to access. The [[fairy ring]] code {{fairycode|ALP}} teleports you right outside the Lighthouse.
+|[[File:Emote clue - bow lighthouse.png|150px]]
+|-
+|''[[Clue scroll (hard) - Cheer at the top of the agility pyramid|Cheer at the top of the agility pyramid. Beware of double agents!]]'' 
+''Equip a [[Mystic robe top|blue mystic robe top]], and any [[rune heraldic shield]].''
+|{{plinkp|Mystic robe top}} {{plinkp|Rune heraldic armour|pic=Rune shield (h1)}}
+|Requires 30 [[Agility]] to reach the top of the [[Agility Pyramid|pyramid]], 40 [[Magic]] and 40 [[Defence]] to equip items. The player-made [[heraldic crest]] rune kiteshields do not work. '''Only the blue [[mystic robe top]] works!'''
+|[[File:Emote clue - cheer agility pyramid top.png|150px]]
+|-
+|''[[Clue scroll (hard) - Dance at the cat-doored pyramid in Sophanem|Dance at the cat-doored pyramid in Sophanem. Beware of double agents!]]''
+''Equip a [[ring of life]], an [[Amulet of glory|uncharged amulet of glory]] and an [[Adamant 2h sword|adamant two-handed sword]].''
+|{{plinkp|Ring of life}} {{plinkp|Amulet of glory}} {{plinkp|Adamant 2h sword}}
+|Partial completion of [[Icthlarin's Little Helper]] required to access Sophanem. Your [[amulet of glory]] must be uncharged in order to work. [[Amulet of glory (t)]] does not work for this clue step.
+|[[File:Emote clue - dance pyramid sophanem.png|150px]]
+|-
+|''[[Clue scroll (hard) - Headbang at the exam centre|Headbang at the exam centre. Beware of double agents!]]''
+''Equip a [[mystic fire staff]], a [[diamond bracelet]] and [[rune boots]].''
+|{{plinkp|Mystic fire staff}} {{plinkp|Diamond bracelet}} {{plinkp|Rune boots}}
+|The Digsite [[Exam Centre]] is located just south of the [[Digsite]].
+|[[File:Emote clue - headbang exam centre.png|150px]]
+|-
+|''[[Clue scroll (hard) - Jig at Jiggig|Jig at Jiggig. Beware of double agents!]]''
+''Equip a [[rune spear]], [[rune platelegs]] and any [[rune heraldic helm]].''
+|{{plinkp|Rune spear}} {{plinkp|Rune platelegs}} {{plinkp|Rune heraldic armour#Full helm|pic=Rune helm (h1)}}
+|South of [[Castle Wars]], talk to the quest starter if you haven't started [[Zogre Flesh Eaters]], and he will grant you access to the location in [[Jiggig]]; you need to jig. The [[Rune platelegs (g)|gilded]] and [[Rune platelegs (t)|trimmed]] versions of the rune platelegs do not work. Poisoned versions of the Rune Spear do not work. 
+'''Note''': You need to complete [[Big Chompy Bird Hunting]] and [[Jungle Potion]] to start Zogre Flesh Eaters.
+|[[File:Emote clue - jig at jiggig.png|150px]]
+|-
+|[[Clue scroll (hard) - Laugh in Jokul's tent in the Mountain Camp|''Laugh in Jokul's tent in the Mountain Camp.'' ''Beware of double agents!'']] 
+''Equip a [[Rune full helm|rune full helmet]], [[blue d'hide chaps]] and a [[fire battlestaff]].''
+|{{plinkp|Rune full helm}} {{plinkp|Blue d'hide chaps}} {{plinkp|Fire battlestaff}}
+|
+Bring [[rope]] if you haven't completed the [[Mountain Daughter]] quest. Go up the top path, and use on the boulder ([[fairy ring]] code: {{fairycode|AJR}}).
+|[[File:Emote clue - laugh jokul's tent mountain camp.png|150px]]
+|-
+|''[[Clue scroll (hard) - Panic by the pilot on White Wolf Mountain|Panic by the pilot on White Wolf Mountain. Beware of double agents!]]''
+''Equip [[mithril platelegs]], a [[ring of life]], and a [[rune axe]].''
+|{{plinkp|Mithril platelegs}} {{plinkp|Ring of life}} {{plinkp|Rune axe}}
+|Panic by [[Captain Bleemadge]] on [[White Wolf Mountain]]. Be careful of the [[aggressive]] level 73 [[Big Wolf]].
+|[[File:Emote clue - panic white wolf mountain.png|150px]]
+|-
+|''[[Clue scroll (hard) - Panic in the heart of the Haunted Woods|Panic in the heart of the Haunted Woods. Beware of double agents!]]''
+''Have no items equipped when you do.''
+|Nothing
+|The location is east of the [[Fairy ring]] {{Fairycode|ALQ}} in the [[Haunted Woods]]. Players should be careful of the [[Feral Vampyre]]s summoned by the spider roaming around that area.
+|[[File:Emote clue - panic haunted woods.png|150px]]
+|-
+|''[[Clue scroll (hard) - Panic on the Wilderness volcano bridge|Panic on the Wilderness volcano bridge. Beware of double agents!]]''
+''Equip any [[headband]] and [[crozier]].''
+|{{plinkp|Headband|pic=White headband}} {{plinkp|Crozier|pic=Saradomin crozier}}
+|Required: {{SCP|Prayer|60}}
+The [[Blighted Volcano]] is located in the north-east corner of the [[Wilderness]]. Players should be cautious of [[player killers]] and dangerous monsters. A Clue Box may also be helpful.
+|[[File:Emote clue - panic wilderness volcano bridge.png|150px]]
+|-
+|''[[Clue scroll (hard) - Panic outside the Twilight Temple|Panic outside the Twilight Temple. Beware of double agents!]]''
+''Equip a [[rune longsword]], [[rune platebody]] and a [[rune plateskirt]].''
+|{{plinkp|Rune longsword}} {{plinkp|Rune platebody}} {{plinkp|Rune plateskirt}}
+|[[Twilight Temple]] is located in Varlamore, which is accessible upon completion of [[Children of the Sun]]. Beware of [[Twilight Emissaries]], ranging from level 34 to 117 (aggressive, multi-combat).
+|[[File:Emote clue - panic outside the Twlight Temple.png|150px]]
+|-
+|''[[Clue scroll (hard) - Salute in the banana plantation|Salute in the banana plantation. Beware of double agents!]]''
+''Equip a [[diamond ring]], [[amulet of power]], and nothing on your chest and legs.''
+|{{plinkp|Diamond ring}} {{plinkp|Amulet of power}}
+|Players can perform the emote near the [[STASH]] (if they have built one) within the [[Musa Point]] banana plantation.
+|[[File:Emote clue - salute banana plantation.png|150px]]
+|-
+|''[[Clue scroll (hard) - Salute in the centre of the mess hall|Salute in the centre of the mess hall. Beware of double agents!]] ''
+''Equip a [[rune halberd]], [[rune platebody]] and an [[amulet of strength]].''
+|{{plinkp|Rune halberd}} {{plinkp|Rune platebody}} {{plinkp|Amulet of strength}}
+|[[Kourend Castle Teleport]] teleports the player just north of the [[Mess]]. Salute in the centre of the kitchen rather than the dining room. 
+|[[File:Emote clue - salute mess hall.png|150px]]
+|-
+| ''[[Clue scroll (hard) - Shrug in the woods east of the Level 19 Wilderness Obelisk|Shrug in the woods east of the Level 19 Wilderness Obelisk. Beware of double agents!]]''
+''Equip rune platelegs, an [[iron platebody]] and [[blue d'hide vambraces]].''
+|{{plinkp|Rune platelegs}} {{plinkp|Iron platebody}} {{plinkp|Blue d'hide vambraces}}
+|Players should be cautious of [[player killers]].  The step location is in level 19 [[Wilderness]]. You can bring a teleport as it is below level 20 Wilderness; however, be wary of [[Tele Block]].
+|[[File:Emote clue - shrug east level 19 Wilderness Obelisk.png|width=150x150]]
+|-
+|''[[Clue scroll (hard) - Yawn in the rogues' general store|Yawn in the rogues' general store. Beware of double agents!]]''
+''Equip an [[Adamant sq shield|adamant square shield]], [[Blue d'hide vambraces|blue dragon vambraces]] and a [[rune pickaxe]].''
+|{{plinkp|Adamant sq shield}} {{plinkp|Blue d'hide vambraces}} {{plinkp|Rune pickaxe}}
+|[[Bandit Camp (Wilderness)|Bandit Camp]] [[Bandit Duty Free|general store]] in level 23 [[Wilderness]], north of the [[Dark Warriors' Fortress]]. The [[burning amulet]] can take you there, but be wary of [[player killers]] and level 130 [[Bandit]]s.
+|[[File:Emote clue - yawn rogues general store.png|150px]]
+|}

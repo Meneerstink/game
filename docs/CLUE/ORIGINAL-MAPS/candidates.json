@@ -1,0 +1,478 @@
+[
+  {
+    "key": "Clue scroll (easy) - North of Falador.",
+    "candidateGroup": 337,
+    "image": "Map clue Falador statue crossroads.png",
+    "guideFile": "Treasure_Trails__Guide__Maps__Easy.wiki",
+    "guideSha256": "24157a342f108516cf831801ae0d38cea877f96c4e9564daf8c98fb10b49b827",
+    "guideImageListed": true,
+    "sourceFile": "Clue_scroll_(easy)_-_North_of_Falador..wiki",
+    "sourceSha256": "042ebbb6cec92c14af7be06995dce04c6baa89f4776306318a973c0f3d4ea038",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_North_of_Falador.",
+    "clueId": 112,
+    "dbRow": 2234,
+    "dbSha256": "083cabe09054be3a669a7aefa485b0075a716e3639428a301e6452e236614324",
+    "point": [
+      [
+        2970,
+        3415,
+        0
+      ]
+    ],
+    "action": "DIG",
+    "imageUrl": "https://oldschool.runescape.wiki/images/Map_clue_Falador_statue_crossroads.png?01058",
+    "imageSha256": "128e072833279325260dab524d04a42fdfecaf8914292cc3f65ffaaaef6d0244",
+    "imageTimestamp": "2014-06-27T07:34:23Z",
+    "downloadedBytes": 7733,
+    "wikiBytes": 15957,
+    "imageFormat": "PNG"
+  },
+  {
+    "key": "Clue scroll (hard) - South-east of the Wilderness Agility Course",
+    "candidateGroup": 338,
+    "image": "Map clue small volcanoes.png",
+    "guideFile": "Treasure_Trails__Guide__Maps__Hard.wiki",
+    "guideSha256": "c0ac6da3ebe4bf7d6920c2dec2cbaa49a5ba132e89979612522fbc933a3edbc7",
+    "guideImageListed": true,
+    "sourceFile": "Clue_scroll_(hard)_-_South-east_of_the_Wilderness_Agility_Course.wiki",
+    "sourceSha256": "7adda851eb750bcf917fe97cb752810a482b3bba564680ec03bd8a99227921dc",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_South-east_of_the_Wilderness_Agility_Course",
+    "clueId": 130,
+    "dbRow": 2252,
+    "dbSha256": "d030e7a7734a90fcff1eb9bc800f3f8fa303fd6adfbd81cddd38afd987022684",
+    "point": [
+      [
+        3021,
+        3912,
+        0
+      ]
+    ],
+    "action": "DIG",
+    "imageUrl": "https://oldschool.runescape.wiki/images/Map_clue_small_volcanoes.png?3e678",
+    "imageSha256": "15441fad840fc6ce4d142872991c4149b575437a41c1441ebdb18f99a460a053",
+    "imageTimestamp": "2013-05-30T21:51:24Z",
+    "downloadedBytes": 6677,
+    "wikiBytes": 10994,
+    "imageFormat": "PNG"
+  },
+  {
+    "key": "Clue scroll (hard) - South of the Legends' Guild",
+    "candidateGroup": 339,
+    "image": "Map clue Picnic tables.png",
+    "guideFile": "Treasure_Trails__Guide__Maps__Hard.wiki",
+    "guideSha256": "c0ac6da3ebe4bf7d6920c2dec2cbaa49a5ba132e89979612522fbc933a3edbc7",
+    "guideImageListed": true,
+    "sourceFile": "Clue_scroll_(hard)_-_South_of_the_Legends'_Guild.wiki",
+    "sourceSha256": "46f632cbe792592b40f5fd4b895a6099ac862fd78847abccb78969c3fd6aeca5",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_South_of_the_Legends%27_Guild",
+    "clueId": 131,
+    "dbRow": 2253,
+    "dbSha256": "7c2d8798591246833aba2532554a2d9d8eabb52de8e857989681b4d1092fb332",
+    "point": [
+      [
+        2722,
+        3338,
+        0
+      ]
+    ],
+    "action": "DIG",
+    "imageUrl": "https://oldschool.runescape.wiki/images/Map_clue_Picnic_tables.png?788d4",
+    "imageSha256": "7e9652963d36ec4b1010d2323ef82f52b5770915c900f8b6ac1dd89427d50f7e",
+    "imageTimestamp": "2014-07-22T19:58:12Z",
+    "downloadedBytes": 7128,
+    "wikiBytes": 14985,
+    "imageFormat": "PNG"
+  },
+  {
+    "key": "Clue scroll (medium) - Miscellania",
+    "candidateGroup": 340,
+    "image": "Map clue Miscellania.png",
+    "guideFile": "Treasure_Trails__Guide__Maps__Medium.wiki",
+    "guideSha256": "359e5bb1bb98cbc0a7aec31620d1a88ff0da180dd6831ddb35a3d8e7acd039f5",
+    "guideImageListed": true,
+    "sourceFile": "Clue_scroll_(medium)_-_Miscellania.wiki",
+    "sourceSha256": "cbed4ac0ebae3b70123cb59b2b3c4081235ebe0aeb5ff6c2e9809bc6ee8910a3",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Miscellania",
+    "clueId": 119,
+    "dbRow": 2241,
+    "dbSha256": "aa691385d77deacbbb38e819eb0480befc9b946707db6fdf6d01df44156417e0",
+    "point": [
+      [
+        2536,
+        3865,
+        0
+      ]
+    ],
+    "action": "DIG",
+    "imageUrl": "https://oldschool.runescape.wiki/images/Map_clue_Miscellania.png?ee5fc",
+    "imageSha256": "6574c41b89357649b883eb19d296109d792c55d89f86f9c99bb8a38a01e32055",
+    "imageTimestamp": "2013-10-26T04:39:59Z",
+    "downloadedBytes": 7050,
+    "wikiBytes": 11450,
+    "imageFormat": "PNG"
+  },
+  {
+    "key": "Clue scroll (medium) - Mort Myre Swamp",
+    "candidateGroup": 341,
+    "image": "Map clue Mort Myre.png",
+    "guideFile": "Treasure_Trails__Guide__Maps__Medium.wiki",
+    "guideSha256": "359e5bb1bb98cbc0a7aec31620d1a88ff0da180dd6831ddb35a3d8e7acd039f5",
+    "guideImageListed": true,
+    "sourceFile": "Clue_scroll_(medium)_-_Mort_Myre_Swamp.wiki",
+    "sourceSha256": "1962cf46d35a18f485b8d9859fa0ba5e8b62f750c36d09018b77f463f1e81c34",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Mort_Myre_Swamp",
+    "clueId": 120,
+    "dbRow": 2242,
+    "dbSha256": "fc16a44f6c73509c6947068e1219280434f2d39f088b9275272d6ec92615a784",
+    "point": [
+      [
+        3434,
+        3266,
+        0
+      ]
+    ],
+    "action": "DIG",
+    "imageUrl": "https://oldschool.runescape.wiki/images/Map_clue_Mort_Myre.png?8ad0b",
+    "imageSha256": "84195869118dd3b6d189516194765dc8ef571d5ee82a5bb56da027e08d86068f",
+    "imageTimestamp": "2013-03-17T17:37:03Z",
+    "downloadedBytes": 9827,
+    "wikiBytes": 14615,
+    "imageFormat": "PNG"
+  },
+  {
+    "key": "Clue scroll (medium) - At the entrance to the Ourania Cave",
+    "candidateGroup": 342,
+    "image": "Map clue Lava chaos altar.png",
+    "guideFile": "Treasure_Trails__Guide__Maps__Medium.wiki",
+    "guideSha256": "359e5bb1bb98cbc0a7aec31620d1a88ff0da180dd6831ddb35a3d8e7acd039f5",
+    "guideImageListed": true,
+    "sourceFile": "Clue_scroll_(medium)_-_At_the_entrance_to_the_Ourania_Cave.wiki",
+    "sourceSha256": "865a1380fc379a31700ddfc8de29743b4e48968c00545aedd8cc109b1b6d3db7",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_At_the_entrance_to_the_Ourania_Cave",
+    "clueId": 121,
+    "dbRow": 2243,
+    "dbSha256": "2711bc7a077d64f4901f5d59962c5b05f533607d9f5678d59a9d395e481b907e",
+    "point": [
+      [
+        2454,
+        3230,
+        0
+      ]
+    ],
+    "action": "DIG",
+    "imageUrl": "https://oldschool.runescape.wiki/images/Map_clue_Lava_chaos_altar.png?2c13c",
+    "imageSha256": "b9a9321e46b519a8d1cd8c6ebf691c18ba401dc34c118da6f29a537dfc545997",
+    "imageTimestamp": "2014-06-27T07:14:37Z",
+    "downloadedBytes": 6920,
+    "wikiBytes": 14517,
+    "imageFormat": "PNG"
+  },
+  {
+    "key": "Clue scroll (medium) - South-east of the Lighthouse",
+    "candidateGroup": 343,
+    "image": "Map clue Lighthouse peninsula.png",
+    "guideFile": "Treasure_Trails__Guide__Maps__Medium.wiki",
+    "guideSha256": "359e5bb1bb98cbc0a7aec31620d1a88ff0da180dd6831ddb35a3d8e7acd039f5",
+    "guideImageListed": true,
+    "sourceFile": "Clue_scroll_(medium)_-_South-east_of_the_Lighthouse.wiki",
+    "sourceSha256": "e6216cea32ba0db44903b12e74570a959091804b13ac4fc324b87d9d8d1ca3f3",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_South-east_of_the_Lighthouse",
+    "clueId": 122,
+    "dbRow": 2244,
+    "dbSha256": "0ce277ca6f64ea1f82362940222e7b1f130a2bcecd99fc773e5168cd82fad5c1",
+    "point": [
+      [
+        2578,
+        3597,
+        0
+      ]
+    ],
+    "action": "DIG",
+    "imageUrl": "https://oldschool.runescape.wiki/images/Map_clue_Lighthouse_peninsula.png?eaa10",
+    "imageSha256": "613c94cf347db5dcbbb919e14438af732104c0ac5e206d5eb3b75fd4dce270c0",
+    "imageTimestamp": "2014-02-11T18:33:12Z",
+    "downloadedBytes": 8053,
+    "wikiBytes": 12658,
+    "imageFormat": "PNG"
+  },
+  {
+    "key": "Clue scroll (medium) - Between Seers' Village and Rellekka",
+    "candidateGroup": 344,
+    "image": "Map clue North Seers.png",
+    "guideFile": "Treasure_Trails__Guide__Maps__Medium.wiki",
+    "guideSha256": "359e5bb1bb98cbc0a7aec31620d1a88ff0da180dd6831ddb35a3d8e7acd039f5",
+    "guideImageListed": true,
+    "sourceFile": "Clue_scroll_(medium)_-_Between_Seers'_Village_and_Rellekka.wiki",
+    "sourceSha256": "0da840aec88209a52f51fb89e63d1c3f846896ef0bd46cf2e52cc6dca67188a4",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Between_Seers%27_Village_and_Rellekka",
+    "clueId": 123,
+    "dbRow": 2245,
+    "dbSha256": "a52c45c4323fabd3852fa850e8e292fb4c7ec4014d30c0d1949b67cd6c7bc49a",
+    "point": [
+      [
+        2667,
+        3562,
+        0
+      ]
+    ],
+    "action": "DIG",
+    "imageUrl": "https://oldschool.runescape.wiki/images/Map_clue_North_Seers.png?18cb0",
+    "imageSha256": "358a4923ea7f8de3334b9d29890bdeedd66e70efb7a3557fb17b02bad76c526d",
+    "imageTimestamp": "2014-07-09T22:09:17Z",
+    "downloadedBytes": 7944,
+    "wikiBytes": 16981,
+    "imageFormat": "PNG"
+  },
+  {
+    "key": "Clue scroll (easy) - West of the Champions' Guild",
+    "candidateGroup": 346,
+    "image": "Map clue Champions guild.png",
+    "guideFile": "Treasure_Trails__Guide__Maps__Easy.wiki",
+    "guideSha256": "24157a342f108516cf831801ae0d38cea877f96c4e9564daf8c98fb10b49b827",
+    "guideImageListed": true,
+    "sourceFile": "Clue_scroll_(easy)_-_West_of_the_Champions'_Guild.wiki",
+    "sourceSha256": "8a5f2159f8347f622c537916e4385e135381b91e98811bfa1369832e46d2e56a",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_West_of_the_Champions%27_Guild",
+    "clueId": 107,
+    "dbRow": 2229,
+    "dbSha256": "ea02781f4f358ed20a4d9d15c97668ebc4ea9d09f072f2480a9ce2e8af07605e",
+    "point": [
+      [
+        3166,
+        3361,
+        0
+      ]
+    ],
+    "action": "DIG",
+    "imageUrl": "https://oldschool.runescape.wiki/images/Map_clue_Champions_guild.png?3bdf1",
+    "imageSha256": "1c9bea96d22d54a5736e3559369a374ed2c655d9c2d8903abcb17ba1bb271311",
+    "imageTimestamp": "2014-06-25T23:28:42Z",
+    "downloadedBytes": 7275,
+    "wikiBytes": 15498,
+    "imageFormat": "PNG"
+  },
+  {
+    "key": "Clue scroll (easy) - South-east Varrock mine",
+    "candidateGroup": 347,
+    "image": "Map clue South-eastern Varrock Mine.png",
+    "guideFile": "Treasure_Trails__Guide__Maps__Easy.wiki",
+    "guideSha256": "24157a342f108516cf831801ae0d38cea877f96c4e9564daf8c98fb10b49b827",
+    "guideImageListed": true,
+    "sourceFile": "Clue_scroll_(easy)_-_South-east_Varrock_mine.wiki",
+    "sourceSha256": "f8aef7d6f7e6d02ecd646f28665ad590686fbc21db7e3fb47307b037f4258c69",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_South-east_Varrock_mine",
+    "clueId": 108,
+    "dbRow": 2230,
+    "dbSha256": "15727c151fe6a3c0600469e99420df23dd3e7d2987da80cb3252bb092b64c26a",
+    "point": [
+      [
+        3290,
+        3373,
+        0
+      ]
+    ],
+    "action": "DIG",
+    "imageUrl": "https://oldschool.runescape.wiki/images/Map_clue_South-eastern_Varrock_Mine.png?f0802",
+    "imageSha256": "c0f50ad20ffffd2b03501ec9481a38a9dcc3cecded12038c8c7c505e7e5e7644",
+    "imageTimestamp": "2013-11-11T00:01:43Z",
+    "downloadedBytes": 12497,
+    "wikiBytes": 32809,
+    "imageFormat": "PNG"
+  },
+  {
+    "key": "Clue scroll (medium) - To the east of the Ranging guild",
+    "candidateGroup": 349,
+    "image": "Map clue Ranging Guild.png",
+    "guideFile": "Treasure_Trails__Guide__Maps__Medium.wiki",
+    "guideSha256": "359e5bb1bb98cbc0a7aec31620d1a88ff0da180dd6831ddb35a3d8e7acd039f5",
+    "guideImageListed": false,
+    "sourceFile": "Clue_scroll_(medium)_-_To_the_east_of_the_Ranging_guild.wiki",
+    "sourceSha256": "91863fce7972d8b9bfe3ed1c13a7f444ac59f801ef30d2a313e60b690007c89e",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_To_the_east_of_the_Ranging_guild",
+    "clueId": 124,
+    "dbRow": 2246,
+    "dbSha256": "4cf9af961c5e2a9f269a85733f9d739ca04b52b377aae3eeff41b73549413662",
+    "point": [
+      [
+        2702,
+        3429,
+        0
+      ]
+    ],
+    "action": "DIG",
+    "imageUrl": "https://oldschool.runescape.wiki/images/Map_clue_Ranging_Guild.png?33472",
+    "imageSha256": "dc6755ce63e8e55f371aa11db27d8cd877c363dd98fd896bef2ad4cd82a36b4a",
+    "imageTimestamp": "2021-08-13T15:13:30Z",
+    "downloadedBytes": 7191,
+    "wikiBytes": 21825,
+    "imageFormat": "PNG"
+  },
+  {
+    "key": "Clue scroll (medium) - West of the Crafting Guild",
+    "candidateGroup": 352,
+    "image": "Map clue hobgoblin peninsula.png",
+    "guideFile": "Treasure_Trails__Guide__Maps__Medium.wiki",
+    "guideSha256": "359e5bb1bb98cbc0a7aec31620d1a88ff0da180dd6831ddb35a3d8e7acd039f5",
+    "guideImageListed": true,
+    "sourceFile": "Clue_scroll_(medium)_-_West_of_the_Crafting_Guild.wiki",
+    "sourceSha256": "d0c5ad715cdecbbfc5ae76bc3bff5c9e1e30993ecd7f84c52d5d93074c21bc35",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_West_of_the_Crafting_Guild",
+    "clueId": 114,
+    "dbRow": 2236,
+    "dbSha256": "cbb4206dbe2d03c748b651a4bb1ea41186af5b7f2f38321bfc4ca7c03ffa0912",
+    "point": [
+      [
+        2907,
+        3295,
+        0
+      ]
+    ],
+    "action": "DIG",
+    "imageUrl": "https://oldschool.runescape.wiki/images/Map_clue_hobgoblin_peninsula.png?aba92",
+    "imageSha256": "545099186b8c859e5d3c93aadf274663ee9c62e81cbc44cb9ff72bd9ff1da7f8",
+    "imageTimestamp": "2014-06-27T09:30:25Z",
+    "downloadedBytes": 7731,
+    "wikiBytes": 16385,
+    "imageFormat": "PNG"
+  },
+  {
+    "key": "Clue scroll (medium) - The crate in McGrubor's Wood",
+    "candidateGroup": 355,
+    "image": "Map clue McGrubors.png",
+    "guideFile": "Treasure_Trails__Guide__Maps__Medium.wiki",
+    "guideSha256": "359e5bb1bb98cbc0a7aec31620d1a88ff0da180dd6831ddb35a3d8e7acd039f5",
+    "guideImageListed": true,
+    "sourceFile": "Clue_scroll_(medium)_-_The_crate_in_McGrubor's_Wood.wiki",
+    "sourceSha256": "d8a31f7a110dc2f5361807855415c3cdda27617681645359508f32cddc67df18",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_The_crate_in_McGrubor%27s_Wood",
+    "clueId": 115,
+    "dbRow": 2237,
+    "dbSha256": "b4e7b6010e0611ad9af984ba5be55aa45e923b7cefa859c2c3611fb98e1f37a8",
+    "point": [
+      [
+        2658,
+        3488,
+        0
+      ]
+    ],
+    "action": "SEARCH",
+    "imageUrl": "https://oldschool.runescape.wiki/images/Map_clue_McGrubors.png?0a25a",
+    "imageSha256": "45444756404684ed08c7e6fe39f6794219c5243886cccb386edb7e8f8141f312",
+    "imageTimestamp": "2014-06-27T10:02:37Z",
+    "downloadedBytes": 7606,
+    "wikiBytes": 15223,
+    "imageFormat": "PNG"
+  },
+  {
+    "key": "Clue scroll (hard) - In the western section of West Ardougne",
+    "candidateGroup": 357,
+    "image": "Map clue West Ardougne.png",
+    "guideFile": "Treasure_Trails__Guide__Maps__Hard.wiki",
+    "guideSha256": "c0ac6da3ebe4bf7d6920c2dec2cbaa49a5ba132e89979612522fbc933a3edbc7",
+    "guideImageListed": true,
+    "sourceFile": "Clue_scroll_(hard)_-_In_the_western_section_of_West_Ardougne.wiki",
+    "sourceSha256": "56d20159ae790721c0fb7c68b87ffb64b76cf76bfe409ca3b13ba553986fe44c",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_In_the_western_section_of_West_Ardougne",
+    "clueId": 127,
+    "dbRow": 2249,
+    "dbSha256": "de47911d88f252b6fa0c4c576deee71e3f43179a7bfc6f048e1455a2da0cc161",
+    "point": [
+      [
+        2488,
+        3308,
+        0
+      ]
+    ],
+    "action": "DIG",
+    "imageUrl": "https://oldschool.runescape.wiki/images/Map_clue_West_Ardougne.png?2caea",
+    "imageSha256": "441412947429785aa806d97c33dd54e10add398bd103226e8bbb41c01c6165ee",
+    "imageTimestamp": "2014-07-10T16:06:14Z",
+    "downloadedBytes": 6294,
+    "wikiBytes": 13042,
+    "imageFormat": "PNG"
+  },
+  {
+    "key": "Clue scroll (hard) - In a crate by the stairs to the Observatory Dungeon",
+    "candidateGroup": 358,
+    "image": "Map clue observatory.png",
+    "guideFile": "Treasure_Trails__Guide__Maps__Hard.wiki",
+    "guideSha256": "c0ac6da3ebe4bf7d6920c2dec2cbaa49a5ba132e89979612522fbc933a3edbc7",
+    "guideImageListed": true,
+    "sourceFile": "Clue_scroll_(hard)_-_In_a_crate_by_the_stairs_to_the_Observatory_Dungeon.wiki",
+    "sourceSha256": "a975ec676cda6d08ea638685126debfefdbeb54b5d070b844de35643d74b3f46",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_In_a_crate_by_the_stairs_to_the_Observatory_Dungeon",
+    "clueId": 128,
+    "dbRow": 2250,
+    "dbSha256": "5f9bef011700ee68e5e4540eeef36abd2aa245b1d57a3f1c69d27c1e7f3cc8ff",
+    "point": [
+      [
+        2457,
+        3182,
+        0
+      ]
+    ],
+    "action": "SEARCH",
+    "imageUrl": "https://oldschool.runescape.wiki/images/Map_clue_observatory.png?c6867",
+    "imageSha256": "385daee178947d7ef1ca79ce83906368db48b53885785f44baae2199f992290f",
+    "imageTimestamp": "2013-05-31T14:09:49Z",
+    "downloadedBytes": 6718,
+    "wikiBytes": 10975,
+    "imageFormat": "PNG"
+  },
+  {
+    "key": "Clue scroll (hard) - In a crate at the Dark Warriors' Fortress",
+    "candidateGroup": 359,
+    "image": "Map clue Dark Warriors' Fortress.png",
+    "guideFile": "Treasure_Trails__Guide__Maps__Hard.wiki",
+    "guideSha256": "c0ac6da3ebe4bf7d6920c2dec2cbaa49a5ba132e89979612522fbc933a3edbc7",
+    "guideImageListed": true,
+    "sourceFile": "Clue_scroll_(hard)_-_In_a_crate_at_the_Dark_Warriors'_Fortress.wiki",
+    "sourceSha256": "3b4224941b0664ff71cfce9cd7a40f208c1dbc24ae59e3bfeff4d4ef2c306a0a",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_In_a_crate_at_the_Dark_Warriors%27_Fortress",
+    "clueId": 129,
+    "dbRow": 2251,
+    "dbSha256": "e199264acfee535952674a63ba8783c9aa307d9c4b0f620d2ab603ee3fa711ce",
+    "point": [
+      [
+        3026,
+        3628,
+        0
+      ]
+    ],
+    "action": "SEARCH",
+    "imageUrl": "https://oldschool.runescape.wiki/images/Map_clue_Dark_Warriors%27_Fortress.png?d27c0",
+    "imageSha256": "3cdb261ca5468b8dc4ac2c489e06c2625b4af2572384675d4e563e639ba709a7",
+    "imageTimestamp": "2014-01-07T00:37:01Z",
+    "downloadedBytes": 7433,
+    "wikiBytes": 11836,
+    "imageFormat": "PNG"
+  },
+  {
+    "key": "Clue scroll (medium) - The crate west of the Clock Tower",
+    "candidateGroup": 361,
+    "image": "Map clue Clocktower.png",
+    "guideFile": "Treasure_Trails__Guide__Maps__Medium.wiki",
+    "guideSha256": "359e5bb1bb98cbc0a7aec31620d1a88ff0da180dd6831ddb35a3d8e7acd039f5",
+    "guideImageListed": true,
+    "sourceFile": "Clue_scroll_(medium)_-_The_crate_west_of_the_Clock_Tower.wiki",
+    "sourceSha256": "f886e858b8f679e0ef021865a37538e019bf690e21fc04044d5107684eb21efc",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_The_crate_west_of_the_Clock_Tower",
+    "clueId": 117,
+    "dbRow": 2239,
+    "dbSha256": "2450329cdb7808dd566a5b33c4c2c6fb5fadd160e26b1590b665774a0bcf1278",
+    "point": [
+      [
+        2565,
+        3248,
+        0
+      ]
+    ],
+    "action": "SEARCH",
+    "imageUrl": "https://oldschool.runescape.wiki/images/Map_clue_Clocktower.png?7fd42",
+    "imageSha256": "dd80d6ee3f96cea5f1bc472b0fa570175447403073cf4e2144c5c037052f1d83",
+    "imageTimestamp": "2014-07-02T23:20:53Z",
+    "downloadedBytes": 7622,
+    "wikiBytes": 15878,
+    "imageFormat": "PNG"
+  }
+]

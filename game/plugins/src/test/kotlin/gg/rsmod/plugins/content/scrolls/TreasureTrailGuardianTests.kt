@@ -1,0 +1,236 @@
+package gg.rsmod.plugins.content.scrolls
+
+import gg.rsmod.game.fs.DefinitionSet
+import gg.rsmod.game.fs.def.ItemDef
+import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.World
+import gg.rsmod.game.model.container.ContainerStackType
+import gg.rsmod.game.model.container.ItemContainer
+import gg.rsmod.game.model.entity.Npc
+import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.item.Item
+import gg.rsmod.game.model.item.ItemAttribute
+import io.mockk.*
+import kotlin.test.*
+
+class TreasureTrailGuardianTests {
+    private val accounts = mutableListOf<Player>()
+    private val emote get() = TreasureTrailStepCatalogue.current.rows.first {
+        it.tier == ClueScrollTier.HARD && it.challenge == TreasureTrailStepCatalogue.Challenge.DOUBLE_AGENT }
+    private val coordinate get() = TreasureTrailStepCatalogue.current.rows.first {
+        it.tier == ClueScrollTier.HARD && it.challenge == TreasureTrailStepCatalogue.Challenge.GUARD }
+    @BeforeTest fun setup() = mockkObject(ClueScrollManager)
+    @AfterTest fun cleanup() { accounts.forEach(TreasureTrailGuardians::remove); unmockkAll() }
+    private fun account(row: TreasureTrailStepCatalogue.Step, progress: Int = 1): Pair<Player, TreasureTrailSourceStep> {
+        val defs = mockk<DefinitionSet>()
+        every { defs.get(ItemDef::class.java, any()) } answers { ItemDef(secondArg()).also { it.stacks=false } }
+        val world = mockk<World>(relaxed=true)
+        every { world.definitions } returns defs
+        val p = mockk<Player>(relaxed=true)
+        every { p.world } returns world
+        every { p.isOnline } returns true
+        every { p.inventory } returns ItemContainer(defs,28,ContainerStackType.NORMAL)
+        every { p.equipment } returns ItemContainer(defs,14,ContainerStackType.NORMAL)
+        every { p.tile } returns row.points.single()
+        val step = TreasureTrailSourceStep(row)
+        val scroll = Item(row.tier.scrollId).putAttr(ItemAttribute.CLUE_STEP_KEY,row.id)
+        p.inventory[0]=scroll
+        row.equipment.forEachIndexed { index, group -> p.equipment[index]=Item(group.first { it.local()!=null }.local()!!) }
+        every { ClueScrollManager.activeStep(p,any()) } returns null
+        every { ClueScrollManager.activeStep(p,row.tier) } returns step
+        every { ClueScrollManager.progress(p,row.tier) } returns progress
+        every { ClueScrollManager.advance(p,row.tier,scroll,progress,emptyList()) } returns true
+        accounts += p
+        return p to step
+    }
+    private fun actor(p: Player): Npc {
+        val world=p.world
+        return mockk<Npc>(relaxed=true).also {
+            every { it.world } returns world
+            every { it.isSpawned() } returns true
+            every { it.isDead() } returns false
+        }
+    }
+    private fun attempt(p: Player, step: TreasureTrailSourceStep, npc: Npc) =
+        TreasureTrailGuardians.attempt(p,step,if(step.source.action==TreasureTrailStepCatalogue.Action.EMOTE) listOf(1778) else step.source.guards,
+            component=step.source.firstEmote) { _, _ -> listOf(npc) }
+
+    @Test fun `first emote is exempt but tier and wilderness still select the correct later agent`() {
+        assertEquals(1777,TreasureTrailGuardians.agentSource(ClueScrollTier.HARD,true))
+        assertEquals(1778,TreasureTrailGuardians.agentSource(ClueScrollTier.HARD,false))
+        assertEquals(7312,TreasureTrailGuardians.agentSource(ClueScrollTier.MASTER,true))
+        assertEquals(7312,TreasureTrailGuardians.agentSource(ClueScrollTier.MASTER,false))
+        listOf(ClueScrollTier.EASY,ClueScrollTier.MEDIUM,ClueScrollTier.ELITE).forEach {
+            assertNull(TreasureTrailGuardians.agentSource(it,true))
+        }
+        val (p,step)=account(emote,0)
+        assertEquals(TreasureTrailGuardians.Result.READY,TreasureTrailGuardians.attempt(p,step,emptyList(),component=emote.firstEmote) { _, _ -> error("first step must not spawn") })
+        assertNull(TreasureTrailGuardians.session(p))
+        verify(exactly=0) { ClueScrollManager.advance(any(),any(),any(),any(),any()) }
+    }
+
+    @Test fun `wrong emote plane tile attire and wilderness variant cannot start a fight`() {
+        val (p,step)=account(emote)
+        val spawn={ _:Player, _:List<Int> -> error("invalid attempt cannot spawn") }
+        assertEquals(TreasureTrailGuardians.Result.UNHANDLED,TreasureTrailGuardians.attempt(p,step,listOf(1778),component=-1,spawn=spawn))
+        val at=p.tile
+        every { p.tile } returns Tile(at.x,at.z,1)
+        assertEquals(TreasureTrailGuardians.Result.UNHANDLED,TreasureTrailGuardians.attempt(p,step,listOf(1778),component=emote.firstEmote,spawn=spawn))
+        every { p.tile } returns at
+        val gear=p.equipment[0]; p.equipment[0]=null
+        assertEquals(TreasureTrailGuardians.Result.UNHANDLED,TreasureTrailGuardians.attempt(p,step,listOf(1778),component=emote.firstEmote,spawn=spawn))
+        p.equipment[0]=gear
+        assertEquals(TreasureTrailGuardians.Result.UNAVAILABLE,TreasureTrailGuardians.attempt(p,step,listOf(1778),wilderness=true,component=emote.firstEmote,spawn=spawn))
+    }
+
+    @Test fun `repeat emotes keep one agent and only its real death makes Uri ready once`() {
+        val (p,step)=account(emote); val npc=actor(p); var spawns=0; var uris=0
+        val spawn={ _:Player, _:List<Int> -> spawns++;listOf(npc) }
+        repeat(5) { assertEquals(TreasureTrailGuardians.Result.FIGHTING,TreasureTrailGuardians.attempt(p,step,listOf(1778),component=emote.firstEmote,spawn=spawn)) }
+        assertEquals(1,spawns)
+        assertFalse(TreasureTrailGuardians.killed(npc){_,_->uris++})
+        assertFalse(TreasureTrailGuardians.killed(actor(p)))
+        every { npc.isDead() } returns true
+        assertTrue(TreasureTrailGuardians.killed(npc){ owner, clue -> assertSame(p,owner);assertSame(step,clue);uris++ })
+        assertFalse(TreasureTrailGuardians.killed(npc){_,_->uris++})
+        assertEquals(1,uris)
+        assertTrue(TreasureTrailGuardians.ready(p,step))
+        assertEquals(TreasureTrailGuardians.Result.READY,attempt(p,step,npc))
+        verify(exactly=0) { ClueScrollManager.advance(any(),any(),any(),any(),any()) }
+    }
+
+    @Test fun `combat gear is allowed but clue gear must be worn again to summon Uri`() {
+        val (p,step)=account(emote);val npc=actor(p)
+        attempt(p,step,npc)
+        val gear=p.equipment[0];p.equipment[0]=Item(995)
+        every { npc.isDead() } returns true
+        assertTrue(TreasureTrailGuardians.killed(npc){_,_->error("combat attire cannot summon Uri")})
+        assertEquals(TreasureTrailGuardians.Result.UNHANDLED,attempt(p,step,npc))
+        p.equipment[0]=gear
+        assertEquals(TreasureTrailGuardians.Result.READY,attempt(p,step,npc))
+    }
+
+    @Test fun `coordinate needs a second correct dig and failed casket transaction retains its victory`() {
+        val (p,step)=account(coordinate);val npc=actor(p);val scroll=p.inventory[0]!!
+        assertEquals(TreasureTrailGuardians.Result.FIGHTING,attempt(p,step,npc))
+        assertFalse(TreasureTrailGuardians.dig(p,step))
+        every { npc.isDead() } returns true
+        assertTrue(TreasureTrailGuardians.killed(npc))
+        every { p.tile } returns Tile(coordinate.points.single().x+1,coordinate.points.single().z)
+        assertFalse(TreasureTrailGuardians.dig(p,step))
+        every { p.tile } returns coordinate.points.single()
+        every { ClueScrollManager.advance(p,step.tier,scroll,1,emptyList()) } returns false
+        assertFalse(TreasureTrailGuardians.dig(p,step))
+        assertTrue(TreasureTrailGuardians.ready(p,step))
+        every { ClueScrollManager.advance(p,step.tier,scroll,1,emptyList()) } answers { p.inventory[0]=null;true }
+        assertTrue(TreasureTrailGuardians.dig(p,step))
+        assertFalse(TreasureTrailGuardians.dig(p,step))
+    }
+
+    @Test fun `three wizards require all distinct real deaths and reject a missing or repeated actor`() {
+        val row=coordinate.copy(guards=listOf(7307,7308,7309));val (p,step)=account(row)
+        val actors=List(3){actor(p)}
+        assertEquals(TreasureTrailGuardians.Result.UNAVAILABLE,TreasureTrailGuardians.attempt(p,step,row.guards){_,_->listOf(actors[0],actors[0],actors[1])})
+        assertEquals(TreasureTrailGuardians.Result.FIGHTING,TreasureTrailGuardians.attempt(p,step,row.guards){_,_->actors})
+        actors.forEachIndexed { i,npc ->
+            every { npc.isDead() } returns true
+            assertTrue(TreasureTrailGuardians.killed(npc))
+            assertFalse(TreasureTrailGuardians.killed(npc))
+            assertEquals(i==2,TreasureTrailGuardians.ready(p,step))
+        }
+    }
+
+    @Test fun `bank replacement death logout and another account never inherit an ongoing fight`() {
+        val (p,step)=account(coordinate);val (other,otherStep)=account(coordinate);val npc=actor(p)
+        attempt(p,step,npc)
+        assertFalse(TreasureTrailGuardians.ready(other,otherStep))
+        val held=p.inventory[0]!!;p.inventory[0]=Item(held)
+        every { npc.isDead() } returns true
+        assertFalse(TreasureTrailGuardians.killed(npc))
+        assertFalse(TreasureTrailGuardians.ready(p,step))
+        p.inventory[0]=held
+        val next=actor(p);assertEquals(TreasureTrailGuardians.Result.FIGHTING,attempt(p,step,next))
+        val nextWorld=next.world
+        p.inventory[0]=null
+        TreasureTrailGuardians.cycle()
+        assertNull(TreasureTrailGuardians.session(p))
+        verify { nextWorld.remove(next) }
+        p.inventory[0]=held
+        val last=actor(p);assertEquals(TreasureTrailGuardians.Result.FIGHTING,attempt(p,step,last))
+        val lastWorld=last.world
+        every { p.isOnline } returns false
+        TreasureTrailGuardians.cycle()
+        assertNull(TreasureTrailGuardians.session(p))
+        verify { lastWorld.remove(last) }
+    }
+
+    @Test fun `a despawn is never a kill and source choices cannot introduce an unlisted guardian`() {
+        val row=coordinate.copy(guards=listOf(6587,6588),chooseGuard=true);val (p,step)=account(row);val npc=actor(p)
+        assertEquals(TreasureTrailGuardians.Result.UNAVAILABLE,TreasureTrailGuardians.attempt(p,step,listOf(7310)){_,_->error("unlisted")})
+        assertEquals(TreasureTrailGuardians.Result.UNAVAILABLE,TreasureTrailGuardians.attempt(p,step,row.guards){_,_->error("both alternatives")})
+        assertEquals(TreasureTrailGuardians.Result.FIGHTING,TreasureTrailGuardians.attempt(p,step,listOf(6588)){_,_->listOf(npc)})
+        every { npc.isSpawned() } returns false
+        TreasureTrailGuardians.cycle()
+        assertFalse(TreasureTrailGuardians.ready(p,step))
+        assertNull(TreasureTrailGuardians.session(p))
+    }
+
+    @Test fun `completed fight survives item serialization but is scoped to the same step and progress`() {
+        val (p,step)=account(coordinate);val npc=actor(p)
+        attempt(p,step,npc);every { npc.isDead() } returns true
+        assertTrue(TreasureTrailGuardians.killed(npc))
+        TreasureTrailGuardians.remove(p)
+        p.inventory[0]=Item(p.inventory[0]!!)
+        assertTrue(TreasureTrailGuardians.ready(p,step))
+        every { ClueScrollManager.progress(p,step.tier) } returns 2
+        assertFalse(TreasureTrailGuardians.ready(p,step))
+        every { ClueScrollManager.progress(p,step.tier) } returns 1
+        p.inventory[0]!!.putAttr(ItemAttribute.CLUE_GUARD_KEY,step.persistenceId+1)
+        assertFalse(TreasureTrailGuardians.ready(p,step))
+    }
+
+    @Test fun `guardian victory preserves a separately selected hot cold target or skill task`() {
+        val (p,step)=account(coordinate);val npc=actor(p);val scroll=p.inventory[0]!!
+        scroll.putAttr(ItemAttribute.CLUE_TASK_KEY,77).putAttr(ItemAttribute.CLUE_TASK_COMPLETE,9)
+        attempt(p,step,npc);every { npc.isDead() } returns true
+        assertTrue(TreasureTrailGuardians.killed(npc))
+        assertEquals(77,scroll.getAttr(ItemAttribute.CLUE_TASK_KEY))
+        assertEquals(9,scroll.getAttr(ItemAttribute.CLUE_TASK_COMPLETE))
+        assertEquals(step.persistenceId,scroll.getAttr(ItemAttribute.CLUE_GUARD_KEY))
+        assertEquals(2,scroll.getAttr(ItemAttribute.CLUE_GUARD_PROGRESS))
+        assertTrue(TreasureTrailGuardians.ready(p,step))
+    }
+
+    @Test fun `recursive spawn cannot publish a second encounter before the original returns`() {
+        val (p,step)=account(coordinate);val npc=actor(p)
+        assertEquals(TreasureTrailGuardians.Result.FIGHTING,TreasureTrailGuardians.attempt(p,step,coordinate.guards){_,_->
+            assertEquals(TreasureTrailGuardians.Result.UNAVAILABLE,
+                TreasureTrailGuardians.attempt(p,step,coordinate.guards){_,_->error("recursive spawn")})
+            listOf(npc)
+        })
+        assertSame(npc,TreasureTrailGuardians.session(p)?.actors?.single())
+    }
+
+    @Test fun `failed callback validation removes every unique actor and allows a clean retry`() {
+        for (mutation in listOf("bank","logout","death","despawn","foreignWorld")) {
+            val (p,step)=account(coordinate);val npc=actor(p);val held=p.inventory[0]!!
+            assertEquals(TreasureTrailGuardians.Result.UNAVAILABLE,
+                TreasureTrailGuardians.attempt(p,step,coordinate.guards){_,_->
+                    when(mutation) {
+                        "bank" -> p.inventory[0]=null
+                        "logout" -> every { p.isOnline } returns false
+                        "death" -> every { p.isDead() } returns true
+                        "despawn" -> every { npc.isSpawned() } returns false
+                        else -> every { npc.world } returns mockk<World>(relaxed=true)
+                    }
+                    listOf(npc)
+                })
+            assertNull(TreasureTrailGuardians.session(p))
+            assertNull(held.getAttr(ItemAttribute.CLUE_GUARD_KEY))
+            p.inventory[0]=held
+            every { p.isOnline } returns true
+            every { p.isDead() } returns false
+            assertEquals(TreasureTrailGuardians.Result.FIGHTING,attempt(p,step,actor(p)))
+        }
+    }
+}

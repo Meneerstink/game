@@ -1,0 +1,28 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 23151
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 812
+|text = The cryptic reveals where to search:<br><br>Search the chest in Fred the Farmer's bedroom.
+|notes = Search the chest by [[Fred the Farmer]]'s bed in his house north-west of [[Lumbridge]].
+|map = {{Map|3185,3274|mtype=pin|plane=0|mapID=-1}}
+}}

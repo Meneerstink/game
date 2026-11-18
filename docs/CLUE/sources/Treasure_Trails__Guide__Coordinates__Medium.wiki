@@ -1,0 +1,410 @@
+<noinclude>{{Treasure Trails Guide Coordinates Intro}}
+
+==Medium Coordinates==
+</noinclude><span id=200></span>{{Coordinates
+|coords = 00 degrees 05 minutes south,<br/>
+01 degrees 13 minutes east
+|req = No
+|fight = No
+|map = 00.05S 01.13E map
+|image = Coordinate clue 00.05S 01.13E.png
+|notes = West of the [[Tree Gnome Village (location)|Tree Gnome Village]], almost directly south of the [[Farming/Patch locations#Fruit Tree patches|fruit tree patch]]. On the east side of the river from the [[Observatory]].
+|level = 2}}
+{{Coordinates
+|coords = 00 degrees 13 minutes south,<br/>
+13 degrees 58 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 00.13S 13.58E.png
+|map = 00.13S 13.58E map
+|notes = On [[Karamja]], west of the general store in the [[free-to-play]] section of the island, in the middle of the two small lakes. Close to [[Amulet of glory]] teleport.
+|level = 2}}
+{{Coordinates
+|coords = 00 degrees 18 minutes south,<br/>
+09 degrees 28 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 00.18S 09.28E.png
+|map = 00.18S 09.28E map
+|notes = South-west of [[Brimhaven]] at the [[North Brimhaven mine|gold mine]] near the entrance to the [[Brimhaven Dungeon]]. Dig one space south of the gold rock in front of the dungeon door.
+|level=2}}
+{{Coordinates
+|coords = 00 degrees 20 minutes south,<br/>
+23 degrees 15 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 00.20S 23.15E.png
+|map = 00.20S 23.15E map
+|notes = South of the [[Water Altar]] ruins.
+|level=2}}
+{{Coordinates
+|coords = 00 degrees 30 minutes north,<br/>
+24 degrees 16 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 00.30N 24.16E.png
+|map = 00.30N 24.16E map
+|notes = North-east of the [[Zanaris]] shed entrance located in the [[Lumbridge Swamp]].
+|level = 2}}
+{{Coordinates
+|coords = 00 degrees 31 minutes south,<br/>
+17 degrees 43 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 00.31S 17.43E.png
+|map = 00.31S 17.43E map
+|notes = South of [[Port Sarim]], just south of the ladder to the [[Asgarnian Ice Dungeon]], on the edge of the cliff. Close to [[fairy ring]] {{fairycode|AIQ}}.
+|level=2}}
+<span id=201></span>{{Coordinates
+|coords = 01 degrees 18 minutes south,<br/>
+14 degrees 15 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 01.18S 14.15E.png
+|map = 01.18S 14.15E map
+|notes = Across the water from [[Musa Point]], on the western seaweed spawn next to the river. [[Tiadeche]] from the [[Tai Bwo Wannai Trio]] quest can be found to the east. Use [[fairy ring]] code {{fairycode|DKP}} or the [[gnome glider]] transport to [[Karamja]].
+|level = 2}}
+{{Coordinates
+|coords = 01 degrees 26 minutes north,<br/>
+08 degrees 01 minutes east
+|req = {{SCP|Agility|10}}
+|fight = No
+|image = Coordinate clue 01.26N 08.01E.png
+|map = 01.26N 08.01E map
+|notes = In the centre of [[Moss Giant Island]] west of [[Brimhaven]]. The island can be found by swinging on the rope swings west of [[Brimhaven]].
+|level=2}}
+{{Coordinates
+|coords = 01 degrees 33 minutes south,<br/>
+24 degrees 24 minutes west
+|req = Completion of [[Children of the Sun]]
+|fight = No
+|image = Coordinate clue 01.33S 24.24W.png
+|map = 01.33S 24.24W map
+|notes = East the [[Civitas illa Fortis]] western bank, dig just south of the statue of Emperor Imafore.
+|level=2}}
+{{Coordinates
+|coords = 01 degrees 35 minutes south,<br/>
+07 degrees 28 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 01.35S 07.28E.png
+|map = 01.35S 07.28E map
+|notes = On the peninsula to [[Hazelmere]]'s house, directly east of [[Yanille]]. Use the [[fairy ring]] code {{Fairycode|CLS}} and run north. Dig between a boulder, a leafy tree, and a creeping plant.
+|level = 2}}
+<span id=202></span>{{Coordinates
+|coords = 02 degrees 16 minutes north, <br/>
+12 degrees 07 minutes east
+|req = Partial completion of [[Dragon Slayer I]]
+|fight = No
+|image = Coordinate clue 02.16N 12.07E.png
+|map = 02.16N 12.07E map
+|notes = Southern coast of [[Crandor]].
+|level = 2}}
+{{Coordinates
+|coords = 02 degrees 43 minutes south, <br/>
+33 degrees 26 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 02.43S 33.26E.png
+|map = 02.43S 33.26E map
+|notes = Directly north of the [[teak]] tree south-east of the [[Ruins of Uzer]]. Can be reached relatively easily via [[fairy ring]] {{fairycode|DLQ}} in [[Nardah]] by running north and then east following the map border.
+|level = 2}}
+{{Coordinates
+|coords = 02 degrees 48 minutes north,<br/>
+22 degrees 30 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 02.48N 22.30E.png
+|map = 02.48N 22.30E map
+|notes = Just west of the trapdoor leading to the [[H.A.M. Hideout]], dig 2 spaces east and 1 south of the nearest tree to the building.
+|level= 2
+}}
+{{Coordinates
+|coords = 02 degrees 50 minutes north,<br/>
+06 degrees 20 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 02.50N 06.20E.png
+|map = 02.50N 06.20E map
+|notes = South of [[Ardougne Zoo]], on a small cape. Can be reached easily via {{fairycode|DJP}} next to the [[Tower of Life (building)|Tower of Life]] or the [[Ardougne cloak 1|Ardougne cloak]] teleport to the [[Ardougne Monastery|monastery]].
+|level = 2}}
+<span id=203></span>{{Coordinates
+|coords = 03 degrees 07 minutes south,<br/>
+03 degrees 41 minutes west
+|req = No
+|fight = No
+|image = Coordinate clue 03.07S 03.41W.png
+|map = 03.07S 03.41W map
+|notes = Just south-west of [[Castle Wars]], [[fairy ring]] code {{Fairycode|BKP}}.
+|level=2}}
+{{Coordinates
+|coords = 03 degrees 35 minutes south,<br/>
+13 degrees 35 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 03.35S 13.35E.png
+|map = 03.35S 13.35E map
+|notes = On [[Karamja]], north of the [[Nature Altar]].
+|level=2}}
+<span id=204></span>{{Coordinates
+|coords = 04 degrees 00 minutes south,<br/>
+12 degrees 46 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 04.00S 12.46E.png
+|map = 04.00S 12.46E map
+|notes = In the centre of the [[Karamja Jungle mine]], north of [[Shilo Village (location)|Shilo Village]]. Dig two spaces north-west of the [[mithril rocks]]. You can use [[fairy ring]] code {{Fairycode|CKR}} and run north-east.
+|level=2}}
+{{Coordinates
+|coords = 04 degrees 13 minutes north,<br/>
+12 degrees 45 minutes east
+|req = Partial completion of [[Dragon Slayer I]]
+|fight = No
+|image = Coordinate clue 04.13N 12.45E.png
+|map = 04.13N 12.45E map
+|notes = North side of [[Crandor]]. [[King Scorpion]]s can be [[aggressive]] to low levelled players.
+|level=2}}
+<span id=205></span>{{Coordinates
+|coords = 05 degrees 20 minutes south,<br/>
+04 degrees 28 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 05.20S 04.28E.png
+|map = 05.20S 04.28E map
+|notes = [[Feldip Hills]], south-east of [[Gu'Tanoth]] and north of [[fairy ring]] code {{Fairycode|AKS}}.
+|level=2}}
+{{Coordinates
+|coords = 05 degrees 43 minutes north,<br/>
+23 degrees 05 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 05.43N 23.05E.png
+|map = 05.43N 23.05E map
+|notes = Just south of the [[Champions' Guild]], opposite side of the [[River Lum]] in [[Lumbridge]]
+|level = 2}}
+<span id=206></span>{{Coordinates
+|coords = 06 degrees 31 minutes north,<br/>
+01 degrees 46 minutes west
+|req = No
+|fight = No
+|image = Coordinate clue 06.31N 01.46W.png
+|map = 06.31N 01.46W map
+|notes = Travel south-west of the [[Tree Gnome Stronghold]], and you will come across three ponds. Dig in between the two eastern ponds. Easily reached by teleporting with the [[Necklace of passage]] to the [[Outpost]].
+|level=2}}
+{{Coordinates
+|coords = 06 degrees 41 minutes north,<br/>
+27 degrees 15 minutes east
+|image = Coordinate clue 06.41N 27.15E.png
+|map = 06.41N 27.15E map
+|req = No
+|fight = No
+|notes = Dig on the hill north-west of the [[Exam Centre]].
+|level = 2}}
+{{Coordinates
+|coords = 06 degrees 58 minutes north,<br/>
+21 degrees 16 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 06.58N 21.16E.png
+|map = 06.58N 21.16E map
+|notes = Located at the north-east fence outside of [[Draynor Manor]], on the southern side of the [[River Lum]].
+|level = 2}}
+<span id=207></span>{{Coordinates
+|coords = 07 degrees 05 minutes north,<br/>
+30 degrees 56 minutes east
+|req = Priest in Peril (to enter Canifis)
+|fight = No
+|image = Coordinate clue 07.05N 30.56E.png
+|map = 07.05N 30.56E map
+|notes = In [[Mort Myre Swamp]], north of the [[Nature Grotto]]. Next pond south of the two most western [[fishing spots]]. Dig west of a rotting swamp tree. Note that there are [[ghast]]s in the swamp, so be sure to bring some [[druid pouch]]es. One can use fairy ring {{Fairycode|BKR}} and run south-west.
+|level=2}}
+{{Coordinates
+|coords = 07 degrees 33 minutes north,<br/>
+15 degrees 00 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 07.33N 15.00E.png
+|map = 07.33N 15.00E map
+|notes = South-east of [[Taverley]], on the peninsula where the [[Lady of the Lake]] wanders around. Dig north of the non-examinable bush on the western part of the peninsula.
+|level=2}}
+<span id=208></span>{{Coordinates
+|coords = 08 degrees 11 minutes south,<br/>
+04 degrees 48 minutes east
+|req = Spade
+|fight = No
+|image = Coordinate clue 08.11S 15.48E.png
+|map = 08.11S 15.48E map
+|notes = South-east edge of [[Feldip Hills]], by the [[crimson swift]]s. South-east of [[fairy ring]] {{fairycode|AKS}}.
+|level=2
+}}
+{{Coordinates
+|coords = 08 degrees 33 minutes north,<br/>
+01 degrees 39 minutes west
+|req = No
+|fight = No
+|image = Coordinate clue 08.33N 01.39W.png
+|map = 08.33N 01.39W map
+|notes = At [[Tree Gnome Stronghold]], in the south-western section there is a bridge, and a pen containing [[terrorbird]]s. Open the gate in the east of the pen and go to the edge of the river as far east as possible and dig there.
+|level=2}}
+<span id=209></span>{{Coordinates
+|coords = 09 degrees 33 minutes north,<br/>
+02 degrees 15 minutes east
+|req = Started [[Waterfall Quest]]
+Rope
+|fight = no
+|image = Coordinate clue 09.33N 02.15E.png
+|notes = Go to the [[Baxtorian Falls]], board the log raft, use a rope with the rock to get to the second island with the dead tree. Dig north of the dead tree.
+|map = 09.33N 02.15E map
+|level=2}}
+{{Coordinates
+|coords = 09 degrees 35 minutes north,<br/>
+01 degrees 50 minutes west
+|req = No
+|fight = No
+|image = Coordinate Clue 09.35N 01.50W.png
+|map = 09.35N 01.50W map
+|notes = This is on the west side of the river in the [[Gnome Stronghold]]. Walk north of the [[terrorbird]] pen and dig right above the rock.
+|level=2}}
+{{Coordinates
+|coords = 09 degrees 48 minutes north, <br/>
+17 degrees 39 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 09.48N 17.39E.png
+|map = 09.48N 17.39E map
+|notes = [[Ice Mountain]], located north of [[Barbarian Village]]. The [[lasser teleport]] teleport you very close to the spot.
+|level = 2}}
+<span id=210></span>{{Coordinates
+|coords = 10 degrees 45 minutes north,<br/>
+04 degrees 31 minutes east
+|req = Recommended:
+20 Agility for Shortcut
+|fight = No
+|image = Coordinate clue 10.45N 04.31E.png
+|map = 10.45N 04.31E map
+|notes = By the shore line north of the [[Coal Trucks]].
+|level = 2
+}}
+<span id=211></span>{{Coordinates
+|coords = 11 degrees 03 minutes north,<br/>
+31 degrees 20 minutes east
+|req = Completion of [[Priest in Peril]]
+|fight = No
+|image = Coordinate clue 11.03N 31.20E.png
+|map = 11.03N 31.20E map
+|notes = South of the big roots that are found east of the path to the [[Slayer Tower]]. North of the [[fairy ring]] code {{fairycode|CKS}}. Also close to the Slayer Tower teleport of the [[slayer ring]].
+|level = 2}}
+{{Coordinates
+|coords = 11 degrees 05 minutes north,<br/>
+00 degrees 45 minutes west
+|req = No
+|fight = No
+|image = Coordinate clue 11.05N 00.45W.png
+|map = 11.05N 00.45W map
+|notes = In the swamp located in the north-west corner of the [[Tree Gnome Stronghold]], west of the [[Grand Tree]], directly south of the [[tortoise]] pen.
+|level = 2}}
+{{Coordinates
+|coords = 11 degrees 18 minutes north,<br/>
+30 degrees 54 minutes east
+|req = Completion of [[Priest in Peril]].
+|fight = No
+|image = Coordinate clue 11.18N 30.54E.png
+|map = 11.18N 30.54E map
+|notes = On the path to the [[Slayer Tower]], just before the entrance. Easily reached by teleporting with [[fairy ring]] code {{fairycode|CKS}} or the Slayer Tower teleport of the [[slayer ring]].
+|level = 2}}
+{{Coordinates
+|coords = 11 degrees 33 minutes north,<br/>
+02 degrees 24 minutes west
+|req = No
+|fight = No
+|image = Coordinate clue 11.33N 02.24W.png
+|map = 11.33N 02.24W map
+|notes = North-east of [[Eagles' Peak (location)|Eagles' Peak]]. Dig on the eastern side of the fence just slightly south of the coniferous tree. Easily reached by teleporting with the [[fairy rings]] with code {{fairycode|AKQ}}.
+|level = 2}}
+{{Coordinates
+|coords = 11 degrees 41 minutes north,<br/>
+14 degrees 58 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 11.41N 14.58E.png
+|map = 11.41N 14.58E map
+|notes = Immediately north of a table in [[Burthorpe]] located east of the pub and west of [[Turael]]'s house.
+|level = 2}}
+<span id=212></span>{{Coordinates
+|coords = 12 degrees 28 minutes north,<br/>
+34 degrees 37 minutes east
+|req = [[Priest in Peril]]
+|fight = No
+|image = Coordinate clue 12.28N 34.37E.png
+|map = 12.28N 34.37E map
+|notes = In the castle grounds of [[Fenkenstrain's Castle]] in [[Morytania]]. Dig two steps north of the northernmost door.
+|level = 2}}
+{{Coordinates
+|coords = 12 degrees 39 minutes north,<br/>
+30 degrees 07 minutes west
+|req = No
+|image = Coordinate clue 12.39N 30.07W.png
+|notes = Dig in the [[Graveyard of Heroes|graveyard]] just south of the [[History and Hearsay]] teleport location found in [[Kharedst's memoirs]] or the [[Book of the Dead]]
+|map = 12.39N 30.07W map
+|fight = No
+|level = 2}}
+
+<span id=214></span>
+{{Coordinates
+|coords = 14 degrees 54 minutes north,<br/>
+9 degrees 13 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 14.54N 09.13E.png
+|map = 14.54N 09.13E map
+|notes = Two paces west of the [[Swaying tree]], located east of [[Rellekka]]. Easily reached by using the [[fairy ring]] code {{fairycode|AJR}}.
+|level=2}}
+<span id=215></span>{{Coordinates
+|coords = 15 degrees 22 minutes north,<br/>
+07 degrees 31 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 15.22N 07.31E.png
+|notes = In [[Pontak]]'s garden in south-eastern [[Rellekka]], between the cabbages and the potatoes. Easily reached by teleporting with the [[lyre]] or [[Fremennik sea boots]].
+|map = 15.22N 07.31E map
+|level = 2}}
+<span id=216></span><span id=217></span>
+{{Coordinates
+|coords = 17 degrees 39 minutes north,<br/>
+37 degrees 16 minutes west
+|req = 45 [[Farming]]
+|fight = No
+|image = Coordinate clue 17.39N 37.16W.png
+|notes = Inside the [[Farming Guild]], close to the entrance. Dig next to the western patch of marigolds.
+|map = 17.39N 37.16W map
+|level = 2}}
+<span id=218></span><span id=219></span><span id=220></span><span id=221></span><span id=222></span>
+{{Coordinates
+|coords = 22 degrees 07 minutes south,<br/>
+23 degrees 13 minutes east
+|req = Partial Completion of the [[Troubled Tortugans|Troubled Tortugans]] quest
+|fight = No
+|image = Coordinate clue 22.07S 23.13E.png
+|map = 22.07S 23.13E map
+|notes = At the centre of [[the Great Conch]], just north east of [[fairy ring]] code {{Fairycode|CJQ}}.
+|level=2}}
+{{Coordinates
+|coords = 22 degrees 30 minutes north,<br/>
+03 degrees 01 minutes east
+|req = Completion of the [[The Fremennik Trials|Fremennik Trials]] quest
+|fight = No
+|image = Coordinate clue 22.30N 03.01E.png
+|map = 22.30N 03.01E map
+|notes = At the end of the path leading to the mining area on [[Miscellania]]. Accessible via [[fairy ring]] code {{Fairycode|CIP}} or teleporting with the [[Ring of wealth]] (if you have completed [[Throne of Miscellania]]).
+|level=2}}
+<span id=223></span>
+{{Coordinates
+|coords = 23 degrees 05 minutes north,<br/>
+41 degrees 22 minutes east
+|req = Completion of [[Bone Voyage]]
+|fight = No
+|image = Coordinate clue 23.05N 41.22E.png
+|map = 23.05N 41.22E map
+|notes = On the small island reachable by a small boat at the north-east end of the [[Mushroom Forest]], or by using the [[Zip line (Fossil Island)|zip line]] (requires 74 [[Agility]]) behind the [[Magic Mushtree]] at the [[House on the Hill]] ([[digsite pendant]] teleport to [[Fossil Island]]).
+|level=2}}
+<span id=224></span><span id=225></span>

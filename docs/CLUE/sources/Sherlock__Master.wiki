@@ -1,0 +1,143 @@
+<noinclude>{{Sync}}</noinclude>
+{| class="wikitable sortable lighttable qc-active"
+!Task
+!Skill(s) requirements
+!Other<br/>requirements
+!Items required
+|-
+|Equip an [[abyssal whip]] in front of the [[abyssal demon]]s of the [[Slayer Tower]].
+|{{SCP|Attack|70|sort=y}}
+|Completion of [[Priest in Peril]]
+|[[Abyssal whip]] ([[Frozen abyssal whip|frozen]], [[Volcanic abyssal whip|volcanic]], and [[abyssal tentacle]] also work, [[Abyssal whip (or)|shattered relics ornament kit]] notably does not work)
+|-
+|Smith a [[rune med helm|runite med helm]].
+|{{SCP|Smithing|88|sort=y}}
+|{{NA|None}}
+|[[Hammer]], [[runite bar]]
+|-
+|Teleport to a [[spirit tree]] you planted yourself.
+|{{SCP|Farming|83|sort=y}}
+|Completion of [[Tree Gnome Village]]
+|[[Spirit sapling]], [[spade]], [[trowel]], [[spade]]. A [[Spirit tree (Construction)|spirit tree]] planted in a [[superior garden]] will work as well.
+
+If the player has planted their overworld spirit tree in the [[Farming Guild]], 85 Farming is required if they are limited to one tree at a time.
+|-
+|Create a [[Barrows teleport (tablet)|Barrows teleport tablet]].
+|{{SCP|Magic|83|sort=y}}
+|Being on the [[Arceuus spellbook]]
+|[[Dark essence block]], 2 [[soul rune]]s, 2 [[law rune]]s, 1 [[blood rune]]
+|-
+|Slay a [[Nechryael]] in the [[Slayer Tower]].
+|{{SCP|Slayer|80|sort=y}}
+|{{NA|None}}
+|None
+|-
+|Kill the [[Spiritual mage|spiritual, magic and godly]] whilst representing their own god.
+|{{SCP|Slayer|83|sort=y}}
+|Completion of [[Troll Stronghold]] '''or''' {{SCP|Strength|60|link=yes}} '''or''' {{SCP|Agility|60|link=yes}}
+|Equipment to kill a [[spiritual mage]], and a god item aligned with that mage.
+|-
+|Create an [[Dragonstone amulet (u)|unstrung dragonstone amulet]] at a furnace.
+|{{SCP|Crafting|80|sort=y}}
+|{{NA|None}}
+|[[Gold bar]], [[dragonstone]], [[amulet mould]]
+|-
+|Burn a [[magic log]].
+|{{SCP|Firemaking|75|sort=y}}
+|{{NA|None}}
+|[[Tinderbox]], [[magic logs]]
+|-
+|Burn a [[redwood log]].
+|{{SCP|Firemaking|90|sort=y}}
+|{{NA|None}}
+|[[Tinderbox]], [[redwood logs]]
+|-
+|Catch a [[Tecu salamander (Hunter)|tecu salamander]].<ref>Can be an [[Immature tecu salamander]]</ref>
+|{{SCP|Hunter|79|sort=y}}
+|{{NA|None}}
+|[[Net trap (item)|Net trap]]
+|-
+|Complete a lap of the [[Rellekka Rooftop Course|Rellekka rooftop agility course]] whilst sporting the [[Graceful outfit|finest amount of grace]].
+|{{SCP|Agility|80|sort=y}}
+|{{NA|None}}
+|[[Graceful outfit]] (An [[Agility cape]] can be used as a substitute for the [[graceful cape]])
+|-
+|Mix an [[anti-venom]] potion.
+|{{SCP|Herblore|87|sort=y}}
+|{{NA|None}}
+|[[Antidote++]](1-4), 5-20 [[zulrah's scales]]
+|-
+|Mine a piece of [[runite ore]] whilst sporting the [[prospector kit|finest mining gear]].
+|{{SCP|Mining|85|sort=y}}
+|{{NA|None}}
+|A [[pickaxe]], [[prospector kit]] or [[Prospector kit (golden)|golden prospector kit]] (the [[Varrock armour 4]] can be used as a substitute for the [[prospector jacket]])<br />[[Blast Mine]] does ''not'' work for this challenge
+|-
+|Steal a gem from the [[Ardougne]] market.
+|{{SCP|Thieving|75|sort=y}}
+|{{NA|None}}
+|None
+|-
+|Pickpocket an [[elf]].
+|{{SCP|Thieving|85|sort=y}}
+|Started [[Mourning's End Part I]]
+|None
+|-
+|Bind a [[blood rune]] at the [[Blood Altar]].<br />''Either blood altar may be used.''
+|{{SCP|Runecraft|77|sort=y}}
+|Completion of [[Sins of the Father]] if not using [[Blood Altar (Kourend)|Kourend's Blood Altar]]
+|[[Dark essence fragments]] or [[pure essence|pure]]/[[daeyalt essence]]
+|-
+|Mix a [[ranging mix]] potion.
+|{{SCP|Herblore|80|sort=y}}
+|Completion of the [[Barbarian Training#Barbarian Herblore|herblore section]] of the [[Barbarian Training]] [[miniquest]]
+|[[Ranging potion (2)]], [[caviar]]
+|-
+|Fletch a [[rune dart]].
+|{{SCP|Fletching|81|sort=y}}
+|Partial completion of [[The Tourist Trap]]. [[File:Ironman chat badge.png]] Ironmen may need other high requirements to obtain a [[Rune dart tip]].
+|[[Rune dart tip]], [[feather]]
+|-
+|Cremate a set of [[fiyr remains]].
+|{{SCP|Firemaking|80|sort=y}}
+|Completion of [[Shades of Mort'ton]]
+|[[Magic pyre logs|Magic]] or [[Redwood pyre logs]], [[tinderbox]], [[fiyr remains]]
+|-
+|Dissect a [[sacred eel]].
+|{{SCP|Fishing|87|sort=y}}, {{SCP|Cooking|72}}
+|Partial completion of [[Regicide]]
+|[[Knife]], [[sacred eel]]
+|-
+|Kill a [[lizardman shaman]].
+|{{NA}}
+|{{NA|None}}
+|Combat equipment
+|-
+|Angle for an [[Anglerfish]] in your finest [[Angler's outfit|fishing gear]].
+|{{SCP|Fishing|82|sort=y}}
+|{{NA|None}}
+|[[Fishing rod]], [[sandworms]], [[angler's outfit|angler's]] or [[spirit angler's outfit]] 
+|-
+|Chop a [[redwood log]] whilst sporting the finest [[Lumberjack outfit|lumberjack gear]].
+|{{SCP|Woodcutting|90|sort=y}}
+|{{NA|None}}
+|An [[axe]], [[lumberjack outfit|lumberjack]] or [[forestry outfit]]
+Wearing a [[forestry kit]]/[[forestry basket]] with either outfit stored counts as long as no other item with a set effect is worn with it.
+|-
+|Craft a [[light orb]] in the [[Dorgesh-Kaan]] bank.
+|{{SCP|Crafting|87|sort=y}}
+|Completion of [[Death to the Dorgeshuun]]
+|[[Cave goblin wire]], and an [[Empty light orb]] or a [[Glassblowing pipe]] and [[molten glass]].
+Adding wire to the empty orb completes the challenge.
+|-
+|Kill a [[reanimated abyssal]].
+|{{SCP|Magic|90|sort=y}}, {{SCP|Slayer|85}}
+|{{NA|None}}
+|[[Ensouled abyssal head]], 4 [[soul rune]]s, 2 [[blood rune]]s, 4 [[nature rune]]s
+|-
+|Kill a [[Fiyr Shade|Fiyr shade]] inside Mort'tons [[Shade Catacombs|shade catacombs]].
+|{{SCP|Firemaking|65|sort=y}}
+|Completion of [[Shades of Mort'ton]]
+|Combat equipment, and a silver or gold [[Shade key]]. To obtain the key, one needs at least 65 firemaking to light [[Yew pyre logs]] or better in combination with [[Asyn remains]] or better.
+|}
+<references />
+[[Category:Treasure Trails]]

@@ -1,0 +1,342 @@
+{{External|rs}}
+{{Otheruses|the Slayer monster|other uses|Jelly (disambiguation)|the [[superior]] variant|Vitreous Jelly}}
+{{HasTask|Jellies}}
+{{Multi Infobox
+|text1 = Regular
+|item1 = 
+{{Infobox Monster
+|version1 = Regular
+|version2 = Grey
+|version3 = Tan
+|version4 = Olive
+|version5 = Dark
+|version6 = Green
+|name = Jelly
+|image1 = [[File:Jelly.png|250px]]
+|image2 = [[File:Jelly (grey).png|250px]]
+|image3 = [[File:Jelly (tan).png|250px]]
+|image4 = [[File:Jelly (olive).png|250px]]
+|image5 = [[File:Jelly (dark).png|250px]]
+|image6 = [[File:Jelly (green).png|250px]]
+|release = [[26 January]] [[2005]]
+|update = Slayer Skill
+|members = Yes
+|combat = 78
+|size = 1
+|examine1 = Looks scared to see me.
+|examine2 = Doesn't look so tough...
+|examine3 = Wibbly.
+|examine4 = There's always room for jelly.
+|examine5 = Needs cream.....
+|examine6 = Wobbly...
+|xpbonus = 0
+|max hit = 5
+|aggressive = No
+|poisonous = No
+|attack style = [[Magical melee]]
+|attack speed = 4
+|respawn = 15
+|slaylvl = 52
+|slayxp = 75
+|cat = Jellies
+|assignedby = krystilia,vannaka,chaeldar,konar, Mortimer
+|hitpoints = 75
+|att = 45
+|str = 45
+|def = 120
+|mage = 45
+|range = 1
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|elementalweaknesstype = Earth
+|elementalweaknesspercent = 35
+|poisonresistance = 0
+|venomresistance = 0
+|immunecannon = No
+|immunethrall = No
+|dropversion = Regular
+|id1 = 437
+|id2 = 438
+|id3 = 439
+|id4 = 440
+|id5 = 441
+|id6 = 442
+|leagueRegion = Fremennik
+}}
+|text2 = Wilderness Slayer Cave
+|item2 = 
+{{Infobox Monster
+|version1 = Regular (w)
+|version2 = Grey (w)
+|version3 = Tan (w)
+|version4 = Olive (w)
+|version5 = Dark (w)
+|name = Jelly
+|image1 = [[File:Jelly (Wilderness Slayer Cave).png|250px]]
+|image2 = [[File:Jelly (Wilderness Slayer Cave, grey).png|250px]]
+|image3 = [[File:Jelly (Wilderness Slayer Cave, tan).png|250px]]
+|image4 = [[File:Jelly (Wilderness Slayer Cave, olive).png|250px]]
+|image5 = [[File:Jelly (Wilderness Slayer Cave, dark).png|250px]]
+|release = [[3 February]] [[2022]]
+|update = Revenant Maledictus & Wilderness Changes
+|members = Yes
+|combat = 78
+|size = 1
+|examine1 = Looks scared to see me.
+|examine2 = Doesn't look so tough...
+|examine3 = Wibbly.
+|examine4 = There's always room for jelly.
+|examine5 = Needs cream.....
+|xpbonus = 0
+|max hit = 5
+|aggressive = No
+|poisonous = No
+|attack style = [[Magical melee]]
+|attack speed = 4
+|respawn = 15
+|slaylvl = 52
+|slayxp = 75
+|cat = Jellies
+|assignedby = krystilia,vannaka,chaeldar,Mortimer
+|hitpoints = 75
+|att = 45
+|str = 45
+|def = 120
+|mage = 45
+|range = 1
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|elementalweaknesstype = Earth
+|elementalweaknesspercent = 35
+|poisonresistance = 0
+|venomresistance = 0
+|immunecannon = Yes
+|immunethrall = No
+|dropversion = Wilderness Slayer Cave
+|id1 = 11241
+|id2 = 11242
+|id3 = 11243
+|id4 = 11244
+|id5 = 11245
+|leagueRegion = Wilderness
+}}
+}}
+[[File:Jelly icon.png|left]]
+'''Jellies''' are [[Slayer monsters]] found in the [[Fremennik Slayer Dungeon]] and [[Wilderness Slayer Cave]] that require a Slayer level of 52 to kill. They give 75 Slayer experience per kill and drop [[hard clue scroll]]s and [[steel weapon]]ry. Jellies and their variants are the only creatures to drop [[mithril boots]].
+
+They attack with magical acids that bypass physical defences{{CiteNPC|npc=Slayer Master|quote=Jellies are nasty cube-like gelatinous creatures which absorb everything they come across into themselves. Their magical acids bypass physical defences. |loc=|notes=|name=}} (a [[magic-based melee]] attack); therefore high [[magic defence]] armour, such as [[dragonhide]] is effective against their attacks. However, [[Protect from Melee]] will prevent all damage from them.
+
+In the Wilderness cave jellies may only be attacked while on a [[Slayer task]]. Here they can be [[safespot]]ted by using either side of the rockfall in the southern part of the cave, which the Jellies will not wander away from. It is also possible to [[safespot]] them by standing on the corner of the rocks in the western section of the chamber or from behind the stones in the hallway south of the jelly chamber.
+
+Stronger variants of jelly called [[warped jellies]] may be found in the [[Catacombs of Kourend]]. The similarly strong [[chilled jelly]] can be found in the [[Ruins of Tapoyauik]].
+
+==Locations==
+{{LocTableHead}}
+{{LocLine
+|name=Jelly
+|location = [[Fremennik Slayer Dungeon]] ({{Fairycode|AJR}})
+|levels = 78
+|members = Yes
+|mapID = 17
+|plane = 0
+|x:2699,y:10029|x:2701,y:10023|x:2701,y:10027|x:2703,y:10025|x:2703,y:10031|x:2704,y:10028|x:2706,y:10029|x:2708,y:10024|x:2708,y:10027|x:2711,y:10029
+|mtype = pin
+|dropversion = Regular
+|leagueRegion = fremennik
+}}
+{{LocLine
+|name=Jelly
+|location = [[Wilderness Slayer Cave]]
+|levels=78
+|members= Yes
+|mapID=26
+|plane=0
+|x:3429,y:10100|x:3435,y:10106|x:3434,y:10102|x:3426,y:10102|x:3430,y:10104|x:3427,y:10106|x:3433,y:10097|x:3424,y:10108|x:3439,y:10107|x:3433,y:10100|x:3433,y:10104|x:3427,y:10100|x:3425,y:10105|x:3432,y:10106
+|mtype= pin
+|dropversion = Wilderness Slayer Cave
+|leagueRegion=wilderness
+}}
+{{LocLine
+|name=Jelly
+|location = [[Ynysdail Cavern]]
+|levels = 78
+|members = Yes
+|mapID = -1
+|zoom = 3.0
+|x:2259,y:9877|x:2261,y:9877|x:2261,y:9880|x:2262,y:9875|x:2262,y:9879|x:2263,y:9882|x:2264,y:9878|x:2265,y:9875|x:2267,y:9880
+|mtype = pin
+|dropversion = Regular
+|leagueRegion = N/A
+}}
+{{LocTableBottom}}
+
+==Strategy==
+*Killing jellies is simple, and no particular strategy is required.
+*[[Melee armour|Metallic armours]] and other armours with low magic defence are not advised, as jellies use a magic-based melee attack. Dragonhide armour should be considered instead.
+*The best safespot to use is on either side of the rockfall in the northern part of the cave, although the jellies may need to be lured into position. There is also a safespot on the north wall near the hallway you enter the room from. The safespot may be difficult to use due to the jelly's unusual route mechanic. 
+*It is a good idea to bring [[High Level Alchemy]] spells for the drops.
+
+==Drops==
+===Regular===
+{{DropLogProject|kills=237836}}
+
+{| class="wikitable"
+! rowspan="2" |[[Konar quo Maten|Konar]] task
+! colspan="2" |Average drop value
+|-
+![[Grand Exchange|GE]]
+![[High Level Alchemy|HA]]
+|-
+|{{No}}
+|{{Coins|{{Average drop value|mob=Jelly#Regular|mobname=regular jelly|raw=y}}}}
+|{{Coins|{{Average drop value|mob=Jelly#Regular|mobname=regular jelly|alch=yes|raw=y}}}}
+|-
+|{{Yes}}
+|{{Coins|{{Average drop value|mob=Jelly#Regular|mobname=regular jelly|brimstone=yes|raw=y}}}}
+|{{Coins|{{Average drop value|mob=Jelly#Regular|mobname=regular jelly|brimstone=yes|alch=yes|raw=y}}}}
+|}
+
+====Weapons and armour====
+{{DropsTableHead|dropversion=Regular}}
+{{DropsLine|name=Steel battleaxe|quantity=1|rarity=11/128}}
+{{DropsLine|name=Steel 2h sword|quantity=1|rarity=7/128}}
+{{DropsLine|name=Steel axe|quantity=1|rarity=3/128}}
+{{DropsLine|name=Mithril kiteshield|quantity=1|rarity=2/128}}
+{{DropsLine|name=Mithril boots|quantity=1|rarity=1/128}}
+{{DropsLine|name=Rune full helm|quantity=1|rarity=1/128|raritynotes={{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/686843730532372480|date=12 January 2016|archiveurl=https://reldo.runescape.wiki/i/105171|archivedate=26 May 2020|quote=It's 1/128, so that's quite unlucky.}}}}
+{{DropsTableBottom}}
+
+====Coins====
+''The overall chance of rolling a coin drop is 88/128 with an average value of {{Coins|96}}.''
+{{DropsTableHead|dropversion=Regular}}
+{{DropsLine|name=Coins|quantity=102|rarity=39/128}}
+{{DropsLine|name=Coins|quantity=44|rarity=30/128}}
+{{DropsLine|name=Coins|quantity=220|rarity=10/128}}
+{{DropsLine|name=Coins|quantity=11|rarity=7/128}}
+{{DropsLine|name=Coins|quantity=460|rarity=2/128}}
+{{DropsTableBottom}}
+
+====Other====
+{{DropsTableHead|dropversion=Regular}}
+{{DropsLine|name=Chaos rune|quantity=15|rarity=5/128}}
+{{DropsLine|name=Death rune|quantity=5|rarity=3/128}}
+{{DropsLine|name=Gold bar|quantity=1|rarity=2/128}}
+{{DropsLine|name=Thread|quantity=10|rarity=1/128}}
+{{DropsTableBottom}}
+
+====Gem drop table====
+{{GemDropTable|4/128|chaostalisman=yes}}
+
+====Tertiary====
+{{DropsTableHead|dropversion=Regular}}
+{{DropsLineClue|type=hard|rarity=1/128|raritynotes={{CiteForum|author=Envision|url=https://reldo.runescape.wiki/i/108912|title=Drop Rates V2|postdate=29 July 2014|name=drop}}}}
+{{DropsLine|name=Brimstone key|quantity=1|rarity={{Brimstone rarity|78|bonus=yes}}|raritynotes=<ref group='d'>Brimstone keys are only dropped if killed on a [[Slayer task]] given by [[Konar quo Maten]].</ref>|gemw=No|leagueRegion=Fremennik&Kourend}}
+{{DropsTableBottom}}
+{{Reflist|group=d}}
+
+===Wilderness Slayer Cave drops===
+{{Average drop value|mob=Jelly#Wilderness Slayer Cave|mobname=jelly in the Wilderness Slayer Cave}}
+====Weapons and armour====
+{{DropsTableHead|dropversion=Wilderness Slayer Cave}}
+{{DropsLine|name=Adamant battleaxe|quantity=1|rarity=11/64}}
+{{DropsLine|name=Black 2h sword|quantity=1|rarity=5/64}}
+{{DropsLine|name=Adamant axe|quantity=1|rarity=3/64}}
+{{DropsLine|name=Adamant 2h sword|quantity=1|rarity=2/64}}
+{{DropsLine|name=Mithril boots|quantity=1|rarity=2/64}}
+{{DropsLine|name=Rune kiteshield|quantity=1|rarity=2/64}}
+{{DropsLine|name=Rune full helm|quantity=1|rarity=1/64}}
+{{DropsTableBottom}}
+
+====Runes====
+{{DropsTableHead|dropversion=Wilderness Slayer Cave}}
+{{DropsLine|name=Chaos rune|quantity=45|rarity=5/64}}
+{{DropsLine|name=Death rune|quantity=15|rarity=3/64}}
+{{DropsTableBottom}}
+
+====Other====
+{{DropsTableHead|dropversion=Wilderness Slayer Cave}}
+{{DropsLine|name=Coins|quantity=1000|rarity=21/64|gemw=No|approx=yes}}
+{{DropsLine|name=Gold bar|quantity=1|rarity=2/64}}
+{{DropsLine|name=Thread|quantity=10|rarity=1/64}}
+{{DropsTableBottom}}
+
+====Gem drop table====
+{{GemDropTable|5/64|chaostalisman=yes|dropversion=Wilderness Slayer Cave}}
+
+====Tertiary====
+{{DropsTableHead|dropversion=Wilderness Slayer Cave}}
+{{DropsLine|name=Looting bag|quantity=1|rarity=1/3|gemw=No}}
+{{DropsLineClue|type=hard|rarity=1/64|altrarity=1/32|raritynotes=<ref group=d>The hard clue scroll rarity changes to 1/32 if a [[ring of wealth (i)]] is worn.</ref>}}
+{{DropsTableBottom}}
+{{Reflist|group=d}}
+
+====Wilderness Slayer tertiary====
+{{WildernessSlayerDropTable|combat=78|hitpoints=75|revenant=yes|slayerbonus=yes|dropversion=Wilderness Slayer Cave}}
+
+====Wilderness Slayer Cave tertiary====
+{{WildernessSlayerCaveDropTable|76/100|dropversion=Wilderness Slayer Cave}}
+
+==Collection log==
+Jellies have a single [[collection log]] item.
+{{Sync}}
+{{Collection log list|cname1=Mithril boots}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 25 June 2025
+|update = Summer Sweep Up: Combat
+|change = Jellies now have a 35% elemental weakness to [[earth spells]].
+}}
+{{Subject changes
+|change = Duradel no longer assigns players Jelly tasks.
+|date = 10 September 2015
+|update = Slayer Assignment Rework
+}}
+{{Subject changes footer}}
+
+==Trivia==
+*Jellies were most likely inspired by the {{Wp|Gelatinous cube}} monster from the Dungeons & Dragons series; both monsters are composed of a substance in a form of a cube.
+*The examine text, "There's always room for jelly," is a reference to the {{wp|Jell-O}} advertising slogan, "There's always room for Jell-O."
+*The examine text, "Wibbly" and "Wobbly" are words used as common British colloquialism when speaking about jelly or other gelatinous substances.
+*The examine text, "Needs cream.....", may refer to recipes such as {{Wp|Trifle}}, {{Wp|Blancmange}}, {{Wp|Flummery}}, or the popular jelly and custard; common British desserts that combine gelatine and cream.
+*The examine text, "Looks scared to see me.", is likely a reference to the fact that it's shaking. A behaviour commonly associated with being scared or experiencing fear.
+*Jellies' drops are similar to the drops from a [[greater demon]].
+
+==Gallery==
+<gallery captionalign="center" widths="120">
+Jelly.png|A typical jelly.
+Jelly (grey).png|A jelly tinted slightly grey.
+Jelly (tan).png|A jelly tinted slightly tan.
+Jelly (olive).png|A jelly tinted slightly olive.
+Jelly (dark).png|A jelly tinted slightly darker.
+Jelly (green).png|A jelly tinted green.
+</gallery>
+
+==References==
+{{Reflist}}
+
+{{Slayer monsters}}
+{{Fremennik Slayer Dungeon}}

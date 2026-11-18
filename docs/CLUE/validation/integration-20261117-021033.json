@@ -1,0 +1,137 @@
+{
+  "exit": 0,
+  "unchangedInputs": true,
+  "changed": [],
+  "missing": [],
+  "accepted": true,
+  "tests": 75,
+  "skipped": 0,
+  "classes": [
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.ClueGuardianPvpTests",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794883402.414984,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailGuardianTests",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794883402.4184432,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailAgentTests",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794883402.4373116,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailNpcStepsTests",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794883402.4204395,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailNumberChallengeTests",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794883402.4338756,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailBasicStepsTests",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794883402.426362,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailStepCatalogueTests",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794883402.4159868,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.ClueScrollLifecycleTests",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794883402.4283555,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailContractTests",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794883402.4253669,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailEmoteTests",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794883402.4303484,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailUriSourceTests",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794883402.4243653,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.ClueStepSelectionTests",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794883402.4428613,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailMapsTests",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794883402.4174457,
+      "fresh": true
+    },
+    {
+      "name": "gg.rsmod.plugins.content.combat.SinglesPlusTests",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modified": 1794883402.42243,
+      "fresh": true
+    }
+  ]
+}

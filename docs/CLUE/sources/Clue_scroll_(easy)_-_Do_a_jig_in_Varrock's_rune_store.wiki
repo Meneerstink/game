@@ -1,0 +1,36 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Bigfoot!
+|value = 20
+|weight = 0.020
+|id = 19833
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is an [[emote clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+The items can be stored in a [[STASH]] crate on the northern wall of the store. It requires {{SCP|Construction|27|link=yes}}, a [[hammer]], [[saw]], 2 [[Plank|planks]] and 10 [[Nails]] to build. Building the STASH rewards the player with 150 Construction XP.
+
+==Clue info==
+{{Clue info
+|id = 294
+|tier = easy
+|emote = Jig
+|text = The emote reveals <br><br>Do a jig in Varrock's rune store. Equip an air tiara and a staff of water.
+|location = Inside [[Aubury's Rune Shop]]
+|items = Equip an [[air tiara]] and a [[staff of water]].
+|equipment1 = Air tiara
+|equipment2 = Staff of water
+|notes = Perform the [[jig]] emote near [[Aubury]]'s shop in [[Varrock]].
+|map = {{Map|3253,3401|mtype=pin|plane=0|mapID=-1}}
+}}

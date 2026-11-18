@@ -1,0 +1,28 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 12168
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 765
+|text = The cryptic reveals where to search:<br><br>Search a wardrobe in Draynor.
+|notes = Go to [[Aggie]]'s house in [[Draynor Village]] and search the wardrobe in northern wall.
+|map = {{Map|3087,3261|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 12108
+|leagueRegion = Morytania
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[coordinate clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 497
+|text = The coordinate reveals where to dig:<br><br>12.35N 36.20E
+|items = 
+|notes = North of the wrecked ship, outside of Port Phasmatys.
+
+The clue has an additional challenge:
+
+Kill an [[Armadylean guard]] or a [[Bandosian guard]]
+|map = {{Map|3603,3564|mtype=pin|plane=0|mapID=-1}}
+}}

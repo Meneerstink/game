@@ -1,0 +1,44 @@
+<noinclude>{{Treasure Trails Guide Anagrams Intro}}
+==Beginner Anagrams==
+</noinclude>
+{|class="wikitable" border="2"
+!Anagram
+!Solution
+!Location
+|-
+|'''[[Clue scroll (beginner) - AN EARL|AN EARL]]'''
+|[[Ranael]]
+|[[Al Kharid]] skirt shop
+|-
+|'''[[Clue scroll (beginner) - CHAR GAME DISORDER|CHAR GAME DISORDER]]'''
+|[[Archmage Sedridor]]
+|[[Wizards' Tower]] basement
+|-
+|'''[[Clue scroll (beginner) - CARPET AHOY|CARPET AHOY]]'''
+|[[Apothecary]]
+|South-west [[Varrock]]
+|-
+|'''[[Clue scroll (beginner) - I CORD|I CORD]]'''
+|[[Doric]]
+|North of [[Falador]]
+|-
+|'''[[Clue scroll (beginner) - IN BAR|IN BAR]]'''
+|[[Brian]]
+|[[Port Sarim]] battleaxe shop
+|-
+|'''[[Clue scroll (beginner) - RAIN COVE|RAIN COVE]]'''
+|[[Veronica]]
+|Outside [[Draynor Manor]]
+|-
+|'''[[Clue scroll (beginner) - RUG DETER|RUG DETER]]'''
+|[[Gertrude]]
+|West of [[Varrock]], south of the [[Cooks' Guild]]
+|-
+|'''[[Clue scroll (beginner) - SIR SHARE RED|SIR SHARE RED]]'''
+|[[Hairdresser]]
+|Western [[Falador]]
+|-
+|'''[[Clue scroll (beginner) - TAUNT ROOF|TAUNT ROOF]]'''
+|[[Fortunato]]
+|[[Draynor Village]] Market
+|}

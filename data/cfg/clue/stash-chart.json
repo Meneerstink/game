@@ -1,0 +1,306 @@
+{
+  "close": 48,
+  "tiers": {
+    "easy": {
+      "body": 6,
+      "tab": 30,
+      "sprites": [
+        49,
+        50,
+        51
+      ],
+      "label": 52,
+      "text": "Easy"
+    },
+    "medium": {
+      "body": 8,
+      "tab": 31,
+      "sprites": [
+        53,
+        54,
+        55
+      ],
+      "label": 56,
+      "text": "Medium"
+    },
+    "hard": {
+      "body": 10,
+      "tab": 32,
+      "sprites": [
+        57,
+        58,
+        59
+      ],
+      "label": 60,
+      "text": "Hard"
+    },
+    "elite": {
+      "body": 12,
+      "tab": 33,
+      "sprites": [
+        61,
+        62,
+        63
+      ],
+      "label": 64,
+      "text": "Elite"
+    },
+    "master": {
+      "body": 14,
+      "tab": 34,
+      "sprites": [
+        65,
+        66,
+        67
+      ],
+      "label": 68,
+      "text": "78"
+    }
+  },
+  "checks": [
+    {
+      "component": 75,
+      "sourceId": 28958,
+      "filled": false
+    },
+    {
+      "component": 76,
+      "sourceId": 28958,
+      "filled": true
+    },
+    {
+      "component": 78,
+      "sourceId": 28959,
+      "filled": false
+    },
+    {
+      "component": 79,
+      "sourceId": 28959,
+      "filled": true
+    },
+    {
+      "component": 81,
+      "sourceId": 28964,
+      "filled": false
+    },
+    {
+      "component": 82,
+      "sourceId": 28964,
+      "filled": true
+    },
+    {
+      "component": 84,
+      "sourceId": 28965,
+      "filled": false
+    },
+    {
+      "component": 85,
+      "sourceId": 28965,
+      "filled": true
+    },
+    {
+      "component": 88,
+      "sourceId": 28968,
+      "filled": false
+    },
+    {
+      "component": 89,
+      "sourceId": 28968,
+      "filled": true
+    },
+    {
+      "component": 91,
+      "sourceId": 28972,
+      "filled": false
+    },
+    {
+      "component": 92,
+      "sourceId": 28972,
+      "filled": true
+    },
+    {
+      "component": 94,
+      "sourceId": 28973,
+      "filled": false
+    },
+    {
+      "component": 95,
+      "sourceId": 28973,
+      "filled": true
+    },
+    {
+      "component": 97,
+      "sourceId": 28974,
+      "filled": false
+    },
+    {
+      "component": 98,
+      "sourceId": 28974,
+      "filled": true
+    },
+    {
+      "component": 101,
+      "sourceId": 28977,
+      "filled": false
+    },
+    {
+      "component": 102,
+      "sourceId": 28977,
+      "filled": true
+    },
+    {
+      "component": 105,
+      "sourceId": 28989,
+      "filled": false
+    },
+    {
+      "component": 106,
+      "sourceId": 28989,
+      "filled": true
+    },
+    {
+      "component": 108,
+      "sourceId": 28991,
+      "filled": false
+    },
+    {
+      "component": 109,
+      "sourceId": 28991,
+      "filled": true
+    },
+    {
+      "component": 111,
+      "sourceId": 28992,
+      "filled": false
+    },
+    {
+      "component": 112,
+      "sourceId": 28992,
+      "filled": true
+    },
+    {
+      "component": 114,
+      "sourceId": 28994,
+      "filled": false
+    },
+    {
+      "component": 115,
+      "sourceId": 28994,
+      "filled": true
+    },
+    {
+      "component": 118,
+      "sourceId": 29001,
+      "filled": false
+    },
+    {
+      "component": 119,
+      "sourceId": 29001,
+      "filled": true
+    },
+    {
+      "component": 121,
+      "sourceId": 29005,
+      "filled": false
+    },
+    {
+      "component": 122,
+      "sourceId": 29005,
+      "filled": true
+    },
+    {
+      "component": 125,
+      "sourceId": 29010,
+      "filled": false
+    },
+    {
+      "component": 126,
+      "sourceId": 29010,
+      "filled": true
+    },
+    {
+      "component": 128,
+      "sourceId": 29013,
+      "filled": false
+    },
+    {
+      "component": 129,
+      "sourceId": 29013,
+      "filled": true
+    },
+    {
+      "component": 131,
+      "sourceId": 29014,
+      "filled": false
+    },
+    {
+      "component": 132,
+      "sourceId": 29014,
+      "filled": true
+    },
+    {
+      "component": 135,
+      "sourceId": 29028,
+      "filled": false
+    },
+    {
+      "component": 136,
+      "sourceId": 29028,
+      "filled": true
+    },
+    {
+      "component": 138,
+      "sourceId": 29029,
+      "filled": false
+    },
+    {
+      "component": 139,
+      "sourceId": 29029,
+      "filled": true
+    },
+    {
+      "component": 141,
+      "sourceId": 29038,
+      "filled": false
+    },
+    {
+      "component": 142,
+      "sourceId": 29038,
+      "filled": true
+    },
+    {
+      "component": 145,
+      "sourceId": 29056,
+      "filled": false
+    },
+    {
+      "component": 146,
+      "sourceId": 29056,
+      "filled": true
+    },
+    {
+      "component": 148,
+      "sourceId": 29059,
+      "filled": false
+    },
+    {
+      "component": 149,
+      "sourceId": 29059,
+      "filled": true
+    }
+  ],
+  "states": {
+    "selectedSprites": [
+      998,
+      999,
+      1000
+    ],
+    "unselectedSprites": [
+      1001,
+      1002,
+      1003
+    ],
+    "selectedColour": 16754735,
+    "unselectedColour": 16750623
+  }
+}

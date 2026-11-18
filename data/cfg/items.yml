@@ -30207,9 +30207,9 @@
   equipment: null
 - id: 2677
   name: "Clue scroll (easy)"
-  examine: "Depends on the type of clue you have('A set of instructions to be followed'. 'A clue!'.'It points to great treasure!'.   ' A place on the world map,but where?', 'Perhaps someone at the observatory can teach me to navigate?' 'Part of the world map, but whe"
+  examine: "A clue!"
   tradeable: false
-  weight: 0.0
+  weight: 0.02
   equipment: null
 - id: 2678
   name: "Clue scroll (easy)"
@@ -30428,10 +30428,10 @@
   weight: 0.0
   equipment: null
 - id: 2714
-  name: "Casket (easy)"
-  examine: "I hope there's treasure in it."
-  tradeable: true
-  weight: 5.0
+  name: "Reward casket (easy)"
+  examine: "Cross your fingers and your toes."
+  tradeable: false
+  weight: 0.0
   equipment: null
 - id: 2715
   name: "Casket (easy)"
@@ -30477,9 +30477,9 @@
   equipment: null
 - id: 2722
   name: "Clue scroll (hard)"
-  examine: "Depends on the type of clue you have('A set of instructions to be followed'. 'A clue!'.'It points to great treasure!'.   ' A place on the world map,but where?', 'Perhaps someone at the observatory can teach me to navigate?' 'Part of the world map, but whe"
+  examine: "Part of the world map, but where?"
   tradeable: false
-  weight: 0.0
+  weight: 0.02
   equipment: null
 - id: 2723
   name: "Clue scroll (hard)"
@@ -30488,10 +30488,10 @@
   weight: 0.0
   equipment: null
 - id: 2724
-  name: "Casket (hard)"
-  examine: "I hope there's treasure in it."
-  tradeable: true
-  weight: 5.0
+  name: "Reward casket (hard)"
+  examine: "Cross your fingers and your toes."
+  tradeable: false
+  weight: 0.0
   equipment: null
 - id: 2725
   name: "Clue scroll (hard)"
@@ -30954,15 +30954,15 @@
   equipment: null
 - id: 2801
   name: "Clue scroll (medium)"
-  examine: "Depends on the type of clue you have('A set of instructions to be followed'. 'A clue!'.'It points to great treasure!'.   ' A place on the world map,but where?', 'Perhaps someone at the observatory can teach me to navigate?' 'Part of the world map, but whe"
+  examine: "Perhaps someone at the observatory can teach me to navigate?"
   tradeable: false
-  weight: 0.0
+  weight: 0.02
   equipment: null
 - id: 2802
-  name: "Casket (medium)"
-  examine: "I hope there's treasure in it."
-  tradeable: true
-  weight: 5.0
+  name: "Reward casket (medium)"
+  examine: "Cross your fingers and your toes."
+  tradeable: false
+  weight: 0.0
   equipment: null
 - id: 2803
   name: "Clue scroll (medium)"
@@ -231625,10 +231625,10 @@
   weight: 0.0
   equipment: null
 - id: 19039
-  name: "Casket (elite)"
-  examine: "I hope there's treasure in it."
-  tradeable: true
-  weight: 5.0
+  name: "Reward casket (elite)"
+  examine: "Cross your fingers and your toes."
+  tradeable: false
+  weight: 0.0
   equipment: null
 - id: 19040
   name: "Puzzle casket (elite)"
@@ -231650,9 +231650,9 @@
   equipment: null
 - id: 19043
   name: "Clue scroll (elite)"
-  examine: "It's an Clue scroll (elite)"
-  tradeable: true
-  weight: 0.0
+  examine: "A set of instructions to be followed."
+  tradeable: false
+  weight: 0.02
   equipment: null
 - id: 19044
   name: "Clue scroll (elite)"
@@ -292013,6 +292013,4418 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+- id: 25022
+  name: "Puzzle box (hard)"
+  examine: "I need to solve this!"
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25023
+  name: "Challenge scroll (medium)"
+  examine: "I need to answer this correctly."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 25024
+  name: "Puzzle box (hard)"
+  examine: "I need to solve this!"
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25025
+  name: "Puzzle box (hard)"
+  examine: "I need to solve this!"
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25026
+  name: "Challenge scroll (hard)"
+  examine: "I need to answer this correctly."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 25027
+  name: "Green d'hide body (g)"
+  examine: "Made from 100% real dragonhide. With colourful trim!"
+  tradeable: true
+  weight: 6.803
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6827
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 15
+    defence_stab: 18
+    defence_slash: 27
+    defence_crush: 24
+    defence_magic: 20
+    defence_ranged: 35
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25028
+  name: "Green d'hide body (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25029
+  name: "Green d'hide body (t)"
+  examine: "Made from 100% real dragonhide. With colourful trim!"
+  tradeable: true
+  weight: 6.803
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6828
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 15
+    defence_stab: 18
+    defence_slash: 27
+    defence_crush: 24
+    defence_magic: 20
+    defence_ranged: 35
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25030
+  name: "Green d'hide body (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25031
+  name: "Blue d'hide body (g)"
+  examine: "Made from 100% real dragonhide. With colourful trim!"
+  tradeable: true
+  weight: 6.803
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6829
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 20
+    defence_stab: 23
+    defence_slash: 30
+    defence_crush: 30
+    defence_magic: 28
+    defence_ranged: 40
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25032
+  name: "Blue d'hide body (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25033
+  name: "Blue d'hide body (t)"
+  examine: "Made from 100% real dragonhide. With colourful trim!"
+  tradeable: true
+  weight: 6.803
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6830
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 20
+    defence_stab: 23
+    defence_slash: 30
+    defence_crush: 30
+    defence_magic: 28
+    defence_ranged: 40
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25034
+  name: "Blue d'hide body (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25035
+  name: "Green d'hide chaps (g)"
+  examine: "Made from 100% real dragonhide. With colourful trim!"
+  tradeable: true
+  weight: 5.443
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6831
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 8
+    defence_stab: 12
+    defence_slash: 15
+    defence_crush: 18
+    defence_magic: 8
+    defence_ranged: 17
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25036
+  name: "Green d'hide chaps (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25037
+  name: "Green d'hide chaps (t)"
+  examine: "Made from 100% real dragonhide. With colourful trim!"
+  tradeable: true
+  weight: 5.443
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6832
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 8
+    defence_stab: 12
+    defence_slash: 15
+    defence_crush: 18
+    defence_magic: 8
+    defence_ranged: 17
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25038
+  name: "Green d'hide chaps (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25039
+  name: "Blue d'hide chaps (g)"
+  examine: "Made from 100% real dragonhide. With colourful trim!"
+  tradeable: true
+  weight: 5.443
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6833
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 11
+    defence_stab: 13
+    defence_slash: 16
+    defence_crush: 20
+    defence_magic: 14
+    defence_ranged: 20
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25040
+  name: "Blue d'hide chaps (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25041
+  name: "Blue d'hide chaps (t)"
+  examine: "Made from 100% real dragonhide. With colourful trim!"
+  tradeable: true
+  weight: 5.443
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6834
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 11
+    defence_stab: 13
+    defence_slash: 16
+    defence_crush: 20
+    defence_magic: 14
+    defence_ranged: 20
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25042
+  name: "Blue d'hide chaps (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25043
+  name: "Blue wizard robe (g)"
+  examine: "I can do magic better in this."
+  tradeable: true
+  weight: 0.907
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6835
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 3
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 3
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25044
+  name: "Blue wizard robe (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25045
+  name: "Blue wizard robe (t)"
+  examine: "I can do magic better in this."
+  tradeable: true
+  weight: 0.907
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6836
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 3
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 3
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25046
+  name: "Blue wizard robe (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25047
+  name: "Blue wizard hat (g)"
+  examine: "A silly pointed hat, with colourful trim."
+  tradeable: true
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6837
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 2
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 2
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25048
+  name: "Blue wizard hat (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25049
+  name: "Blue wizard hat (t)"
+  examine: "A silly pointed hat, with colourful trim."
+  tradeable: true
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6838
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 2
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 2
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25050
+  name: "Blue wizard hat (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25051
+  name: "Bob's red shirt"
+  examine: "'Bob says: Never give your password out to anyone.'"
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6839
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25052
+  name: "Bob's red shirt"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25053
+  name: "Bob's blue shirt"
+  examine: "'Bob says: Always check the second trade screen.'"
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6840
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25054
+  name: "Bob's blue shirt"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25055
+  name: "Bob's green shirt"
+  examine: "'Bob says: Never trade in the wilderness!'"
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6841
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25056
+  name: "Bob's green shirt"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25057
+  name: "Bob's black shirt"
+  examine: "'Bob says: A bank pin will keep your items secure.'"
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6842
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25058
+  name: "Bob's black shirt"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25059
+  name: "Bob's purple shirt"
+  examine: "'Bob says: Keep your computer keylogger free and virus scanned.'"
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6843
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25060
+  name: "Bob's purple shirt"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25061
+  name: "Zamorak bracers"
+  examine: "Zamorak blessed dragonhide vambraces."
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 9
+    equip_type: -1
+    appearance_id: 6844
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 11
+    defence_stab: 6
+    defence_slash: 5
+    defence_crush: 7
+    defence_magic: 8
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25062
+  name: "Zamorak bracers"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25063
+  name: "Zamorak d'hide body"
+  examine: "Zamorak blessed dragonhide body armour."
+  tradeable: true
+  weight: 6.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6845
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 30
+    defence_stab: 55
+    defence_slash: 47
+    defence_crush: 60
+    defence_magic: 50
+    defence_ranged: 55
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25064
+  name: "Zamorak d'hide body"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25065
+  name: "Guthix bracers"
+  examine: "Guthix blessed dragonhide vambraces."
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 9
+    equip_type: -1
+    appearance_id: 6846
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 11
+    defence_stab: 6
+    defence_slash: 5
+    defence_crush: 7
+    defence_magic: 8
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25066
+  name: "Guthix bracers"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25067
+  name: "Guthix d'hide body"
+  examine: "Guthix blessed dragonhide body armour."
+  tradeable: true
+  weight: 6.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6847
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 30
+    defence_stab: 55
+    defence_slash: 47
+    defence_crush: 60
+    defence_magic: 50
+    defence_ranged: 55
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25068
+  name: "Guthix d'hide body"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25069
+  name: "Saradomin bracers"
+  examine: "Saradomin blessed dragonhide vambraces."
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 9
+    equip_type: -1
+    appearance_id: 6848
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 11
+    defence_stab: 6
+    defence_slash: 5
+    defence_crush: 7
+    defence_magic: 8
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25070
+  name: "Saradomin bracers"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25071
+  name: "Saradomin d'hide body"
+  examine: "Saradomin blessed dragonhide body armour."
+  tradeable: true
+  weight: 6.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6849
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 30
+    defence_stab: 55
+    defence_slash: 47
+    defence_crush: 60
+    defence_magic: 50
+    defence_ranged: 55
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25072
+  name: "Saradomin d'hide body"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25073
+  name: "Challenge scroll (elite)"
+  examine: "I need to demonstrate my skilling prowess."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 25074
+  name: "Challenge scroll (elite)"
+  examine: "I need to answer this correctly."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 25075
+  name: "Puzzle box (elite)"
+  examine: "I need to solve this!"
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25076
+  name: "Ancient robe top"
+  examine: "Ancient Vestments."
+  tradeable: true
+  weight: 0.005
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6850
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 4
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 4
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 6
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25077
+  name: "Ancient robe top"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25078
+  name: "Bronze platebody (g)"
+  examine: "Bronze platebody with gold trim."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6851
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 15
+    defence_slash: 14
+    defence_crush: 9
+    defence_magic: -6
+    defence_ranged: 14
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25079
+  name: "Bronze platebody (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25080
+  name: "Bronze platelegs (g)"
+  examine: "Bronze platelegs with gold trim."
+  tradeable: true
+  weight: 9.071
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6852
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 8
+    defence_slash: 7
+    defence_crush: 6
+    defence_magic: -4
+    defence_ranged: 7
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25081
+  name: "Bronze platelegs (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25082
+  name: "Bronze plateskirt (g)"
+  examine: "Bronze plateskirt with gold trim."
+  tradeable: true
+  weight: 8.164
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6853
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 8
+    defence_slash: 7
+    defence_crush: 6
+    defence_magic: -4
+    defence_ranged: 7
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25083
+  name: "Bronze plateskirt (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25084
+  name: "Bronze full helm (g)"
+  examine: "Bronze full helm with gold trim."
+  tradeable: true
+  weight: 2.721
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6854
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -6
+    attack_ranged: -3
+    defence_stab: 4
+    defence_slash: 5
+    defence_crush: 3
+    defence_magic: -1
+    defence_ranged: 4
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25085
+  name: "Bronze full helm (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25086
+  name: "Bronze kiteshield (g)"
+  examine: "Bronze kiteshield with gold trim."
+  tradeable: true
+  weight: 5.443
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6855
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -8
+    attack_ranged: -2
+    defence_stab: 5
+    defence_slash: 7
+    defence_crush: 6
+    defence_magic: -1
+    defence_ranged: 6
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25087
+  name: "Bronze kiteshield (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25088
+  name: "Bronze platebody (t)"
+  examine: "Bronze platebody with trim."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6856
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 15
+    defence_slash: 14
+    defence_crush: 9
+    defence_magic: -6
+    defence_ranged: 14
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25089
+  name: "Bronze platebody (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25090
+  name: "Bronze platelegs (t)"
+  examine: "Bronze platelegs with trim."
+  tradeable: true
+  weight: 9.071
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6857
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 8
+    defence_slash: 7
+    defence_crush: 6
+    defence_magic: -4
+    defence_ranged: 7
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25091
+  name: "Bronze platelegs (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25092
+  name: "Bronze plateskirt (t)"
+  examine: "Bronze plateskirt with trim."
+  tradeable: true
+  weight: 8.164
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6858
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 8
+    defence_slash: 7
+    defence_crush: 6
+    defence_magic: -4
+    defence_ranged: 7
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25093
+  name: "Bronze plateskirt (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25094
+  name: "Bronze full helm (t)"
+  examine: "Bronze full helm with trim."
+  tradeable: true
+  weight: 2.721
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6859
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -6
+    attack_ranged: -3
+    defence_stab: 4
+    defence_slash: 5
+    defence_crush: 3
+    defence_magic: -1
+    defence_ranged: 4
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25095
+  name: "Bronze full helm (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25096
+  name: "Bronze kiteshield (t)"
+  examine: "Bronze kiteshield with trim."
+  tradeable: true
+  weight: 5.443
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6860
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -8
+    attack_ranged: -2
+    defence_stab: 5
+    defence_slash: 7
+    defence_crush: 6
+    defence_magic: -1
+    defence_ranged: 6
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25097
+  name: "Bronze kiteshield (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25098
+  name: "Iron platebody (t)"
+  examine: "Iron platebody with trim."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6861
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 21
+    defence_slash: 20
+    defence_crush: 12
+    defence_magic: -6
+    defence_ranged: 20
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25099
+  name: "Iron platebody (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25100
+  name: "Iron platelegs (t)"
+  examine: "Iron platelegs with trim."
+  tradeable: true
+  weight: 9.071
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6862
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 11
+    defence_slash: 10
+    defence_crush: 10
+    defence_magic: -4
+    defence_ranged: 10
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25101
+  name: "Iron platelegs (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25102
+  name: "Iron plateskirt (t)"
+  examine: "Iron plateskirt with trim."
+  tradeable: true
+  weight: 8.164
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6863
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 11
+    defence_slash: 10
+    defence_crush: 10
+    defence_magic: -4
+    defence_ranged: 10
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25103
+  name: "Iron plateskirt (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25104
+  name: "Iron full helm (t)"
+  examine: "Iron full helm with trim."
+  tradeable: true
+  weight: 2.721
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6864
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -6
+    attack_ranged: -3
+    defence_stab: 6
+    defence_slash: 7
+    defence_crush: 5
+    defence_magic: -1
+    defence_ranged: 6
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25105
+  name: "Iron full helm (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25106
+  name: "Iron kiteshield (t)"
+  examine: "Iron kiteshield with trim."
+  tradeable: true
+  weight: 5.443
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6865
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -8
+    attack_ranged: -2
+    defence_stab: 8
+    defence_slash: 10
+    defence_crush: 9
+    defence_magic: -1
+    defence_ranged: 9
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25107
+  name: "Iron kiteshield (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25108
+  name: "Iron platebody (g)"
+  examine: "Iron platebody with gold trim."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6866
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 21
+    defence_slash: 20
+    defence_crush: 12
+    defence_magic: -6
+    defence_ranged: 20
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25109
+  name: "Iron platebody (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25110
+  name: "Iron platelegs (g)"
+  examine: "Iron platelegs with gold trim."
+  tradeable: true
+  weight: 9.071
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6867
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 11
+    defence_slash: 10
+    defence_crush: 10
+    defence_magic: -4
+    defence_ranged: 10
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25111
+  name: "Iron platelegs (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25112
+  name: "Iron plateskirt (g)"
+  examine: "Iron plateskirt with gold trim."
+  tradeable: true
+  weight: 8.164
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6868
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 11
+    defence_slash: 10
+    defence_crush: 10
+    defence_magic: -4
+    defence_ranged: 10
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25113
+  name: "Iron plateskirt (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25114
+  name: "Iron full helm (g)"
+  examine: "Iron full helm with gold trim."
+  tradeable: true
+  weight: 2.721
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6869
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -6
+    attack_ranged: -3
+    defence_stab: 6
+    defence_slash: 7
+    defence_crush: 5
+    defence_magic: -1
+    defence_ranged: 6
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25115
+  name: "Iron full helm (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25116
+  name: "Iron kiteshield (g)"
+  examine: "Iron kiteshield with gold trim."
+  tradeable: true
+  weight: 5.443
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6870
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -8
+    attack_ranged: -2
+    defence_stab: 8
+    defence_slash: 10
+    defence_crush: 9
+    defence_magic: -1
+    defence_ranged: 9
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25117
+  name: "Iron kiteshield (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25118
+  name: "Beanie"
+  examine: "Weeeeeee!"
+  tradeable: true
+  weight: 0.002
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6871
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25119
+  name: "Beanie"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25120
+  name: "Red beret"
+  examine: "Parlez-vous francais?"
+  tradeable: true
+  weight: 0.04
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6872
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25121
+  name: "Red beret"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25122
+  name: "Imp mask"
+  examine: "What mischief can I get up to with this?"
+  tradeable: true
+  weight: 0.002
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6873
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25123
+  name: "Imp mask"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25124
+  name: "Goblin mask"
+  examine: "Let's start a flash mob!"
+  tradeable: true
+  weight: 0.002
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6874
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25125
+  name: "Goblin mask"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25126
+  name: "Armadyl robe top"
+  examine: "Armadyl Vestments."
+  tradeable: true
+  weight: 1.8
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6875
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 4
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 4
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 6
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25127
+  name: "Armadyl robe top"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25128
+  name: "Bandos robe top"
+  examine: "Bandos Vestments."
+  tradeable: true
+  weight: 1.8
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6876
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 4
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 4
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 6
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25129
+  name: "Bandos robe top"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25130
+  name: "Mithril platebody (g)"
+  examine: "Mithril platebody with gold trim."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6877
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 46
+    defence_slash: 44
+    defence_crush: 38
+    defence_magic: -6
+    defence_ranged: 44
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25131
+  name: "Mithril platebody (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25132
+  name: "Mithril platelegs (g)"
+  examine: "Mithril platelegs with gold trim."
+  tradeable: true
+  weight: 7.711
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6878
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 24
+    defence_slash: 22
+    defence_crush: 20
+    defence_magic: -4
+    defence_ranged: 22
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25133
+  name: "Mithril platelegs (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25134
+  name: "Mithril kiteshield (g)"
+  examine: "Mithril kiteshield with gold trim."
+  tradeable: true
+  weight: 4.535
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6879
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -8
+    attack_ranged: -2
+    defence_stab: 18
+    defence_slash: 22
+    defence_crush: 20
+    defence_magic: -1
+    defence_ranged: 20
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25135
+  name: "Mithril kiteshield (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25136
+  name: "Mithril full helm (g)"
+  examine: "Mithril full helm with gold trim."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6880
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -6
+    attack_ranged: -3
+    defence_stab: 13
+    defence_slash: 14
+    defence_crush: 11
+    defence_magic: -1
+    defence_ranged: 13
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25137
+  name: "Mithril full helm (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25138
+  name: "Mithril plateskirt (g)"
+  examine: "Mithril plateskirt with gold trim."
+  tradeable: true
+  weight: 7.257
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6881
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 24
+    defence_slash: 22
+    defence_crush: 20
+    defence_magic: -4
+    defence_ranged: 22
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25139
+  name: "Mithril plateskirt (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25140
+  name: "Mithril platebody (t)"
+  examine: "Mithril platebody with trim."
+  tradeable: true
+  weight: 8.618
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6882
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 46
+    defence_slash: 44
+    defence_crush: 38
+    defence_magic: -6
+    defence_ranged: 44
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25141
+  name: "Mithril platebody (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25142
+  name: "Mithril platelegs (t)"
+  examine: "Mithril platelegs with trim."
+  tradeable: true
+  weight: 7.711
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6883
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 24
+    defence_slash: 22
+    defence_crush: 20
+    defence_magic: -4
+    defence_ranged: 22
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25143
+  name: "Mithril platelegs (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25144
+  name: "Mithril kiteshield (t)"
+  examine: "Mithril kiteshield with trim."
+  tradeable: true
+  weight: 4.535
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6884
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -8
+    attack_ranged: -2
+    defence_stab: 18
+    defence_slash: 22
+    defence_crush: 20
+    defence_magic: -1
+    defence_ranged: 20
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25145
+  name: "Mithril kiteshield (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25146
+  name: "Mithril full helm (t)"
+  examine: "Mithril full helm with trim."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6885
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -6
+    attack_ranged: -3
+    defence_stab: 13
+    defence_slash: 14
+    defence_crush: 11
+    defence_magic: -1
+    defence_ranged: 13
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25147
+  name: "Mithril full helm (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25148
+  name: "Mithril plateskirt (t)"
+  examine: "Mithril plateskirt with trim."
+  tradeable: true
+  weight: 7.257
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6886
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 24
+    defence_slash: 22
+    defence_crush: 20
+    defence_magic: -4
+    defence_ranged: 22
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25149
+  name: "Mithril plateskirt (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25150
+  name: "Black pickaxe"
+  examine: "Used for mining."
+  tradeable: true
+  weight: 0.01
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6887
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 10
+    attack_slash: -2
+    attack_crush: 8
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 11
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25151
+  name: "Black pickaxe"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25152
+  name: "White headband"
+  examine: "A minimalist's hat."
+  tradeable: true
+  weight: 0.04
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6888
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25153
+  name: "White headband"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25154
+  name: "Blue headband"
+  examine: "A minimalist's hat."
+  tradeable: true
+  weight: 0.04
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6889
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25155
+  name: "Blue headband"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25156
+  name: "Gold headband"
+  examine: "A minimalist's hat."
+  tradeable: true
+  weight: 0.04
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6890
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25157
+  name: "Gold headband"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25158
+  name: "Pink headband"
+  examine: "A minimalist's hat."
+  tradeable: true
+  weight: 0.04
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6891
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25159
+  name: "Pink headband"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25160
+  name: "Green headband"
+  examine: "A minimalist's hat."
+  tradeable: true
+  weight: 0.04
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6892
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25161
+  name: "Green headband"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25162
+  name: "Pink boater"
+  examine: "Stylish!"
+  tradeable: true
+  weight: 0.01
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6893
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25163
+  name: "Pink boater"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25164
+  name: "Purple boater"
+  examine: "Stylish!"
+  tradeable: true
+  weight: 0.01
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6894
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25165
+  name: "Purple boater"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25166
+  name: "White boater"
+  examine: "Stylish!"
+  tradeable: true
+  weight: 0.01
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6895
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25167
+  name: "White boater"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25168
+  name: "Pink elegant shirt"
+  examine: "A well made elegant men's pink shirt."
+  tradeable: true
+  weight: 0.1
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6896
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25169
+  name: "Pink elegant shirt"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25170
+  name: "Pink elegant legs"
+  examine: "A rather elegant pair of men's pink pantaloons."
+  tradeable: true
+  weight: 0.1
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6897
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25171
+  name: "Pink elegant legs"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25172
+  name: "Crier hat"
+  examine: "Hear ye! Hear ye!"
+  tradeable: true
+  weight: 0.3
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6898
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25173
+  name: "Crier hat"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25174
+  name: "White cavalier"
+  examine: "All for one and one for all!"
+  tradeable: true
+  weight: 0.08
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6899
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25175
+  name: "White cavalier"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25176
+  name: "Red cavalier"
+  examine: "All for one and one for all!"
+  tradeable: true
+  weight: 0.08
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6900
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25177
+  name: "Red cavalier"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25178
+  name: "Navy cavalier"
+  examine: "All for one and one for all!"
+  tradeable: true
+  weight: 0.08
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6901
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25179
+  name: "Navy cavalier"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25180
+  name: "Red d'hide body (g)"
+  examine: "Made from 100% real dragonhide. With colourful trim!"
+  tradeable: true
+  weight: 6.803
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6902
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 25
+    defence_stab: 26
+    defence_slash: 34
+    defence_crush: 36
+    defence_magic: 36
+    defence_ranged: 45
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25181
+  name: "Red d'hide body (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25182
+  name: "Red d'hide chaps (g)"
+  examine: "Made from 100% real dragonhide. With colourful trim!"
+  tradeable: true
+  weight: 5.443
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6903
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 14
+    defence_stab: 15
+    defence_slash: 18
+    defence_crush: 22
+    defence_magic: 18
+    defence_ranged: 20
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25183
+  name: "Red d'hide chaps (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25184
+  name: "Red d'hide body (t)"
+  examine: "Made from 100% real dragonhide. With colourful trim!"
+  tradeable: true
+  weight: 6.803
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6904
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 25
+    defence_stab: 26
+    defence_slash: 34
+    defence_crush: 36
+    defence_magic: 36
+    defence_ranged: 45
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25185
+  name: "Red d'hide body (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25186
+  name: "Red d'hide chaps (t)"
+  examine: "Made from 100% real dragonhide. With colourful trim!"
+  tradeable: true
+  weight: 5.443
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6905
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 14
+    defence_stab: 15
+    defence_slash: 18
+    defence_crush: 22
+    defence_magic: 18
+    defence_ranged: 20
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25187
+  name: "Red d'hide chaps (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25188
+  name: "Pink elegant blouse"
+  examine: "A well made elegant ladies' pink blouse."
+  tradeable: true
+  weight: 0.1
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6906
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25189
+  name: "Pink elegant blouse"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25190
+  name: "Pink elegant skirt"
+  examine: "A rather elegant pink skirt."
+  tradeable: true
+  weight: 0.1
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6907
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25191
+  name: "Pink elegant skirt"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25192
+  name: "Gold elegant blouse"
+  examine: "A well made elegant ladies' gold blouse."
+  tradeable: true
+  weight: 0.1
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6908
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25193
+  name: "Gold elegant blouse"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25194
+  name: "Gold elegant skirt"
+  examine: "A rather elegant gold skirt."
+  tradeable: true
+  weight: 0.1
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6909
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25195
+  name: "Gold elegant skirt"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25196
+  name: "Gold elegant shirt"
+  examine: "A well made elegant men's gold shirt."
+  tradeable: true
+  weight: 0.1
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6910
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25197
+  name: "Gold elegant shirt"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25198
+  name: "Gold elegant legs"
+  examine: "A rather elegant pair of men's gold pantaloons."
+  tradeable: true
+  weight: 0.1
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6911
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25199
+  name: "Gold elegant legs"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25200
+  name: "Leprechaun hat"
+  examine: "Top o' the morning!"
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6912
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25201
+  name: "Leprechaun hat"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25202
+  name: "Cat mask"
+  examine: "Miaow!"
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6913
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25203
+  name: "Cat mask"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25204
+  name: "Bronze dragon mask"
+  examine: "Do I look scary?"
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6914
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25205
+  name: "Bronze dragon mask"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25206
+  name: "Iron dragon mask"
+  examine: "Do I look scary?"
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6915
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25207
+  name: "Iron dragon mask"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25208
+  name: "Steel dragon mask"
+  examine: "Do I look scary?"
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6916
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25209
+  name: "Steel dragon mask"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25210
+  name: "Mithril dragon mask"
+  examine: "Do I look scary?"
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6917
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25211
+  name: "Mithril dragon mask"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25212
+  name: "Black cane"
+  examine: "A ruby topped cane."
+  tradeable: true
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6918
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 8
+    attack_slash: -2
+    attack_crush: 16
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 13
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25213
+  name: "Black cane"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25214
+  name: "Adamant cane"
+  examine: "A diamond topped cane."
+  tradeable: true
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6919
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 13
+    attack_slash: -2
+    attack_crush: 25
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 23
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25215
+  name: "Adamant cane"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25216
+  name: "Rune cane"
+  examine: "A dragonstone topped cane."
+  tradeable: true
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6920
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 20
+    attack_slash: -2
+    attack_crush: 39
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 36
+    prayer: 4
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25217
+  name: "Rune cane"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25218
+  name: "Penguin mask"
+  examine: "Thankfully this doesn't reset every week."
+  tradeable: true
+  weight: 1.814
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6921
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25219
+  name: "Penguin mask"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25220
+  name: "Top hat"
+  examine: "Aint no rabbits in this hat."
+  tradeable: true
+  weight: 1.36
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6922
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25221
+  name: "Top hat"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25222
+  name: "Black skirt (g)"
+  examine: "Leg covering favoured by women and wizards. With a colourful trim!"
+  tradeable: true
+  weight: 0.907
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6923
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25223
+  name: "Black skirt (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25224
+  name: "Black skirt (t)"
+  examine: "Leg covering favoured by women and wizards. With a colourful trim!"
+  tradeable: true
+  weight: 0.907
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6924
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25225
+  name: "Black skirt (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25226
+  name: "Black wizard robe (g)"
+  examine: "I can do magic better in this."
+  tradeable: true
+  weight: 0.907
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6925
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 3
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 3
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25227
+  name: "Black wizard robe (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25228
+  name: "Black wizard robe (t)"
+  examine: "I can do magic better in this."
+  tradeable: true
+  weight: 0.907
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6926
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 3
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 3
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25229
+  name: "Black wizard robe (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25230
+  name: "Black wizard hat (g)"
+  examine: "A silly pointed hat, with colourful trim."
+  tradeable: true
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6927
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 2
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 2
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25231
+  name: "Black wizard hat (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25232
+  name: "Black wizard hat (t)"
+  examine: "A silly pointed hat, with colourful trim."
+  tradeable: true
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6928
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 2
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 2
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25233
+  name: "Black wizard hat (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25234
+  name: "Ancient platebody"
+  examine: "Rune platebody in the colours of a long-forgotten god."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6929
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 82
+    defence_slash: 80
+    defence_crush: 72
+    defence_magic: -6
+    defence_ranged: 80
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25235
+  name: "Ancient platebody"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25236
+  name: "Armadyl platebody"
+  examine: "Rune platebody in the colours of Armadyl."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6930
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 82
+    defence_slash: 80
+    defence_crush: 72
+    defence_magic: -6
+    defence_ranged: 80
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25237
+  name: "Armadyl platebody"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25238
+  name: "Bandos platebody"
+  examine: "Rune platebody in the colours of Bandos."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6931
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 82
+    defence_slash: 80
+    defence_crush: 72
+    defence_magic: -6
+    defence_ranged: 80
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25239
+  name: "Bandos platebody"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25240
+  name: "Ancient bracers"
+  examine: "Ancient blessed dragonhide vambraces."
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 9
+    equip_type: -1
+    appearance_id: 6932
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 11
+    defence_stab: 6
+    defence_slash: 5
+    defence_crush: 7
+    defence_magic: 8
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 70}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25241
+  name: "Ancient bracers"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25242
+  name: "Ancient d'hide body"
+  examine: "Ancient blessed dragonhide body armour."
+  tradeable: true
+  weight: 6.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6933
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 30
+    defence_stab: 55
+    defence_slash: 47
+    defence_crush: 60
+    defence_magic: 50
+    defence_ranged: 55
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 70}, {'skill': 1, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25243
+  name: "Ancient d'hide body"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25244
+  name: "Bandos bracers"
+  examine: "Bandos blessed dragonhide vambraces."
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 9
+    equip_type: -1
+    appearance_id: 6934
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 11
+    defence_stab: 6
+    defence_slash: 5
+    defence_crush: 7
+    defence_magic: 8
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25245
+  name: "Bandos bracers"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25246
+  name: "Bandos d'hide body"
+  examine: "Bandos blessed dragonhide body armour."
+  tradeable: true
+  weight: 6.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6935
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 30
+    defence_stab: 55
+    defence_slash: 47
+    defence_crush: 60
+    defence_magic: 50
+    defence_ranged: 55
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25247
+  name: "Bandos d'hide body"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25248
+  name: "Armadyl bracers"
+  examine: "Armadyl blessed dragonhide vambraces."
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 9
+    equip_type: -1
+    appearance_id: 6936
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 11
+    defence_stab: 6
+    defence_slash: 5
+    defence_crush: 7
+    defence_magic: 8
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25249
+  name: "Armadyl bracers"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25250
+  name: "Armadyl d'hide body"
+  examine: "Armadyl blessed dragonhide body armour."
+  tradeable: true
+  weight: 6.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6937
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 30
+    defence_stab: 55
+    defence_slash: 47
+    defence_crush: 60
+    defence_magic: 50
+    defence_ranged: 55
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25251
+  name: "Armadyl d'hide body"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25252
+  name: "Explorer backpack"
+  examine: "I'm the Backpack loaded up with things and knick knacks too."
+  tradeable: true
+  weight: 2.0
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6938
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
 - id: 24742
   name: "Justiciar's hand"
   examine: "The hand of a Saradominist justiciar."
@@ -292105,6 +296517,45 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+- id: 25253
+  name: "Explorer backpack"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25254
+  name: "Pith helmet"
+  examine: "Official explorer headgear!"
+  tradeable: true
+  weight: 0.06
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6939
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
 - id: 24748
   name: "Imbued ancient max cape (broken)"
   examine: "The cape worn by only the most experienced players. This one is broken."
@@ -292145,6 +296596,201 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+- id: 25255
+  name: "Pith helmet"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25256
+  name: "Green dragon mask"
+  examine: "Do I look scary?"
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6940
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25257
+  name: "Green dragon mask"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25258
+  name: "Blue dragon mask"
+  examine: "Do I look scary?"
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6941
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25259
+  name: "Blue dragon mask"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25260
+  name: "Red dragon mask"
+  examine: "Do I look scary?"
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6942
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25261
+  name: "Red dragon mask"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25262
+  name: "Black dragon mask"
+  examine: "Do I look scary?"
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6943
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25263
+  name: "Black dragon mask"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25264
+  name: "Holy sandals"
+  examine: "Holy footwear!"
+  tradeable: true
+  weight: 0.5
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 6944
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
 - id: 24750
   name: "Imbued ancient cape (broken)"
   examine: "A cape from an almighty god, imbued with great power."
@@ -292182,6 +296828,168 @@
     magic_damage: 2.0
     attack_audio: -1
     skill_reqs: [{'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25265
+  name: "Holy sandals"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25266
+  name: "Clue bottle (easy)"
+  examine: "This bottle seems to have some old paper inside."
+  tradeable: false
+  weight: 0.19
+  equipment: null
+- id: 25267
+  name: "Clue bottle (medium)"
+  examine: "This bottle seems to have some old paper inside."
+  tradeable: false
+  weight: 0.19
+  equipment: null
+- id: 25268
+  name: "Clue bottle (hard)"
+  examine: "This bottle seems to have some old paper inside."
+  tradeable: false
+  weight: 0.19
+  equipment: null
+- id: 25269
+  name: "Clue bottle (elite)"
+  examine: "This bottle seems to have some old paper inside."
+  tradeable: false
+  weight: 0.19
+  equipment: null
+- id: 25270
+  name: "Clue nest (easy)"
+  examine: "This nest seems to have some old paper inside."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 25271
+  name: "Clue nest (medium)"
+  examine: "This nest seems to have some old paper inside."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 25272
+  name: "Clue nest (hard)"
+  examine: "This nest seems to have some old paper inside."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 25273
+  name: "Clue nest (elite)"
+  examine: "This nest seems to have some old paper inside."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 25274
+  name: "78 clue scroll"
+  examine: "Hopefully leads to treasure."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 25275
+  name: "Reward casket (78)"
+  examine: "I hope it\u0027s bigger on the inside."
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 25276
+  name: "Torn clue scroll (part 1)"
+  examine: "A clue scroll, at least partially."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 25277
+  name: "Torn clue scroll (part 2)"
+  examine: "A clue scroll, at least partially."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 25278
+  name: "Torn clue scroll (part 3)"
+  examine: "A clue scroll, at least partially."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 25279
+  name: "Puzzle box (hard)"
+  examine: "I need to solve this!"
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25280
+  name: "Zombie head"
+  examine: "Get a head in life."
+  tradeable: true
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6945
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 6
+    attack_stab: -4
+    attack_slash: -4
+    attack_crush: 10
+    attack_magic: -4
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 8
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25281
+  name: "Zombie head"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25282
+  name: "Cyclops head"
+  examine: "You'd expect this to interfere with your 3D vision."
+  tradeable: true
+  weight: 0.2
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6946
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -292237,8 +297045,53 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+- id: 25283
+  name: "Cyclops head"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
 - id: 24937
   name: "Elder maul"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25284
+  name: "Nunchaku"
+  examine: "A pair of Nunchaku, smells of pizza."
+  tradeable: true
+  weight: 1.36
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6947
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: -4
+    attack_slash: -4
+    attack_crush: 11
+    attack_magic: -4
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 14
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25285
+  name: "Nunchaku"
   examine: "Swamp this note at any bank for the equivalent item"
   tradeable: true
   weight: 0.0
@@ -292283,6 +297136,2229 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 25286
+  name: "Ancient d'hide boots"
+  examine: "Ancient blessed dragonhide boots."
+  tradeable: true
+  weight: 1.4
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 6948
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 7
+    defence_stab: 4
+    defence_slash: 4
+    defence_crush: 4
+    defence_magic: 4
+    defence_ranged: 4
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25287
+  name: "Ancient d'hide boots"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25288
+  name: "Bandos d'hide boots"
+  examine: "Bandos blessed dragonhide boots."
+  tradeable: true
+  weight: 1.4
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 6949
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 7
+    defence_stab: 4
+    defence_slash: 4
+    defence_crush: 4
+    defence_magic: 4
+    defence_ranged: 4
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25289
+  name: "Bandos d'hide boots"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25290
+  name: "Guthix d'hide boots"
+  examine: "Guthix blessed dragonhide boots."
+  tradeable: true
+  weight: 1.4
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 6950
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 7
+    defence_stab: 4
+    defence_slash: 4
+    defence_crush: 4
+    defence_magic: 4
+    defence_ranged: 4
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25291
+  name: "Guthix d'hide boots"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25292
+  name: "Armadyl d'hide boots"
+  examine: "Armadyl blessed dragonhide boots."
+  tradeable: true
+  weight: 1.4
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 6951
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 7
+    defence_stab: 4
+    defence_slash: 4
+    defence_crush: 4
+    defence_magic: 4
+    defence_ranged: 4
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25293
+  name: "Armadyl d'hide boots"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25294
+  name: "Saradomin d'hide boots"
+  examine: "Saradomin blessed dragonhide boots."
+  tradeable: true
+  weight: 1.4
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 6952
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 7
+    defence_stab: 4
+    defence_slash: 4
+    defence_crush: 4
+    defence_magic: 4
+    defence_ranged: 4
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25295
+  name: "Saradomin d'hide boots"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25296
+  name: "Zamorak d'hide boots"
+  examine: "Zamorak blessed dragonhide boots."
+  tradeable: true
+  weight: 1.4
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 6953
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 7
+    defence_stab: 4
+    defence_slash: 4
+    defence_crush: 4
+    defence_magic: 4
+    defence_ranged: 4
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25297
+  name: "Zamorak d'hide boots"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25298
+  name: "Strange device"
+  examine: "You can sense strange powers emanating from it."
+  tradeable: false
+  weight: 0.01
+  equipment: null
+- id: 25299
+  name: "Heavy casket"
+  examine: "Full to the brim with loot... Where's that key gone?"
+  tradeable: false
+  weight: 15.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6954
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 6
+    attack_stab: -4
+    attack_slash: -4
+    attack_crush: 11
+    attack_magic: -4
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 9
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25300
+  name: "Large spade"
+  examine: "Can you dig it?"
+  tradeable: false
+  weight: 3.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6955
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: -100
+    attack_slash: -100
+    attack_crush: -50
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: -10
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25301
+  name: "Wooden shield (g)"
+  examine: "An epic wooden shield with a golden trim."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6956
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 4
+    defence_slash: 5
+    defence_crush: 3
+    defence_magic: 1
+    defence_ranged: 4
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25302
+  name: "Wooden shield (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25303
+  name: "Steel platebody (g)"
+  examine: "Steel platebody with a gold trim."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6957
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 32
+    defence_slash: 31
+    defence_crush: 24
+    defence_magic: -6
+    defence_ranged: 31
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25304
+  name: "Steel platebody (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25305
+  name: "Steel platelegs (g)"
+  examine: "Steel platelegs with a gold trim."
+  tradeable: true
+  weight: 9.071
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6958
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 17
+    defence_slash: 16
+    defence_crush: 15
+    defence_magic: -4
+    defence_ranged: 16
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25306
+  name: "Steel platelegs (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25307
+  name: "Steel plateskirt (g)"
+  examine: "Steel plateskirt with gold trim."
+  tradeable: true
+  weight: 8.164
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6959
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 17
+    defence_slash: 16
+    defence_crush: 15
+    defence_magic: -4
+    defence_ranged: 16
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25308
+  name: "Steel plateskirt (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25309
+  name: "Steel full helm (g)"
+  examine: "A steel full helmet with gold trim."
+  tradeable: true
+  weight: 2.721
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6960
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -6
+    attack_ranged: -3
+    defence_stab: 9
+    defence_slash: 10
+    defence_crush: 7
+    defence_magic: -1
+    defence_ranged: 9
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25310
+  name: "Steel full helm (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25311
+  name: "Steel kiteshield (g)"
+  examine: "Steel kiteshield with gold trim."
+  tradeable: true
+  weight: 5.443
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6961
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -8
+    attack_ranged: -2
+    defence_stab: 13
+    defence_slash: 15
+    defence_crush: 14
+    defence_magic: -1
+    defence_ranged: 14
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25312
+  name: "Steel kiteshield (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25313
+  name: "Steel platebody (t)"
+  examine: "Steel platebody with a trim."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6962
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 32
+    defence_slash: 31
+    defence_crush: 24
+    defence_magic: -6
+    defence_ranged: 31
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25314
+  name: "Steel platebody (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25315
+  name: "Steel platelegs (t)"
+  examine: "Steel platelegs with a trim."
+  tradeable: true
+  weight: 9.071
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6963
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 17
+    defence_slash: 16
+    defence_crush: 15
+    defence_magic: -4
+    defence_ranged: 16
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25316
+  name: "Steel platelegs (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25317
+  name: "Steel plateskirt (t)"
+  examine: "Steel plateskirt with trim."
+  tradeable: true
+  weight: 8.164
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6964
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -21
+    attack_ranged: -11
+    defence_stab: 17
+    defence_slash: 16
+    defence_crush: 15
+    defence_magic: -4
+    defence_ranged: 16
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25318
+  name: "Steel plateskirt (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25319
+  name: "Steel full helm (t)"
+  examine: "A steel full helmet with trim."
+  tradeable: true
+  weight: 2.721
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6965
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -6
+    attack_ranged: -3
+    defence_stab: 9
+    defence_slash: 10
+    defence_crush: 7
+    defence_magic: -1
+    defence_ranged: 9
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25320
+  name: "Steel full helm (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25321
+  name: "Steel kiteshield (t)"
+  examine: "Steel kiteshield with trim."
+  tradeable: true
+  weight: 5.443
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6966
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -8
+    attack_ranged: -2
+    defence_stab: 13
+    defence_slash: 15
+    defence_crush: 14
+    defence_magic: -1
+    defence_ranged: 14
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25322
+  name: "Steel kiteshield (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25323
+  name: "Monk's robe top (g)"
+  examine: "I feel the gods don't enjoy my materialistic obsessions."
+  tradeable: true
+  weight: 0.907
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6967
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 6
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25324
+  name: "Monk's robe top (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25325
+  name: "Monk's robe (g)"
+  examine: "Keeps a monk's knees nice, warm and stylish."
+  tradeable: true
+  weight: 0.907
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 6968
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 5
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25326
+  name: "Monk's robe (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25327
+  name: "Golden chef's hat"
+  examine: "What a perfectly reasonable hat."
+  tradeable: true
+  weight: 0.907
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6969
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25328
+  name: "Golden chef's hat"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25329
+  name: "Golden apron"
+  examine: "An astonishingly gold apron."
+  tradeable: true
+  weight: 0.453
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6970
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25330
+  name: "Golden apron"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25331
+  name: "Team cape zero"
+  examine: "Ooohhh look at the dirty colours..."
+  tradeable: true
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6971
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 1
+    defence_magic: 0
+    defence_ranged: 2
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25332
+  name: "Team cape zero"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25333
+  name: "Team cape x"
+  examine: "Ooohhh look at the dirty colours..."
+  tradeable: true
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6972
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 1
+    defence_magic: 0
+    defence_ranged: 2
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25334
+  name: "Team cape x"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25335
+  name: "Team cape i"
+  examine: "Ooohhh look at the dirty colours..."
+  tradeable: true
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6973
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 1
+    defence_crush: 1
+    defence_magic: 0
+    defence_ranged: 2
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25336
+  name: "Team cape i"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25337
+  name: "Charge dragonstone jewellery scroll"
+  examine: "A scroll for charging dragonstone jewellery."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25338
+  name: "Crier coat"
+  examine: "Don't shoot the messenger!"
+  tradeable: true
+  weight: 0.001
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6974
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25339
+  name: "Crier coat"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25340
+  name: "Crier bell"
+  examine: "For whom?"
+  tradeable: true
+  weight: 0.453
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6975
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: -100
+    attack_slash: -100
+    attack_crush: -50
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: -10
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25341
+  name: "Crier bell"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25342
+  name: "Black leprechaun hat"
+  examine: "Try as they will, and try as they might, who steals me gold won't live through the night."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6976
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25343
+  name: "Black leprechaun hat"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25344
+  name: "Clueless scroll"
+  examine: "The instructions are complete nonsense!"
+  tradeable: false
+  weight: 1.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6977
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: -100
+    attack_slash: -100
+    attack_crush: -50
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: -10
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25345
+  name: "Arceuus banner"
+  examine: "An ancient banner bearing the mark of the Arceuus Elders."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6978
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 12
+    attack_slash: 12
+    attack_crush: 12
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 1
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 12
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25346
+  name: "Arceuus banner"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25347
+  name: "Hosidius banner"
+  examine: "A banner made of redwood bearing the Hosidius sigil."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6979
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 12
+    attack_slash: 12
+    attack_crush: 12
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 1
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 12
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25348
+  name: "Hosidius banner"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25349
+  name: "Lovakengj banner"
+  examine: "A lovakite banner bearing the Lovakengj sigil."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6980
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 12
+    attack_slash: 12
+    attack_crush: 12
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 1
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 12
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25350
+  name: "Lovakengj banner"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25351
+  name: "Piscarilius banner"
+  examine: "A stained glass banner displaying the Piscarilius sigil."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6981
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 12
+    attack_slash: 12
+    attack_crush: 12
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 1
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 12
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25352
+  name: "Piscarilius banner"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25353
+  name: "Shayzien banner"
+  examine: "A war torn banner bearing the Shayzien sigil."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6982
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 12
+    attack_slash: 12
+    attack_crush: 12
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 1
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 12
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25354
+  name: "Shayzien banner"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25355
+  name: "Black unicorn mask"
+  examine: "Pointy shadows."
+  tradeable: true
+  weight: 0.1
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6983
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25356
+  name: "Black unicorn mask"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25357
+  name: "White unicorn mask"
+  examine: "Pointy rainbows."
+  tradeable: true
+  weight: 0.1
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6984
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25358
+  name: "White unicorn mask"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25359
+  name: "Cabbage round shield"
+  examine: "An adamant shield shaped like a cabbage."
+  tradeable: true
+  weight: 4.535
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6985
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -6
+    attack_ranged: -2
+    defence_stab: 24
+    defence_slash: 26
+    defence_crush: 22
+    defence_magic: 0
+    defence_ranged: 24
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25360
+  name: "Cabbage round shield"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25361
+  name: "Gnomish firelighter"
+  examine: "Fill it with firelighters to make pretty fire."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 25362
+  name: "Gnomish firelighter"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25363
+  name: "Puzzle box (master)"
+  examine: "I need to solve this!"
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25364
+  name: "Puzzle box (master)"
+  examine: "I need to solve this!"
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25365
+  name: "Puzzle box (master)"
+  examine: "I need to solve this!"
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25366
+  name: "Light box"
+  examine: "I need to brighten its day."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25367
+  name: "null"
+  examine: ""
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25368
+  name: "null"
+  examine: ""
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25369
+  name: "Clue geode (easy)"
+  examine: "This geode seems to have some old paper inside."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 25370
+  name: "Clue geode (medium)"
+  examine: "This geode seems to have some old paper inside."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 25371
+  name: "Clue geode (hard)"
+  examine: "This geode seems to have some old paper inside."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 25372
+  name: "Clue geode (elite)"
+  examine: "This geode seems to have some old paper inside."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 25373
+  name: "Master scroll book (empty)"
+  examine: "I can store my teleport scrolls in this."
+  tradeable: true
+  weight: 1.0
+  equipment: null
+- id: 25374
+  name: "Master scroll book (empty)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25375
+  name: "Scroll sack"
+  examine: "Gosh, you really seem to love clue scrolls."
+  tradeable: false
+  weight: 0.435
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6987
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25380
+  name: "Snape grass seed"
+  examine: "A snape grass seed - plant in an allotment."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25381
+  name: "Puzzle box (hard)"
+  examine: "I need to solve this!"
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25382
+  name: "Guthix d'hide shield"
+  examine: "Guthix blessed wooden shield covered in dragon leather."
+  tradeable: true
+  weight: 8.0
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6988
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: -15
+    attack_slash: -15
+    attack_crush: -11
+    attack_magic: -10
+    attack_ranged: 7
+    defence_stab: 21
+    defence_slash: 18
+    defence_crush: 16
+    defence_magic: 15
+    defence_ranged: 14
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25383
+  name: "Guthix d'hide shield"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25384
+  name: "Saradomin d'hide shield"
+  examine: "Saradomin blessed wooden shield covered in dragon leather."
+  tradeable: true
+  weight: 8.0
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6989
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: -15
+    attack_slash: -15
+    attack_crush: -11
+    attack_magic: -10
+    attack_ranged: 7
+    defence_stab: 21
+    defence_slash: 18
+    defence_crush: 16
+    defence_magic: 15
+    defence_ranged: 14
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25385
+  name: "Saradomin d'hide shield"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25386
+  name: "Zamorak d'hide shield"
+  examine: "Zamorak blessed wooden shield covered in dragon leather."
+  tradeable: true
+  weight: 8.0
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6990
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: -15
+    attack_slash: -15
+    attack_crush: -11
+    attack_magic: -10
+    attack_ranged: 7
+    defence_stab: 21
+    defence_slash: 18
+    defence_crush: 16
+    defence_magic: 15
+    defence_ranged: 14
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25387
+  name: "Zamorak d'hide shield"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25388
+  name: "Ancient d'hide shield"
+  examine: "Ancient blessed wooden shield covered in dragon leather."
+  tradeable: true
+  weight: 8.0
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6991
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: -15
+    attack_slash: -15
+    attack_crush: -11
+    attack_magic: -10
+    attack_ranged: 7
+    defence_stab: 21
+    defence_slash: 18
+    defence_crush: 16
+    defence_magic: 15
+    defence_ranged: 14
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25389
+  name: "Ancient d'hide shield"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25390
+  name: "Armadyl d'hide shield"
+  examine: "Armadyl blessed wooden shield covered in dragon leather."
+  tradeable: true
+  weight: 8.0
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6992
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: -15
+    attack_slash: -15
+    attack_crush: -11
+    attack_magic: -10
+    attack_ranged: 7
+    defence_stab: 21
+    defence_slash: 18
+    defence_crush: 16
+    defence_magic: 15
+    defence_ranged: 14
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25391
+  name: "Armadyl d'hide shield"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25392
+  name: "Bandos d'hide shield"
+  examine: "Bandos blessed wooden shield covered in dragon leather."
+  tradeable: true
+  weight: 8.0
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6993
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: -15
+    attack_slash: -15
+    attack_crush: -11
+    attack_magic: -10
+    attack_ranged: 7
+    defence_stab: 21
+    defence_slash: 18
+    defence_crush: 16
+    defence_magic: 15
+    defence_ranged: 14
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25393
+  name: "Bandos d'hide shield"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25394
+  name: "Dual sai"
+  examine: "A pair of aggressive Sai."
+  tradeable: true
+  weight: 1.36
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6994
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 11
+    attack_slash: 8
+    attack_crush: -4
+    attack_magic: -4
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 14
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25395
+  name: "Dual sai"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25396
+  name: "Rune platebody (h1)"
+  examine: "Provides excellent protection with a heraldic design."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6995
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 82
+    defence_slash: 80
+    defence_crush: 72
+    defence_magic: -6
+    defence_ranged: 80
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25397
+  name: "Rune platebody (h1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25398
+  name: "Rune platebody (h2)"
+  examine: "Provides excellent protection with a heraldic design."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6996
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 82
+    defence_slash: 80
+    defence_crush: 72
+    defence_magic: -6
+    defence_ranged: 80
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25399
+  name: "Rune platebody (h2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25400
+  name: "Rune platebody (h3)"
+  examine: "Provides excellent protection with a heraldic design."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6997
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 82
+    defence_slash: 80
+    defence_crush: 72
+    defence_magic: -6
+    defence_ranged: 80
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25401
+  name: "Rune platebody (h3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25402
+  name: "Rune platebody (h4)"
+  examine: "Provides excellent protection with a heraldic design."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6998
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 82
+    defence_slash: 80
+    defence_crush: 72
+    defence_magic: -6
+    defence_ranged: 80
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25403
+  name: "Rune platebody (h4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25404
+  name: "Rune platebody (h5)"
+  examine: "Provides excellent protection with a heraldic design."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 6999
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 82
+    defence_slash: 80
+    defence_crush: 72
+    defence_magic: -6
+    defence_ranged: 80
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25405
+  name: "Rune platebody (h5)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25406
+  name: "Thieving bag"
+  examine: "A good place to store your stolen goods."
+  tradeable: true
+  weight: 0.435
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 7000
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25407
+  name: "Thieving bag"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25408
+  name: "Cape of skulls"
+  examine: "Lets the person behind you know that you mean business."
+  tradeable: true
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 7001
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 9
+    defence_slash: 9
+    defence_crush: 9
+    defence_magic: 9
+    defence_ranged: 9
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25409
+  name: "Cape of skulls"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25410
+  name: "Amulet of power (t)"
+  examine: "An enchanted diamond amulet that looks good."
+  tradeable: true
+  weight: 0.01
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 7002
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 6
+    attack_slash: 6
+    attack_crush: 6
+    attack_magic: 6
+    attack_ranged: 6
+    defence_stab: 6
+    defence_slash: 6
+    defence_crush: 6
+    defence_magic: 6
+    defence_ranged: 6
+    summoning: 0
+    melee_strength: 6
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25411
+  name: "Amulet of power (t)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25412
+  name: "Rain bow"
+  examine: "Short but effective and very colourful."
+  tradeable: true
+  weight: 1.36
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 7003
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 8
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
 - id: 24755
   name: "Kindling"
   examine: "It feels weak, but it might be okay for burning."
@@ -293216,6 +300292,318 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+- id: 25413
+  name: "Rain bow"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25414
+  name: "Ham joint"
+  examine: "A delicious joint of ham."
+  tradeable: true
+  weight: 2.0
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 7004
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 3
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25415
+  name: "Ham joint"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25416
+  name: "Staff of Bob the Cat"
+  examine: "A staff styled after the elusive cat."
+  tradeable: true
+  weight: 2.0
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 7005
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 2
+    attack_slash: -1
+    attack_crush: 10
+    attack_magic: 10
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 10
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 7
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25417
+  name: "Staff of Bob the Cat"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25418
+  name: "Black platebody (h1)"
+  examine: "Black plate body with a heraldic design."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 7006
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 41
+    defence_slash: 40
+    defence_crush: 30
+    defence_magic: -6
+    defence_ranged: 40
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25419
+  name: "Black platebody (h1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25420
+  name: "Black platebody (h2)"
+  examine: "Black plate body with a heraldic design."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 7007
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 41
+    defence_slash: 40
+    defence_crush: 30
+    defence_magic: -6
+    defence_ranged: 40
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25421
+  name: "Black platebody (h2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25422
+  name: "Black platebody (h3)"
+  examine: "Black plate body with a heraldic design."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 7008
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 41
+    defence_slash: 40
+    defence_crush: 30
+    defence_magic: -6
+    defence_ranged: 40
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25423
+  name: "Black platebody (h3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25424
+  name: "Black platebody (h4)"
+  examine: "Black plate body with a heraldic design."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 7009
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 41
+    defence_slash: 40
+    defence_crush: 30
+    defence_magic: -6
+    defence_ranged: 40
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25425
+  name: "Black platebody (h4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25426
+  name: "Black platebody (h5)"
+  examine: "Black plate body with a heraldic design."
+  tradeable: true
+  weight: 9.979
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 7010
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 41
+    defence_slash: 40
+    defence_crush: 30
+    defence_magic: -6
+    defence_ranged: 40
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25427
+  name: "Black platebody (h5)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25428
+  name: "Leather body (g)"
+  examine: "Better than no armour! Nice trim too!"
+  tradeable: true
+  weight: 5.443
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 7011
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -2
+    attack_ranged: 2
+    defence_stab: 8
+    defence_slash: 9
+    defence_crush: 10
+    defence_magic: 4
+    defence_ranged: 9
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
 - id: 24918
   name: "Xeric's talisman"
   examine: "An enervated relic of the ancient times of Kourend."
@@ -293249,6 +300637,465 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+- id: 25429
+  name: "Leather body (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25430
+  name: "Leather chaps (g)"
+  examine: "Better than no armour! Nice trim too!"
+  tradeable: true
+  weight: 2.721
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 7012
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 4
+    defence_stab: 2
+    defence_slash: 2
+    defence_crush: 1
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25431
+  name: "Leather chaps (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25432
+  name: "Adamant platebody (h1)"
+  examine: "Adamant platebody with a heraldic design."
+  tradeable: true
+  weight: 11.339
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 7013
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 65
+    defence_slash: 63
+    defence_crush: 55
+    defence_magic: -6
+    defence_ranged: 63
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25433
+  name: "Adamant platebody (h1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25434
+  name: "Adamant platebody (h2)"
+  examine: "Adamant platebody with a heraldic design."
+  tradeable: true
+  weight: 11.339
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 7014
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 65
+    defence_slash: 63
+    defence_crush: 55
+    defence_magic: -6
+    defence_ranged: 63
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25435
+  name: "Adamant platebody (h2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25436
+  name: "Adamant platebody (h3)"
+  examine: "Adamant platebody with a heraldic design."
+  tradeable: true
+  weight: 11.339
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 7015
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 65
+    defence_slash: 63
+    defence_crush: 55
+    defence_magic: -6
+    defence_ranged: 63
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25437
+  name: "Adamant platebody (h3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25438
+  name: "Adamant platebody (h4)"
+  examine: "Adamant platebody with a heraldic design."
+  tradeable: true
+  weight: 11.339
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 7016
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 65
+    defence_slash: 63
+    defence_crush: 55
+    defence_magic: -6
+    defence_ranged: 63
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25439
+  name: "Adamant platebody (h4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25440
+  name: "Adamant platebody (h5)"
+  examine: "Adamant platebody with a heraldic design."
+  tradeable: true
+  weight: 11.339
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 7017
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -30
+    attack_ranged: -15
+    defence_stab: 65
+    defence_slash: 63
+    defence_crush: 55
+    defence_magic: -6
+    defence_ranged: 63
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25441
+  name: "Adamant platebody (h5)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25442
+  name: "Wolf mask"
+  examine: "Howwwallll!"
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 7018
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25443
+  name: "Wolf mask"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25444
+  name: "Wolf cloak"
+  examine: "A very warm wolf cloak."
+  tradeable: true
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 7019
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25445
+  name: "Wolf cloak"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25446
+  name: "Climbing boots (g)"
+  examine: "Boots made for climbing. Nice trim!"
+  tradeable: true
+  weight: 0.34
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 7020
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 2
+    defence_crush: 2
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 2
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25447
+  name: "Climbing boots (g)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25448
+  name: "Puzzle box (master)"
+  examine: "I need to solve this!"
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25449
+  name: "Scroll box (easy)"
+  examine: "Contains an easy clue scroll."
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 25450
+  name: "Scroll box (medium)"
+  examine: "Contains a medium clue scroll."
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 25451
+  name: "Scroll box (hard)"
+  examine: "Contains a hard clue scroll."
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 25452
+  name: "Scroll box (elite)"
+  examine: "Contains an elite clue scroll."
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 25453
+  name: "Scroll box (master)"
+  examine: "Contains a master clue scroll."
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 25454
+  name: "Minor easy scroll case"
+  examine: "Maybe I should open it..."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 25455
+  name: "Major easy scroll case"
+  examine: "Maybe I should open it..."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 25456
+  name: "Minor medium scroll case"
+  examine: "Maybe I should open it..."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 25457
+  name: "Major medium scroll case"
+  examine: "Maybe I should open it..."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 25458
+  name: "Minor hard scroll case"
+  examine: "Maybe I should open it..."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 25459
+  name: "Major hard scroll case"
+  examine: "Maybe I should open it..."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 25460
+  name: "Minor elite scroll case"
+  examine: "Maybe I should open it..."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 25461
+  name: "Major elite scroll case"
+  examine: "Maybe I should open it..."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 25462
+  name: "Minor master scroll case"
+  examine: "Maybe I should open it..."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 25463
+  name: "Major master scroll case"
+  examine: "Maybe I should open it..."
+  tradeable: false
+  weight: 0.02
+  equipment: null
+- id: 25464
+  name: "Mimic scroll case"
+  examine: "Maybe I should open it..."
+  tradeable: false
+  weight: 0.02
+  equipment: null
 - id: 24924
   name: "Antipoison (-)(1)"
   examine: "The potion purges the lizardmen's poison. It was mixed particularly badly."

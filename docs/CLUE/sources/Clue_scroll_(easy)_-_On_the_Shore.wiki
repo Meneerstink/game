@@ -1,0 +1,40 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 23159
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[music clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 608
+|text = The clue reveals who to speak to:<br><br>I'd like to hear some music.
+Come and see me on the bridge in
+Falador Park, and play:
+On the Shore
+Thanks,
+Cecilia
+|notes = Speak to [[Cecilia]] on the bridge in Falador Park. Play the [[music]] track [[On the Shore]].
+|map = {{Map|2990,3384|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+*[[Ring of wealth]] teleport to [[Falador Park]].
+*[[Falador Teleport]] and run east into the park.
+*[[Achievement diary cape]] teleport to [[Sir Rebral]].
+*[[Balloon transport system]] to [[Taverley]].
+*[[Teleport to House]] with a [[player-owned house]] in [[Taverley]], or [[Construction cape]] teleport to the [[Taverley]] [[house portal]].
+*[[Explorer's ring 2]] or higher teleport to the [[Farming patch]] at [[South Falador Farm]].

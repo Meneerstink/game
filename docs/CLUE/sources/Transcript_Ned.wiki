@@ -1,0 +1,98 @@
+{{Transcript|npc}}
+
+==Standard dialogue==
+===Before completing any quests===
+* '''Ned:''' Why, hello there, [lad/lass]. Me friends call me Ned. I was a man of the sea, but it's past me now. Could I be making or selling you some rope?
+* {{topt|Yes, I would like some rope.}}
+** {{tact|opens=Ned's Handmade Rope (100% Wool)}}
+* {{topt|No thanks Ned, I don't need any.}}
+** {{tact|end}}
+
+===After completion of [[Dragon Slayer I]]===
+* '''Ned:''' Hello again, [lad/lass]. Something I can help you with? Want to buy some rope perhaps?
+* {{topt|How did you get back from Crandor?}}
+** '''Player:''' How did you get back from Crandor?
+** '''Ned:''' I got towed back by a passing friendly whale.
+** '''Ned:''' Anyway, would you like me to make some rope while you're here?
+** {{topt|Can you take me to Crandor again?}}
+*** '''Player:''' Can you take me back to Crandor again?
+*** '''Ned:''' Aye, that I could. I'll meet you at the Port Sarim docks again. I'll try to steer a little better this time!
+*** {{tact|end}}
+** {{topt|Yes, I would like some rope.}}
+*** {{tact|below}}
+** {{topt|No thanks Ned, I don't need any.}}
+*** {{tact|below}}
+* {{topt|Yes, I would like some rope.}}
+** '''Player:''' Yes, I would like some rope.
+** '''Ned:''' Well, I can sell you some rope for 15 coins. Or I can be making you some if you gets me 4 balls of wool. I strands them together I does, makes em strong.
+** '''Player:''' You make rope from wool?
+** '''Ned:''' Of course you can!
+** '''Player:''' I thought you needed hemp or jute.
+** '''Ned:''' Do you want some rope or not?
+** {{topt|Okay, please sell me some rope.}}
+*** {{tcond|If the player doesn't have 15 coins:}}
+**** {{tbox|You don't have enough coins to buy any rope!}}
+**** {{tcond|If the player has completed the [[The Fremennik Isles]] quest:}}
+***** {{tact|continues}}
+**** {{tcond|If the player has not completed the The Fremennik Isles quest:}}
+***** {{tact|end}}
+*** {{tcond|If the player has 15 coins:}}
+**** '''Player:''' Okay, please sell me some rope.
+**** '''Ned:''' There you go, finest rope in Gielinor.
+**** {{tbox|You hand Ned 15 coins. Ned gives you a coil of rope.}}{{^|Drops to ground with full inventory.}}
+**** {{tcond|If the player has completed the The Fremennik Isles quest:}}
+***** {{tact|continues}}
+**** {{tcond|If the player has not completed the The Fremennik Isles quest:}}
+***** {{tact|end}}
+*** '''Player:''' Thanks. Hmmm, do you know something? This rope has a funny smell.
+*** '''Ned:''' Really?
+*** '''Player:''' Yes, It reminds me of...yaks. I was travelling in the Fremennik Isles recently and, do you know what? They made rope out of yak's hair.
+*** '''Ned:''' What a coincidence?
+*** '''Player:''' There was a lady over there who sold wool, she said she traded rope for the wool.
+*** '''Ned:''' Who would have thought it?
+*** '''Player:''' I don't think you make rope at all. I think you trade balls of wool for rope.
+*** '''Ned:''' Oh, I confess. You have found the truth. I used to make the rope myself, but my fingers aren't as nimble as they used to be and so many people wanted my rope. Demand was so high I had to find another
+*** '''Ned:''' source. But I couldn't tell anyone since Ned's Handmade Rope (100% Wool) is a high profile brand now.
+*** '''Player:''' Yes, well, the wool is still pretty good, though yak hair makes fine rope. I don't suppose any harm will come of it.
+*** {{tcond|If the player has inventory space:}}
+**** '''Ned:''' Thanks. Here take this, a free sample! Please, don't tell anyone.
+*** '''Player:''' Well, it's always good to keep on the good side of a sailor. Your secret is safe with me.
+*** {{tcond|If the player has inventory space:}}
+**** {{tact|receives=rope}}
+*** '''Ned:''' Oh, if you're in the Isles again, tell Jofridr that her Neddie will be there soon.
+*** '''Player:''' I will do that!
+*** {{tact|end}}
+** {{topt|cond=If the player has 4 balls of wool:|I have some balls of wool. Could you make me some rope?}}
+*** '''Player:''' I have some balls of wool. Could you make me some rope?
+*** '''Ned:''' Sure I can.
+*** {{tbox|You hand over 4 balls of wool. Ned gives you a coil of rope.}}
+*** {{tact|end}}
+** {{topt|That's a little more than I want to pay.}}
+*** '''Player:''' That's a little more than I want to pay.
+*** '''Ned:''' Well, if you ever need rope that's the price. Sorry. An old sailor needs money for a little drop o' rum.
+*** {{tact|end}}
+** {{topt|cond=If the player does not have 4 balls of wool:|I will go and get some wool.}}
+*** '''Player:''' I will go and get some wool.
+*** '''Ned:''' Aye, you do that. Remember, it takes 4 balls of wool to make strong rope.
+*** {{tact|end}}
+* {{topt|No thanks Ned, I don't need any.}}
+** '''Player:''' No thanks Ned, I don't need any.
+** '''Ned:''' Well, old Neddy is always here if you do. Tell your friends. I can always be using the business.
+** {{tact|end}}
+
+==Treasure Trails==
+===Easy===
+* '''Ned:''' Well done!
+* {{tcond|When given another clue scroll:}}
+** {{tbox|pic=clue scroll (easy) detail.png|You've been given another clue!}}
+** {{tact|end}}
+* {{tcond|When given a reward casket:}}
+** {{tbox|pic=reward casket (easy) detail.png|You've obtained a casket!}}
+** {{tact|end}}
+
+==Crack the Clue III==
+* '''Ned:''' Good work! I have new information to share with you. Listen carefully, now!
+* '''Ned:''' A place 65 steps forward and 17 to the right needs an inspection. The weather vane up high will guide you in the right direction.
+* '''Ned:''' Under the ground lies the next clue you seek. Getting it out requires a little technique.
+* {{tbox|pic=Clue scroll (special) detail.png|You've found a new special clue! However, a magical force prevents you from putting this item in your inventory!}}
+* {{tact|Interface showing the next clue opens.}}

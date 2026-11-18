@@ -46,6 +46,9 @@ fun resolveDeath(victim: Player) {
         return
     }
     val world = victim.world
+    // OSRS Item Retrieval Service: another unsafe death permanently loses the old deathbank.
+    gg.rsmod.plugins.content.areas.watson.MimicRecovery.clear(victim)
+    gg.rsmod.plugins.content.areas.watson.MimicEncounter.settleDeath(victim)
     // DamageMap normally contains the player (including familiar damage credited to its owner).
     // If an NPC/environmental hit lands after a live PvP hit, use the shared aggressor window so
     // the death remains player-caused instead of silently falling back to PvM recovery.
@@ -69,7 +72,8 @@ fun resolveDeath(victim: Player) {
         killer == null && gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.isSkulled(victim) &&
             (victim.attr[KILLER_ATTR]?.get() as? gg.rsmod.game.model.entity.Npc)
                 ?.let { gg.rsmod.plugins.content.mechanics.pvp.CityGuards.isGuard(it) } == true
-    val contextOverride = if (killedBySkulledGuard) DeathContext.WILDERNESS_PVP else if (abuseKill) DeathContext.PVM_SAFE else null
+    val contextOverride = if (gg.rsmod.plugins.content.areas.watson.MimicEncounter.inArena(victim)) DeathContext.PVM_SAFE
+        else if (killedBySkulledGuard) DeathContext.WILDERNESS_PVP else if (abuseKill) DeathContext.PVM_SAFE else null
 
     val pvpDeath = (contextOverride ?: DeathResolver.resolveContext(victim, killer)) == DeathContext.WILDERNESS_PVP
     // Everything the victim carried before the death takes it counts as earned for Perdu's Lost Property.

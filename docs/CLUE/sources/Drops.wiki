@@ -1,0 +1,68 @@
+{{External|rs}}
+{{otheruses|the items that monsters drop when they die|the function that allows players to remove items from their inventories|Drop}}
+'''Drops''', also known as '''monster drops''' or '''loot''', are the [[items]] [[monsters]] leave for the killer when they are defeated or die. Drops can be picked up by [[players]]. Drops often include [[bones]], [[coins]] or other items. A lot of monsters have "100% drops", which is an item or items that are ''always'' dropped by that monster. 100% drops are more commonly bones or [[ashes]]. Certain monsters have more than one type of 100% drops. A good example of monsters who have more than one type of 100% drops are [[metal dragons]], who drop bones and also, metal [[bars]] of the type of metal they're made of.
+
+Large monsters (that take up more than one square) will always drop their drops in the south-westernmost square. This also applies to any [[Ranged]] [[ammunition]] that falls to the ground when ranging those monsters.
+
+The player who has done the most damage will see the drop before the other players. If a player has done half of the monster's [[Hitpoints]] in damage, and the monster has had time to heal, someone else may end up doing the most damage.
+
+A delay between the damage being done, and the creature eventually being killed, does not seem to affect the person who sees the drop first, as long as they did more than half of the total damage done.
+
+On rare occasions, when right-clicked the exact same moment as the monster dies, a screen may appear with the 100% drop only (and [[arrows]] if Ranged is used) and not with the other drops. Then, if right-clicked on the same spot again, the drops are present. This shows that ''[[Old School RuneScape]]'' first lets the monster drop its 100% drop, and then quickly calculates the other drops and then they appear too. To increase the chance of this happening, log on to a world with low ping.
+
+[[Items#Tradeability|Tradeable]] drops will remain on the ground for 200 game ticks (2 minutes or 120 seconds) before disappearing. Untradeable drops will disappear after 300 game ticks (3 minutes or 180 seconds). Drops are invisible to other players for the first 100 game ticks (1 minute or 60 seconds), after which time, anyone will be able to see (and take) the item if it is tradeable. The only exception is that if a player manually drops a non-food item in the [[Wilderness]], it will become visible to other players immediately.
+
+==Drop rate==
+{{Main|Drop rate}}
+All items have a chance of being dropped that is expressible as a number—their [[drop rate]]. Drop rates are not necessarily a guarantee; an item with a drop rate of "1 in 5" does not equate to "This item will be dropped after five kills." While each kill does nothing to increase the drop rate itself, it is trivial to state that more kills gives rise to more chance ''overall''.
+
+===Random number generator===
+The '''{{wp|random-number generator}}''' (or '''RNG''') functions similarly to [[drop rate]]s. It generates an unpredictable, random sequence of numbers, thus denoting a random chance. For example, if you kill a [[lizardman shaman]], there's a 1 in 3,000 chance it drops a [[dragon warhammer]], so a function object, such as a die, has a 1 in 3,000 chance of rolling on 3,000 each kill, which would result in receiving the drop.
+
+When selecting a random number from a range, in almost all cases every option in the range is equally likely, and most exceptions to this rule are documented explicitly. For example, if you open a [[casket (beginner)]], you are equally likely to get 1, 2, or 3 rolls at a reward, and if one of those rolls is for a [[cabbage]], you are equally likely to get 5, 6, 7, 8, or 9 cabbages from that roll.
+
+==Drop tables==
+{{Main|Drop table}}
+When a [[monster]] dies, it will roll its various drop tables to see if a player should obtain an item, and then which item they should obtain. Monsters generally have up to four types of drop rolls: 100% drops, main drops, secondary drops and tertiary drops.
+
+===100% drop===
+These are the items that a monster is guaranteed to drop when it dies. Items on this table are usually [[remains]], such as [[bones]] or [[ashes]], but there is no strict limitation to what can appear on this drop table. While all items on this table have a drop chance of "Always", not every item with an "Always" drop chance is a 100% drop; i.e., some items, such as some [[quest]] monster drops, are guaranteed as a drop on the first kill, but are not obtainable afterwards. This distinction keeps one-off items from being classed here; such items are usually tertiary drops (since they are also dropped alongside the 100% drop in many cases).
+
+===Main drop===
+The main drop table, if a monster has one, is guaranteed to be rolled when a monster dies. It contains a selection of items, with one randomly chosen. For a some monsters, this table can be rolled multiple times in one kill. It can also contain 'empty' drops, meaning that while the table is always rolled for monsters with such a drop table, it does not guarantee that the player will receive an item.
+
+===Secondary drops===
+Secondary drops are drops alongside main drops. A secondary drop is also known as a complementary drop. Secondary drops can have access to the main drop table (such as the [[Grotesque Guardians]] and [[Alchemical Hydra]]), but cannot roll uniques from the main drop table. For other monsters, mostly bosses, the secondary drop table contains supplies such as [[food]] and [[potions]] that can be used to extend trips.
+
+===Tertiary drops===
+Tertiary drops are drops that are rolled independently of the main drop table; examples include [[Pet|pets]], [[Clue scroll|clue scrolls]], and [[Looting bag|looting bags]]. Unlike the main drop, multiple tertiary drops can be obtained in a single kill. The [[long bone]] and [[curved bone]] are unique among tertiary drops in that the curved bone is only rolled if the long bone is not given: both these items cannot be received from the same kill.
+
+Some monsters also access a set of tertiary drops, such as [[Superior slayer monster|superior slayer monsters]], who roll a tertiary drop table alongside three rolls on their standard counterpart's drop table.
+
+==Special drop tables==
+
+===Rare drop table===
+{{Main|Rare drop table}}
+The [[rare drop table]] is an extra table of drops that can be rolled if a drop slot indicating it is rolled on the main drop. As such, the rare drop table drop will count as the main drop. The items available on the rare drop table are the same across every monster.
+
+===Slayer drop tables===
+Monsters assigned by [[Krystilia]] have a chance to drop [[slayer's enchantment]]s or [[Larran's key]]s as part of a global drop. Furthermore, monsters assigned by [[Konar]] have a chance to drop [[brimstone key]]s.
+
+===Shared drop tables===
+Shared or universal drop tables are tables that are shared between a class of monsters, such as [[revenants]]. 
+
+==Unique drops==
+Unique drops are notable drops from a particular monster that cannot generally be obtained elsewhere. They are usually dropped exclusively from that monster or a group of similar monsters. For example, the [[twisted bow]] and [[Armadyl crossbow]] are unique drops. They are usually part of the main drop table, but can sometimes be on tertiary drop tables, such as boss jars and pets.
+
+Some items that are 'unique' are dropped by multiple bosses or monsters, or classes of monsters, such as the [[abyssal whip]] and [[draconic visage]].
+
+==See also==
+*[[Drop rate]]
+*[[Rare drop table]]
+*[[Konar's drop table]]
+*[[Items]]
+*[[Kill count]]
+*[[Bestiary]]
+*[[Nothing]]
+[[Category:Combat]]
+[[Category:Mechanics]]

@@ -1,0 +1,170 @@
+<noinclude>{{Treasure Trails Guide Emote Clues Intro}}
+
+==Master Emote clues==
+</noinclude>
+{| class="wikitable lighttable" width="100%"
+! width="33% " |Clue
+! width="12%" |Items
+! width="40%" |Notes
+! width="15%" |Map
+|-
+|''[[Clue scroll (master) - Beckon by a collection of crystalline maple trees|Beckon by a collection of crystalline maple trees. Beware of double agents!]]'' 
+''Equip [[Bryophyta's staff]] and a [[nature tiara]].''
+|{{plinkp|Bryophyta's staff}} {{plinkp|Nature tiara}}
+|The maple trees are found within the town of [[Gwenith]], which requires completion of [[Song of the Elves]] to reach. [[Bryophyta's staff]] can either be uncharged or charged; both can be used.
+|[[File:Emote clue - beckon crystalline maple trees.png|150px]]
+|-
+|''[[Clue scroll (master) - Blow a kiss outside K'ril Tsutsaroth's chamber|Blow a kiss outside K'ril Tsutsaroth's chamber. Beware of double agents!]]'' 
+''Equip a [[Zamorak full helm]] and the [[Shadow sword]].''
+|{{plinkp|Zamorak full helm}} {{plinkp|Shadow sword}}
+|70 [[Hitpoints]] is required to access this part of the [[God Wars Dungeon]]. Completion of [[The General's Shadow]] [[miniquest]] is required to obtain the [[Shadow sword]].
+|[[File:Emote clue - kiss door of K'ril Tsutsaroth.png|150px]]
+|-
+|''[[Clue scroll (master) - Blow a raspberry at the bank of the Warrior's guild|Blow a raspberry at the bank of the Warrior's{{sic}} guild. Beware of double agents!]]'' 
+''Equip a [[dragon battleaxe]], a [[Slayer helmet|slayer helm]] of any kind and a [[dragon defender]] or [[avernic defender]].''
+|{{plinkp|Dragon battleaxe}} {{plinkp|Dragon defender}} {{plinkp|Slayer helmet}}
+|Any variant of [[Slayer helmet]] is acceptable. A total of 130 levels in [[Attack]] and [[Strength]] or level 99 in either skill is required to enter the guild. A [[Dragon defender (t)|trimmed dragon]] or [[avernic defender]] can be used.
+|[[File:Emote clue - raspberry warrior guild bank.png|150px]]
+|-
+|''[[Clue scroll (master) - Bow in front of the cave on Brittle Isle|Bow in front of the cave on Brittle Isle. Beware of double agents!]]'' 
+''Equip a [[medallion of the deep]] and a [[rosewood blowpipe]].''
+|{{plinkp|Medallion of the Deep}} {{plinkp|Rosewood blowpipe}}
+|81 [[Sailing]] and a [[boat]] with an [[eternal brazier]] are required to [[dock]] at [[Brittle Isle]]. At least one [[dart]] (adamant or lower) must be loaded in the blowpipe in order to equip it.
+|[[File:Emote clue - bow Brittle Isle.png|150px]]
+|-
+|''[[Clue scroll (master) - Bow in the Iorwerth Camp|Bow in the Iorwerth Camp. Beware of double agents!]]'' 
+''Equip a charged [[crystal bow]].''
+|{{plinkp|Crystal bow}} or {{plinkp|Bow of Faerdhinen}}
+|Bow near the stools at the south-eastern fire in the [[Iorwerth Camp]]. Works with any amount of charges left on the bow, or the [[Bow of Faerdhinen]].
+|[[File:Emote clue - bow near lord iorwerth.png|150px]]
+|-
+|''[[Clue scroll (master) - Cheer in the Entrana church|Cheer in the Entrana church. Beware of double agents!]]'' 
+''Equip a set of full [[black dragonhide armour]].''
+|{{plinkp|Black d'hide body}} {{plinkp|Black d'hide chaps}} {{plinkp|Black d'hide vambraces}}
+|Players must take a [[needle]], [[thread]], and six [[black dragon leather]]s, and craft the armour after arriving at [[Entrana]] (or trade another player on Entrana who has done so). Players with level 88 in [[Construction]] can make a master [[STASH]] unit to store the [[Black dragonhide armour|dragonhide armour]] in.
+|[[File:Emote clue - cheer entrana church.png|150px]]
+|-
+|''[[Clue scroll (master) - Clap in the magic axe hut|Clap in the magic axe hut. Beware of double agents!]]'' 
+''Equip only [[flared trousers]].''
+|{{Plinkp|Flared trousers}} {{Plinkp|lockpick}}
+|Level 55 [[Wilderness]], north-east of the [[Deserted Keep]].
+Lockpick required to enter
+|[[File:Emote clue - clap magic axe hut.png|150px]]
+|-
+|''[[Clue scroll (master) - Cry in the TzHaar gem store|Cry in the Tzhaar gem store. Beware of the double agents!]]''
+''Equip a [[fire cape]] and a [[Toktz-xil-ul|TokTz-Xil-Ul]]''.
+|{{plinkp|Fire cape}} {{plinkp|Toktz-xil-ul}}
+|The [[Toktz-xil-ul]] requires level 60 [[Ranged]] to equip. '''Turn off [[Auto Retaliate]]''' before performing the emote, as you may lose the TokTz-Xil-Ul from retaliating against the double agent!
+
+The [[fire max cape]], [[infernal cape]], and [[infernal max cape]] work in place of a fire cape.
+|[[File:Emote clue - cry tzhaar gem shop.png|150px]]
+|-
+|''[[Clue scroll (master) - Dance in Iban's temple|Dance in Iban's temple. Beware of double agents!]]'' 
+''Equip [[Iban's staff]], a [[Mystic robe top (dark)|black mystic top]], and a [[Mystic robe bottom (dark)|black mystic bottom]].''
+|{{plinkp|Iban's staff}} {{plinkp|Mystic robe top (dark)}} {{plinkp|Mystic robe bottom (dark)}}
+|Requires completion of [[Underground Pass]]. [[Iban's staff (u)]] can be used as a substitute. The easiest route is from [[Lletya]], running north to the Pass entrance.
+Note that the temple cannot be entered until the [[Regicide]] quest is started.
+|[[File:Emote clue - dance ibans temple.png|150px]]
+|-
+|''[[Clue scroll (master) - Dance in the King Black Dragon's lair|Dance in the King Black Dragon's lair. Beware of double agents!]]''
+''Equip a [[black d'hide body]], [[black d'hide vambraces]] and a [[black dragon mask]].''
+|{{plinkp|Black d'hide body}} {{plinkp|Black d'hide vambraces}} {{plinkp|Black dragon mask}}
+|An [[anti-dragon shield]] is recommended to defend against the [[King Black Dragon]]'s attacks. A [[STASH]] unit is found at the south-east corner of the lair for emote item storage.
+|[[File:Emote clue - dance kbd lair.png|150px]]
+|-
+|''[[Clue scroll (master) - Do a jig at the Barrows chest|Do a jig at the Barrows chest. Beware of double agents!]]'' 
+''Equip any [[Barrows equipment|full barrows set]].''
+|Any set of [[Barrows equipment]].
+|[[Echo ahrim's ornament kit|Echo Ahrim's]] can be used for this clue.
+|[[File:Emote clue - jig at barrows chest.png|150px]]
+|-
+|''[[Clue scroll (master) - Flap at the Death Altar|Flap at the Death Altar. Beware of double agents!]]'' 
+''Equip a [[death tiara]], a [[Cape of Legends|legend's cape]] and any [[ring of wealth]].''
+|{{plinkp|Death tiara}} {{plinkp|Cape of Legends}} {{plinkp|Ring of wealth}}
+|The [[flap]] emote requires opening the [[Gift of Peace]] at the centre of the [[Stronghold of Security]]'s first level. Accessing the [[Death Altar]] requires completion of [[Mourning's End Part II]], and a [[Cape of Legends]] can only be obtained after completion of [[Legends' Quest]]. Accessing the altar through [[Guardians of the Rift]] works for this clue. 
+|[[File:Emote clue - flap at Death Altar.png|150px]]
+|-
+|''[[Clue scroll (master) - Goblin Salute in the Goblin Village|Goblin Salute at the Goblin Village. Beware of double agents!]]''
+''Equip a [[Bandos platebody]], [[Bandos cloak]] and [[Bandos godsword]].''
+|{{plinkp|Bandos platebody}} {{plinkp|Bandos cloak}} {{plinkp|Bandos godsword}}
+|The [[Goblin Salute]] emote requires partial completion of [[The Lost Tribe]] quest. An [[Bandos godsword (or)|ornamental bandos godsword]] can be used for this clue.
+|[[File:Emote clue - goblin salute at goblin village.png|150px]]
+|-
+|''[[Clue scroll (master) - Jump for joy in the centre of Zul-Andra|Jump for joy in the centre of Zul-Andra. Beware of double agents!]]''
+''Equip a [[dragon 2h sword]], [[Bandos boots]] and an [[obsidian cape]].''
+|{{plinkp|Dragon 2h sword}} {{plinkp|Bandos boots}} {{plinkp|Obsidian cape}}
+|Partial completion of [[Regicide]] is required to reach [[Zul-Andra]]. [[Guardian boots|Guardian]] or [[echo boots]] can be used in place of [[Bandos boots]].
+|[[File:Emote clue - jump for joy Zul-Andra.png|150px]]
+|-
+|''[[Clue scroll (master) - Panic by the big egg|Panic by the big egg where no one dare goes and the ground is burnt. Beware of double agents!]]''
+''Equip a [[dragon med helm]], a [[Toktz-ket-xil|TokTz-Ket-Xil]], a [[brine sabre]], [[rune platebody]] and an [[Amulet of glory|uncharged amulet of glory]].''
+|{{plinkp|Dragon med helm}} {{plinkp|Toktz-ket-xil}} {{plinkp|Rune platebody}} {{plinkp|Brine sabre}} {{plinkp|Amulet of glory}}
+|Panic by the [[big egg]] on the east side of [[Lava Dragon Isle]]. Be careful of the [[lava dragons]] and [[player killers]] roaming the area.
+|[[File:Emote clue - panic lava dragon isle.png|150px]]
+|-
+|''[[Clue scroll (master) - Salute outside the gates of Cam Torum|Salute outside the gates of Cam Torum. Beware of double agents!]]''
+''Equip a full set of [[Blue moon armour|blue moon equipment]].''
+|{{plinkp|Blue Moon helm}} {{plinkp|Blue Moon chestplate}} {{plinkp|Blue Moon tassets}} {{plinkp|Blue Moon spear}}
+|Perform the emote at the entrance to [[Cam Torum]]. Used versions of the armour pieces can be used for this clue (but not fully broken).
+|[[File:Emote clue - salute Cam Torum.png|150px]]
+|-
+|''[[Clue scroll (master) - Show your anger at the Wise old man|Show your anger at the Wise old man. Beware of double agents!]]''
+''Equip an [[abyssal whip]], a [[cape of Legends|legend's cape]] and some [[spined chaps]].''
+|{{plinkp|Abyssal whip}} {{plinkp|Cape of Legends}} {{plinkp|Spined chaps}}
+|Any whip variant can be used for this clue.
+|[[File:Emote clue - anger wise old man.png|150px]]
+|-
+|''[[Clue scroll (master) - Show your anger towards the Statue of Saradomin|Show your anger towards the Statue of Saradomin in Ellamaria's garden. Beware of double agents!]]'' 
+''Equip a [[Zamorak godsword]].''
+|{{plinkp|Zamorak godsword}}
+|75 [[Attack]] is required to wield the [[Zamorak godsword]]. 
+[[Zamorak godsword (or)]] can be used as substitute.
+
+Partial completion of [[Garden of Tranquillity]] is required.
+|[[File:Emote clue - anger saradomin statue.png|150px]]
+|-
+|''[[Clue scroll (master) - Slap your head in the centre of the Kourend catacombs|Slap your head in the centre of the Kourend catacombs. Beware of double agents!]]'' 
+''Equip [[arclight]] or [[emberlight]] along with the [[amulet of the damned]].''
+|{{plinkp|Arclight}} {{plinkp|Amulet of the Damned}}
+|[[Kourend Castle Teleport]] teleports the player directly to the [[Catacombs of Kourend|Catacombs]]' main entrance. Partially charged items work. An [[Emberlight]] or an inactive [[Arclight#Inactive|Arclight]] will work for this step.
+|[[File:Emote clue - slap head kourend catacombs.png|150px]]
+|-
+|''[[Clue scroll (master) - Spin in front of the Soul Altar|Spin in front of the Soul Altar. Beware of double agents!]]''
+''Equip a [[dragon pickaxe]], [[helm of Neitiznot]] and a pair of [[rune boots]].''
+|{{plinkp|Dragon pickaxe}} {{plinkp|Helm of Neitiznot}} {{plinkp|Rune boots}}
+|Completion of [[The Fremennik Isles]] is required to wear the [[helm of Neitiznot]]. The [[neitiznot faceguard]] can't be used. Any variant of a dragon pickaxe will work, as well as a crystal pickaxe.
+|[[File:Emote clue - spin Soul Altar.png|150px]]
+|-
+|''[[Clue scroll (master) - Stamp in the Enchanted valley|Stamp in the Enchanted valley west of the waterfall. Beware of double agents!]]'' 
+''Equip a [[dragon axe]].''
+|{{plinkp|Dragon axe}}
+|[[Fairy ring]] code {{fairycode|BKQ}} (requires partial completion of [[Fairytale II - Cure a Queen]]) and the [[Stamp]] emote unlocked. The [[infernal axe]], [[crystal axe]], [[dragon felling axe]], and [[crystal felling axe]] can be used instead of a regular dragon axe.
+||[[File:Emote clue - stomp enchanted valley.png|150px]]
+|-
+|''[[Clue scroll (master) - Swing a bullroarer at the top of the Watchtower|Swing a bullroarer at the top of the watchtower. Beware of double agents!]]'' 
+''Equip a [[dragon plateskirt]], [[climbing boots]] and a [[dragon chainbody]].''
+|{{plinkp|Bullroarer}} {{plinkp|Dragon plateskirt}} {{plinkp|Climbing boots}} {{plinkp|Dragon chainbody}}
+|Partial completion of [[Legends' Quest]] is required to obtain the [[bullroarer]]. Completion of [[Watchtower Quest]] is required. [[Death Plateau]] is also required to wear [[climbing boots]]. The gilded [[Dragon chainbody (g)|chainbody]] and [[Dragon plateskirt (g)|plateskirt]] also work.
+|[[File:Emote clue - swing bullroarer watchtower.png|150px]]
+|-
+|''[[Clue scroll (master) - Wave on the northern wall of Castle Drakan|Wave on the northern wall of the Castle Drakan. Beware of double agents!]]'' 
+''Wear a [[dragon sq shield]], [[splitbark body]] and any [[boater]].''
+|{{Plinkp|Dragon sq shield}} {{plinkp|Splitbark body}} {{plinkp|Boater|pic=Red boater}}
+|Completion of [[Legends' Quest]] and partial completion of [[Darkness of Hallowvale]] is required. Any coloured [[boater]] and the [[Dragon sq shield (g)|gilded dragon sq shield]] will work. The location is accessed by entering the western wall in the far south-west corner of [[Meiyerditch]] and following north.
+
+With level 86 [[Agility]], completion of [[Sins of the Father]], and two [[long rope]]s, players can use an alternate route without the presence of [[vyrewatch]] by climbing the [[Wall (Darkmeyer)|wall]] at the north-eastern side of [[Darkmeyer]]. After climbing the wall, players can then run north-west until they reach some [[Rocks (Darkmeyer)|rocks]] that must be jumped over.
+
+|[[File:Emote clue - wave castle drakan.png|150px]]
+|-
+|''[[Clue scroll (master) - Yawn in the 7th room of Pyramid Plunder|Yawn in the 7th room of Pyramid Plunder. Beware of double agents!]]'' 
+''Equip a [[pharaoh's sceptre]] and a full set of [[Menaphite clothing|menaphite robes]].''
+|{{plinkp|Pharaoh's sceptre}} {{plinkp|Menaphite purple hat}} {{plinkp|Menaphite purple top}}{{plinkp|Menaphite purple robe}}
+|81 [[Thieving]] (cannot be boosted) is required to reach this room, in addition to completing [[Icthlarin's Little Helper]]. Any amount of charges will work for the [[Pharaoh's sceptre]], and any [[menaphite clothing]] will work as long as all the pieces are the same colour. A set of [[menaphite clothing]] may be stored without storing the sceptre.
+|[[File:Emote clue - yawn pyramid plunder.png|150px]]
+|-
+|''[[Clue scroll (master) - Think on the western coast of Salvager Overlook|Think on the western coast of Salvager Overlook. Beware of double agents!]]'' 
+''Equip a [[Hueycoatl hide coif]] and some [[Hueycoatl hide vambraces]].''
+|{{plinkp|Hueycoatl hide coif}} {{plinkp|Hueycoatl hide vambraces}}
+|
+|[[File:Emote clue - think salvager overlook.png|150px]]
+|}

@@ -1,0 +1,30 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Perhaps someone at the observatory can teach me to navigate?
+|value = 20
+|weight = 0.020
+|id = 12033
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[coordinate clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 411
+|text = The coordinate reveals where to dig:<br><br>08.11S 04.48E
+|items = 
+|notes = South-east of [[Feldip Hills]], by the [[crimson swift]]s ([[fairy ring]] {{Fairycode|AKS}}).
+
+|map = {{Map|2594,2899|mtype=pin|plane=0|mapID=-1}}
+}}

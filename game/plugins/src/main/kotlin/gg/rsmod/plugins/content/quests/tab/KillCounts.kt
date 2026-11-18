@@ -6,6 +6,7 @@ import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.content.areas.wilderness.bosses.OldWildernessBosses
 import gg.rsmod.plugins.content.npcs.definitions.barrows.Barrows
+import gg.rsmod.plugins.content.scrolls.ClueCompletions
 
 /**
  * Kill count per Drop Viewer entry (N108 / N104). The engine already counts every npc kill per npc id
@@ -22,7 +23,8 @@ object KillCounts {
             "chest" -> player.attr[CHESTS] ?: 0
             CollectionLogPages.TOA -> player.attr[gg.rsmod.plugins.content.activity.toa.ToaChest.COMPLETIONS] ?: 0
             CollectionLogPages.COX -> player.attr[gg.rsmod.plugins.content.activity.cox.CoxRewards.COMPLETIONS] ?: 0
-            else -> DropSources.byKey(player, key)?.let { source -> ofNpcs(player, source.npcs) } ?: 0
+            else -> ClueCompletions.tierForKey(key)?.let { ClueCompletions.get(player, it) }
+                ?: DropSources.byKey(player, key)?.let { source -> ofNpcs(player, source.npcs) } ?: 0
         }
 
     // Count completed fights, including entries that group several NPC forms under the same name.

@@ -1,0 +1,8 @@
+{
+  "source": "C:\\RSPS\\2011scape-client\\2011scape-client\\runescape\\src\\main\\java\\com\\jagex\\game\\runetek6\\config\\loctype\\LocType.java",
+  "sourceSha256": "b5182fb938c222d06ae8d7a7b22f8324fb2d78a2822edfbaa1d1c2540e30da7f",
+  "opcode": 242,
+  "purpose": "u16 selectors + signed g4 fallback/destinations; no change to old 77/92",
+  "clientWritten": false,
+  "stagedSource": "C:\\RSPS\\work\\gpt-b\\build\\clue\\client-stash-patch\\LocType.java"
+}

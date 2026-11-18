@@ -1,0 +1,92 @@
+{{Transcript|npc}}
+
+==Before Doric's Quest==
+* '''Doric:''' Hello traveller, what brings you to my humble smithy?
+* {{tselect|Select an Option}}
+* {{topt|I wanted to use your anvils.}}
+** '''Player:''' I wanted to use your anvils.
+** '''Doric:''' My anvils get enough work with my own use. I make pickaxes, and it takes a lot of hard work. If you could get me some more materials, then I could let you use them.
+** {{tselect|Start Doric's Quest?}}
+** {{topt|Yes.}}
+*** {{tact|Continues in [[Transcript:Doric's Quest]]}}
+** {{topt|No.}}
+*** '''Player:''' No, hitting rocks is for the boring people, sorry.
+*** '''Doric:''' That is your choice. Nice to meet you anyway.
+*** {{tact|end}}
+* {{topt|I want to use your whetstone.}}
+** '''Player:''' I wanted to use your whetstone.
+** '''Doric:''' The whetstone is for more advanced smithing, but I could let you use it as well as my anvils if you could get me some more materials.
+** {{tselect|Start Doric's Quest?}}
+** {{topt|Yes.}}
+*** {{tact|above}}
+** {{topt|No.}}
+*** {{tact|above}}
+* {{topt|Mind your own business, shortstuff!}}
+** '''Player:''' Mind your own business, shortstuff!
+** '''Doric:''' How nice to meet someone with such pleasant manners. Do come again when you need to shout at someone smaller than you!
+** {{tact|end}}
+* {{topt|I was just checking out the landscape.}}
+** '''Player:''' I was just checking out the landscape.
+** '''Doric:''' Hope you like it. I do enjoy the solitude of my little home. If you get time, please say hi to my friends in the Dwarven Mine.
+** {{tselect|Select an Option}}
+** {{topt|Dwarven Mine?}}
+*** '''Player:''' Dwarven Mine?
+*** '''Doric:''' Yep, the entrance is in the side of Ice Mountain just to the east of here. They're a friendly bunch. Stop in at Nurmof's store and buy one of my pickaxes!
+*** {{tact|end}}
+** {{topt|Will do!}}
+*** '''Player:''' Will do!
+*** {{tact|end}}
+* {{topt|What do you make here?}}
+** '''Player:''' What do you make here?
+** '''Doric:''' I make pickaxes. I am the best maker of pickaxes in the whole of Gielinor.
+** '''Player:''' Do you have any to sell?
+** '''Doric:''' Sorry, but I've got a running order with Nurmof.
+*** {{tselect|Select an Option}}
+*** {{topt|Who's Nurmof?}}
+**** '''Player:''' Who's Nurmof?
+**** '''Doric:''' Nurmof has a store over in the Dwarven Mine. You can find the entrance on the side of Ice Mountain to the east of here.
+**** {{tact|end}}
+*** {{topt|Ah, fair enough.}}
+**** '''Player:''' Ah, fair enough.
+**** {{tact|end}}
+
+===Attempting to use his anvils before the quest===
+* '''Doric:''' Hey, who said you could use that? My anvils get enough work with my own use. I make pickaxes, and it takes a lot of hard work.
+* {{tselect|Select an Option}}
+* {{topt|Sorry, would it be OK if I used your anvils?}}
+** '''Player:''' Sorry, would it be OK if I used your anvils?
+** '''Doric:''' If you could get me some more materials then I could let you use them.
+** {{tselect|Select an Option}}
+** {{topt|Yes, I will get you materials.}}
+*** {{tact|above}}
+** {{topt|No, hitting rocks is for the boring people, sorry.}}
+*** {{tact|above}}
+* {{topt|I didn't want to use your anvils anyway.}}
+** '''Player:''' I didn't want to use your anvils anyway.
+** '''Doric:''' That is your choice.
+** {{tact|end}}
+
+==After Doric's Quest==
+* '''Doric:''' Hello traveller, how is your metalworking coming along?
+* '''Player:''' Not too bad, Doric.
+* '''Doric:''' Good, the love of metal is a thing close to my heart.
+* {{tact|end}}
+
+==Treasure Trails==
+===Beginner===
+* '''Doric:''' Well done.
+* {{tcond|If the reward is another clue scroll:}}
+** {{tbox|pic=Clue scroll (beginner) detail.png|You've found another clue!}}
+** {{tact|end}}
+* {{tcond|If the reward is a casket:}}
+** {{tbox|pic=Reward casket (beginner) detail.png|You've obtained a casket!}}
+** {{tact|end}}
+
+===Easy===
+* '''Doric:''' So, you've come to the right place?
+* {{tcond|If the reward is another clue scroll:}}
+** {{tbox|pic=Clue scroll (easy) detail.png|You've been given another clue!}}
+** {{tact|end}}
+* {{tcond|If the reward is a casket:}}
+** {{tbox|pic=Reward casket (easy) detail.png|You've obtained a casket!}}
+** {{tact|end}}

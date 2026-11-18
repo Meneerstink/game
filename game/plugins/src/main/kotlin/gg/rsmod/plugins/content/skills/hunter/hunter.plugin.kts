@@ -23,7 +23,7 @@ HunterCreatures.ALL.forEach { creature ->
 }
 
 // Classic impling capture. Jar Loot is registered once in impling_jars.plugin.kts.
-ImplingData.TIERS.forEach { tier ->
+ImplingData.JAR_TIERS.forEach { tier ->
     on_npc_option(npc = tier.npcId, option = "catch") {
         Impling.catch(player, player.getInteractingNpc())
     }

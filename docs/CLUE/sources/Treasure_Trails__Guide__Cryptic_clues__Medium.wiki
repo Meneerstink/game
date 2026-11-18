@@ -1,0 +1,189 @@
+<noinclude>{{Treasure Trails Guide Cryptic Clues Intro}}
+
+==Medium Cryptic clues==
+</noinclude>
+{| class="wikitable align-center-3" width="100%"
+!Clue
+!Notes
+!Task
+!Image
+{{Cryptics
+|clue=[[Clue scroll (medium) - A graceful man of many colours|A graceful man of many colours, his crates must be full of many delights.]]
+|note=Kill a [[hill giant]] to obtain the key. Search the crate on the {{FloorNumber|uk=2}} of [[Osten]]'s shop in [[Shayzien]].
+|task=key
+|image=Cryptic clue - search crate osten.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - A town with a different sort of night-life is your destination|A town with a different sort of night-life is your destination.
+Search for some crates in one of the houses.]]
+|note=Search the crate inside of the clothes shop in [[Canifis]]. ([[fairy ring]] code {{Fairycode|CKS}})
+|task=search
+|image=Cryptic clue - search crate barkers canifis.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - Are you somewhat entertained|Are you somewhat entertained?]]
+|note=Speak to [[Gloria]] inside the [[Fortis Colosseum]].
+|task=talk
+|image=Cryptic clue - are you somewhat entertained.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - Find a crate close to the monks that like to paaarty!|Find a crate close to the monks that like to paaarty!]]
+|note=The crate is in the east side of the [[Kandarin Monastery]], which is south of [[Ardougne]] and where [[Brother Omad]] is found.
+|task=search
+|image=Cryptic clue - search crate yanille monastery.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - Go to the village being attacked by trolls|Go to the village being attacked by trolls, search the drawers in one of the houses.]]
+|note=Go to [[Dunstan]]'s house in the north-east corner of [[Burthorpe]]. Kill [[Penda]] in [[The Toad and Chicken]] to obtain the key.
+|task=key
+|image=Cryptic clue - search drawers dunstan Burthorpe.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - Go to this building to be illuminated|Go to this building to be illuminated, and check the drawers while you are there.]]
+|note=The {{FloorNumber|uk=1}} of the [[Lighthouse]] ([[fairy ring]] code {{Fairycode|ALP}}).
+Kill a [[Rellekka]] [[Market Guard (Fremennik)|marketplace guard]] to obtain the key. ('''Note:''' Starting the [[Horror from the Deep]] quest and speaking to [[Gunnjorn]] to obtain the [[Lighthouse key]] is required! Level 35 [[Agility]] is required to talk to Gunnjorn. You must also repair the bridge with two wooden [[planks]], a [[hammer]] and 60 [[steel nails]].)
+|task=key
+|image=Cryptic clue - search drawers lighthouse.png
+|level=2}}
+{{Cryptics
+|clue=I'd like to hear some music. Come and see me on the bridge in Falador Park, and play: ''<some music>''
+
+Thanks, Cecilia
+|note=Speak to [[Cecilia]], who is located on the bridge in [[Falador Park]].
+|task=talk
+|image=Cryptic clue - talk to Cecilia.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - In a town where everyone has perfect vision|In a town where everyone has perfect vision, seek some locked drawers in a house that sits opposite a workshop.]]
+|note=The drawers is in [[Seers' Village]] in the house south of the [[Elemental Workshop (dungeon)|Elemental Workshop entrance]].
+Kill any [[chicken]] to obtain a key. ('''Note:''' The closest chicken is just by the entrance of the [[Ranging Guild]], west of [[Seers' Village]].)
+|task=key
+|image= Cryptic clue - search drawer seers village.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - In a town where the guards are armed with maces|In a town where the guards are armed with maces, search the upstairs rooms of the Public House.]]
+|note=Search the drawers in the pub north of [[Ardougne Castle]].
+Kill a [[guard dog]] at [[Handelmort Mansion]] to obtain the key.
+|task= key
+|image= Cryptic clue - search drawers east ardougne.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - In a town where thieves steal from stalls|In a town where thieves steal from stalls, search for some drawers in the upstairs of a house near the bank.]]
+|note=Kill any [[guard]] located around [[East Ardougne]] for a [[key (medium)|medium key]]. Then, search the drawers in the upstairs hallway of [[Jerico]]'s house, which is the house with [[pigeon cage]]s located south of the northern [[East Ardougne]] bank.
+|task=key
+|image=Cryptic clue - search drawers jerico east ardougne.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - In a town where wizards are known to gather|In a town where wizards are known to gather, search upstairs in a large house to the north.]]
+|note=Travel to [[Yanille]] and head to the house north-west of the bank. Kill a [[man]] nearby to receive a key. Go upstairs in the house and search the chest.''
+|task=key
+|image=Cryptic clue - search chest yanille.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - In a village made of bamboo|In a village made of bamboo, look for some crates under one of the houses.]]
+|note=Search the crate by the house at the northern point of the broken jungle fence in [[Tai Bwo Wannai]].
+|task=search
+|image=Cryptic clue - search crates tai bwo wannai.png
+|level=2}}
+{{Cryptics
+|clue= [[Clue scroll (medium) - Probably filled with wizards socks|Probably filled with wizards socks.]]
+|note= Kill one of the [[wizard]]s for the key. Search the drawers in the basement of the [[Wizards' Tower]] south of [[Draynor Village]]. ([[fairy ring]] code {{Fairycode|DIS}})
+|task= key
+|image= Cryptic clue - search drawer wizard tower.png
+|level= 2}}
+{{Cryptics
+|clue = [[Clue scroll (medium) - Search the basket of apples in an orchard|Search the basket of apples in an orchard, south of the unknown grave surrounded by white roses.]]
+|note = It's in the orchard north-west of [[Hosidius]].
+|task =search
+|image = Cryptic clue - search basket apples.png
+|level = 2}}
+{{Cryptics
+|clue = [[Clue scroll (medium) - Search the crate abandoned in the shadow of a mountain's grace|Search the crate abandoned in the shadow of a mountain's grace.]]
+|note = Search the crate inside the lone building in the [[Gloomthorn Trail]].
+|task =search
+|image = Cryptic clue - search crate Gloomthorn Trail.png
+|level = 2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - Search the upstairs drawers of a house|Search the upstairs drawers of a house in a village where pirates are known to have a good time.]]
+|note=The house in the south-east corner of [[Brimhaven]], north-east of [[Davon's Amulet Store]].
+Kill any [[pirate]] located around [[Brimhaven]] to obtain the key.
+|task=key
+|image=Cryptic clue - search drawers brimhaven.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - Speak to a referee|Speak to a referee.]]
+|note=Talk to a [[Gnome ball referee]] found on the [[Gnome Ball]] field in the [[Gnome Stronghold]]. You will receive a [[challenge scroll]] that you have to answer.
+'''Answer:''' 5096
+|task=talk
+|image=Cryptic clue - speak gnomeball referee.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - Speak to Donovan, the Family Handyman|Speak to Donovan, the Family Handyman.]]
+|note=[[Donovan the Family Handyman]] is found on the {{FloorNumber|uk=1}} of [[Sinclair Mansion]].
+|task=talk
+|image=Cryptic clue - speak donovan sinclair mansion.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - Speak to Hajedy|Speak to Hajedy.]]
+|note=[[Hajedy]] is found by the [[Shilo Village cart system|cart]], located just south of the [[Brimhaven]] docks.
+|task=talk
+|image=Cryptic clue - speak hajedy brimhaven.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - Speak to Kangai Mau|Speak to Kangai Mau]].
+|note=[[Kangai Mau]] is found in the [[Shrimp and Parrot]] in [[Brimhaven]].
+|task=talk
+|image=Cryptic clue - speak kangai mau.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - Speak to Roavar|Speak to Roavar.]]
+|note=Talk to [[Roavar]] in the [[Canifis]] [[Hair of the Dog|tavern]].
+|task=talk
+|image= Cryptic clue - talk roavar canifis.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - Speak to Uglug Nar|Speak to Uglug Nar.]]
+|note=[[Uglug Nar]] is an ogre shaman outside of [[Jiggig]], south of [[Castle Wars]]. You will receive a [[challenge scroll]] that you have to answer.
+'''Answer:''' 6859
+|task=talk
+|image=
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - Speak to Ulizius|Speak to Ulizius.]]
+|note=[[Ulizius]] is the monk who guards the gate into [[Mort Myre Swamp]]. ([[fairy ring]] code {{Fairycode|CKS}})
+|task=talk
+|image=Cryptic clue - speak ulizius canifis.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - The dead, red dragon watches over this chest|The dead, red dragon watches over this chest. He must really dig the view.]]
+|note=Search the chest underneath the Red Dragon's head in the [[Exam Centre]].
+Kill a [[barbarian]] in [[Barbarian Village]], [[Barbarian Outpost]] or the [[Blue Moon Inn]] to receive the key.
+|task=key
+|image=Cryptic clue - search chest exam centre.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - This crate holds a better reward than a broken arrow|This crate holds a better reward than a broken arrow.]]
+|note= Inside the [[Ranging Guild]]. Search the crate behind the northern most building.
+|task=search
+|image=Cryptic clue - search crate ranging guild.png
+|level=2}}
+{{Cryptics
+|clue= [[Clue scroll (medium) - This crate is mine, all mine, even if it is in the middle of the desert|This crate is mine, all mine, even if it is in the middle of the desert.]]
+|note= Centre of the [[Desert Mining Camp]]. Search the crates. Requires the [[metal key]] from [[The Tourist Trap]] to enter.
+|task=search
+|image=Cryptic clue - search crate desert mining camp.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - Try not to step on any aquatic nasties while searching this crate|Try not to step on any aquatic nasties while searching this crate.]]
+|note=Search the crate in [[Bailey]]'s house on the [[Fishing Platform]].
+|task=search
+|image=Cryptic clue - search crate fishing platform.png
+|level=2}}
+{{Cryptics
+|clue=[[Clue scroll (medium) - Look for a locked chest in the town's chapel|You'll need to look for a town with a central fountain. Look for a locked chest in the town's chapel.]]
+|note=Search the chest by the stairs in the [[Varrock]] church, east of the [[Varrock Palace|palace]].
+Kill a [[monk]] in [[Ardougne Monastery]] to obtain the key.
+|task=key
+|image=Cryptic clue - search chest varrock church.png
+|level=2}}
+|}

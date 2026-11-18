@@ -1,0 +1,86 @@
+[
+  {
+    "npc": "Hans",
+    "source": {
+      "page": "Transcript:Hans",
+      "revision": 15279943,
+      "revision_time": "2026-07-29T12:46:52Z",
+      "file": "Transcript_Hans.wiki",
+      "sha256": "d8198461d06219b2b63bf42915de42825eb592ea8062c41843f4b6c8fec360e5",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AHans"
+    },
+    "section": "\n* {{tcond|When given another clue scroll:}}\n** {{tbox|pic=clue scroll (easy) detail.png|You've been given another clue!}}\n** {{tact|receives=another clue scroll}}\n** {{tact|end}}\n* {{tcond|When given a reward casket:}}\n** {{tbox|pic=Reward casket (easy) detail.png|You've obtained a casket!}}\n** {{tact|receives=a reward casket}}\n** {{tact|end}}\n"
+  },
+  {
+    "npc": "Doric",
+    "source": {
+      "page": "Transcript:Doric",
+      "revision": 15320499,
+      "revision_time": "2026-08-26T07:24:05Z",
+      "file": "Transcript_Doric.wiki",
+      "sha256": "45e2273f997c5516d0351cd8d06973717947e905eff4d0bed60e353b22cd8fd3",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ADoric"
+    },
+    "section": "\n* '''Doric:''' So, you've come to the right place?\n* {{tcond|If the reward is another clue scroll:}}\n** {{tbox|pic=Clue scroll (easy) detail.png|You've been given another clue!}}\n** {{tact|end}}\n* {{tcond|If the reward is a casket:}}\n** {{tbox|pic=Reward casket (easy) detail.png|You've obtained a casket!}}\n** {{tact|end}}"
+  },
+  {
+    "npc": "Arhein",
+    "source": {
+      "page": "Transcript:Arhein",
+      "revision": 15314033,
+      "revision_time": "2026-08-20T17:06:59Z",
+      "file": "Transcript_Arhein.wiki",
+      "sha256": "d5f080921e0a877bde540dd186ed56fc73cdff31309d7bc1b46588bdb48d273a",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AArhein"
+    },
+    "section": "\n* '''Arhein:''' Well done, matey!\n* {{tcond|If the reward is another clue scroll:}}\n** {{tact|receives=an [[Clue scroll (easy)|easy clue scroll]]}}\n** {{tbox|pic=clue scroll (easy) detail.png|You've found another clue!}}\n** {{tact|end}}\n* {{tcond|If the reward is a casket:}}\n** {{tact|receives=an [[Reward casket (easy)|easy reward casket]]}}\n** {{tbox|pic=reward casket (easy) detail.png|You've obtained a casket!}}\n** {{tact|end}}"
+  },
+  {
+    "npc": "Ellis",
+    "source": {
+      "page": "Transcript:Ellis",
+      "revision": 15304631,
+      "revision_time": "2026-08-17T22:37:36Z",
+      "file": "Transcript_Ellis.wiki",
+      "sha256": "b695555c4f50249808468b3f6633d37f80c7be3fc8614a9eb575b6b5a3283f63",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AEllis"
+    },
+    "section": "\n* {{tcond|If the reward is another clue scroll:}}\n** {{tact|receives=an [[Clue scroll (easy)|easy clue scroll]]}}\n** {{tbox|pic=clue scroll (easy) detail.png|You've been given another clue!}}\n** {{tact|end}}\n* {{tcond|If the reward is a casket:}}\n** {{tact|receives=an [[Reward casket (easy)|easy reward casket]]}}\n** {{tbox|pic=reward casket (easy) detail.png|You've obtained a casket!}}\n** {{tact|end}}"
+  },
+  {
+    "npc": "Ned",
+    "source": {
+      "page": "Transcript:Ned",
+      "revision": 15127859,
+      "revision_time": "2026-02-16T01:40:16Z",
+      "file": "Transcript_Ned.wiki",
+      "sha256": "cbe151295aa182bbd166697bc55941bfdf1f7d3b90c245b653389cdb81d2aa4d",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ANed"
+    },
+    "section": "\n* '''Ned:''' Well done!\n* {{tcond|When given another clue scroll:}}\n** {{tbox|pic=clue scroll (easy) detail.png|You've been given another clue!}}\n** {{tact|end}}\n* {{tcond|When given a reward casket:}}\n** {{tbox|pic=reward casket (easy) detail.png|You've obtained a casket!}}\n** {{tact|end}}\n"
+  },
+  {
+    "npc": "Gaius",
+    "source": {
+      "page": "Transcript:Gaius",
+      "revision": 15127951,
+      "revision_time": "2026-02-16T03:16:43Z",
+      "file": "Transcript_Gaius.wiki",
+      "sha256": "9096eea2523d8907239daf099818adb24e3c1495ce7ea2bb02d674226a9cb535",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AGaius"
+    },
+    "section": "\n* '''Gaius:''' Here you go.\n* {{tcond|If the reward is another clue scroll:}}\n** {{tact|receives=an [[Clue scroll (easy)|easy clue scroll]]}}\n** {{tbox|pic=clue scroll (easy) detail.png|You've been given another clue!}}\n** {{tact|end}}\n* {{tcond|If the reward is a casket:}}\n** {{tact|receives=an [[Reward casket (easy)|easy reward casket]]}}\n** {{tbox|pic=reward casket (easy) detail.png|You've obtained a casket!}}\n** {{tact|end}}"
+  },
+  {
+    "npc": "Cassie",
+    "source": {
+      "page": "Transcript:Cassie",
+      "revision": 15127300,
+      "revision_time": "2026-02-15T04:04:15Z",
+      "file": "Transcript_Cassie.wiki",
+      "sha256": "57cc4af847aaf5039919cba6a369986795f99a9966e73767bde2b8e65a78a68c",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ACassie"
+    },
+    "section": "\n* {{tcond|When given another clue scroll:}}\n** {{tbox|pic=clue scroll (easy) detail.png|You've been given another clue!}}\n** {{tact|end}}\n* {{tcond|When given a reward casket:}}\n** {{tbox|pic=reward casket (easy) detail.png|You've obtained a casket!}}\n** {{tact|end}}"
+  }
+]

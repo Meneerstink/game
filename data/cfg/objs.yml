@@ -72402,6 +72402,9 @@
 # N462: OSRS loc 11391; https://oldschool.runescape.wiki/w/Rocks_(empty)?oldid=15073028 L25. Local id resolved from toa/ids.tsv.
 - id: 66312
   examine: "Stoney!"
+# CLUE: OSRS 29718 -> existing Watson-house loc 62735; Noticeboard Wiki revision 15101341.
+- id: 62735
+  examine: "Keep track of your STASH."
 # N634 (Claude 18-11): CoX loc examines from the OSRS Wiki infobox versions (work/claude-scripts/loc_examines.py)
 - id: 66334
   examine: "Found near the water's edge."

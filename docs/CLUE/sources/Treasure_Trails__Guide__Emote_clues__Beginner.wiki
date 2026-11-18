@@ -1,0 +1,43 @@
+<noinclude>{{Treasure Trails Guide Emote Clues Intro}}
+
+==Beginner Emote clues==
+</noinclude>
+{| class="wikitable lighttable" width="100%"
+! width="33% " |Clue
+! width="12%" |Items
+! width="40%" |Notes
+! width="15%" |Map
+|-
+|''[[Clue scroll (beginner) - Blow a raspberry at Aris in her tent|Blow a raspberry at Aris in her tent.]]''
+''Equip a [[gold ring]] and a [[gold necklace]].''
+|{{plinkp|Gold ring}} {{plinkp|Gold necklace}}
+|[[Aris]] can be found in her tent at [[Varrock Square]].
+|[[File:Emote clue - raspberry gypsy aris.png|150px]]
+|-
+|''[[Clue scroll (beginner) - Bow to Brugsen Bursen at the Grand Exchange|Bow to Brugsen Bursen at the Grand Exchange.]]''
+|
+|[[Brugsen Bursen]] is found inside the [[Grand Exchange]].
+|[[File:Emote clue - bow Brugsen Bursen.png|150px]]
+|-
+|''[[Clue scroll (beginner) - Cheer at Iffie Nitter|Cheer at Iffie Nitter.]]''
+''Equip a [[chef's hat]] and a [[red cape]].''
+|{{plinkp|Chef's hat}} {{plinkp|Red cape}}
+|[[Iffie]] can be found in [[Thessalia's Fine Clothes]] store in [[Varrock]].
+|[[File:Emote clue - cheer iffie nitter.png|150px]]
+|-
+|''[[Clue scroll (beginner) - Clap at Bob's Brilliant Axes|Clap at Bob's Brilliant Axes.]]''
+''Equip a [[bronze axe]] and [[leather boots]].''
+|{{plinkp|Bronze axe}} {{plinkp|Leather boots}}
+|[[Bob's Brilliant Axes]] is located in south [[Lumbridge]], right outside [[Lumbridge Castle]].
+|[[File:Emote clue - clap bobs brilliant axes.png|150px]]
+|-
+|''[[Clue scroll (beginner) - Panic at Al Kharid mine|Panic at Al Kharid mine.]]''
+|
+|[[Al Kharid mine]] is located just north of [[Al Kharid]]. The area is quite large, so the step can also be completed at the southern entrance of the mine or standing in the north-western corner outside the mine.
+|[[File:Emote clue - panic al kharid mine.png|150px]]
+|-
+|''[[Clue scroll (beginner) - Spin at Flynn's Mace Shop|Spin at Flynn's Mace Shop.]]''
+|
+|[[Flynn's Mace Market]] is located near the north entrance of [[Falador]].
+|[[File:Emote clue - spin mace market.png|150px]]
+|}

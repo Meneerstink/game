@@ -31,12 +31,12 @@ class KitTradeabilityTests {
 
     @Test
     fun `no casket, chest or drop table gives a kit or a kitted item`() {
-        // V12: every kit comes from the stores only. The reward tables name items by number (EliteCasketTable, casket.plugin.kts,
+        // V12: every kit comes from the stores only. The legacy clue tree has been replaced by the sourced catalogue below.
+        // Other reward tables name items by number (casket.plugin.kts,
         // the Deadman chest, the npc drop tables), so the ids themselves are searched.
         val ids = OrnamentKitRules.KITS + OrnamentKitRules.KITTED
         val sources =
             listOf(
-                "src/main/kotlin/gg/rsmod/plugins/content/items/EliteCasketTable.kt",
                 "src/main/kotlin/gg/rsmod/plugins/content/items/casket.plugin.kts",
                 "src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/chest/DeadmanChestWorld.kt",
                 "../../data/cfg/npcs/drop-tables.json",
@@ -48,6 +48,11 @@ class KitTradeabilityTests {
                 ids.filter { Regex("(?<![\\w\\d])$it(?![\\d])").containsMatchIn(text) }.map { "$path: $it" }
             }
         assertTrue(found.isEmpty(), "kits outside the stores: $found")
+        val clues = gg.rsmod.plugins.content.scrolls.ClueRewardCatalogue.load(File("../../data/cfg/clue/rewards.json"))
+        val rolled = clues.outcomes.values.flatten().flatMap { it.rows }
+        assertTrue(rolled.none { it.shopOnly }, "owner 14 November: kit outcomes reroll the allowed table")
+        val rolledLocal = rolled.mapNotNull { gg.rsmod.plugins.content.scrolls.ClueItems.local(it.osrsId) }.toSet()
+        assertTrue((rolledLocal intersect ids).isEmpty(), "clue catalogue gives a store-only kit/kitted item")
     }
 
     @Test

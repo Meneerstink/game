@@ -1,0 +1,29 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 3604
+|leagueRegion = Karamja
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[cryptic clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 839
+|text = The cryptic reveals where to search:<br><br>In a village made of bamboo, look for some crates under one of the houses.
+|notes = Search the crate by the house at the northern point of the broken jungle fence in [[Tai Bwo Wannai]].
+|map = {{Map|2800,3074|mtype=pin|plane=0|mapID=-1}}
+}}

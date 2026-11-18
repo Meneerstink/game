@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.skills.mining
 
+import gg.rsmod.plugins.content.scrolls.TreasureTrailSherlock as ClueTasks
+
 import gg.rsmod.plugins.content.skills.summoning.SummoningBoosts
 
 import gg.rsmod.game.fs.def.ItemDef
@@ -198,9 +200,11 @@ object Mining {
             }
             player.playSound(Sfx.MINE_ORE)
         }
-        player.inventory.add(reward)
+        val mined = player.inventory.add(reward)
+        if (mined.hasSucceeded() && rock == RockType.MITHRIL) ClueTasks.succeeded(player, ClueTasks.Action.MITHRIL_ORE)
         player.addXp(Skills.MINING, product?.experience ?: rock.experience, checkBrawlingGloves = true)
         gg.rsmod.plugins.content.skills.summoning.SkillingPets.mining(player, rock)
+        gg.rsmod.plugins.content.scrolls.ClueSkilling.mining(player, rock)
         player.filterableMessage("You manage to mine some $oreName.")
     }
 

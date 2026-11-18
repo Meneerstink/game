@@ -1,0 +1,30 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[20 March]] [[2024]]
+|update = Varlamore: Part One
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = I need to decipher this.
+|value = 20
+|weight = 0.020
+|id = 28916
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cipher clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 965
+|text = The cipher reveals who to speak to next:<br><br>BXJA UNJMNA YRCAR
+|notes = Speak to [[Soar Leader Pitri]] at the top of the [[Hunter Guild]].
+The clue has an additional challenge:
+
+A [[puzzle box]].
+|map = {{Map|1558,3046|mtype=pin|plane=2|mapID=-1}}
+}}

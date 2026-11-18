@@ -1,0 +1,40 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by thetoddster!
+|value = 20
+|weight = 0.020
+|id = 12552
+|leagueRegion = Kourend&Asgarnia,Kourend&Tirannwn,Kourend&Wilderness
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[emote clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+The items can be stored in a [[STASH]] unit, requiring {{SCP|Construction|55|link=yes}}, 2 [[teak plank|teak planks]], 10 [[nails]] and a [[hammer]] and [[saw]] to build.
+
+==Clue info==
+{{Clue info
+|id = 346
+|tier = hard
+|emote = Salute
+|text = The emote reveals <br><br>Salute in the centre of the mess hall. Beware of double agents! Equip a rune halberd rune platebody, and an amulet of strength.
+|location = Northern part of the [[Hosidius]] [[mess]], near [[Ewesey]]
+|items = Equip a [[rune halberd]], [[rune platebody]], and an [[amulet of strength]].
+|equipment1 = Rune halberd
+|equipment2 = Rune platebody
+|equipment3 = Amulet of strength
+|notes = Perform the [[salute]] emote in the [[Hosidius]] [[Mess]].
+The clue has an additional challenge:
+
+Kill a [[Double agent]].
+|map = {{Map|1646,3631|mtype=pin|plane=0|mapID=-1}}
+}}

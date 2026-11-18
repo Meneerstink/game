@@ -1,0 +1,70 @@
+{{External|rs=Dog (pet)}}
+{{Otheruses|the follower|other dogs|Dog (disambiguation)}}
+
+'''Dogs''' are [[pet]]s obtained by raising a [[puppy]] after completing [[A Ruff Situation]]. Adult dogs can accompany the player and dig for [[Treasure Trails|Treasure Trail]] steps through their right-click Dig option or by clicking the [[Call follower]] button in the [[Worn Equipment]] tab, replacing the need to carry a [[spade]] for those steps.<ref name="release">Jagex. [https://secure.runescape.com/m=news/a-ruff-situation--crab-quest-out-today?oldschool=1#dog A Ruff Situation & Crab Quest Out Today!]. 8 September 2026.</ref> They cannot be used as a replacement for a spade for other activities, such as the [[Barrows]] or the [[Giant Mole]].  Dogs can move 2 tiles per tick to match a player's speed, a trait currently shared only by [[Nexling]] and [[Babi]]. They also have pathfinding abilities, meaning they won't get stuck.
+
+There are 12 breeds of dogs, 9 of which need to be tracked down through [[Gielinor]] to unlock.
+
+Dogs can be traded in to the [[Mysterious Stranger (dog)|Mysterious Stranger]] in [[Ver Sinhaza]] for 100 [[Blood rune|blood runes]] (200 blood runes if [[Morytania Medium Diary|Morytania medium diary]] is completed). They may be found near the landing platform from the [[Drakan's medallion]]'s teleport.
+
+==Obtaining==
+To obtain a dog, players must first purchase a puppy from [[Chase]] at the Dog Shelter near [[Ice Mountain]] after completing A Ruff Situation. A puppy costs 200 [[coins]], and players can own only one puppy at a time (puppies cannot be stored in your menagerie; full grown dogs can be stored in your menagerie). You also can't have any grown dog in your inventory/bank, they must be in a menagerie before you can obtain a new puppy.
+
+A puppy grows into an adult dog after approximately three hours of active growth while following the player. Growth pauses when the puppy is left unfed and resumes when it is fed. See [[Puppy#Growth|Puppy § Growth]] for details.
+
+Attempting to rescue a lost dog before completing the quest will result in the message {{Mes|You have nowhere to send this lost dog...}} being displayed and the dog staying put.
+
+==Breeds==
+[[File:Summer Sweep-Up Pet Improvements & More (2).jpg|thumb|800px|none|''The dog breeds available for adoption.'']]
+Labradors, pugs, and spaniels are available after completing the quest. Additional breeds can be discovered throughout Gielinor and brought back to the Dog Shelter.<ref name="release"/>
+
+The available breeds are:
+* [[Labrador]]
+* [[Chihuahua]]
+* [[Border Collie]]
+* [[Shiba]]
+* [[Samoyed]]
+* [[Spaniel]]
+* [[Bernese Mountain Dog]]
+* [[Corgi]]
+* [[Greyhound]]
+* [[Yorkie]]
+* [[Pug]]
+* [[Husky]]
+
+See [[Puppy#Breeds|Puppy § Breeds]] for the available colours and locations of lost dogs.
+
+==Treasure Trails==
+Adult dogs can dig for Treasure Trail steps through their right-click Dig option or by clicking the [[Call follower]] button in the [[Worn Equipment]] tab, allowing players to complete those steps without carrying a spade.<ref name="release"/>
+
+For beginner, easy, medium, and hard clues, the dog may stand on the exact coordinates of the clue tile. For elite clues, the player must stand on the exact coordinates instead.
+
+==Housing==
+Dogs can be housed in the [[menagerie]] of a [[player-owned house]] as an "extra" pet. Since the menagerie can also hold 12 extra pets, players can house all 12 breeds. However, this limit is shared with a number of other pets, including cats and fish.
+
+This capacity applies to adult dogs, as puppies cannot be housed in the menagerie.
+
+==Loss==
+Adult dogs accompanying a player will be lost when the player dies an [[Death#Unsafe and safe deaths|unsafe death]], whether to a monster or to another player. Puppies, however, will never be lost on death.
+
+==Official world==
+The following [[Server#Themed servers/worlds|official world]] is assigned to dog walking:
+
+{| class="wikitable sortable" style="text-align: left;"
+!World
+!Location
+!Members
+!Activity
+{{WorldLine|317|United Kingdom|mems=yes|Dog Walking World}}
+|}
+
+==Trivia==
+* Food containing chocolate, onions, or grapes cannot be fed to pet dogs or puppies; attempting to do so gives the message {{mes|Feeding the [item name] to your [puppy]/[dog] would give them an upset stomach.}} This is a reference to the real-world toxicity of these foods to canines. Despite appearances, you can feed a [[monkey bar]] to a dog.
+* As of 11 September 2026, 108,000 dogs have been adopted, the most popular dog breed is the labrador, 97 dogs have been lost due to their owner getting killed by another player in the [[Wilderness]], and 883 players have attempted to feed their dogs chocolate.{{CiteVideo|author=Old School Runescape|title=WE'RE RAISING MONEY FOR ALVEUS SANCTUARY!|url=https://www.youtube.com/live/rCpD0BHG9gY?si=UU_JYxITZy4xyIF7&t=3721|timestamp=01:02:00|date=11 September 2026|site=YouTube}}
+** As of 19 September 2026, 161,000 dogs have been adopted.{{CiteTwitter|author=Old School RuneScape|url=https://x.com/OldSchoolRS/status/2101280347887464526|date=19 September 2026|archiveurl=|archivedate=2026-09-19|quote=|notes=|name=}}
+* As of 20 September 2026, 49,500 clue steps have been dug up by dogs.{{CiteTwitter|author=Old School RuneScape|url=https://x.com/OldSchoolRS/status/2101703088696340724|date=1209 September 2026|archiveurl=|archivedate=2026-09-20|quote=|notes=|name=}}
+
+==References==
+{{Reflist}}
+
+{{Pets}}

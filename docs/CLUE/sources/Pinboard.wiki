@@ -1,0 +1,144 @@
+{{Infobox Scenery
+|name = Pinboard
+|image = [[File:Pinboard.png|294px]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|location = [[Watson's house]]
+|options = Read
+|examine = Looks like Watson's ideas board.
+|map = {{Map|x=1651|y=3572|plane=0|r=4|mapID=-1|mtype=square}}
+|id = 6615
+}}
+
+The '''pinboard''' is an object located in [[Watson's house]] which was introduced with the 2016 [[Treasure Trails]] [[Update:Treasure Trail Expansion (2016)|expansion]]. It displays the username of players that have submitted ideas for this and later Treasure Trails expansions.
+
+== List of names ==
+A list of the players mentioned on the pinboard.
+{| class="wikitable"
+|+
+|A classy boy
+|Flapz
+|Old Herb
+|Hunt3red
+|QQOQ
+|-
+|Edenlolol
+|Foraka
+|Ruby Weapon
+|PalmTreeRS
+|Bloxx
+|-
+|Strong kid33
+|X Cite8
+|Hess
+|1Lettershor
+|Iron Pheonix
+|-
+|EliteChaos
+|GoingNowhere
+|Skrellix
+|thetoddster
+|Afropunk
+|-
+|Solo Gi
+|xunhallowedx
+|King Bert IV
+|Acid bubble
+|Perm agility
+|-
+|Ripin clouds
+|Tach
+|Uunikana
+|Gangster EC
+|Speedruns
+|-
+|Bigfoot
+|pizzaman420p
+|123Jarek
+|Captaindun
+|Level 3 clue
+|-
+|Fjalee
+|Kairbender
+|Bosco 6
+|KahviPoju
+|Glorious guy
+|-
+|Marfn
+|Kincent
+|Prizim
+|Hunting calm
+|King Flameo0
+|-
+|Cyprus
+|Stormbow
+|Fiism
+|Andyjay0
+|Nod Storm
+|-
+|Anxious NPC
+|Versierd
+|LittleMenace
+|dadbodfever
+|Narwallus
+|-
+|Laz0r
+|Benvil
+|Lovsaphira9
+|epic niceXD
+|Mitch
+|-
+|Jonasonosrs
+|A dust devil
+|Mage Tutor
+|JVH
+|AkemiHomura
+|-
+|CallmeZach
+|Bank Made
+|Ovidis
+|Koswordsman
+|KKona
+|-
+|ZyphDoz
+|LulDied2Mole
+|Harry RS
+|Wildmuffin
+|Burning Love
+|-
+|Rek
+|Suyin
+|Mga
+|JackScape
+|Rigondeaux
+|-
+|Mr Jeza
+|The Atlantis
+|Maen i maen
+|RuneDragon
+|Warm Pockets
+|-
+|Pinuzzo
+|Demilancer
+|
+|
+|
+|}
+
+== Changes ==
+{{Subject changes header}}
+{{Subject changes
+|date = 27 June 2019
+|update = Changes to Teleblock and Extra Clan Wars Options
+|change = An extra username got added to the list of contributors.
+}}
+{{Subject changes
+|date = 11 April 2019
+|update = Treasure Trails Expansion and Easter 2019
+|change = The list got updated with contributors to the new Treasure Trails expansion.
+}}
+{{Subject changes footer}}
+
+[[Category:Content with player credits]]

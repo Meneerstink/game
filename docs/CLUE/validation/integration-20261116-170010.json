@@ -1,0 +1,186 @@
+{
+  "sourceCommits": [
+    "3ce55b818",
+    "5644607ac",
+    "dd2171ccd"
+  ],
+  "inputCount": 4541,
+  "inputManifestSha256": "aca771f153eed6741c89bb2420cffa1c95436ecb65bb8bac9e15878f7061a5e0",
+  "command": [
+    "cmd.exe",
+    "/d",
+    "/c",
+    "C:\\RSPS\\work\\gpt-b\\gradlew.bat",
+    "-I",
+    "tools/clue/test-init.gradle",
+    ":game:plugins:test",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.ClueScrollLifecycleTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.TreasureTrailContractTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.TreasureTrailTornPartsTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.TreasureTrailBasicStepsTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.TreasureTrailEmoteTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.TreasureTrailNumberChallengeTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.TreasureTrailMapsTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.ClueStepSelectionTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.ClueCasketTransactionTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.ClueDropOwnershipTests",
+    "--tests",
+    "gg.rsmod.plugins.content.scrolls.ClueGuardianCombatDataTests",
+    "--tests",
+    "gg.rsmod.plugins.content.areas.watson.MimicEncounterTests",
+    "--tests",
+    "gg.rsmod.plugins.content.areas.watson.MimicChallengeTests",
+    "--tests",
+    "gg.rsmod.plugins.content.areas.watson.WatsonClueTests",
+    "--priority",
+    "low",
+    "--console=plain"
+  ],
+  "summary": {
+    "exit": 0,
+    "unchangedInputs": true,
+    "changed": [],
+    "missing": [],
+    "accepted": true,
+    "tests": 84,
+    "skipped": 0,
+    "classes": [
+      {
+        "name": "gg.rsmod.plugins.content.scrolls.ClueScrollLifecycleTests",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "modified": 1794850300.7896378,
+        "fresh": true
+      },
+      {
+        "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailContractTests",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "modified": 1794850300.7896378,
+        "fresh": true
+      },
+      {
+        "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailTornPartsTests",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "modified": 1794850300.7896378,
+        "fresh": true
+      },
+      {
+        "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailBasicStepsTests",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "modified": 1794850300.7896378,
+        "fresh": true
+      },
+      {
+        "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailEmoteTests",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "modified": 1794850300.7896378,
+        "fresh": true
+      },
+      {
+        "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailNumberChallengeTests",
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "modified": 1794850300.7896378,
+        "fresh": true
+      },
+      {
+        "name": "gg.rsmod.plugins.content.scrolls.TreasureTrailMapsTests",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "modified": 1794850300.7896378,
+        "fresh": true
+      },
+      {
+        "name": "gg.rsmod.plugins.content.scrolls.ClueStepSelectionTests",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "modified": 1794850300.7896378,
+        "fresh": true
+      },
+      {
+        "name": "gg.rsmod.plugins.content.scrolls.ClueCasketTransactionTests",
+        "tests": 13,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "modified": 1794850300.7896378,
+        "fresh": true
+      },
+      {
+        "name": "gg.rsmod.plugins.content.scrolls.ClueDropOwnershipTests",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "modified": 1794850300.7896378,
+        "fresh": true
+      },
+      {
+        "name": "gg.rsmod.plugins.content.scrolls.ClueGuardianCombatDataTests",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "modified": 1794850300.7896378,
+        "fresh": true
+      },
+      {
+        "name": "gg.rsmod.plugins.content.areas.watson.MimicEncounterTests",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "modified": 1794850300.7896378,
+        "fresh": true
+      },
+      {
+        "name": "gg.rsmod.plugins.content.areas.watson.MimicChallengeTests",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "modified": 1794850300.7896378,
+        "fresh": true
+      },
+      {
+        "name": "gg.rsmod.plugins.content.areas.watson.WatsonClueTests",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "modified": 1794850300.7896378,
+        "fresh": true
+      }
+    ]
+  }
+}

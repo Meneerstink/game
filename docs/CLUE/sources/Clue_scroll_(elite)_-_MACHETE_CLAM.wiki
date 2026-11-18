@@ -1,0 +1,44 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by House Host!
+|value = 20
+|weight = 0.020
+|id = 12136
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[anagram clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 78
+|text = The anagram reveals who to speak to:<br><br>MACHETE CLAM
+|notes = Speak to [[Cam the Camel]] at the gates of [[Emir's Arena]] (no [[Camulet]] required) or [[Bank Camel|Cam the Camel]] in the entrance to the [[Tombs of Amascut]] (requires a [[Camulet]] and to have already learned her name)
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''How many items can carry water in Gielinor?''
+
+Answer: '''6'''
+|map = {{Map|3300,3231|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 19 October 2022
+|update = Fresh Start Worlds
+|change = The Bank Camel's name will also now be a valid answer to the MACHETE CLAM Elite anagram clue once you've learned it.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+* As of [[2024]], there are actually 9 items that can carry water - [[bowl]]s, [[bucket]]s, [[Empty cup|cups]], [[fishbowl]]s, [[jug]]s, [[vial]]s, [[watering can]]s, [[kettle]]s, and [[waterskin]]s. This number is increased to 11 if counting the [[Empty vial|special vial]] used in [[Lunar Diplomacy]] and the [[Empty gourd vial|gourd vials]] used in the [[Chambers of Xeric]] separately from normal vials.

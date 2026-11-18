@@ -1,0 +1,40 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 12079
+|leagueRegion = No
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[emote clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 12079
+|tier = elite
+|emote = Dance
+|text = The emote reveals <br><br>Dance on the Fishing Platform. Equip barrows gloves, an amulet of glory and a dragon med helm.
+|location = South-east corner of the [[Fishing Platform]]
+|items = Equip [[barrows gloves]], an [[amulet of glory]] and a [[dragon med helm]].
+|equipment1 = Barrows gloves
+|equipment1price1 = Coins
+|equipment1price1qty = 130000
+|equipment2 = Amulet of glory
+|equipment2alt1 = Amulet of eternal glory
+|equipment3 = Dragon med helm
+|equipment3alt1 = Dragon med helm (cr)
+|equipment3alt1price1 = Dragon med helm
+|notes = Perform the [[dance]] emote near south-east corner of the [[Fishing Platform]].
+|map = {{Map|2782,3273|mtype=pin|plane=0|mapID=-1}}
+}}

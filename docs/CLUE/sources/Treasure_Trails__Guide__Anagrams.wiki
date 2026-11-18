@@ -1,0 +1,21 @@
+<noinclude>{{External|rs}}
+</noinclude>{{shortcut|ttga}}
+{{Treasure Trails Guide Anagrams Intro}}
+
+===Beginner Anagrams===
+{{:Treasure Trails/Guide/Anagrams/Beginner}}
+
+===Medium Anagrams===
+{{:Treasure Trails/Guide/Anagrams/Medium}}
+
+===Hard Anagrams===
+{{:Treasure Trails/Guide/Anagrams/Hard}}
+
+===Elite Anagrams===
+{{:Treasure Trails/Guide/Anagrams/Elite}}
+
+===Master Anagrams===
+{{:Treasure Trails/Guide/Anagrams/Master}}<noinclude>
+
+{{Treasure Trails}}
+[[Category:Guides]]</noinclude>

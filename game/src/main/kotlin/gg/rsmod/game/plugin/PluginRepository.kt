@@ -9,6 +9,7 @@ import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.COMMAND_ARGS_ATTR
 import gg.rsmod.game.model.attr.COMMAND_ATTR
 import gg.rsmod.game.model.attr.DEATH_FLAG
+import gg.rsmod.game.model.attr.INTERACTING_NPC_ATTR
 import gg.rsmod.game.model.attr.RECENT_COMMANDS_ATTR
 import gg.rsmod.game.model.combat.NpcCombatDef
 import gg.rsmod.game.model.container.key.*
@@ -279,6 +280,7 @@ class PluginRepository(
      * item can not be picked up.
      */
     private val groundItemPickupConditions = Int2ObjectOpenHashMap<Plugin.() -> Boolean>()
+    private val groundItemPickupAmounts = Int2ObjectOpenHashMap<(Player, Int) -> Int>()
 
     /**
      * A map of plugins that check if an item with the associated key, can be
@@ -1877,6 +1879,17 @@ class PluginRepository(
         return allowed
     }
 
+    /** Item-specific quantity caps. Unchanged for every item without a registered cap. */
+    fun setGroundItemPickupAmount(item: Int, limit: (Player, Int) -> Int) {
+        if (groundItemPickupAmounts.containsKey(item)) {
+            if (rejectDuplicateBinding("Ground item pick-up amount already set: $item")) return
+        }
+        groundItemPickupAmounts[item] = limit
+    }
+
+    fun groundItemPickupAmount(player: Player, item: Int, amount: Int): Int =
+        (groundItemPickupAmounts[item]?.invoke(player, amount) ?: amount).coerceIn(0, amount)
+
     fun bindCanItemDrop(
         item: Int,
         plugin: Plugin.() -> Boolean,
@@ -2119,6 +2132,21 @@ class PluginRepository(
         opt: Int,
     ): Boolean = objectOverrides.any { it(p, obj, opt) }
 
+    /**
+     * Contextual NPC options, asked after pathing and before ordinary
+     * dialogue. A handler returning false must leave the interaction untouched.
+     * Treasure Trails can then use an existing quest/shop NPC without replacing
+     * its Talk-to plugin for players who do not have the matching clue.
+     */
+    private val npcOverrides = mutableListOf<(Player, Npc, Int) -> Boolean>()
+
+    fun bindNpcOverride(handler: (Player, Npc, Int) -> Boolean) {
+        npcOverrides.add(handler)
+    }
+
+    private fun executeNpcOverride(p: Player, npc: Npc, opt: Int): Boolean =
+        npcOverrides.any { it(p, npc, opt) }
+
     fun bindNpc(
         npc: Int,
         opt: Int,
@@ -2145,6 +2173,12 @@ class PluginRepository(
         opt: Int,
     ): Boolean {
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INTERACT) { "npc-option ${p.username} npc=$id option=$opt handled=${npcPlugins[id]?.containsKey(opt) == true}" }
+        if (npcOverrides.isNotEmpty()) {
+            val target = p.attr[INTERACTING_NPC_ATTR]?.get()
+            // This method is called after PawnPathAction has reached its NPC.
+            // A stale/unrelated reference must never claim a different option.
+            if (target != null && (target.id == id || target.getTransform(p) == id) && executeNpcOverride(p, target, opt)) return true
+        }
         val optMap = npcPlugins[id] ?: return false
         val logic = optMap[opt] ?: return false
         p.executePlugin(logic)

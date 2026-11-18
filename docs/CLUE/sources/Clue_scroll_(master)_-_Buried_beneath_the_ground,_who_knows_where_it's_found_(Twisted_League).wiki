@@ -1,0 +1,31 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is a [[hot and cold clue]] that could be obtained from [[Clue scroll (master)|master]] [[Treasure Trails]] during the [[Twisted League]]. It replaced the standard hot and cold step that requires talking to [[Jorral]] in the [[Outpost]], as only [[Great Kourend]] and the [[Kebos Lowlands]] was accessible during the league.
+
+==Clue info==
+{{Clue info
+|id = 894
+|text = The clue reveals who to speak to:<br><br>Buried beneath the ground, who knows where it's found.<br><br>Lucky for you, a man called Watson may have a clue.
+|notes = Speak to [[Watson]] to receive a [[strange device]] used by [[Hot and cold clues]] to locate the location of the next clue.
+
+Players can immediately start the search without speaking to [[Watson]] if they already own a [[strange device]].
+
+To find your location, click on the strange device and it will tell you how close you are to the treasure. Its temperature is based on the distance of the treasure from the player, measured in the number of steps it would take to reach the treasure, ignoring any obstacles. Then, teleport or walk to another location, and check to see if the strange device has gotten warmer. Repeat to pinpoint a location. You can also use [[Treasure_Trails/Guide/Hot_Cold#Master_Hot_Cold_clue_locations|this list of solutions]] to help you find your location. For each location, there is a 7x7 square in which you can dig to find the treasure.
+|map = {{Map|1645,3573|mtype=pin|plane=0|mapID=-1}}
+}}

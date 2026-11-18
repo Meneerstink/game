@@ -1,0 +1,38 @@
+{{External|rs=Clue scroll (easy) - Think in the middle of the wheat field by the Lumbridge mill}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10198
+|leagueRegion = Misthalin&Kandarin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is an [[emote clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+The items can be stored in a [[STASH]] hole east of the wheat field. It requires {{SCP|Construction|27|link=yes}}, a [[hammer]], [[saw]], 2 [[Plank|planks]] and 10 [[Nails]] to build. Building the STASH rewards the player with 150 Construction XP.
+
+==Clue info==
+{{Clue info
+|id = 10198
+|tier = easy
+|emote = Think
+|text = The emote reveals <br><br>Think in middle of the wheat field by the Lumbridge mill. Equip a blue gnome robetop, a turquoise gnome robe bottom and an oak shortbow.
+|location = Inside the wheatfield south-west of the [[Lumbridge]] mill
+|items = Equip a [[blue robetop]], [[turquoise robe bottoms]] and an [[oak shortbow]].
+|equipment1 = Blue robe top
+|equipment2 = Turquoise robe bottoms
+|equipment3 = Oak shortbow
+|notes = Perform the [[think]] emote in the wheat field near the [[Lumbridge]] windmill.
+|map = {{Map|3159,3298|mtype=pin|plane=0|mapID=-1}}
+}}

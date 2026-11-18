@@ -1,0 +1,54 @@
+{{Transcript|npc}}
+{{incomplete|Dialogue box for clue receiving is missing}}
+==Standard dialogue==
+* '''Luthas:''' Hello I'm Luthas, I run the banana plantation here.
+* {{topt|Could you offer me employment on your plantation?}}
+** '''Player:''' Could you offer me employment on your plantation?
+** '''Luthas:''' Yes, I can sort something out. There's a crate ready to be loaded onto the ship.
+** '''Luthas:''' You wouldn't believe the demand for bananas from Wydin's shop over in Port Sarim. I think this is the third crate I've shipped him this month..
+** '''Luthas:''' If you could fill it up with bananas, I'll pay you 30 gold.
+** {{tact|end}}
+* {{topt|That customs officer is annoying isn't she?}}
+** '''Player:''' That customs officer is annoying isn't she?
+** '''Luthas:''' Well I know her pretty well. She doesn't cause me any trouble any more.
+** '''Luthas:''' She doesn't even search my export crates any more. She knows they only contain bananas.
+** '''Player:''' Really? How interesting. Whereabouts do you send those to?
+** '''Luthas:''' There is a little shop over in Port Sarim that buys them up by the crate. I believe it is run by a man called Wydin.
+** {{tact|end}}
+===After accepting his task===
+* '''Luthas:''' Have you completed your task yet?
+* {{topt|What did I have to do again?}}
+** '''Player:''' What did I have to do again?
+** '''Luthas:''' There's a crate ready to be loaded onto the ship. If you could fill it up with bananas, I'll pay you 30 gold.
+** {{tact|end}}
+* {{topt|No, the crate isn't full yet.}}
+** '''Player:''' No, the crate isn't full yet...
+** '''Luthas:''' Well come back when it is.
+** {{tact|end}}
+* {{topt|So where are these bananas going to be delivered to?}}
+** '''Player:''' So where are these bananas going to be delivered to?
+** '''Luthas:''' I sell them to Wydin who runs a grocery store in Port Sarim.
+** {{tact|end}}
+* {{topt|That customs officer is annoying isn't she?}}
+** {{tact|above}}
+===After completing his task===
+* '''Player:''' I've filled a crate with bananas.
+* '''Luthas:''' Well done, here's your payment.
+* {{tact|receives=30 coins}}
+* {{topt|Will you pay me for another crate full?}}
+** '''Player:''' Will you pay me for another crate full?
+** '''Luthas:''' Yes certainly.
+** '''Luthas:''' If you go outside you should see the old crate has been loaded on to the ship, and there is another empty crate in its place.
+** {{tact|end}}
+* {{topt|Thank you, I'll be on my way}}
+** '''Player:''' Thank you, I'll be on my way.
+** {{tact|end}}
+* {{topt|So where are these bananas going to be delivered to?}}
+** {{tact|above}}
+* {{topt|That customs officer is annoying isn't she?}}
+** {{tact|above}}
+
+==Treasure Trails==
+===Medium===
+* '''Luthas:''' Congratulations.
+* {{tmissing}}

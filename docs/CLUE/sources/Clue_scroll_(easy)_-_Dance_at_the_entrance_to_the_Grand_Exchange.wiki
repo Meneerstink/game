@@ -1,0 +1,37 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by KahviPoju!
+|value = 20
+|weight = 0.020
+|id = 19831
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is an [[emote clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+The items can be stored in a [[STASH]] bush west of the entrance to the [[Grand Exchange]]. It requires {{SCP|Construction|27|link=yes}}, a [[hammer]], [[saw]], 2 [[Plank|planks]] and 10 [[Nails]] to build. Building the STASH rewards the player with 150 Construction XP.
+
+==Clue info==
+{{Clue info
+|id = 291
+|tier = easy
+|emote = Dance
+|text = The emote reveals <br><br>Dance at the entrance to the Grand Exchange. Equip a pink skirt, pink robe top and a body tiara.
+|location = Next to the southern entrance to the [[Grand Exchange]]
+|items = Equip a [[pink skirt]], [[pink robe top]] and a [[body tiara]].
+|equipment1 = Pink skirt
+|equipment2 = Pink robe top
+|equipment3 = Body tiara
+|notes = Perform the [[dance]] emote south of the [[Grand Exchange]].
+|map = {{Map|3165,3467|mtype=pin|plane=0|mapID=-1}}
+}}

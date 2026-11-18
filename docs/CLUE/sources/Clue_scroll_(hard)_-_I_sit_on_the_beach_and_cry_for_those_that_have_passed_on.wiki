@@ -1,0 +1,28 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[19 November]] [[2025]]
+|update = Sailing is OUT TODAY!
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 31272
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+Getting here the first time requires {{SCP|Sailing|61|link=yes}}. At {{SCP|Construction|50|link=yes}} you can build a rowboat to the [[Isle of Souls]], requiring 8 [[camphor plank|camphor planks]], 10 [[swamp paste]] and a [[hammer]] and [[saw]] to build.
+==Clue info==
+{{Clue info
+|id = 996
+|text = The clue reveals where to dig:<br><br>I sit on the beach and cry for those that have passed on.
+|notes = Dig on the beach of the [[Tear of the Soul]] - Requires 61 Sailing
+|map = {{Map|2324,2772|mtype=pin|plane=0|mapID=-1}}
+}}

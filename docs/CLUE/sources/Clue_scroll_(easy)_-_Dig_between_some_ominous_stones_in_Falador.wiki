@@ -1,0 +1,36 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 12170
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 844
+|text = The cryptic reveals where to dig:<br><br>Dig between some ominous stones in Falador.
+|notes = Dig near three [[Standing stone|standing stones]] inside a walled area east of the northern [[Falador]] gate.
+|map = {{Map|3040,3399|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+*[[Skull sceptre (i)]] teleport and run south-west.
+*[[Falador Teleport]] and run north-east.
+*[[Combat bracelet]] to the [[Edgeville Monastery]].
+*[[Lassar Teleport]] and run down the mountain.
+*[[Amulet of glory]] teleport to [[Edgeville]].
+*[[Balloon transport system]] to [[Taverley]].

@@ -1,0 +1,143 @@
+[[File:Arno's Item Retrieval Service.png|right|thumb|250px|Arno's Item Retrieval Service interface.]]
+'''Item Retrieval Services''', commonly known as '''deathbanks''', are in-game services offered outside of dangerous, [[instance]]d [[boss]] fights and other challenges. If a player [[death|dies]] during one of these activities, their items will be saved and made available to retrieve at a later time, usually after the player pays a certain fee. This system prevents the player from permanently losing items due to an instanced area ceasing to exist after the player dies. Any items stored at an Item Retrieval Service will be '''permanently lost''' should the player die anywhere in an unsafe [[death]]. Thus it is recommended that players retrieve their items as soon as possible if planning to continue dangerous activities. Dying in an activity with an Item Retrieval Service will let the player keep their three most valuable items (affected by [[Skull (status)|skull]] and [[Protect Item]]) but not additional untradeable items, unlike standard deaths outside [[PvP]] scenarios.
+
+Retrieval fees can be paid using [[Death's Coffer]]. Fees will be first taken from the coffer and any remaining amount from your bank, or from currency stored within the deathbank.
+
+Item Retrieval Services are notably used by [[Ironman Mode|ultimate ironmen]] to [[Ultimate Ironman Guide/Item Management|store all of their items]] in lieu of a bank while performing activities with no risk of death, such as skilling.
+
+==<span class="anchor" id="Regular Item Retrieval Services"></span> Regular services==
+The following Item Retrieval Services are available at all times, once the player has unlocked the activity they are associated with.
+
+{| class="wikitable sortable"
+!Activity
+!Retrieval point
+!Cost
+!Notes
+|-
+|[[Alchemical Hydra]]
+|[[Orrvor quo Maten]]
+|{{Coins|100000}}
+|Requires a dangerous run past the normal [[Hydra]] room if the player does not have 88 [[Agility]]. If a player dies due to potentially recurring external issues, e.g. storms, it is '''strongly''' recommended not to retrieve items until issues are resolved, as a second disconnection can easily result in a second death.
+|-
+|[[Grotesque Guardians]]
+|[[Magical Chest]]
+|{{Coins|50000}}
+|Located outside the roof entrance unlocked by the [[brittle key]]. Requires an active [[Grotesque Guardians]] or [[Gargoyle]] slayer task to enter the activity.  Players without 81 Agility must run past [[Aberrant spectre|Aberrant spectres]] to access this location, so a [[nosepeg]] is strongly recommended to avoid a second death.
+|-
+|[[Hallowed Sepulchre]]
+|[[Mysterious Stranger (Hallowed Sepulchre)|Mysterious Stranger]]
+|{{Coins|25000}}
+|
+|-
+|[[Hespori]]
+|[[Arno]]
+|{{Coins|25000}}
+|The most common Item Retrieval Storage for Ultimate Ironman usage, due to its easily accessible location and low cost.
+|-
+|[[The Mimic]]
+|[[Strange casket]]
+|{{Coins|90000}}
+|
+|-
+|[[Nex]]
+|Chest
+|{{Coins|100000}}
+|Located in the safe room immediately after entering the [[frozen door]], or in the safe room before Nex's chamber. The player must pass through the central chamber of [[God Wars Dungeon]] on their way, so god-related items are recommended to prevent a second death.
+|-
+|[[The Nightmare]]
+|[[Shura]]
+|{{Coins|60000}}
+|Notable for being the lowest requirement option for Ultimate Ironmen to deathbank. The Trouble Brewing minigame teleport offers a relatively short run to the deathbank after dying, but carries some risk of running across [[Mos Le'Harmless]] through [[Jungle horror|jungle horrors]].
+|-
+|[[Phosani's Nightmare]]
+|[[Sister Senga]]
+|{{Coins|60000}}
+|
+|-
+|[[Theatre of Blood]]
+|[[Chest (Ver Sinhaza)|Chest]]
+|{{Coins|100000}}
+|Located north of [[Ver Sinhaza]]'s [[bank]]. No cost is incurred for Entry Mode runs.
+|-
+|[[Tombs of Amascut]]
+|Chest
+|Varies, up to {{Coins|500000}}
+|If team is killed without attempts remaining, reclaim fee on unprotected items is based on the items' respective [[Grand Exchange]] values, up to a maximum fee of 500,000 coins.
+|-
+|[[Volcanic Mine]]
+|[[Petrified Pete]]
+|{{Currency|Numulite|150}}
+|The most accessible Item Retrieval Storage for Ultimate Ironmen before access to Hespori. [[Fossil Island fossil|Fossils]] can be stored in [[Fossil Storage]] to later be traded to the [[Fossil Collector]] for numulite to pay the unlock cost and volcanic mine entry fee.
+|-
+|[[Vorkath]]
+|[[Torfinn]]
+|{{Coins|100000}}
+|
+|-
+|[[Zulrah]]
+|[[Priestess Zul-Gwenwynig]]
+|{{Coins|100000}}
+|No cost is incurred for players with a Zulrah kill count of less than 50 (to not discourage learners). No cost is incurred for Ultimate Ironmen, regardless of their kill count.{{CiteNews|url=https://secure.runescape.com/m=news/death-changes?oldschool=1|title=Death Changes|newsdate=25 June 2020|quote=One major change affects the priestess at Zul-Andra. She previously offered her services for free, but we no longer feel that's appropriate, since Zulrah is so generous with its loot. Once a non-Ultimate Iron player has a Zulrah kill count of 50 or more, she will start charging 100,000 coins to return your items, matching Torfinn's fee. This charge will not apply to Ultimate Iron players.}} There is no UI to pick which items to withdraw, [[Ultimate Ironman Guide/Item Management#Zulrah|items are withdrawn in a set order]].
+|}
+
+==<span class="anchor" id="Quest Item Retrieval Services"></span> Quest services==
+The following Item Retrieval Services are only available during certain quests, for specific boss fights or challenges.
+
+{| class="wikitable sortable"
+!Quest
+!NPC/Object
+!Cost
+!Notes
+|-
+| rowspan="2" |[[Dragon Slayer II]]
+|[[Torfinn]]
+|{{Coins|100000}}
+| Retrieves items lost during the quest fight with [[Vorkath]], as well as during any part of the final combat sequence against various [[dragon]]s and [[Galvek]].
+|-
+|[[Item Chest]]
+|{{Coins|100000}}
+|Retrieves items lost during the fight with [[Robert the Strong]]. Located next to the [[Ceremonial Brazier]].
+|-
+|[[A Taste of Hope]]
+|[[Chest (Ranis Drakan)|Chest]]
+|{{Coins|20000}}
+|Retrieves items lost in the final fight with [[Ranis Drakan]]. Located in [[Ver Sinhaza]]'s courtyard.
+|-
+|[[Sins of the Father]]
+|[[Veliaf Hurtz]]
+|{{Coins|50000}}
+|Retrieves items lost in the final fight with [[Vanstrom Klause]]. Veliaf can be found at the [[Icyene Graveyard]].
+|-
+|[[Song of the Elves]]
+|[[Rebel Scout]]
+|{{Coins|80000}}
+|Retrieves items lost during the fight against [[Arianwyn]], during the siege in the [[Underground Pass (dungeon)|Underground Pass]], the fight against [[Essyllt]], and the final fight against the [[Fragment of Seren]].
+|-
+|[[The Fremennik Exiles]]
+|[[Brundt the Chieftain]]
+|{{Coins|50000}}
+| Retrieves items lost during the fight against [[The Jormungand]]. Brundt can be found on the [[Island of Stone]].
+|}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 3 August 2022
+|update = Maximum Hitsplats & Clan Hall Changes
+|change = Players with items stored in an Item Retrieval Service will now be told of this when logging in, as to remind players that said items will be lost if they die before reclaiming them.
+}}
+{{Subject changes
+|date = 3 November 2021
+|update = Android Beta Signup & Small QoL Changes
+|poll = 
+|change = A "Yes, and don't ask again" option has been added to item reclaim chests when coins are used to unlock them at bosses like [[The Nightmare]] and [[Vorkath]].
+}}
+{{Subject changes footer}}
+
+==Trivia==
+*Item Retrieval Services are sometimes colloquially referred to as "Gravestones", both by players and [[Jagex Moderator]]s. This is due to the resemblance the functionality of ''{{RSL|RuneScape}}''{{'}}s {{RSL|Gravestone}} system, which was added to the game in {{RSL|Update:Trade and Drop Changes|an update}} on [[10 December]] [[2007]] (four months after the [[August 2007 Archive of RuneScape|August 2007 Archive of ''RuneScape'']] backup on which ''[[Old School RuneScape|Old School]]'' is based).
+
+==References==
+{{reflist}}
+
+[[Category:Mechanics]]

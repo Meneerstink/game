@@ -1,0 +1,36 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 12021
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[emote clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 324
+|tier = medium
+|emote = Dance
+|emote2 = Blow Kiss
+|text = The emote reveals <br><br>Dance in the dark caves beneath Lumbridge Swamp. Blow a kiss before you talk to me. Equip an air staff, Bronze full helm and an amulet of power.
+|location = Inside [[Lumbridge Swamp Caves]], by the western cave exit
+|items = Equip an [[air staff]], [[Bronze full helm]] and an [[amulet of power]].
+|equipment1 = Staff of air
+|equipment2 = Bronze full helm
+|equipment3 = Amulet of power
+|notes = Perform the [[dance]] and [[blow kiss]] emotes in the [[Lumbridge Swamp Caves]].
+|map = {{Map|3168,9571|mtype=pin|plane=0|mapID=-1}}
+}}

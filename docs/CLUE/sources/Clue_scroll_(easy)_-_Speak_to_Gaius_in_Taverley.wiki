@@ -1,0 +1,30 @@
+{{External|rs=Clue scroll (easy) - Speak to Gaius in Burthorpe}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 2699
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 658
+|text = The cryptic reveals who to speak to:<br><br>Speak to Gaius in Taverley.
+|items = 
+|notes = Speak to [[Gaius]] in [[Taverley]].
+|map = {{Map|2884,3450|mtype=pin|plane=0|mapID=-1}}
+}}

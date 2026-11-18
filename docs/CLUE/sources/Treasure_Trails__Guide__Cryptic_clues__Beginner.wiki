@@ -1,0 +1,48 @@
+<noinclude>{{Treasure Trails Guide Cryptic Clues Intro}}
+
+==Beginner Cryptic clues==
+</noinclude>{| class="wikitable align-center-3" width="100%"
+!Clue
+!Notes
+!Task
+!Image
+{{Cryptics
+|clue=[[Always walking around the castle grounds and somehow knows everyone's age]].
+|note=Talk to [[Hans]] walking around [[Lumbridge Castle]].
+|task=talk
+|image=Cryptic clue - talk to Hans.png
+|level= 0}}
+{{Cryptics
+|clue=[[Clue scroll (beginner) - Buried beneath the ground|''Buried beneath the ground, who knows where it's found.''
+
+''Lucky for you, A man called Reldo may have a clue.'']]
+|note=Speak to [[Reldo]] to receive a [[strange device]] used by [[Treasure Trails/Guide/Hot Cold|Hot and Cold clues]] to locate the location of the next clue.
+Players can immediately start the search without speaking to [[Reldo]] if they already own a [[strange device]].
+|task=hotcold
+|image=Cryptic clue - speak to Reldo.png
+|level= 0}}
+{{Cryptics
+|clue=[[Clue scroll (beginner) - In the place Duke Horacio calls home|In the place Duke Horacio calls home, talk to a man with a hat dropped by goblins]].
+|note=Talk to the [[Cook (Lumbridge)|Cook]] in [[Lumbridge Castle]].
+|task=talk
+|image=Cryptic clue - talk to Lumbridge Cook.png
+|level= 0}}
+{{Cryptics
+|clue=[[Clue scroll (beginner) - In a village of barbarians|In a village of barbarians, I am the one who guards the village from up high]].
+|note=Talk to [[Hunding]] atop the tower on the east side of [[Barbarian Village]].
+|task=talk
+|image=Cryptic clue - talk hunding barbarian village.png
+|level= 0}}
+{{Cryptics
+|clue=[[Clue scroll (beginner) - Talk to Charlie the Tramp|Talk to Charlie the Tramp in Varrock]].
+|note=Talk to [[Charlie the Tramp]] by the southern entrance to [[Varrock]]. He will give you a task.
+|task=talk
+|image=Cryptic clue - talk to charlie the tramp.png
+|level= 0}}
+{{Cryptics
+|clue=[[Clue scroll (beginner) - Near the open desert I reside|Near the open desert I reside, to get past me you must abide. Go forward if you dare, for when you pass me, you'll be sweating by your hair]].
+|note=Talk to [[Shantay]] at the [[Shantay Pass]] south of [[Al Kharid]].
+|task=talk
+|image=Cryptic clue - talk shantay shantay pass.png
+|level= 0}}
+|}

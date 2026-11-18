@@ -1,0 +1,787 @@
+# OSRS id	local id	cache name; generated from cache + OSRS_IMPORT_MASTER, not GE data
+207	207	Grimy ranarr weed
+208	208	null
+225	225	Limpwurt root
+226	226	null
+245	245	Wine of Zamorak
+246	246	null
+269	269	Torstol
+270	270	null
+329	329	Salmon
+330	330	null
+333	333	Trout
+334	334	null
+373	373	Swordfish
+374	374	null
+379	379	Lobster
+380	380	null
+385	385	Shark
+386	386	null
+390	390	null
+391	391	Manta ray
+392	392	null
+451	451	Runite ore
+452	452	null
+554	554	Fire rune
+555	555	Water rune
+556	556	Air rune
+557	557	Earth rune
+558	558	Mind rune
+559	559	Body rune
+560	560	Death rune
+561	561	Nature rune
+562	562	Chaos rune
+563	563	Law rune
+565	565	Blood rune
+566	566	Soul rune
+847	847	Willow longbow
+849	849	Willow shortbow
+855	855	Yew longbow
+857	857	Yew shortbow
+859	859	Magic longbow
+861	861	Magic shortbow
+985	985	Tooth half of key
+987	987	Loop half of key
+989	989	Crystal key
+995	995	Coins
+1073	1073	Adamant platelegs
+1077	1077	Black platelegs
+1079	1079	Rune platelegs
+1093	1093	Rune plateskirt
+1097	1097	Studded chaps
+1099	1099	Green d'hide chaps
+1123	1123	Adamant platebody
+1125	1125	Black platebody
+1127	1127	Rune platebody
+1133	1133	Studded body
+1135	1135	Green d'hide body
+1161	1161	Adamant full helm
+1163	1163	Rune full helm
+1165	1165	Black full helm
+1169	1169	Coif
+1201	1201	Rune kiteshield
+1211	1211	Adamant dagger
+1213	1213	Rune dagger
+1215	1215	Dragon dagger
+1217	1217	Black dagger
+1269	1269	Steel pickaxe
+1271	1271	Adamant pickaxe
+1275	1275	Rune pickaxe
+1297	1297	Black longsword
+1301	1301	Adamant longsword
+1303	1303	Rune longsword
+1305	1305	Dragon longsword
+1357	1357	Adamant axe
+1359	1359	Rune axe
+1361	1361	Black axe
+1367	1367	Black battleaxe
+1371	1371	Adamant battleaxe
+1373	1373	Rune battleaxe
+1377	1377	Dragon battleaxe
+1381	1381	Staff of air
+1391	1391	Battlestaff
+1392	1392	null
+1393	1393	Fire battlestaff
+1434	1434	Dragon mace
+1645	1645	Dragonstone ring
+1664	1664	Dragon necklace
+1727	1727	Amulet of magic
+1731	1731	Amulet of power
+1747	1747	Black dragonhide
+1748	1748	null
+1965	1965	Cabbage
+2363	2363	Runite bar
+2364	2364	null
+2436	2436	Super attack(4)
+2437	2437	null
+2440	2440	Super strength(4)
+2441	2441	null
+2442	2442	Super defence(4)
+2443	2443	null
+2444	2444	Ranging potion(4)
+2445	2445	null
+2452	2452	Antifire potion(4)
+2453	2453	null
+2497	2497	Black d'hide chaps
+2503	2503	Black d'hide body
+2577	2577	Ranger boots
+2579	2579	Wizard boots
+2581	2581	Robin hood hat
+2583	2583	Black platebody (t)
+2585	2585	Black platelegs (t)
+2587	2587	Black full helm (t)
+2589	2589	Black kiteshield (t)
+2591	2591	Black platebody (g)
+2593	2593	Black platelegs (g)
+2595	2595	Black full helm (g)
+2597	2597	Black kiteshield (g)
+2599	2599	Adamant platebody (t)
+2601	2601	Adamant platelegs (t)
+2603	2603	Adamant kiteshield (t)
+2605	2605	Adamant full helm (t)
+2607	2607	Adamant platebody (g)
+2609	2609	Adamant platelegs (g)
+2611	2611	Adamant kiteshield (g)
+2613	2613	Adamant full helm (g)
+2615	2615	Rune platebody (g)
+2617	2617	Rune platelegs (g)
+2619	2619	Rune full helm (g)
+2621	2621	Rune kiteshield (g)
+2623	2623	Rune platebody (t)
+2625	2625	Rune platelegs (t)
+2627	2627	Rune full helm (t)
+2629	2629	Rune kiteshield (t)
+2631	2631	Highwayman mask
+2633	2633	Blue beret
+2635	2635	Black beret
+2637	2637	White beret
+2639	2639	Tan cavalier
+2641	2641	Dark cavalier
+2643	2643	Black cavalier
+2645	2645	Red headband
+2647	2647	Black headband
+2649	2649	Brown headband
+2651	2651	Pirate's hat
+2653	2653	Zamorak platebody
+2655	2655	Zamorak platelegs
+2657	2657	Zamorak full helm
+2659	2659	Zamorak kiteshield
+2661	2661	Saradomin platebody
+2663	2663	Saradomin platelegs
+2665	2665	Saradomin full helm
+2667	2667	Saradomin kiteshield
+2669	2669	Guthix platebody
+2671	2671	Guthix platelegs
+2673	2673	Guthix full helm
+2675	2675	Guthix kiteshield
+2677	2677	Clue scroll (easy)
+2722	2722	Clue scroll (hard)
+2795	25022	Puzzle box (hard)
+2801	2801	Clue scroll (medium)
+2842	25023	Challenge scroll (medium)
+3016	3016	Super energy(4)
+3017	3017	null
+3024	3024	Super restore(4)
+3025	3025	null
+3049	3049	Grimy toadflax
+3050	3050	null
+3051	3051	Grimy snapdragon
+3052	3052	null
+3204	3204	Dragon halberd
+3472	3472	Black plateskirt (t)
+3473	3473	Black plateskirt (g)
+3474	3474	Adamant plateskirt (t)
+3475	3475	Adamant plateskirt (g)
+3476	3476	Rune plateskirt (g)
+3477	3477	Rune plateskirt (t)
+3478	3478	Zamorak plateskirt
+3479	3479	Saradomin plateskirt
+3480	3480	Guthix plateskirt
+3481	3481	Gilded platebody
+3483	3483	Gilded platelegs
+3485	3485	Gilded plateskirt
+3486	3486	Gilded full helm
+3488	3488	Gilded kiteshield
+3565	25024	Puzzle box (hard)
+3569	25025	Puzzle box (hard)
+3827	3827	Saradomin page 1
+3828	3828	Saradomin page 2
+3829	3829	Saradomin page 3
+3830	3830	Saradomin page 4
+3831	3831	Zamorak page 1
+3832	3832	Zamorak page 2
+3833	3833	Zamorak page 3
+3834	3834	Zamorak page 4
+3835	3835	Guthix page 1
+3836	3836	Guthix page 2
+3837	3837	Guthix page 3
+3838	3838	Guthix page 4
+4587	4587	Dragon scimitar
+5289	5289	Palm tree seed
+5315	5315	Yew seed
+5316	5316	Magic seed
+6685	6685	Saradomin brew(4)
+6686	6686	null
+7060	7060	Tuna potato
+7061	7061	null
+7218	7218	Summer pie
+7219	7219	null
+7269	25026	Challenge scroll (hard)
+7319	7319	Red boater
+7321	7321	Orange boater
+7323	7323	Green boater
+7325	7325	Blue boater
+7327	7327	Black boater
+7329	7329	Red firelighter
+7330	7330	Green firelighter
+7331	7331	Blue firelighter
+7332	7332	Black shield (h1)
+7334	7334	Adamant shield (h1)
+7336	7336	Rune shield (h1)
+7338	7338	Black shield (h2)
+7340	7340	Adamant shield (h2)
+7342	7342	Rune shield (h2)
+7344	7344	Black shield (h3)
+7346	7346	Adamant shield (h3)
+7348	7348	Rune shield (h3)
+7350	7350	Black shield (h4)
+7352	7352	Adamant shield (h4)
+7354	7354	Rune shield (h4)
+7356	7356	Black shield (h5)
+7358	7358	Adamant shield (h5)
+7360	7360	Rune shield (h5)
+7362	7362	Studded body (g)
+7364	7364	Studded body (t)
+7366	7366	Studded chaps (g)
+7368	7368	Studded chaps (t)
+7370	25027	Green d'hide body (g)
+7372	25029	Green d'hide body (t)
+7374	25031	Blue d'hide body (g)
+7376	25033	Blue d'hide body (t)
+7378	25035	Green d'hide chaps (g)
+7380	25037	Green d'hide chaps (t)
+7382	25039	Blue d'hide chaps (g)
+7384	25041	Blue d'hide chaps (t)
+7386	7386	Blue skirt (g)
+7388	7388	Blue skirt (t)
+7390	25043	Blue wizard robe (g)
+7392	25045	Blue wizard robe (t)
+7394	25047	Blue wizard hat (g)
+7396	25049	Blue wizard hat (t)
+7398	7398	Enchanted robe
+7399	7399	Enchanted top
+7400	7400	Enchanted hat
+8778	8778	Oak plank
+8779	8779	null
+8780	8780	Teak plank
+8781	8781	null
+8782	8782	Mahogany plank
+8783	8783	null
+9185	9185	Rune crossbow
+9194	9194	Onyx bolt tips
+9245	9245	Onyx bolts (e)
+10280	10280	Willow comp bow
+10282	10282	Yew comp bow
+10284	10284	Magic comp bow
+10286	10286	Rune helm (h1)
+10288	10288	Rune helm (h2)
+10290	10290	Rune helm (h3)
+10292	10292	Rune helm (h4)
+10294	10294	Rune helm (h5)
+10296	10296	Adamant helm (h1)
+10298	10298	Adamant helm (h2)
+10300	10300	Adamant helm (h3)
+10302	10302	Adamant helm (h4)
+10304	10304	Adamant helm (h5)
+10306	10306	Black helm (h1)
+10308	10308	Black helm (h2)
+10310	10310	Black helm (h3)
+10312	10312	Black helm (h4)
+10314	10314	Black helm (h5)
+10316	25051	Bob's red shirt
+10318	25053	Bob's blue shirt
+10320	25055	Bob's green shirt
+10322	25057	Bob's black shirt
+10324	25059	Bob's purple shirt
+10326	10326	Purple firelighter
+10327	10327	White firelighter
+10330	10330	3rd Age range top
+10332	10332	3rd Age range legs
+10334	10334	3rd Age range coif
+10336	10336	3rd Age vambraces
+10338	10338	3rd Age robe top
+10340	10340	3rd Age robe
+10342	10342	3rd Age mage hat
+10344	10344	3rd Age amulet
+10346	10346	3rd Age platelegs
+10348	10348	3rd Age platebody
+10350	10350	3rd Age full helmet
+10352	10352	3rd Age kiteshield
+10354	10354	Amulet of glory (t4)
+10364	10364	Strength amulet (t)
+10366	10366	Amulet of magic (t)
+10368	25061	Zamorak bracers
+10370	25063	Zamorak d'hide body
+10372	10372	Zamorak chaps
+10374	10374	Zamorak coif
+10376	25065	Guthix bracers
+10378	25067	Guthix d'hide body
+10380	10380	Guthix chaps
+10382	10382	Guthix coif
+10384	25069	Saradomin bracers
+10386	25071	Saradomin d'hide body
+10388	10388	Saradomin chaps
+10390	10390	Saradomin coif
+10392	10392	A powdered wig
+10394	10394	Flared trousers
+10396	10396	Pantaloons
+10398	10398	Sleeping cap
+10400	10400	Black elegant shirt
+10402	10402	Black elegant legs
+10404	10404	Red elegant shirt
+10406	10406	Red elegant legs
+10408	10408	Blue elegant shirt
+10410	10410	Blue elegant legs
+10412	10412	Green elegant shirt
+10414	10414	Green elegant legs
+10416	10416	Purple elegant shirt
+10418	10418	Purple elegant legs
+10420	10420	White elegant blouse
+10422	10422	White elegant skirt
+10424	10424	Red elegant blouse
+10426	10426	Red elegant skirt
+10428	10428	Blue elegant blouse
+10430	10430	Blue elegant skirt
+10432	10432	Green elegant blouse
+10434	10434	Green elegant skirt
+10436	10436	Purple elegant blouse
+10438	10438	Purple elegant skirt
+10440	10440	Saradomin crozier
+10442	10442	Guthix crozier
+10444	10444	Zamorak crozier
+10446	10446	Saradomin cloak
+10448	10448	Guthix cloak
+10450	10450	Zamorak cloak
+10452	10452	Saradomin mitre
+10454	10454	Guthix mitre
+10456	10456	Zamorak mitre
+10458	10458	Saradomin robe top
+10460	10460	Zamorak robe top
+10462	10462	Guthix robe top
+10464	10464	Saradomin robe legs
+10466	10466	Guthix robe legs
+10468	10468	Zamorak robe legs
+10470	10470	Saradomin stole
+10472	10472	Guthix stole
+10474	10474	Zamorak stole
+10476	10476	Purple sweets
+11115	11115	Dragonstone bracelet
+11951	23701	Extended antifire(4)
+11952	23702	null
+12073	19043	Clue scroll (elite)
+12128	25073	Challenge scroll (elite)
+12139	25074	Challenge scroll (elite)
+12161	25075	Puzzle box (elite)
+12193	25076	Ancient robe top
+12195	19390	Ancient robe legs
+12197	19372	Ancient cloak
+12199	19366	Ancient crozier
+12201	19396	Ancient stole
+12203	19378	Ancient mitre
+12205	25078	Bronze platebody (g)
+12207	25080	Bronze platelegs (g)
+12209	25082	Bronze plateskirt (g)
+12211	25084	Bronze full helm (g)
+12213	25086	Bronze kiteshield (g)
+12215	25088	Bronze platebody (t)
+12217	25090	Bronze platelegs (t)
+12219	25092	Bronze plateskirt (t)
+12221	25094	Bronze full helm (t)
+12223	25096	Bronze kiteshield (t)
+12225	25098	Iron platebody (t)
+12227	25100	Iron platelegs (t)
+12229	25102	Iron plateskirt (t)
+12231	25104	Iron full helm (t)
+12233	25106	Iron kiteshield (t)
+12235	25108	Iron platebody (g)
+12237	25110	Iron platelegs (g)
+12239	25112	Iron plateskirt (g)
+12241	25114	Iron full helm (g)
+12243	25116	Iron kiteshield (g)
+12245	25118	Beanie
+12247	25120	Red beret
+12249	25122	Imp mask
+12251	25124	Goblin mask
+12253	25126	Armadyl robe top
+12255	19386	Armadyl robe legs
+12257	19392	Armadyl stole
+12259	19374	Armadyl mitre
+12261	19368	Armadyl cloak
+12263	19362	Armadyl crozier
+12265	25128	Bandos robe top
+12267	19388	Bandos robe legs
+12269	19394	Bandos stole
+12271	19376	Bandos mitre
+12273	19370	Bandos cloak
+12275	19364	Bandos crozier
+12277	25130	Mithril platebody (g)
+12279	25132	Mithril platelegs (g)
+12281	25134	Mithril kiteshield (g)
+12283	25136	Mithril full helm (g)
+12285	25138	Mithril plateskirt (g)
+12287	25140	Mithril platebody (t)
+12289	25142	Mithril platelegs (t)
+12291	25144	Mithril kiteshield (t)
+12293	25146	Mithril full helm (t)
+12295	25148	Mithril plateskirt (t)
+12297	25150	Black pickaxe
+12299	25152	White headband
+12301	25154	Blue headband
+12303	25156	Gold headband
+12305	25158	Pink headband
+12307	25160	Green headband
+12309	25162	Pink boater
+12311	25164	Purple boater
+12313	25166	White boater
+12315	25168	Pink elegant shirt
+12317	25170	Pink elegant legs
+12319	25172	Crier hat
+12321	25174	White cavalier
+12323	25176	Red cavalier
+12325	25178	Navy cavalier
+12327	25180	Red d'hide body (g)
+12329	25182	Red d'hide chaps (g)
+12331	25184	Red d'hide body (t)
+12333	25186	Red d'hide chaps (t)
+12335	23640	Briefcase
+12337	23582	Sagacious spectacles
+12339	25188	Pink elegant blouse
+12341	25190	Pink elegant skirt
+12343	25192	Gold elegant blouse
+12345	25194	Gold elegant skirt
+12347	25196	Gold elegant shirt
+12349	25198	Gold elegant legs
+12351	23550	Musketeer hat
+12353	23538	Monocle
+12355	23446	Big pirate hat
+12357	23636	Katana
+12359	25200	Leprechaun hat
+12361	25202	Cat mask
+12363	25204	Bronze dragon mask
+12365	25206	Iron dragon mask
+12367	25208	Steel dragon mask
+12369	25210	Mithril dragon mask
+12371	23518	Lava dragon mask
+12373	23638	Dragon cane
+12375	25212	Black cane
+12377	25214	Adamant cane
+12379	25216	Rune cane
+12381	23450	Black d'hide body (g)
+12383	23454	Black d'hide chaps (g)
+12385	23452	Black d'hide body (t)
+12387	23456	Black d'hide chaps (t)
+12389	23622	Gilded scimitar
+12391	23486	Gilded boots
+12393	23578	Royal gown top
+12395	23576	Royal gown bottom
+12397	15509	Royal crown
+12402	19475	Nardah teleport
+12403	23681	Digsite teleport
+12404	23682	Feldip hills teleport
+12405	23683	Lunar isle teleport
+12406	23684	Mort'ton teleport
+12407	23685	Pest control teleport
+12408	23686	Piscatoris teleport
+12409	19479	Tai bwo wannai teleport
+12410	23687	Iorwerth camp teleport
+12411	23688	Mos le'harmless teleport
+12422	23616	3rd Age wand
+12424	23612	3rd Age bow
+12426	23614	3rd Age longsword
+12428	25218	Penguin mask
+12430	23430	Afro
+12432	25220	Top hat
+12437	23422	3rd Age cloak
+12439	15507	Royal sceptre
+12441	23554	Musketeer tabard
+12443	23552	Musketeer pants
+12445	25222	Black skirt (g)
+12447	25224	Black skirt (t)
+12449	25226	Black wizard robe (g)
+12451	25228	Black wizard robe (t)
+12453	25230	Black wizard hat (g)
+12455	25232	Black wizard hat (t)
+12460	25234	Ancient platebody
+12462	19401	Ancient platelegs
+12464	19404	Ancient plateskirt
+12466	19407	Ancient full helm
+12468	19410	Ancient kiteshield
+12470	25236	Armadyl platebody
+12472	19416	Armadyl platelegs
+12474	19419	Armadyl plateskirt
+12476	19422	Armadyl full helm
+12478	19425	Armadyl kiteshield
+12480	25238	Bandos platebody
+12482	19431	Bandos platelegs
+12484	19434	Bandos plateskirt
+12486	19437	Bandos full helm
+12488	19440	Bandos kiteshield
+12490	25240	Ancient bracers
+12492	25242	Ancient d'hide body
+12494	19447	Ancient chaps
+12496	19449	Ancient coif
+12498	25244	Bandos bracers
+12500	25246	Bandos d'hide body
+12502	19455	Bandos chaps
+12504	19457	Bandos coif
+12506	25248	Armadyl bracers
+12508	25250	Armadyl d'hide body
+12510	19463	Armadyl chaps
+12512	19465	Armadyl coif
+12514	25252	Explorer backpack
+12516	25254	Pith helmet
+12518	25256	Green dragon mask
+12520	25258	Blue dragon mask
+12522	25260	Red dragon mask
+12524	25262	Black dragon mask
+12526	19333	Fury ornament kit
+12528	22860	Dark infinity colour kit
+12530	22858	Light infinity colour kit
+12532	23656	Dragon sq shield ornament kit
+12534	23650	Dragon chainbody ornament kit
+12536	23652	Dragon legs/skirt ornament kit
+12538	23654	Dragon full helm ornament kit
+12540	23478	Deerstalker
+12596	23568	Rangers' tunic
+12598	25264	Holy sandals
+12613	19600	Bandos page 1
+12614	19601	Bandos page 2
+12615	19602	Bandos page 3
+12616	19603	Bandos page 4
+12617	19604	Armadyl page 1
+12618	19605	Armadyl page 2
+12619	19606	Armadyl page 3
+12620	19607	Armadyl page 4
+12621	19608	Ancient page 1
+12622	19609	Ancient page 2
+12623	19610	Ancient page 3
+12624	19611	Ancient page 4
+12642	23689	Lumberyard teleport
+12913	23255	Anti-venom+(4)
+12914	23256	null
+13648	25266	Clue bottle (easy)
+13649	25267	Clue bottle (medium)
+13650	25268	Clue bottle (hard)
+13651	25269	Clue bottle (elite)
+19712	25270	Clue nest (easy)
+19714	25271	Clue nest (medium)
+19716	25272	Clue nest (hard)
+19718	25273	Clue nest (elite)
+19724	23520	Left eye patch
+19730	24112	Bloodhound
+19835	25274	Clue scroll (master)
+19836	25275	Reward casket (master)
+19837	25276	Torn clue scroll (part 1)
+19838	25277	Torn clue scroll (part 2)
+19839	25278	Torn clue scroll (part 3)
+19887	25279	Puzzle box (hard)
+19912	25280	Zombie head
+19915	25282	Cyclops head
+19918	25284	Nunchaku
+19921	25286	Ancient d'hide boots
+19924	25288	Bandos d'hide boots
+19927	25290	Guthix d'hide boots
+19930	25292	Armadyl d'hide boots
+19933	25294	Saradomin d'hide boots
+19936	25296	Zamorak d'hide boots
+19939	25298	Strange device
+19941	25299	Heavy casket
+19943	23444	Arceuus scarf
+19946	23514	Hosidius scarf
+19949	23536	Lovakengj scarf
+19952	23562	Piscarilius scarf
+19955	23596	Shayzien scarf
+19958	23474	Dark tuxedo jacket
+19961	23472	Dark tuxedo cuffs
+19964	23470	Dark trousers
+19967	23476	Dark tuxedo shoes
+19970	23468	Dark bow tie
+19973	23530	Light tuxedo jacket
+19976	23528	Light tuxedo cuffs
+19979	23526	Light trousers
+19982	23532	Light tuxedo shoes
+19985	23524	Light bow tie
+19988	23458	Blacksmith's helm
+19991	23464	Bucket helm
+19994	23564	Ranger gloves
+19997	23508	Holy wraps
+20002	23664	Dragon scimitar ornament kit
+20005	23694	Ring of nature
+20008	23480	Fancy tiara
+20011	23618	3rd Age axe
+20014	23620	3rd Age pickaxe
+20017	23692	Ring of coins
+20020	23522	Lesser demon mask
+20023	23504	Greater demon mask
+20026	23448	Black demon mask
+20029	23558	Old demon mask
+20032	23516	Jungle demon mask
+20035	23590	Samurai kasa
+20038	23592	Samurai shirt
+20041	23586	Samurai gloves
+20044	23588	Samurai greaves
+20047	23584	Samurai boots
+20050	23556	Obsidian cape (r)
+20053	23506	Half moon spectacles
+20056	23690	Ale of the gods
+20059	23466	Bucket helm (g)
+20062	22348	Torture ornament kit
+20065	22331	Occult ornament kit
+20068	23642	Armadyl godsword ornament kit
+20071	23644	Bandos godsword ornament kit
+20074	23646	Saradomin godsword ornament kit
+20077	23648	Zamorak godsword ornament kit
+20080	23546	Mummy's head
+20083	23540	Mummy's body
+20086	23544	Mummy's hands
+20089	23548	Mummy's legs
+20092	23542	Mummy's feet
+20095	23434	Ankou mask
+20098	23438	Ankou top
+20101	23432	Ankou gloves
+20104	23440	Ankou's leggings
+20107	23436	Ankou socks
+20110	23462	Bowl wig
+20113	23442	Arceuus hood
+20116	23512	Hosidius hood
+20119	23534	Lovakengj hood
+20122	23560	Piscarilius hood
+20125	23594	Shayzien hood
+20128	23510	Hood of darkness
+20131	23574	Robe top of darkness
+20134	23502	Gloves of darkness
+20137	23572	Robe bottom of darkness
+20140	23460	Boots of darkness
+20143	23662	Dragon defender ornament kit
+20146	23498	Gilded med helm
+20149	23488	Gilded chainbody
+20152	23500	Gilded sq shield
+20155	23624	Gilded 2h sword
+20158	23626	Gilded spear
+20161	23628	Gilded hasta
+20164	25300	Large spade
+20166	25301	Wooden shield (g)
+20169	25303	Steel platebody (g)
+20172	25305	Steel platelegs (g)
+20175	25307	Steel plateskirt (g)
+20178	25309	Steel full helm (g)
+20181	25311	Steel kiteshield (g)
+20184	25313	Steel platebody (t)
+20187	25315	Steel platelegs (t)
+20190	25317	Steel plateskirt (t)
+20193	25319	Steel full helm (t)
+20196	25321	Steel kiteshield (t)
+20199	25323	Monk's robe top (g)
+20202	25325	Monk's robe (g)
+20205	25327	Golden chef's hat
+20208	25329	Golden apron
+20211	25331	Team cape zero
+20214	25333	Team cape x
+20217	25335	Team cape i
+20220	23600	Holy blessing
+20223	23602	Unholy blessing
+20226	23604	Peaceful blessing
+20229	23606	Honourable blessing
+20232	23608	War blessing
+20235	23610	Ancient blessing
+20238	25337	Charge dragonstone jewellery scroll
+20240	25338	Crier coat
+20243	25340	Crier bell
+20246	25342	Black leprechaun hat
+20249	25344	Clueless scroll
+20251	25345	Arceuus banner
+20254	25347	Hosidius banner
+20257	25349	Lovakengj banner
+20260	25351	Piscarilius banner
+20263	25353	Shayzien banner
+20266	25355	Black unicorn mask
+20269	25357	White unicorn mask
+20272	25359	Cabbage round shield
+20275	25361	Gnomish firelighter
+20280	25363	Puzzle box (master)
+20281	25364	Puzzle box (master)
+20282	25365	Puzzle box (master)
+20355	25366	Light box
+20356	25367	null
+20357	25368	null
+20358	25369	Clue geode (easy)
+20360	25370	Clue geode (medium)
+20362	25371	Clue geode (hard)
+20364	25372	Clue geode (elite)
+20543	19039	Reward casket (elite)
+20544	2724	Reward casket (hard)
+20545	2802	Reward casket (medium)
+20546	2714	Reward casket (easy)
+21387	25373	Master scroll book (empty)
+22231	23759	Dragon boots ornament kit
+22236	23660	Dragon platebody ornament kit
+22239	23658	Dragon kiteshield ornament kit
+22246	22343	Anguish ornament kit
+22675	25375	Scroll sack
+22879	25380	Snape grass seed
+23173	25381	Puzzle box (hard)
+23184	23729	Mimic
+23185	23570	Ring of 3rd Age
+23188	25382	Guthix d'hide shield
+23191	25384	Saradomin d'hide shield
+23194	25386	Zamorak d'hide shield
+23197	25388	Ancient d'hide shield
+23200	25390	Armadyl d'hide shield
+23203	25392	Bandos d'hide shield
+23206	25394	Dual sai
+23209	25396	Rune platebody (h1)
+23212	25398	Rune platebody (h2)
+23215	25400	Rune platebody (h3)
+23218	25402	Rune platebody (h4)
+23221	25404	Rune platebody (h5)
+23224	25406	Thieving bag
+23227	23765	Rune defender ornament kit
+23232	23768	Tzhaar-ket-om ornament kit
+23237	23762	Berserker necklace ornament kit
+23242	23426	3rd Age plateskirt
+23246	23482	Fremennik kilt
+23249	23566	Rangers' tights
+23252	23484	Giant boot
+23255	23598	Uri's hat
+23258	23490	Gilded coif
+23261	23496	Gilded d'hide vambraces
+23264	23492	Gilded d'hide body
+23267	23494	Gilded d'hide chaps
+23270	23428	Adamant dragon mask
+23273	23580	Rune dragon mask
+23276	23632	Gilded pickaxe
+23279	23630	Gilded axe
+23282	23634	Gilded spade
+23336	19317	3rd Age druidic robe top
+23339	23424	3rd Age druidic robe bottoms
+23342	19308	3rd Age druidic staff
+23345	19311	3rd Age druidic cloak
+23348	22353	Tormented ornament kit
+23351	25408	Cape of skulls
+23354	25410	Amulet of power (t)
+23357	25412	Rain bow
+23360	25414	Ham joint
+23363	25416	Staff of Bob the Cat
+23366	25418	Black platebody (h1)
+23369	25420	Black platebody (h2)
+23372	25422	Black platebody (h3)
+23375	25424	Black platebody (h4)
+23378	25426	Black platebody (h5)
+23381	25428	Leather body (g)
+23384	25430	Leather chaps (g)
+23389	23854	Spiked manacles
+23392	25432	Adamant platebody (h1)
+23395	25434	Adamant platebody (h2)
+23398	25436	Adamant platebody (h3)
+23401	25438	Adamant platebody (h4)
+23404	25440	Adamant platebody (h5)
+23407	25442	Wolf mask
+23410	25444	Wolf cloak
+23413	25446	Climbing boots (g)
+23417	25448	Puzzle box (master)
+24362	25449	Scroll box (easy)
+24363	25450	Scroll box (medium)
+24364	25451	Scroll box (hard)
+24365	25452	Scroll box (elite)
+24366	25453	Scroll box (master)
+30906	25454	Minor easy scroll case
+30908	25455	Major easy scroll case
+30910	25456	Minor medium scroll case
+30912	25457	Major medium scroll case
+30914	25458	Minor hard scroll case
+30916	25459	Major hard scroll case
+30918	25460	Minor elite scroll case
+30920	25461	Major elite scroll case
+30922	25462	Minor master scroll case
+30924	25463	Major master scroll case
+30926	25464	Mimic scroll case

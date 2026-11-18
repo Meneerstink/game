@@ -1,0 +1,138 @@
+{
+  "sourceClue": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_XJABSE_USBJCPSO",
+  "sourceFile": "Clue_scroll_(medium)_-_XJABSE_USBJCPSO.wiki",
+  "sourceSha256": "852b0203c6c5d494c82232ad06b0e2528024d41f0b0c8bac370146ba35a9f7a5",
+  "native": {
+    "881": {
+      "definition": {
+        "name": "Traiborn",
+        "models": [
+          51092,
+          215,
+          251,
+          51095,
+          3189,
+          51091,
+          177,
+          51094,
+          20748,
+          60380
+        ],
+        "ops": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "heads": [
+          39836,
+          38096,
+          51089,
+          51090
+        ],
+        "size": 1,
+        "recol": [
+          [
+            6798,
+            10365
+          ],
+          [
+            7705,
+            6043
+          ],
+          [
+            5400,
+            6031
+          ]
+        ],
+        "bas": 4,
+        "level": 0
+      },
+      "sha256": "88a06fd988d2051712fe1a71f7a71c35e3858fa4f5a28ce01513ff2e819685d8"
+    },
+    "8180": {
+      "definition": {
+        "name": "Traiborn",
+        "models": [
+          20399,
+          215,
+          251,
+          20405,
+          3189,
+          20395,
+          177,
+          40268,
+          181,
+          245,
+          40171
+        ],
+        "ops": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "heads": [
+          42339
+        ],
+        "size": 1,
+        "recol": [],
+        "bas": -1,
+        "level": 0
+      },
+      "sha256": "79fd73347006406df072357f76e24baa300064e6bce31b62d20d8992f1a47405"
+    },
+    "11604": {
+      "definition": {
+        "name": "Traiborn",
+        "models": [
+          51092,
+          215,
+          251,
+          51095,
+          3189,
+          51091,
+          177,
+          51094,
+          20748,
+          51093
+        ],
+        "ops": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "heads": [
+          39836,
+          38096,
+          51089,
+          51090
+        ],
+        "size": 1,
+        "recol": [
+          [
+            6798,
+            10365
+          ],
+          [
+            7705,
+            6043
+          ],
+          [
+            5400,
+            6031
+          ]
+        ],
+        "bas": 1,
+        "level": 0
+      },
+      "sha256": "aef128bd7a00e8299b83df12b9d7d4f530b1437a22facc82cbc14e3f310fbbb5"
+    }
+  },
+  "spawn": "spawns_12337.plugin.kts: native881,3112,3162,1,radius5",
+  "finding": "Source clue change history dates Wizard prefix change6July2022; native881Traiborn is the existing same-location actor. Other881-like variants must not be accepted."
+}

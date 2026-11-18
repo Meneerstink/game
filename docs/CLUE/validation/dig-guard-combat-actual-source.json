@@ -1,0 +1,25 @@
+{
+  "inputs": {
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueGuardianProfiles.kt": "1075e9add192e2d3a1470cce5f56942ed0b03fe1f3111f01948cd5f2a48cf845",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailDigGuards.kt": "977ea954b1bd07c1cad0ce1004b02ad43f92a4eea6c813603de8742055574be5",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailGuardians.kt": "e8b0927295b90dde3ed3bf751e92cf63ddaff66ab917cbc898e31d020b4e4cf5",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailHotCold.kt": "7f043347b9a0a4e9107f09a1ca8d6db8b68d68cc7e5bff517836a297d2049d17",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailHotColdDialogue.kt": "517ede6df1446201218c5c5b6be5041cbfa77ae72f70d5761be367ca4755f040",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailWizards.kt": "02bb66f66474f74ade7f02ecd210de3a9c9b082b56a9198e4072789c7f6f10d0",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailAgents.kt": "fc0a792b10a473219dc629f1deec2f43caa323d320ed0d71acc25b0d4f68163b",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueScrollManager.kt": "24690ea20a9db86cf0e6a4bd76b3b5d733931e86e7a5bf05fc40731a4e97a051",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueGuardianDrops.kt": "5ec481b1a439d0421a75df87d5241a80af38f4a1431702709f323dd1c930959f",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueGuardianCombat.kt": "7494ef845341cbb2074559e42eea7724dc78c46e3f0145fc81a4d0d9a79b6fce",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueCombatAssets.kt": "bb1365bac7b9abec621457688057764f48eccd4d827c22d2dce31844a3882fcb",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\skills\\slayer\\Krystilia.kt": "ae44a396265581e1ace9cca6bfa1a66ae5686751bbd4b5d457528ea60a3aef66",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailDigGuardTests.kt": "b95198d5170223f443105aa3e04914b76a267bd1ab9689cffa774e214d6e0a42",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailGuardianTests.kt": "bd9dc46c59cf7755d344821826530fe6d76546f720602366652057b1beb7d9ac",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailHotColdTests.kt": "656422eecf5fd649c8a1e8b8e8a9f52350521fa3caef3690c94663317661006f",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailWizardTests.kt": "e779ef6e36621f87d91b1b7725921a14e95137520cea3e9c9e3fea081c12f220",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueGuardianCombatTests.kt": "c77812c15bf45b9746e99caab6e8ab36cfe848c153be1136a45f75a3f64cc8c9",
+    "C:\\RSPS\\work\\gpt-b\\data\\cfg\\clue\\hotcold.json": "016e46afcd7993173652765f53eb809b1e870e4604d34c67cd2a57150837d831",
+    "C:\\RSPS\\work\\gpt-b\\data\\cfg\\clue\\guardians.json": "cc097a5a3a36ba28a974c7eec6ce71dee4987c89e230eb63e26d7e0220daef6d"
+  },
+  "unchanged": true,
+  "tests": "JUnit version 4.13.2\n......................PROBLEM CLUE unknown saved hot/cold target-923; scroll retained\n...PROBLEM CLUE coordinate wizard unavailable atTile{x=3081, z=3209, height=0}; clue retained\n.......\nTime: 18,53\n\nOK (32 tests)\n\n"
+}

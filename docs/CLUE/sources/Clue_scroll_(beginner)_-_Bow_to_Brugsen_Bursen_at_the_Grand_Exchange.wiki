@@ -1,0 +1,34 @@
+{{Infobox Item
+|name = Clue scroll (beginner)
+|image = [[File:Clue scroll (beginner).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = No
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 23182
+}}
+[[File:Clue scroll (beginner) detail.png|left|width=100x86]]
+'''Clue scroll (beginner)''' is an [[emote clue]] obtained from [[Clue scroll (beginner)|beginner]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|text=Bow to Brugsen Bursen at the Grand Exchange.
+|notes=[[Brugsen Bursen]] is found inside the [[Grand Exchange]].
+|map={{Map|3165,3478|mtype=pin|plane=0|mapID=-1}}}}
+
+==Transportation==
+*[[Varrock Teleport]] (directly to the [[Grand Exchange]] if the [[Medium Varrock Diary]] is completed).
+*[[Ring of wealth]] teleport to the Grand Exchange.
+*[[Spirit tree]] to the Grand Exchange.
+*[[Skills necklace]] teleport to the [[Cooks' Guild]].
+*[[Amulet of glory]] teleport to [[Edgeville]] and use the [[Agility shortcut]] at the north-west corner of the Grand Exchange with 21 [[Agility]].
+*[[Skull sceptre (i)]] and run east across the [[River Lum]].
+*[[Chronicle]] and run north-west past [[Gertrude]].

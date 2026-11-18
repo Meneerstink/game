@@ -1,0 +1,37 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10278
+|leagueRegion = Desert&Morytania
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[emote clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 322
+|tier = medium
+|emote = Jig
+|emote2 = Bow
+|text = The emote reveals <br><br>Dance a jig under Shantay's Awning. Bow before you talk to me. Equip a pointed blue snail helmet, an air staff and a bronze square shield.
+|location = [[Shantay Pass]]
+|items = Equip a [[Bruise blue snelm (pointed)|pointed blue snail helmet]], an [[air staff]] and a [[bronze square shield]].
+|equipment1 = Pointed bruise blue snelm
+|equipment2 = Staff of air
+|equipment3 = Bronze sq shield
+|notes = Perform the [[jig]] and [[Bow (emote)|bow]] emotes at [[Shantay Pass]].
+|map = {{Map|3304,3124|mtype=pin|plane=0|mapID=-1}}
+}}

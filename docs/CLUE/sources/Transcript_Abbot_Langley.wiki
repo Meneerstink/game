@@ -1,0 +1,108 @@
+{{Transcript|npc}}
+{{Incomplete|Missing [[Treasure Trails]] clue dialogue, missing 1.5m sigil creation, and WOM letter rewards}}
+
+==Standard dialogue==
+* '''Abbot Langley:''' Greetings traveller.
+* {{topt|Can you heal me? I'm injured.}}
+** '''Player:''' Can you heal me? I'm injured.
+** '''Abbot Langley:''' Ok.
+** {{tbox|Abbot Langley places his hands on your head. You feel a little better.}}
+** {{tact|end}}
+* {{topt|Isn't this place built a bit out of the way?}}
+** '''Player:''' Isn't this place built a bit out of the way?
+** '''Abbot Langley:''' We like it that way actually! We get disturbed less. We still get rather a large amount of travellers looking for sanctuary and healing here as it is!
+** {{tact|end}}
+* {{topt|cond=If the player has not joined the Edgeville Monastery order:|How do I get further into the monastery?}}
+** '''Player:''' How do I get further into the monastery?
+** '''Abbot Langley:''' I'm sorry but only members of our order are allowed in the second level of the monastery.
+** {{topt|Well can I join your order?}}
+*** '''Player:''' Well can I join your order?
+*** {{tcond|If the player does not have 31 prayer:}}
+**** '''Abbot Langley:''' No. I am sorry, but I feel you are not devout enough.
+**** {{mes|You need a prayer level of 31 to join the order.}}
+**** {{tact|end}}
+*** {{tcond|If the player has 31 prayer:}}
+**** '''Abbot Langley:''' Ok, I see you are someone suitable for our order. You may join.
+**** {{tact|end}}
+** {{topt|Oh, sorry.}}
+** '''Player:''' Oh, sorry.
+*** {{tact|end}}
+* {{topt|Can you help with spirit shields?}}
+** '''Abbot Langley:''' I might be able to... What did you have in mind?
+** '''Player:''' Can you remove the sigils from my spirit shields?
+** '''Abbot Langley:''' I think I shoud be able to manage that. However in doing so, I'm afraid I'll have to destroy the blessed shield itself. You'll only get the sigil back.
+** '''Abbot Langley:''' I can go ahead and break down all of the shields in your inventory now if you'd like?.{{sic}}
+** {{tselect|Are you sure?}}
+** {{topt|Yes.}}
+*** {{tbox|pic=Arcane sigil detail.png|Abbot Langley carefully breaks each shield, leaving the sigils perfectly intact.}}
+*** {{tact|end}}
+** {{topt|No.}}
+*** '''Player:''' Not right now.
+*** {{tact|end}}
+
+===Interacting with the south-eastern ladder before joining the Edgeville Monastery order===
+* '''Abbot Langley:''' Only members of our order can go up there.
+* {{tselect|Select an Option}}
+* {{topt|Well can I join your order?}}
+** '''Player:''' Well can I join your order?
+** {{tcond|If the player does not have 31 prayer:}}
+*** '''Abbot Langley:''' No. I am sorry, but I feel you are not devout enough.
+*** {{mes|You need a prayer level of 31 to join the order.}}
+*** {{tact|end}}
+** {{tcond|If the player has 31 prayer:}}
+*** '''Abbot Langley:''' Ok, I see you are someone suitable for our order. You may join.
+*** {{tact|end}}
+* {{topt|Oh, sorry.}}
+** '''Player:''' Oh, sorry.
+
+==Claiming the Corrupted Helm==
+* '''Abbot Langley:''' Ah, I was told to expect you, please take this as thanks!
+* {{tbox|pic=Corrupted helm detail.png|Abbot Langley quickly takes the soft clay, leather boots and bowl of hot water in exchange for a mysterious helmet.}}
+* {{tact|receives=Corrupted helm}}
+* {{tact|end}}
+
+==[[Treasure Trails]]==
+===Hard===
+* '''Abbot Langley:''' Congratulations, traveller!
+* {{tcond|If the player has finished the treasure trail:}}
+** {{tbox|pic=Reward casket (hard) detail.png|You've obtained a casket!}}
+** {{tact|receives=Reward casket (hard)}}
+** {{tact|end}}
+* {{tcond|If the player has not finished the treasure trail:}}
+** {{tbox|pic=Clue scroll (hard) detail.png|Abbot Langley has given you another clue scroll!}}
+** {{tact|receives=another clue scroll}}
+** {{tact|end}}
+===Master===
+* {{tcond|If the player has no free inventory spaces:}}
+** '''Abbot Langley:''' Hey, I have something for you but you don't have any space for it!
+* {{tcond|If the player has at least one free inventory space:}}
+** {{tact|receives=a [[torn clue scroll]]}}
+** '''Abbot Langley:''' Here you go.
+** {{tbox|pic=Torn clue scroll (part 3) detail.png|You are handed a torn part of a clue scroll.}}
+* '''Abbot Langley:''' I must say, I despise the equipment you have chosen to wear.
+* {{tact|end}}
+
+==Delivering a [[Old man's message|letter]] from the [[Wise Old Man]]==
+* '''Abbot Langley:''' Greetings traveller.
+* '''Player:''' I've got a message for you from your friend in Draynor Village.
+* '''Abbot Langley:''' Gosh, you are very kind to bring a message to my remote monastery!
+* {{tcond|If the player does not have enough space in their inventory for a reward:}}
+** '''Abbot Langley:''' I'd give you a reward, but you don't seem to have any space for it. Come back when you do.
+** {{tact|initial}}
+* {{tcond|If the player has at least one space in their inventory for a reward:}}
+** {{trandom}}
+** {{topt|Herbs}}
+*** {{tbox|pic=Grimy tarromin detail.png|{{colour|#000080|Abbot Langley gives you some banknotes that can be exchanged for herbs.}}}}
+*** {{tact|receives=an assortment of [[Wise Old Man tasks#Herbs|herbs]]}}
+*** '''Abbot Langley:''' I grow a few herbs in my little cabbage patch; please take some as a sign of my gratitude.
+*** {{tact|initial}}
+** {{topt|Coins}}
+*** {{tmissing}}
+** {{topt|Runes}}
+*** {{tmissing}}
+** {{topt|Seeds}}
+*** {{tmissing}}
+** {{topt|Prayer experience}}
+*** {{tbox|pic=Prayer icon.png|{{Colour|#000080|Abbot Langley blesses you. You gain some prayer xp.}}}}
+*** '''Abbot Langley:''' Allow me to bestow on you Saradomin's blessings...
+*** {{tact|initial}}

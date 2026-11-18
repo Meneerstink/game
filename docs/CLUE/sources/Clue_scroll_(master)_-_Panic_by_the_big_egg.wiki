@@ -1,0 +1,41 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 379
+|tier = master
+|emote = Panic
+|text = The clue reveals <br><br>Panic by the big egg where no one dare goes and the ground is burnt. Beware of double agents! Equip a dragon med helm, a TokTz-Ket-Xil, a brine sabre, rune platebody and an uncharged amulet of glory.
+|location=South-east corner of [[Lava Dragon Isle]] by the [[big egg]]
+|items = Equip a [[dragon med helm]], a [[toktz-ket-xil]], a [[brine sabre]], [[rune platebody]] and an uncharged [[amulet of glory]].
+|equipment1 = Dragon med helm
+|equipment1alt1 = Dragon med helm (cr)
+|equipment1alt1price1 = Dragon med helm
+|equipment2 = Toktz-ket-xil
+|equipment3 = Brine sabre
+|equipment4 = Rune platebody
+|equipment5 = Amulet of glory
+|notes = Perform the [[panic]] emote near the south-east corner of [[Lava Dragon Isle]].
+The clue has an additional challenge:
+
+Kill a [[double agent]].
+|map = {{Map|3227,3831|mtype=pin|plane=0|mapID=-1}}
+}}

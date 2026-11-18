@@ -1,0 +1,622 @@
+[
+  {
+    "npc": "Baraek",
+    "source": {
+      "page": "Transcript:Baraek",
+      "revision": 15315303,
+      "revision_time": "2026-08-21T05:40:22Z",
+      "file": "Transcript_Baraek.wiki",
+      "sha256": "d9662f1136a478067aae4a0fde28eb96e0d09f61749d68e4599bf90c0a1b1bfb",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ABaraek"
+    },
+    "section": "===Medium===\n* '''Baraek:''' I must ask you something...\n* {{tact|receives=a challenge scroll}}\n* {{tbox|pic=Clue scroll (medium) detail.png|Baraek has given you a challenge scroll!}}\n* {{tact|end}}\n\n====When talked to again====\n* '''Dunstan:''' Please enter the answer to the question.\n* {{tcond|When given the wrong answer:}}\n** '''Baraek:''' Wrong! Try again.\n** {{tact|end}}\n* {{tcond|When given the correct answer:}}\n** '''Baraek:''' Correct.\n** {{tcond|When given another clue scroll:}}\n*** {{tact|receives=another [[Clue scroll (medium)|clue scroll]]}}\n*** {{tbox|pic=Clue scroll (medium) detail.png|Baraek has given you another clue scroll!}}\n*** {{tact|end}}\n** {{tcond|When given a reward casket:}}\n*** {{tact|receives=a [[Reward casket (medium)|medium reward casket]]}}\n*** {{tbox|pic=Reward casket (medium) detail.png|You've obtained a casket!}}\n*** {{tact|end}}",
+    "lines": [
+      {
+        "depth": 1,
+        "speaker": "Baraek",
+        "text": "I must ask you something..."
+      },
+      {
+        "depth": 1,
+        "speaker": "Dunstan",
+        "text": "Please enter the answer to the question."
+      },
+      {
+        "depth": 2,
+        "speaker": "Baraek",
+        "text": "Wrong! Try again."
+      },
+      {
+        "depth": 2,
+        "speaker": "Baraek",
+        "text": "Correct."
+      }
+    ],
+    "incomplete": false,
+    "activation": "research; runtime must preserve these conditions"
+  },
+  {
+    "npc": "Father Aereck",
+    "source": {
+      "page": "Transcript:Father Aereck",
+      "revision": 15396508,
+      "revision_time": "2026-11-07T23:05:28Z",
+      "file": "Transcript_Father_Aereck.wiki",
+      "sha256": "11f5b2057e67207ffb78f7942299048d8e1514bbe75d2c542806cdfa159344dd",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AFather_Aereck"
+    },
+    "section": "===Medium===\n* '''Father Aereck:''' I have a question for you.\n* {{tact|receives=a challenge scroll}}\n* {{tbox|pic=Clue scroll (medium) detail.png|Father Aereck has given you a challenge scroll!}}\n* {{tact|end}}\n\n====When talked to again====\n* '''Father Aereck:''' Please enter the answer to the question.\n* {{tcond|When given the wrong answer:}}\n** '''Father Aereck:''' No, try again.\n** {{tact|end}}\n* {{tcond|When given the correct answer:}}\n** '''Father Aereck:''' Correct!\n** {{tcond|When given another clue scroll:}}\n*** {{tact|receives=another [[Clue scroll (medium)|clue scroll]]}}\n*** {{tbox|pic=Clue scroll (medium) detail.png|Father Aereck has given you another clue scroll!}}\n*** {{tact|end}}\n** {{tcond|When given a reward casket:}}\n*** {{tact|receives=a [[Reward casket (medium)|medium reward casket]]}}\n*** {{tbox|pic=Reward casket (medium) detail.png|You've obtained a casket!}}\n*** {{tact|end}}\n\n===Elite===\n* {{tcond|When given another clue scroll:}}\n** {{tact|receives=another [[Clue scroll (elite)|clue scroll]]}}\n** {{tbox|pic=Clue scroll (elite) detail.png|You've been given a new clue!}}\n** '''Father Aereck:''' Here, have this.\n** {{tact|end}}\n* {{tcond|When given a reward casket:}}\n** {{tact|receives=an [[Reward casket (elite)|elite reward casket]]}}\n** {{tbox|pic=Reward casket (elite) detail.png|You've obtained a casket!}}\n** {{tact|above}}",
+    "lines": [
+      {
+        "depth": 1,
+        "speaker": "Father Aereck",
+        "text": "I have a question for you."
+      },
+      {
+        "depth": 1,
+        "speaker": "Father Aereck",
+        "text": "Please enter the answer to the question."
+      },
+      {
+        "depth": 2,
+        "speaker": "Father Aereck",
+        "text": "No, try again."
+      },
+      {
+        "depth": 2,
+        "speaker": "Father Aereck",
+        "text": "Correct!"
+      },
+      {
+        "depth": 2,
+        "speaker": "Father Aereck",
+        "text": "Here, have this."
+      }
+    ],
+    "incomplete": false,
+    "activation": "research; runtime must preserve these conditions"
+  },
+  {
+    "npc": "Drezel",
+    "source": {
+      "page": "Transcript:Drezel",
+      "revision": 15328852,
+      "revision_time": "2026-09-02T20:10:53Z",
+      "file": "Transcript_Drezel.wiki",
+      "sha256": "9c589c8e7017ef3e6fc2b4a38d014bded05ce9f60799c94dc78cf75f7fdc5029",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ADrezel"
+    },
+    "section": "===Medium ===\n* '''Drezel:''' Ah! Here you go!\n* '''Player:''' What?\n* '''Drezel:''' I need you to help me with this.\n* {{tact|receives=a challenge scroll}}\n* {{tbox|Drezel has given you a challenge scroll!}}\n* {{tact|end}}\n\n==== When talked to again====\n* '''Drezel:''' Please give me your answer!\n* {{tcond|When given the wrong answer:}}\n** '''Drezel:''' Nope, not correct!\n** {{tact|end}}\n* {{tcond|When given the correct answer:}}\n** '''Drezel:''' Correct!\n** {{tact|receives=another clue scroll/a casket}}\n** {{tbox|Drezel has given you another clue scroll!}}\n** {{tact|end}}",
+    "lines": [
+      {
+        "depth": 1,
+        "speaker": "Drezel",
+        "text": "Ah! Here you go!"
+      },
+      {
+        "depth": 1,
+        "speaker": "Player",
+        "text": "What?"
+      },
+      {
+        "depth": 1,
+        "speaker": "Drezel",
+        "text": "I need you to help me with this."
+      },
+      {
+        "depth": 1,
+        "speaker": "Drezel",
+        "text": "Please give me your answer!"
+      },
+      {
+        "depth": 2,
+        "speaker": "Drezel",
+        "text": "Nope, not correct!"
+      },
+      {
+        "depth": 2,
+        "speaker": "Drezel",
+        "text": "Correct!"
+      }
+    ],
+    "incomplete": false,
+    "activation": "research; runtime must preserve these conditions"
+  },
+  {
+    "npc": "Wizard Traiborn",
+    "source": {
+      "page": "Transcript:Wizard Traiborn",
+      "revision": 15079315,
+      "revision_time": "2025-12-06T03:12:52Z",
+      "file": "Transcript_Wizard_Traiborn.wiki",
+      "sha256": "836ecab9b18ff835bb13310c4102b1a066ba3aee3c266a14a076af9e691c1c62",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AWizard_Traiborn"
+    },
+    "section": "===Medium===\n* '''Wizard Traiborn:''' Ello young thingummywut.\n* '''Wizard Traiborn:''' Here you go!\n* '''Player:''' What?\n* '''Wizard Traiborn:''' I need you to answer this for me like a good thingummywut.\n* {{tact|receives=a challenge scroll}}\n* {{tbox|Wizard Traiborn has given you a challenge scroll!}}\n* {{tact|end}}\n\n====When talked to again====\n* '''Wizard Traiborn:''' Ello young thingummywut.\n* '''Wizard Traiborn:''' Please give me your answer, young thingummywut!\n* {{tcond|When given the wrong answer:}}\n** '''Wizard Traiborn:''' How can that be? Go check again, silly thingummywut!\n** {{tact|end}}\n* {{tcond|When given the correct answer:}}\n** '''Wizard Traiborn:''' Spot on!\n** {{tact|receives=[another clue scroll/a casket]}}\n** {{tbox|Wizard Traiborn has given you another clue scroll!}}\n** {{tact|end}}",
+    "lines": [
+      {
+        "depth": 1,
+        "speaker": "Wizard Traiborn",
+        "text": "Ello young thingummywut."
+      },
+      {
+        "depth": 1,
+        "speaker": "Wizard Traiborn",
+        "text": "Here you go!"
+      },
+      {
+        "depth": 1,
+        "speaker": "Player",
+        "text": "What?"
+      },
+      {
+        "depth": 1,
+        "speaker": "Wizard Traiborn",
+        "text": "I need you to answer this for me like a good thingummywut."
+      },
+      {
+        "depth": 1,
+        "speaker": "Wizard Traiborn",
+        "text": "Ello young thingummywut."
+      },
+      {
+        "depth": 1,
+        "speaker": "Wizard Traiborn",
+        "text": "Please give me your answer, young thingummywut!"
+      },
+      {
+        "depth": 2,
+        "speaker": "Wizard Traiborn",
+        "text": "How can that be? Go check again, silly thingummywut!"
+      },
+      {
+        "depth": 2,
+        "speaker": "Wizard Traiborn",
+        "text": "Spot on!"
+      }
+    ],
+    "incomplete": false,
+    "activation": "research; runtime must preserve these conditions"
+  },
+  {
+    "npc": "Luthas",
+    "source": {
+      "page": "Transcript:Luthas",
+      "revision": 15284269,
+      "revision_time": "2026-07-31T12:21:28Z",
+      "file": "Transcript_Luthas.wiki",
+      "sha256": "67894d4b226fbd3aa47885a4720f1f205c0cb39702e014f0865dc4c3af1cd985",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ALuthas"
+    },
+    "section": "===Medium===\n* '''Luthas:''' Congratulations.\n* {{tmissing}}",
+    "lines": [
+      {
+        "depth": 1,
+        "speaker": "Luthas",
+        "text": "Congratulations."
+      }
+    ],
+    "incomplete": true,
+    "activation": "research; runtime must preserve these conditions"
+  },
+  {
+    "npc": "Vannaka",
+    "source": {
+      "page": "Transcript:Vannaka",
+      "revision": 15279938,
+      "revision_time": "2026-07-29T12:46:50Z",
+      "file": "Transcript_Vannaka.wiki",
+      "sha256": "2eeceafd3f42be73fcdcdd44de3f310845b11448f7f291a7e33708d7ec1464e2",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AVannaka"
+    },
+    "section": "===Easy===\n* '''Vannaka:''' Here, have this.\n* {{tcond|If the reward is another clue scroll:}}\n** {{tact|receives=another [[Clue scroll (easy)|clue scroll]]}}\n** {{tbox|pic=Clue scroll (easy) detail.png|You've found another clue!}}\n** {{tact|end}}\n* {{tcond|If the reward is a casket:}}\n** {{tact|receives=an [[Reward casket (easy)|easy reward casket]]}}\n** {{tbox|pic=Reward casket (easy) detail.png|You've obtained a casket!}}\n** {{tact|end}}\n\n===Elite===\n* {{tcond|When given another clue scroll:}}\n** {{tact|receives=another [[Clue scroll (elite)|clue scroll]]}}\n** {{tbox|pic=Clue scroll (elite) detail.png|You've been given a new clue!}}\n** '''Vannaka:''' Here, have this!\n** {{tact|end}}\n* {{tcond|When given a reward casket:}}\n** {{tact|receives=an [[Reward casket (elite)|elite reward casket]]}}\n** {{tbox|pic=Reward casket (elite) detail.png|You've obtained a casket!}}\n** {{tact|above}}",
+    "lines": [
+      {
+        "depth": 1,
+        "speaker": "Vannaka",
+        "text": "Here, have this."
+      },
+      {
+        "depth": 2,
+        "speaker": "Vannaka",
+        "text": "Here, have this!"
+      }
+    ],
+    "incomplete": false,
+    "activation": "research; runtime must preserve these conditions"
+  },
+  {
+    "npc": "Captain Tobias",
+    "source": {
+      "page": "Transcript:Captain Tobias",
+      "revision": 15315412,
+      "revision_time": "2026-08-21T06:05:22Z",
+      "file": "Transcript_Captain_Tobias.wiki",
+      "sha256": "5fb9862f5dd3e7ab1a29500e181d588c013e385a7581b544ae176e4c381dad7c",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ACaptain_Tobias"
+    },
+    "section": "===Easy===\n* '''Captain Tobias:''' Well done, matey! Here you go!\n* {{tcond|If the reward is another clue scroll:}}\n** {{tact|receives=an [[Clue scroll (easy)|easy clue scroll]]}}\n** {{tbox|pic=clue scroll (easy) detail.png|You've found another clue!}}\n** {{tact|end}}\n* {{tcond|If the reward is a casket:}}\n** {{tact|receives=an [[Reward casket (easy)|easy reward casket]]}}\n** {{tbox|pic=reward casket (easy) detail.png|You've obtained a casket!}}\n** {{tact|end}}",
+    "lines": [
+      {
+        "depth": 1,
+        "speaker": "Captain Tobias",
+        "text": "Well done, matey! Here you go!"
+      }
+    ],
+    "incomplete": false,
+    "activation": "research; runtime must preserve these conditions"
+  },
+  {
+    "npc": "Doomsayer",
+    "source": {
+      "page": "Transcript:Doomsayer",
+      "revision": 15392128,
+      "revision_time": "2026-11-03T15:45:39Z",
+      "file": "Transcript_Doomsayer.wiki",
+      "sha256": "957d9a37c166d8ce14b953059c93d96b3093f6079a5101b17529d21b94952e97",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ADoomsayer"
+    },
+    "section": "===Easy===\n* '''Doomsayer:''' You got lucky this time, next time doom will be upon you.\n* {{tcond|When given another clue scroll:}}\n** {{tbox|pic=Clue scroll (easy) detail.png|You've been given another clue!}}\n** {{tact|receives=an [[Clue scroll (easy)|easy clue scroll]]}}\n** {{tact|end}}\n* {{tcond|When given a reward casket:}}\n** {{tbox|pic=Reward casket (easy) detail.png|You've obtained a casket!}}\n** {{tact|receives=an [[Reward casket (easy)|easy reward casket]]}}\n** {{tact|end}}\n\n===Hard===\n* '''Doomsayer:''' Ah! Here you go!\n* '''Player:''' What?\n* '''Doomsayer:''' I need you to answer this for me.\n* {{tbox|pic=Clue scroll (hard) detail.png|The Doomsayer has given you a challenge scroll!}}\n* {{tact|receives=a [[Challenge_scroll#Hard|challenge scroll]]}}\n* {{tact|end}}\n\n====When spoken to again====\n* '''Doomsayer:''' Please enter the answer to the question.\n* {{tcond|When given the wrong answer:}}\n** '''Doomsayer:''' How can that be? Try again!\n** {{tact|end}}\n* {{tcond|When given the correct answer:}}\n** '''Doomsayer:''' Spot on!\n** {{tcond|When given another clue scroll:}}\n*** {{tbox|pic=Clue scroll (hard) detail.png|The Doomsayer has given you another clue scroll!}}\n*** {{tact|receives=a [[Clue scroll (hard)|hard clue scroll]]}}\n*** {{tact|end}}\n** {{tcond|When given a reward casket:}}\n*** {{tbox|pic=Reward casket (hard) detail.png|you've obtained a casket!}}\n*** {{tact|receives=a [[Reward casket (hard)|hard reward casket]]}}\n*** {{tact|end}}",
+    "lines": [
+      {
+        "depth": 1,
+        "speaker": "Doomsayer",
+        "text": "You got lucky this time, next time doom will be upon you."
+      },
+      {
+        "depth": 1,
+        "speaker": "Doomsayer",
+        "text": "Ah! Here you go!"
+      },
+      {
+        "depth": 1,
+        "speaker": "Player",
+        "text": "What?"
+      },
+      {
+        "depth": 1,
+        "speaker": "Doomsayer",
+        "text": "I need you to answer this for me."
+      },
+      {
+        "depth": 1,
+        "speaker": "Doomsayer",
+        "text": "Please enter the answer to the question."
+      },
+      {
+        "depth": 2,
+        "speaker": "Doomsayer",
+        "text": "How can that be? Try again!"
+      },
+      {
+        "depth": 2,
+        "speaker": "Doomsayer",
+        "text": "Spot on!"
+      }
+    ],
+    "incomplete": false,
+    "activation": "research; runtime must preserve these conditions"
+  },
+  {
+    "npc": "Martin Thwait",
+    "source": {
+      "page": "Transcript:Martin Thwait",
+      "revision": 14789754,
+      "revision_time": "2024-10-28T06:26:28Z",
+      "file": "Transcript_Martin_Thwait.wiki",
+      "sha256": "9ae114faf844970724e0004530f97b700a5f11978470ba5721e69925bd87dc97",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AMartin_Thwait"
+    },
+    "section": "* '''Martin Thwait:''' Ah! Here you go!\n* '''Player:''' What?\n* '''Martin Thwait:''' I need you to answer this for me.\n* {{tbox|pic=Clue scroll (hard) detail.png|Martin has given you a challenge scroll!}}\n* {{tact|end}}\n\n====When spoken to again====\n* '''Martin Thwait:''' Please enter the answer to the question.\n* {{tcond|When given the wrong answer:}}\n** '''Martin Thwait:''' How can that be? Go check again!\n** {{tact|end}}\n* {{tcond|When given the correct answer:}}\n** '''Martin Thwait:''' Spot on!\n** {{tcond|When given another clue scroll:}}\n*** {{tbox|pic=Clue scroll (hard) detail.png|Martin has given you another clue scroll!}}\n*** {{tact|receives=a clue scroll}}\n*** {{tact|end}}\n** {{tcond|When given a reward casket:}}\n*** {{tbox|pic=Reward casket (hard) detail.png|You've obtained a casket!}}\n*** {{tact|receives=a reward casket}}\n*** {{tact|end}}",
+    "lines": [
+      {
+        "depth": 1,
+        "speaker": "Martin Thwait",
+        "text": "Ah! Here you go!"
+      },
+      {
+        "depth": 1,
+        "speaker": "Player",
+        "text": "What?"
+      },
+      {
+        "depth": 1,
+        "speaker": "Martin Thwait",
+        "text": "I need you to answer this for me."
+      },
+      {
+        "depth": 1,
+        "speaker": "Martin Thwait",
+        "text": "Please enter the answer to the question."
+      },
+      {
+        "depth": 2,
+        "speaker": "Martin Thwait",
+        "text": "How can that be? Go check again!"
+      },
+      {
+        "depth": 2,
+        "speaker": "Martin Thwait",
+        "text": "Spot on!"
+      }
+    ],
+    "incomplete": false,
+    "activation": "research; runtime must preserve these conditions"
+  },
+  {
+    "npc": "Weird Old Man",
+    "source": {
+      "page": "Transcript:Weird Old Man",
+      "revision": 14615959,
+      "revision_time": "2024-03-28T23:22:55Z",
+      "file": "Transcript_Weird_Old_Man.wiki",
+      "sha256": "d94d72620ef932fb8b046205eb4c78c3284337c14a7289a3d1201c4e4aa406b7",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AWeird_Old_Man"
+    },
+    "section": "===Hard===\n* '''Weird Old Man:''' Ah! This is for you.\n* '''Player:''' What?\n* '''Weird Old Man:''' I need answers.\n* {{tact|receives=a challenge scroll}}\n* {{tbox|pic=Clue scroll (hard) detail.png|The Weird Old Man has given you a challenge scroll!}}\n* {{tact|end}}\n\n====When spoken to again====\n* '''Weird Old Man:''' AHHH HELP! What's the answer?\n* {{tcond|When given the wrong answer:}}\n** '''Weird Old Man:''' They like it when you scream! AHHHHHHH. That's not right!\n** {{tact|end}}\n* {{tcond|When given the correct answer:}}\n** '''Weird Old Man:''' Spot on!\n** {{tcond|When given another clue scroll:}}\n*** {{tbox|pic=Clue scroll (hard) detail.png|The Weird Old Man has given you another clue scroll!}}\n*** {{tact|receives=a [[clue scroll (hard)]]}}\n*** {{tact|end}}\n** {{tcond|When given a reward casket:}}\n*** {{tbox|pic=Reward casket (hard) detail.png|You've obtained a casket!}}\n*** {{tact|receives=a [[reward casket (hard)]]}}\n*** {{tact|end}}",
+    "lines": [
+      {
+        "depth": 1,
+        "speaker": "Weird Old Man",
+        "text": "Ah! This is for you."
+      },
+      {
+        "depth": 1,
+        "speaker": "Player",
+        "text": "What?"
+      },
+      {
+        "depth": 1,
+        "speaker": "Weird Old Man",
+        "text": "I need answers."
+      },
+      {
+        "depth": 1,
+        "speaker": "Weird Old Man",
+        "text": "AHHH HELP! What's the answer?"
+      },
+      {
+        "depth": 2,
+        "speaker": "Weird Old Man",
+        "text": "They like it when you scream! AHHHHHHH. That's not right!"
+      },
+      {
+        "depth": 2,
+        "speaker": "Weird Old Man",
+        "text": "Spot on!"
+      }
+    ],
+    "incomplete": false,
+    "activation": "research; runtime must preserve these conditions"
+  },
+  {
+    "npc": "Mandrith",
+    "source": {
+      "page": "Transcript:Mandrith",
+      "revision": 15255766,
+      "revision_time": "2026-07-07T09:26:24Z",
+      "file": "Transcript_Mandrith.wiki",
+      "sha256": "23567de4c9e251a5100de99bf2a72cbc63c4352a2d318b890c51ff8691aea14e",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AMandrith"
+    },
+    "section": "===Elite===\n* '''Mandrith:''' Answer this, please.\n* {{tact|receives=a challenge clue}}\n* '''Mandrith:''' Well done.\n* {{tbox|You've been given a [new clue/casket]!}}\n* {{tact|end}}\n===Master===\n* '''Mandrith:''' Here, solve this.\n* {{tact|receives=a [light/puzzle] box}}\n* {{tbox|Mandrith hands you a [light box/puzzlebox]!}}\n* {{tact|end}}\n====Talking again====\n* {{tcond|If the puzzle is not solved:}}\n** '''Mandrith:''' That doesn't look solved to me.\n** {{tact|end}}\n* {{tcond|If the puzzle is solved:}}\n** '''Mandrith:''' Well done [player name]. Here you go.\n** {{tact|receives=a [new clue/casket]}}\n** {{tbox|You've been given a [new clue/casket]!}}\n** {{tact|end}}",
+    "lines": [
+      {
+        "depth": 1,
+        "speaker": "Mandrith",
+        "text": "Answer this, please."
+      },
+      {
+        "depth": 1,
+        "speaker": "Mandrith",
+        "text": "Well done."
+      },
+      {
+        "depth": 1,
+        "speaker": "Mandrith",
+        "text": "Here, solve this."
+      },
+      {
+        "depth": 2,
+        "speaker": "Mandrith",
+        "text": "That doesn't look solved to me."
+      },
+      {
+        "depth": 2,
+        "speaker": "Mandrith",
+        "text": "Well done [player name]. Here you go."
+      }
+    ],
+    "incomplete": false,
+    "activation": "research; runtime must preserve these conditions"
+  },
+  {
+    "npc": "Old crone",
+    "source": {
+      "page": "Transcript:Old crone",
+      "revision": 15058797,
+      "revision_time": "2025-11-23T10:43:31Z",
+      "file": "Transcript_Old_crone.wiki",
+      "sha256": "3314e13bff7a861a2d5d28280563ad3517503db1cc8f5a859d4cd306233b5740",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AOld_crone"
+    },
+    "section": "===Elite===\n* '''Old crone:''' Answer this, please.\n* {{tact|receives=a challenge scroll}}\n* {{tbox|You've been given a challenge scroll!}}\n* {{tact|end}}\n====When given the correct answer====\n* '''Old crone:''' Well done.\n* {{tact|receives=[another clue scroll/a casket]}}\n* {{tbox|You've been given a new clue!}}\n* {{tact|end}}",
+    "lines": [
+      {
+        "depth": 1,
+        "speaker": "Old crone",
+        "text": "Answer this, please."
+      },
+      {
+        "depth": 1,
+        "speaker": "Old crone",
+        "text": "Well done."
+      }
+    ],
+    "incomplete": false,
+    "activation": "research; runtime must preserve these conditions"
+  },
+  {
+    "npc": "Gunnjorn",
+    "source": {
+      "page": "Transcript:Gunnjorn",
+      "revision": 15095249,
+      "revision_time": "2025-12-27T06:11:31Z",
+      "file": "Transcript_Gunnjorn.wiki",
+      "sha256": "d631c83ff55d34afa2153f43606bf514da1e106f64179a0cdc0a539331976efe",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AGunnjorn"
+    },
+    "section": "===Hard===\n* {{tact|receives=a puzzle box}}\n* '''Gunnjorn:''' Please solve this for me. I have other things to be thinking about.\n* Gunnjorn has given you a puzzle box!\n* {{tact|end}}\n====While holding the puzzle box====\n* {{tcond|If the puzzle is not solved:}}\n** '''Gunnjorn:''' Sorry but you haven't solved the puzzle yet.\n** {{tact|end}}\n* {{tcond|If the puzzle is not in the inventory but the clue is:}}\n** '''Player:''' I don't have the puzzle box with me.\n** '''Gunnjorn:''' That's not much use is it, go and fetch it!\n** {{tact|end}}\n* {{tcond|If the puzzle is solved and in the inventory:}}\n** '''Gunnjorn:''' Thanks [player name]!\n** {{tcond|When given another clue scroll:}}\n*** {{tbox|pic=Clue scroll (hard) detail.png|Gunnjorn has given you another clue scroll!}}\n*** {{tact|receives=a [[clue scroll (hard)]]}}\n*** {{tact|end}}\n** {{tcond|When given a reward casket:}}\n*** {{tbox|pic=Reward casket (hard) detail.png|You've obtained a casket!}}\n*** {{tact|receives=a [[reward casket (hard)]]}}\n*** {{tact|end}}",
+    "lines": [
+      {
+        "depth": 1,
+        "speaker": "Gunnjorn",
+        "text": "Please solve this for me. I have other things to be thinking about."
+      },
+      {
+        "depth": 2,
+        "speaker": "Gunnjorn",
+        "text": "Sorry but you haven't solved the puzzle yet."
+      },
+      {
+        "depth": 2,
+        "speaker": "Player",
+        "text": "I don't have the puzzle box with me."
+      },
+      {
+        "depth": 2,
+        "speaker": "Gunnjorn",
+        "text": "That's not much use is it, go and fetch it!"
+      },
+      {
+        "depth": 2,
+        "speaker": "Gunnjorn",
+        "text": "Thanks [player name]!"
+      }
+    ],
+    "incomplete": false,
+    "activation": "research; runtime must preserve these conditions"
+  },
+  {
+    "npc": "Lumbridge Guide",
+    "source": {
+      "page": "Transcript:Lumbridge Guide",
+      "revision": 15396094,
+      "revision_time": "2026-11-07T11:15:31Z",
+      "file": "Transcript_Lumbridge_Guide.wiki",
+      "sha256": "ef46052ef7b8e69b0b2c3e8e2a97c968bc39fdc99fca0ea16cecbf11ea77effa",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ALumbridge_Guide"
+    },
+    "section": "===Hard===\n* {{tact|receives=a puzzle box}}\n* '''Lumbridge Guide:''' I'm supposed to be the local source of knowledge, but I cannot even solve this puzzle! Do me a favour and solve it for me.\n* {{tbox|pic=Puzzle_box_tree_detail.png|The Lumbridge Guide has given you a puzzle box!}}\n* {{tact|end}}\n\n====While holding the puzzle box====\n* {{tcond|If the puzzle box is not solved:}}\n** '''Lumbridge Guide:''' Sorry but you haven't solved the puzzle yet.\n** {{tact|end}}\n* {{tcond|If the puzzle box is solved:}}\n** '''Lumbridge Guide:''' Thanks [player name]!\n** {{tcond|When given another clue scroll:}}\n*** {{tbox|pic=Clue scroll (hard) detail.png|The Lumbridge Guide has given you another clue scroll!}}\n*** {{tact|receives=another clue scroll}}\n*** {{tact|end}}\n** {{tcond|When given a reward casket:}}\n*** {{tbox|pic=Reward casket (hard) detail.png|You've obtained a casket!}}\n*** {{tact|receives=a reward casket}}\n*** {{tact|end}}",
+    "lines": [
+      {
+        "depth": 1,
+        "speaker": "Lumbridge Guide",
+        "text": "I'm supposed to be the local source of knowledge, but I cannot even solve this puzzle! Do me a favour and solve it for me."
+      },
+      {
+        "depth": 2,
+        "speaker": "Lumbridge Guide",
+        "text": "Sorry but you haven't solved the puzzle yet."
+      },
+      {
+        "depth": 2,
+        "speaker": "Lumbridge Guide",
+        "text": "Thanks [player name]!"
+      }
+    ],
+    "incomplete": false,
+    "activation": "research; runtime must preserve these conditions"
+  },
+  {
+    "npc": "Radimus Erkle",
+    "source": {
+      "page": "Transcript:Radimus Erkle",
+      "revision": 15007792,
+      "revision_time": "2025-10-19T23:12:50Z",
+      "file": "Transcript_Radimus_Erkle.wiki",
+      "sha256": "680283d88aa561020e37b802e18f5da85f75409e5193e7b8aa0011bf45f3965d",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ARadimus_Erkle"
+    },
+    "section": "===Master===\n* '''Radimus Erkle:''' Here, solve this.\n* {{tact|receives=a puzzle box}}\n* {{tbox|Radimus Erkle hands you a puzzlebox!}}\n* {{tact|end}}\n====Talking again====\n* {{tcond|If the puzzle box is not solved:}}\n** '''Radimus Erkle:''' That doesn't look solved to me.\n** {{tact|end}}\n* {{tcond|If the puzzle box is solved:}}\n** '''Radimus Erkle:''' Well done [player name]. Here you go.\n** {{tact|receives=a [new clue/casket]}}\n** {{tbox|You've obtained a [new clue/casket]!}}\n** {{tact|end}}",
+    "lines": [
+      {
+        "depth": 1,
+        "speaker": "Radimus Erkle",
+        "text": "Here, solve this."
+      },
+      {
+        "depth": 2,
+        "speaker": "Radimus Erkle",
+        "text": "That doesn't look solved to me."
+      },
+      {
+        "depth": 2,
+        "speaker": "Radimus Erkle",
+        "text": "Well done [player name]. Here you go."
+      }
+    ],
+    "incomplete": false,
+    "activation": "research; runtime must preserve these conditions"
+  },
+  {
+    "npc": "Bolkoy",
+    "source": {
+      "page": "Transcript:Bolkoy",
+      "revision": 15110932,
+      "revision_time": "2026-01-22T11:54:08Z",
+      "file": "Transcript_Bolkoy.wiki",
+      "sha256": "1b69a91634d30e4ab1c4a0bed15c00ad1b2bddff7ff2d4b441e0c030d005c27f",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ABolkoy"
+    },
+    "section": "\n* '''Bolkoy:''' Hello! I take it you're here about the trail?\n* '''Player:''' Yes, do you have a challenge for me?\n* '''Bolkoy:''' Yes, right here!\n* {{tbox|pic=Clue scroll (hard) detail.png|Bolkoy has given you a challenge scroll!}}\n* {{tact|receives=a challenge scroll}}\n* {{tact|end}}\n\n====Talking to him again====\n* '''Bolkoy:''' Please enter the answer to the question.\n* {{tcond|When given the wrong answer:}}\n** '''Bolkoy:''' What's the matter with you? Can't you count? Try harder!\n** {{tact|end}}\n* {{tcond|When given the right answer:}}\n** '''Bolkoy:''' Lucky for you, that's the right answer!\n** {{tcond|When given another clue scroll:}}\n*** {{tbox|pic=Clue scroll (hard) detail.png|Bolkoy has given you another clue scroll!}}\n*** {{tact|receives=a clue scroll}}\n*** {{tact|end}}\n** {{tcond|When given a reward casket:}}\n*** {{tbox|pic=Reward casket (hard) detail.png|You've obtained a casket!}}\n*** {{tact|receives=a reward casket}}\n*** {{tact|end}}"
+  },
+  {
+    "npc": "Gnome Coach",
+    "source": {
+      "page": "Transcript:Gnome Coach",
+      "revision": 14631087,
+      "revision_time": "2024-04-14T08:49:53Z",
+      "file": "Transcript_Gnome_Coach.wiki",
+      "sha256": "3778bb1066ac4fe6b7bebee8ba70cc52b84fbbdf192b6fc1711adef36da2d5d9",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AGnome_Coach"
+    },
+    "section": "==Treasure Trails==\n* '''Gnome Coach:''' Ah! Here you go!\n* '''Player:''' What?\n* '''Gnome Coach:''' I need you to answer this for me.\n* {{tact|receives=a challenge scroll}}\n* {{tbox|pic=Clue scroll (hard) detail.png|The coach has given you a challenge scroll!}}\n* {{tact|end}}\n\n===When spoken to again===\n* '''Gnome Coach:''' Please enter the answer to the question.\n* {{tcond|When given the wrong answer:}}\n** '''Gnome Coach:''' How can that be? Go check again!\n** {{tact|end}}\n* {{tcond|When given the correct answer:}}\n** '''Gnome Coach:''' Spot on!\n** {{tcond|When given another clue scroll:}}\n*** {{tbox|pic=Clue scroll (hard) detail.png|The coach has given you another clue scroll!}}\n*** {{tact|end}}\n** {{tcond|When given a reward casket:}}\n*** {{tact|receives=a [[reward casket (hard)]]}}\n*** {{tbox|pic=reward casket (hard) detail.png|You've obtained a casket!}}\n*** {{tact|end}}"
+  },
+  {
+    "npc": "Brother Omad",
+    "source": {
+      "page": "Transcript:Brother Omad",
+      "revision": 15094851,
+      "revision_time": "2025-12-26T09:26:13Z",
+      "file": "Transcript_Brother_Omad.wiki",
+      "sha256": "8c30c4bac651ed8bbf2c6fd3aa26b18d23b1a124b3fef56c42428ee61016ef5e",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ABrother_Omad"
+    },
+    "section": "\n* '''Brother Omad:''' Ah! Here you go!\n* '''Player:''' What?\n* '''Brother Omad:''' I need you to answer this for me.\n* {{tact|receives=a challenge scroll}}\n* Brother Omad has given you a challenge scroll!\n* {{tact|end}}\n\n====While holding the challenge scroll====\n* '''Brother Omad:''' Please enter the answer to the question.\n* {{tcond|When given the wrong answer:}}\n** '''Brother Omad:''' How can that be? Go check again!\n** {{tact|end}}\n* {{tcond|When given the correct answer:}}\n** '''Brother Omad:''' Spot on!\n** {{tcond|When given another clue scroll:}}\n*** {{tact|receives=[[clue scroll (hard)]]}}\n*** {{tbox|pic=clue scroll (hard) detail.png|Brother Omad has given you another clue scroll!}}\n*** {{tact|end}}\n** {{tcond|When given a reward casket:}}\n*** {{tact|receives=[[reward casket (hard)]]}}\n*** {{tbox|pic=Reward casket (hard) detail.png|You've obtained a casket!}}\n*** {{tact|end}}"
+  },
+  {
+    "npc": "Otto Godblessed",
+    "source": {
+      "page": "Transcript:Otto Godblessed",
+      "revision": 15131427,
+      "revision_time": "2026-02-20T15:52:32Z",
+      "file": "Transcript_Otto_Godblessed.wiki",
+      "sha256": "335c9a51c600243f91e45bf77c0fd0714e2ecb535c5cdf8513698005dbe4148b",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AOtto_Godblessed"
+    },
+    "section": "\n====Getting the challenge====\n* '''Otto Godblessed:''' Ah! Here you go!\n* '''Player:''' What?\n* '''Otto Godblessed:''' I need you to answer this for me.\n* {{tbox|pic=Clue scroll (hard) detail.png|Otto Godblessed has given you a challenge scroll!}}{{^|pic should be Challenge scroll (hard)}}\n* {{tact|end}}\n====Solving the challenge====\n* '''Otto Godblessed:''' Please tell me your answer.\n* {{tinput|Enter amount:}}\n* {{tcond|If the answer was incorrect:}}\n** '''Otto Godblessed:''' Nope, Go check again!\n** {{tact|end}}\n* {{tcond|If the answer was correct:}}\n** '''Otto Godblessed:''' Spot on!\n** {{tcond|If the player gets another clue:}}\n*** {{tbox|pic=Clue scroll (hard) detail.png|Otto Godblessed has given you another clue scroll!}}\n*** {{tact|end}}\n** {{tcond|If the player gets a casket:}}\n*** {{tbox|pic=reward casket (hard) detail.png|You've obtained a casket!}}\n*** {{tact|end}}"
+  },
+  {
+    "npc": "Wise Old Man",
+    "source": {
+      "page": "Transcript:Wise Old Man",
+      "revision": 15393729,
+      "revision_time": "2026-11-04T11:09:27Z",
+      "file": "Transcript_Wise_Old_Man.wiki",
+      "sha256": "08a6e9c21c54afae4b1a379c1cf90b5cd0f159e47bc1a250a45dbb6cb3864922",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AWise_Old_Man"
+    },
+    "section": "\n* '''Wise Old Man:''' Ah! Here you go!\n* '''Player:''' What?\n* '''Wise Old Man:''' I need you to answer this for me.\n* {{tbox|pic=Clue scroll (hard) detail.png|The wise old man has given you a challenge scroll!}}\n* {{tact|receives=a challenge scroll}}\n* {{tact|end}}\n\n====When talked to again====\n* '''Wise Old Man:''' Please enter the answer to the question.\n* {{tcond|When given the wrong answer:}}\n** '''Wise Old Man:''' How can that be? Try again!\n** {{tact|end}}\n* {{tcond|When given the correct answer:}}\n** '''Wise Old Man:''' Spot on!\n** {{tcond|When given another clue scroll:}}\n*** {{tbox|pic=Clue scroll (hard) detail.png|The wise old man has given you another clue scroll!}}\n*** {{tact|receives=another clue scroll}}\n*** {{tact|end}}\n** {{tcond|When given a reward casket:}}\n*** {{tbox|pic=Reward casket (hard) detail.png|You've obtained a casket!}}\n*** {{tact|receives=a hard reward casket}}\n*** {{tact|end}}"
+  }
+]

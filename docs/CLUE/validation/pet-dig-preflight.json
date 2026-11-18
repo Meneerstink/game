@@ -1,0 +1,676 @@
+{
+  "staged": false,
+  "commands": [
+    [
+      "gg.rsmod.game.tools.importer.OsrsFxImportTool",
+      "clue-pet-dig"
+    ],
+    [
+      "gg.rsmod.game.tools.importer.CluePetDigCacheTool",
+      "C:\\RSPS\\work\\gpt-b\\build\\clue\\pet-dig\\preflight-20261117-173936\\menus.tsv"
+    ]
+  ],
+  "source": "C:\\RSPS\\work\\gpt-b\\build\\clue\\pet-dig\\source-2762\\cache",
+  "inputs": {
+    "C:\\RSPS\\work\\gpt-b\\game\\src\\main\\kotlin\\gg\\rsmod\\game\\tools\\importer\\CluePetDigCacheTool.kt": "8a8fdde9ca5891fa14a805ae418080efedb2edb1d4f3b86195e51d3ac2316d9f",
+    "C:\\RSPS\\work\\gpt-b\\game\\src\\main\\kotlin\\gg\\rsmod\\game\\tools\\importer\\OsrsFxImportTool.kt": "90e51d3174d26f3b755a30a15cf21303566d68e1afdd5fab6a5531250f07a448",
+    "C:\\RSPS\\work\\gpt-b\\game\\src\\main\\kotlin\\gg\\rsmod\\game\\tools\\importer\\Rev667WorldCodec.kt": "fc03826d179fab9c2e4e46dd67c6681301c41a41c1427d71499f9c95c4c96a74"
+  },
+  "before": {
+    "ledger": "e98027aa37da3a5c4e77e7311d9d3d5538b821a445618ad6a6f99b55e4fdaa23",
+    "mapping": "229dc24ca6c6f45203bce52bcbe3e6197c82dbd68b39216c5305a7a7f21a3865",
+    "files": {
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.dat2": [
+        309304392,
+        1794935357359997500
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx0": [
+        36072,
+        1794933567681421700
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx1": [
+        23082,
+        1794915745355207800
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx10": [
+        2070,
+        1794896662761011400
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx11": [
+        2940,
+        1794085176104538300
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx12": [
+        32628,
+        1794935357342014900
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx13": [
+        50706,
+        1791518013049651500
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx14": [
+        46854,
+        1788017511394393100
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx15": [
+        3078,
+        1788017511420306200
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx16": [
+        1572,
+        1794933134240766600
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx17": [
+        126,
+        1794790804417158100
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx18": [
+        720,
+        1794933084676980000
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx19": [
+        600,
+        1794935201385450200
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx2": [
+        330,
+        1794933505768404500
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx20": [
+        834,
+        1794933568738722700
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx21": [
+        84,
+        1794915745404451200
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx22": [
+        60,
+        1794933044102742000
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx23": [
+        576,
+        1794884560084054900
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx24": [
+        12,
+        1788017511547714700
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx25": [
+        12,
+        1788017511559564400
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx255": [
+        228,
+        1794935357357986200
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx26": [
+        6,
+        1794933418577541900
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx27": [
+        12,
+        1788017511588418500
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx28": [
+        42,
+        1788017511601229500
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx29": [
+        6,
+        1788017511612861600
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx3": [
+        7440,
+        1794935356654018400
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx30": [
+        222,
+        1788017511626579200
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx31": [
+        24,
+        1788017511638256100
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx32": [
+        22770,
+        1788017511652311000
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx33": [
+        12,
+        1788017511666431200
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx34": [
+        22770,
+        1788017511681149300
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx35": [
+        12,
+        1788017511694483500
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx36": [
+        0,
+        1788017511708597000
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx37": [
+        11472,
+        1794933418581579000
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx4": [
+        65058,
+        1794896442233386500
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx5": [
+        41676,
+        1794877572742927600
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx6": [
+        6174,
+        1794790804336791100
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx7": [
+        393216,
+        1794884092333827500
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx8": [
+        54660,
+        1794935357293609600
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx9": [
+        8556,
+        1794933418542864400
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.dat2": [
+        309304392,
+        1794935357831013400
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx0": [
+        36072,
+        1794933569054681000
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx1": [
+        23082,
+        1794915745355207800
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx10": [
+        2070,
+        1794896662761011400
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx11": [
+        2940,
+        1794085176104538300
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx12": [
+        32628,
+        1794935357813938700
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx13": [
+        50706,
+        1791518013049651500
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx14": [
+        46854,
+        1788017511394393100
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx15": [
+        3078,
+        1788017511420306200
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx16": [
+        1572,
+        1794933134879750400
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx17": [
+        126,
+        1794790804417158100
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx18": [
+        720,
+        1794933085161352500
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx19": [
+        600,
+        1794935201732545200
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx2": [
+        330,
+        1794933506790704100
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx20": [
+        834,
+        1794933569610837200
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx21": [
+        84,
+        1794915745404451200
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx22": [
+        60,
+        1794933044447485700
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx23": [
+        576,
+        1794884560084054900
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx24": [
+        12,
+        1788017511547714700
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx25": [
+        12,
+        1788017511559564400
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx255": [
+        228,
+        1794935357829004800
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx26": [
+        6,
+        1794933419437159300
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx27": [
+        12,
+        1788017511588418500
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx28": [
+        42,
+        1788017511601229500
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx29": [
+        6,
+        1788017511612861600
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx3": [
+        7440,
+        1794935357612004900
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx30": [
+        222,
+        1788017511626579200
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx31": [
+        24,
+        1788017511638256100
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx32": [
+        22770,
+        1788017511652311000
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx33": [
+        12,
+        1788017511666431200
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx34": [
+        22770,
+        1788017511681149300
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx35": [
+        12,
+        1788017511694483500
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx36": [
+        0,
+        1788017511708597000
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx37": [
+        11472,
+        1794933419439805600
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx4": [
+        65058,
+        1794896442233386500
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx5": [
+        41676,
+        1794877572742927600
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx6": [
+        6174,
+        1794790804336791100
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx7": [
+        393216,
+        1794884092333827500
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx8": [
+        54660,
+        1794935357791709500
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx9": [
+        8556,
+        1794933419422968300
+      ]
+    }
+  },
+  "after": {
+    "ledger": "e98027aa37da3a5c4e77e7311d9d3d5538b821a445618ad6a6f99b55e4fdaa23",
+    "mapping": "229dc24ca6c6f45203bce52bcbe3e6197c82dbd68b39216c5305a7a7f21a3865",
+    "files": {
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.dat2": [
+        309304392,
+        1794935357359997500
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx0": [
+        36072,
+        1794933567681421700
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx1": [
+        23082,
+        1794915745355207800
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx10": [
+        2070,
+        1794896662761011400
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx11": [
+        2940,
+        1794085176104538300
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx12": [
+        32628,
+        1794935357342014900
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx13": [
+        50706,
+        1791518013049651500
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx14": [
+        46854,
+        1788017511394393100
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx15": [
+        3078,
+        1788017511420306200
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx16": [
+        1572,
+        1794933134240766600
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx17": [
+        126,
+        1794790804417158100
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx18": [
+        720,
+        1794933084676980000
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx19": [
+        600,
+        1794935201385450200
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx2": [
+        330,
+        1794933505768404500
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx20": [
+        834,
+        1794933568738722700
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx21": [
+        84,
+        1794915745404451200
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx22": [
+        60,
+        1794933044102742000
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx23": [
+        576,
+        1794884560084054900
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx24": [
+        12,
+        1788017511547714700
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx25": [
+        12,
+        1788017511559564400
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx255": [
+        228,
+        1794935357357986200
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx26": [
+        6,
+        1794933418577541900
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx27": [
+        12,
+        1788017511588418500
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx28": [
+        42,
+        1788017511601229500
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx29": [
+        6,
+        1788017511612861600
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx3": [
+        7440,
+        1794935356654018400
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx30": [
+        222,
+        1788017511626579200
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx31": [
+        24,
+        1788017511638256100
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx32": [
+        22770,
+        1788017511652311000
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx33": [
+        12,
+        1788017511666431200
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx34": [
+        22770,
+        1788017511681149300
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx35": [
+        12,
+        1788017511694483500
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx36": [
+        0,
+        1788017511708597000
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx37": [
+        11472,
+        1794933418581579000
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx4": [
+        65058,
+        1794896442233386500
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx5": [
+        41676,
+        1794877572742927600
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx6": [
+        6174,
+        1794790804336791100
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx7": [
+        393216,
+        1794884092333827500
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx8": [
+        54660,
+        1794935357293609600
+      ],
+      "C:\\RSPS\\game\\game\\data\\cache\\main_file_cache.idx9": [
+        8556,
+        1794933418542864400
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.dat2": [
+        309304392,
+        1794935357831013400
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx0": [
+        36072,
+        1794933569054681000
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx1": [
+        23082,
+        1794915745355207800
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx10": [
+        2070,
+        1794896662761011400
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx11": [
+        2940,
+        1794085176104538300
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx12": [
+        32628,
+        1794935357813938700
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx13": [
+        50706,
+        1791518013049651500
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx14": [
+        46854,
+        1788017511394393100
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx15": [
+        3078,
+        1788017511420306200
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx16": [
+        1572,
+        1794933134879750400
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx17": [
+        126,
+        1794790804417158100
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx18": [
+        720,
+        1794933085161352500
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx19": [
+        600,
+        1794935201732545200
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx2": [
+        330,
+        1794933506790704100
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx20": [
+        834,
+        1794933569610837200
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx21": [
+        84,
+        1794915745404451200
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx22": [
+        60,
+        1794933044447485700
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx23": [
+        576,
+        1794884560084054900
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx24": [
+        12,
+        1788017511547714700
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx25": [
+        12,
+        1788017511559564400
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx255": [
+        228,
+        1794935357829004800
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx26": [
+        6,
+        1794933419437159300
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx27": [
+        12,
+        1788017511588418500
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx28": [
+        42,
+        1788017511601229500
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx29": [
+        6,
+        1788017511612861600
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx3": [
+        7440,
+        1794935357612004900
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx30": [
+        222,
+        1788017511626579200
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx31": [
+        24,
+        1788017511638256100
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx32": [
+        22770,
+        1788017511652311000
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx33": [
+        12,
+        1788017511666431200
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx34": [
+        22770,
+        1788017511681149300
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx35": [
+        12,
+        1788017511694483500
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx36": [
+        0,
+        1788017511708597000
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx37": [
+        11472,
+        1794933419439805600
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx4": [
+        65058,
+        1794896442233386500
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx5": [
+        41676,
+        1794877572742927600
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx6": [
+        6174,
+        1794790804336791100
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx7": [
+        393216,
+        1794884092333827500
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx8": [
+        54660,
+        1794935357791709500
+      ],
+      "C:\\RSPS\\file-server\\cache\\main_file_cache.idx9": [
+        8556,
+        1794933419422968300
+      ]
+    }
+  },
+  "unchanged": true,
+  "exits": [
+    0,
+    0
+  ]
+}

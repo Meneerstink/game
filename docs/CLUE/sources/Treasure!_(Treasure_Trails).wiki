@@ -1,0 +1,42 @@
+{{No official name}}
+{{Infobox Music
+|name = Treasure! (Treasure Trails)
+|file = [[File:Treasure! (Treasure Trails).ogg]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|members = Yes
+|location = N/A
+|hint = N/A
+|quest = N/A
+|instruments = French Horn, English Horn, Pizzicato Strings, Timpani, Choir Aahs, Tubular Bells, Standard Drum Kit
+|tempo = 110 BPM
+|duration = 00:09
+|composer = Ian Taylor
+|map = No
+|cacheid = 193
+|jingle = Yes
+|sortname = Treasure!
+}}
+'''Treasure! (Treasure Trails)''' is a [[jingle]] that plays when opening the reward casket from a [[Treasure Trail]].
+
+==Versions==
+{{Music changes header}}
+{{Music changes
+|version=1
+|date=1 June 2004
+|file=[[File:Treasure! (Treasure Trails) (v1).ogg]]
+}}
+{{Music changes
+|version=4
+|date=6 March 2007
+|change=[[Audio#March_2007_audio_rework|Soundbank Update]] - Mixing changes.
+|file=[[File:Treasure! (Treasure Trails) (8-bit).ogg]]
+}}
+{{Music changes
+|version=4
+|date=9 April 2025
+|change= [[Audio#16-bit_music|16-bit Music Update]]
+|file=[[File:Treasure! (Treasure Trails).ogg]]
+}}
+{{Music changes footer}}
+{{Music}}

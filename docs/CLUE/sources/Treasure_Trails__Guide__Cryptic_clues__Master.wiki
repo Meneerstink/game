@@ -1,0 +1,224 @@
+<noinclude>{{Treasure Trails Guide Cryptic Clues Intro}}
+
+==Master Cryptic clues==
+</noinclude>
+{| class="wikitable align-center-3" width="100%"
+!Clue
+!Notes
+!Task
+!Image
+{{Cryptics
+|clue=[[Clue scroll (master) - 2 musical birds|2 musical birds. Dig in front of the spinning light.]]
+|note=Dig in front of the spinning light in [[Ping]] and [[Pong]]'s room inside the [[Iceberg]]. A [[clockwork suit]] is required to enter the iceberg.
+|task=dig
+|image=Cryptic clue - dig ping and pong's room.png
+|level=5}}
+{{Cryptics
+|clue = [[Clue scroll (master) - A chisel and hammer reside in his home, strange for one of magic|A chisel and hammer reside in his home, strange for one of magic. Impress him with your magical equipment.]]
+|note = [[Wizard Cromperty]] at the north-east corner of [[East Ardougne]]. Speak to him while wearing [[equipment]] adding up to at least +100 in [[magical]] attack bonus. The passive magic attack multiplication effect of [[Tumeken's shadow]] '''does not''' count towards the +100 requirement, but its base magic attack bonus of +35 will.
+|task = talk
+|image = Cryptic clue - speak to wizard cromperty.png
+|level = 5}}
+{{Cryptics
+|clue = [[Clue scroll (master) - A dwarf, approaching death, but very much in the light|A dwarf, approaching death, but very much in the light.]]
+|note = [[Thorgel]] at the entrance to the [[Death Altar]]. Requires partial completion of [[Mourning's End Part II]]. Easily reached by entering the Death Altar via the Abyss and then leaving.
+|task = talk
+|image = Cryptic clue - a dwarf approaching death.png
+|level = 5}}
+{{Cryptics
+|clue = [[Clue scroll (master) - A massive battle rages beneath|A massive battle rages beneath so be careful when you dig by the large broken crossbow.]]
+|note = North-east of the [[God Wars Dungeon]] entrance, climb the rocky handholds and dig by the large crossbow.
+|task = dig
+|image = Cryptic clue - dig by the large broken crossbow.png
+|level = 5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - Anger Abbot Langley|Anger Abbot Langley.]]
+|note=Speak to [[Abbot Langley]] while you have a negative prayer bonus (currently only possible with an [[Ancient staff]] or an [[Ancient sceptre]]).
+|task=talk
+|image=Cryptic clue - anger Abbot Langley.png
+|level=5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - Anger those who adhere to Saradomin's edicts|Anger those who adhere to Saradomin's edicts to prevent travel.]]
+|note=[[Port Sarim]] docks, try to [[charter]] a ship to [[Entrana]] with [[armour]] or [[weapons]] equipped.
+|task=talk
+|image = Cryptic clue - entrana monks port sarim.png
+|level=5}}
+{{Cryptics
+|clue=''Buried beneath the ground, who knows where it's found.''
+
+''Lucky for you, A man called Jorral may have a clue.''
+|note=Speak to [[Jorral]] to receive a [[strange device]], which works similarly to the [[enchanted key]] (must have [[Making History]] quest completed).
+
+For a list of all possible locations, see [[Treasure Trails/Guide/Hot Cold|here]].
+|task=hotcold
+|image=Cryptic clue - speak to Jorral.png
+|level= 5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - Come brave adventurer, your sense is on fire|Come brave adventurer, your sense is on fire. If you talk to me, it's an old god you desire.]]
+|note=Speak to [[Viggora]]. Note that he can be found (is visible) in 3 locations, but you can only speak to (and continue the clue) the version of him that you spoke to during [[Curse of the Empty Lord]] [[miniquest]]. You can check your quest log to find out which location. 
+*[[Paddewwa]], [[Edgeville Dungeon]], near the [[earth warrior]]s.
+*{{FloorNumber|uk=1}} of the [[Rogues' Castle]] in the deep [[Wilderness]].
+*{{FloorNumber|uk=1}} of the [[Canifis]] [[Slayer Tower]], just before the [[Infernal Mage]].
+
+A [[ring of visibility]] or a [[ring of shadows]] and [[ghostspeak amulet]] are required to make progress through the clue.
+|task=talk
+|image=Cryptic clue - talk to Viggora.png
+|level=5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - Darkness wanders around me, but fills my mind with knowledge|Darkness wanders around me, but fills my mind with knowledge.]]
+|note=Speak to [[Biblia]] on the [[Arceuus Library]]'s top floor.
+|task=talk
+|image=Cryptic clue - talk to biblia.png
+|level=5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - Dig in front of the icy arena where 1 of 4 was fought|Dig in front of the icy arena where 1 of 4 was fought.]]
+|note=Where you fought [[Kamil]] from [[Desert Treasure I]], dig north-east of the first small rock just past the wolves.
+|task=dig
+|image=Cryptic clue - dig icy path.png
+|level=5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - Faint sounds of 'Arr'|Faint sounds of 'Arr', fire giants found deep, the eastern tip of a lake, are the rewards you could reap.]]
+|note=Dig south of the pillar at the end of the [[Deep Wilderness Dungeon]].
+|task=dig
+|image=Cryptic clue - dig deep wilderness dungeon end.png
+|level=5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - Falo the bard wants to see you|Falo the bard wants to see you.]]
+|note=Speak to [[Falo the Bard]], who is located on the road to the [[Fremennik Province]].
+|task=talk
+|image=Cryptic clue - talk to falo.png
+|level=5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - Elvish onions|Elvish onions.]]
+|note=Dig in the onion patch east of the allotment patches in the east part of [[Prifddinas]]. Requires completion of [[Song of the Elves]].
+|task=dig
+|image=Cryptic clue - elvish onion.png
+|level=5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - Fiendish cooks probably won't dig the dirty dishes|Fiendish cooks probably won't dig the dirty dishes.]]
+|note=Dig by the fire in the [[Rogues' Den]].
+|task=dig
+|image=Cryptic clue - dig rogues' den fire.png
+|level=5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - The doorman of the Warriors' Guild|The doorman of the Warriors' Guild wishes to be impressed by how strong your equipment is.]]
+|note=Speak to [[Ghommal]] (or [[Laidee Gnonock]] after [[While Guthix Sleeps]]) with a total [[Melee]] [[Strength bonus]] of 100 or more. ('''Note:''' [[Amulet of strength]] gives +10, even better than a [[fury]] for this clue. A [[dragon battleaxe]] gives +85 and is relatively easy to obtain for earlier-game players. A [[Godsword]] or [[Barrelchest anchor]] on its own is over 100 Strength bonus.)
+|image=Cryptic clue - talk ghommal warrior's guild.png
+|task=talk
+|level=5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - Great demons, dragons and spiders protect this blue rock|Great demons, dragons, and spiders protect this blue rock, beneath which, you may find what you seek.]]
+|note=Dig by the [[runite rock]] in the [[Lava Maze Dungeon]].
+|task=dig
+|image= Cryptic clue - dig lava maze dungeon.png
+|level=5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - Guthix left his mark in a fiery lake|Guthix left his mark in a fiery lake, dig at the tip of it.]]
+|note=Dig at the tip of the lava lake that is shaped like a [[Guthixian]] symbol, west of the [[Mage Arena]].
+|task=dig
+|image= Cryptic clue - dig guthix lava lake.png
+|level=5}}
+{{Cryptics
+|clue = [[Clue scroll (master) - Here, there are tears, but nobody is crying|Here, there are tears, but nobody is crying. Speak to the guardian and show off your alignment to balance.]]
+|note = Talk to [[Juna]] while wearing three [[Guthix#Affiliated items|Guthix-affiliated]] items. All [[Void Knight equipment]] is Guthix-affiliated.
+|task = talk
+|image = Cryptic clue - speak to Juna.png
+|level = 5}}
+{{Cryptics
+|clue = [[Clue scroll (master) - Hopefully this set of armour will help you to keep surviving|Hopefully this set of armour will help you to keep surviving.]]
+|note = Speak to [[Sir Vyvin]] while wearing [[white platebody]] and [[white platelegs]]/[[white plateskirt]] ([[white full helm]] is not needed).
+|task = talk
+|image = Cryptic clue - speak to Sir Vyvin.png
+|level = 5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - If you're feeling brave, dig beneath the dragon's eye|If you're feeling brave, dig beneath the dragon's eye.]]
+|note=Dig below the mossy rock under the [[Viyeldi caves]]. Requires progress or completion of [[Legends' Quest]]. 
+
+If the quest has not been completed, a [[bravery potion]] and rope is required. 
+
+If the player has 91 [[Agility]]{{Boostable|yes}}, they can purchase a [[long rope]] from the [[Darkmeyer General Store]] and attach it to [[Rocks (Viyeldi caves)|rocks]] and use it to avoid having to navigate the perilous slope.
+
+If the player does not have 96 Agility{{Boostable|yes}}, a [[pickaxe]], a [[lockpick]], [[unpowered orb]], 3 [[cosmic rune]]s and 30 elemental runes of one type are additionally required to enter the [[Viyeldi caves]].
+|task=dig
+|image= Cryptic clue - dig dragon's eye.png
+|level=5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - I lie beneath the first descent to the holy encampment|I lie beneath the first descent to the holy encampment.]]
+|note=Dig immediately after climbing down the first set of rocks towards [[Saradomin's Encampment]] within the [[God Wars Dungeon]]. Two [[rope]]s are needed; one to enter the dungeon and another to enter Saradomin's Encampment (not required if you've used once before already). 70 [[Agility]] is also required (cannot be boosted).
+|task=dig
+|image=Cryptic clue - dig sara gwd.png
+|level=5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - My life was spared but these voices remain|My life was spared but these voices remain, now guarding these iron gates is my bane.]]
+|note=Speak to the [[Key Master]] in [[Cerberus' Lair]].
+|task=talk
+|image=Cryptic clue - talk to key master.png
+|level=5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - One of several rhyming brothers|One of several rhyming brothers, in business attire with an obsession for paper work.]]
+|note=Speak to [[Piles]] in the [[Resource Area]]. An entry fee of 7,500 [[coins]] is required (6,000 if the medium [[Wilderness Diary]] is completed, 3,750 if the hard diary is completed, or free if the elite diary is completed).
+|task=talk
+|image=Cryptic clue - talk to piles.png
+|level=5}}
+{{Cryptics
+|clue= [[Clue scroll (master) - Pentagrams and demons|Pentagrams and demons, burnt bones and remains, I wonder what the blood contains.]]
+|note= Dig under the [[blood rune]] spawn next to the [[Demonic Ruins]].
+|task= dig
+|image= Cryptic clue - dig blood rune spawn.png
+|level= 5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - Robin wishes to see your finest ranged equipment|Robin wishes to see your finest ranged equipment.]]
+|note=[[Robin]] at the inn in [[Port Phasmatys]]. Speak to him while wearing equipment adding up to 180 [[ranged]] attack bonus or over ([[crystal bow]] gives +100 ranged attack bonus on its own). The bonuses from a [[toxic blowpipe]] '''does not''' count.
+|task = talk
+|image = Cryptic clue - speak to robin.png
+|level=5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - She's small but can build both literally and figuratively|She's small but can build both literally and figuratively.]]
+|note=Speak to [[Lovada]] south of the [[Lovakengj]] [[blast mine]].
+|task=talk
+|image=Cryptic clue - talk to lovada.png
+|level=5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - Shhhh!|Shhhh!]]
+|note=Speak to [[Logosia]] in the [[Arceuus Library]]'s ground floor.
+|task=talk
+|image=Cryptic clue - talk to logosia.png
+|level=5}}
+{{Cryptics
+|clue=Show this to Sherlock.
+|note=[[Sherlock]] can be found south of [[Seers' Village]]. Players will have to perform one of the Sherlock tasks in order to complete this challenge.
+|image=Cryptic clue - talk sherlock.png
+|task=sherlock
+|level=5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - South of a river in a town surrounded by the undead|South of a river in a town surrounded by the undead, what lies beneath the furnace?]]
+|note=Dig in front of the [[Shilo Village (location)|Shilo Village]] furnace.
+|task=dig
+|image=Cryptic clue - dig shilo furnace.png
+|level=5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - The far north eastern corner where 1 of 4 was defeated|The far north eastern corner where 1 of 4 was defeated, the shadows still linger.]]
+|note=Dig on the north-eastern-most corner of the [[Shadow Dungeon]]. Bring a [[ring of visibility]] or a [[ring of shadows]].
+|task=dig
+|image=Cryptic clue - dig shadow dungeon.png
+|level=5}}
+{{Cryptics
+|clue=[[Clue scroll (master) - This place sure is a mess|This place sure is a mess.]]
+|note=[[Ewesey]] is located in the [[Hosidius]] [[mess]] hall.
+|task=talk
+|image=Cryptic clue - talk ewesey.png
+|level=5}}
+{{Cryptics
+|-
+|clue= [[Clue scroll (master) - Under a giant robotic bird that cannot fly|Under a giant robotic bird that cannot fly.]]
+|note=Dig next to the terrorbird display in the south exhibit of [[Varrock Museum]]'s basement.
+|task=dig
+|image=Cryptic clue - under a giant robotic bird.png
+|level=5}}
+{{Cryptics
+|clue = [[Clue scroll (master) - The man who offers the pouch of smallest size|Where safe to speak, the man who offers the pouch of smallest size wishes to see your alignment.]]
+|note = Speak to the [[Mage of Zamorak]] in the Zamorakian chapel south of [[Aubury's Rune Shop]] in [[East Varrock]] while wearing three items aligned to [[Zamorak]].
+|task = talk
+|image = Cryptic clue - speak to Mage of Zamorak.png
+|level = 5}}
+|}

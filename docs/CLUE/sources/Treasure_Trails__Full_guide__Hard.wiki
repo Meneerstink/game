@@ -1,0 +1,107 @@
+{{ToC|right}}
+{{Shortcut|ttfg3}}
+
+For the main article, see [[Treasure Trails]].
+
+==Preparation==
+{{See also|Treasure Trails/Guide/Emote clues/Items}}
+[[Clue scroll (hard)|Hard clue scrolls]] have a variable amount of steps, with each clue ranging between four-to-six (4-6) steps long. These steps may require completion of multiple high difficulty quests, as well as the ability to defeat multiple high level enemies. For a suggested inventory setup, see the [[Treasure Trails/Strategies#Setups | Setups page]].
+
+{|class="wikitable align-center-1"
+! colspan=2 | Item
+! Description
+|-
+| {{plinkt|Clue scroll (hard)|txt=Clue scroll}}
+| Must be in the inventory in order to receive the next step or reward.
+|-
+| {{plinkp|Spade}} {{plinkp|Eastfloor spade}}
+| [[Spade]] or [[Eastfloor spade]]
+| Digging in certain locations is required for some clues.
+Wilderness - Cluescrolls are protected over the The Eastfloor spade, useful for 3-iteming. 
+|-
+| {{plinkp|Law rune}} {{plinkp|Amulet of glory(4)}}
+| [[Teleportation]] [[runes]] and enchanted [[jewellery]]
+| Use this to travel over large distances.
+|-
+| {{plinkp|Energy potion}} {{plinkp|Super energy}} {{plinkp|Stamina potion}}
+| [[Energy potion]]s ([[Super energy potion|super]]) or [[stamina potion]]s
+| Use these to restore [[energy]].
+|-
+| {{plinkp|Coins|pic=Coins 10000}}
+| [[Money]]
+| Use this to buy items needed for [[emote clues]] and travel costs.
+|-
+| {{plinkp|Dramen staff}} {{plinkp|Lunar staff}}
+| [[Dramen staff|Dramen]] or [[lunar staff]]
+| Use this to access the [[Fairy ring]] network shortly into [[Fairytale II - Cure a Queen]] (especially useful for [[medium clue]]s).
+|-
+| {{plinkp|Dragon scimitar}} {{plinkp|Black d'hide body}}
+| [[Weapon]] and [[armour]]
+| Some clue steps require combat.
+|-
+| {{plinkp|Shark}}
+| [[Food]]
+| Used to restore [[Hitpoints]].
+|-
+| {{plinkt|Prayer potion}}s
+| Used to restore [[prayer points]].
+|-
+| {{plinkp|Superantipoison}}
+| ([[Superantipoison|Super]]) [[antipoison]] potions
+| Use this to cure [[poison]] caused by [[Saradomin wizard]]s.
+|-
+| {{plinkt|Clue box}}
+| Protects clue scrolls while in the Wilderness.
+|-
+| {{plinkt|Wilderness sword 1|txt=Wilderness sword}}
+| Wilderness - guaranteed to cut all webs, and clue scrolls are protected over the sword, useful for 3-iteming.
+|-
+| {{plinkp|Royal seed pod}} {{plinkp|Teleport crystal}}
+| [[Royal seed pod]], [[Teleport crystal]]
+|
+Wilderness - useful teleports especially the Royal Seed pod (can be used below level 30 Wilderness);<br>
+Clue scrolls are protected over these items, useful for 3-iteming.
+|}
+
+==Requirements==
+{{:Clue scroll (hard)}}
+
+==Anagrams==
+{{shortcut|ttga}}
+{{Treasure Trails Guide Anagrams Intro}}
+{{:Treasure Trails/Guide/Anagrams/Hard}}
+
+==Ciphers==
+{{shortcut|ttgci}}
+{{Treasure Trails Guide Ciphers Intro}}
+{{:Treasure Trails/Guide/Ciphers/Hard}}
+
+==Coordinates==
+{{shortcut|ttgc}}
+Quick links: [[#300|00]] [[#301|01]] [[#302|02]] [[#303|03]] [[#304|04]] [[#305|05]] [[#306|06]] [[#307|07]] [[#308|08]] [[#309|09]] [[#310|10]] [[#311|11]] [[#312|12]] [[#313|13]] [[#314|14]] [[#315|15]] [[#316|16]] [[#317|17]] [[#318|18]] [[#319|19]] [[#320|20]] [[#321|21]] [[#322|22]] [[#323|23]] [[#324|24]] [[#325|25]]
+{{Treasure Trails Guide Coordinates Intro}}
+{{:Treasure Trails/Guide/Coordinates/Hard}}
+
+==Cryptic clues==
+{{shortcut|ttgcr}}
+{{Treasure Trails Guide Cryptic Clues Intro}}
+{{:Treasure Trails/Guide/Cryptic clues/Hard}}
+
+==Emote clues==
+{{shortcut|ttge}}
+{{Treasure Trails Guide Emote Clues Intro}}
+{{:Treasure Trails/Guide/Emote clues/Hard}}
+
+==Maps==
+{{shortcut|ttgm}}
+{{Treasure Trails Guide Maps Intro}}
+{{:Treasure Trails/Guide/Maps/Hard}}
+
+==Puzzle boxes==
+{{Puzzle Box Guide}}
+
+==References==
+{{Reflist}}
+
+{{Treasure Trails}}
+[[Category:Guides]]

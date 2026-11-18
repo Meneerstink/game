@@ -1,0 +1,528 @@
+<noinclude>{{Treasure Trails Guide Coordinates Intro}}
+
+==Hard Coordinates==
+</noinclude><span id=300></span>{{Coordinates
+|coords = 00 degrees 00 minutes north,<br/>
+07 degrees 13 minutes west
+|req = [[Regicide]]
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 00.00N 07.13W.png
+|map = 00.00N 07.13W map
+|notes = In [[Tirannwn]], dig by the western spawn point of the roving elves south-east of the [[catapult]], near the [[Tyras Camp]]. Watch out for the stick trap. [[Port Tyras]] is accessible via the [[charter]] network if the player wishes to avoid walking long distances.
+
+From Tyras Camp: go north past the dense forest, walk a few steps east and go south past the stick traps. Also can use [[fairy ring]] {{fairycode|BJS}} and run north to Tyras Camp (requires {{SCP|Agility|76}}).
+
+From [[Lletya]]: go out of the city, past the trip wire, south over the leaf trap, past the [[Elf Tracker]], west through the dense forest, over a second trip wire, north through another dense forest, then west and south past the stick trap.
+|level=3}}
+<span id=301></span>{{Coordinates
+|coords = 01 degrees 24 minutes north,<br/>
+08 degrees 05 minutes west
+|req = [[Regicide]]
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 01.24N 08.05W.png
+|map = 01.24N 08.05W map
+|notes = In the hunter area directly south of the [[Iorwerth Camp]], past a stick trap, dig by the north-east edge of the pond. An [[Iorwerth camp teleport]] can greatly reduce the difficulty in reaching this position.
+
+From [[Lletya]]: Pass the tree, go west across the tripwire, continue west through the dense forest. Turn north and up the path to [[Prifddinas]]. Before the bridge and the water, head west through the dense forest. Then, keep going west past the leaves pitfall trap, then south-west past a stick trap.
+
+From [[Port Tyras]]: Go north through dense forest then east; go south through dense forest; step over tripwire; go east through the dense forest then north-west for quite a while; jump over the leaves. Finally, continue west till you arrive at an elven lamp next to mushrooms. Head south down the small path to the pond. Pass the stick trap and dig by the north-east edge of the pond.
+
+This clue can be frustrating due to the frequency of activating the stick traps, which deal significant amounts of damage. There is a better success rate of passing the trap by turning off run and walking past the trap.
+
+It's recommended to follow [[:File:Isafdar map.png|this map]] in order to not get lost.
+|level=3}}
+{{Coordinates
+|coords = 01 degrees 30 minutes north,<br/>
+20 degrees 01 minutes east
+|req = Partial completion of [[Fairytale II - Cure a Queen]] for access to [[fairy rings]].
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 01.30N 20.01E.png
+|map = 01.30N 20.01E map
+|notes = Located on [[Draynor island]], which only be accessed via [[fairy ring]] {{fairycode|CLP}}.
+|level=3}}
+<span id=302></span>{{Coordinates
+|coords = 02 degrees 39 minutes north,<br/>
+29 degrees 58 minutes east
+|req = No
+|fight = No
+|image = Coordinate clue 02.39N 29.58E.png
+|map = 02.39N 29.58E map
+|notes = Eastern side of the [[Emir's Arena]].
+|level = 3}}
+{{Coordinates
+|coords = 02 degrees 48 minutes north,<br/>
+08 degrees 05 minutes east
+|req = *Partial completion of [[Fairytale II - Cure a Queen]]
+*Either a [[Dramen staff|dramen]] or [[lunar staff]]
+|image = Coordinate clue 02.48N 08.05E.png
+|map = 02.48N 08.05E map
+|fight = [[Saradomin wizard]]
+|notes = Little island, [[fairy ring]] code {{Fairycode|AIR}}.
+|level=3}}
+{{Coordinates
+|coords = 02 degrees 48 minutes north,<br/>
+34 degrees 33 minutes east
+|req = Started [[In Aid of the Myreque]]
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 02.48N 34.33E.png
+|map = 02.48N 34.33E map
+|notes = Dig 3 steps south of the pile of bricks east of the broken wall. Teleporting with the [[Morytania legs]] is the quickest way.
+|level= 3
+}}
+{{Coordinates
+|coords = 02 degrees 56 minutes north,<br/>
+34 degrees 30 minutes east
+|image = Coordinate clue 02.56N_34.30E.png
+|map = 02.56N 34.30E map
+|req = Started [[In Aid of the Myreque]]
+|fight = [[Saradomin wizard]]
+|level = 3
+}}
+<span id=303></span>{{Coordinates
+|coords = 03 degrees 18 minutes north,<br/>12 degrees 31 minutes east
+|req = Partial completion of [[Dragon Slayer I]]
+|fight = [[Saradomin wizard]]
+|level = 3
+|notes = [[Crandor]], centre of the island.
+|image = Coordinate clue 03.18N 12.31E.png
+|map = 03.18N 12.31E map
+}}
+{{Coordinates
+|coords = 03 degrees 45 minutes south,<br/>
+22 degrees 45 minutes east
+|req = No
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 03.45S 22.45E.png
+|map = 03.45S 22.45E map
+|notes = In the [[Bedabin Camp]] in the [[Kharidian Desert]], just south-west of the [[Shantay Pass]]. Dig north side of the watering hole.
+|level=3}}
+<span id="304"></span>
+{{Coordinates
+|coords = 04 degrees 03 minutes south,<br/>
+03 degrees 11 minutes east
+|req = Partial completion of [[Watchtower]]
+20 coins if [[Watchtower]] has not been completed, or if you have used the bridge to cross back{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1172245332106907648|date=12 September 2019|archiveurl=https://reldo.runescape.wiki/i/99269|archivedate=8 January 2022|quote=Looks intentional - the dev specifically added something to wipe your payment status when you jump back, and it strains credibility that he typed it by accident.|notes= In response to the tweet: "Is the Ogre in Gu'tanoth supposed to charge you 20gp every time you jump over the bridge? I've had to pay a few times doing clue steps and I'm not sure if it's a bug or not. I noticed RS3 had this patched on Aug 19 2019."|name="OgreBridgePayment"}} (if you used the bridge to cross back, but have {{SCP|Agility|71}}, you don't need the coins)
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 04.03S 03.11E.png
+|map = 04.03S 03.11E map
+|notes = In [[Gu'Tanoth]]. You must have gotten far enough through the [[Watchtower]] quest to gain access. After crossing the fourth bridge, stand near the tree there and dig. You need 20gp to pay the guard to cross the bridge if [[Watchtower]] has not been completed, or if you have used the bridge to cross back.<ref name="OgreBridgePayment" /> (if you used the bridge to cross back, but have {{SCP|Agility|71}}, you don't need the coins)
+|level=3}}
+{{Coordinates
+|coords = 04 degrees 05 minutes south,<br/>
+04 degrees 24 minutes east
+|req = No
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 04.05S 04.24E.png
+|map = 04.05S 04.24E map
+|notes = On the island where [[Gorad]] is located. From [[Castle Wars]], go south around [[Jiggig]] then south-east along the coast. Follow the coastline until you see a hole in the ground that you can enter. Enter it, and you will end up on the island. Note that you do ''not'' need a [[skavid map]] to enter this cave. Dig on the east side of the island, near a spear wall. Alternately, you can use the [[Feldip Hills]] [[gnome glider]] or [[fairy ring]] code {{Fairycode|AKS}} and run north-west.
+|level=3}}
+{{Coordinates
+|coords = 04 degrees 16 minutes south,<br/>
+16 degrees 16 minutes east
+|req = Partial completion of [[The Grand Tree]]
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 04.16S 16.16E.png
+|map = 04.16S 16.16E map
+|notes = Outside the east wall of the [[Shipyard (Karamja)|Karamja Shipyard]] building with [[G.L.O. Caranock]], use the [[gnome glider]] and dig directly by the window. It may also be faster to get there by using fairy ring ({{Fairycode|DKP}}).
+|level=3}}
+{{Coordinates
+|coords = 04 degrees 41 minutes north,<br/>
+03 degrees 09 minutes west
+|req = Start of [[Regicide]]
+|fight = [[Saradomin wizard]]
+|image = Coordinate_clue_04.41N_03.09W.png
+|map = 04.41N 03.09W map
+|notes = Located near the [[Red spiders' eggs]] on the [[Arandar]] mountain pass leading to [[Tirannwn]]. The Outpost teleport on [[necklace of passage]] for close access.
+|level=3}}
+<span id="305"></span>
+{{Coordinates|coords=05 degrees 03 minutes north,<br/>
+34 degrees 58 minutes west
+|req=Completion of [[Children of the Sun]]
+|fight=[[Saradomin wizard]]
+|map = 05.03N 34.58W map
+|notes=Located west of [[Nemus Retreat]] across the bridge.
+|image=Coordinate clue 05.03N 34.58W.png}}
+{{Coordinates
+|coords = 05 degrees 37 minutes north,<br/>
+31 degrees 15 minutes east
+|req = Partial completion of [[Nature Spirit]]
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 05.37N 31.15E.png
+|map = 05.37N 31.15E map
+|notes = In [[Mort Myre Swamp]], over [[Nature Spirit]]'s grotto, dig to the north of the grotto tree. [[Druid pouch]]es are strongly recommended as [[ghast]]s may rot your food. (Fairy ring {{Fairycode|BIP}})
+|level=3}}
+{{Coordinates
+|coords = 05 degrees 50 minutes south,<br/>
+10 degrees 05 minutes east
+|req = {{SCP|Agility|15}}
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 05.50S 10.05E.png
+|map = 05.50S 10.05E map
+|notes = On [[Cairn Isle]], [[Karamja]]. [[Fairy ring]] code {{Fairycode|CKR}} is very close; area is south-west of the fairy ring. Dig in the centre of the hut with the broken walls.
+|level=3}}
+<span id=306></span>{{Coordinates
+|coords = 06 degrees 00 minutes south,<br/>
+21 degrees 48 minutes east
+|req = No
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 06.00S 21.48E.png
+|map = 06.00S 21.48E map
+|notes = West of the [[Bandit Camp (Kharidian Desert)|Bandit Camp]] in the [[Kharidian Desert]], at the small peninsula. Dig at the very edge. Bring [[waterskin]]s or [[Desert amulet 4]] as this area is affected by [[desert heat]].
+|level=3}}
+{{Coordinates
+|coords = 06 degrees 11 minutes south,<br/>
+15 degrees 07 minutes east
+|req = No
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 06.11S 15.07E.png
+|map = 06.11S 15.07E map
+|notes = On the southern part of eastern [[Karamja]], just north of some stepping stones across a waterfall. Dig in the brown patch of ground near the [[jogre]]s. A [[gnome glider]] destination is close to the area.
+|level=3}}
+<span id=307></span>{{Coordinates
+|level = 3
+|coords = 07 degrees 43 minutes south,<br/>
+12 degrees 26 minutes east
+|req = Partial completion of [[Legends' Quest]]
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 07.43S 12.26E.png
+|map = 07.43S 12.26E map
+|notes = '''An [[axe]] and [[machete]] is required, or have 79 [[Agility]] for the vine shortcuts!'''
+In the middle of the [[Kharazi Jungle]], next to the water pool. Remember to bring [[Radimus notes]] if you have not completed [[Legends' Quest]]. One can use [[fairy ring]] {{Fairycode|CKR}} and run south.
+}}
+<span id=308></span>{{Coordinates
+|coords = 08 degrees 03 minutes north,<br/>
+31 degrees 16 minutes east
+|req = Started [[Priest in Peril]]
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 08.03N 31.16E.png
+|map = 08.03N 31.16E map
+|notes = South-west of [[fairy ring]] code {{Fairycode|BKR}} and slightly north-east of the [[fishing spot]] (the one just south-west of the word [[Morytania]] on the [[world map]]), in the centre of [[Mort Myre]] swamp. Dig between the easternmost and middle logs. Bring [[druid pouch]]es to prevent [[ghast]]s from rotting your food.
+|level=3
+}}
+{{Coordinates
+|coords = 08 degrees 05 minutes south,<br/>
+15 degrees 56 minutes east
+|req = Partial completion of [[Legends' Quest]]
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 08.05S 15.56E.png
+|map = 08.05S 15.56E map
+|notes = South-east of the easternmost [[mahogany]] in the [[Kharazi Jungle]]. Remember to bring an [[axe]] and a [[machete]] (and your [[Radimus notes]] if you have not finished [[Legends' Quest]]) to cut through the jungle. ('''Note:''' There may or may not be a totem pole at this location).
+|level=3
+}}
+{{Coordinates
+|coords = 08 degrees 26 minutes south,<br/>
+10 degrees 28 minutes east
+|req = Partial completion of [[Legends' Quest]]
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 08.26S 10.28E.png
+|map = 08.26S 10.28E map
+|notes = In the south-west peninsula of the [[Kharazi Jungle]] on [[Karamja]]. Dig north of a skeleton. Remember to bring an [[axe]] and a [[machete]] (and your [[Radimus notes]] if you have not finished [[Legends' Quest]]) to cut through the jungle.
+|level=3}}
+<span id=309></span><span id=310></span>{{Coordinates
+|coords = 10 degrees 03 minutes north,<br/>
+32 degrees 13 minutes west
+|req = No
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 10.03N 32.11W.png
+|map = 10.03N 32.11W map
+|notes = At the southern end of [[Shayziens' Wall]].
+|level=3}}
+<span id=311></span><span id=312></span>{{Coordinates
+|coords = 12 degrees 05 minutes south,<br/>
+38 degrees 58 minutes west
+|req = {{SCP|Sailing|58}}
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 12.05S 38.58W.png
+|map = 12.05S 38.58W map
+|notes = On [[Laguna Aurorae]], south-west of the [[spirit tree]] and south of the [[Kurask Lair]].
+|level = 3
+}}
+<span id=313></span>{{Coordinates
+|coords = 13 degrees 46 minutes north,<br/>
+21 degrees 01 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 13.46N 21.01E.png
+|map = 13.46N 21.01E map
+|notes = North of the [[Edgeville]] level 11 [[Wilderness]] and south-west of [[Ferox Enclave]], near horseshoe-shaped mushroom patch.
+|level = 3
+}}
+<span id="314"></span><span id="315"></span><span id="316"></span>{{Coordinates
+|coords = 16 degrees 03 minutes north,<br/>
+14 degrees 07 minutes east
+|req = Start [[Troll Stronghold]], bring [[climbing boots]]
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 16.03N 14.07E.png
+|map = 16.03N 14.07E map
+|notes = On the summit of [[Trollheim]], near the entrance to [[Eadgar]]'s cave.
+|level=3}}
+{{Coordinates
+|coords = 16 degrees 07 minutes north,<br/>
+22 degrees 45 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 16.07N 22.45E.png
+|map = 16.07N 22.45E map
+|notes = In the [[Graveyard of Shadows]] in the [[Wilderness]], immediately north of a [[dead tree]].
+|level=3}}
+{{Coordinates
+|coords = 16 degrees 31 minutes north,<br/>
+12 degrees 54 minutes east
+|req = Partial completion of the [[Troll Stronghold]] quest
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 16.31N 12.54E.png
+|map = 16.31N 12.54E map
+|notes = At the entrance to the [[Troll Stronghold (location)|Troll Stronghold]], next to the sleeping troll called [[Mushroom (mountain troll)|Mushroom]].
+|level=3}}
+{{Coordinates
+|coords = 16 degrees 35 minutes north,<br/>
+27 degrees 01 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 16.35N 27.01E.png
+|map = 16.35N 27.01E map
+|notes = In level 22 [[Wilderness]], past the [[Black Salamander]]s.
+|level=3}}
+{{Coordinates
+|coords = 16 degrees 43 minutes north,<br/>
+19 degrees 13 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 16.43N 19.13E.png
+|map = 16.43N 19.13E map
+|notes = In the northern section of the [[Bandit Camp (Wilderness)|Bandit Camp]] in level 23 [[Wilderness]]. The burning amulet can teleport you close to there.
+|level = 3
+}}
+{{Coordinates
+|coords = 16 degrees 43 minutes north,<br/>
+26 degrees 56 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 16.43N 26.56E.png
+|map = 16.43N 26.56E map
+|notes = In the [[Black salamander (Hunter)|black salamander]] hunting area in the level 23 [[Wilderness]].
+|level = 3
+}}
+{{Coordinates
+|coords = 16 degrees 45 minutes north,<br/>
+03 degrees 05 minutes west
+|req = Partial completion of [[Swan Song]]
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 16.45N 03.05W.png
+|map = 16.45N 03.05W map
+|notes = North-east of the [[Piscatoris Fishing Colony]] bank. fairy ring code {{Fairycode|AKQ}}
+|level = 3
+}}
+{{Coordinates
+|coords = 16 degrees 48 minutes north,<br/>
+30 degrees 01 minutes west
+|req = No
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 16.48N 30.01W.png
+|map = 16.48N 30.01W map
+|notes = In the west end of the [[Lizardman Canyon]] between [[Lovakengj]] and [[Shayzien]]. Use [[fairy ring]] code {{Fairycode|DJR}} to get there quickly.
+|level = 3
+}}
+<span id=317></span>{{Coordinates
+|coords = 17 degrees 50 minutes north,<br/>
+08 degrees 30 minutes east
+|req = No
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 17.50N 08.30E.png
+|map = 17.50N 08.30E map
+|notes = North-east of [[Rellekka]], immediately east of [[Larry]] and his boat, north of the [[rock crab]]s, and north-west of [[fairy ring]] code {{Fairycode|DKS}}.
+|level = 3}}
+<span id=318></span>{{Coordinates
+|coords = 18 degrees 22 minutes north,<br/>
+16 degrees 33 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 18.22N 16.33E.png
+|map = 18.22N 16.33E map
+|notes = In the south-west section of the [[Forgotten Cemetery]] in level 29 [[Wilderness]]. Dig immediately south of one of the graves, located in the second column from the south. A [[cemetery teleport]] will teleport a player here.
+|level=3}}
+{{Coordinates
+|coords = 18 degrees 50 minutes north,<br/>
+20 degrees 26 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 18.50N 20.26E.png
+|map = 18.50N 20.26E map
+|notes = In the [[Bandit camp mining site]] in level 31 [[Wilderness]].
+|level = 3
+}}
+<span id=319></span>
+{{Coordinates
+|coords = 19 degrees 00 minutes north,<br/>
+27 degrees 13 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 19.00N 27.13E.png
+|map = 19.00N 27.13E map
+|notes = In level 32 [[Wilderness]], south of the [[Silk Chasm]]. Dig in the area wherein there are several [[Black Knight]]s.
+|level=3}}
+{{Coordinates
+|coords = 19 degrees 09 minutes north,<br/>
+21 degrees 58 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 19.09N 21.58E.png
+|map = 19.09N 21.58E map
+|notes = In level 32 [[Wilderness]], by the [[Black chinchompa (Hunter)|black chinchompa]] hunting area.
+|level=3}}
+{{Coordinates
+|coords = 19 degrees 24 minutes north,<br/>
+30 degrees 37 minutes west
+|req = No
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 19.24N 30.37W.png
+|map = 19.24N_30.37W_map
+|notes = In [[Lovakengj]], dig south of the burning man located south-east of the [[lovakite mine]].
+|level=3}}
+{{Coordinates
+|coords = 19 degrees 43 minutes north,<br/>
+25 degrees 07 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 19.43N 25.07E.png
+|map = 19.43N 25.07E map
+|notes = In level 35 [[Wilderness]] just a little south-east of the [[Lava Dragon Isle]] by some [[Chaos dwarves]], you will come across four large cave like objects. Dig almost directly in the centre of them. This area can be accessed via the [[canoe]] system (requires {{SCP|Woodcutting|57}}), just keep heading east from the pond at which you arrive.
+|level = 3}}
+<span id=320></span>{{Coordinates
+|coords = 20 degrees 05 minutes north,<br/>
+21 degrees 52 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 20.05N 21.52E.png
+|map = 20.05N 21.52E map
+|notes = In level 36 [[Wilderness]], just north of a pond by some [[moss giant]]s. This can be difficult because of the nearby moss giants and [[skeleton]]s. The Wilderness [[canoe]] destination is a quick way to get here.
+|level=3}}
+{{Coordinates
+|coords = 20 degrees 33 minutes north,<br/>
+15 degrees 48 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 20.33N 15.48E.png
+|map = 20.33N 15.48E map
+|notes = North-west of [[The Forgotten Cemetery]], at level 38 [[Wilderness]], there is a [[Chaos Temple (church)|Chaos Temple]]. Dig outside the building, just to the south of the altar. A [[cemetery teleport]] can be used to reach the coordinates relatively quickly.
+|level=3}}
+{{Coordinates
+|coords = 20 degrees 45 minutes north,<br/>
+41 degrees 35 minutes east
+|image = Coordinate clue 20.45N 41.35E.png
+|map = 20.45N 41.35E map
+|req = Completed [[Bone Voyage]]
+|fight = [[Saradomin wizard]]
+|level = 3
+|notes = On [[Fossil Island]], east of the [[Museum Camp]].
+}}
+<span id=321></span>{{Coordinates
+|coords = 21 degrees 24 minutes north,<br/>
+17 degrees 54 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 21.24N 17.54E.png
+|map = 21.24N 17.54E map
+|notes = Level 41 [[Wilderness]], in the area with the [[lesser demon]]s, west of the [[Lava Maze]], about three squares west and two squares south of the ladder to the [[King Black Dragon]]'s lair. A [[burning amulet]] will take players close to this location.
+The [[Ghorrock Teleport]] is also a short distance west of the location.|level = 3}}
+<span id=322></span>{{Coordinates
+|coords = 22 degrees 35 minutes north,<br/>
+19 degrees 18 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 22.35N 19.18E.png
+|map = 22.35N 19.18E map
+|notes = In the [[Wilderness]] near the two [[runite rocks]] located north of the [[Lava Maze]].
+|level = 3
+}}
+{{Coordinates
+|coords = 22 degrees 45 minutes north,<br/>
+26 degrees 33 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 22.45N 26.33E.png
+|map = 22.45N 26.33E map
+|notes = In the [[Demonic Ruins]] in level 44 [[Wilderness]]. Dig on top of the north-east icosagram, immediately north-west of one of the [[burnt bones]] spawns.
+
+Easily reached by casting [[Annakarl Teleport]] or using its [[Annakarl teleport|magic tablet equivalent]].
+|level=3}}
+<span id=323></span>{{Coordinates
+|coords = 23 degrees 03 minutes north,<br/>
+41 degrees 24 minutes east
+|req = Completion of [[Bone Voyage]]
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 23.03N 41.24E.png
+|map = 23.03N 41.24E map
+|notes = On the small island reachable by a small boat at the north-east end of the [[Mushroom Forest]], or by using the [[Zip line (Fossil Island)|zip line]] (requires 74 [[Agility]]) behind the [[Magic Mushtree]] at the [[House on the Hill]] ([[digsite pendant]] teleport to [[Fossil Island]]).
+|level = 3}}
+{{Coordinates
+|coords = 23 degrees 03 minutes north,<br/>
+02 degrees 01 minutes east
+|req = Partial completion of [[Fairytale II - Cure a Queen]] for access to [[fairy rings]].
+|fight = [[Saradomin wizard]]
+|image = Coordinate clue 23.03N 02.01E.png
+|map = 23.03N 02.01E map
+|notes = Small island located north of [[Miscellania]]. Only reachable via [[fairy ring]] {{Fairycode|AJS}}.
+|level = 3}}
+<span id=324></span>{{Coordinates
+|coords = 23 degrees 30 minutes north,<br/>
+16 degrees 33 minutes east
+|level=3
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 23.30N 16.33E.png
+|map = 23.30N 16.33E map
+|notes = [[Frozen Waste Plateau]]
+}}
+{{Coordinates
+|coords = 24 degrees 24 minutes north,<br/>
+26 degrees 24 minutes east
+|level=3
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 24.24N 26.24E.png
+|map = 24.24N 26.24E map
+|notes = In the northern area of the [[Rogues' Castle]] in the [[Wilderness]]. Take caution when travelling here as the deadly [[Chaos Elemental]] lurks nearby.
+}}
+{{Coordinates
+|coords = 24 degrees 56 minutes north,<br/>
+22 degrees 28 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 24.56N 22.28E.png
+|map = 24.56N 22.28E map
+|notes = North of the [[Deserted Keep]] in the [[Wilderness]]. Dig six squares north of the spider web that must be slashed. This area can be reached via the [[teleport lever]].
+|level = 3}}
+{{Coordinates
+|coords = 24 degrees 58 minutes north,<br/>
+18 degrees 43 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 24.58N 18.43E.png
+|map = 24.58N 18.43E map
+|notes = One step north and then one step west of the northern door of the [[Pirates' Hideout]] in the [[Wilderness]].
+|level = 3
+}}
+<span id=325></span>{{Coordinates
+|coords = 25 degrees 03 minutes north,<br/>
+17 degrees 05 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 25.03N 17.05E.png
+|map = 25.03N 17.05E map
+|notes = North-west of the [[Wilderness Agility Course]] in level 56 [[Wilderness]]. North-eastern corner of the [[Frozen Waste Plateau]]. Reachable via the [[Ancient Magicks|ancient spell]], [[Ghorrock Teleport]] (requires {{SCP|Magic|96}}). Or [[Ice Plateau Teleport]] via the [[Lunar spellbook]] (requires {{SCP|Magic|89}}).
+|level = 3}}
+{{Coordinates
+|coords = 25 degrees 03 minutes north,<br/>
+23 degrees 24 minutes east
+|req = No
+|fight = [[Zamorak wizard]]
+|image = Coordinate clue 25.03N 23.24E.png
+|map = 25.03N 23.24E map
+|notes = Immediately north of the [[magic axe hut]], which is located north-east of the [[Deserted Keep]] in the [[Wilderness]]. Quickly reachable by pulling the [[Ardougne teleport lever]] in [[East Ardougne]] and running north-east from the [[Deserted Keep]].
+|level=3}}
+<noinclude>
+
+==References==
+{{Reflist}}
+</noinclude>

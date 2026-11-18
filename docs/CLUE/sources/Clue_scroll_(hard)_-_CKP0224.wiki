@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by thetoddster!
+|value = 20
+|weight = 0.020
+|id = 19874
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 950
+|text = The cryptic reveals where to dig:<br><br>C K P 0 2 2 4
+|items = 
+|notes = Dig near [[fairy ring]] {{Fairycode|CKP}}.
+|map = {{Map|2073,4846|mtype=pin|plane=0|mapID=-1}}
+}}

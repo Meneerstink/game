@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Sir Pvmalot!
+|value = 20
+|weight = 0.020
+|id = 12152
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 684
+|text = The cryptic reveals who to speak to:<br><br>I burn between heroes and legends.
+|items = 
+|notes = Speak to the [[Candle maker]] in the [[Candle Shop]] in [[Catherby]].
+|map = {{Map|2799,3438|mtype=pin|plane=0|mapID=-1}}
+}}

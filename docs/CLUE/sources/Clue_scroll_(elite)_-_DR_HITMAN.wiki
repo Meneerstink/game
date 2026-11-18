@@ -1,0 +1,32 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by iKips!
+|value = 20
+|weight = 0.020
+|id = 12134
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[anagram clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 76
+|text = The anagram reveals who to speak to:<br><br>DR HITMAN
+|notes = Speak to [[Mandrith]] outside of the [[Wilderness Resource Area]].
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''How many scorpions live under the pit?''
+
+Answer: '''28'''
+|map = {{Map|3182,3946|mtype=pin|plane=0|mapID=-1}}
+}}

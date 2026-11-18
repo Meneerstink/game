@@ -1,0 +1,122 @@
+{{External|rs}}
+{{otheruses|the wizards that appear while doing Hard Clues|other uses|Zamorak mage (disambiguation)}}
+{{Infobox Monster
+|name = Zamorak wizard
+|image = [[File:Zamorak wizard.png|130px]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|members = Yes
+|combat = 65
+|size = 1
+|examine = A servant of Zamorak.
+|xpbonus = 0
+|max hit = 20
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Magic]]
+|attack speed = 4
+|hitpoints = 76
+|att = 24
+|str = 24
+|def = 24
+|mage = 80
+|range = 1
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 3
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|poisonresistance = 0
+|venomresistance = 0
+|immunecannon = No
+|immunethrall = No
+|id = 2954
+|leagueRegion = Wilderness
+}}
+'''Zamorak wizards''' are hostile followers of [[Zamorak]] that appear when doing [[Clue scroll (hard)|hard clue]] [[Treasure Trails/Guide/Coordinates|coordinates]] in the [[Wilderness]]. 
+
+Upon appearing, they will call out {{overhead|Die, human!}}, immediately attacking the player with the [[Flames of Zamorak]] spell. Unlike their [[Saradomin wizard]] counterparts, they attack exclusively with [[Magic]], do not deal poison and all damage can be negated with [[Protect from Magic]]. They are also generally weaker, having low [[Hitpoints]] and low [[Defence]] (except against [[Magic]]).
+
+You can mitigate risk by bringing only 3 items: a weapon (slashing [[Teleport lever|if you need to cut a web]]), the clue scroll, and [[spade]]. With 70+ [[Strength]] and a 1-dose [[combat potion]], using four [[special attack]]s from the [[dragon dagger]] and relevant [[prayers]] should kill them almost every time, and if not they can be easily finished.
+
+==Drops==
+{{DropLogProject|kills=425464}}
+===100%===
+{{DropsTableHead}}
+{{DropsLine|name=Bones|quantity=1|rarity=Always}}
+{{DropsTableBottom}}
+
+===Weapons and armour===
+{{DropsTableHead}}
+{{DropsLine|name=Zamorak monk top|quantity=1|rarity=3/128}}
+{{DropsLine|name=Zamorak monk bottom|quantity=1|rarity=4/128}}
+{{DropsLine|name=Air battlestaff|quantity=1|rarity=2/128}}
+{{DropsLine|name=Water battlestaff|quantity=1|rarity=3/128}}
+{{DropsLine|name=Earth battlestaff|quantity=1|rarity=3/128}}
+{{DropsLine|name=Fire battlestaff|quantity=1|rarity=1/128}}
+{{DropsTableBottom}}
+
+===Runes===
+{{DropsTableHead}}
+{{DropsLine|name=Air rune|quantity=60|rarity=3/128}}
+{{DropsLine|name=Air rune|quantity=189|rarity=2/128}}
+{{DropsLine|name=Water rune|quantity=42|rarity=3/128}}
+{{DropsLine|name=Water rune|quantity=126|rarity=2/128}}
+{{DropsLine|name=Earth rune|quantity=79|rarity=3/128}}
+{{DropsLine|name=Earth rune|quantity=86|rarity=4/128}}
+{{DropsLine|name=Earth rune|quantity=107|rarity=2/128}}
+{{DropsLine|name=Fire rune|quantity=51|rarity=3/128}}
+{{DropsLine|name=Fire rune|quantity=180|rarity=2/128}}
+{{DropsLine|name=Cosmic rune|quantity=25|rarity=1/128}}
+{{DropsLine|name=Nature rune|quantity=30|rarity=7/128}}
+{{DropsLine|name=Law rune|quantity=9|rarity=1/128}}
+{{DropsLine|name=Death rune|quantity=45|rarity=6/128}}
+{{DropsLine|name=Blood rune|quantity=8|rarity=12/128}}
+{{DropsTableBottom}}
+
+===Coins===
+{{DropsTableHead}}
+{{DropsLine|name=Coins|quantity=77|rarity=17/128}}
+{{DropsLine|name=Coins|quantity=89|rarity=25/128}}
+{{DropsLine|name=Coins|quantity=240|rarity=3/128}}
+{{DropsTableBottom}}
+
+===Tertiary===
+{{DropsTableHead|leagueRegion=Wilderness}}
+{{DropsLine|name=Looting bag|quantity=1|rarity=1/3|gemw=No}}
+{{DropsTableBottom}}
+
+==Dialogue==
+{{Hastranscript|npc}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 10 September 2015
+|update = Slayer Assignment Rework
+|poll = 
+|change =
+* All treasure trail combat NPCs now cannot prevent a player from being attacked by a player inside a single combat zone of the wilderness. 
+* All treasure trail combat NPCs now also do not allow a player to be attacked by several players at once in a single combat zone.
+}}
+{{Subject changes
+|date = 5 December 2006
+|update = Treasure Trails, spiders and sheep
+|change = The NPC was renamed from "Zamorak Wizard" to "Zamorak wizard".
+}}
+{{Subject changes footer}}
+
+==Trivia==
+*The Zamorak Wizard yells "Die, human!" although it appears to be human as well.
+
+{{Treasure Trails}}
+[[Category:Zamorakians]]
+[[Category:Monsters that take priority in combat]]

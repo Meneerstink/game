@@ -1,0 +1,21 @@
+<noinclude>{{external|rs}}
+</noinclude>{{shortcut|ttgm}}
+{{Treasure Trails Guide Maps Intro}}
+
+===Beginner Maps===
+{{:Treasure Trails/Guide/Maps/Beginner}}
+
+===Easy Maps===
+{{:Treasure Trails/Guide/Maps/Easy}}
+
+===Medium Maps===
+{{:Treasure Trails/Guide/Maps/Medium}}
+
+===Hard Maps===
+{{:Treasure Trails/Guide/Maps/Hard}}
+
+===Elite Maps===
+{{:Treasure Trails/Guide/Maps/Elite}}<noinclude>
+
+{{Treasure Trails}}
+[[Category:Guides]]</noinclude>

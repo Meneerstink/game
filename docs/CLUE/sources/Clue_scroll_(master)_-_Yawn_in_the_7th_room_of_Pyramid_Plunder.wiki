@@ -1,0 +1,55 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 387
+|tier = master
+|emote = Yawn
+|text = The clue reveals <br><br>Yawn in the 7th room of Pyramid Plunder. Beware of double agents! Equip a pharaoh sceptre and a full set of menaphite robes.
+|reference = The pharaoh's sceptre can have any amount of charges. The pieces of the menaphite clothing must all be the same colour, both the kilt and robe can be used. It's possible to store the menaphite clothing in the STASH unit without the pharaoh's sceptre.
+|location = 7th room in [[Pyramid Plunder]]
+|items = Equip a [[pharaoh sceptre]] and a full set of [[Menaphite clothing]]
+|set1equipment1 = Menaphite purple hat
+|set1equipment2 = Menaphite purple top
+|set1equipment3 = Menaphite purple kilt
+|set1equipment4 = Pharaoh's sceptre
+|set1equipment4price1 = Pharaoh's sceptre (uncharged)
+|set2equipment1 = Menaphite purple hat
+|set2equipment2 = Menaphite purple top
+|set2equipment3 = Menaphite purple robe
+|set2equipment4 = Pharaoh's sceptre
+|set2equipment4price1 = Pharaoh's sceptre (uncharged)
+|set3equipment1 = Menaphite red hat
+|set3equipment2 = Menaphite red top
+|set3equipment3 = Menaphite red kilt
+|set3equipment4 = Pharaoh's sceptre
+|set3equipment4price1 = Pharaoh's sceptre (uncharged)
+|set4equipment1 = Menaphite red hat
+|set4equipment2 = Menaphite red top
+|set4equipment3 = Menaphite red robe
+|set4equipment4 = Pharaoh's sceptre
+|set4equipment4price1 = Pharaoh's sceptre (uncharged)
+|notes = Perform the [[yawn]] emote near 7th chamber of the [[Jalsavrah Pyramid]] in the [[Pyramid Plunder]] [[minigame]].
+The clue has an additional challenge:
+
+Kill a [[double agent]].
+|map = {{Map|1944,4427|mtype=pin|plane=0|mapID=-1}}
+}}

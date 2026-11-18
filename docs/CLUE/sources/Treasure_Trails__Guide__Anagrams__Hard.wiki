@@ -1,0 +1,101 @@
+<noinclude>{{Treasure Trails Guide Anagrams Intro}}
+==Hard Anagrams==
+</noinclude>
+{|class="wikitable" border="2"
+!Anagram
+!Solution
+!Location
+![[Challenge scrolls (Treasure Trails)|Challenge]] answer
+|-
+|'''[[Clue scroll (hard) - BAKER CLIMB|BAKER CLIMB]]'''
+|[[Brambickle]]
+|Located on [[Trollweiss Mountain]].
+|[[Treasure Trails/Guide/Puzzle boxes|Puzzle box]]
+|-
+|'''[[Clue scroll (hard) - BLUE GRIM GUIDED|BLUE GRIM GUIDED]]'''
+|[[Lumbridge Guide]]
+|Just outside of [[Lumbridge Castle]].
+|[[Treasure Trails/Guide/Puzzle boxes|Puzzle box]]
+|-
+|'''[[Clue scroll (hard) - BY LOOK|BY LOOK]]'''
+|[[Bolkoy]]
+|In the [[Tree Gnome Village (location)|Tree Gnome Village]] general store.
+|13
+|-
+|'''[[Clue scroll (hard) - C ON GAME HOC|C ON GAME HOC]]'''
+|[[Gnome Coach]]
+|Walking around outside the [[Gnome Ball]] course, west of the [[Grand Tree]].
+|6
+|-
+|'''[[Clue scroll (hard) - COPPER ORE CRYPTS|COPPER ORE CRYPTS]]'''
+|[[Prospector Percy]]
+|[[Motherlode Mine]], a [[pickaxe]] is needed to reach him.
+|12
+|-
+|'''[[Clue scroll (hard) - DARN DRAKE|DARN DRAKE]]'''
+|[[Daer Krand]]
+|Upstairs in the eastern wing of the [[Sisterhood Sanctuary]], just north of the [[The Nightmare]]'s arena.
+|[[Treasure Trails/Guide/Puzzle boxes|Puzzle box]]
+|-
+|'''[[Clue scroll (hard) - DEKAGRAM|DEKAGRAM]]'''
+|[[Dark Mage (Abyss)|Dark mage]]
+|Centre of the inner ring of the [[Abyss]]. Astral Contact does not work.
+|13
+|-
+|'''[[Clue scroll (hard) - DO SAY MORE|DO SAY MORE]]'''
+|[[Doomsayer]]
+|East of [[Lumbridge Castle]], near the [[Lumbridge Guide]].
+|95
+|-
+|'''[[Clue scroll (hard) - DRAGONS LAMENT|DRAGONS LAMENT]]'''
+|[[Strange Old Man]]
+|Gravedigger at the [[Barrows]].
+|40
+|-
+|'''[[Clue scroll (hard) - DR WARDEN FUNK|DR WARDEN FUNK]]'''
+|[[Drunken Dwarf (Keldagrim)|Drunken Dwarf]]
+|In [[Keldagrim]], east side in the house with broken glass.
+|[[Treasure Trails/Guide/Puzzle boxes|Puzzle box]]
+|-
+|'''[[Clue scroll (hard) - MOTHERBOARD|MOTHERBOARD]]'''
+|[[Brother Omad]]
+|[[Ardougne Monastery|Monastery]] south of [[Ardougne]].
+|129
+|-
+|'''[[Clue scroll (hard) - MY MANGLE LAL|MY MANGLE LAL]]'''
+|[[Lammy Langle]]
+|[[Hosidius]] [[spirit tree patch]]
+|[[Treasure Trails/Guide/Puzzle boxes|Puzzle box]]
+|-
+|'''[[Clue scroll (hard) - O BIRDZ A ZANY EN PC|O BIRDZ A ZANY EN PC]]'''
+|[[Cap'n Izzy no Beard]]
+|Entrance of the [[Brimhaven Agility Arena]].
+|33
+|-
+|'''[[Clue scroll (hard) - QUIT HORRIBLE TYRANT|QUIT HORRIBLE TYRANT]]'''
+|[[Brother Tranquility]]
+|[[Mos Le'Harmless]] or [[Harmony Island]]
+|7
+|-
+|'''[[Clue scroll (hard) - RAT MAT WITHIN|RAT MAT WITHIN]]'''
+|[[Martin Thwait]]
+|[[Rogues' Den]]
+|2
+|-
+|'''[[Clue scroll (hard) - SLIDE WOMAN|SLIDE WOMAN]]'''
+|[[Wise Old Man]]
+|[[Draynor Village]]
+|28
+|-
+|'''[[Clue scroll (hard) - VEIL VEDA|VEIL VEDA]]'''
+|[[Evil Dave]]
+|Down the trapdoor in the house directly west of [[Edgeville]] bank, where the [[Hell-Rat|evil rats]] are located for the [[Recipe for Disaster]] quest.
+(Requires completion of [[Shadow of the Storm]] quest to open the trapdoor.)
+(On Examine: A clue suggested by Marfn.)
+|666
+|-
+|'''[[Clue scroll (hard) - WOO AN EGG KIWI|WOO AN EGG KIWI]]'''
+|[[King Awowogei]]
+|Must have at least partially completed [[Monkey Madness I]]. Located in the building south of the [[Ape Atoll Teleport (standard)|Ape Atoll Teleport]]. Remember to bring a [[Karamjan monkey greegree]] and an [[M'speak amulet]], unless the player has competed [[Monkey Madness II]]. Talk to the [[Elder Guard]] to gain entrance.
+|24
+|}

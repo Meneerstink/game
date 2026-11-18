@@ -1,0 +1,36 @@
+{{Infobox Item
+|name = Clue scroll (beginner)
+|image = [[File:Clue scroll (beginner).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = No
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = <!-- All beginner clue scrolls share an item ID. Leave blank to not break wiki id lookup -->
+}}
+[[File:Clue scroll (beginner) detail.png|100px|left]]
+'''Clue scroll (beginner)''' is an [[anagram clue]] obtained from [[Clue scroll (beginner)|beginner]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id =
+|text = The anagram reveals<br>who to speak to:<br><br>SIR SHARE RED
+|notes = Speak to the [[Hairdresser]] in [[Falador]].
+|map = {{Map|x=2945|y=3380|mtype=pin}}
+}}
+
+==Transportation==
+*[[Falador Teleport]].
+*[[Achievement diary cape]] teleport to [[Sir Rebral]].
+*[[Ring of wealth]] teleport to [[Falador Park]].
+*[[Balloon transport system]] to [[Taverley]].
+*[[Teleport to House]] with a [[player-owned house]] in Taverley, or [[Construction cape]] teleport to the Taverley [[house portal]].
+*[[Skills necklace]] teleport to the [[Mining Guild]].
+*[[Ring of the elements]] teleport to the [[Air Altar]] and run north.

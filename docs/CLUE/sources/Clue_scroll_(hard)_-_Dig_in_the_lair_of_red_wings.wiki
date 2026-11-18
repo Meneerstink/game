@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[16 June]] [[2021]]
+|update = A Kingdom Divided
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 25791
+|leagueRegion = Kourend
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 877
+|text = The cryptic reveals where to dig:<br><br>Dig in the lair of red wings, within the temple of the Sun and Moon.
+|items = 
+|notes = Dig near among the [[red dragon]]s in the [[Forthos Dungeon]].
+|map = {{Map|1820,9935|mtype=pin|plane=0|mapID=-1}}
+}}

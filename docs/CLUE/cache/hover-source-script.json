@@ -1,0 +1,27 @@
+{
+  "44": {
+    "id": 44,
+    "instructions": [
+      33,
+      33,
+      2105,
+      21
+    ],
+    "intOperands": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "stringOperands": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "intStackCount": 2,
+    "stringStackCount": 0,
+    "localIntCount": 2,
+    "localStringCount": 0
+  }
+}

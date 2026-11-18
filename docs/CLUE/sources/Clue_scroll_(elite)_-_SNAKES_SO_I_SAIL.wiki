@@ -1,0 +1,32 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = If only I could decipher this...
+|value = 20
+|weight = 0.020
+|id = 19795
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[anagram clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 82
+|text = The anagram reveals who to speak to:<br><br>SNAKES SO I SAIL
+|notes = Speak to [[Lisse Isaakson]] in [[Neitiznot]].
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''How many arctic logs are required to make a large fremennik round shield?''
+
+Answer: '''2'''
+|map = {{Map|2351,3801|mtype=pin|plane=0|mapID=-1}}
+}}

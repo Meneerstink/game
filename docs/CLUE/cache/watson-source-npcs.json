@@ -1,0 +1,132 @@
+{
+  "7303": {
+    "id": 7303,
+    "name": "Watson",
+    "models": [
+      13705,
+      215,
+      10039,
+      31807,
+      10979,
+      31781,
+      8954,
+      31628,
+      31631
+    ],
+    "chatheads": [
+      32305
+    ],
+    "size": 1,
+    "stand": 808,
+    "walk": 819,
+    "idleTurnLeft": -1,
+    "idleTurnRight": -1,
+    "walk180": 820,
+    "walkLeft": 821,
+    "walkRight": 822,
+    "run": -1,
+    "run180": -1,
+    "runLeft": -1,
+    "runRight": -1,
+    "crawl": -1,
+    "crawl180": -1,
+    "crawlLeft": -1,
+    "crawlRight": -1,
+    "ops": [
+      "Talk-to",
+      null,
+      null,
+      null,
+      null
+    ],
+    "recolorFind": [
+      24,
+      8741
+    ],
+    "recolorReplace": [
+      24088,
+      49
+    ],
+    "retextures": 0,
+    "minimap": true,
+    "combat": 0,
+    "widthScale": 128,
+    "heightScale": 128,
+    "renderPriority": 1,
+    "ambient": 0,
+    "contrast": 0,
+    "rotationSpeed": 32,
+    "interactable": true,
+    "rotationFlag": true,
+    "follower": false,
+    "height": -1,
+    "footprint": -1,
+    "multiNpc": false,
+    "dropped": []
+  },
+  "7304": {
+    "id": 7304,
+    "name": "Watson",
+    "models": [
+      13705,
+      215,
+      10039,
+      31807,
+      10979,
+      31781,
+      8954,
+      31628,
+      31631
+    ],
+    "chatheads": [
+      32305
+    ],
+    "size": 1,
+    "stand": 808,
+    "walk": 819,
+    "idleTurnLeft": -1,
+    "idleTurnRight": -1,
+    "walk180": 820,
+    "walkLeft": 821,
+    "walkRight": 822,
+    "run": -1,
+    "run180": -1,
+    "runLeft": -1,
+    "runRight": -1,
+    "crawl": -1,
+    "crawl180": -1,
+    "crawlLeft": -1,
+    "crawlRight": -1,
+    "ops": [
+      "Talk-to",
+      null,
+      "Check",
+      null,
+      null
+    ],
+    "recolorFind": [
+      24,
+      8741
+    ],
+    "recolorReplace": [
+      24088,
+      49
+    ],
+    "retextures": 0,
+    "minimap": true,
+    "combat": 0,
+    "widthScale": 128,
+    "heightScale": 128,
+    "renderPriority": 1,
+    "ambient": 0,
+    "contrast": 0,
+    "rotationSpeed": 32,
+    "interactable": true,
+    "rotationFlag": true,
+    "follower": false,
+    "height": -1,
+    "footprint": -1,
+    "multiNpc": false,
+    "dropped": []
+  }
+}

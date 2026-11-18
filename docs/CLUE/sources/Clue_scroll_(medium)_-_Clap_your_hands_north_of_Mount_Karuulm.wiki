@@ -1,0 +1,36 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[10 January]] [[2019]]
+|update = The Kebos Lowlands
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 23046
+|leagueRegion = Kourend
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[emote clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 317
+|tier = medium
+|emote = Clap
+|emote2 = Spin
+|text = The emote reveals <br><br>Clap your hands north of Mount Karuulm Spin before you talk to me. Equip an adamant warhammer, a ring of life and a pair of mithril boots.
+|location = North of [[Mount Karuulm]]
+|items = Equip an [[adamant warhammer]], a [[ring of life]] and a pair of [[mithril boots]].
+|equipment1 = Adamant warhammer
+|equipment2 = Ring of life
+|equipment3 = Mithril boots
+|notes = Perform the [[clap]] and [[spin]] emotes north of [[Mount Karuulm]].
+|map = {{Map|1306,3839|mtype=pin|plane=0|mapID=-1}}
+}}

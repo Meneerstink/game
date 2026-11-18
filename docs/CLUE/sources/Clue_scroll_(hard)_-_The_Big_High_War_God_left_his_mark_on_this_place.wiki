@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[9 February]] [[2022]]
+|update = Land of the Goblins
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 26566
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 878
+|text = The cryptic reveals where to dig:<br><br>The Big High War God left his mark on this place.
+|items = 
+|notes = Dig in [[Yu'biusk]] ([[fairy ring]] {{fairycode|BLQ}} after completion of [[Land of the Goblins]]).
+|map = {{Map|3572,4372|mtype=pin|plane=0|mapID=-1}}
+}}

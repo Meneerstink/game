@@ -1,0 +1,34 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 19829
+|leagueRegion = Kourend
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 810
+|text = The cryptic reveals where to search:<br><br>Search the open crate found in the Hosidius kitchens.
+|items = 
+|notes = Search the crates in the [[Hosidius Kitchen|kitchen]] north-west of [[Hosidius]].
+|map = {{Map|1683,3616|mtype=pin|plane=0|mapID=-1}}
+}}
+
+== Transportation ==
+
+* [[Kourend Castle Teleport]] and run south.
+* [[Fairy ring]] code {{fairycode|akr}} and run north west.

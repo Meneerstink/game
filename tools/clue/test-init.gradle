@@ -1,0 +1,16 @@
+// Keep this card's tests on the reviewed worktree data; never read another branch's runtime catalogues.
+gradle.projectsEvaluated {
+    allprojects {
+        tasks.withType(Test).configureEach {
+            systemProperty 'rsps.data', new File(rootProject.projectDir, 'data').absolutePath
+            inputs.dir(new File(rootProject.projectDir, 'data/cfg/clue'))
+            // These tests read pinned source fixtures directly; changes must invalidate UP-TO-DATE results.
+            inputs.dir(new File(rootProject.projectDir, 'docs/CLUE/cache'))
+            inputs.dir(new File(rootProject.projectDir, 'docs/CLUE/sources'))
+            inputs.files(['data/cfg/objs.yml', 'data/cfg/npcs/combat-defs.json', 'docs/CLUE/cache/interfaces.json',
+                          'docs/CLUE/cache/hover.json', 'docs/CLUE/cache/stash-chart-baked.json',
+                          'docs/CLUE/cache/stash-setting.json', 'docs/CLUE/cache/ui-camera-order.json']
+                         .collect { new File(rootProject.projectDir, it) })
+        }
+    }
+}

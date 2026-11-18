@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.skills.woodcutting
 
+import gg.rsmod.plugins.content.scrolls.TreasureTrailSherlock as ClueTasks
+
 import gg.rsmod.plugins.content.skills.summoning.SummoningBoosts
 
 import gg.rsmod.game.fs.def.ItemDef
@@ -103,6 +105,8 @@ object Woodcutting {
         farmingTreeState: PatchState?,
     ): Boolean {
         player.addXp(Skills.WOODCUTTING, tree.xp, checkBrawlingGloves = true)
+        gg.rsmod.plugins.content.scrolls.ClueSkilling.woodcutting(player, tree)
+        if (tree == TreeType.YEW) ClueTasks.succeeded(player, ClueTasks.Action.YEW_LOG)
         when (tree) {
             TreeType.IVY -> {
                 player.filterableMessage("You successfully chop away some ivy.")

@@ -1,0 +1,30 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[23 July]] [[2025]]
+|update = Varlamore: The Final Dawn Out Now
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Perhaps someone at the observatory can teach me to navigate?
+|value = 20
+|weight = 0.020
+|id = 30931
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[coordinate clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 986
+|text = The clue reveals where to dig:<br><br>5.03N 34.58W
+|notes = Dig south of [[Custodia Pass]], west of [[Auburnvale]] and [[Nemus Retreat]]
+The clue has an additional challenge:
+
+Kill a [[Saradomin wizard]].
+|map = {{Map|1321,3323|mtype=pin|plane=0|mapID=-1}}
+}}

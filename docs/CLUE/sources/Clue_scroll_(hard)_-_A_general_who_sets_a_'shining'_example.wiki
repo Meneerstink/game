@@ -1,0 +1,39 @@
+{{External|rs=Clue scroll (hard) - There is no 'worthier' lord}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 3564
+|leagueRegion = Tirannwn
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 716
+|text = The cryptic reveals who to speak to:<br><br>A general who sets a 'shining' example.
+|items = 
+|notes = Speak to [[General Hining]] in Tyras Camp.
+|map = {{Map|2186,3148|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 25 July 2019
+|update = Song of the Elves
+|change = The clue's contents and answer were changed. Previously, it was ''There is no 'worthier' lord.'', to which the answer was [[Lord Iorwerth]].
+}}
+{{Subject changes footer}}

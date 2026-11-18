@@ -1,0 +1,9809 @@
+{
+  "gaps": [
+    {
+      "key": "Clue scroll (medium) - Yawn in the Castle Wars lobby",
+      "matches": [],
+      "reason": "Wiki clue ID does not uniquely resolve in pinned cache table",
+      "wikiClueId": 10262
+    },
+    {
+      "key": "Clue scroll (hard) - Salute in the banana plantation",
+      "matches": [],
+      "reason": "Wiki clue ID does not uniquely resolve in pinned cache table",
+      "wikiClueId": 10246
+    },
+    {
+      "key": "Clue scroll (hard) - Blow a raspberry in the Fishing Guild bank",
+      "matches": [],
+      "reason": "Wiki clue ID does not uniquely resolve in pinned cache table",
+      "wikiClueId": 10236
+    },
+    {
+      "key": "Clue scroll (elite) - Laugh in front of the gem store in Ardougne market",
+      "matches": [],
+      "reason": "Wiki clue ID does not uniquely resolve in pinned cache table",
+      "wikiClueId": 19790
+    }
+  ],
+  "rows": {
+    "1006": {
+      "bytes": 81,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            7306
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            44060126
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Between Seers' Village and Rellekka. Fairy ring (CJR)."
+          ]
+        }
+      },
+      "sha256": "8a3b886ffeeaf0dbcb63815d36b49973b8e26c8d8a846f9ad2760c69c0e38fbb",
+      "table": 15
+    },
+    "1009": {
+      "bytes": 50,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            2995
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            60181924
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "In Port Phasmatys' inn."
+          ]
+        }
+      },
+      "sha256": "14ad00d9b94fcf7e4817ac8b9dee384369d7c2d1c1cc98d064f3af8f0ad16d71",
+      "table": 15
+    },
+    "1010": {
+      "bytes": 54,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            2577
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            50105759
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "In the Edgeville Monastery."
+          ]
+        }
+      },
+      "sha256": "eca64a515c1487cb3f11047b3eb93cee17cf253ac4013104c256dce9b0d5e221",
+      "table": 15
+    },
+    "1032": {
+      "bytes": 38,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            9636
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            56370855
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Paterdomus."
+          ]
+        }
+      },
+      "sha256": "2d262692287e447a0bd9d35757661e2a5bc4296cfa2ed2a921cf7ebc42f7e453",
+      "table": 15
+    },
+    "1034": {
+      "bytes": 56,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            5081
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            50990170
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "First floor of Wizards Tower."
+          ]
+        }
+      },
+      "sha256": "76c4447b4280ba12529ebfbeb814e63a5346cfa224f5f112d4807927122e703f",
+      "table": 15
+    },
+    "1040": {
+      "bytes": 50,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            954
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            52825128
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Kalphite Lair entrance."
+          ]
+        }
+      },
+      "sha256": "f3160cac5f7da0de498223d7aac706d03c20cdb081d84c9ba9072a72d5db5018",
+      "table": 15
+    },
+    "1042": {
+      "bytes": 60,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            2153
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            41635292
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Barbarian Outpost agility course."
+          ]
+        }
+      },
+      "sha256": "8b9d23d8087f4014d527de62fe5a2474be19399f7cc555fa1258bcc23ea9515e",
+      "table": 15
+    },
+    "1046": {
+      "bytes": 71,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            30
+          ],
+          "values": [
+            366
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            43552160
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "The crate in McGrubor's Wood. Fairy ring ALS"
+          ]
+        }
+      },
+      "sha256": "737d4ec639a62be50bf0941408ec1d7796cde6298cafe561afaf41e27fac18f0",
+      "table": 16
+    },
+    "1047": {
+      "bytes": 61,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            30
+          ],
+          "values": [
+            366
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            42028208
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "The crate west of the Clock Tower."
+          ]
+        }
+      },
+      "sha256": "445f7eb34aed99d400809eccf65420dbe09aeff6a1ac8b187431fd846e5a63ad",
+      "table": 16
+    },
+    "1048": {
+      "bytes": 77,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            30
+          ],
+          "values": [
+            366
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            54218159
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "A crate in the Lumber Yard, north-east of Varrock."
+          ]
+        }
+      },
+      "sha256": "80b2af6a53080fe32a9cbdd929ebee51d55a677da01d7449b90187ef6f42d740",
+      "table": 16
+    },
+    "1049": {
+      "bytes": 79,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            30
+          ],
+          "values": [
+            366
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            40258670
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "In a crate by the stairs to the Observatory Dungeon."
+          ]
+        }
+      },
+      "sha256": "323b65794c58bf123a3b4d1b047b6c500fb93620b3e91a95dc909946d19f8cce",
+      "table": 16
+    },
+    "1050": {
+      "bytes": 92,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            30
+          ],
+          "values": [
+            354
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            49581612
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "In a crate at the Dark Warriors' Fortress in level 14 Wilderness."
+          ]
+        }
+      },
+      "sha256": "29b212ae0c630add019344fce5a6310b0e9a5fb1f60320dc37ffb2483fa3ae93",
+      "table": 16
+    },
+    "1052": {
+      "bytes": 136,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            30
+          ],
+          "values": [
+            9568
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            49368171
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Reveal yourself as an outlaw to Shantay to be sent to Port Sarim jail, then search a bucket within the cells."
+          ]
+        }
+      },
+      "sha256": "ab3c80c9d29850b6d6eef703a2ef2b66b3cbc48f890a749d0dde65da3d114131",
+      "table": 16
+    },
+    "1068": {
+      "bytes": 91,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            30
+          ],
+          "values": [
+            5113
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            52825508
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Search the crate in the corner of the kitchen in Varrock Castle."
+          ]
+        }
+      },
+      "sha256": "39a64187bbfb8dace29d6d42021071693d2847fdced7d1e96de0f90dedeb9757",
+      "table": 16
+    },
+    "1116": {
+      "bytes": 80,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            30
+          ],
+          "values": [
+            9533
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            48270471
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "The crates in Rommik's Crafty Supplies in Rimmington."
+          ]
+        }
+      },
+      "sha256": "f94f4945d5aaabe394b3472bde1a3815c609e17c307aafae595471ea5b992dd1",
+      "table": 16
+    },
+    "1146": {
+      "bytes": 60,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "How many stalls are there in Varrock Square?",
+            5
+          ]
+        }
+      },
+      "sha256": "affce21e1e620aedd0f41d77bdc66505fb49675afd7a6288a1ba7eb03aa5d495",
+      "table": 25
+    },
+    "1150": {
+      "bytes": 119,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "How many gravestones are in the church graveyard?",
+            19,
+            "How many gravestones are in the church graveyard?",
+            20
+          ]
+        }
+      },
+      "sha256": "32eb6f5cdac077475d62acfc486b230cffd36f1e34edfe02ca6df3905b56885d",
+      "table": 25
+    },
+    "1182": {
+      "bytes": 79,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "How many flowers are there in the clearing below this platform?",
+            13
+          ]
+        }
+      },
+      "sha256": "2b2dc4aca0fe5bb1efa82bb07267031752a8eb7dede9d29988fb822807512651",
+      "table": 25
+    },
+    "1183": {
+      "bytes": 91,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "How many gnomes on the Gnome ball field have red patches on their uniforms?",
+            6
+          ]
+        }
+      },
+      "sha256": "c9fd0ea895a9a154958d5647dc8b4ddb916ee36253d5c73e025c7f17f54ae008",
+      "table": 25
+    },
+    "1186": {
+      "bytes": 50,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "What is 40 divided by 1/2 plus 15?",
+            95
+          ]
+        }
+      },
+      "sha256": "2f8bd3881237eb31a696de7b15990b63022f62f4d4dd68329323805817d7596a",
+      "table": 25
+    },
+    "1188": {
+      "bytes": 85,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "What is the next number? 12, 13, 15, 17, 111, 113, 117, 119, 123....?",
+            129
+          ]
+        }
+      },
+      "sha256": "26c79a95877cd2ff61548be9ea562b765db11fa9205d8ddcc329919aa206f0a4",
+      "table": 25
+    },
+    "1191": {
+      "bytes": 59,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "How many natural fires burn in Rogue's Den?",
+            2
+          ]
+        }
+      },
+      "sha256": "2d811e8f0f8845b05b592c9ad7df96c7eb45fa6e348cf8bdaca2b72539356c1e",
+      "table": 25
+    },
+    "1192": {
+      "bytes": 67,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "How many bookcases are in the Wise Old Man's house?",
+            28
+          ]
+        }
+      },
+      "sha256": "1e1a18cb21051bf4940ed78b9e7f9918a9de1181c0761cc9aa07ce177e03fba1",
+      "table": 25
+    },
+    "1196": {
+      "bytes": 92,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "What is the combined combat level of each species that live in Slayer tower?",
+            623
+          ]
+        }
+      },
+      "sha256": "88a8dfaabc6d5b2bd67eb3da41c0e3d6e9e34f03405125976ccfe113852befc1",
+      "table": 25
+    },
+    "1197": {
+      "bytes": 54,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "How many scorpions live under the pit?",
+            28
+          ]
+        }
+      },
+      "sha256": "13d073de6b8b28c5157dc44530e3514834ba04b2b056c71ede4d6cfa95d69a53",
+      "table": 25
+    },
+    "1223": {
+      "bytes": 51,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "Please solve this for x: 7x - 28=21",
+            7
+          ]
+        }
+      },
+      "sha256": "2ded521543e52214a8cbe9a182e2ca83892853a787637f52ef77864cedf3eb6a",
+      "table": 25
+    },
+    "1226": {
+      "bytes": 71,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "How many air runes would I need to cast 630 wind waves?",
+            3150
+          ]
+        }
+      },
+      "sha256": "ba57b7948990b31f2fdb4d66e1ff02dd943ac3de5f58a7bd15d8a17b816f4444",
+      "table": 25
+    },
+    "1228": {
+      "bytes": 82,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "SIX LEGS! All of them have 6! There are 25 of them! How many legs?",
+            150
+          ]
+        }
+      },
+      "sha256": "74647b13ec3328151da50ba3364ae7fe5ae132af7d8d2f43d8cf647ec659d36f",
+      "table": 25
+    },
+    "1231": {
+      "bytes": 63,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "How many pyre sites are found around this lake?",
+            3
+          ]
+        }
+      },
+      "sha256": "fa7c7ffca7e6a0f990f0eead2db9d0bc054c867e9b08fa3d37a7104643b9db49",
+      "table": 25
+    },
+    "1244": {
+      "bytes": 101,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            647
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "One of the sailors in Port Sarim is your next destination."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            843
+          ]
+        }
+      },
+      "sha256": "1bfaf477d2454939cbf30b58719b6da254553daa06f48d9349d090590f0b8f9a",
+      "table": 8
+    },
+    "1246": {
+      "bytes": 75,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            649
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Speak to Ned in Draynor Village."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            943
+          ]
+        }
+      },
+      "sha256": "c982fe8a58279558b106a5c0a18d4ac7e73b8d2d2577d77b14c005181ada7bce",
+      "table": 8
+    },
+    "1247": {
+      "bytes": 75,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            650
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Speak to Hans to solve the clue."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            933
+          ]
+        }
+      },
+      "sha256": "5281389f7c046917b408fcc79e602be532a97194787339ae724f92f216c6d1d8",
+      "table": 8
+    },
+    "1252": {
+      "bytes": 93,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            655
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "I wonder how many bronze swords he has handed out."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            948
+          ]
+        }
+      },
+      "sha256": "d11ee6dc2af0f9e393321d0a5fa321a22151f4fa109eb5bcbf2c3bcb0074a4ba",
+      "table": 8
+    },
+    "1255": {
+      "bytes": 70,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            658
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Speak to Gaius in Taverley."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            951
+          ]
+        }
+      },
+      "sha256": "a17e1aa5a547f7e23f9302a2ef4942132d3724b1d53396756cfffee7ba29d89c",
+      "table": 8
+    },
+    "1258": {
+      "bytes": 71,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            661
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Speak to Arhein in Catherby."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            953
+          ]
+        }
+      },
+      "sha256": "d6a81f226f81913058f8a6baf0803e5c085f5189eb47407730cee2d22ab560fb",
+      "table": 8
+    },
+    "1259": {
+      "bytes": 86,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            662
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Speak to Doric, who lives north of Falador."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            835
+          ]
+        }
+      },
+      "sha256": "d1a3b6fc2a24d87759db92a0591259f8f935724facfef81632ed9d0206a657bd",
+      "table": 8
+    },
+    "1262": {
+      "bytes": 69,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            665
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Talk to Cassie in Falador."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            955
+          ]
+        }
+      },
+      "sha256": "b8a3404e3c472dc16174ea0764cab588f16845ed5decb1232756e698268f7010",
+      "table": 8
+    },
+    "1271": {
+      "bytes": 71,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            674
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            6
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Speak to Ellis in Al Kharid."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            963
+          ]
+        }
+      },
+      "sha256": "e94a84ba5db26c6e087bfae1c46810dc600b6e3989e241482de026e10aa6d0aa",
+      "table": 8
+    },
+    "1280": {
+      "bytes": 88,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            750
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            3,
+            6
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Search the bucket in the Port Sarim jail."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            1052
+          ]
+        }
+      },
+      "sha256": "c442dece5c3c3e83a3abb90d1d9fd555c377e3ce3a88dd6ef471ad22bad257f3",
+      "table": 8
+    },
+    "1296": {
+      "bytes": 80,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            766
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Search for a crate in Varrock Castle."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            1068
+          ]
+        }
+      },
+      "sha256": "66aeef30cd05c04c792af06c45870ce9a38d582fc8330c91282c471981631457",
+      "table": 8
+    },
+    "1344": {
+      "bytes": 99,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            814
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Search the crate in Rommiks crafting shop in Rimmington."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            1116
+          ]
+        }
+      },
+      "sha256": "7ee3167a6ba56682f05cd29580530770f4ce84db7d8a2611a63ee9258d947e10",
+      "table": 8
+    },
+    "1349": {
+      "bytes": 86,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            844
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Dig between some ominous stones in Falador."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            623
+          ]
+        }
+      },
+      "sha256": "936c8c53241b7ba4fedcc728547bd3e06c60e5cf35bdd0b1960bdaa34300010a",
+      "table": 8
+    },
+    "1350": {
+      "bytes": 96,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            845
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Dig near some giant mushrooms, behind the Grand Tree."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            624
+          ]
+        }
+      },
+      "sha256": "49a566e9d39fbfb3eb963d1abc97d3aed4f261f7a2d89c0a5085b5ef094f6242",
+      "table": 8
+    },
+    "1417": {
+      "bytes": 208,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            870
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            11
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "46 is my number. My body is the colour of burnt orange and crawls among those with eight. Three mouths I have, yet I cannot eat. My blinking blue eye hides my grave."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            649
+          ]
+        }
+      },
+      "sha256": "1777547a9ac49ec7cccb9d89745015fd225c5f773411c5d68a9174fe6c61cc59",
+      "table": 8
+    },
+    "1421": {
+      "bytes": 198,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            874
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Aggie I see. Lonely and southern I feel. I am neither inside nor outside the house, yet no home would be complete without me. The treasure lies beneath me!"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            653
+          ]
+        }
+      },
+      "sha256": "e85b68a10e241954eef17448918404c883b6fb3b67bdef9a059546cfcf5c83d4",
+      "table": 8
+    },
+    "1426": {
+      "bytes": 65,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            682
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Show this to Sherlock."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            971
+          ]
+        }
+      },
+      "sha256": "06b6c033b2cbfe88b4d0234118a88ccf45a786259304aa02fd8a70cce8c57dc2",
+      "table": 8
+    },
+    "1445": {
+      "bytes": 60,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            853
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "W marks the spot."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            632
+          ]
+        }
+      },
+      "sha256": "424b81972690a99522586d56eb06be04c8a302ed92f1be02a144aec224635887",
+      "table": 8
+    },
+    "1448": {
+      "bytes": 106,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            856
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            8
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Three rule below and three sit at top. Come dig at my entrance."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            635
+          ]
+        }
+      },
+      "sha256": "eeeae3831ea04685568bf3391e519c5cc864671e9a9f1734021cc77a75d80c96",
+      "table": 8
+    },
+    "1465": {
+      "bytes": 78,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            717
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            5
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            4,
+            8
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Falo the bard wants to see you."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            1006
+          ]
+        }
+      },
+      "sha256": "7ad2be13c9e453b28f13ec800f3d729bf0c41ca2299143cb48032cecc86ebafb",
+      "table": 8
+    },
+    "1468": {
+      "bytes": 92,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            720
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            5
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            5
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Robin wishes to see your finest ranged equipment."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            1009
+          ]
+        }
+      },
+      "sha256": "974376e950c2de8f8de8df066e5ad6258b9b97639442cbe34259f5e36d5fee3e",
+      "table": 8
+    },
+    "1469": {
+      "bytes": 67,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            721
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            5
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            3,
+            6
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Anger Abbot Langley."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            1010
+          ]
+        }
+      },
+      "sha256": "829f8840be0467156a42ca20118a9979d827416f2db201c2c3655c2b16a0f76d",
+      "table": 8
+    },
+    "1492": {
+      "bytes": 130,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            891
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            5
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "A massive battle rages beneath so be careful when you dig by the large broken crossbow."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            670
+          ]
+        }
+      },
+      "sha256": "eb9372669783e6e377bcc1a575fb71a06a6c75b29b4a03b0829cbf2d60f6c346",
+      "table": 8
+    },
+    "1508": {
+      "bytes": 58,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            10
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "A BAKER"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            841
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1146
+          ]
+        },
+        "5": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "4939375af3606ac05b42ef51e46c347aae2129a2738e92fd9482714886502924",
+      "table": 4
+    },
+    "1514": {
+      "bytes": 65,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            16
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "AREA CHEF TREK"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            975
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1150
+          ]
+        },
+        "5": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "0321435f611daf41ceef4de34ed8d6204f86e463e897c01487ed3a21bbbcece5",
+      "table": 4
+    },
+    "1526": {
+      "bytes": 50,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            28
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "HALT US"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            858
+          ]
+        },
+        "5": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        }
+      },
+      "sha256": "36e9de84ee88581fedbb374804a9bfc723dd5fdb8c93dc13230835798441cdf4",
+      "table": 4
+    },
+    "1554": {
+      "bytes": 67,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            56
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Blue Grim Guided"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            884
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            830
+          ]
+        },
+        "5": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "9c5575a0f51a1364ef6f672a1072b107196e1705278c8870817baf4497827c84",
+      "table": 4
+    },
+    "1555": {
+      "bytes": 58,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            57
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "By Look"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            885
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1182
+          ]
+        },
+        "5": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "f7481b5f1071b6c14658b35fd183ec544108330f2c6b02691e0d304b5df33413",
+      "table": 4
+    },
+    "1556": {
+      "bytes": 64,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            58
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "C On Game Hoc"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            886
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1183
+          ]
+        },
+        "5": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "64ae022ac6a7b4d3ff90e88c01e33f42143364b602ba94cc88b75bd9a47069d9",
+      "table": 4
+    },
+    "1560": {
+      "bytes": 62,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            62
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Do Say More"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            890
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1186
+          ]
+        },
+        "5": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "3ba7e2d5c287ebcce9822a611acaf08dfcca051a75fb271def3aed59ac523b83",
+      "table": 4
+    },
+    "1563": {
+      "bytes": 62,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            65
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Motherboard"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            893
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1188
+          ]
+        },
+        "5": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "5e39ba6fa34e6caf2ea5a69ab2993776ed69cf1f790e731150bb26cb601ecc8a",
+      "table": 4
+    },
+    "1567": {
+      "bytes": 65,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            69
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Rat Mat Within"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            897
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1191
+          ]
+        },
+        "5": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        }
+      },
+      "sha256": "d30a5c317f70d5ac074b5fd47913f39217c4ac674d85c886401ae2a153f29ee6",
+      "table": 4
+    },
+    "1568": {
+      "bytes": 62,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            70
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Slide Woman"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            898
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1192
+          ]
+        },
+        "5": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "a091fa69e4a3b00bb4c4c38af9520778aee0931f3932556d7c674b5a3038c00f",
+      "table": 4
+    },
+    "1573": {
+      "bytes": 60,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            75
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Cool Nerd"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            902
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1196
+          ]
+        },
+        "5": {
+          "types": [
+            0
+          ],
+          "values": [
+            5
+          ]
+        }
+      },
+      "sha256": "3c6ce50b412217db2878773f4a5e6507e7c96eebc95e5b8a8bd1c516cbf074b2",
+      "table": 4
+    },
+    "1574": {
+      "bytes": 60,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            76
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Dr Hitman"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            916
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1197
+          ]
+        },
+        "5": {
+          "types": [
+            0
+          ],
+          "values": [
+            11
+          ]
+        }
+      },
+      "sha256": "62cd4b1d32f627d0d54b75f752ca68afff220ea4b2c587f42743dba9d0af826c",
+      "table": 4
+    },
+    "1606": {
+      "bytes": 100,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip a blue wizard hat, a bronze two-handed sword and HAM boots."
+          ]
+        },
+        "1": {
+          "types": [
+            33
+          ],
+          "values": [
+            579
+          ]
+        },
+        "4": {
+          "types": [
+            33
+          ],
+          "values": [
+            1307
+          ]
+        },
+        "9": {
+          "types": [
+            33
+          ],
+          "values": [
+            4310
+          ]
+        }
+      },
+      "sha256": "b29c793c1e7e7d7f080885c95f08d909eed89aa2f88f8c72197656e2a66f63ab",
+      "table": 28
+    },
+    "1608": {
+      "bytes": 90,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip a coif, steel plateskirt and a sapphire necklace."
+          ]
+        },
+        "1": {
+          "types": [
+            33
+          ],
+          "values": [
+            1169
+          ]
+        },
+        "3": {
+          "types": [
+            33
+          ],
+          "values": [
+            1656
+          ]
+        },
+        "7": {
+          "types": [
+            33
+          ],
+          "values": [
+            1083
+          ]
+        }
+      },
+      "sha256": "37e24cb45396acb4279287c17d41eb7a0929ddd040267961f09a5a658b00e4b0",
+      "table": 28
+    },
+    "1610": {
+      "bytes": 95,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip an iron medium helmet, emerald ring and a white apron."
+          ]
+        },
+        "1": {
+          "types": [
+            33
+          ],
+          "values": [
+            1137
+          ]
+        },
+        "10": {
+          "types": [
+            33
+          ],
+          "values": [
+            1639
+          ]
+        },
+        "5": {
+          "types": [
+            33
+          ],
+          "values": [
+            1005
+          ]
+        }
+      },
+      "sha256": "264cacd8a79c0ee6b0e10ba210fec0e7fee54a56683c5bdd2980c4e786827110",
+      "table": 28
+    },
+    "1612": {
+      "bytes": 101,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip an emerald ring, a sapphire amulet, and a bronze chain body."
+          ]
+        },
+        "10": {
+          "types": [
+            33
+          ],
+          "values": [
+            1639
+          ]
+        },
+        "3": {
+          "types": [
+            33
+          ],
+          "values": [
+            1694
+          ]
+        },
+        "5": {
+          "types": [
+            33
+          ],
+          "values": [
+            1103
+          ]
+        }
+      },
+      "sha256": "72daaae7a8cfe7113c794f88018d0b5e4a2a24df01ef1c003726af10a30e38e5",
+      "table": 28
+    },
+    "1613": {
+      "bytes": 91,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip an iron chain body, a sapphire ring and a longbow."
+          ]
+        },
+        "10": {
+          "types": [
+            33
+          ],
+          "values": [
+            1637
+          ]
+        },
+        "4": {
+          "types": [
+            33
+          ],
+          "values": [
+            839
+          ]
+        },
+        "5": {
+          "types": [
+            33
+          ],
+          "values": [
+            1101
+          ]
+        }
+      },
+      "sha256": "d631f7bdf35533d4f480c6c9b9dcec03c95b258bc6c98d279560e6d94fcc8ab6",
+      "table": 28
+    },
+    "1615": {
+      "bytes": 101,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip a steel full helmet, steel platebody and an iron plateskirt."
+          ]
+        },
+        "1": {
+          "types": [
+            33
+          ],
+          "values": [
+            1157
+          ]
+        },
+        "5": {
+          "types": [
+            33
+          ],
+          "values": [
+            1119
+          ]
+        },
+        "7": {
+          "types": [
+            33
+          ],
+          "values": [
+            1081
+          ]
+        }
+      },
+      "sha256": "cd6bf4ccfb321dae93fea3fb30421ad9a193a3a79a95b7e2114c6a52434acd2f",
+      "table": 28
+    },
+    "1616": {
+      "bytes": 91,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip a bronze dagger, iron full helmet and a gold ring."
+          ]
+        },
+        "1": {
+          "types": [
+            33
+          ],
+          "values": [
+            1153
+          ]
+        },
+        "10": {
+          "types": [
+            33
+          ],
+          "values": [
+            1635
+          ]
+        },
+        "4": {
+          "types": [
+            33
+          ],
+          "values": [
+            1205
+          ]
+        }
+      },
+      "sha256": "e19eb517df465be052968b1a7d047e2c83f9609bd3ac0fce467180a7f0dbae2e",
+      "table": 28
+    },
+    "1618": {
+      "bytes": 90,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip a desert shirt, leather gloves and leather boots."
+          ]
+        },
+        "5": {
+          "types": [
+            33
+          ],
+          "values": [
+            1833
+          ]
+        },
+        "8": {
+          "types": [
+            33
+          ],
+          "values": [
+            1059
+          ]
+        },
+        "9": {
+          "types": [
+            33
+          ],
+          "values": [
+            1061
+          ]
+        }
+      },
+      "sha256": "75b5ed73b8eafa91796271e8f6f5d08d04e10015cdcd5ba27c23d242d2f34844",
+      "table": 28
+    },
+    "1619": {
+      "bytes": 98,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip a desert shirt, green gnome robe bottoms and a steel axe."
+          ]
+        },
+        "4": {
+          "types": [
+            33
+          ],
+          "values": [
+            1353
+          ]
+        },
+        "5": {
+          "types": [
+            33
+          ],
+          "values": [
+            1833
+          ]
+        },
+        "7": {
+          "types": [
+            33
+          ],
+          "values": [
+            648
+          ]
+        }
+      },
+      "sha256": "8ef5e678d42e7e494fc1075ebb85dedc29590e84161fc32d8afbfa9adda40bf1",
+      "table": 28
+    },
+    "1636": {
+      "bytes": 97,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip a steel platebody, maple shortbow and a Wilderness cape."
+          ]
+        },
+        "13": {
+          "types": [
+            0
+          ],
+          "values": [
+            19
+          ]
+        },
+        "4": {
+          "types": [
+            33
+          ],
+          "values": [
+            853
+          ]
+        },
+        "5": {
+          "types": [
+            33
+          ],
+          "values": [
+            1119
+          ]
+        }
+      },
+      "sha256": "09300e21720ac640b3726d477280891590999543797a097389b8d8baee0f4041",
+      "table": 28
+    },
+    "1637": {
+      "bytes": 89,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip a brown apron, leather boots and leather gloves."
+          ]
+        },
+        "5": {
+          "types": [
+            33
+          ],
+          "values": [
+            1757
+          ]
+        },
+        "8": {
+          "types": [
+            33
+          ],
+          "values": [
+            1059
+          ]
+        },
+        "9": {
+          "types": [
+            33
+          ],
+          "values": [
+            1061
+          ]
+        }
+      },
+      "sha256": "1a295a521de244fa5d63aba76758735229a03dfbf1e2e703e2814c307287247a",
+      "table": 28
+    },
+    "1649": {
+      "bytes": 101,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip a brown apron, adamantite medium helmet and snakeskin chaps."
+          ]
+        },
+        "1": {
+          "types": [
+            33
+          ],
+          "values": [
+            1145
+          ]
+        },
+        "5": {
+          "types": [
+            33
+          ],
+          "values": [
+            1757
+          ]
+        },
+        "7": {
+          "types": [
+            33
+          ],
+          "values": [
+            6324
+          ]
+        }
+      },
+      "sha256": "5593e0cbd6b5a8a231f97c656015be4252760eb0ac7c98e47a3e4c79d298841c",
+      "table": 28
+    },
+    "1651": {
+      "bytes": 98,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip a maple longbow, green d'hide chaps and an iron med helm."
+          ]
+        },
+        "1": {
+          "types": [
+            33
+          ],
+          "values": [
+            1137
+          ]
+        },
+        "4": {
+          "types": [
+            33
+          ],
+          "values": [
+            851
+          ]
+        },
+        "7": {
+          "types": [
+            33
+          ],
+          "values": [
+            1099
+          ]
+        }
+      },
+      "sha256": "99c962268d37b30d565cbc7813b803a876318bd87e0e5a91a71bb13401c0104b",
+      "table": 28
+    },
+    "1652": {
+      "bytes": 101,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip purple gloves, a steel kiteshield and a mithril full helmet."
+          ]
+        },
+        "1": {
+          "types": [
+            33
+          ],
+          "values": [
+            1159
+          ]
+        },
+        "6": {
+          "types": [
+            33
+          ],
+          "values": [
+            1193
+          ]
+        },
+        "8": {
+          "types": [
+            33
+          ],
+          "values": [
+            2942
+          ]
+        }
+      },
+      "sha256": "e897d16f4688fa90452efede5c67cae140b07574a45c6e41a2f3a17c8765b4aa",
+      "table": 28
+    },
+    "1671": {
+      "bytes": 108,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip an adamant square shield, blue dragon vambraces and a rune pickaxe."
+          ]
+        },
+        "4": {
+          "types": [
+            33
+          ],
+          "values": [
+            1275
+          ]
+        },
+        "6": {
+          "types": [
+            33
+          ],
+          "values": [
+            1183
+          ]
+        },
+        "8": {
+          "types": [
+            33
+          ],
+          "values": [
+            2487
+          ]
+        }
+      },
+      "sha256": "e4aeb3304d98dddbec88f30f3252ac5cadbc2a99293aee435c332d5ab7bb7795",
+      "table": 28
+    },
+    "1674": {
+      "bytes": 49,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip a completed prayer book."
+          ]
+        },
+        "17": {
+          "types": [
+            0
+          ],
+          "values": [
+            7
+          ]
+        }
+      },
+      "sha256": "0c19eb66533d53dda60b7b96761ac3d08671dd31ff4c9361b4e176aad01362fe",
+      "table": 28
+    },
+    "1685": {
+      "bytes": 129,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip only a black salamander."
+          ]
+        },
+        "1": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        },
+        "10": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        },
+        "11": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        },
+        "2": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        },
+        "3": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        },
+        "4": {
+          "types": [
+            33
+          ],
+          "values": [
+            10148
+          ]
+        },
+        "5": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        },
+        "6": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        },
+        "7": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        },
+        "8": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        },
+        "9": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        }
+      },
+      "sha256": "23bdcc9849da38ec5268d2b4e032e8ba8db00b3ea1942d8474c720c4f5e52c3d",
+      "table": 28
+    },
+    "1694": {
+      "bytes": 131,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip only some flared trousers."
+          ]
+        },
+        "1": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        },
+        "10": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        },
+        "11": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        },
+        "2": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        },
+        "3": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        },
+        "4": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        },
+        "5": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        },
+        "6": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        },
+        "7": {
+          "types": [
+            33
+          ],
+          "values": [
+            10394
+          ]
+        },
+        "8": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        },
+        "9": {
+          "types": [
+            33
+          ],
+          "values": [
+            6512
+          ]
+        }
+      },
+      "sha256": "cec8ca2fcb2f6561c14ceb7a04717ec2641a26bc6b197ad897c37f822743e4f7",
+      "table": 28
+    },
+    "1709": {
+      "bytes": 96,
+      "columnCount": 24,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Equip an abyssal whip, a legend's cape and some spined chaps."
+          ]
+        },
+        "15": {
+          "types": [
+            0
+          ],
+          "values": [
+            24
+          ]
+        },
+        "2": {
+          "types": [
+            33
+          ],
+          "values": [
+            1052
+          ]
+        },
+        "7": {
+          "types": [
+            33
+          ],
+          "values": [
+            6135
+          ]
+        }
+      },
+      "sha256": "3beff377f52f1fcee2efb6166465ce72c194fa55973e2c9d61925212829cdbbe",
+      "table": 28
+    },
+    "1802": {
+      "bytes": 36,
+      "columnCount": 2,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "A Brassican mage."
+          ]
+        },
+        "1": {
+          "types": [
+            32
+          ],
+          "values": [
+            7310
+          ]
+        }
+      },
+      "sha256": "97740b076bfbdd48ecd7fa0d9db8ca5cb55b40d5af12e05cc98584a39414d15c",
+      "table": 27
+    },
+    "1804": {
+      "bytes": 34,
+      "columnCount": 2,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "A double agent."
+          ]
+        },
+        "1": {
+          "types": [
+            32
+          ],
+          "values": [
+            1777
+          ]
+        }
+      },
+      "sha256": "018019af1038a4e2d35f13883387267c668211d32b94ca1278df46483e59fe1e",
+      "table": 27
+    },
+    "1806": {
+      "bytes": 34,
+      "columnCount": 2,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "A double agent."
+          ]
+        },
+        "1": {
+          "types": [
+            32
+          ],
+          "values": [
+            7312
+          ]
+        }
+      },
+      "sha256": "d794c830b377ec10d19c8e050655ff6320b55b9eb0d9c79149f08aca073abf4d",
+      "table": 27
+    },
+    "1807": {
+      "bytes": 38,
+      "columnCount": 2,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "A Saradomin wizard."
+          ]
+        },
+        "1": {
+          "types": [
+            32
+          ],
+          "values": [
+            2955
+          ]
+        }
+      },
+      "sha256": "528601b1e7c98e5f426499ebdf4a5db5bb8e65dbae0d025888badc9dcc0c8960",
+      "table": 27
+    },
+    "1809": {
+      "bytes": 39,
+      "columnCount": 2,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "An Armadylean guard."
+          ]
+        },
+        "1": {
+          "types": [
+            32
+          ],
+          "values": [
+            6587
+          ]
+        }
+      },
+      "sha256": "a5d0215c88c7c43a211427a12ca8b63efb6e1f68f82bef85ba0daaf99135ecda",
+      "table": 27
+    },
+    "1810": {
+      "bytes": 37,
+      "columnCount": 2,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "A Bandosian guard."
+          ]
+        },
+        "1": {
+          "types": [
+            32
+          ],
+          "values": [
+            6588
+          ]
+        }
+      },
+      "sha256": "9708da1e0257a4785d9cbe8b43133b241ffee07af781e3c511b4951efdfaa0ca",
+      "table": 27
+    },
+    "186": {
+      "bytes": 43,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            53906733
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "South-east Varrock mine."
+          ]
+        }
+      },
+      "sha256": "d47f205c2bbb5e249b12502806c1133d73a1dd97aa21fb33160d1e0f0678c47e",
+      "table": 18
+    },
+    "187": {
+      "bytes": 70,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            50662554
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "South of Draynor Village bank, by the fishing spot."
+          ]
+        }
+      },
+      "sha256": "468b3f2c4371b1c7608d613ab665ee881fa5de89b75cfd2a09cf754ea2f58833",
+      "table": 18
+    },
+    "188": {
+      "bytes": 54,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            50941009
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Directly behind the Wizards' Tower."
+          ]
+        }
+      },
+      "sha256": "52020ee94fe0c8160f54b8b82e426227b11e0be3cbc5700f46cdcba9951cdd82",
+      "table": 18
+    },
+    "189": {
+      "bytes": 52,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            44272997
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "To the east of the Ranging guild."
+          ]
+        }
+      },
+      "sha256": "437e40b026c97367b36ac2dfcdf3e11c72d11a6f5a517dd47ff1389e92abaf14",
+      "table": 18
+    },
+    "191": {
+      "bytes": 48,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            51875105
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "West of the Champions' Guild."
+          ]
+        }
+      },
+      "sha256": "1130e5b474ed1444da2fb553884b8ecfbde4cc220bbfa1a1eaa37b9d3e4e96eb",
+      "table": 18
+    },
+    "192": {
+      "bytes": 59,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            49859910
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "At the standing stones north of Falador."
+          ]
+        }
+      },
+      "sha256": "f9bb7d9d0b59476ed05e854461612b870d3d0471758018d8aa6ff8418267e3e9",
+      "table": 18
+    },
+    "1924": {
+      "bytes": 56,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            389
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "00.13S 13.58E"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            463
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        }
+      },
+      "sha256": "c87e0e5c2605b1426942e005c269dff71a1c6c47fb4c17bff384d5d8aecab34a",
+      "table": 7
+    },
+    "1926": {
+      "bytes": 56,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            391
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "00.20S 23.15E"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            465
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "62fba7a060c5e7ec3e011deca2095d387958258dde8072c47aa5981f491437c1",
+      "table": 7
+    },
+    "1927": {
+      "bytes": 56,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            392
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "00.30N 24.16E"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            466
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "141da46fc6c444b02c1c42261a8537b8b935809765a6240c5637feb14fc20ad8",
+      "table": 7
+    },
+    "1928": {
+      "bytes": 56,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            393
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "00.31S 17.43E"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            467
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        }
+      },
+      "sha256": "a261a68065184c2871d64b2b165f4981b1775d0ca2c8aa5eb86456093536bdf2",
+      "table": 7
+    },
+    "193": {
+      "bytes": 68,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            42798490
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Brother Galahad's house, West of McGrubor's Wood."
+          ]
+        }
+      },
+      "sha256": "42a62b8b6b4feeeab3c7160d25d5a0b0c6467ff33e453dfd33530eb4b39dd91f",
+      "table": 18
+    },
+    "1933": {
+      "bytes": 56,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            398
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "02.48N 22.30E"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            472
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "3e919a2ca8ab2b3221d74bbad37ddf67d68da9cc33d63b2656d10cd37f6dc428",
+      "table": 7
+    },
+    "194": {
+      "bytes": 36,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            48663895
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "North of Falador."
+          ]
+        }
+      },
+      "sha256": "c49e9510c886d109fadd988d5279ad7ca4db2e81c0898c9459263270ad1597a7",
+      "table": 18
+    },
+    "1940": {
+      "bytes": 56,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            405
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "05.43N 23.05E"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            479
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "189934eaf4d3ff5abd941d89309c8e7cc833dea8c4ca6d35d0fe6680908a7e64",
+      "table": 7
+    },
+    "195": {
+      "bytes": 46,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            47631583
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "West of the Crafting Guild."
+          ]
+        }
+      },
+      "sha256": "ebb63a5f60fa2af006aee718bfe861714705bb1c0a0a4b16e3edf2f7e8842d40",
+      "table": 18
+    },
+    "196": {
+      "bytes": 64,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            43420831
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "North of the Tower of Life. Fairy ring (DJP)."
+          ]
+        }
+      },
+      "sha256": "ff4fbaf1b5171f4d03515d873b054a0e471fea0ea8e971c02ea04adbf3a838f1",
+      "table": 18
+    },
+    "1967": {
+      "bytes": 64,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            432
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "01.30N 20.01E"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            506
+          ]
+        },
+        "5": {
+          "types": [
+            74
+          ],
+          "values": [
+            1807
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "f0a980f3f5e08991c94bc73c6e819e748adce4095825f434df866224f224beca",
+      "table": 7
+    },
+    "1968": {
+      "bytes": 56,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            433
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "02.39N 29.58E"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            507
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            6
+          ]
+        }
+      },
+      "sha256": "82202bbef2e9dc81c6daeb5c0ad5f85dd05398b6a9f7f5bbce616e08aac0f713",
+      "table": 7
+    },
+    "1969": {
+      "bytes": 64,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            434
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "02.48N 08.05E"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            508
+          ]
+        },
+        "5": {
+          "types": [
+            74
+          ],
+          "values": [
+            1807
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        }
+      },
+      "sha256": "3d7ab0c52724e75d4fd71266b8acc7d5cc5c575086355cc5a3986cabad65b4e7",
+      "table": 7
+    },
+    "197": {
+      "bytes": 60,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            47910025
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Behind the Chemist's house in Rimmington."
+          ]
+        }
+      },
+      "sha256": "629f3678aa94243916ca012e1b482cf478aa70e2c2fec84b47c42a1a42b425a9",
+      "table": 18
+    },
+    "198": {
+      "bytes": 49,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            41553689
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Miscellania. Fairy ring (CIP)."
+          ]
+        }
+      },
+      "sha256": "6d898209cac520ea01b830122a3b48fa0362a5c2247f71b8a33af50c3f2e0fa2",
+      "table": 18
+    },
+    "199": {
+      "bytes": 71,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            56265922
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Mort Myre Swamp, west of Mort'ton. Fairy ring (BIP)."
+          ]
+        }
+      },
+      "sha256": "9a9769f7e63b3147643c0b11812abc2b488202dd971cdaa7930e1ef9967e04e7",
+      "table": 18
+    },
+    "200": {
+      "bytes": 55,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            40209566
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "At the entrance to the Ourania Cave."
+          ]
+        }
+      },
+      "sha256": "7c0baf671c3cd7125fa768bc27ac5182a4e71bc0dad37605e27706dd94799841",
+      "table": 18
+    },
+    "201": {
+      "bytes": 66,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            42241549
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "South-east of the Lighthouse. Fairy ring (ALP)."
+          ]
+        }
+      },
+      "sha256": "07b93804acebcca2fbb626c132b5bc77773d693fd467f7e3a2e3779e57efc43c",
+      "table": 18
+    },
+    "202": {
+      "bytes": 87,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            43699690
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Between Seers' Village and Rellekka. South-west of Fairy ring (CJR)."
+          ]
+        }
+      },
+      "sha256": "c03635b3557b8852691f43a1ecff689c7acf761a3cdc3193ea183009737bcc4d",
+      "table": 18
+    },
+    "2020": {
+      "bytes": 68,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            485
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "02.35S 11.52E"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            559
+          ]
+        },
+        "5": {
+          "types": [
+            74
+          ],
+          "values": [
+            1809,
+            1810
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        }
+      },
+      "sha256": "48fd76e09c1f7bbe8ff5d6fa54e92d117ef0e5528ee70e5569d21705e4f61230",
+      "table": 7
+    },
+    "2023": {
+      "bytes": 68,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            488
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "05.07S 13.26E"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            562
+          ]
+        },
+        "5": {
+          "types": [
+            74
+          ],
+          "values": [
+            1809,
+            1810
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        }
+      },
+      "sha256": "49303b11b51dc58b8c405e9ccc330dd1d6e94f6887f70ce3a7e9aefb1e8402c2",
+      "table": 7
+    },
+    "203": {
+      "bytes": 53,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            42863621
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Yanille anvils, south of the bank."
+          ]
+        }
+      },
+      "sha256": "d729b303ac00986ba34d2c65f5707ffac8c02c6bb8d388ffbe206bb3ba3f1d77",
+      "table": 18
+    },
+    "204": {
+      "bytes": 59,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            40766700
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "In the western section of West Ardougne."
+          ]
+        }
+      },
+      "sha256": "fab4414baa25ccdd387187d0d59b2fd8e83f9b4c8b01d23d0c162288e10b1a2d",
+      "table": 18
+    },
+    "205": {
+      "bytes": 86,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            49499976
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "South-east of the Wilderness Agility Course in level 50 Wilderness."
+          ]
+        }
+      },
+      "sha256": "4df68ea05de52ed5b933417ce2a8bd4555b903eb69aecf461b6ac366813ed517",
+      "table": 18
+    },
+    "206": {
+      "bytes": 65,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            44600586
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "South of the Legends' Guild. Fairy ring (BLR)."
+          ]
+        }
+      },
+      "sha256": "60fb154013b54549d5457846449b939667f8b03ef78ddda412f48b839bc851e7",
+      "table": 18
+    },
+    "2060": {
+      "bytes": 64,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            525
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            5
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "03.26N 12.18E"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            599
+          ]
+        },
+        "5": {
+          "types": [
+            74
+          ],
+          "values": [
+            1802
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        }
+      },
+      "sha256": "5599929b9a7d42c558d2b0235ebefd5e219295ecbe84d1be2fb6f09e80fdc278",
+      "table": 7
+    },
+    "2061": {
+      "bytes": 64,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            526
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            5
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "03.50N 09.07E"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            600
+          ]
+        },
+        "5": {
+          "types": [
+            74
+          ],
+          "values": [
+            1802
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "25dc5e54fe08c4b2d3fb0ba2c0571b0a436763ec41c47c281598edc4d7bcfe06",
+      "table": 7
+    },
+    "207": {
+      "bytes": 52,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            40127546
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "South-west of Tree Gnome Village."
+          ]
+        }
+      },
+      "sha256": "5d8594520cc48a831dcf269005c4ba47c99166dbd316421c7ac79f806545df22",
+      "table": 18
+    },
+    "2094": {
+      "bytes": 173,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            283
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            3,
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Cheer at the Druids' Circle. Equip a blue wizard hat, a bronze two-handed sword and HAM boots."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            357
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            7
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1606
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            28973
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            47910293
+          ]
+        }
+      },
+      "sha256": "63647560695c959a07e5896614b2d7f84e4117f7c4caa1d3b6e39fa06978bf9f",
+      "table": 9
+    },
+    "2096": {
+      "bytes": 169,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            285
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            3,
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Cheer for the monks at Port Sarim. Equip a coif, steel plateskirt and a sapphire necklace."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            359
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            7
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1608
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            28964
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            49974437
+          ]
+        }
+      },
+      "sha256": "68c2acc98b97a278b304daae98659ae3414f3f888a520789d975037438b404c7",
+      "table": 9
+    },
+    "2098": {
+      "bytes": 179,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            287
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Clap on the causeway to the Wizards' Tower. Equip an iron medium helmet, emerald ring and a white apron."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            361
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            20
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1610
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            28959
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            51039354
+          ]
+        }
+      },
+      "sha256": "c76f9cdc42de7b6633ea63b9f737ada1175e84f0f584fec3d4099507f9e96402",
+      "table": 9
+    },
+    "2100": {
+      "bytes": 191,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            289
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Dance a jig by the entrance to the Fishing Guild. Equip an emerald ring, a sapphire amulet, and a bronze chain body."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            363
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            13
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1612
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            28977
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            42732865
+          ]
+        }
+      },
+      "sha256": "e8e7f524a33535c049dd44911ef9f09febbf002f1e3f8ddd121d6b5619cbdfdd",
+      "table": 9
+    },
+    "2101": {
+      "bytes": 177,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            290
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            1,
+            4
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Dance at the crossroads north of Draynor. Equip an iron chain body, a sapphire ring and a longbow."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            364
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            12
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1613
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            28968
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            50973913
+          ]
+        }
+      },
+      "sha256": "5d5c37c736a0523c7fb02d28bdaa67294433be96b1cc22bcfe8afe68692e00a5",
+      "table": 9
+    },
+    "2103": {
+      "bytes": 166,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            292
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Dance in the Party Room. Equip a steel full helmet, steel platebody and an iron plateskirt."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            366
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            12
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1615
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            28972
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            49859883
+          ]
+        }
+      },
+      "sha256": "8a3752cc2baf5c64881337095d2f11b8526080983bee8fd74ce0f90381a0e92f",
+      "table": 9
+    },
+    "2104": {
+      "bytes": 170,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            293
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Dance in the shack in Lumbridge Swamp. Equip a bronze dagger, iron full helmet and a gold ring."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            367
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            12
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1616
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            28958
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            52448355
+          ]
+        }
+      },
+      "sha256": "a1a0cd1cd4a093d720a112845b5857080cc993836055b31375b6e71b8d937826",
+      "table": 9
+    },
+    "2106": {
+      "bytes": 171,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            295
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            6
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Headbang in the mine north of Al Kharid. Equip a desert shirt, leather gloves and leather boots."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            369
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            15
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1618
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            28965
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            54119641
+          ]
+        }
+      },
+      "sha256": "5b0c3a797c8f564ffc5f394b99dd7926c183da97ba7d7e6f7be5b25ef4601b7e",
+      "table": 9
+    },
+    "2107": {
+      "bytes": 172,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            296
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            4,
+            6
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Jump for joy at the beehives. Equip a desert shirt, green gnome robe bottoms and a steel axe."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            370
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            10
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1619
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            28974
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            45288814
+          ]
+        }
+      },
+      "sha256": "fd9fc1985dee88366cefcd6b835dfc544f8413a98be7c6918969b545fcd29662",
+      "table": 9
+    },
+    "2124": {
+      "bytes": 215,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            313
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            4,
+            8
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Cheer in the Barbarian Agility Arena. Headbang before you talk to me. Equip a steel platebody, maple shortbow and a Wilderness cape."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            442
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            7,
+            15
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1636
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            28992
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            41635294
+          ]
+        }
+      },
+      "sha256": "970686daa106efb96703b61755f0f24e8b4f1e2e88a66cc0a817740893bcca64",
+      "table": 9
+    },
+    "2125": {
+      "bytes": 200,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            314
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Cheer in the Edgeville general store. Dance before you talk to me. Equip a brown apron, leather boots and leather gloves."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            443
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            7,
+            12
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1637
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            29005
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            50417071
+          ]
+        }
+      },
+      "sha256": "cdf8d20270e5d6080879d8f4d90d1f56b812787f11a1db83bf34355d892e3fc3",
+      "table": 9
+    },
+    "2137": {
+      "bytes": 218,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            326
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            4,
+            5,
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Jump for joy in Yanille bank. Dance a jig before you talk to me. Equip a brown apron, adamantite medium helmet and snakeskin chaps."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            455
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            10,
+            13
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1649
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            28994
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            42650643
+          ]
+        }
+      },
+      "sha256": "e619f93f2b08e79a93c996da037e6f680511995122a450ebc8d554aba78e6e28",
+      "table": 9
+    },
+    "2139": {
+      "bytes": 198,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            328
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            4,
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Shrug in Catherby bank. Yawn before you talk to me. Equip a maple longbow, green d'hide chaps and an iron med helm."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            457
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            6,
+            11
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1651
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            29001
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            45993325
+          ]
+        }
+      },
+      "sha256": "5bd610762cf125d287ed8c79e74a55a2bd1921db01fdfbb6781fa7e992243d36",
+      "table": 9
+    },
+    "2140": {
+      "bytes": 224,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            329
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            1,
+            5
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Spin on the bridge by the Barbarian Village. Salute before you talk to me. Equip purple gloves, a steel kiteshield and a mithril full helmet."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            458
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            14,
+            21
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1652
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            28989
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            50957662
+          ]
+        }
+      },
+      "sha256": "e03acf0aeaef9b8c2acbc058815085bfee5c1065d55041b7ae2722f5995d4b85",
+      "table": 9
+    },
+    "2159": {
+      "bytes": 224,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            348
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            11,
+            4,
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Yawn in the rogues' general store. Beware of double agents! Equip an adamant square shield, blue dragon vambraces and a rune pickaxe."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            416
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            11
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1671
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            29013
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            49598067
+          ]
+        },
+        "9": {
+          "types": [
+            74
+          ],
+          "values": [
+            1804
+          ]
+        }
+      },
+      "sha256": "7c292bf9866aaee4f550c715388f91e583cad3c4050032cdc2867ec70226d8d7",
+      "table": 9
+    },
+    "2162": {
+      "bytes": 150,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            351
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            3,
+            8
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Bow upstairs in the Edgeville Monastery. Equip a completed prayer book."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            386
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1674
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            29029
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            50072986
+          ]
+        }
+      },
+      "sha256": "9cdbf9b619e6ceb337c54cc1fd08830411e008cca4a56c4691c14971098c5cfb",
+      "table": 9
+    },
+    "2173": {
+      "bytes": 145,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            362
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            3,
+            11
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Salute in the Warriors' guild bank. Equip only a black salamander."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            397
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            21
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1685
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            29028
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            46599633
+          ]
+        }
+      },
+      "sha256": "a0b7bdea2576f21e73a4635eb2bafe2fb96a47b0277f29f0d0f69d7cc1af4f3e",
+      "table": 9
+    },
+    "2182": {
+      "bytes": 167,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            371
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            5
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            11
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Clap in the magic axe hut. Beware of double agents! Equip only some flared trousers."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            422
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            20
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1694
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            29056
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            52203382
+          ]
+        },
+        "9": {
+          "types": [
+            74
+          ],
+          "values": [
+            1806
+          ]
+        }
+      },
+      "sha256": "fa7584f13d33ab3a781685b735975179ea4beceff8fd6ac3478509fc5e682536",
+      "table": 9
+    },
+    "2191": {
+      "bytes": 210,
+      "columnCount": 14,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            380
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            5
+          ]
+        },
+        "11": {
+          "types": [
+            0
+          ],
+          "values": [
+            1,
+            8
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Show your anger at the Wise old man. Beware of double agents! Equip an abyssal whip, a legend's cape and some spined chaps."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            431
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "6": {
+          "types": [
+            74
+          ],
+          "values": [
+            1709
+          ]
+        },
+        "7": {
+          "types": [
+            30
+          ],
+          "values": [
+            29059
+          ]
+        },
+        "8": {
+          "types": [
+            22
+          ],
+          "values": [
+            50711734
+          ]
+        },
+        "9": {
+          "types": [
+            74
+          ],
+          "values": [
+            1806
+          ]
+        }
+      },
+      "sha256": "d21ee595caaad3737d200bb7620ad626c76683205e1290025075e4172d6ec7d0",
+      "table": 9
+    },
+    "2229": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            107
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            191
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "ea02781f4f358ed20a4d9d15c97668ebc4ea9d09f072f2480a9ce2e8af07605e",
+      "table": 5
+    },
+    "2230": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            108
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            186
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "15727c151fe6a3c0600469e99420df23dd3e7d2987da80cb3252bb092b64c26a",
+      "table": 5
+    },
+    "2231": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            109
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            192
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        }
+      },
+      "sha256": "9712aaba9bafc85e016ca1b150a420d8bdc1c51a6003cba095faf4b199d7c762",
+      "table": 5
+    },
+    "2232": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            110
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            193
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "e2d2848757b97135e22e8f000d9fec9363280979b895fb39a4286093fe9c9dcd",
+      "table": 5
+    },
+    "2233": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            111
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            188
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "e4edf8fc0865d71a2688115c75351ddadfee529a9ae50da31091c84b9407c9da",
+      "table": 5
+    },
+    "2234": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            112
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            194
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        }
+      },
+      "sha256": "083cabe09054be3a669a7aefa485b0075a716e3639428a301e6452e236614324",
+      "table": 5
+    },
+    "2235": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            113
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            187
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "202dab51a3ef23530a483ff89035eceff1bd48ced57ec580f0e43956fe9b1e91",
+      "table": 5
+    },
+    "2236": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            114
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            195
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        }
+      },
+      "sha256": "cbb4206dbe2d03c748b651a4bb1ea41186af5b7f2f38321bfc4ca7c03ffa0912",
+      "table": 5
+    },
+    "2237": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            115
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            1046
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "b4e7b6010e0611ad9af984ba5be55aa45e923b7cefa859c2c3611fb98e1f37a8",
+      "table": 5
+    },
+    "2238": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            116
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            196
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "2957d8dada791d815e2933edf85d006107bac3e4ff6cb05274510caefb179bf8",
+      "table": 5
+    },
+    "2239": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            117
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            1047
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "2450329cdb7808dd566a5b33c4c2c6fb5fadd160e26b1590b665774a0bcf1278",
+      "table": 5
+    },
+    "2240": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            118
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            197
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        }
+      },
+      "sha256": "eb0e1176eb26eb647a7ec7a998131b0af13320460514e5adf4d5384226118a4e",
+      "table": 5
+    },
+    "2241": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            119
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            198
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            8
+          ]
+        }
+      },
+      "sha256": "aa691385d77deacbbb38e819eb0480befc9b946707db6fdf6d01df44156417e0",
+      "table": 5
+    },
+    "2242": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            120
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            199
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            5
+          ]
+        }
+      },
+      "sha256": "fc16a44f6c73509c6947068e1219280434f2d39f088b9275272d6ec92615a784",
+      "table": 5
+    },
+    "2243": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            121
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            200
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "2711bc7a077d64f4901f5d59962c5b05f533607d9f5678d59a9d395e481b907e",
+      "table": 5
+    },
+    "2244": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            122
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            201
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            8
+          ]
+        }
+      },
+      "sha256": "0ce277ca6f64ea1f82362940222e7b1f130a2bcecd99fc773e5168cd82fad5c1",
+      "table": 5
+    },
+    "2245": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            123
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            202
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "a52c45c4323fabd3852fa850e8e292fb4c7ec4014d30c0d1949b67cd6c7bc49a",
+      "table": 5
+    },
+    "2246": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            124
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            189
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "4cf9af961c5e2a9f269a85733f9d739ca04b52b377aae3eeff41b73549413662",
+      "table": 5
+    },
+    "2247": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            125
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            1048
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "f7f7b29f59f50bc8ebbd870982d3a6c1e16257105a7330f669dd1df2a2cb6856",
+      "table": 5
+    },
+    "2248": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            126
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            203
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "6827f2140a31cf309f78e54dbd6749fecb0637c3c28175d1053bd92192c65c80",
+      "table": 5
+    },
+    "2249": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            127
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            204
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "de47911d88f252b6fa0c4c576deee71e3f43179a7bfc6f048e1455a2da0cc161",
+      "table": 5
+    },
+    "2250": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            128
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            1049
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "5f9bef011700ee68e5e4540eeef36abd2aa245b1d57a3f1c69d27c1e7f3cc8ff",
+      "table": 5
+    },
+    "2251": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            129
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            1050
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            11
+          ]
+        }
+      },
+      "sha256": "e199264acfee535952674a63ba8783c9aa307d9c4b0f620d2ab603ee3fa711ce",
+      "table": 5
+    },
+    "2252": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            130
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            205
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            11
+          ]
+        }
+      },
+      "sha256": "d030e7a7734a90fcff1eb9bc800f3f8fa303fd6adfbd81cddd38afd987022684",
+      "table": 5
+    },
+    "2253": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            131
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            206
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "7c2d8798591246833aba2532554a2d9d8eabb52de8e857989681b4d1092fb332",
+      "table": 5
+    },
+    "2254": {
+      "bytes": 38,
+      "columnCount": 7,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            132
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        },
+        "2": {
+          "types": [
+            74
+          ],
+          "values": [
+            207
+          ]
+        },
+        "4": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "11e723bde61edc4efa28df9396266027b16e98bfee1652db6872d5a8ee030cd0",
+      "table": 5
+    },
+    "2264": {
+      "bytes": 57,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            928
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "GUHCHO"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            1032
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1223
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            5
+          ]
+        }
+      },
+      "sha256": "a4035d1722be60389b6cdda14a6c6cb562c78da14f4f55bce5858fdac33c710a",
+      "table": 6
+    },
+    "2267": {
+      "bytes": 66,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            931
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "XJABSE USBJCPSO"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            1034
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1226
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "f50d8a0f71ec4510ee5157221b93e2762c07ba94df80b6b150a5cc12868682ac",
+      "table": 6
+    },
+    "2269": {
+      "bytes": 64,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            933
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "ZHLUG ROG PDQ"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            1040
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1228
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            6
+          ]
+        }
+      },
+      "sha256": "f7df95297567ad1266a260b922ed0e684dc99f6ed22d3d15015084914e8971ab",
+      "table": 6
+    },
+    "2272": {
+      "bytes": 66,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            936
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "UZZU MUJHRKYYKJ"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            855
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1231
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "b61e8417198d9b8d8bf278398f79f8440f0083d59bbba50cd129c74e47465453",
+      "table": 6
+    },
+    "2276": {
+      "bytes": 59,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            940
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "IWPPLQTP"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            1042
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            830
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "0f60c6d30c10531908940ab3574f07cc6b57e834c35e03bde078f682745b3067",
+      "table": 6
+    },
+    "357": {
+      "bytes": 41,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            47910294
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Taverley stone circle."
+          ]
+        }
+      },
+      "sha256": "1ab31273dc20e2fcaaf3f87f663e2ef379d6e8ef2219a815e2d4d05a89c7b32c",
+      "table": 18
+    },
+    "359": {
+      "bytes": 56,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            49925285
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Near the Entrana ferry in Port Sarim."
+          ]
+        }
+      },
+      "sha256": "490a8f500b0a3dd560fffc917b2924984e75f4ba8c2acb6e0e46b1cef562d93e",
+      "table": 18
+    },
+    "361": {
+      "bytes": 65,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            51006588
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "On the bridge to the Misthalin Wizards' Tower."
+          ]
+        }
+      },
+      "sha256": "cadb6827e3ab955af5a2310394e6be165e996f4c88c869ccf61c3e1934874628",
+      "table": 18
+    },
+    "363": {
+      "bytes": 45,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            42765631
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Outside the Fishing Guild."
+          ]
+        }
+      },
+      "sha256": "6e1c5126f995c5ac5be7c450262b471ec3ff4a2cc5cbe9edac7a5ecc734a4a17",
+      "table": 18
+    },
+    "364": {
+      "bytes": 55,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            50941150
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Crossroads north of Draynor Village."
+          ]
+        }
+      },
+      "sha256": "16fe3e4b6fff0cb9606a69339a09066e948e751c8a3ef8a197239d2da2339d34",
+      "table": 18
+    },
+    "366": {
+      "bytes": 50,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            49892656
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Outside the Falador party room."
+          ]
+        }
+      },
+      "sha256": "162eea3ea7f50d80378e9b857229e24be4b91a4ff4d9c852f8b6aac3fc4a77c4",
+      "table": 18
+    },
+    "367": {
+      "bytes": 52,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            52481121
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Near the shed in Lumbridge Swamp."
+          ]
+        }
+      },
+      "sha256": "2a43dae8b70bf1add792f7c72548a796e5f1cc20ebee8d9c32b4e5feac7348de",
+      "table": 18
+    },
+    "369": {
+      "bytes": 34,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            54054105
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Al Kharid mine."
+          ]
+        }
+      },
+      "sha256": "a11614f14573bff77598d8be365c4f6697b8f9d30b3276fb67da55ba677e68cf",
+      "table": 18
+    },
+    "370": {
+      "bytes": 42,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            45206901
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Catherby beehive field."
+          ]
+        }
+      },
+      "sha256": "95fa2795b4f84767fb5aa7b0649d81c5deffc6a50d28189d591329218a04d1a8",
+      "table": 18
+    },
+    "386": {
+      "bytes": 64,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            318508444
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "South-east corner of the Edgeville monastery."
+          ]
+        }
+      },
+      "sha256": "542e9c1061a0151f352f4539a01c3a9a6acfb6ccfa035eafde86752f77172597",
+      "table": 18
+    },
+    "397": {
+      "bytes": 40,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            46599638
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Warriors' Guild bank."
+          ]
+        }
+      },
+      "sha256": "753d1460101cea743477525e5d7ea7e2ec3801d00317b99073ac4be7fa6bba4c",
+      "table": 18
+    },
+    "416": {
+      "bytes": 54,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            49581685
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Noterazzo's shop in the wilderness."
+          ]
+        }
+      },
+      "sha256": "7bf72e7d12e84dc9d1936c05e2ae4cd7a3984e66765d4e267131f10077aa7eee",
+      "table": 18
+    },
+    "422": {
+      "bytes": 50,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            52285304
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Outside the wilderness axe hut."
+          ]
+        }
+      },
+      "sha256": "e4a283d22ad4a69803d488fa4dde4b733e0e4192e27a4a3a3215275b11c9741b",
+      "table": 18
+    },
+    "431": {
+      "bytes": 57,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            50597046
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Behind Miss Schism in Draynor Village."
+          ]
+        }
+      },
+      "sha256": "1b62ff148e1c999baf22f269600accc69901ec309472e8ebdb1ba4d8402c0cc0",
+      "table": 18
+    },
+    "442": {
+      "bytes": 53,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            41815524
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Barbarian Outpost obstacle course."
+          ]
+        }
+      },
+      "sha256": "3059026a9498f7f3820b4c2093b288908f4fc6da1f8b2e4ec2ce1ca016ebcbeb",
+      "table": 18
+    },
+    "443": {
+      "bytes": 59,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            50466229
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "North of Evil Dave's house in Edgeville."
+          ]
+        }
+      },
+      "sha256": "2c5f90c926e57ae64e89c17f823538ca28629182086b15dfa6bd9a2bb2252b62",
+      "table": 18
+    },
+    "455": {
+      "bytes": 40,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            42765332
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Outside Yanille bank."
+          ]
+        }
+      },
+      "sha256": "9e0b7a3e17563c27ddf5a0191e6c47c5d66ef38576f0d694b3528bf36896cb74",
+      "table": 18
+    },
+    "457": {
+      "bytes": 41,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            46009712
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Outside Catherby bank."
+          ]
+        }
+      },
+      "sha256": "e7c70fdc904cd898f1d92aaa83b44159d4bf604946595805c2ed3e1cfd871f70",
+      "table": 18
+    },
+    "458": {
+      "bytes": 56,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            50875740
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "East of the Barbarian Village bridge."
+          ]
+        }
+      },
+      "sha256": "248d128ba90c1c685861e6bd1a808cfcc8300e6da92d23ba18fdc2fe2b894665",
+      "table": 18
+    },
+    "463": {
+      "bytes": 56,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            47303762
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "West of Banana plantation on Karamja."
+          ]
+        }
+      },
+      "sha256": "8d72cb104871ce85a5ee630f4a690f5d5e5f2f625315063c6b852bb81061f2cb",
+      "table": 18
+    },
+    "465": {
+      "bytes": 44,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            52169806
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "South of Lumbridge Swamp."
+          ]
+        }
+      },
+      "sha256": "a3ba68e8c2456918072c4659c18b5b163ed93ba9702e1fbb9656c052548ab3ff",
+      "table": 18
+    },
+    "466": {
+      "bytes": 43,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            52710505
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "East of Lumbridge Swamp."
+          ]
+        }
+      },
+      "sha256": "0074d3e4574269228127ff974c607dba3eaf709547af6cb0db95918383ce89c5",
+      "table": 18
+    },
+    "467": {
+      "bytes": 68,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            49269832
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Near the Asgarnian Ice Dungeon. Fairy ring (AIQ)."
+          ]
+        }
+      },
+      "sha256": "7693e16ab865c7308d3485e18b8e298e7eab6cd1959e8aed97d913a4e961a9c3",
+      "table": 18
+    },
+    "472": {
+      "bytes": 46,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            51776691
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "West of the H.A.M. Hideout."
+          ]
+        }
+      },
+      "sha256": "618fd99a1febe0d1ab17b594457d496acc183c669108e8fd97df57fa2bc356fd",
+      "table": 18
+    },
+    "479": {
+      "bytes": 66,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            52088080
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "In the cow pen north of the Lumbridge windmill."
+          ]
+        }
+      },
+      "sha256": "766735f9f5e637ceb0c1cb8f7d7d1e9ee58e52ce4333e4488777b73e6a4751b4",
+      "table": 18
+    },
+    "506": {
+      "bytes": 38,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            50482313
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Small Island (CLP)."
+          ]
+        }
+      },
+      "sha256": "b6a5bd9dc1fd5d82b51846250c5b3b8fe1355d481f6ca8a800d24bf4edc79bc6",
+      "table": 18
+    },
+    "507": {
+      "bytes": 43,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            55692462
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Behind the Emir's arena."
+          ]
+        }
+      },
+      "sha256": "f94747d0303064e31c85bf02d53d25b9bd3fc2d6edff2e039c020e77c36e3f89",
+      "table": 18
+    },
+    "508": {
+      "bytes": 39,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            44223667
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Little island (AIR)."
+          ]
+        }
+      },
+      "sha256": "12e9e8de70d6b4b54cfb9b3acc9c0d382dd92c111bcd2e8e98b5228bc5f0835e",
+      "table": 18
+    },
+    "559": {
+      "bytes": 123,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            46205958
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Tai Bwo Wannai. Hardwood Grove. 100 Trading sticks or elite Karamja diary completion is needed to enter."
+          ]
+        }
+      },
+      "sha256": "e9a35c591115dc3236ddfaa4b8492f9ba3b662a8847c35762d56fefa8e1e9f98",
+      "table": 18
+    },
+    "562": {
+      "bytes": 54,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            47025077
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "North-east corner in Shilo Village."
+          ]
+        }
+      },
+      "sha256": "39542b7e5af8c94e831e3370e306dd5a89c8dc8d5a96773105b717f52735b9ff",
+      "table": 18
+    },
+    "599": {
+      "bytes": 34,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            46435527
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Crandor island."
+          ]
+        }
+      },
+      "sha256": "21bdd1b35ff007ef6b848bc336eb2d1cda9024841957bd2230498eb86c4cb650",
+      "table": 18
+    },
+    "600": {
+      "bytes": 29,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            44764372
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Witchaven."
+          ]
+        }
+      },
+      "sha256": "4263960dba7dc9226f0f66d9d93798b6defc4999dc1949513f5512a52ab9b073",
+      "table": 18
+    },
+    "623": {
+      "bytes": 97,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            49810759
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Three standing stones inside a walled area. East of the northern Falador gate."
+          ]
+        }
+      },
+      "sha256": "5b7fdc4b70e4e0c1aa45f7af89e6f1b3d646a73b6e024b0af293dd52d4deba92",
+      "table": 18
+    },
+    "624": {
+      "bytes": 71,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            40275376
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Near the red mushrooms north-west of the Grand Tree."
+          ]
+        }
+      },
+      "sha256": "80fbab7896b9e7227e17fab52ca377915adc31d88188e82366189c38f4eaac64",
+      "table": 18
+    },
+    "632": {
+      "bytes": 67,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            46976474
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "The middle of the Warriors' Guild entrance hall."
+          ]
+        }
+      },
+      "sha256": "4c9cf1e37fbe4333cf7fd2ae85072c69a55512e94bdcce1a6d2e72b354c483ae",
+      "table": 18
+    },
+    "635": {
+      "bytes": 65,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            41340571
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "The entrance to the Waterbirth Island Dungeon."
+          ]
+        }
+      },
+      "sha256": "102edef91b6e399f254cfc68f001994f9884e84562b227740901154550b05fc8",
+      "table": 18
+    },
+    "649": {
+      "bytes": 77,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            51941165
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "On the spider covered hill north-west of Lava Dragon Isle."
+          ]
+        }
+      },
+      "sha256": "12345cb736d1699bbc3770c3ec1414fb662caab7008db829baec8c2eb1e6fcf7",
+      "table": 18
+    },
+    "653": {
+      "bytes": 60,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            50547895
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Outside Aggie's house in Draynor Village."
+          ]
+        }
+      },
+      "sha256": "b876c429fe5db265365cd464e47eaeb872ad532680c45b223717f324316e667a",
+      "table": 18
+    },
+    "670": {
+      "bytes": 63,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            47959729
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "North-east of the God Wars Dungeon entrance."
+          ]
+        }
+      },
+      "sha256": "d36fa95e703c40d5068c9ca0099da52b280ac94cb763bb91cd8f9fc1bbaa09ae",
+      "table": 18
+    },
+    "830": {
+      "bytes": 24,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36
+          ],
+          "values": [
+            "A puzzle box."
+          ]
+        }
+      },
+      "sha256": "a7f02dd649fa3756179f58e206a0718067b9ab73c53fa782c8bd06b6a26d52bf",
+      "table": 26
+    },
+    "835": {
+      "bytes": 44,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            3893
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            48352634
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "North of Falador."
+          ]
+        }
+      },
+      "sha256": "0e4049090025e605c2cdd242b4fdadb4a8b281c209097a5608d6795b9778190a",
+      "table": 15
+    },
+    "841": {
+      "bytes": 60,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            2881
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            52710762
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "The fur trader in Varrock square."
+          ]
+        }
+      },
+      "sha256": "ec141ac57cad51b5193bfae8d34626239f40ec47a293b7188a1f8c39b77fd008",
+      "table": 15
+    },
+    "843": {
+      "bytes": 38,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            3644
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            49581200
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Port Sarim."
+          ]
+        }
+      },
+      "sha256": "c038522ae9e900f19dba0ca298df8fdd1eaa9c1e54a931305cab72889b518732",
+      "table": 15
+    },
+    "855": {
+      "bytes": 76,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            2914
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            40979871
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "South of the Barbarian Outpost, in Otto's Grotto."
+          ]
+        }
+      },
+      "sha256": "b6c5bbc089961522c78abd04b359a20bbc0aff77686f9332f936607f8a783084",
+      "table": 15
+    },
+    "858": {
+      "bytes": 66,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            3647
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            48139344
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "In the Banana plantation on Musa Point."
+          ]
+        }
+      },
+      "sha256": "20a900b1f6d3feabea0f3c2ba24a224f1d3e31af003a3637703cb2b3f9c86c3f",
+      "table": 15
+    },
+    "884": {
+      "bytes": 52,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            306
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            53054612
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "East of Lumbridge Castle."
+          ]
+        }
+      },
+      "sha256": "3df9c3378774a46aa17a84a4aac990a99363c67b2dd0e3f1e76b70ec8eaddfb0",
+      "table": 15
+    },
+    "885": {
+      "bytes": 67,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            4965
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            41438298
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "In the Tree Gnome Village general store."
+          ]
+        }
+      },
+      "sha256": "b90b726780066975a0f43d5962f0a0bfdabb6b34f768bd13256ac2420b34d8ca",
+      "table": 15
+    },
+    "886": {
+      "bytes": 79,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            3142
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            39243166
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Near the Gnome Ball course in Tree Gnome Stronghold."
+          ]
+        }
+      },
+      "sha256": "763dfda4dead301e5acd3713fc7afefd467c36af2906061bb8fc2b73317eeb63",
+      "table": 15
+    },
+    "890": {
+      "bytes": 60,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            119
+          ]
+        },
+        "1": {
+          "types": [
+            32
+          ],
+          "values": [
+            6773
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            52923550
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "East of Lumbridge Castle."
+          ]
+        }
+      },
+      "sha256": "435625de5c0169851bfec81af20af83a174753020d362624c30aa78156a03bdb",
+      "table": 15
+    },
+    "893": {
+      "bytes": 55,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            4244
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            42699915
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Monastery south of Ardougne."
+          ]
+        }
+      },
+      "sha256": "e1f9e809a16ad5f42887cbb04606777dca7007dce1395d4207b08657d7594e08",
+      "table": 15
+    },
+    "897": {
+      "bytes": 39,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            3193
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            318313321
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Rogues' Den."
+          ]
+        }
+      },
+      "sha256": "0e9ae0cfbcb0472de60e3802292b175371042c8e7357a7adc73d7c7ab2a52141",
+      "table": 15
+    },
+    "898": {
+      "bytes": 51,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            2109
+          ]
+        },
+        "1": {
+          "types": [
+            32
+          ],
+          "values": [
+            2108
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            50597045
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Draynor Village."
+          ]
+        }
+      },
+      "sha256": "1449285ab321efcb598e6859fb12a850553c38799e2d0dc421687719cdb593b0",
+      "table": 15
+    },
+    "902": {
+      "bytes": 52,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            2996
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            56724965
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "East of the Slayer Tower."
+          ]
+        }
+      },
+      "sha256": "7fab20ce3b6dcd7c644548e3accc34a8da6555ffcf8fd09c246005c7d6c60c5c",
+      "table": 15
+    },
+    "916": {
+      "bytes": 64,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            6599
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            52137834
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Outside the Wilderness Resource Area."
+          ]
+        }
+      },
+      "sha256": "448177cfab8eda99d2a3de93bab677d647ae8de374c5e291ba485dbb4892243e",
+      "table": 15
+    },
+    "933": {
+      "bytes": 72,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            3105
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            52776082
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Talk to Hans walking around Lumbridge Castle."
+          ]
+        }
+      },
+      "sha256": "d40056dccf5d28743efa736299ed419152db3cf3039a5f11fe78ad7191492cb2",
+      "table": 15
+    },
+    "943": {
+      "bytes": 66,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            4280
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            50760890
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Ned is found north of the Draynor bank."
+          ]
+        }
+      },
+      "sha256": "255b789b8c70000bdec52e34f5f92a751e0fd5ab2c09e9c8c1a67d7f66bc2868",
+      "table": 15
+    },
+    "948": {
+      "bytes": 48,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            403
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            51848889
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "In Edgeville Dungeon."
+          ]
+        }
+      },
+      "sha256": "2fc25707f13bbcd4b7d1963464ebaeddc5823791d268b537ac8be0c9ab54fd07",
+      "table": 15
+    },
+    "951": {
+      "bytes": 36,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            7798
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            47254906
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Taverley."
+          ]
+        }
+      },
+      "sha256": "a9a675cb6efc0149b67b520eea91a4a70b0e9b2fb10b26b28f5880e50747c511",
+      "table": 15
+    },
+    "953": {
+      "bytes": 46,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            3200
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            45927782
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Near Catherby bank."
+          ]
+        }
+      },
+      "sha256": "7e7a3e4e7f9c070dd95b906717b675ea42c8b9934f4db1aec76cbc21017a91a8",
+      "table": 15
+    },
+    "955": {
+      "bytes": 58,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            3214
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            48745783
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Near the northern Falador gate."
+          ]
+        }
+      },
+      "sha256": "d4ddcdcff44f2af952d51c90a620a8cc69bfcc6c89bdb8ef02e7bd293e9e2d8c",
+      "table": 15
+    },
+    "963": {
+      "bytes": 45,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            3231
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            53677175
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Al Kharid Tannery."
+          ]
+        }
+      },
+      "sha256": "529d1a9b1ec424b850e685c69b03dfb1fcfa09fb6049feef599da975c0d68e18",
+      "table": 15
+    },
+    "971": {
+      "bytes": 67,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            6586
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            44780887
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Near Sorcerer's tower in Seers' Village."
+          ]
+        }
+      },
+      "sha256": "5c005ad377efddc55c67e3aa6aefc70adc9ac95ac99dd37ca7a44cf28c9bd95f",
+      "table": 15
+    },
+    "975": {
+      "bytes": 47,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            2812
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            53120135
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "In Lumbridge church."
+          ]
+        }
+      },
+      "sha256": "eafe444792fe1b1f6eaaf075dbd16e426fa7bc591be6edca5592e2e8aade4dab",
+      "table": 15
+    }
+  },
+  "source": "openrs2-2686 config 2/38",
+  "steps": [
+    {
+      "dbRow": 2101,
+      "key": "Clue scroll (easy) - Dance at the crossroads north of Draynor",
+      "wikiClueId": 290
+    },
+    {
+      "dbRow": 2106,
+      "key": "Clue scroll (easy) - Headbang in the mine north of Al Kharid",
+      "wikiClueId": 295
+    },
+    {
+      "dbRow": 2094,
+      "key": "Clue scroll (easy) - Cheer at the Druids' Circle",
+      "wikiClueId": 283
+    },
+    {
+      "dbRow": 2098,
+      "key": "Clue scroll (easy) - Clap on the causeway to the Wizards' Tower",
+      "wikiClueId": 287
+    },
+    {
+      "dbRow": 2107,
+      "key": "Clue scroll (easy) - Jump for joy at the beehives",
+      "wikiClueId": 296
+    },
+    {
+      "dbRow": 2231,
+      "key": "Clue scroll (easy) - At the standing stones north of Falador",
+      "wikiClueId": 109
+    },
+    {
+      "dbRow": 2232,
+      "key": "Clue scroll (easy) - Brother Galahad's house",
+      "wikiClueId": 110
+    },
+    {
+      "dbRow": 2233,
+      "key": "Clue scroll (easy) - Directly behind the Wizards' Tower",
+      "wikiClueId": 111
+    },
+    {
+      "dbRow": 1349,
+      "key": "Clue scroll (easy) - Dig between some ominous stones in Falador",
+      "wikiClueId": 844
+    },
+    {
+      "dbRow": 1350,
+      "key": "Clue scroll (easy) - Dig near some giant mushrooms",
+      "wikiClueId": 845
+    },
+    {
+      "dbRow": 1252,
+      "key": "Clue scroll (easy) - I wonder how many bronze shortswords he has handed out",
+      "wikiClueId": 655
+    },
+    {
+      "dbRow": 1244,
+      "key": "Clue scroll (easy) - One of the sailors in Port Sarim",
+      "wikiClueId": 647
+    },
+    {
+      "dbRow": 1344,
+      "key": "Clue scroll (easy) - Search the crate in Rommiks crafting shop in Rimmington",
+      "wikiClueId": 814
+    },
+    {
+      "dbRow": 1296,
+      "key": "Clue scroll (easy) - Search for a crate in Varrock Castle",
+      "wikiClueId": 766
+    },
+    {
+      "dbRow": 1280,
+      "key": "Clue scroll (easy) - Search the bucket in the Port Sarim jail",
+      "wikiClueId": 750
+    },
+    {
+      "dbRow": 2100,
+      "key": "Clue scroll (easy) - Dance a jig by the entrance to the Fishing Guild",
+      "wikiClueId": 289
+    },
+    {
+      "dbRow": 2104,
+      "key": "Clue scroll (easy) - Dance in the shack in Lumbridge Swamp",
+      "wikiClueId": 293
+    },
+    {
+      "dbRow": 2103,
+      "key": "Clue scroll (easy) - Dance in the Party Room",
+      "wikiClueId": 292
+    },
+    {
+      "dbRow": 2096,
+      "key": "Clue scroll (easy) - Cheer for the monks at Port Sarim",
+      "wikiClueId": 285
+    },
+    {
+      "dbRow": 2234,
+      "key": "Clue scroll (easy) - North of Falador.",
+      "wikiClueId": 112
+    },
+    {
+      "dbRow": 2229,
+      "key": "Clue scroll (easy) - West of the Champions' Guild",
+      "wikiClueId": 107
+    },
+    {
+      "dbRow": 2230,
+      "key": "Clue scroll (easy) - South-east Varrock mine",
+      "wikiClueId": 108
+    },
+    {
+      "dbRow": 1247,
+      "key": "Clue scroll (easy) - Speak to Hans to solve the clue",
+      "wikiClueId": 650
+    },
+    {
+      "dbRow": 1259,
+      "key": "Clue scroll (easy) - Speak to Doric, who lives north of Falador",
+      "wikiClueId": 662
+    },
+    {
+      "dbRow": 1258,
+      "key": "Clue scroll (easy) - Speak to Arhein in Catherby",
+      "wikiClueId": 661
+    },
+    {
+      "dbRow": 1271,
+      "key": "Clue scroll (easy) - Speak to Ellis in Al Kharid",
+      "wikiClueId": 674
+    },
+    {
+      "dbRow": 1246,
+      "key": "Clue scroll (easy) - Speak to Ned in Draynor Village",
+      "wikiClueId": 649
+    },
+    {
+      "dbRow": 1255,
+      "key": "Clue scroll (easy) - Speak to Gaius in Taverley",
+      "wikiClueId": 658
+    },
+    {
+      "dbRow": 1262,
+      "key": "Clue scroll (easy) - Talk to Cassie in Falador",
+      "wikiClueId": 665
+    },
+    {
+      "dbRow": 2125,
+      "key": "Clue scroll (medium) - Cheer in the Edgeville general store",
+      "wikiClueId": 314
+    },
+    {
+      "dbRow": 2139,
+      "key": "Clue scroll (medium) - Shrug in Catherby bank",
+      "wikiClueId": 328
+    },
+    {
+      "dbRow": 2140,
+      "key": "Clue scroll (medium) - Spin on the bridge by the Barbarian Village",
+      "wikiClueId": 329
+    },
+    {
+      "dbRow": 1924,
+      "key": "Clue scroll (medium) - 00.13S 13.58E",
+      "wikiClueId": 389
+    },
+    {
+      "dbRow": 1926,
+      "key": "Clue scroll (medium) - 00.20S 23.15E",
+      "wikiClueId": 391
+    },
+    {
+      "dbRow": 1927,
+      "key": "Clue scroll (medium) - 00.30N 24.16E",
+      "wikiClueId": 392
+    },
+    {
+      "dbRow": 1508,
+      "key": "Clue scroll (medium) - A BAKER",
+      "wikiClueId": 10
+    },
+    {
+      "dbRow": 1526,
+      "key": "Clue scroll (medium) - HALT US",
+      "wikiClueId": 28
+    },
+    {
+      "dbRow": 1514,
+      "key": "Clue scroll (medium) - AREA CHEF TREK",
+      "wikiClueId": 16
+    },
+    {
+      "dbRow": 2264,
+      "key": "Clue scroll (medium) - GUHCHO",
+      "wikiClueId": 928
+    },
+    {
+      "dbRow": 2267,
+      "key": "Clue scroll (medium) - XJABSE USBJCPSO",
+      "wikiClueId": 931
+    },
+    {
+      "dbRow": 2235,
+      "key": "Clue scroll (medium) - South of Draynor Village bank",
+      "wikiClueId": 113
+    },
+    {
+      "dbRow": 2240,
+      "key": "Clue scroll (medium) - Behind the Chemist's house in Rimmington",
+      "wikiClueId": 118
+    },
+    {
+      "dbRow": 2238,
+      "key": "Clue scroll (medium) - North of the Tower of Life",
+      "wikiClueId": 116
+    },
+    {
+      "dbRow": 2124,
+      "key": "Clue scroll (medium) - Cheer in the Barbarian Agility Arena",
+      "wikiClueId": 313
+    },
+    {
+      "dbRow": 2137,
+      "key": "Clue scroll (medium) - Jump for joy in Yanille bank",
+      "wikiClueId": 326
+    },
+    {
+      "dbRow": 2241,
+      "key": "Clue scroll (medium) - Miscellania",
+      "wikiClueId": 119
+    },
+    {
+      "dbRow": 2242,
+      "key": "Clue scroll (medium) - Mort Myre Swamp",
+      "wikiClueId": 120
+    },
+    {
+      "dbRow": 2243,
+      "key": "Clue scroll (medium) - At the entrance to the Ourania Cave",
+      "wikiClueId": 121
+    },
+    {
+      "dbRow": 2244,
+      "key": "Clue scroll (medium) - South-east of the Lighthouse",
+      "wikiClueId": 122
+    },
+    {
+      "dbRow": 2245,
+      "key": "Clue scroll (medium) - Between Seers' Village and Rellekka",
+      "wikiClueId": 123
+    },
+    {
+      "dbRow": 2246,
+      "key": "Clue scroll (medium) - To the east of the Ranging guild",
+      "wikiClueId": 124
+    },
+    {
+      "dbRow": 2236,
+      "key": "Clue scroll (medium) - West of the Crafting Guild",
+      "wikiClueId": 114
+    },
+    {
+      "dbRow": 2237,
+      "key": "Clue scroll (medium) - The crate in McGrubor's Wood",
+      "wikiClueId": 115
+    },
+    {
+      "dbRow": 2239,
+      "key": "Clue scroll (medium) - The crate west of the Clock Tower",
+      "wikiClueId": 117
+    },
+    {
+      "dbRow": 1928,
+      "key": "Clue scroll (medium) - 00.31S 17.43E",
+      "wikiClueId": 393
+    },
+    {
+      "dbRow": 1933,
+      "key": "Clue scroll (medium) - 02.48N 22.30E",
+      "wikiClueId": 398
+    },
+    {
+      "dbRow": 1940,
+      "key": "Clue scroll (medium) - 05.43N 23.05E",
+      "wikiClueId": 405
+    },
+    {
+      "dbRow": 2159,
+      "key": "Clue scroll (hard) - Yawn in the rogues' general store",
+      "wikiClueId": 348
+    },
+    {
+      "dbRow": 1967,
+      "key": "Clue scroll (hard) - 01.30N 20.01E",
+      "wikiClueId": 432
+    },
+    {
+      "dbRow": 1968,
+      "key": "Clue scroll (hard) - 02.39N 29.58E",
+      "wikiClueId": 433
+    },
+    {
+      "dbRow": 1969,
+      "key": "Clue scroll (hard) - 02.48N 08.05E",
+      "wikiClueId": 434
+    },
+    {
+      "dbRow": 1554,
+      "key": "Clue scroll (hard) - BLUE GRIM GUIDED",
+      "wikiClueId": 56
+    },
+    {
+      "dbRow": 1560,
+      "key": "Clue scroll (hard) - DO SAY MORE",
+      "wikiClueId": 62
+    },
+    {
+      "dbRow": 1567,
+      "key": "Clue scroll (hard) - RAT MAT WITHIN",
+      "wikiClueId": 69
+    },
+    {
+      "dbRow": 2276,
+      "key": "Clue scroll (hard) - IWPPLQTP",
+      "wikiClueId": 940
+    },
+    {
+      "dbRow": 2269,
+      "key": "Clue scroll (hard) - ZHLUG ROG PDQ",
+      "wikiClueId": 933
+    },
+    {
+      "dbRow": 2248,
+      "key": "Clue scroll (hard) - Yanille anvils",
+      "wikiClueId": 126
+    },
+    {
+      "dbRow": 2247,
+      "key": "Clue scroll (hard) - A crate in the Lumber Yard",
+      "wikiClueId": 125
+    },
+    {
+      "dbRow": 1417,
+      "key": "Clue scroll (hard) - 46 is my number",
+      "wikiClueId": 870
+    },
+    {
+      "dbRow": 1421,
+      "key": "Clue scroll (hard) - Aggie I see",
+      "wikiClueId": 874
+    },
+    {
+      "dbRow": 2252,
+      "key": "Clue scroll (hard) - South-east of the Wilderness Agility Course",
+      "wikiClueId": 130
+    },
+    {
+      "dbRow": 2253,
+      "key": "Clue scroll (hard) - South of the Legends' Guild",
+      "wikiClueId": 131
+    },
+    {
+      "dbRow": 2249,
+      "key": "Clue scroll (hard) - In the western section of West Ardougne",
+      "wikiClueId": 127
+    },
+    {
+      "dbRow": 2250,
+      "key": "Clue scroll (hard) - In a crate by the stairs to the Observatory Dungeon",
+      "wikiClueId": 128
+    },
+    {
+      "dbRow": 2251,
+      "key": "Clue scroll (hard) - In a crate at the Dark Warriors' Fortress",
+      "wikiClueId": 129
+    },
+    {
+      "dbRow": 1555,
+      "key": "Clue scroll (hard) - BY LOOK",
+      "wikiClueId": 57
+    },
+    {
+      "dbRow": 1556,
+      "key": "Clue scroll (hard) - C ON GAME HOC",
+      "wikiClueId": 58
+    },
+    {
+      "dbRow": 1563,
+      "key": "Clue scroll (hard) - MOTHERBOARD",
+      "wikiClueId": 65
+    },
+    {
+      "dbRow": 1568,
+      "key": "Clue scroll (hard) - SLIDE WOMAN",
+      "wikiClueId": 70
+    },
+    {
+      "dbRow": 2272,
+      "key": "Clue scroll (hard) - UZZU MUJHRKYYKJ",
+      "wikiClueId": 936
+    },
+    {
+      "dbRow": 2162,
+      "key": "Clue scroll (elite) - Bow upstairs in the Edgeville Monastery",
+      "wikiClueId": 351
+    },
+    {
+      "dbRow": 2173,
+      "key": "Clue scroll (elite) - Salute in the Warriors' guild bank",
+      "wikiClueId": 362
+    },
+    {
+      "dbRow": 2020,
+      "key": "Clue scroll (elite) - 02.35S 11.52E",
+      "wikiClueId": 485
+    },
+    {
+      "dbRow": 2023,
+      "key": "Clue scroll (elite) - 05.07S 13.26E",
+      "wikiClueId": 488
+    },
+    {
+      "dbRow": 1574,
+      "key": "Clue scroll (elite) - DR HITMAN",
+      "wikiClueId": 76
+    },
+    {
+      "dbRow": 1573,
+      "key": "Clue scroll (elite) - COOL NERD",
+      "wikiClueId": 75
+    },
+    {
+      "dbRow": 1445,
+      "key": "Clue scroll (elite) - W marks the spot",
+      "wikiClueId": 853
+    },
+    {
+      "dbRow": 1448,
+      "key": "Clue scroll (elite) - Three rule below and three sit at top",
+      "wikiClueId": 856
+    },
+    {
+      "dbRow": 2254,
+      "key": "Clue scroll (elite) - South-west of Tree Gnome Village",
+      "wikiClueId": 132
+    },
+    {
+      "dbRow": 1426,
+      "key": "Clue scroll (elite) - Show this to Sherlock",
+      "wikiClueId": 682
+    },
+    {
+      "dbRow": 2191,
+      "key": "Clue scroll (master) - Show your anger at the Wise old man",
+      "wikiClueId": 380
+    },
+    {
+      "dbRow": 2182,
+      "key": "Clue scroll (master) - Clap in the magic axe hut",
+      "wikiClueId": 371
+    },
+    {
+      "dbRow": 2060,
+      "key": "Clue scroll (master) - 03.26N 12.18E",
+      "wikiClueId": 525
+    },
+    {
+      "dbRow": 2061,
+      "key": "Clue scroll (master) - 03.50N 09.07E",
+      "wikiClueId": 526
+    },
+    {
+      "dbRow": 1469,
+      "key": "Clue scroll (master) - Anger Abbot Langley",
+      "wikiClueId": 721
+    },
+    {
+      "dbRow": 1468,
+      "key": "Clue scroll (master) - Robin wishes to see your finest ranged equipment",
+      "wikiClueId": 720
+    },
+    {
+      "dbRow": 1465,
+      "key": "Clue scroll (master) - Falo the bard wants to see you",
+      "wikiClueId": 717
+    },
+    {
+      "dbRow": 1492,
+      "key": "Clue scroll (master) - A massive battle rages beneath",
+      "wikiClueId": 891
+    }
+  ]
+}

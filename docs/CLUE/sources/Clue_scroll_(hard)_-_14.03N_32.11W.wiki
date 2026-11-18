@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = 
+|update = 
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = 
+|value = 20
+|weight = 0.020
+|id = undefined
+|leagueRegion = Kourend
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[coordinate clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 481
+|text = The coordinate reveals where to dig:<br><br>14.03N 32.11W
+|items = 
+|notes = [[Lake Molch]] dock west of [[Shayzien]] encampment.
+
+The clue has an additional challenge:
+
+Kill a [[Saradomin wizard]]
+|map = {{Map|1410,3611|mtype=pin|plane=0|mapID=-1}}
+}}

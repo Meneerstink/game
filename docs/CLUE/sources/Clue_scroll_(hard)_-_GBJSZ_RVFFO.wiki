@@ -1,0 +1,38 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = I need to decipher this.
+|value = 20
+|weight = 0.020
+|id = 19910
+|leagueRegion = General
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cipher clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+Players must have completed [[Fairytale II - Cure a Queen]] to complete the step; the version of the Fairy Queen in Zanaris '''will not work'''. Players can reach the hideout by using the [[Fairy rings]] in this sequence:
+
+# '''air''' (to a small island)
+# '''dlr''' (to another small island)
+# '''djq''' (to nowhere)
+# '''ajs''' (to the hideout)
+
+==Clue info==
+{{Clue info
+|id = 939
+|text = The cipher reveals who to speak to:<br><br>GBJSZ RVFFO
+|notes = Speak to the [[Fairy Queen]] in the [[Fairy Resistance Hideout]].
+The clue has an additional challenge:
+
+A [[puzzle box]].
+|map = {{Map|2347,4435|mtype=pin|plane=0|mapID=-1}}
+}}

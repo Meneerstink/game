@@ -1,0 +1,1048 @@
+{
+  "donorBlob": "3ce55b818^:game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailSteps.kt",
+  "donorBlobSha256": "c74545937705ebcb62bcf01e799178742c8e8b8bcbf8cfeeace434eadbefeecc",
+  "caveat": "Source-catalogue counts only; NOT actual active choices. No donor interface is reused by numeric coincidence.",
+  "originalLocations": 41,
+  "originalInCatalogue": 38,
+  "originalDeferred": 3,
+  "originalSourceTiers": {
+    "easy": 15,
+    "hard": 10,
+    "medium": 14,
+    "unresolved": 2
+  },
+  "originalInCatalogueTiers": {
+    "easy": 14,
+    "hard": 10,
+    "medium": 14
+  },
+  "initialSelectionRecords": 69,
+  "initialSelectionOriginalOverlap": 15,
+  "initialSelectionUniqueAdditions": 54,
+  "additionalUniqueSteps": 15,
+  "totalUniqueAdditions": 69,
+  "currentCatalogueRecords": 107,
+  "currentCatalogueTiers": {
+    "easy": 29,
+    "medium": 29,
+    "hard": 25,
+    "elite": 12,
+    "master": 12
+  },
+  "tornPartsAreOneChoice": true,
+  "records": [
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        2970,
+        3421,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 337,
+      "candidateSource": "Clue scroll (easy) - North of Falador.",
+      "sourcePoints": [
+        [
+          2970,
+          3415,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_North_of_Falador.",
+      "sourceFile": "Clue_scroll_(easy)_-_North_of_Falador..wiki",
+      "sourceSha256": "042ebbb6cec92c14af7be06995dce04c6baa89f4776306318a973c0f3d4ea038",
+      "sourceTier": "easy",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        3022,
+        3912,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 338,
+      "candidateSource": "Clue scroll (hard) - South-east of the Wilderness Agility Course",
+      "sourcePoints": [
+        [
+          3021,
+          3912,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_South-east_of_the_Wilderness_Agility_Course",
+      "sourceFile": "Clue_scroll_(hard)_-_South-east_of_the_Wilderness_Agility_Course.wiki",
+      "sourceSha256": "7adda851eb750bcf917fe97cb752810a482b3bba564680ec03bd8a99227921dc",
+      "sourceTier": "hard",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        2732,
+        3337,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 339,
+      "candidateSource": "Clue scroll (hard) - South of the Legends' Guild",
+      "sourcePoints": [
+        [
+          2722,
+          3338,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_South_of_the_Legends%27_Guild",
+      "sourceFile": "Clue_scroll_(hard)_-_South_of_the_Legends'_Guild.wiki",
+      "sourceSha256": "46f632cbe792592b40f5fd4b895a6099ac862fd78847abccb78969c3fd6aeca5",
+      "sourceTier": "hard",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        2535,
+        3866,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 340,
+      "candidateSource": "Clue scroll (medium) - Miscellania",
+      "sourcePoints": [
+        [
+          2536,
+          3865,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Miscellania",
+      "sourceFile": "Clue_scroll_(medium)_-_Miscellania.wiki",
+      "sourceSha256": "cbed4ac0ebae3b70123cb59b2b3c4081235ebe0aeb5ff6c2e9809bc6ee8910a3",
+      "sourceTier": "medium",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        3433,
+        3265,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 341,
+      "candidateSource": "Clue scroll (medium) - Mort Myre Swamp",
+      "sourcePoints": [
+        [
+          3434,
+          3266,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Mort_Myre_Swamp",
+      "sourceFile": "Clue_scroll_(medium)_-_Mort_Myre_Swamp.wiki",
+      "sourceSha256": "1962cf46d35a18f485b8d9859fa0ba5e8b62f750c36d09018b77f463f1e81c34",
+      "sourceTier": "medium",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        2455,
+        3230,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 342,
+      "candidateSource": "Clue scroll (medium) - At the entrance to the Ourania Cave",
+      "sourcePoints": [
+        [
+          2454,
+          3230,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_At_the_entrance_to_the_Ourania_Cave",
+      "sourceFile": "Clue_scroll_(medium)_-_At_the_entrance_to_the_Ourania_Cave.wiki",
+      "sourceSha256": "865a1380fc379a31700ddfc8de29743b4e48968c00545aedd8cc109b1b6d3db7",
+      "sourceTier": "medium",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        2578,
+        3598,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 343,
+      "candidateSource": "Clue scroll (medium) - South-east of the Lighthouse",
+      "sourcePoints": [
+        [
+          2578,
+          3597,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_South-east_of_the_Lighthouse",
+      "sourceFile": "Clue_scroll_(medium)_-_South-east_of_the_Lighthouse.wiki",
+      "sourceSha256": "e6216cea32ba0db44903b12e74570a959091804b13ac4fc324b87d9d8d1ca3f3",
+      "sourceTier": "medium",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        2666,
+        3562,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 344,
+      "candidateSource": "Clue scroll (medium) - Between Seers' Village and Rellekka",
+      "sourcePoints": [
+        [
+          2667,
+          3562,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Between_Seers%27_Village_and_Rellekka",
+      "sourceFile": "Clue_scroll_(medium)_-_Between_Seers'_Village_and_Rellekka.wiki",
+      "sourceSha256": "0da840aec88209a52f51fb89e63d1c3f846896ef0bd46cf2e52cc6dca67188a4",
+      "sourceTier": "medium",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        3166,
+        3360,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 346,
+      "candidateSource": "Clue scroll (easy) - West of the Champions' Guild",
+      "sourcePoints": [
+        [
+          3166,
+          3361,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_West_of_the_Champions%27_Guild",
+      "sourceFile": "Clue_scroll_(easy)_-_West_of_the_Champions'_Guild.wiki",
+      "sourceSha256": "8a5f2159f8347f622c537916e4385e135381b91e98811bfa1369832e46d2e56a",
+      "sourceTier": "easy",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        3289,
+        3372,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 347,
+      "candidateSource": "Clue scroll (easy) - South-east Varrock mine",
+      "sourcePoints": [
+        [
+          3290,
+          3373,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_South-east_Varrock_mine",
+      "sourceFile": "Clue_scroll_(easy)_-_South-east_Varrock_mine.wiki",
+      "sourceSha256": "f8aef7d6f7e6d02ecd646f28665ad590686fbc21db7e3fb47307b037f4258c69",
+      "sourceTier": "easy",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        3092,
+        3227,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 348,
+      "candidateSource": "Clue scroll (medium) - South of Draynor Village bank",
+      "sourcePoints": [
+        [
+          3092,
+          3226,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_South_of_Draynor_Village_bank",
+      "sourceFile": "Clue_scroll_(medium)_-_South_of_Draynor_Village_bank.wiki",
+      "sourceSha256": "054f6f23d4c3cae3eeca0253a71e17a8601fdc7e0e4b711f71b7cc992b15920a",
+      "sourceTier": "medium",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": true,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        2702,
+        3429,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 349,
+      "candidateSource": "Clue scroll (medium) - To the east of the Ranging guild",
+      "sourcePoints": [
+        [
+          2702,
+          3429,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_To_the_east_of_the_Ranging_guild",
+      "sourceFile": "Clue_scroll_(medium)_-_To_the_east_of_the_Ranging_guild.wiki",
+      "sourceSha256": "91863fce7972d8b9bfe3ed1c13a7f444ac59f801ef30d2a313e60b690007c89e",
+      "sourceTier": "medium",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        3309,
+        3504,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 350,
+      "candidateSource": "Clue scroll (hard) - A crate in the Lumber Yard",
+      "sourcePoints": [
+        [
+          3309,
+          3503,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_A_crate_in_the_Lumber_Yard",
+      "sourceFile": "Clue_scroll_(hard)_-_A_crate_in_the_Lumber_Yard.wiki",
+      "sourceSha256": "525f4bad07c263b68be4dbee7bc0aaa1f0f5b8031fba746ae2ab3afd34a63a68",
+      "sourceTier": "hard",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": true,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        3043,
+        3398,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 351,
+      "candidateSource": "Clue scroll (easy) - At the standing stones north of Falador",
+      "sourcePoints": [
+        [
+          3043,
+          3398,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_At_the_standing_stones_north_of_Falador",
+      "sourceFile": "Clue_scroll_(easy)_-_At_the_standing_stones_north_of_Falador.wiki",
+      "sourceSha256": "f42b420bceb8a3d3bd481c983aa660a965ad106d9e2f0075c5e2713f9027bc65",
+      "sourceTier": "easy",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": true,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        2906,
+        3294,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 352,
+      "candidateSource": "Clue scroll (medium) - West of the Crafting Guild",
+      "sourcePoints": [
+        [
+          2907,
+          3295,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_West_of_the_Crafting_Guild",
+      "sourceFile": "Clue_scroll_(medium)_-_West_of_the_Crafting_Guild.wiki",
+      "sourceSha256": "d0c5ad715cdecbbfc5ae76bc3bff5c9e1e30993ecd7f84c52d5d93074c21bc35",
+      "sourceTier": "medium",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        2616,
+        3077,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 353,
+      "candidateSource": "Clue scroll (hard) - Yanille anvils",
+      "sourcePoints": [
+        [
+          2616,
+          3077,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Yanille_anvils",
+      "sourceFile": "Clue_scroll_(hard)_-_Yanille_anvils.wiki",
+      "sourceSha256": "a1a2125d26a40e7366552117dd12117f4236333599eaaa38ff72093e1a178b50",
+      "sourceTier": "hard",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": true,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        2612,
+        3482,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 354,
+      "candidateSource": "Clue scroll (easy) - Brother Galahad's house",
+      "sourcePoints": [
+        [
+          2612,
+          3482,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Brother_Galahad%27s_house",
+      "sourceFile": "Clue_scroll_(easy)_-_Brother_Galahad's_house.wiki",
+      "sourceSha256": "cd59136e4726372aaaa1874718b664d04b48e53c8b47c035202df6a5319dec7f",
+      "sourceTier": "easy",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": true,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        2658,
+        3487,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 355,
+      "candidateSource": "Clue scroll (medium) - The crate in McGrubor's Wood",
+      "sourcePoints": [
+        [
+          2658,
+          3488,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_The_crate_in_McGrubor%27s_Wood",
+      "sourceFile": "Clue_scroll_(medium)_-_The_crate_in_McGrubor's_Wood.wiki",
+      "sourceSha256": "d8a31f7a110dc2f5361807855415c3cdda27617681645359508f32cddc67df18",
+      "sourceTier": "medium",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        2488,
+        3308,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 357,
+      "candidateSource": "Clue scroll (hard) - In the western section of West Ardougne",
+      "sourcePoints": [
+        [
+          2488,
+          3308,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_In_the_western_section_of_West_Ardougne",
+      "sourceFile": "Clue_scroll_(hard)_-_In_the_western_section_of_West_Ardougne.wiki",
+      "sourceSha256": "56d20159ae790721c0fb7c68b87ffb64b76cf76bfe409ca3b13ba553986fe44c",
+      "sourceTier": "hard",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        2457,
+        3183,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 358,
+      "candidateSource": "Clue scroll (hard) - In a crate by the stairs to the Observatory Dungeon",
+      "sourcePoints": [
+        [
+          2457,
+          3182,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_In_a_crate_by_the_stairs_to_the_Observatory_Dungeon",
+      "sourceFile": "Clue_scroll_(hard)_-_In_a_crate_by_the_stairs_to_the_Observatory_Dungeon.wiki",
+      "sourceSha256": "a975ec676cda6d08ea638685126debfefdbeb54b5d070b844de35643d74b3f46",
+      "sourceTier": "hard",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        3026,
+        3629,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 359,
+      "candidateSource": "Clue scroll (hard) - In a crate at the Dark Warriors' Fortress",
+      "sourcePoints": [
+        [
+          3026,
+          3628,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_In_a_crate_at_the_Dark_Warriors%27_Fortress",
+      "sourceFile": "Clue_scroll_(hard)_-_In_a_crate_at_the_Dark_Warriors'_Fortress.wiki",
+      "sourceSha256": "3b4224941b0664ff71cfce9cd7a40f208c1dbc24ae59e3bfeff4d4ef2c306a0a",
+      "sourceTier": "hard",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        2650,
+        3231,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 360,
+      "candidateSource": "Clue scroll (medium) - North of the Tower of Life",
+      "sourcePoints": [
+        [
+          2650,
+          3231,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_North_of_the_Tower_of_Life",
+      "sourceFile": "Clue_scroll_(medium)_-_North_of_the_Tower_of_Life.wiki",
+      "sourceSha256": "e79b89c6d8f1a4985197cf3e281e0c47edd9cf55e156b3366b57a2a2ecd0d4ba",
+      "sourceTier": "medium",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": true,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        2565,
+        3249,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 361,
+      "candidateSource": "Clue scroll (medium) - The crate west of the Clock Tower",
+      "sourcePoints": [
+        [
+          2565,
+          3248,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_The_crate_west_of_the_Clock_Tower",
+      "sourceFile": "Clue_scroll_(medium)_-_The_crate_west_of_the_Clock_Tower.wiki",
+      "sourceSha256": "f886e858b8f679e0ef021865a37538e019bf690e21fc04044d5107684eb21efc",
+      "sourceTier": "medium",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "MAP",
+      "donorPoint": [
+        2923,
+        3209,
+        0
+      ],
+      "donorHint": null,
+      "donorInterface": 362,
+      "candidateSource": "Clue scroll (medium) - Behind the Chemist's house in Rimmington",
+      "sourcePoints": [
+        [
+          2924,
+          3209,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Behind_the_Chemist%27s_house_in_Rimmington",
+      "sourceFile": "Clue_scroll_(medium)_-_Behind_the_Chemist's_house_in_Rimmington.wiki",
+      "sourceSha256": "3ee934f53e6cfdde1e36c37b78ac0882173b73fa6f4f5ec4f616b845645cc783",
+      "sourceTier": "medium",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": true,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "EMOTE",
+      "donorPoint": [
+        3298,
+        3287,
+        0
+      ],
+      "donorHint": "Headbang in the mine north of Al Kharid.",
+      "donorInterface": null,
+      "candidateSource": "Clue scroll (easy) - Headbang in the mine north of Al Kharid",
+      "sourcePoints": [
+        [
+          3299,
+          3289,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Headbang_in_the_mine_north_of_Al_Kharid",
+      "sourceFile": "Clue_scroll_(easy)_-_Headbang_in_the_mine_north_of_Al_Kharid.wiki",
+      "sourceSha256": "128f2a3b5e78562e8a231fb2e51be6cadaec52c02cfc058a6e7f87f7b1d82cc4",
+      "sourceTier": "easy",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": true,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "EMOTE",
+      "donorPoint": [
+        2917,
+        3166,
+        0
+      ],
+      "donorHint": "Salute in the banana plantation. Beware of double agents!",
+      "donorInterface": null,
+      "candidateSource": "Clue scroll (hard) - Salute in the banana plantation",
+      "sourcePoints": [
+        [
+          2914,
+          3168,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Salute_in_the_banana_plantation",
+      "sourceFile": "Clue_scroll_(hard)_-_Salute_in_the_banana_plantation.wiki",
+      "sourceSha256": "89d534c745ac0d413da29041fc1a53c62356d046165e1dce2e12d526de58057a",
+      "sourceTier": "hard",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": true,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "EMOTE",
+      "donorPoint": [
+        2547,
+        3554,
+        0
+      ],
+      "donorHint": "Cheer in the Barbarian Agility Arena.",
+      "donorInterface": null,
+      "candidateSource": "Clue scroll (medium) - Cheer in the Barbarian Agility Arena",
+      "sourcePoints": [
+        [
+          2552,
+          3556,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Cheer_in_the_Barbarian_Agility_Arena",
+      "sourceFile": "Clue_scroll_(medium)_-_Cheer_in_the_Barbarian_Agility_Arena.wiki",
+      "sourceSha256": "f65ebad4fdab7767bb3cfccfae911f884474b98ffce835470fb1a911540543ff",
+      "sourceTier": "medium",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "EMOTE",
+      "donorPoint": [
+        2757,
+        3445,
+        0
+      ],
+      "donorHint": "Jump for joy at the beehives.",
+      "donorInterface": null,
+      "candidateSource": "Clue scroll (easy) - Jump for joy at the beehives",
+      "sourcePoints": [
+        [
+          2759,
+          3445,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Jump_for_joy_at_the_beehives",
+      "sourceFile": "Clue_scroll_(easy)_-_Jump_for_joy_at_the_beehives.wiki",
+      "sourceSha256": "3c1e42a6293205db21d60e955311d90bfabf1106ade8cd1f695de034ba42451a",
+      "sourceTier": "easy",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": true,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "EMOTE",
+      "donorPoint": [
+        3111,
+        3296,
+        0
+      ],
+      "donorHint": "Dance at the crossroads north of Draynor.",
+      "donorInterface": null,
+      "candidateSource": "Clue scroll (easy) - Dance at the crossroads north of Draynor",
+      "sourcePoints": [
+        [
+          3109,
+          3294,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dance_at_the_crossroads_north_of_Draynor",
+      "sourceFile": "Clue_scroll_(easy)_-_Dance_at_the_crossroads_north_of_Draynor.wiki",
+      "sourceSha256": "f8c2643657e7de62efefb7860a0eedfaa92ae1f48f91905ceddb2a8861cc3f73",
+      "sourceTier": "easy",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": true,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "EMOTE",
+      "donorPoint": [
+        2923,
+        3484,
+        0
+      ],
+      "donorHint": "Cheer at the Druid's Circle.",
+      "donorInterface": null,
+      "candidateSource": "Clue scroll (easy) - Cheer at the Druids' Circle",
+      "sourcePoints": [
+        [
+          2924,
+          3478,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Cheer_at_the_Druids%27_Circle",
+      "sourceFile": "Clue_scroll_(easy)_-_Cheer_at_the_Druids'_Circle.wiki",
+      "sourceSha256": "37d68d705b226010b79f4677ebef0ee7dbcc5f0bf0f97ef5e0fe5c5e0ca2ded8",
+      "sourceTier": "easy",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": true,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "EMOTE",
+      "donorPoint": [
+        3314,
+        3241,
+        0
+      ],
+      "donorHint": "Bow or curtsy in the ticket office of the Duel Arena.",
+      "donorInterface": null,
+      "candidateSource": "Clue scroll (easy) - Bow in the office of the Emir's Arena",
+      "sourcePoints": [
+        [
+          3314,
+          3241,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Bow_in_the_office_of_the_Emir%27s_Arena",
+      "sourceFile": "Clue_scroll_(easy)_-_Bow_in_the_office_of_the_Emir's_Arena.wiki",
+      "sourceSha256": "a9daadd2d175c169dee624edcf1b08ee55a72fb40c3720cd19967ff34af2d28e",
+      "sourceTier": "easy",
+      "inCurrentCatalogue": false,
+      "overlapsInitial69": false,
+      "status": "pending source UI/scene/handler review"
+    },
+    {
+      "kind": "EMOTE",
+      "donorPoint": [
+        2613,
+        3386,
+        0
+      ],
+      "donorHint": "Dance a jig by the entrance to the fishing guild.",
+      "donorInterface": null,
+      "candidateSource": "Clue scroll (easy) - Dance a jig by the entrance to the Fishing Guild",
+      "sourcePoints": [
+        [
+          2610,
+          3391,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dance_a_jig_by_the_entrance_to_the_Fishing_Guild",
+      "sourceFile": "Clue_scroll_(easy)_-_Dance_a_jig_by_the_entrance_to_the_Fishing_Guild.wiki",
+      "sourceSha256": "246c8a1a7539b00c800ae940ba6d2a305b46f970c78acab6681632add61cf87d",
+      "sourceTier": "easy",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "EMOTE",
+      "donorPoint": [
+        2586,
+        3422,
+        0
+      ],
+      "donorHint": "Blow a raspberry in the Fishing Guild bank.",
+      "donorInterface": null,
+      "candidateSource": "Clue scroll (hard) - Blow a raspberry in the Fishing Guild bank",
+      "sourcePoints": [
+        [
+          2588,
+          3419,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Blow_a_raspberry_in_the_Fishing_Guild_bank",
+      "sourceFile": "Clue_scroll_(hard)_-_Blow_a_raspberry_in_the_Fishing_Guild_bank.wiki",
+      "sourceSha256": "652f294fe617ebcd6b5fce30d8a0dd48882b4a996676f878912a13f3dd8eb02d",
+      "sourceTier": "hard",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": true,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "EMOTE",
+      "donorPoint": [
+        3203,
+        3169,
+        0
+      ],
+      "donorHint": "Dance in the shack in Lumbridge Swamp.",
+      "donorInterface": null,
+      "candidateSource": "Clue scroll (easy) - Dance in the shack in Lumbridge Swamp",
+      "sourcePoints": [
+        [
+          3203,
+          3169,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dance_in_the_shack_in_Lumbridge_Swamp",
+      "sourceFile": "Clue_scroll_(easy)_-_Dance_in_the_shack_in_Lumbridge_Swamp.wiki",
+      "sourceSha256": "1d9c325c9634d9b1a09c980708b1639f4af287206cf765e38ba276dbf43f49f7",
+      "sourceTier": "easy",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "EMOTE",
+      "donorPoint": [
+        3045,
+        3376,
+        0
+      ],
+      "donorHint": "Dance in the Party Room.",
+      "donorInterface": null,
+      "candidateSource": "Clue scroll (easy) - Dance in the Party Room",
+      "sourcePoints": [
+        [
+          3045,
+          3376,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dance_in_the_Party_Room",
+      "sourceFile": "Clue_scroll_(easy)_-_Dance_in_the_Party_Room.wiki",
+      "sourceSha256": "d213f7b523261163bcd539387d822d2e059569b2ff41d53097c5c5ed67151848",
+      "sourceTier": "easy",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "EMOTE",
+      "donorPoint": [
+        3048,
+        3234,
+        0
+      ],
+      "donorHint": "Cheer for the monks at Port Sarim.",
+      "donorInterface": null,
+      "candidateSource": "Clue scroll (easy) - Cheer for the monks at Port Sarim",
+      "sourcePoints": [
+        [
+          3047,
+          3237,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Cheer_for_the_monks_at_Port_Sarim",
+      "sourceFile": "Clue_scroll_(easy)_-_Cheer_for_the_monks_at_Port_Sarim.wiki",
+      "sourceSha256": "ab8eb4ccea33071710d356f8859300945a6c4021eb52ff6b4b3ef4d381166327",
+      "sourceTier": "easy",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "EMOTE",
+      "donorPoint": [
+        3294,
+        3933,
+        0
+      ],
+      "donorHint": "Shrug in the Rogue's Castle found deep in the North Eastern Wilderness. Beware of double agents!",
+      "donorInterface": null,
+      "candidateSource": null,
+      "sourcePoints": null,
+      "source": null,
+      "sourceFile": null,
+      "sourceSha256": null,
+      "sourceTier": null,
+      "inCurrentCatalogue": false,
+      "overlapsInitial69": false,
+      "status": "no current pinned source identity"
+    },
+    {
+      "kind": "EMOTE",
+      "donorPoint": [
+        3025,
+        3701,
+        0
+      ],
+      "donorHint": "Yawn in the rogues' general store. Beware of double agents!",
+      "donorInterface": null,
+      "candidateSource": "Clue scroll (hard) - Yawn in the rogues' general store",
+      "sourcePoints": [
+        [
+          3026,
+          3701,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Yawn_in_the_rogues%27_general_store",
+      "sourceFile": "Clue_scroll_(hard)_-_Yawn_in_the_rogues'_general_store.wiki",
+      "sourceSha256": "7b155e8713b6febbd0926c45369eb10f817f38f809be76d4f679bae56505806e",
+      "sourceTier": "hard",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": true,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "EMOTE",
+      "donorPoint": [
+        3113,
+        3180,
+        0
+      ],
+      "donorHint": "Clap on the causeway to the Wizard's Tower.",
+      "donorInterface": null,
+      "candidateSource": "Clue scroll (easy) - Clap on the causeway to the Wizards' Tower",
+      "sourcePoints": [
+        [
+          3113,
+          3196,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Clap_on_the_causeway_to_the_Wizards%27_Tower",
+      "sourceFile": "Clue_scroll_(easy)_-_Clap_on_the_causeway_to_the_Wizards'_Tower.wiki",
+      "sourceSha256": "bea869de9294d7096f627e07c4ce45589e619ba45f271d86ae52f642772bac7e",
+      "sourceTier": "easy",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": true,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "EMOTE",
+      "donorPoint": [
+        2611,
+        3091,
+        0
+      ],
+      "donorHint": "Jump for joy in Yanille bank.",
+      "donorInterface": null,
+      "candidateSource": "Clue scroll (medium) - Jump for joy in Yanille bank",
+      "sourcePoints": [
+        [
+          2610,
+          3092,
+          0
+        ]
+      ],
+      "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Jump_for_joy_in_Yanille_bank",
+      "sourceFile": "Clue_scroll_(medium)_-_Jump_for_joy_in_Yanille_bank.wiki",
+      "sourceSha256": "ec8e2c574697f6410f7e6e47bbb3036d4081cd741529622e4475130e949e0a49",
+      "sourceTier": "medium",
+      "inCurrentCatalogue": true,
+      "overlapsInitial69": false,
+      "status": "source handler/asset gates still apply"
+    },
+    {
+      "kind": "EMOTE",
+      "donorPoint": [
+        3240,
+        3609,
+        0
+      ],
+      "donorHint": "Shrug in the Zamorak Temple found in the Eastern Wilderness. Beware of double agents!",
+      "donorInterface": null,
+      "candidateSource": null,
+      "sourcePoints": null,
+      "source": null,
+      "sourceFile": null,
+      "sourceSha256": null,
+      "sourceTier": null,
+      "inCurrentCatalogue": false,
+      "overlapsInitial69": false,
+      "status": "no current pinned source identity"
+    }
+  ]
+}

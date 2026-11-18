@@ -1,0 +1,32 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[22 June]] [[2021]]
+|update = A Kingdom Divided
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 25792
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[music clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 625
+|text = The clue reveals who to speak to:<br><br>I'd like to hear some music.
+Come and see me on the bridge in
+Falador Park, and play:
+Regal Pomp
+Thanks,
+Cecilia
+|notes = Speak to [[Cecilia]] on the bridge in Falador Park. Play the [[music]] track [[Regal Pomp]].
+|map = {{Map|2990,3384|mtype=pin|plane=0|mapID=-1}}
+}}

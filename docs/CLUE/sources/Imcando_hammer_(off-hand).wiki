@@ -1,0 +1,76 @@
+{{Otheruses|def=no|the mainhand mode of this hammer|Imcando hammer}}
+{{Infobox Item
+|name = Imcando hammer (off-hand)
+|image = [[File:Imcando hammer (off-hand).png]]
+|release = [[14 August]] [[2024]]
+|update = Slayer Partners
+|members = Yes{{efn|May only be equipped in a members' world. However, upon logging into a free-to-play world, the hammer retains its usual functionality, regardless of the player's membership status.}}
+|quest = No
+|tradeable = No
+|equipable = Yes
+|stackable = No
+|noteable = 
+|options = Wield, Swap, Drop
+|examine = It's good for holding and hitting things!
+|value = 1
+|weight = 2.000
+|id = 29775
+}}
+[[File:Imcando hammer (off-hand) detail.png|left|100px]]
+'''Imcando hammer (off-hand)''' is a variant of the [[Imcando hammer]] that can be equipped in the [[shield slot]]. A broken Imcando hammer is obtained through smashing [[barronite deposit]]s on the [[Barronite Crusher|barronite crusher]] in the [[Ruins of Camdozaal]] after completing the [[Below Ice Mountain]] [[quest]]. Once repaired by [[Ramarno]], the hammer can be swapped between its normal and off-hand variants by using the "Swap" option.
+
+The hammer functions identically to the normal variant. The off-hand variant is particularly useful at [[Motherlode Mine]] as it allows the player to repair [[Strut|broken struts]] while still having a [[pickaxe]] equipped, and without taking up any inventory space.
+
+Although the main hand variant can be handed back to [[Ramarno]] for [[Barronite shards]], attempting to return the off-hand hammer will not work.
+{{Costume storage|magic wardrobe}}
+
+It can also be used in a [[free-to-play]] [[Server|world]], despite being a [[members object]]. Though it can only be equipped in a [[members]]' world, if it is already equipped or in the player's inventory upon logging into a free-to-play world, the hammer retains its usual functionality, regardless of the player's membership status.
+
+==Combat stats==
+{{Infobox Bonuses
+|astab = 0
+|aslash = 0
+|acrush = 0
+|amagic = 0
+|arange = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|drange = 0
+|str = 0
+|rstr = 0
+|mdmg = 0
+|prayer = 0
+|slot = shield
+|image = [[File:Imcando hammer (off-hand) equipped male.png|120px]]
+|altimage = [[File:Imcando hammer (off-hand) equipped female.png|120px]]
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 21 August 2024
+|update = Miscellaneous Fixes
+|change = 
+* The item has been renamed from "Imcando hammer (offhand)" to "Imcando hammer (off-hand)".
+* The hammer now correctly works with [[infernal eel]]s and [[coconut]]s.
+}}
+{{Subject changes footer}}
+
+==Used in recommended equipment==
+{{Used in recommended equipment|Imcando hammer (off-hand)}}
+
+==Trivia==
+*When using the hammer, it will still strike from the main-hand.
+*The off-hand and normal Imcando Hammer can be equipped at the same time
+
+==See also==
+* [[Amy's saw (off-hand)]]
+* [[Bruma torch (off-hand)]]
+
+==Notes==
+{{Notelist}}
+
+{{Ruins of Camdozaal}}
+{{Tools}}

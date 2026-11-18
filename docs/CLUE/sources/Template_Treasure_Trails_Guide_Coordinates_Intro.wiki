@@ -1,0 +1,27 @@
+{{mainonly|[[Category:Treasure Trails]]}}
+During a [[Treasure Trail]], a '''coordinate clue''' is a [[clue scroll]] that contains a set of coordinates. These coordinates indicate a precise point somewhere on the surface where the next clue scroll or treasure casket is buried.
+
+Coordinates are presented in the following format:[[File:Coordinate map.png|right|200px|(click to enlarge)]]
+
+<blockquote>'''03 degrees 00 minutes north/south<br />02 degrees 00 minutes east/west'''</blockquote>
+
+In ''Old School RuneScape'', one square of space is equivalent to 15/8 (1.875) minutes of arc. 0°00' degrees north and 0°00' degrees east is located in the middle of the [[Observatory]]. {{Map|x=2440|y=3161|r=5|align=right|width=200|height=200|mtype=square}}
+
+A [[chart]], [[sextant]] and [[watch]] may be used to determine one's present coordinates, but if using a guide to find the coordinates, players will only require a [[spade]] to dig up the clue.
+
+On [[Hard clue scroll|hard]] Treasure Trails, digging on the correct spot will cause a hostile level 108 [[Saradomin wizard]] to appear when outside of the [[Wilderness]], otherwise the level 65 [[Zamorak wizard]] will appear. These wizards must be defeated in order to dig again to retrieve the clue scroll or treasure casket.
+
+The [[Saradomin wizard]] will immediately attack the player with a poisoned [[dragon dagger]]. They will change attack styles between Melee and Magic to counter protection [[prayer]]s if activated within melee distance. Keeping distance while praying [[Protect from Magic]] will cause them to attack only with Magic, allowing the player to negate all damage. The player may choose to pray [[Protect from Melee]] to prevent the poison on the first hit, then switch to [[Protect from Magic]] once at a distance. Alternatively, an [[antipoison]] may be used.
+
+The [[Zamorak wizard]] will immediately attack the player with the [[Flames of Zamorak]] spell. Unlike their [[Saradomin wizard]] counterparts, they attack exclusively with [[Magic]], do not deal poison and all damage can be negated with [[Protect from Magic]]. They are also generally weaker, having low [[Hitpoints]] and low [[Defence]] (except against [[Magic]]).
+
+On [[Elite clue scroll|elite]] Treasure Trails, digging on the correct spot will cause either a level 97 [[Armadylean guard]] or a level 125 [[Bandosian guard]] to appear, which must be defeated before the next [[clue scroll]] or the treasure casket may be dug up. Armadylean guards must be killed with either [[Ranged]] or [[Magic]] attacks, since they are in the form of an [[Aviansie]]. It is advised to use the [[Protect from Missiles]] prayer when fighting them, and [[Protect from Melee]] when fighting Bandosian guards.
+
+On [[Clue scroll (master)|master]] Treasure Trails, digging in the correct spot will cause either three [[Ancient Wizard]]s (levels 112, 98, 98) in [[multi-combat]] to appear, or a level 140 [[Brassican Mage]], which need to be defeated before the next [[clue scroll]] or the treasure casket may be dug up. If the coordinates are located in a [[multi-combat area]], three Ancient wizards, each attacking with a unique [[attack style]], will appear. [[Melee]] wizards are [[poisonous]], with poison dealing 8 damage to a player. In [[single-combat]] zones, a Brassican Mage will appear, and its attacks cannot be stopped by [[protection prayers]].
+
+Following is a list of all known coordinate clues and their corresponding locations. The list is organised into ascending numerical value (for example, 00:00 north first, then 00:05 south, then 00:13 north, continuing accordingly). Shorthand writing is used together with normal writing. An example: 09°34'N, 25°12'E = 09 degrees and 34 minutes north, 25 degrees and 12 minutes east.
+•
+'''Remember: You must have a [[spade]] with you to dig up coordinate clues.'''
+
+Note that some of the clues may require [[skill]] or [[quest]] requirements before you will be able to get to that location.'
+These quests, which must be finished or partially completed, include: [[Bone Voyage]], [[Regicide]], [[Legends' Quest]], [[Nature Spirit]], [[The Grand Tree]], [[Fairytale II - Cure a Queen]], [[Troll Stronghold]], [[Cabin Fever]], [[The Fremennik Trials]], and [[Watchtower]]. Some coordinates will also require a certain skill levels to complete the clue, though the required level is low.

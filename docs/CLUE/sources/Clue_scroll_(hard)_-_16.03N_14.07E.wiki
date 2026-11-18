@@ -1,0 +1,34 @@
+{{External|rs=Clue scroll (hard) - 15 degrees 48 minutes north, 13 degrees 52 minutes east}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Perhaps someone at the observatory can teach me to navigate?
+|value = 20
+|weight = 0.020
+|id = 3526
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[coordinate clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 452
+|text = The coordinate reveals where to dig:<br><br>16.03N 14.07E
+|items = 
+|notes = On the summit of [[Trollheim]].
+
+The clue has an additional challenge:
+
+Kill a [[Saradomin wizard]]
+|map = {{Map|2892,3675|mtype=pin|plane=0|mapID=-1}}
+}}

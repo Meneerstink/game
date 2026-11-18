@@ -1,0 +1,90 @@
+[
+  {
+    "key": "Clue scroll (medium) - Yawn in the Castle Wars lobby",
+    "reason": "Unresolved optional equipment alternatives",
+    "items": [
+      {
+        "osrs": 20211,
+        "local": null,
+        "name": "Team cape zero"
+      },
+      {
+        "osrs": 20214,
+        "local": null,
+        "name": "Team cape x"
+      },
+      {
+        "osrs": 20217,
+        "local": null,
+        "name": "Team cape i"
+      }
+    ]
+  },
+  {
+    "key": "Clue scroll (medium) - XJABSE USBJCPSO",
+    "npc": "Wizard Traiborn",
+    "reason": "NPC absent from target cache"
+  },
+  {
+    "key": "Clue scroll (medium) - Cheer in the Barbarian Agility Arena",
+    "reason": "Unresolved optional equipment alternatives",
+    "items": [
+      {
+        "osrs": 20211,
+        "local": null,
+        "name": "Team cape zero"
+      },
+      {
+        "osrs": 20214,
+        "local": null,
+        "name": "Team cape x"
+      },
+      {
+        "osrs": 20217,
+        "local": null,
+        "name": "Team cape i"
+      }
+    ]
+  },
+  {
+    "key": "Clue scroll (hard) - BLUE GRIM GUIDED",
+    "npc": "Lumbridge Guide",
+    "reason": "NPC absent from target cache"
+  },
+  {
+    "key": "Clue scroll (elite) - Show this to Sherlock",
+    "npc": "Sherlock",
+    "reason": "NPC absent from target cache"
+  },
+  {
+    "key": "Clue scroll (master) - Show your anger at the Wise old man",
+    "reason": "Unresolved optional equipment alternatives",
+    "items": [
+      {
+        "osrs": 20405,
+        "local": null,
+        "name": "Abyssal whip"
+      },
+      {
+        "osrs": 26482,
+        "local": null,
+        "name": "Abyssal whip (or)"
+      },
+      {
+        "osrs": 26484,
+        "local": null,
+        "name": "Abyssal tentacle (or)"
+      }
+    ]
+  },
+  {
+    "key": "Clue scroll (master) - Falo the bard wants to see you",
+    "npc": "Falo the Bard",
+    "reason": "NPC absent from target cache"
+  },
+  {
+    "key": "master:sherlock",
+    "npc": "Sherlock",
+    "reason": "NPC absent from target cache"
+  }
+]

@@ -1,0 +1,32 @@
+{{External|rs=Clue scroll (easy) - Falador statue crossroads}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[20 February]] [[2006]]
+|update = Updates, updates and more updates...
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Part of the world map, but where?
+|value = 20
+|weight = 0.020
+|id = 7236
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[map clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 112
+|text = The map reveals where to dig:
+
+[[File:Map clue Falador statue crossroads.png]]
+|items = 
+|notes = 
+|map = {{Map|2970,3415|mtype=pin|plane=0|mapID=-1}}
+}}

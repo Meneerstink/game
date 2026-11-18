@@ -178,6 +178,7 @@ object DropViewer {
             }
         }
         val underBoss = minions.values.flatten().map { it.key }.toSet()
+        group("CLUES", "Clues", null, false, sources.filter { it.group == DropSources.Group.CLUES })
         val monsters = sources.filter { it.group == DropSources.Group.MONSTERS && it.key !in underBoss }.sortedWith(compareBy({ it.name.lowercase() }, { it.level }))
         val monstersOpen = "MONSTERS" in open
         out += Slot(true, "G:MONSTERS", "Monsters", null, null, monstersOpen, false, -1)
@@ -360,7 +361,11 @@ object DropViewer {
         val coxModel = if (source.kind == DropSources.Kind.COX) {
             gg.rsmod.plugins.content.activity.cox.CoxIds.loc(29881)?.let { N108Ui.locModel(world, it) } ?: -1
         } else -1
-        if (coxModel >= 0) {
+        if (source.modelItem >= 0) {
+            N108Ui.item(player, i, V.MODEL, source.modelItem, N108Ui.NO_COUNT)
+            N108Ui.anim(player, i, V.MODEL, -1)
+            N108Ui.hidden(player, i, V.MODEL, false)
+        } else if (coxModel >= 0) {
             N108Ui.plainModel(player, N108Ui.hash(i, V.MODEL), coxModel, COX_ZOOM, COX_XAN, false, COX_YAN)
             N108Ui.anim(player, i, V.MODEL, -1)
             N108Ui.hidden(player, i, V.MODEL, false)
@@ -522,6 +527,8 @@ object DropViewer {
                 "$where$opened"
             }
             DropSources.Kind.BARROWS -> "All six brothers${dot}Chests <col=ffffff>${N108Ui.number(kc)}</col>"
+            DropSources.Kind.CLUE -> "Caskets opened <col=ffffff>${N108Ui.number(kc)}</col>"
+            DropSources.Kind.IMPLING_JAR -> "Loot from one jar"
             // N462: the chances are those of one reference raid (DropSources.toaView); the count is the account's completions.
             DropSources.Kind.TOA -> "Solo Normal, ${N108Ui.number(DropSources.TOA_REFERENCE_POINTS)} points${dot}Raids <col=ffffff>${N108Ui.number(player.attr[gg.rsmod.plugins.content.activity.toa.ToaChest.COMPLETIONS] ?: 0)}</col>"
             // CoX: the chances of one reference raid (DropSources.coxView); the count is the account's completions.

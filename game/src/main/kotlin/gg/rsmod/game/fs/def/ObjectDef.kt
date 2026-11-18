@@ -183,27 +183,25 @@ class ObjectDef(
                     varp = -1
                 }
 
-                if (opcode == 92) {
-                    buf.readUnsignedShort()
-                }
+                val fallback = if (opcode == 92) buf.readUnsignedShort().let { if (it == 65535) -1 else it } else -1
 
                 val count = buf.readUnsignedByte().toInt()
 
-                transforms = Array(count + 1) { 0 }
+                // Include the fallback just as the real 667 LocType decoder does.
+                transforms = Array(count + 2) { fallback }
                 for (i in 0..count) {
                     val transform = buf.readUnsignedShort()
                     transforms!![i] = if (transform == 65535) -1 else transform
                 }
             }
-            242 -> {
-                // CLUE STASH scenery (client c1de063f LocType 242, GPT-B gpt-b/clue-scrolls-7): 77/92 with g4 destination ids. An
-                // unknown opcode was skipped without its payload, so the rest of the 23 STASH definitions was read out of step.
+            242 -> { // CLUE wide multiloc IDs; legacy opcodes 77/92 retain their byte layout.
                 varbit = buf.readUnsignedShort().let { if (it == 65535) -1 else it }
                 varp = buf.readUnsignedShort().let { if (it == 65535) -1 else it }
-                buf.readInt() // fallback (the 92 'default' id, which this decoder also does not keep)
+                val fallback = buf.readInt()
                 val count = buf.readUnsignedByte().toInt()
-                transforms = Array(count + 1) { 0 }
+                transforms = Array(count + 2) { fallback }
                 for (i in 0..count) transforms!![i] = buf.readInt()
+                require(transforms!!.all { it >= -1 }) { "Invalid wide object transform" }
             }
             78 -> {
                 ambientSound = buf.readUnsignedShort()

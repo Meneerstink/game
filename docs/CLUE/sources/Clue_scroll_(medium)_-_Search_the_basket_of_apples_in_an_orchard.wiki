@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[16 June]] [[2021]]
+|update = A Kingdom Divided
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 25783
+|leagueRegion = Kourend
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[cryptic clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 843
+|text = The cryptic reveals where to search:<br><br>Search the basket of apples in an orchard, south of the unknown grave surrounded by white roses.
+|items = 
+|notes = Search the middle apple basket in the apple orchard north of [[Hosidius]].
+|map = {{Map|1718,3626|mtype=pin|plane=0|mapID=-1}}
+}}

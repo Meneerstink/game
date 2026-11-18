@@ -1,0 +1,63 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 12082
+|leagueRegion = Asgarnia&Morytania,Asgarnia&Wilderness
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[emote clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 358
+|tier = elite
+|emote = Laugh
+|location = [[Fountain of Heroes]] under the [[Heroes' Guild]]
+|text = The emote reveals <br><br>Laugh by the fountain of heroes. Equip splitbark legs, dragon boots and a Rune longsword.
+|items = Equip [[splitbark legs]], [[dragon boots]] and a [[Rune longsword]].
+|equipment1 = Splitbark legs
+|equipment2 = Dragon boots
+|equipment2alt1 = Dragon boots (g)
+|equipment2alt1price1 = Dragon boots
+|equipment2alt1price2 = Dragon boots ornament kit
+|equipment2alt2 = Primordial boots
+|equipment2alt3 = Avernic treads (pr)
+|equipment2alt3price1 = Avernic treads
+|equipment2alt3price2 = Primordial boots
+|equipment2alt3price3 = Demon tear
+|equipment2alt3price3qty = 4000
+|equipment2alt4 = Avernic treads (pr)(et)
+|equipment2alt4price1 = Avernic treads
+|equipment2alt4price2 = Primordial boots
+|equipment2alt4price3 = Eternal boots
+|equipment2alt4price4 = Demon tear
+|equipment2alt4price4qty = 8000
+|equipment2alt5 = Avernic treads (pr)(pe)
+|equipment2alt5price1 = Avernic treads
+|equipment2alt5price2 = Primordial boots
+|equipment2alt5price3 = Pegasian boots
+|equipment2alt5price4 = Demon tear
+|equipment2alt5price4qty = 8000
+|equipment2alt6 = Avernic treads (max)
+|equipment2alt6price1 = Avernic treads
+|equipment2alt6price2 = Primordial boots
+|equipment2alt6price3 = Pegasian boots
+|equipment2alt6price4 = Eternal boots
+|equipment2alt6price5 = Demon tear
+|equipment2alt6price5qty = 12000
+|equipment3 = Rune longsword
+|notes = Perform the [[laugh]] emote near the [[Fountain of Heroes]],<br>found in the basement of the [[Heroes' Guild]].
+|map = {{Map|2920,9893|mtype=pin|plane=0|mapID=-1}}
+}}

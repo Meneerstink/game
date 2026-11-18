@@ -1,0 +1,34 @@
+{{External|rs}}
+{{Infobox NPC
+|name = Mandrith
+|image = [[File:Mandrith.png|110px]]
+|release = [[13 March]] [[2014]]
+|update = Rejuvenating the Wilderness: More risk, more reward
+|members = Yes
+|race = [[Human]]
+|location = [[Resource Area]]
+|shop = None
+|gender = Male
+|options = Talk-to
+|examine = A collector of ancient artefacts.
+|map = {{Map|name=Mandrith|x=3184|y=3945|r=2|mtype=square}}
+|id = 6599
+|leagueRegion = Wilderness
+}}
+[[File:Mandrith chathead.png|left]]
+'''Mandrith''' guards the [[Resource Area]] in the deep [[Wilderness]]. He allows players to enter the arena for a fee of 7,500 coins. However, players will only need to pay 6,000 coins to enter if they have completed the medium [[Wilderness Diary]], 3,750 coins if they have completed the hard Wilderness Diary, and can enter free of charge if they have completed the elite Wilderness Diary.
+
+==Treasure Trails==
+{{Anagram|Mandrith|elite|[[Clue scroll (elite) - DR HITMAN|DR HITMAN]]}}. The answer to the challenge scroll is '''28'''.<br/>
+{{Anagram|Mandrith|master|DIM THARN}}. He will give the player a [[puzzle box]] or a [[light box]].
+
+No fee is required to complete Mandrith's clue steps, he stands outside the gate.
+
+==Dialogue==
+{{hastranscript|NPC}}
+
+==Trivia==
+* Mandrith was originally added in ''RuneScape 2'' in December 2007. He was originally added to host the original iteration of [[Bounty Hunter]], and was later given the ability to buy [[ancient artefacts]] from players similar to how the [[Emblem Trader]] does in ''Old School RuneScape''. The [[artefacts]] found next to him in ''Old School RuneScape'' is a reference to this.
+** In ''RuneScape 3'' in 2019, he was also made a [[Slayer Master]].
+
+{{Wilderness content}}

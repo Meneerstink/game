@@ -1,0 +1,38 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10246
+|leagueRegion = Karamja
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[emote clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 10246
+|tier = hard
+|emote = Salute
+|text = The emote reveals <br><br>Salute in the banana plantation. Beware of double agents! Equip a diamond ring, amulet of power, and nothing on your chest and legs.
+|location = West side of the [[banana plantation]] in [[Musa Point]]
+|items = Equip a [[diamond ring]], [[amulet of power]], and nothing on your chest and legs.
+|equipment1 = Diamond ring
+|equipment2 = Amulet of power
+|notes = Perform the [[salute]] emote near the west side of the [[Karamja]] [[banana plantation]].
+The clue has an additional challenge:
+
+Kill a [[Double agent]].
+|map = {{Map|2914,3168|mtype=pin|plane=0|mapID=-1}}
+}}

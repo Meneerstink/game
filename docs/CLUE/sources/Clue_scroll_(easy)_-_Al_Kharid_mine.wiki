@@ -1,0 +1,31 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Part of the world map, but where?
+|value = 20
+|weight = 0.020
+|id = 12179
+|leagueRegion = Desert
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[map clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 106
+|text = The map reveals where to dig:
+
+[[File:Map clue Al Kharid mines.png]]
+|items = 
+|notes = [[Al Kharid mine]].
+|map = {{Map|3300,3291|mtype=pin|plane=0|mapID=-1}}
+}}

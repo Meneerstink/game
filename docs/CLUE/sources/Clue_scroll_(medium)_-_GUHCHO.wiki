@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 19772
+|leagueRegion = Morytania
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[cipher clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 928
+|text = The cipher reveals who to speak to:<br><br>GUHCHO
+|notes = Speak to [[Drezel]] in [[Paterdomus]].
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''Please solve this for x: 7x - 28=21''
+
+Answer: '''7'''
+|map = {{Map|3440,9895|mtype=pin|plane=0|mapID=-1}}
+}}

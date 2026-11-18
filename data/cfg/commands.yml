@@ -1540,3 +1540,9 @@
   usage: "::botunlock ruinous"
   description: "Test accounts (teamtest*) only: Desert Treasure II finished + Ruinous powers book read, so the bot can use the Ruinous book."
   example: "::botunlock ruinous"
+
+- name: cluestep
+  rank: owner
+  usage: "::cluestep <easy|medium|hard|elite|78> [list|step id|unique text]"
+  description: "Client test: choose an installed step on your ordinary clue; normal trail length, requirements and rewards remain."
+  example: "::cluestep hard BLUE GRIM"

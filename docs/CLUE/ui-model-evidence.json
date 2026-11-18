@@ -1,0 +1,30 @@
+[
+  {
+    "osrsModel": 3395,
+    "sourceSha256": "946f17668e9f676001da2f5c52c94c1ed5b1467505b3cb2bdc986c52cc40aca4",
+    "sameLocalId": 3395,
+    "localSha256": "e5d572ac02a76fe9614a2882902295e3fe5c78bb9e5d919ce17d829b5e1a3f47",
+    "identical": false
+  },
+  {
+    "osrsModel": 1226,
+    "sourceSha256": "3afcbfe9c21eae315ee3dbe5d11b2ff29219b99075918ed48b64d533fec7db1a",
+    "sameLocalId": 1226,
+    "localSha256": "699ad627b3eacb0f2e3709a9f4c90eb15b0ca755a6225717c5695a19b6242014",
+    "identical": false
+  },
+  {
+    "osrsModel": 3438,
+    "sourceSha256": "c1931a6765fb267b5297802dedecd003329a1cc6cfef5927b2e6d97822aa57ba",
+    "sameLocalId": 3438,
+    "localSha256": "e319ae2a7463de321c6fd384c12a110b3c393bfc8fddaa8f2f5e7f5dc923c729",
+    "identical": false
+  },
+  {
+    "osrsModel": 4695,
+    "sourceSha256": "ba0ae62fa1106cfed9720645a87c0c50c389bee2f95ed5798bd6424e58c3832f",
+    "sameLocalId": 4695,
+    "localSha256": "21cd391ecc3fb9248b8eb4c643a8f38491e76fa776cc25239ea289de7bf40ade",
+    "identical": false
+  }
+]

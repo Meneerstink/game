@@ -1,0 +1,34 @@
+{{Cache}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[23 July]] [[2025]]
+|update = Varlamore: The Final Dawn Out Now
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 30933
+|leagueRegion = Varlamore
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[cipher clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 988
+|text = The cipher reveals who to speak to:<br><br>CUTE HI
+|notes = Speak to [[Teicuh]].
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''If a death rune costs 220 coins, an air rune costs 3 coins, and a water rune costs 4 coins, how many coins do I need to cast Water Blast 17 times?''
+
+Answer: '''4097'''
+|map = {{Map|1212,3119|mtype=pin|plane=0|mapID=-1}}
+}}

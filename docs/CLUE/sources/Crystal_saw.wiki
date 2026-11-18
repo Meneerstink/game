@@ -1,0 +1,80 @@
+{{External|rs}}
+{{Infobox Item
+|name = Crystal saw
+|image = [[File:Crystal saw.png]]
+|release = [[15 August]] [[2006]]
+|update = The Eyes of Glouphrie
+|members = Yes
+|quest = [[The Eyes of Glouphrie]]
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Check, Destroy
+|destroy = Maybe Brimstail will have another...
+|examine = A magical saw.
+|value = 10
+|weight = 1.000
+|id = 9625
+|leagueRegion = Kandarin
+}}
+[[File:Crystal saw detail.png|left|150px]]
+A '''crystal saw''' is an item made from a [[crystal saw seed]] by invoking a [[singing bowl]] in either [[Brimstail's cave]] or [[Prifddinas]]. The seed is awarded to players who complete [[The Eyes of Glouphrie]] quest.
+
+When in the inventory, the saw allows the player to build furniture up to 3 levels higher than their current [[Construction]] level. Note that this boost only works on furniture that requires both a [[saw]] and a hammer to make ([[STASH]] units, [[Fire pit|Fire Pits]], and [[Shipbuilding]] included); as such, the saw '''cannot''' assist in building new rooms or planting flowers in a [[garden]]. This bonus stacks with all other visible [[Construction#Temporary boosts|boosts to Construction]], making it possible to build items up to 8 levels higher than the player's current Construction level when used in conjunction with a +5 boost from [[spicy stew]]. However, given the erratic nature of spicy stew boosts, it is more common for players to combine it with a [[Cup of tea (trimmed)|trimmed cup of tea]] for a +6 boost.
+
+If players lose or destroy the saw, they can get it back by talking to [[Brimstail]] in his cave and selecting his first dialogue option. He will not give players a seed if they have either the seed or the saw in the bank or inventory. The saw is destroyed upon death.
+
+The saw can be used to boost your construction level for [[Sailing]] [[Facilities]] and [[Shipbuilding#Core_boat_parts|core boat parts]], despite the latter not requiring a saw. When used to construct core boat parts the crystal saw will not lose any charges.
+
+The saw cannot be used to get higher-level contracts in [[Mahogany Homes]].
+
+==Creation==
+{{Recipe
+|notes = {{SCP|Quest}} Completion of [[The Eyes of Glouphrie]]
+|members = Yes
+|ticks = 
+|facilities = Singing bowl
+|mat1 = Crystal saw seed
+|mat1cost = no
+|output1 = Crystal saw
+|output1cost = no
+}}
+
+==Degradation==
+The saw has 28 charges (56 if the [[medium Western Provinces Diary]] has been completed). One charge is used each time the player constructs a piece of furniture that requires the saw's invisible boost to build. In other words, charges are '''not''' '''consumed''' if the player already has the base level required to build that furniture. Charges are not consumed when building [[STASH]] units beyond the player's level.
+
+Once the saw runs out of charges, it reverts to its seed form and will need to be re-enchanted by returning it to the [[singing bowl]] in [[Brimstail's cave]] in the south-west area of the [[Tree Gnome Stronghold|Gnome Stronghold]] or the singing bowl in [[Prifddinas]].
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 26 August 2020
+|update = Mahogany Homes
+|change = The crystal saw now has an option for checking its remaining charges.
+}}
+{{Subject changes
+|date = 5 June 2020
+|update = Darkmeyer Day One Feedback Changes
+|change = The Crystal Saw can now be used to build the bridge in the Hallowed Sepulchre.
+}}
+{{Subject changes
+|date = 22 February 2018
+|update = Old School RuneScape's 5th Birthday
+|change = Crystal saws now have charges deducted if, and only if, you needed their stat-boost in order to build the furniture you were making. This also applies when making flatpacks at a workbench. 
+}}
+{{Subject changes
+|date = 5 March 2015
+|update = Achievement Diaries
+|poll = Old School Achievement Diary Rewards Poll
+|change = Crystal saws now hold up to 56 charges if players have completed the [[Medium Western Provinces Diary]].
+}}
+{{Subject changes footer}}
+
+{{Tools}}
+{{Crystal items}}
+{{The Eyes of Glouphrie}}
+
+[[Category:Items with charges]]
+[[Category:Temporary skill boost]]
+[[Category:Construction boosting items]]

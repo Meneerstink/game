@@ -1,0 +1,51 @@
+# B continuation: 15 November 09:29
+
+Base: `2c6cf2453`, branch `gpt-b/clue-scrolls-5`. A runs 88209 and 71870 are not counted as integration acceptance.
+
+## STASH transaction backend
+
+`TreasureTrailStashes.kt` reads all 17 selected source units and their five source recipes. A per-source-object save string contains the complete item set, including ItemAttribute values; the same account save holds inventory, equipment and storage together. Storage always prefers inventory, checks the equipped-item setting and existing unequip guards, and calls the existing unequip hooks after committing. Partial sets, partial withdrawals, corrupt storage, missing tools/materials and duplicate construction cannot spend items.
+
+Tool sources now include Hammer/Saw, main-hand and off-hand Imcando/Amy variants, and Crystal saw with revisions/hashes in sources/manifest.json. Crystal saw grants +3 on top of visible boosts and loses no charges when building STASH. Broken hammer and crystal seed are excluded. Optional unmapped modern tools cannot become an automatic pass; ordinary hammer/saw and the verified 667 crystal saw remain available.
+
+Validation: `python tools/clue/build_stash_catalogue.py` and `python tools/clue/check_compile.py HEAD stash-tests`: **9 tests, zero failures**, fresh isolated output, 512m compiler/256m JUnit, below-normal priority. Includes mixed nail metals, missing final gear item, full/partly-full inventory, equipped-item denial, inventory priority, charged-item save roundtrip, second account and corrupt storage. This is backend acceptance only.
+
+Still required for this part: scenery/selector imports and preflight; world placement; contextual Build/Search handlers with the three-tick build; equipped-item setting UI; chart/noticeboard UI; client/collision proof. No STASH runtime registration or cache write occurred.
+
+The lockpick in the raw magic-axe-hut source template is already correctly excluded from the generated equipment array; no nonexistent gameplay bug was patched.
+
+## 10:03 scene/codec checkpoint
+
+Source hash/mapping proof and the exact 69-mutation transaction are in CLAUDE-HANDOFF.md. Shared ObjectDef fallback correction and new opcode 242 need core review. Ordinary loc bytes are unchanged. A separate staged real-client LocType decoder passed the same four server-produced fixtures (77/92/242 with visible/invisible defaults), and real IndexedImage preserved the source binary texture cutout. All ten current STASH tests and four current importer tests passed standalone with fresh outputs. New world/script integration is not accepted until the frozen targeted Gradle run completes.
+
+No client/server operation, canonical client edit, cache application or import-ledger mutation occurred. Remaining STASH gates: animation/audio, setting UI, chart/Watson board, actual placement/collision/client verification.
+
+## Frozen integration and further source work, 10:54
+
+`build/clue/integration-20261115-090652`: all 4,433 Kotlin/Gradle/runtime catalogue input hashes stayed identical. Core, plugin libraries and every plugin script compiled. The 29 explicitly selected classes produced 111 tests, zero skipped, with two failures in `OsrsMimicImportTests` caused by its old relative `../../data/cache` path. The other 109 tests passed. This run is **not green**. Only that test class is being rerun after changing its read-only cache path; runtime catalogues still come from this worktree through test-init.gradle.
+
+`CHALLENGE-CANDIDATES.json` records seven individually sourced Falo lyrics and thirteen Sherlock tasks, with full source rows/requirements and source revisions/hashes. It is research only. Barrows gloves 7462 are the existing native item named `Gloves`, independently confirmed by their source page, the native Barrows-themed examine and matching inventory/worn model references. This does not authorize a generic Gloves alias. Numeric challenge reading is optional; wrong answers have no penalty. Sherlock requires the actual successful action while the challenge is held, not possession of the result. Jorral's transcript is now pinned. Challenge-item replacement/ownership and all action adapters still need implementation.
+
+The source STASH chart 493 is decoded with its actual frame/row/tab scripts. `stash-chart-baked.json` contains 130 review components and 34 personal built/filled checkmarks for the selected 17 units. Source enum order, two-column row geometry, real native p12 font measurements and responsive frame alignments are retained. Beginner is hidden and Master is labelled 78. Tab hover, small-viewport behavior, cache import and runtime bindings remain open; this JSON is not an applied interface.
+
+`cache/watson-source-npcs.json` proves the installed source 7303 has Talk-to only, while post-introduction source 7304 adds Check in slot 3; every other decoded field is identical. The existing 14406 installation represents 7303. Its unconditional Check script binding is therefore an activation/boot gate until proper source-backed personal pre/post-introduction representation is provided. Do not merely assume that the existing handler makes the client option available.
+
+### 11:00 cache-test correction accepted
+
+The isolated `:game:plugins:test --tests '*OsrsMimicImportTests*' --priority low` rerun completed successfully in 8m30s: two tests, zero failures/errors/skips (XML timestamp 09:57:40 UTC). Together with the 109 unaffected passing tests on the frozen snapshot, all 111 selected checks are now green. `rsps.clue.test.cache` can explicitly override the read-only installed cache, whose default is `RspsPaths.root("game/game/data/cache")`; rsps.data remains the reviewed worktree's catalogues. No cache copy or change was needed. New Watson variants/chart work after this snapshot is not covered by that acceptance.
+
+## Watson source variants, 11:06
+
+`ClueWatsonCacheTool` + `WatsonAppearance` replace the unconditional missing-option assumption with two actual source variants and one personal native selector. The imported physical NPC remains 14406. Source 7303 must re-encode byte-identically to the installed pre-introduction NPC, and source 7304 must differ only in its source options; no models/animation are duplicated. Default PLAN/PREFLIGHT, no cache application.
+
+Validation: **four tests, zero failures** in the two new targeted classes (`python tools/clue/check_compile.py HEAD watson-tests`, fresh isolated compiler output). Includes exact option slot, invalid selectors/duplicate/self-referencing forms, unverified mapping refusal, two accounts, changed introduction flag and relog reconstruction. `verify_watson_client.py` compiled the actual unmodified native NPCType and read the server fixture with correct selectors, before/after/fallback forms, root menu, BAS and complete byte alignment. Read-only preflight `tx-20261115-100537` passed four mutations; both cache file sets, ledger SHA and runtime mapping hashes remained unchanged. Proposed IDs overlap earlier unapplied batches and must be recalculated in the documented order.
+
+Watson plugin-script changes still require the next frozen Gradle integration and Claude's live-client menu/hand-in checks. This checkpoint does not accept remaining Watson noticeboard/POH chart functionality or complete CLUE.
+
+## STASH chart backend/import, 11:18
+
+Source chart 493 now has an applied-mapping-gated importer and runtime entry from the existing Watson noticeboard. The exact installed board has the source option, position, type and rotation. It is not posted again. Source examine is supplied through existing object metadata. UI imports preserve the real frame, original two-column row layout, source enum order, native font measurements, private checkmarks and five source tabs; the owner's 78 label replaces Master and beginner stays hidden.
+
+Four new source/runtime tests passed, including full/empty/corrupt storage, second-account isolation, native hover execution and selected-tab suppression. `verify_stash_chart_client.py` decoded all 130 actual server fixtures through the actual unmodified native Component class; row shading, three graphic hover hooks, close hover, 78 label and byte alignment passed. Preflight `tx-20261115-101610`: 154 mutations, all read-only fingerprints unchanged. No renderer/layout/audio acceptance is implied. Exact batch, order, proposed IDs and client checks are in CLAUDE-HANDOFF.md. POH Study conflict Q5 and the equipped-item setting/build animation/audio are still open.
+
+The next targeted Gradle selection adds both new core and plugin test pairs (33 classes / expected 119 tests). Its test-init explicitly declares the runtime catalogue and cache fixture files as inputs, so Gradle cannot reuse a stale report after a JSON-only change. All Kotlin/Gradle/catalogue/used-fixture inputs are frozen for this run.

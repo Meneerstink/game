@@ -1,0 +1,30 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[20 February]] [[2006]]
+|update = Updates, updates and more updates...
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 7253
+|leagueRegion = Desert
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 822
+|text = The cryptic reveals where to search:<br><br>His head might be hollow, but the crates nearby are filled with surprises.
+|items = 
+|notes = Search the crates near the [[Clay golem]] in the [[Ruins of Uzer]].
+|map = {{Map|3478,3091|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,36 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 12029
+|leagueRegion = Karamja
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[emote clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 325
+|tier = medium
+|emote = Jump for Joy
+|emote2 = Shrug
+|text = The emote reveals <br><br>Jump for joy in the TzHaar sword shop. Shrug before you talk to me. Equip a Steel longsword, Blue D'hide body and blue mystic gloves.
+|location = [[TzHaar-Hur-Tel's Equipment Store]] in [[Mor Ul Rek]]
+|items = Equip a [[Steel longsword]], [[Blue d'hide body]] and blue [[mystic gloves]].
+|equipment1 = Steel longsword
+|equipment2 = Blue d'hide body
+|equipment3 = Mystic gloves
+|notes = Perform the [[jump for joy]] and [[shrug]] emotes in [[TzHaar-Hur-Tel's Equipment Store]].
+|map = {{Map|2477,5146|mtype=pin|plane=0|mapID=-1}}
+}}

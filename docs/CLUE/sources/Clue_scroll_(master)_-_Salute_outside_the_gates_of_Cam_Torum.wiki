@@ -1,0 +1,49 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[20 March]] [[2024]]
+|update = Varlamore: Part One
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 983
+|tier = master
+|emote = Salute
+|text = The clue reveals <br><br>Salute outside the gates of Cam Torum. Beware of double agents! Equip a full set of Blue Moon equipment.
+|location = South of [[Cam Torum]] entrance
+|items = Equip the full [[Blue moon armour|Blue Moon set]].
+|equipment1 = Blue Moon helm
+|equipment2 = Blue Moon chestplate
+|equipment3 = Blue Moon tassets
+|equipment4 = Blue Moon spear
+|notes = Perform the [[salute]] emote outside the gates of [[Cam Torum]].
+The clue has an additional challenge:
+
+Kill a [[double agent]].
+|map = {{Map|1436,3114|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 27 March 2024
+|update = Easter & Varlamore Updates
+|change =
+* The emote required for this clue was changed from the [[Fortis Salute]] to the regular [[salute]].
+* The clue no longer refers to the [[blue moon armour]] set as frostmoon equipment.
+}}
+{{Subject changes footer}}

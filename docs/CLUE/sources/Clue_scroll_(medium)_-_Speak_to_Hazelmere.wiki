@@ -1,0 +1,47 @@
+{{External|rs}}
+{{Gone|update=While Guthix Sleeps}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|removal = [[10 July]] [[2024]]
+|removalupdate = While Guthix Sleeps
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = hist2841
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[cryptic clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 631
+|text = The cryptic reveals who to speak to:<br><br>Speak to [[Hazelmere]].
+|items = 
+|notes = Speak to [[Hazelmere]] east of [[Yanille]] ([[fairy code]] {{Fairycode|CLS}}). 
+The clue has an additional challenge:
+
+Question: ''What is 19 to the power of 3?''
+
+Answer: '''6859'''
+|map = {{Map|2677,3088|mtype=pin|plane=1|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 10 July 2024
+|update = While Guthix Sleeps
+|change = The clue was removed in place of the medium cryptic clue [[Clue scroll (medium) - Speak to Uglug Nar|''Speak to Uglug Nar'']].
+}}
+{{Subject changes footer}}

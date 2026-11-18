@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[7 September]] [[2017]]
+|update = Fossil Island
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggestion by Kieren.
+|value = 20
+|weight = 0.020
+|id = 21525
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 859
+|text = The cryptic reveals where to dig:<br><br>Does one really need a fire to stay warm here?
+|items = 
+|notes = Dig near near the [[Volcanic Mine]] entrance on [[Fossil Island]].
+|map = {{Map|3816,3810|mtype=pin|plane=0|mapID=-1}}
+}}

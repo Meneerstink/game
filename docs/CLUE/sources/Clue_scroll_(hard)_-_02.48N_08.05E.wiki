@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Suggested by Rain of Life!
+|value = 20
+|weight = 0.020
+|id = 12558
+|leagueRegion = Karamja
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[coordinate clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 434
+|text = The coordinate reveals where to dig:<br><br>02.48N 08.05E
+|items = 
+|notes = Little island ([[fairy ring]] {{Fairycode|AIR}}).
+
+The clue has an additional challenge:
+
+Kill a [[Saradomin wizard]]<!--If you did not get a Saradomin wizard, you likely got AIR2331 instead-->
+|map = {{Map|2699,3251|mtype=pin|plane=0|mapID=-1}}
+}}

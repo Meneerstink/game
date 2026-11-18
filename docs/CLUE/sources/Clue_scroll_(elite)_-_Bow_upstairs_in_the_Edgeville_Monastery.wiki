@@ -1,0 +1,62 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 12078
+|leagueRegion = Asgarnia&Fremennik
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[emote clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 351
+|tier = elite
+|emote = Bow
+|text = The emote reveals <br><br>Bow upstairs in the Edgeville Monastery. Equip a completed prayer book.
+|location = South-east corner of the [[Edgeville Monastery]], on the {{FloorNumber|uk=1}}
+|items = Equip a completed [[god book|prayer book]].
+|equipment1 = Holy book
+|equipment1price1 = Saradomin page 1
+|equipment1price2 = Saradomin page 2
+|equipment1price3 = Saradomin page 3
+|equipment1price4 = Saradomin page 4
+|equipment1alt1 = Unholy book
+|equipment1alt1price1 = Zamorak page 1
+|equipment1alt1price2 = Zamorak page 2
+|equipment1alt1price3 = Zamorak page 3
+|equipment1alt1price4 = Zamorak page 4
+|equipment1alt2 = Book of Balance
+|equipment1alt2price1 = Guthix page 1
+|equipment1alt2price2 = Guthix page 2
+|equipment1alt2price3 = Guthix page 3
+|equipment1alt2price4 = Guthix page 4
+|equipment1alt3 = Book of War
+|equipment1alt3price1 = Bandos page 1
+|equipment1alt3price2 = Bandos page 2
+|equipment1alt3price3 = Bandos page 3
+|equipment1alt3price4 = Bandos page 4
+|equipment1alt4 = Book of Law
+|equipment1alt4price1 = Armadyl page 1
+|equipment1alt4price2 = Armadyl page 2
+|equipment1alt4price3 = Armadyl page 3
+|equipment1alt4price4 = Armadyl page 4
+|equipment1alt5 = Book of Darkness
+|equipment1alt5price1 = Ancient page 1
+|equipment1alt5price2 = Ancient page 2
+|equipment1alt5price3 = Ancient page 3
+|equipment1alt5price4 = Ancient page 4
+|notes = Perform the [[Bow (emote)|bow]] emote near south-east corner of the [[Edgeville Monastery]].
+|map = {{Map|3056,3484|mtype=pin|plane=1|mapID=-1}}
+}}

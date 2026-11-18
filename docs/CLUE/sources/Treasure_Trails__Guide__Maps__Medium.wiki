@@ -1,0 +1,53 @@
+<noinclude>{{Treasure Trails Guide Maps Intro}}
+==Medium Maps==
+</noinclude>
+{| class="wikitable sortable"
+!Map
+!Location
+!Image
+|-
+|[[File:Map clue Clocktower.png|200px]]
+|Search the crate by the [[Clock Tower (building)|Clock Tower]], south-west of [[East Ardougne]]. Using a [[Spirit tree]] to [[Battlefield of Khazard]] is the fastest route. [[Ardougne cloak 1|Ardougne cloak]]'s Monastery Teleport is also close by.
+|[[File:Map clue solution Clocktower.png|250px]]
+|-
+|[[File:Map clue McGrubors.png|200px]]
+|Inside [[McGrubor's Wood]], west of [[Seers' Village]]. [[Fairy ring]] code {{Fairycode|ALS}}. If approaching from outside, squeeze through the broken fence by the northern half of the hut in the centre and search the crate south of the house.
+|[[File:Map clue solution McGrubors.png|250px]]
+|-
+|[[File:Map clue Lighthouse peninsula.png|200px]]
+|Road between [[Rellekka]] and the [[Lighthouse]]. Fairy code {{Fairycode|alp}} and run East.
+|[[File:Map clue solution Lighthouse peninsula.png|250px]]
+|-
+|[[File:Map clue Lava chaos altar.png|200px]]
+|By the entrance to the [[Ourania Cave]]. Use the spirit tree to the Khazard Battlefield, or teleport to [[Castle Wars]] with a [[Ring of dueling]] and run North past the [[Observatory]].
+|[[File:Map clue solution Lava chaos altar.png|250px]]
+|-
+|[[File:Map clue Mort Myre.png|200px]]
+|South of the path to [[Mort'ton]]; [[fairy ring]] {{Fairycode|BIP}} is nearby (50 [[Agility]] is required when you use the fairy ring).
+|[[File:Map clue solution Mort Myre.png|250px]]
+|-
+|[[File:Map clue Tower of Life.png|200px]]
+|Just south of [[East Ardougne]] (straight south of town square), north of the [[Tower of Life (building)|Tower of Life]], near the [[Necromancer's Tower]]. Dig two spaces north of the smaller crate that [[Bonafido]] is leaning on. [[Fairy ring]] code {{Fairycode|DJP}} is very close, or use any [[Ardougne cloak 1|Ardougne cloak]] to the [[Ardougne Monastery|Monastery]].
+|[[File:Map clue solution Tower of Life.png|250px]]
+|-
+|[[File:Map clue Miscellania.png|200px]]
+|On [[Miscellania]], one of the [[Fremennik]] Isles, just east of the castle. [[Fairy ring]] code {{Fairycode|CIP}} accessible only after completing [[The Fremennik Trials]].
+|[[File:Map clue solution Miscellania.png|250px]]
+|-
+|[[File:Map clue Chemist house.png|200px]]
+|Just west of the [[Chemist]]'s house in [[Rimmington]]. South of [[Falador]], west of [[Port Sarim]].
+|[[File:Map clue solution Chemist house.png|250px]]
+|-
+|[[File:Map clue hobgoblin peninsula.png|200px]]
+|West of the [[Crafting Guild]]. Dig north of the sandpile at the tip of the peninsula.
+|[[File:Map clue solution hobgoblin peninsula.png|250px]]
+|-
+|[[File:Map clue North Seers.png|200px]]
+|North of [[Seers' Village]], along the path towards [[Rellekka]].
+|[[File:Map clue solution North Seers.png|250px]]
+|-
+|[[File:Map clue Draynor willows.png|200px]]
+|South of [[Draynor Village]] bank, by the [[fishing spot]].
+|[[File:Map clue solution Draynor willows.png|250px]]
+|}
+[[Category:Treasure Trails]]

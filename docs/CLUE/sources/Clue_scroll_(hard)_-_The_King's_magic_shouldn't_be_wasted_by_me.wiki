@@ -1,0 +1,38 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 12587
+|leagueRegion = Desert
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 706
+|text = The cryptic reveals who to speak to:<br><br>The King's magic shouldn't be wasted by me.
+|items = 
+|notes = Requires the completion of Prince Ali Rescue, Gertrude's Cat, and partial completion of Icthlarin's Little Helper to complete. Speak to [[Guardian mummy]] in [[Jalsavrah Pyramid]].
+|map = {{Map|name=Guardian mummy|x=3289|y=2787|r=4|mtype=square}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 27 April 2022
+|update = Beneath Cursed Sands
+|change = The word "won't" in the cryptic clue was replaced by "shouldn't", due to the Guardian mummy now recharging sceptres regardless of whether or not they are fully empty.
+}}
+{{Subject changes footer}}

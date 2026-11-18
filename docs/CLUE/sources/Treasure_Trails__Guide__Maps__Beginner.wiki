@@ -1,0 +1,34 @@
+<noinclude>{{Treasure Trails Guide Maps Intro}}
+
+==Beginner Maps==
+</noinclude>{| class="wikitable sortable"
+!Map
+!Page
+!Location
+!Image
+|-
+|[[File:Map clue Champions guild.png|200px]]
+|[[Clue scroll (beginner) - West of the Champions' Guild]]
+|Locate the single tree that is west of the [[Champions' Guild]], outside [[Varrock]]. Dig two squares to the east of it.
+|[[File:Map clue solution Champions guild.png|250px]]
+|-
+|[[File:Map clue Falador stones.png|200px]]
+|[[Clue scroll (beginner) - At the standing stones north of Falador]]
+|Due east of [[Falador]]'s north gate. Look for the (grapple) [[agility shortcut]] icon.
+|[[File:Map clue solution Falador stones.png|250px]]
+|-
+|[[File:Map clue Draynor willows.png|200px]]
+|[[Clue scroll (beginner) - South of Draynor Village bank]]
+|South of [[Draynor Village]] bank, by the [[fishing spot]].
+|[[File:Map clue solution Draynor willows.png|250px]]
+|-
+|[[File:Map clue South-eastern Varrock Mine.png|200px]]
+|[[Clue scroll (beginner) - South-east Varrock mine]]
+|[[South-east Varrock mine]]. Dig one square west of the small fern.
+|[[File:Map clue solution South-eastern Varrock Mine.png|250px]]
+|-
+|[[File:Map clue Wizard tower.png|200px]]
+|[[Clue scroll (beginner) - Directly behind the Wizards' Tower]]
+|Directly behind the [[Wizards' Tower]], there's a fern you can use as a reference; the dig spot is one tile directly north of the fern. [[Fairy ring]] code {{Fairycode|DIS}} is very close.
+|[[File:Map clue solution Wizard tower.png|250px]]
+|}

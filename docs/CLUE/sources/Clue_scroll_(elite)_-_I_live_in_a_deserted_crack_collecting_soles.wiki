@@ -1,0 +1,30 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Sir Pvmalot!
+|value = 20
+|weight = 0.020
+|id = 12153
+|leagueRegion = Desert
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 695
+|text = The cryptic reveals who to speak to:<br><br>I live in a deserted crack collecting soles.
+|items = [[Rope]] and a [[Light sources|light source]]
+|notes = Speak to the [[Genie_(Spirits_of_the_Elid)|Genie]] in the cave west of the [[Nardah]] [[Rug Merchant#Nardah,_Sophanem,_Menaphos|Rug Merchant]].
+|map = {{Map|3371,9320|mtype=pin|plane=0|mapID=-1}}
+{{Map|3374,2905|r=6|mtype=square}}
+}}

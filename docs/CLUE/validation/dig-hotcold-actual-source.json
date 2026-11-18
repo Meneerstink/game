@@ -1,0 +1,15 @@
+{
+  "inputs": {
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailHotCold.kt": "7f043347b9a0a4e9107f09a1ca8d6db8b68d68cc7e5bff517836a297d2049d17",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailHotColdDialogue.kt": "517ede6df1446201218c5c5b6be5041cbfa77ae72f70d5761be367ca4755f040",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailWizards.kt": "02bb66f66474f74ade7f02ecd210de3a9c9b082b56a9198e4072789c7f6f10d0",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailAgents.kt": "fc0a792b10a473219dc629f1deec2f43caa323d320ed0d71acc25b0d4f68163b",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueScrollManager.kt": "7a35e066f6d83c9329e0f780aa6012de5f04d2dcbce8433930428c9d7514773e",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\ClueGuardianDrops.kt": "5ec481b1a439d0421a75df87d5241a80af38f4a1431702709f323dd1c930959f",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailHotColdTests.kt": "656422eecf5fd649c8a1e8b8e8a9f52350521fa3caef3690c94663317661006f",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailWizardTests.kt": "e779ef6e36621f87d91b1b7725921a14e95137520cea3e9c9e3fea081c12f220",
+    "C:\\RSPS\\work\\gpt-b\\data\\cfg\\clue\\hotcold.json": "016e46afcd7993173652765f53eb809b1e870e4604d34c67cd2a57150837d831"
+  },
+  "unchanged": true,
+  "tests": "JUnit version 4.13.2\n......PROBLEM CLUE unknown saved hot/cold target-923; scroll retained\n...PROBLEM CLUE coordinate wizard unavailable atTile{x=3081, z=3209, height=0}; clue retained\n...\nTime: 35,251\n\nOK (12 tests)\n\n"
+}

@@ -1,0 +1,150 @@
+{{Transcript|npc}}
+
+==Standard dialogue==
+===The first time talking to Watson===
+* {{tact|Dialogue begins below from "Who are you?"}}
+
+===Subsequent conversations===
+* '''Watson:''' Hello there [player name].
+* {{tselect|Select an Option}}
+* {{topt|Who are you?}}
+** '''Player:''' Who are you?
+** '''Watson:''' I am Watson, the master of clue scrolls. I have lived a long life here in Kourend. The lands are beautiful here.
+** '''Player:''' You're the master are you?
+** '''Watson:''' Ha! It is not so much due to my ego, but the fact that I give out master tier clue scrolls.
+** '''Player:''' Interesting. Do you get many treasure hunters here in Kourend?
+** '''Watson:''' I have seen many, but few are good enough. I only give out my clue scrolls to the very best.
+** '''Player:''' Ah! I am just the adventurer you are looking for. If you hand me a clue, I'll be on my way.
+** '''Watson:''' Not so fast [player name]. I require payment. You must bring me a clue scroll of all lower tiers.
+** '''Watson:''' I will remember which ones you have given me though. I expect you'll find that useful.
+** {{tact|other}}
+* {{topt|Have you heard of Sherlock?}}
+** '''Player:''' Have you heard of Sherlock?
+** '''Watson:''' Never heard of the bloke. I haven't a clue who he is.
+** '''Player:''' He also claims to be the master of all clue scrolls.
+** '''Watson:''' As I said, I've never heard of him. If he was such a big deal, I would have heard of him...
+** '''Player:''' Something tells me you're lying! I bet you're just his underling aren't you.
+** {{tselect|Select an option}}
+*** {{topt|Who are you?}}
+**** {{tact|above}}
+*** {{topt|So what are master clue scrolls anyway?}}
+**** {{tact|below}}
+*** {{topt|Goodbye.}}
+**** {{tact|below}}
+* {{topt|So what are master clue scrolls anyway?}}
+** '''Player:''' So what are master clue scrolls anyway?
+** '''Watson:''' Master clue scrolls are the most challenging of all clue scrolls. They will test you in ways you have not been tested before.
+** '''Watson:''' You will be led all over Gielinor with your strengths, your weaknesses, your mental strength and your reactions all scrutinised.
+** '''Player:''' I assume there is treasure to be found?
+** '''Watson:''' That is for you to find out, [player name].
+** {{tselect|Select an option}}
+*** {{topt|Who are you?}}
+**** {{tact|above}}
+*** {{topt|So what are master clue scrolls anyway?}}
+**** {{tact|below}}
+*** {{topt|Goodbye.}}
+**** {{tact|below}}
+* {{topt|cond=If the player has a clue scroll with them:|I have something for you.}}
+** {{tcond|If the player only has clue tiers they have already handed over or a beginner clue:}}
+*** '''Watson:''' You need to bring me clue scroll you haven't already given me [player name].
+*** {{tact|end}}
+** {{tselect|Select an Option}}
+** {{topt|cond=If the player has an easy clue:|Hand over easy clue.}}
+*** {{tbox|pic=Clue scroll (master) detail.png|You hand over the clue scroll to Watson.}}
+*** '''Watson:''' Thank you very much.
+*** {{tact|end}}
+** {{topt|cond=If the player has a medium clue:|Hand over medium clue.}}
+*** {{tbox|pic=Clue scroll (master) detail.png|You hand over the clue scroll to Watson.}}
+*** {{tact|above}}
+** {{topt|cond=If the player has a hard clue:|Hand over hard clue.}}
+*** {{tbox|pic=Clue scroll (master) detail.png|You hand over the clue scroll to Watson.}}
+*** {{tact|above}}
+** {{topt|cond=If the player has an elite clue:|Hand over elite clue.}}
+*** {{tbox|pic=Clue scroll (master) detail.png|You hand over the clue scroll to Watson.}}
+*** {{tact|above}}
+** {{topt|cond=If the player has two or more clues:|Hand over all clues.}}
+*** {{tbox|pic=Clue scroll (master) detail.png|pic2=Clue scroll (master) detail.png|You hand over the clue scrolls to Watson.}}{{^|Actually shows 2 master clues}}
+*** {{tcond|If the player already has a master clue:}}
+**** '''Watson:'''  I have a master scroll box for you, but you already have too many of them! Finish them or discard them, I don't care which.
+**** {{tselect|Select an Option}}
+**** {{topt|Who are you?}}
+***** {{tact|above}}
+**** {{topt|Have you heard of Sherlock?}}
+***** {{tact|above}}
+**** {{topt|So what are master clue scrolls anyway?}}
+***** {{tact|above}}
+**** {{topt|What is that noticeboard for?}}
+***** {{tact|below}}
+**** {{topt|Goodbye.}}
+***** '''Player:''' Goodbye.
+***** {{tact|end}}
+*** '''Watson:''' Nice work [player name], I've had one of each lower tier clue scroll from you.
+*** {{tcond|If the player has not completed [[X Marks the Spot]]:}}
+**** {{tbox|pic=Clue scroll (master) detail.png|Watson hands you a master clue scroll.}}
+*** {{tcond|If the player has completed [[X Marks the Spot]]:}}
+**** {{tbox|pic=Scroll box (master) detail.png|Watson hands you a master scroll box.}}
+*** {{tact|end}}
+** {{topt|cond=If the player has exactly one clue:|Cancel.}}
+*** {{tact|end}}
+* {{topt|What is that noticeboard for?}}
+** '''Player:''' What is that noticeboard for?
+** '''Watson''' It lets you view any of your S.T.A.S.H units that you have built around Gielinor.
+** '''Player:''' Oh that seems really useful! It's a bit of a shame I need to come here everytime to check though.
+** '''Watson''' Well it's just a board with some notes on it. I'm sure you could figure something out.
+** '''Player:''' I suppose you're right, I don't suppose you have a spare one I could buy off you to save me the hassle?
+** '''Watson''' No, but I could write down the instructions to make one. Then all you'd need is a house with a study to build it in, and a bolt of cloth.
+** {{tselect|Pay Watson 500 coins for a S.T.A.S.H blueprint?}}
+** {{topt|Yes}}
+*** {{tcond|If the player doesn't have enough coins:}}
+**** '''Watson''' I'm not giving it away for free, 500 coins is just covering my expenses!
+**** {{tact|end}}
+*** {{tcond|If the player's inventory is full}}
+**** '''Watson''' You don't have enough space for it.
+**** {{tact|end}}
+*** {{tcond|If the player has enough coins and an empty inventory slot:}}
+**** '''Watson''' Here you go.
+**** {{tact|(Watson takes 500 coins.)}}
+**** {{tact|receives=[[S.t.a.s.h blueprint]]}}
+**** {{tact|end}}
+** {{topt|No}}
+*** '''Watson''' Alright, feel free to carry on using mine.
+*** {{tact|end}}
+* {{topt|Can you tell me about scroll boxes?}}
+** '''Player:''' Can you tell me about scroll boxes?
+** '''Watson:''' Well, the long and short of it is that scroll boxes contain clue scrolls, but in a much easier to carry form factor.
+* {{tcond|If the player is on a normal world:}}
+** '''Watson:''' Now, just because they're easier to carry, it doesn't mean you can take as many as you want. You'll need scroll cases to be able to store them.
+** '''Watson:''' You can get scroll cases by completing clues. You can get up to two extra scroll cases for each clue tier by doing that kind of clue.
+** '''Watson:''' I can give you the exact numbers, but I wouldn't worry too much about them. You'll get them eventually.
+** '''Watson:''' If you want to help deal with the strange casket I have upstairs, I think it also has some scroll cases as well.
+** '''Player:''' So how many scrolls can I carry right now?
+** '''Watson:''' You'll find that information written on the statistics board by the door.
+** {{tact|end}}
+* {{tcond|If the player is on a [[Demonic Pacts League]] world:}}
+** '''Watson:''' I get the feeling that you'd be able to carry as many as you wanted for some reason.
+** '''Player:''' Why do you think that?
+** '''Watson:''' Just a hunch. I don't think I'm the best person to talk to about this right now.
+** {{tact|end}}
+
+==Using a clue scroll on Watson==
+===Any tier from beginner to elite===
+* {{tact|The conversation starts as if the player selected the "I have something for you" option from the standard dialogue.}}
+
+===Master clue with an active Sherlock step===
+* '''Player:''' You said you didn't know Sherlock!
+* '''Watson:''' Sure is windy today, did you hear that?
+* {{tact|end}}
+
+===Master clue with any other active step===
+* '''Watson:''' Sorry [player name]. That scroll is for you, not me.
+* {{tact|end}}
+
+==Using a master scroll book on Watson==
+* '''Watson:''' Do you want to trade that in? You'd need another copy to take your scrolls out again. But I'll swap it for some teleport scrolls if you like, so you can travel here more easily.
+* {{topt|Exchange the book for teleport scrolls}}
+** {{tbox|pic=Master scroll book detail.png|pic2=Watson teleport detail.png|Watson exchanges your book for [amount] scrolls.}}
+** {{tact|receives=[[Watson teleport]]s}}
+** {{tact|end}}
+* {{topt|Don't exchange the book}}
+** '''Watson:''' Come again if you change your mind.
+** {{tact|end}}

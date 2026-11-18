@@ -1,0 +1,29 @@
+{
+  "sourceFile": "hover-source-script.json",
+  "sourceSha256": "4610c1ccf2a889d07ba9ee53c1b7246aa35081fdbab070ca12facf5285aac7f6",
+  "targetCache": "C:/RSPS/game/game/data/cache",
+  "targetIndex": 12,
+  "targetGroup": 44,
+  "targetFile": 0,
+  "targetSha1": "31fa82b591efec6f85896573068371868d9dfd39",
+  "targetBytes": "AAAhAAAAAQAhAAAAAAg5AAAVAAAAAAQAAgAAAAAAAgAAAAAAAAE=",
+  "instructions": [
+    [
+      "ILOAD",
+      1
+    ],
+    [
+      "ILOAD",
+      0
+    ],
+    [
+      "IF_SETGRAPHIC",
+      0
+    ],
+    [
+      "RETURN",
+      0
+    ]
+  ],
+  "intArguments": 2
+}

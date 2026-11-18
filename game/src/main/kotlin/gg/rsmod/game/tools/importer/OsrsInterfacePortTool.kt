@@ -83,6 +83,7 @@ object OsrsInterfacePortTool {
         val ops: List<String> = emptyList(), val opBase: String = "",
         val model: Int = -1, val originX: Int = 0, val originY: Int = 0, val xan: Int = 0, val yan: Int = 0, val zan: Int = 0,
         val zoom: Int = 0, val ortho: Boolean = false, val flipH: Boolean = false,
+        val mouseOver: List<Int> = emptyList(), val mouseLeave: List<Int> = emptyList(),
     )
 
     /** OSRS model -> local model recorded by an import (OsrsLocImportTool fx_kind osrs_loc_model, region import role loc_model). */
@@ -105,7 +106,10 @@ object OsrsInterfacePortTool {
     /** Same layout as [LootKeyInterfaceImportTool.encode] (667 Component.decode, version 255), plus the layer scroll size. */
     fun encode(c: C): ByteArray {
         val o = Out()
-        o.p1(255); o.p1(c.type); o.p2(0)
+        // CLUE: type flag 0x40 extends only MODEL's id to g4. Legacy encodings stay byte-identical.
+        val wideModel = c.type == 6 && ModelArchive.isWide(c.model)
+        require(c.model <= ModelArchive.MAX_MODEL_ID) { "Interface model ${c.model} exceeds the model namespace" }
+        o.p1(255); o.p1(c.type or if (wideModel) 0x40 else 0); o.p2(0)
         o.p2(c.x); o.p2(c.y); o.p2(c.w); o.p2(c.h)
         o.p1(c.wMode); o.p1(c.hMode); o.p1(c.xMode); o.p1(c.yMode)
         o.p2(if (c.parent < 0) 65535 else c.parent)
@@ -121,7 +125,8 @@ object OsrsInterfacePortTool {
                 // 667 Component.decode (client Component.java:824): flag 0x1 = the 2D camera block (origin x/y, xan/yan/zan, zoom) follows,
                 // 0x4 = orthographic. The camera block is always written below, so 0x1 is always set (07-11: writing 0 for a
                 // non-orthographic model shifted every later field - interface 771 comp 3 read past its end).
-                o.p2(if (c.model < 0) 65535 else c.model.also { require(it <= 0xFFFF) { "interface model $it is in archive 37 - a 667 component model is u16" } }); o.p1(0x1 or if (c.ortho) 0x4 else 0)
+                if (wideModel) o.p4(c.model) else o.p2(if (c.model < 0) 65535 else c.model)
+                o.p1(0x1 or if (c.ortho) 0x4 else 0)
                 o.p2(c.originX); o.p2(c.originY); o.p2(c.xan); o.p2(c.yan); o.p2(c.zan); o.p2(c.zoom); o.p2(65535)
                 if (c.wMode != 0) o.p2(0)
                 if (c.hMode != 0) o.p2(0)
@@ -130,7 +135,11 @@ object OsrsInterfacePortTool {
         }
         o.p3(0); o.p1(0); o.str(c.opBase); o.p1(c.ops.size); c.ops.forEach { o.str(it) }
         o.str(""); o.p1(0); o.p1(0); o.p1(0); o.str("")
-        repeat(20) { o.p1(0) }
+        repeat(20) { hook ->
+            val arguments = when (hook) { 1 -> c.mouseOver; 2 -> c.mouseLeave; else -> emptyList() }
+            o.p1(arguments.size)
+            arguments.forEach { o.p1(0); o.p4(it) }
+        }
         repeat(5) { o.p1(0) }
         return o.b.toByteArray()
     }

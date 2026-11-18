@@ -1,0 +1,35 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[20 February]] [[2006]]
+|update = Updates, updates and more updates...
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 7284
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[anagram clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 37
+|text = The anagram reveals<br>who to speak to:<br><br>LARK IN DOG
+|items = 
+|notes = Speak to [[King Roald]]
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''How many bookcases are there in the palace library?''
+
+Answer: '''24'''
+|map = {{Map|3220,3476|mtype=pin|plane=0|mapID=-1}}
+}}

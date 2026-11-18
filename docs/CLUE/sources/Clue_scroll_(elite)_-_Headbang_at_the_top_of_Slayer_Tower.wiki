@@ -1,0 +1,36 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 12080
+|leagueRegion = Morytania&Fremennik
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[emote clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 12080
+|tier = elite
+|emote = Headbang
+|text = The emote reveals <br><br>Headbang at the top of Slayer Tower. Equip a seercull, a combat bracelet and helm of Neitiznot.
+|location = Outside the room with [[gargoyles]] on the [[Slayer Tower]]'s top floor
+|items = Equip a [[seercull]], a [[combat bracelet]] and [[helm of Neitiznot]]
+|equipment1 = Seercull
+|equipment2 = Combat bracelet
+|equipment3 = Helm of Neitiznot
+|notes = Perform the [[headbang]] emote outside the [[Slayer Tower]] [[gargoyle]] room.
+A [[Neitiznot faceguard]] is NOT an acceptable alternative for the [[helm of Neitiznot]]
+|map = {{Map|3421,3537|mtype=pin|plane=2|mapID=-1}}
+}}

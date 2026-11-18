@@ -1,0 +1,38 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 23165
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 681
+|text = The cryptic reveals who to speak to:<br><br>Talk to the Slayer Master in Burthorpe.
+|items = 
+|notes = Speak to [[Turael]] or [[Aya]] east of the [[Toad and Chicken]] inn in [[Burthorpe]].
+|map = {{Map|2930,3536|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 10 July 2024
+|update = While Guthix Sleeps
+|change = The clue hint was changed from "Talk to Turael in Burthorpe." to "Talk to the Slayer Master in Burthorpe."
+}}
+{{Subject changes footer}}

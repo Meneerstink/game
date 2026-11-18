@@ -3,7 +3,7 @@ package gg.rsmod.plugins.content.quests.tab
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.cfg.Items
-import gg.rsmod.plugins.content.items.EliteCasketTable
+import gg.rsmod.plugins.content.scrolls.ClueLogPages
 import gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls
 import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachIds
 import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachLoot
@@ -21,7 +21,7 @@ import gg.rsmod.plugins.content.skills.summoning.Pets
  *    not from a shared table). Dagannoth Kings are one page like OSRS. Barrows: [Barrows.COLLECTION_LOG_ITEMS].
  *  - Deadman: the Deadman's chest list and the breach uniques + Archaic emblem, weapons and armour first and the pets they can
  *    give at the bottom (N268, owner 2026-10-24; a breach monster's chest-list roll gives the chest's pets too).
- *  - Clues: the elite casket's uniques (1/1,000 per roll or rarer, [EliteCasketTable.itemProbabilities]).
+ *  - Clues: five complete OSRS cache-enum pages plus shared rewards ([ClueLogPages]).
  *  - Minigames (N276): Pest Control, the Void Knight reward items as OSRS lists them (+ the 2011 deflector this server sells).
  *  - Other: the five Beast of burden trinkets (N423), every pet.
  */
@@ -177,15 +177,8 @@ object CollectionLogPages {
         val breachPets = breaches.flatMap { it.npcs.toList() }.mapNotNull { Pets.dropFor(it)?.pet }.distinct().mapNotNull { Pets.baseItem(it) }.sortedBy { name(it) }
         val breachItems = (gearFirst(BreachLoot.MEGA_RARE + BreachLoot.RARE.map { it.item } + listOfNotNull(BreachIds.ARCHAIC_EMBLEM_TIER_5.takeIf { it > 0 && !gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled }) + PrayerScrolls.SCROLLS.toList() + Items.RUINOUS_POWERS) + breachPets).distinct()
         pages += Page("breach", Category.DEADMAN, "Breaches", breachKeys, breachItems, "Breach monster kills")
-        // ---- Clues: the elite casket's uniques.
-        val elite = runCatching { EliteCasketTable.itemProbabilities() }.getOrNull()
-        if (elite != null) {
-            // N292: a note counts as its item - the page shows the plain item (the log records it so, CollectionLog.unnoted).
-            val perItem = HashMap<Int, Double>()
-            elite.forEach { (key, p) -> unnoted(world, key.first).let { id -> perItem[id] = (perItem[id] ?: 0.0) + p } }
-            val uniques = perItem.filter { it.value > 0.0 && it.value <= 1.0 / 1000 }.keys.sortedBy { name(it) }
-            if (uniques.isNotEmpty()) pages += Page("elite", Category.CLUES, "Elite Treasure Trails", emptyList(), uniques)
-        }
+        // ---- Clues: enum order and every item, including shared rewards and milestone cases.
+        pages += ClueLogPages.build()
         // ---- Minigames: Pest Control (the reward items recorded when the Void Knight hands them over, PestControlRewards.confirm).
         pages += Page(PEST_CONTROL, Category.MINIGAMES, "Pest Control", emptyList(), PEST_CONTROL_ITEMS)
         // ---- N462 Tombs of Amascut: the 27 slots of the OSRS log in cache order (cache 2686 enum 4805; GPT-A 30-enums-structs.tsv), shown under

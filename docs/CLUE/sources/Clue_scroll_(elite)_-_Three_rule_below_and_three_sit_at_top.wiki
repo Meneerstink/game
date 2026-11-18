@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Uv 6!
+|value = 20
+|weight = 0.020
+|id = 12142
+|leagueRegion = Fremennik
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 856
+|text = The cryptic reveals where to dig:<br><br>Three rule below and three sit at top. Come dig at my entrance.
+|items = 
+|notes = Dig near the entrance to the [[Waterbirth Island Dungeon]].
+|map = {{Map|2523,3739|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,38 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10216
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is an [[emote clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+The items can be stored in a [[STASH]] bush south-west of the parrot cage. It requires 27 [[Construction]], a [[hammer]], [[saw]], 2 [[plank]]s and 10 [[nails]] to build. Building the STASH rewards the player with 150 Construction experience.
+
+==Clue info==
+{{Clue info
+|id = 279
+|tier = easy
+|emote = Raspberry
+|text = The emote reveals <br><br>Blow a raspberry at the monkey cage in Ardougne Zoo. Equip a studded leather body, bronze platelegs and a normal staff with no orb.
+|location = [[Ardougne Zoo]], near [[Parroty Pete]]
+|items = Equip a [[studded leather body]], [[bronze platelegs]] and a normal [[staff]] with no orb.
+|equipment1 = Studded body
+|equipment2 = Bronze platelegs
+|equipment3 = Staff
+|notes = Perform the [[raspberry]] emote near the parrots in [[Ardougne Zoo]].
+|map = {{Map|2607,3282|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 12063
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[anagram clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 48
+|text = The anagram reveals<br>who to speak to:<br><br>RATAI
+|notes = Speak to [[Taria]]
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''How many buildings are there in Rimmington?''
+
+Answer: '''7'''
+|map = {{Map|2940,3223|mtype=pin|plane=0|mapID=-1}}
+}}

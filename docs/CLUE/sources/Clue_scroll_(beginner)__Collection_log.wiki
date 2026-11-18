@@ -1,0 +1,5 @@
+There are a total of 16 items to collect from [[Clue scroll (beginner)|beginner Treasure Trails]].
+
+{{Sync|checkbox=show}}
+{{Collection log list|category=Beginner Treasure Trails}}
+<noinclude>[[Category:Clue scrolls]]</noinclude>

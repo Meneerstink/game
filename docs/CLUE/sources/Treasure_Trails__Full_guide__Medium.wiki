@@ -1,0 +1,106 @@
+{{ToC|right}}
+{{Shortcut|ttfg2}}
+
+For the main article, see [[Treasure Trails]].
+
+==Sources==
+{{Incomplete}}
+While clue scrolls can be obtained from a large variety of monsters or activities, players wishing to farm a specific clue tier may wish to commit to the most efficient methods for said clue tier. Below is a non-exhaustive list of methods for obtaining medium clues.
+
+===Eclectic implings===
+Non-[[Ironman Mode|ironman]] players with money to spare may opt to purchase the [[Eclectic impling jar|impling jars]] on the [[Grand Exchange]] for the absolute fastest method of obtaining medium clues.
+
+Camping [[Eclectic impling]] spawn points in [[Puro-Puro]] offers the (sans buying the implings from other players) fastest medium clues in the game; the minimum requirements are 50 [[Hunter]], the [[Lost City]] [[quest]], [[Impling jar|Impling jars]], and an [[Insect net]] (as you cannot bare-hand implings in Puro-Puro.) The optimal requirements are 93 Hunter and a [[Magic insect net]] for 100% catch rate, 50 [[Magic]] and [[A Kingdom Divided]] for [[Dark Lure]], and the [[Huntsman's kit]] to withdraw jars from when the ones in the inventory break. [[Implings]] are '''not''' affected by the clue chance buff from [[Combat Achievements]].
+
+Eclectic implings have a 1 in 25 chance of containing a medium clue, and under perfect conditions it is possible to catch one impling every 9 ticks (including respawn time) thus with high focus it is possible to catch over ~650 Eclectics per hour. This puts the clue rate at ~26 medium clues, however under real conditions the clue rate will vary.
+
+
+===Pickpocketing gnomes===
+Various [[gnomes]] throughout the world can be thieved from with the minimum requirement of 75 [[Thieving]], however a higher Thieving level is recommended due to the fairly poor success rate (56% base at 75 vs 68% at 99) at lower levels, as is the completion of the [[Ardougne diary]] hard tier for the increased thieving success perk. 47 [[Magic]] and completion of [[A Kingdom Divided]] gives the player access to [[Shadow Veil]] which can be combined with a [[Dodgy necklace]] for a ~36% chance to avoid the stun from being caught. Upon being caught the player will take a small amount of damage, thus a method of healing is required.
+
+Gnomes offer medium clues at a rate of 1 in 150, and it is possible to pick a pocket every 2 ticks, and every time the player is caught they will be stunned for 10 ticks. Assuming 99 Thieving with Ardougne diary completed, wearing the [[Thieving cape]] and using both Shadow Veil and Dodgy necklaces the player can expect to succeed 82.81% of the time, ~10.96% attempts leading to a full stun for 10 ticks, and the remaining ~6.23% avoiding the stun but still losing 2 ticks. This puts the theoretical perfect time per roll at an average of ~4.342 ticks per hour, or ~1380 rolls coming out to ~9.2 medium clues per hour.
+
+The medium [[Combat Achievements]] increase the likelihood of receiving a medium clue from gnomes by 5%.
+
+===Cannoning guards===
+Using the [[Dwarf multicannon]] to mass-farm the [[Guards]] of [[Falador]] is another popular method, with the only requirements being the [[Dwarf Cannon]] quest, a [[Dwarf multicannon|multicannon]] and a supply of [[Steel cannonball|Steel cannonballs]].
+
+Guards offer medium clues at a rate of 1 in 128, which can be boosted to a rate of 1 in 100 through the buffs offered by the [[Falador diary]] and [[Combat Achievements]] medium tier.
+
+Information about the efficacy of this method is pending.
+
+==Preparation==
+{{See also|Treasure Trails/Guide/Emote clues/Items}}
+[[Clue scroll (medium)|Medium clue scrolls]] can be between three and five clues long with some quest requirements. For a suggested inventory setup, see the [[Treasure Trails/Strategies#Setups | Setups page]].
+
+{|class="wikitable align-center-1"
+! colspan=2 | Item
+! Description
+|-
+| {{plinkt|Clue scroll (medium)|txt=Clue scroll}}
+| Must be in the inventory in order to receive the next step or reward.
+|-
+| {{plinkp|Spade}} {{plinkp|Eastfloor spade}}
+| [[Spade]] or [[Eastfloor spade]]
+| Digging in certain locations is required for some clues.
+|-
+| {{plinkp|Law rune}} {{plinkp|Amulet of glory(4)}}
+| [[Teleportation]] [[runes]] and enchanted [[jewellery]]
+| Use this to travel over large distances.
+|-
+| {{plinkp|Energy potion}} {{plinkp|Super energy}} {{plinkp|Stamina potion}}
+| [[Energy potion]]s ([[Super energy potion|super]]) or [[stamina potion]]s
+| Use these to restore [[energy]].
+|-
+| {{plinkp|Coins|pic=Coins 10000}}
+| [[Money]]
+| Use this to buy items needed for [[emote clues]] and travel costs.
+|-
+| {{plinkp|Dramen staff}} {{plinkp|Lunar staff}}{{Plinkp|Explorer's ring 4}}
+| [[Dramen staff|Dramen]]/[[lunar staff]] or [[Lumbridge & Draynor Elite Diary]]
+| Use this to access the [[Fairy ring]] network shortly into [[Fairytale II - Cure a Queen]] (especially useful for [[medium clue]]s).
+|-
+| {{plinkp|Dragon scimitar}}
+| [[Weapon]]
+| Some clue steps require combat.
+|}
+
+==Requirements==
+{{:Clue scroll (medium)}}
+
+==Anagrams==
+{{shortcut|ttga}}
+{{Treasure Trails Guide Anagrams Intro}}
+{{:Treasure Trails/Guide/Anagrams/Medium}}
+
+==Ciphers==
+{{shortcut|ttgci}}
+{{Treasure Trails Guide Ciphers Intro}}
+{{:Treasure Trails/Guide/Ciphers/Medium}}
+
+==Coordinates==
+{{shortcut|ttgc}}
+Quick links: [[#200|00]] [[#201|01]] [[#202|02]] [[#203|03]] [[#204|04]] [[#205|05]] [[#206|06]] [[#207|07]] [[#208|08]] [[#209|09]] [[#210|10]] [[#211|11]] [[#212|12]] [[#213|13]] [[#214|14]] [[#215|15]] [[#216|16]] [[#217|17]] [[#218|18]] [[#219|19]] [[#220|20]] [[#221|21]] [[#222|22]] [[#223|23]] [[#224|24]] [[#225|25]]
+{{Treasure Trails Guide Coordinates Intro}}
+{{:Treasure Trails/Guide/Coordinates/Medium}}
+
+==Cryptic clues==
+{{shortcut|ttgcr}}
+{{Treasure Trails Guide Cryptic Clues Intro}}
+{{:Treasure Trails/Guide/Cryptic clues/Medium}}
+
+==Emote clues==
+{{shortcut|ttge}}
+{{Treasure Trails Guide Emote Clues Intro}}
+{{:Treasure Trails/Guide/Emote clues/Medium}}
+
+==Maps==
+{{shortcut|ttgm}}
+{{Treasure Trails Guide Maps Intro}}
+{{:Treasure Trails/Guide/Maps/Medium}}
+
+==References==
+{{Reflist}}
+
+{{Treasure Trails}}
+[[Category:Guides]]

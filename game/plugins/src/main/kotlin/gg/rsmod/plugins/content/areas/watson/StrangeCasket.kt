@@ -6,7 +6,7 @@ import gg.rsmod.game.model.attr.AttributeKey
  * Owner answer Q10: the Strange casket upstairs in Watson's house (OSRS loc 34733 -> local 62743, option "Search"). OSRS Wiki
  * Transcript:Strange casket (2026-09-14): talking to it opts the player in to or out of Mimic challenges (disabled by default); a player
  * carrying a Mimic casket is offered the fight. The opt-in is what the elite casket's 1/35 Mimic roll will read.
- * BLOCKED (recorded): the "has a Mimic in their inventory" branch and the arena - the Mimic casket item and the fight are not built yet.
+ * Encounter bindings live in mimic_encounter.plugin.kts; arena import/timing evidence gates are in the CLUE handoff.
  */
 object StrangeCasket {
     const val LOC = 62743

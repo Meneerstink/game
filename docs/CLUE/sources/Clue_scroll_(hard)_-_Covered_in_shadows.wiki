@@ -1,0 +1,30 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[20 February]] [[2006]]
+|update = Updates, updates and more updates...
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 7245
+|leagueRegion = Morytania
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 865
+|text = The cryptic reveals where to dig:<br><br>Covered in shadows, the centre of the circle is where you will find the answer.
+|items = 
+|notes = Dig near the centre of [[Mort'ton]], where the roads intersect.
+|map = {{Map|3488,3289|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (beginner)
+|image = [[File:Clue scroll (beginner).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = No
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 23182
+}}
+[[File:Clue scroll (beginner) detail.png|100px|left]]
+'''Clue scroll (beginner)''' is a [[cryptic clue]] obtained from [[Clue scroll (beginner)|beginner]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 712
+|text = The cryptic reveals who to speak to:<br><br>In the place Duke Horacio calls home, talk to a man with a hat dropped by goblins.
+|notes = Talk to the [[Cook (Lumbridge)|Cook]] in [[Lumbridge Castle]].
+|map = {{Map|3209,3214|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+*[[Lumbridge Teleport]] or [[Lumbridge Home Teleport]].
+*[[Achievement diary cape]] teleport to [[Mikasi]].
+*[[Ring of the elements]] to the [[Water Altar]] and run north-east.
+*[[Amulet of glory]] teleport to [[Al Kharid]] or [[Draynor Village]].

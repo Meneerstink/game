@@ -79,6 +79,9 @@ class GroundItem private constructor(
         return this
     }
 
+    /** Snapshot for pickup routes, including telegrab; clue step/charges must survive the ground. */
+    fun asItem(amount: Int = this.amount): Item = Item(item, amount).also { it.attr.putAll(attr) }
+
     fun isSpawned(world: World): Boolean = world.isSpawned(this)
 
     override fun toString(): String =

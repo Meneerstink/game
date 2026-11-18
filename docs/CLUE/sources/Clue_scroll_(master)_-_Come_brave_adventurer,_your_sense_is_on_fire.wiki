@@ -1,0 +1,35 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is a [[cryptic clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 906
+|text = The clue reveals who to speak to:<br><br>Come brave adventurer, your sense is on fire. If you talk to me, it's an old god you desire.
+|items = Equip a [[ring of visibility]] or [[ring of shadows]] and a [[ghostspeak amulet]].
+|equipment1 = Ring of visibility or Ring of shadows
+|equipment2 = Ghostspeak amulet
+|notes = Speak to [[Viggora]]. Note that he can be found (is visible) in 3 locations, but you can only speak to (and continue the clue) the version of him that you spoke to during [[Curse of the Empty Lord]] [[miniquest]]. You can check your quest log to find out which location. 
+*[[Paddewwa]], [[Edgeville Dungeon]], near the [[earth warrior]]s.
+*{{FloorNumber|uk=1}} of the [[Rogues' Castle]] in the deep [[Wilderness]].
+*{{FloorNumber|uk=1}} of the [[Canifis]] [[Slayer Tower]], just before the [[Infernal Mage]].
+|map = {{Map|3293,3933|mtype=pin|plane=1|mapID=-1}}
+{{Map|3448,3549|mtype=pin|plane=1|mapID=-1}}
+{{Map|3119,9996|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,55 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 12550
+|leagueRegion = Desert
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[emote clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 12550
+|tier = hard
+|emote = Cheer
+|text = The emote reveals <br><br>Cheer at the top of the agility pyramid. Beware of double agents! Equip a blue mystic robe top, and any rune heraldic shield.
+|location = Stairs by the beginning of the [[Agility Pyramid]]
+|items = Equip a blue [[mystic robe top]], and any [[rune heraldic shield]].
+|equipment1 = Mystic robe top
+|equipment2 = Rune shield (h1)
+|equipment2alt1 = Rune shield (h2)
+|equipment2alt2 = Rune shield (h3)
+|equipment2alt3 = Rune shield (h4)
+|equipment2alt4 = Rune shield (h5)
+|notes = Perform the [[cheer]] emote at the top of the [[Agility Pyramid]].
+The clue has an additional challenge:
+
+Kill a [[Double agent]].
+|map = {{Map|3043,4697|mtype=pin|plane=3|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 28 July 2016
+|update = Dragon Spear Changes & Beta 3
+|change = The Hard clue on top of the Agility Pyramid now confirms the version required is the Blue Mystic Top.
+}}
+{{Subject changes 
+|date = 14 July 2016
+|update = Hidey Holes & Miniquests
+|change = Fixed an issue where an emote clue on the agility pyramid would not always work.
+}}
+{{Subject changes footer}}

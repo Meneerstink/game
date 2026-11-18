@@ -1,0 +1,36 @@
+{{Cache}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[23 July]] [[2025]]
+|update = Varlamore: The Final Dawn Out Now
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = I need to decipher this.
+|value = 20
+|weight = 0.020
+|id = 30929
+|leagueRegion = Varlamore
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cipher clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+The clue was briefly obtainable during the [[Demonic Pacts League]], but is otherwise not obtainable.
+
+==Clue info==
+{{Clue info
+|id = 30929
+|text = The cipher reveals who to speak to:<br><br>YAROYGR
+|notes = Speak to [[Sulisal]].
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''If a fish can feed four people, and I'm hosting 15 guests, how many whole fish will I need?''
+
+Answer: '''4'''
+|map = {{Map|1376,3037|mtype=pin|plane=0|mapID=-1}}
+}}

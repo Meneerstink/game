@@ -1,0 +1,277 @@
+{
+  "batchcomplete": true,
+  "query": {
+    "pages": [
+      {
+        "pageid": 12804,
+        "ns": 6,
+        "title": "File:Map clue Chemist house.png",
+        "imagerepository": "local",
+        "imageinfo": [
+          {
+            "timestamp": "2013-03-10T02:13:36Z",
+            "size": 11695,
+            "width": 324,
+            "height": 308,
+            "url": "https://oldschool.runescape.wiki/images/Map_clue_Chemist_house.png?efe67",
+            "descriptionurl": "https://oldschool.runescape.wiki/w/File:Map_clue_Chemist_house.png",
+            "descriptionshorturl": "https://oldschool.runescape.wiki/index.php?curid=12804",
+            "sha1": "ccfb723fcb8348504c5e47045bd1cbfc6ab1298b",
+            "extmetadata": {
+              "DateTime": {
+                "value": "2013-03-10T02:13:36Z",
+                "source": "mediawiki-metadata",
+                "hidden": ""
+              },
+              "ObjectName": {
+                "value": "Map clue Chemist house",
+                "source": "mediawiki-metadata"
+              }
+            }
+          }
+        ],
+        "downloadSha256": "55be4de0ef4d75d1f4a7e4317b2883eee0d2175c44bd732e8710682d1c7eceed"
+      },
+      {
+        "pageid": 13039,
+        "ns": 6,
+        "title": "File:Map clue Galahad.png",
+        "imagerepository": "local",
+        "imageinfo": [
+          {
+            "timestamp": "2013-03-17T11:25:42Z",
+            "size": 11807,
+            "width": 324,
+            "height": 308,
+            "url": "https://oldschool.runescape.wiki/images/Map_clue_Galahad.png?554e8",
+            "descriptionurl": "https://oldschool.runescape.wiki/w/File:Map_clue_Galahad.png",
+            "descriptionshorturl": "https://oldschool.runescape.wiki/index.php?curid=13039",
+            "sha1": "0bf6b8cf9d626267aeac1dd1d0e92da5a89a0dfe",
+            "extmetadata": {
+              "DateTime": {
+                "value": "2013-03-17T11:25:42Z",
+                "source": "mediawiki-metadata",
+                "hidden": ""
+              },
+              "ObjectName": {
+                "value": "Map clue Galahad",
+                "source": "mediawiki-metadata"
+              }
+            }
+          }
+        ],
+        "downloadSha256": "d70c2fc653be4d39afea1399f221906b74cd944f46df4703036021ef339fe193"
+      },
+      {
+        "pageid": 13951,
+        "ns": 6,
+        "title": "File:Map clue Draynor willows.png",
+        "imagerepository": "local",
+        "imageinfo": [
+          {
+            "timestamp": "2013-03-21T23:06:11Z",
+            "size": 12037,
+            "width": 324,
+            "height": 308,
+            "url": "https://oldschool.runescape.wiki/images/Map_clue_Draynor_willows.png?bb604",
+            "descriptionurl": "https://oldschool.runescape.wiki/w/File:Map_clue_Draynor_willows.png",
+            "descriptionshorturl": "https://oldschool.runescape.wiki/index.php?curid=13951",
+            "sha1": "97b0a1827de8ba69915d0a275c92af418c547c3b",
+            "extmetadata": {
+              "DateTime": {
+                "value": "2013-03-21T23:06:11Z",
+                "source": "mediawiki-metadata",
+                "hidden": ""
+              },
+              "ObjectName": {
+                "value": "Map clue Draynor willows",
+                "source": "mediawiki-metadata"
+              }
+            }
+          }
+        ],
+        "downloadSha256": "125986f286cebde762f535b01df497606d7a6934912f6c1eaeb600b9cbc4045a"
+      },
+      {
+        "pageid": 16106,
+        "ns": 6,
+        "title": "File:Map clue Falador stones.png",
+        "imagerepository": "local",
+        "imageinfo": [
+          {
+            "timestamp": "2013-05-31T15:36:55Z",
+            "size": 33639,
+            "width": 325,
+            "height": 308,
+            "url": "https://oldschool.runescape.wiki/images/Map_clue_Falador_stones.png?1d2b6",
+            "descriptionurl": "https://oldschool.runescape.wiki/w/File:Map_clue_Falador_stones.png",
+            "descriptionshorturl": "https://oldschool.runescape.wiki/index.php?curid=16106",
+            "sha1": "99a955301ba8356b38b241d16ce91036d7643c0f",
+            "extmetadata": {
+              "DateTime": {
+                "value": "2013-05-31T15:36:55Z",
+                "source": "mediawiki-metadata",
+                "hidden": ""
+              },
+              "ObjectName": {
+                "value": "Map clue Falador stones",
+                "source": "mediawiki-metadata"
+              }
+            }
+          }
+        ],
+        "downloadSha256": "5ebe67c0270cb6226dec3d0735ce332283dc27cf7417291eeda12ab154120263"
+      },
+      {
+        "pageid": 18788,
+        "ns": 6,
+        "title": "File:Map clue Yanille anvil.png",
+        "imagerepository": "local",
+        "imageinfo": [
+          {
+            "timestamp": "2013-05-31T17:46:08Z",
+            "size": 11878,
+            "width": 324,
+            "height": 308,
+            "url": "https://oldschool.runescape.wiki/images/Map_clue_Yanille_anvil.png?253bb",
+            "descriptionurl": "https://oldschool.runescape.wiki/w/File:Map_clue_Yanille_anvil.png",
+            "descriptionshorturl": "https://oldschool.runescape.wiki/index.php?curid=18788",
+            "sha1": "6d9cb4c5de4e90cf5a870b2f0f1d62c7a9af7bd5",
+            "extmetadata": {
+              "DateTime": {
+                "value": "2013-05-31T17:46:08Z",
+                "source": "mediawiki-metadata",
+                "hidden": ""
+              },
+              "ObjectName": {
+                "value": "Map clue Yanille anvil",
+                "source": "mediawiki-metadata"
+              }
+            }
+          }
+        ],
+        "downloadSha256": "8aad83bae94ac2f733c70c2fd2281b9734a56c427c45caa83ed5c19743a99783"
+      },
+      {
+        "pageid": 18815,
+        "ns": 6,
+        "title": "File:Map clue Wizard tower.png",
+        "imagerepository": "local",
+        "imageinfo": [
+          {
+            "timestamp": "2014-07-29T18:22:34Z",
+            "size": 15335,
+            "width": 324,
+            "height": 308,
+            "url": "https://oldschool.runescape.wiki/images/Map_clue_Wizard_tower.png?e1c87",
+            "descriptionurl": "https://oldschool.runescape.wiki/w/File:Map_clue_Wizard_tower.png",
+            "descriptionshorturl": "https://oldschool.runescape.wiki/index.php?curid=18815",
+            "sha1": "40b9dbe2667f096b6c87c749f4c866ef7d1595ee",
+            "extmetadata": {
+              "DateTime": {
+                "value": "2014-07-29T18:22:34Z",
+                "source": "mediawiki-metadata",
+                "hidden": ""
+              },
+              "ObjectName": {
+                "value": "Map clue Wizard tower",
+                "source": "mediawiki-metadata"
+              }
+            }
+          }
+        ],
+        "downloadSha256": "340306ddec69da232629a0244eea217376f769669314fc2a978a138323c9d015"
+      },
+      {
+        "pageid": 19471,
+        "ns": 6,
+        "title": "File:Map clue Tower of Life.png",
+        "imagerepository": "local",
+        "imageinfo": [
+          {
+            "timestamp": "2013-06-08T06:04:53Z",
+            "size": 12330,
+            "width": 324,
+            "height": 308,
+            "url": "https://oldschool.runescape.wiki/images/Map_clue_Tower_of_Life.png?99b21",
+            "descriptionurl": "https://oldschool.runescape.wiki/w/File:Map_clue_Tower_of_Life.png",
+            "descriptionshorturl": "https://oldschool.runescape.wiki/index.php?curid=19471",
+            "sha1": "9a512070804cfb0f3ddcaaf4aedee03962776002",
+            "extmetadata": {
+              "DateTime": {
+                "value": "2013-06-08T06:04:53Z",
+                "source": "mediawiki-metadata",
+                "hidden": ""
+              },
+              "ObjectName": {
+                "value": "Map clue Tower of Life",
+                "source": "mediawiki-metadata"
+              }
+            }
+          }
+        ],
+        "downloadSha256": "2464ec251972316ad7beb13ac01999530ec965ca00a9a71bc3d073406861a9d8"
+      },
+      {
+        "pageid": 40944,
+        "ns": 6,
+        "title": "File:Map clue Lumberyard.png",
+        "imagerepository": "local",
+        "imageinfo": [
+          {
+            "timestamp": "2014-08-13T04:37:08Z",
+            "size": 13935,
+            "width": 324,
+            "height": 308,
+            "url": "https://oldschool.runescape.wiki/images/Map_clue_Lumberyard.png?985cc",
+            "descriptionurl": "https://oldschool.runescape.wiki/w/File:Map_clue_Lumberyard.png",
+            "descriptionshorturl": "https://oldschool.runescape.wiki/index.php?curid=40944",
+            "sha1": "b6db38949efb020de5292a680f40d9aa143ccd85",
+            "extmetadata": {
+              "DateTime": {
+                "value": "2014-08-13T04:37:08Z",
+                "source": "mediawiki-metadata",
+                "hidden": ""
+              },
+              "ObjectName": {
+                "value": "Map clue Lumberyard",
+                "source": "mediawiki-metadata"
+              }
+            }
+          }
+        ],
+        "downloadSha256": "b502b865f3444a8b9701d32561421d47312d40c5ba5fdea040527c7a613b21ce"
+      },
+      {
+        "pageid": 40650,
+        "ns": 6,
+        "title": "File:Map clue Castle Wars.png",
+        "imagerepository": "local",
+        "imageinfo": [
+          {
+            "timestamp": "2016-08-22T19:08:19Z",
+            "size": 17664,
+            "width": 324,
+            "height": 308,
+            "url": "https://oldschool.runescape.wiki/images/Map_clue_Castle_Wars.png?aabae",
+            "descriptionurl": "https://oldschool.runescape.wiki/w/File:Map_clue_Castle_Wars.png",
+            "descriptionshorturl": "https://oldschool.runescape.wiki/index.php?curid=40650",
+            "sha1": "dfde9e8979ba013f9dfbadf230a08f90400bfd3d",
+            "extmetadata": {
+              "DateTime": {
+                "value": "2016-08-22T19:08:19Z",
+                "source": "mediawiki-metadata",
+                "hidden": ""
+              },
+              "ObjectName": {
+                "value": "Map clue Castle Wars",
+                "source": "mediawiki-metadata"
+              }
+            }
+          }
+        ],
+        "downloadSha256": "d790e1201e33a2f089741c08f24ede3647636a7b071716a873ece8493ebcc2b8"
+      }
+    ]
+  }
+}

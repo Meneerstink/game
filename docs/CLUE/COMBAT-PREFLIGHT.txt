@@ -1,0 +1,43 @@
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-b/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[09:21:41.238 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS spotanim_model_holes=64205 next spot=3470 seq=17752 frameset=5996 base=3846 synth=10843
+PLAN seq 376 -> 17752
+PLAN seq 378 -> 17753
+PLAN seq 390 -> 15785
+PLAN seq 424 -> 16085
+PLAN seq 426 -> 15799
+PLAN seq 427 -> 17754
+PLAN seq 727 -> 15755
+PLAN seq 836 -> 17755
+PLAN seq 1162 -> 15774
+PLAN seq 1167 -> 15756
+PLAN seq 4320 -> 16157
+PLAN seq 4321 -> 16159
+PLAN seq 4322 -> 16158
+PLAN seq 6957 -> 17756
+PLAN seq 6958 -> 17757
+PLAN seq 6959 -> 17758
+DROPPED seq 376: vertical offset 8
+DROPPED seq 376: stretches flag (no 667 equivalent)
+DROPPED seq 378: vertical offset 8
+DROPPED seq 390: vertical offset 8
+DROPPED seq 390: stretches flag (no 667 equivalent)
+DROPPED seq 424: vertical offset 8
+DROPPED seq 426: vertical offset 8
+DROPPED seq 427: vertical offset 8
+DROPPED seq 727: vertical offset 8
+DROPPED seq 836: vertical offset 8
+DROPPED seq 1162: vertical offset 8
+DROPPED seq 1167: vertical offset 8
+DROPPED seq 4320: stretches flag (no 667 equivalent)
+DROPPED seq 4321: stretches flag (no 667 equivalent)
+DROPPED seq 6957: stretches flag (no 667 equivalent)
+DROPPED seq 6957: vertical offset 10
+DROPPED seq 6958: vertical offset 10
+DROPPED seq 6959: vertical offset 10
+PREFLIGHT transaction=tx-20261117-082149 mutations=294 outcomes={NO_OP=312, CREATE=276}
+DRY_RUN records=14

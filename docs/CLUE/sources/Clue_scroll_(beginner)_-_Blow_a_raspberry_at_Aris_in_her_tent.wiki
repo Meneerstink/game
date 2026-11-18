@@ -1,0 +1,43 @@
+{{Infobox Item
+|name = Clue scroll (beginner)
+|image = [[File:Clue scroll (beginner).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = No
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 23182
+}}
+[[File:Clue scroll (beginner) detail.png|left|width=100x86]]
+'''Clue scroll (beginner)''' is an [[emote clue]] obtained from [[Clue scroll (beginner)|beginner]] [[Treasure Trails]].
+
+The items can be stored in a [[STASH]] bush outside Aris' tent. It requires {{SCP|Construction|12|link=yes}}, a [[hammer]], [[saw]], 2 [[plank|planks]] and 10 [[Nails]] to build. Building the STASH rewards the player with 150 Construction XP.
+
+==Clue info==
+{{Clue info
+|id = 23182
+|tier = beginner
+|emote = Raspberry
+|text=Blow a raspberry at Aris in her tent.
+
+Equip a gold ring and a gold necklace.
+|location = [[Aris]]'s tent
+|items=Equip a [[gold ring]] and a [[gold necklace]].
+|equipment1 = Gold ring
+|equipment2 = Gold necklace 
+|notes=[[Aris]] can be found in her tent at [[Varrock Square]].
+|map={{Map|3203,3424|mtype=pin|plane=0|mapID=-1}}}}
+
+==Transportation==
+*[[Varrock Teleport]].
+*[[Achievement diary cape]] teleport to [[Toby]].
+*[[Chronicle]] teleport and run north.
+*[[Combat bracelet]] teleport to the [[Champions' Guild]] and run north.
+*[[Spirit tree]] teleport to the [[Grand Exchange]].

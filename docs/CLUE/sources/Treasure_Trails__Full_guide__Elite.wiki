@@ -1,0 +1,92 @@
+{{ToC|right}}
+{{Shortcut|ttfg4}}
+
+For ideal setups for elite clues, refer [[Treasure_Trails/Strategies#Elite_clues_|here]].
+
+==Preparation==
+{{See also|Treasure Trails/Guide/Emote clues/Items}}
+[[Clue scroll (elite)|Elite clue scrolls]] can be between five and seven clues long, with multiple fights and puzzles.
+
+{|class="wikitable align-center-1"
+! colspan=2 | Item
+! Description
+|-
+| {{plinkt|Clue scroll (elite)|txt=Clue scroll}}
+| Must be in the inventory in order to receive the next step or reward.
+|-
+| {{plinkp|Spade}} {{plinkp|Eastfloor spade}}
+| [[Spade]] or [[Eastfloor spade]]
+| Digging in certain locations is required for some clues.
+|-
+| {{plinkp|Law rune}} {{plinkp|Amulet of glory(4)}}
+| [[Teleportation]] [[runes]] and enchanted [[jewellery]]
+| Use this to travel over large distances.
+|-
+| {{plinkp|Energy potion}} {{plinkp|Super energy}} {{plinkp|Stamina potion}}
+| [[Energy potion]]s ([[Super energy potion|super]]) or [[stamina potion]]s
+| Use these to restore [[energy]].
+|-
+| {{plinkp|Coins|pic=Coins 10000}}
+| [[Money]]
+| Use this to buy items needed for [[emote clues]] and travel costs.
+|-
+| {{plinkp|Dramen staff}} {{plinkp|Lunar staff}}
+| [[Dramen staff|Dramen]] or [[lunar staff]]
+| Use this to access the [[Fairy ring]] network shortly into [[Fairytale II - Cure a Queen]] (especially useful for [[medium clue]]s).
+|-
+| {{plinkp|Dragon scimitar}} {{plinkp|Black d'hide body}}
+| [[Weapon]] and [[armour]]
+| Some clue steps require combat.
+|-
+| {{plinkp|Shark}}
+| [[Food]]
+| Used to restore [[Hitpoints]].
+|-
+| {{plinkt|Prayer potion}}s
+| Used to restore [[prayer points]].
+|-
+| {{plinkt|Clue box}}
+| Protects clue scrolls while in the wilderness.
+|-
+| {{plinkt|Kandarin headgear 4}}
+| Used to teleport to [[Sherlock]].
+|}
+
+==Requirements==
+{{:Clue scroll (elite)}}
+
+==Anagrams==
+{{shortcut|ttga}}
+{{Treasure Trails Guide Anagrams Intro}}
+{{:Treasure Trails/Guide/Anagrams/Elite}}
+
+==Coordinates==
+{{shortcut|ttgc}}
+Quick links: [[#400|00]] [[#401|01]] [[#402|02]] [[#403|03]] [[#404|04]] [[#405|05]] [[#406|06]] [[#407|07]] [[#408|08]] [[#409|09]] [[#410|10]] [[#411|11]] [[#412|12]] [[#413|13]] [[#414|14]] [[#415|15]] [[#416|16]] [[#417|17]] [[#418|18]] [[#419|19]] [[#420|20]] [[#421|21]] [[#422|22]] [[#423|23]] [[#424|24]] [[#425|25]] [[#426|26]]
+{{Treasure Trails Guide Coordinates Intro}}
+{{:Treasure Trails/Guide/Coordinates/Elite}}
+
+==Cryptic clues==
+{{shortcut|ttgcr}}
+{{Treasure Trails Guide Cryptic Clues Intro}}
+{{:Treasure Trails/Guide/Cryptic clues/Elite}}
+
+==Emote clues==
+{{shortcut|ttge}}
+{{Treasure Trails Guide Emote Clues Intro}}
+{{:Treasure Trails/Guide/Emote clues/Elite}}
+
+==Maps==
+{{shortcut|ttgm}}
+{{Treasure Trails Guide Maps Intro}}
+{{:Treasure Trails/Guide/Maps/Elite}}
+
+==Sherlock==
+{{Sherlock Intro}}
+{{:Sherlock/Elite}}
+
+==Puzzle boxes==
+{{Puzzle Box Guide}}
+
+{{Treasure Trails}}
+[[Category:Guides]]

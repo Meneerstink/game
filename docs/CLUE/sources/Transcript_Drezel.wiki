@@ -1,0 +1,104 @@
+{{Transcript|npc}}
+{{incomplete|Casket receiving dialogue is missing}}
+
+==Standard dialogue after Priest in Peril==
+* {{tcond|If the player has lost their wolfbane dagger:}}
+** '''Player:''' I've lost my wolfbane dagger.
+** {{Tcond|If the player's inventory is full:}}
+*** '''Drezel:''' Yes I know, but you have no space for a it at the moment so I can't return it to you.
+*** {{tact|end}}
+** {{Tcond|If the player's inventory isn't full:}}
+*** {{tact|receives=wolfbane dagger}}
+*** '''Player:''' I've lost my wolfbane dagger.
+*** '''Drezel:''' Yes I know! Luckily for you it washed up on the banks of the Salve earlier! Here, take it again, but please try and be more careful this time. It's a family heirloom after all!
+*** '''Player:''' Thanks for that!
+*** {{tact|end}}
+* {{tcond|If the player has lost their temple library key:}}
+** '''Player:''' I've lost my library key.
+** {{tact|receives=temple library key}}
+** '''Drezel:''' Ok, here's another one for you.
+** '''Player:''' Thanks for that!
+** {{tact|end}}
+* {{Tcond|Before Nature Spirit:}}
+** '''Player:''' Hello again, Drezel. Is there anything that I can help you out with around here?
+** {{tcond|If the player does not meet the requirements for Nature Spirit:}}
+*** '''Drezel:''' Well... I don't think so. There's not much to do in that place.
+*** {{tbox|You do not meet all of the requirements to start the Nature Spirit quest.}}
+*** {{tact|end}}
+** {{tcond|If the player meets the requirements for Nature Spirit:}}
+*** '''Drezel:''' Well... there is something you could do for me if you're interested. Though it is quite dangerous.
+*** {{tselect|Select an option}}
+*** {{Topt|Well, what is it, I may be able to help?}}
+*** '''Player:''' Well, what is it, I may be able to help?
+*** '''Drezel:''' There's a man called Filliman who lives in Mort Myre. He comes by the temple from time to time but I haven't seen him recently. I was wondering if you could check in on him?
+*** '''Drezel:''' I must warn you, it could be dangerous. Mort Myre is filled with ghasts!
+**** {{Tselect|Start Nature Spirit quest?}}
+**** {{Topt|Yes.}}
+***** {{tact|Continues in [[Transcript:Nature Spirit]]}}
+**** {{Topt|No.}}
+***** '''Player:''' Sorry, I don't think I can help.
+***** '''Drezel:''' That's fine, I'm sure someone else will be along shortly who can. Now, if you will excuse me, I do have some things to be getting on with.
+***** {{tact|end}}
+*** {{Topt|Sorry, not interested.}}
+**** '''Player:''' Sorry, not interested.
+**** '''Drezel:''' Of course. I understand.
+**** {{tact|end}}
+
+===After Nature Spirit===
+* '''Player:''' Hi there! Filliman says I've completed the quest!
+* '''Drezel:''' That's fantastic, well done!
+* {{tact|end}}
+
+===After Darkness of Hallowvale===
+* '''Drezel:''' Hello, [player name]. How are things in Morytania?
+* '''Player:''' Not as well as I'd hope, Drezel. I'm still working with the Myreque. I just hope that we can find a way to defeat those Drakans.
+* '''Drezel:''' You can be sure that a great many people hope for exactly the same thing, [player name]. Good luck to you, and Myreque prevail!
+* '''Player:''' Myreque prevail, Drezel.
+* {{tact|end}}
+
+===After A Taste of Hope===
+* '''Drezel:''' How's everything going, [player name]?
+* '''Player:''' We've managed to create a new weapon to fight the vampyres with. I used it to kill Ranis Drakan!
+* '''Drezel:''' This is amazing news, [player name]. Myreque prevail!
+* '''Player:''' Myreque prevail, Drezel.
+* {{tact|end}}
+
+===After Sins of the Father===
+* '''Drezel:''' [player name]. How are things?
+* '''Player:''' As well as they could be, everything considered. We lost everything, Drezel.
+* '''Drezel:''' Not everything. There's still you, me and Ivan. Veliaf is out there somewhere as well. It's not much, but it's something to be thankful for.
+* '''Player:''' I suppose.
+* '''Drezel:''' Morytania has never been darker. Trust in Saradomin, friend. There is still a chance we will live through this darkness.
+* {{tact|end}}
+
+===After The Blood Moon Rises===
+* '''Drezel:''' [player name]. How are things?
+* '''Player:''' Not too bad, Drezel. How about here?
+* '''Drezel:''' Well, it's nice to not have to worry as much about the vampyres, but I must admit, I'm still not overly comfortable about the fact that we're now all trying to be friends.
+* '''Player:''' It was that or we try to kill them all, and I'm not totally sure wiping out a whole race would have been the best of ideas either... not that we'd have ever likely been able to.
+* '''Drezel:''' You make a good point. And I suppose the King is behind it, even if that advisor of his isn't... Even still, I'm glad we have the Salve to stop them if they do try anything.
+* '''Drezel:''' In happier news, Ivan is now able to properly focus on his studying... though he does still sneak off for the odd adventure from time to time.
+* '''Player:''' Well, I suppose you can't be too picky.
+* '''Drezel:''' Indeed. The important part is that he will be a worthy successor. Of that, I can be confident.
+* '''Player:''' I couldn't agree more. Until next time, Drezel.
+* {{tact|end}}
+
+==Treasure Trails==
+===Medium ===
+* '''Drezel:''' Ah! Here you go!
+* '''Player:''' What?
+* '''Drezel:''' I need you to help me with this.
+* {{tact|receives=a challenge scroll}}
+* {{tbox|Drezel has given you a challenge scroll!}}
+* {{tact|end}}
+
+==== When talked to again====
+* '''Drezel:''' Please give me your answer!
+* {{tcond|When given the wrong answer:}}
+** '''Drezel:''' Nope, not correct!
+** {{tact|end}}
+* {{tcond|When given the correct answer:}}
+** '''Drezel:''' Correct!
+** {{tact|receives=another clue scroll/a casket}}
+** {{tbox|Drezel has given you another clue scroll!}}
+** {{tact|end}}

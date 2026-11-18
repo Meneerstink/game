@@ -1,0 +1,1354 @@
+{
+  "fetched_utc": "2026-11-14T20:05:50.696260+00:00",
+  "license": "OSRS Wiki CC BY-NC-SA 3.0; attribution in each source URL",
+  "pages": [
+    {
+      "page": "Treasure Trails",
+      "revision": 15379766,
+      "revision_time": "2026-10-23T01:32:22Z",
+      "file": "Treasure_Trails.wiki",
+      "sha256": "622ebcd26f08659d5765d9d6ee3bcb2a75961a4b6c9dcd9a931c88251b78241d",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails"
+    },
+    {
+      "page": "Watson",
+      "revision": 15393014,
+      "revision_time": "2026-11-03T23:38:15Z",
+      "file": "Watson.wiki",
+      "sha256": "a1d133a2ad38d6f9c228311feaddc318b818ac741395eb6fad28ac7f2c6768d3",
+      "url": "https://oldschool.runescape.wiki/w/Watson"
+    },
+    {
+      "page": "Transcript:Watson",
+      "revision": 15221342,
+      "revision_time": "2026-05-30T00:52:04Z",
+      "file": "Transcript_Watson.wiki",
+      "sha256": "9abf11c013a1ad7eef37e6bca8e4c48ca22064e9122bdf4de6ba385b28abfea5",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AWatson"
+    },
+    {
+      "page": "Strange casket",
+      "revision": 14937692,
+      "revision_time": "2025-07-14T23:45:49Z",
+      "file": "Strange_casket.wiki",
+      "sha256": "56d9a5be0afeb6f6e780c84a6fc0ed6c4c4c887576c513ac901c19be8c85d326",
+      "url": "https://oldschool.runescape.wiki/w/Strange_casket"
+    },
+    {
+      "page": "Transcript:Strange casket",
+      "revision": 15246149,
+      "revision_time": "2026-07-01T03:36:34Z",
+      "file": "Transcript_Strange_casket.wiki",
+      "sha256": "afd3502f5588777ac69ec21105e7f55d362d336e47b89e90516391b6a111de1a",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AStrange_casket"
+    },
+    {
+      "page": "Mimic",
+      "revision": 15401801,
+      "revision_time": "2026-11-13T05:11:35Z",
+      "file": "Mimic.wiki",
+      "sha256": "7a28b0725c007e647294519be56dfa09212240e7a01267b59a5c8fec87d8888c",
+      "url": "https://oldschool.runescape.wiki/w/Mimic"
+    },
+    {
+      "page": "The Mimic",
+      "revision": 15308038,
+      "revision_time": "2026-08-19T18:16:49Z",
+      "file": "The_Mimic.wiki",
+      "sha256": "196a154c629cfda17871cfe77d1b9f84426974ca83907c31a785ca6d92761ec6",
+      "url": "https://oldschool.runescape.wiki/w/The_Mimic"
+    },
+    {
+      "page": "STASH",
+      "revision": 15392150,
+      "revision_time": "2026-11-03T16:01:55Z",
+      "file": "STASH.wiki",
+      "sha256": "18b91fcad7e8e15cee28a7eed1d32394797bb64e18d9c6036741f755b4fd609f",
+      "url": "https://oldschool.runescape.wiki/w/STASH"
+    },
+    {
+      "page": "Uri",
+      "revision": 15396490,
+      "revision_time": "2026-11-07T22:33:54Z",
+      "file": "Uri.wiki",
+      "sha256": "99029589305afb96fb33d8c2e6f22e270ee8867f201e35f5e059816ad949bcbf",
+      "url": "https://oldschool.runescape.wiki/w/Uri"
+    },
+    {
+      "page": "Falo the Bard",
+      "revision": 15386440,
+      "revision_time": "2026-10-30T15:24:22Z",
+      "file": "Falo_the_Bard.wiki",
+      "sha256": "2ee64013f5d48487c27bb81d34b5a09bbe46d01d785031bf95886fcc7a4fc042",
+      "url": "https://oldschool.runescape.wiki/w/Falo_the_Bard"
+    },
+    {
+      "page": "Charlie the Tramp",
+      "revision": 15278787,
+      "revision_time": "2026-07-28T21:27:48Z",
+      "file": "Charlie_the_Tramp.wiki",
+      "sha256": "952f59c2bb97211feaa0ac36da7b3af552178c2219f909aa2efc861a7131da80",
+      "url": "https://oldschool.runescape.wiki/w/Charlie_the_Tramp"
+    },
+    {
+      "page": "Clue nest",
+      "revision": 15363120,
+      "revision_time": "2026-10-03T17:48:41Z",
+      "file": "Clue_nest.wiki",
+      "sha256": "395da0dca2f9f13e4fa1f7105645b75bafe2d4c22190288dd2b1957529c685c7",
+      "url": "https://oldschool.runescape.wiki/w/Clue_nest"
+    },
+    {
+      "page": "Clue geode",
+      "revision": 15394978,
+      "revision_time": "2026-11-05T21:00:28Z",
+      "file": "Clue_geode.wiki",
+      "sha256": "3a438572beb7a6a615b97c20965c5eec3c8c0b3666226a87ae0bf27fadb89c0f",
+      "url": "https://oldschool.runescape.wiki/w/Clue_geode"
+    },
+    {
+      "page": "Clue bottle",
+      "revision": 15207082,
+      "revision_time": "2026-05-06T13:21:23Z",
+      "file": "Clue_bottle.wiki",
+      "sha256": "d13cbc00ea0f04fce515cb9c857f26904e7a532e3d35d683d3b190499e57673a",
+      "url": "https://oldschool.runescape.wiki/w/Clue_bottle"
+    },
+    {
+      "page": "Scroll box",
+      "revision": 15361925,
+      "revision_time": "2026-10-03T12:32:24Z",
+      "file": "Scroll_box.wiki",
+      "sha256": "5a1ce266d02d0d24d8199dd646974fa73f1ab59336b6fd7d04506404ee6617ce",
+      "url": "https://oldschool.runescape.wiki/w/Scroll_box"
+    },
+    {
+      "page": "Treasure Trails/Guide/Hot Cold",
+      "revision": 15279267,
+      "revision_time": "2026-07-29T07:30:01Z",
+      "file": "Treasure_Trails__Guide__Hot_Cold.wiki",
+      "sha256": "eb7bef8bb067d41ec3d64583f8ba820c5314fe0d040fecfafccb161a9b0cc7bf",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Hot_Cold"
+    },
+    {
+      "page": "Treasure Trails/Guide/Light boxes",
+      "revision": 15205840,
+      "revision_time": "2026-05-04T16:14:07Z",
+      "file": "Treasure_Trails__Guide__Light_boxes.wiki",
+      "sha256": "0e54b154cf15420e73ea99dedb6d52cf24c53e64c2f22883aa8b05f453f05de7",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Light_boxes"
+    },
+    {
+      "page": "Treasure Trails/Guide/Puzzle boxes",
+      "revision": 14830720,
+      "revision_time": "2025-01-03T15:54:21Z",
+      "file": "Treasure_Trails__Guide__Puzzle_boxes.wiki",
+      "sha256": "be9720e7cd7f0cb952374b7a9477c85c44bd3339733ec1079f85dd93982385ff",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Puzzle_boxes"
+    },
+    {
+      "page": "Treasure Trails/Guide/Challenge scrolls",
+      "revision": 15392406,
+      "revision_time": "2026-11-03T18:12:46Z",
+      "file": "Treasure_Trails__Guide__Challenge_scrolls.wiki",
+      "sha256": "916c3da4bcd2ddbaf3b23ae7453f1c429b06220d25c2e00adb654233d343841c",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Challenge_scrolls"
+    },
+    {
+      "page": "Treasure Trails/Full guide/All",
+      "revision": 15308708,
+      "revision_time": "2026-08-19T19:07:17Z",
+      "file": "Treasure_Trails__Full_guide__All.wiki",
+      "sha256": "a148963d8fb47f40efa26751da3b47fed7f0e2168e4e1fac1794de276df8ff6b",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Full_guide/All"
+    },
+    {
+      "page": "Treasure Trails/Guide/Anagrams",
+      "revision": 14235928,
+      "revision_time": "2022-01-23T20:54:59Z",
+      "file": "Treasure_Trails__Guide__Anagrams.wiki",
+      "sha256": "d9d36116f90016a88b2899f2a4a7066ebd37dcfe91af6381941bb64b17635c33",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Anagrams"
+    },
+    {
+      "page": "Treasure Trails/Guide/Ciphers",
+      "revision": 15320504,
+      "revision_time": "2026-08-26T07:36:36Z",
+      "file": "Treasure_Trails__Guide__Ciphers.wiki",
+      "sha256": "fc4bc827162179abf4a962c0e23d38ec82775ab7228a3a0fda0efdf7728b27ae",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Ciphers"
+    },
+    {
+      "page": "Treasure Trails/Guide/Coordinates",
+      "revision": 15213043,
+      "revision_time": "2026-05-19T04:22:28Z",
+      "file": "Treasure_Trails__Guide__Coordinates.wiki",
+      "sha256": "56b5d2825b30d39565108b12d6aa13ff83e221d0e6a256277cce4c68ac6e41e7",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates"
+    },
+    {
+      "page": "Treasure Trails/Guide/Cryptic clues",
+      "revision": 14298168,
+      "revision_time": "2022-06-29T03:40:11Z",
+      "file": "Treasure_Trails__Guide__Cryptic_clues.wiki",
+      "sha256": "fac4d3ae213db3ace1fc59e89160b56a295d765c745548a5cf404be81dfad221",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Cryptic_clues"
+    },
+    {
+      "page": "Treasure Trails/Guide/Emote clues",
+      "revision": 14401066,
+      "revision_time": "2023-04-20T01:36:27Z",
+      "file": "Treasure_Trails__Guide__Emote_clues.wiki",
+      "sha256": "be7b34a4be1c2bc25fcd81336a4dd71f1ffc12b98754b3ed8586fea86b5a9544",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Emote_clues"
+    },
+    {
+      "page": "Treasure Trails/Guide/Maps",
+      "revision": 14235940,
+      "revision_time": "2022-01-23T20:57:59Z",
+      "file": "Treasure_Trails__Guide__Maps.wiki",
+      "sha256": "b4c48e9f1e8fcbd48386f35bb79d327e46473f062f4e3bd23f62dfe22e08c314",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Maps"
+    },
+    {
+      "page": "Sherlock/Elite",
+      "revision": 15399335,
+      "revision_time": "2026-11-11T15:46:49Z",
+      "file": "Sherlock__Elite.wiki",
+      "sha256": "91255401273747243570ededf56863741b7bab6c5839c8517c495c3b28cfa9de",
+      "url": "https://oldschool.runescape.wiki/w/Sherlock/Elite"
+    },
+    {
+      "page": "Sherlock/Master",
+      "revision": 15375230,
+      "revision_time": "2026-10-18T17:47:07Z",
+      "file": "Sherlock__Master.wiki",
+      "sha256": "6a8f3304274149e897fa983ddd84b954d8306e79643cfbd42c563b07f9e0a087",
+      "url": "https://oldschool.runescape.wiki/w/Sherlock/Master"
+    },
+    {
+      "page": "Clue scroll (beginner)",
+      "revision": 15368108,
+      "revision_time": "2026-10-07T20:39:56Z",
+      "file": "Clue_scroll_(beginner).wiki",
+      "sha256": "0868c31a2092a22cd495067bab74a4e03e3ff0dd451a6e6b2070534d7a895899",
+      "url": "https://oldschool.runescape.wiki/w/Clue_scroll_%28beginner%29"
+    },
+    {
+      "page": "Clue scroll (easy)",
+      "revision": 15386965,
+      "revision_time": "2026-10-31T11:39:09Z",
+      "file": "Clue_scroll_(easy).wiki",
+      "sha256": "f391f447da2b194bc8be86a4804bbf38ad3c95062240866c0f134054e19e0068",
+      "url": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29"
+    },
+    {
+      "page": "Clue scroll (medium)",
+      "revision": 15399781,
+      "revision_time": "2026-11-11T18:41:51Z",
+      "file": "Clue_scroll_(medium).wiki",
+      "sha256": "2ada0ec2d89c6f3205f5b884cb0bc70a30967a277e18923530597707edfb6f11",
+      "url": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29"
+    },
+    {
+      "page": "Clue scroll (hard)",
+      "revision": 15386963,
+      "revision_time": "2026-10-31T11:38:52Z",
+      "file": "Clue_scroll_(hard).wiki",
+      "sha256": "3c1b07e76718d6cf720bdd15871cdde28fd871148bf76ba0ef75c5be6cdb0691",
+      "url": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29"
+    },
+    {
+      "page": "Clue scroll (elite)",
+      "revision": 15402243,
+      "revision_time": "2026-11-13T22:58:38Z",
+      "file": "Clue_scroll_(elite).wiki",
+      "sha256": "d46d28139a64f66ca94ae0ddc9649b9f7d29d162b93e64e82737d6f0019deef9",
+      "url": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29"
+    },
+    {
+      "page": "Clue scroll (master)",
+      "revision": 15386974,
+      "revision_time": "2026-10-31T11:53:50Z",
+      "file": "Clue_scroll_(master).wiki",
+      "sha256": "a2f366c2249675e8c3248a4e7c4afb02059c9d9a332c7b8418facf9807f86f49",
+      "url": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29"
+    },
+    {
+      "page": "Reward casket (beginner)",
+      "revision": 15391833,
+      "revision_time": "2026-11-03T14:51:51Z",
+      "file": "Reward_casket_(beginner).wiki",
+      "sha256": "266e1b8f2f30310bae5d0d12776575ae65ef5da6fb29969020d3734300524a4d",
+      "url": "https://oldschool.runescape.wiki/w/Reward_casket_%28beginner%29"
+    },
+    {
+      "page": "Reward casket (easy)",
+      "revision": 15386969,
+      "revision_time": "2026-10-31T11:43:44Z",
+      "file": "Reward_casket_(easy).wiki",
+      "sha256": "79b121b57238614560fcca2104302ff196515639d6d24836b13de42544c6ee98",
+      "url": "https://oldschool.runescape.wiki/w/Reward_casket_%28easy%29"
+    },
+    {
+      "page": "Reward casket (medium)",
+      "revision": 15386970,
+      "revision_time": "2026-10-31T11:43:53Z",
+      "file": "Reward_casket_(medium).wiki",
+      "sha256": "58fd3897d9207c19472f4e199407c2b910da95a86d9e5fbeba804deaeeaa6e30",
+      "url": "https://oldschool.runescape.wiki/w/Reward_casket_%28medium%29"
+    },
+    {
+      "page": "Reward casket (hard)",
+      "revision": 15386959,
+      "revision_time": "2026-10-31T11:22:05Z",
+      "file": "Reward_casket_(hard).wiki",
+      "sha256": "cc0331585462c234cb6237354e1dc59b42b254f05e3401a4a3f28e31c92cd44c",
+      "url": "https://oldschool.runescape.wiki/w/Reward_casket_%28hard%29"
+    },
+    {
+      "page": "Reward casket (elite)",
+      "revision": 15386972,
+      "revision_time": "2026-10-31T11:49:31Z",
+      "file": "Reward_casket_(elite).wiki",
+      "sha256": "c686a83d54ac41db1e15caafdca8a16bb97dac6947becbeaff2974f38db8ef37",
+      "url": "https://oldschool.runescape.wiki/w/Reward_casket_%28elite%29"
+    },
+    {
+      "page": "Reward casket (master)",
+      "revision": 15389566,
+      "revision_time": "2026-11-02T04:22:46Z",
+      "file": "Reward_casket_(master).wiki",
+      "sha256": "d767c07f78965ac7db26ce3dff6455bf9c1b327b49cfcc0e62eedef99f12835b",
+      "url": "https://oldschool.runescape.wiki/w/Reward_casket_%28master%29"
+    },
+    {
+      "page": "Treasure Trails/Guide/Anagrams/Beginner",
+      "revision": 14593753,
+      "revision_time": "2024-03-19T16:57:00Z",
+      "file": "Treasure_Trails__Guide__Anagrams__Beginner.wiki",
+      "sha256": "f224309dd14db47a9feb96ef847b02f4f8e82ca11e6249d7f8862db38e5dc3a4",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Anagrams/Beginner"
+    },
+    {
+      "page": "Treasure Trails/Guide/Anagrams/Elite",
+      "revision": 14815975,
+      "revision_time": "2024-12-02T17:47:27Z",
+      "file": "Treasure_Trails__Guide__Anagrams__Elite.wiki",
+      "sha256": "dfbb23a879260a1b3ffb3c2ec4ffecd728617fe6d54a2e872793fc7028a4ef62",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Anagrams/Elite"
+    },
+    {
+      "page": "Treasure Trails/Guide/Anagrams/Hard",
+      "revision": 15280056,
+      "revision_time": "2026-07-29T13:02:32Z",
+      "file": "Treasure_Trails__Guide__Anagrams__Hard.wiki",
+      "sha256": "6cbe9ea459130e21710157f0c3e20e2594d2d0f774896ac45ffb95ebc29129f0",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Anagrams/Hard"
+    },
+    {
+      "page": "Treasure Trails/Guide/Anagrams/Master",
+      "revision": 14896740,
+      "revision_time": "2025-05-07T19:13:48Z",
+      "file": "Treasure_Trails__Guide__Anagrams__Master.wiki",
+      "sha256": "10c3d25d65f9db42b9ee7732dc236addba91bd7380cf3404e96db26117b8572b",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Anagrams/Master"
+    },
+    {
+      "page": "Treasure Trails/Guide/Anagrams/Medium",
+      "revision": 15395657,
+      "revision_time": "2026-11-06T18:14:24Z",
+      "file": "Treasure_Trails__Guide__Anagrams__Medium.wiki",
+      "sha256": "bbabfe3312b62b091ad94f3ede9fbd1bf4cee8ab3a68a8cf66e58b9a6f5e9295",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Anagrams/Medium"
+    },
+    {
+      "page": "Treasure Trails/Guide/Ciphers/Hard",
+      "revision": 15320505,
+      "revision_time": "2026-08-26T07:37:45Z",
+      "file": "Treasure_Trails__Guide__Ciphers__Hard.wiki",
+      "sha256": "6722edf638026fa39744f9a05280cf87b86e92ec909c6f4c88d36a822cb6f7f1",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Ciphers/Hard"
+    },
+    {
+      "page": "Treasure Trails/Guide/Ciphers/Medium",
+      "revision": 15392438,
+      "revision_time": "2026-11-03T18:15:57Z",
+      "file": "Treasure_Trails__Guide__Ciphers__Medium.wiki",
+      "sha256": "2e95bfbede065a4301eb8d504194526dd5c2acddcae60d9a790a06694385b7db",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Ciphers/Medium"
+    },
+    {
+      "page": "Treasure Trails/Guide/Coordinates/Elite",
+      "revision": 15315367,
+      "revision_time": "2026-08-21T05:53:16Z",
+      "file": "Treasure_Trails__Guide__Coordinates__Elite.wiki",
+      "sha256": "16fc0867f8a97091cd0b2bd9faace95f552746d9e24c6dc701f1b0d34deab0ec",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Elite"
+    },
+    {
+      "page": "Treasure Trails/Guide/Coordinates/Hard",
+      "revision": 15377582,
+      "revision_time": "2026-10-20T14:52:10Z",
+      "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+      "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+    },
+    {
+      "page": "Treasure Trails/Guide/Coordinates/Master",
+      "revision": 15389781,
+      "revision_time": "2026-11-02T12:06:01Z",
+      "file": "Treasure_Trails__Guide__Coordinates__Master.wiki",
+      "sha256": "9970aec8d93d41ac4523af8358e027efefd0967a3871e636e61016fa7829d55d",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Master"
+    },
+    {
+      "page": "Treasure Trails/Guide/Coordinates/Medium",
+      "revision": 15371619,
+      "revision_time": "2026-10-13T01:33:39Z",
+      "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+      "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+    },
+    {
+      "page": "Treasure Trails/Guide/Cryptic clues/Beginner",
+      "revision": 14939159,
+      "revision_time": "2025-07-16T23:05:30Z",
+      "file": "Treasure_Trails__Guide__Cryptic_clues__Beginner.wiki",
+      "sha256": "fb56eca4478df9172cbb268199156f7a77f53313b77921d7f56f91093afc693c",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Cryptic_clues/Beginner"
+    },
+    {
+      "page": "Treasure Trails/Guide/Cryptic clues/Easy",
+      "revision": 15394455,
+      "revision_time": "2026-11-05T07:06:15Z",
+      "file": "Treasure_Trails__Guide__Cryptic_clues__Easy.wiki",
+      "sha256": "26cd622d35c63f9d7b86c860cb3344ee21e4abbf275f8678e6d3b2f5d56ac573",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Cryptic_clues/Easy"
+    },
+    {
+      "page": "Treasure Trails/Guide/Cryptic clues/Elite",
+      "revision": 15237722,
+      "revision_time": "2026-06-23T01:12:26Z",
+      "file": "Treasure_Trails__Guide__Cryptic_clues__Elite.wiki",
+      "sha256": "730ee1b2ee33029aac3f8b3fdbd715285e3e2513b1328326687aa40868c588f4",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Cryptic_clues/Elite"
+    },
+    {
+      "page": "Treasure Trails/Guide/Cryptic clues/Hard",
+      "revision": 15309253,
+      "revision_time": "2026-08-19T19:56:33Z",
+      "file": "Treasure_Trails__Guide__Cryptic_clues__Hard.wiki",
+      "sha256": "85f7d7985259a436fab3e91de5e3b9fb088b47971d20ef6faaf4ad2e8d697e47",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Cryptic_clues/Hard"
+    },
+    {
+      "page": "Treasure Trails/Guide/Cryptic clues/Master",
+      "revision": 15369527,
+      "revision_time": "2026-10-09T16:39:08Z",
+      "file": "Treasure_Trails__Guide__Cryptic_clues__Master.wiki",
+      "sha256": "789fce0ceb7142a9343cb555cf92d6b6f0b51615fcb8db42298c3a428e785701",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Cryptic_clues/Master"
+    },
+    {
+      "page": "Treasure Trails/Guide/Cryptic clues/Medium",
+      "revision": 15171742,
+      "revision_time": "2026-04-09T22:32:59Z",
+      "file": "Treasure_Trails__Guide__Cryptic_clues__Medium.wiki",
+      "sha256": "4cf9de1f58f8cf360894b2244eef71d6ef1c27a264993f9fb344a491a4c262cd",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Cryptic_clues/Medium"
+    },
+    {
+      "page": "Treasure Trails/Guide/Emote clues/Beginner",
+      "revision": 14796202,
+      "revision_time": "2024-11-09T23:12:02Z",
+      "file": "Treasure_Trails__Guide__Emote_clues__Beginner.wiki",
+      "sha256": "f7c5299dd9a39b31fdc56bebea7c742fb2e4e6f4d42397b0d6ad517e20344ed4",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Emote_clues/Beginner"
+    },
+    {
+      "page": "Treasure Trails/Guide/Emote clues/Easy",
+      "revision": 15089758,
+      "revision_time": "2025-12-18T22:11:54Z",
+      "file": "Treasure_Trails__Guide__Emote_clues__Easy.wiki",
+      "sha256": "e9caaf6b2df60e19c19657906da6e613fcf40d85906d000b1fbc6230a6f22755",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Emote_clues/Easy"
+    },
+    {
+      "page": "Treasure Trails/Guide/Emote clues/Elite",
+      "revision": 15345381,
+      "revision_time": "2026-09-16T13:35:34Z",
+      "file": "Treasure_Trails__Guide__Emote_clues__Elite.wiki",
+      "sha256": "1c7004784191e20d6247ccbaa5c09fae3f5d3420d3ff3307b600d3b9f567f29f",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Emote_clues/Elite"
+    },
+    {
+      "page": "Treasure Trails/Guide/Emote clues/Hard",
+      "revision": 15263121,
+      "revision_time": "2026-07-14T15:23:38Z",
+      "file": "Treasure_Trails__Guide__Emote_clues__Hard.wiki",
+      "sha256": "2ccd0acc6eb12ddb33fc77cb51de6cd85b142a21af90af289ce52247f69f26e8",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Emote_clues/Hard"
+    },
+    {
+      "page": "Treasure Trails/Guide/Emote clues/Master",
+      "revision": 15347483,
+      "revision_time": "2026-09-16T23:43:06Z",
+      "file": "Treasure_Trails__Guide__Emote_clues__Master.wiki",
+      "sha256": "b69ebd634b98efebcad32fc7f7235951c6287e804f55f77f7ffcb6edb820b9ff",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Emote_clues/Master"
+    },
+    {
+      "page": "Treasure Trails/Guide/Emote clues/Medium",
+      "revision": 15392358,
+      "revision_time": "2026-11-03T17:43:23Z",
+      "file": "Treasure_Trails__Guide__Emote_clues__Medium.wiki",
+      "sha256": "9e78d445598ebe297e1c180177e109848fa3debb81439729d9fb2008b547c901",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Emote_clues/Medium"
+    },
+    {
+      "page": "Treasure Trails/Guide/Hot Cold/Beginner",
+      "revision": 15263581,
+      "revision_time": "2026-07-14T22:14:45Z",
+      "file": "Treasure_Trails__Guide__Hot_Cold__Beginner.wiki",
+      "sha256": "c3151b64ebed4469ffe8506618ea9f257a769d94cd043be28879d2b8f4846fb1",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Hot_Cold/Beginner"
+    },
+    {
+      "page": "Treasure Trails/Guide/Hot Cold/Master",
+      "revision": 15373288,
+      "revision_time": "2026-10-15T19:46:54Z",
+      "file": "Treasure_Trails__Guide__Hot_Cold__Master.wiki",
+      "sha256": "56e558908d499afda80f7276b0c1154c70f8ec6126b1cf7264a398181f4383b9",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Hot_Cold/Master"
+    },
+    {
+      "page": "Treasure Trails/Guide/Maps/Beginner",
+      "revision": 14939156,
+      "revision_time": "2025-07-16T22:58:07Z",
+      "file": "Treasure_Trails__Guide__Maps__Beginner.wiki",
+      "sha256": "8a2c84042fa77cc21c8edb76a8ebe42d0cda31471bab67ccd530f7d123e4a174",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Maps/Beginner"
+    },
+    {
+      "page": "Treasure Trails/Guide/Maps/Easy",
+      "revision": 14803056,
+      "revision_time": "2024-11-19T06:09:57Z",
+      "file": "Treasure_Trails__Guide__Maps__Easy.wiki",
+      "sha256": "24157a342f108516cf831801ae0d38cea877f96c4e9564daf8c98fb10b49b827",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Maps/Easy"
+    },
+    {
+      "page": "Treasure Trails/Guide/Maps/Elite",
+      "revision": 15386379,
+      "revision_time": "2026-10-30T14:37:34Z",
+      "file": "Treasure_Trails__Guide__Maps__Elite.wiki",
+      "sha256": "75272a6c5aef558958b85305a6851a6ea081b3b7dd5757473d476f7375d36640",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Maps/Elite"
+    },
+    {
+      "page": "Treasure Trails/Guide/Maps/Hard",
+      "revision": 15099567,
+      "revision_time": "2026-01-03T16:03:33Z",
+      "file": "Treasure_Trails__Guide__Maps__Hard.wiki",
+      "sha256": "c0ac6da3ebe4bf7d6920c2dec2cbaa49a5ba132e89979612522fbc933a3edbc7",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Maps/Hard"
+    },
+    {
+      "page": "Treasure Trails/Guide/Maps/Medium",
+      "revision": 15360117,
+      "revision_time": "2026-10-02T05:50:04Z",
+      "file": "Treasure_Trails__Guide__Maps__Medium.wiki",
+      "sha256": "359e5bb1bb98cbc0a7aec31620d1a88ff0da180dd6831ddb35a3d8e7acd039f5",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Maps/Medium"
+    },
+    {
+      "page": "Scroll case",
+      "revision": 15344242,
+      "revision_time": "2026-09-15T20:41:18Z",
+      "file": "Scroll_case.wiki",
+      "sha256": "fe1986455528a5fa091ee95915fb3964c909566b266db7d0c2acc0721f6708bd",
+      "url": "https://oldschool.runescape.wiki/w/Scroll_case"
+    },
+    {
+      "page": "X Marks the Spot",
+      "revision": 15367156,
+      "revision_time": "2026-10-06T20:40:05Z",
+      "file": "X_Marks_the_Spot.wiki",
+      "sha256": "f83eb35a4161bc6e6ad65144a3e46ceb1f0914bd1b4f3ca6c1e02e1893aa41f1",
+      "url": "https://oldschool.runescape.wiki/w/X_Marks_the_Spot"
+    },
+    {
+      "page": "Template:Treasure Trails Guide Maps Intro",
+      "revision": 14435985,
+      "revision_time": "2023-07-16T13:25:57Z",
+      "file": "Template_Treasure_Trails_Guide_Maps_Intro.wiki",
+      "sha256": "04ba071a1976e14a0f3cf2dcc5fef0ba5fe38d40875d87c3905503479f17eff7",
+      "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Maps_Intro"
+    },
+    {
+      "page": "Drops",
+      "revision": 15359629,
+      "revision_time": "2026-10-01T13:15:12Z",
+      "file": "Drops.wiki",
+      "sha256": "19625ef3c30af81efb6b3a79a134b7c7beeda0c361d7ca27dbf8ca8827725a7e",
+      "url": "https://oldschool.runescape.wiki/w/Drops"
+    },
+    {
+      "page": "Reward casket",
+      "revision": 15366136,
+      "revision_time": "2026-10-05T21:23:02Z",
+      "file": "Reward_casket.wiki",
+      "sha256": "d523271fbd99d129f3a4e1f13737bced1eaec80bcda0949327e5b13f85e4c2f3",
+      "url": "https://oldschool.runescape.wiki/w/Reward_casket"
+    },
+    {
+      "page": "Clue scroll",
+      "revision": 15343108,
+      "revision_time": "2026-09-14T00:47:03Z",
+      "file": "Clue_scroll.wiki",
+      "sha256": "b58424a835b3513b396286aa22d58ad6cd45d25ccef2483a52ea035389a5aa64",
+      "url": "https://oldschool.runescape.wiki/w/Clue_scroll"
+    },
+    {
+      "page": "Entrana",
+      "revision": 15399173,
+      "revision_time": "2026-11-11T15:00:15Z",
+      "file": "Entrana.wiki",
+      "sha256": "3691be57d4cae81d7702f6e084a93a621726e2a95dcc6dcd3b9fb848434cf843",
+      "url": "https://oldschool.runescape.wiki/w/Entrana"
+    },
+    {
+      "page": "Treasure!",
+      "missing": true
+    },
+    {
+      "page": "Treasure! (Treasure Trails)",
+      "revision": 15353846,
+      "revision_time": "2026-09-23T03:55:19Z",
+      "file": "Treasure!_(Treasure_Trails).wiki",
+      "sha256": "b324a92187752d768348dd1cdf5b6ef9d7eed0c0a68eac153cb4c95c268dc576",
+      "url": "https://oldschool.runescape.wiki/w/Treasure%21_%28Treasure_Trails%29"
+    },
+    {
+      "page": "The Mimic/Strategies",
+      "revision": 15402020,
+      "revision_time": "2026-11-13T14:21:37Z",
+      "file": "The_Mimic__Strategies.wiki",
+      "sha256": "58c3b0b45d30db90dd42cb6b62a7d6b03fe12048eaed6e1facd3602b54aaac3b",
+      "url": "https://oldschool.runescape.wiki/w/The_Mimic/Strategies"
+    },
+    {
+      "page": "Watson's house",
+      "revision": 15357953,
+      "revision_time": "2026-09-28T22:58:47Z",
+      "file": "Watson's_house.wiki",
+      "sha256": "d9cfef0f0e0dfc29fbe11efb37190e7c7c799fe536a4457dcb294d1df500cca6",
+      "url": "https://oldschool.runescape.wiki/w/Watson%27s_house"
+    },
+    {
+      "page": "Mimic scroll case",
+      "revision": 15210737,
+      "revision_time": "2026-05-13T22:48:43Z",
+      "file": "Mimic_scroll_case.wiki",
+      "sha256": "3c60bb8dc232b7eea1c3e80d7ca4db2582e2aaf29056629cf9bcf7bae794e758",
+      "url": "https://oldschool.runescape.wiki/w/Mimic_scroll_case"
+    },
+    {
+      "page": "Treasure Trail Statistics",
+      "revision": 14931517,
+      "revision_time": "2025-07-03T09:42:19Z",
+      "file": "Treasure_Trail_Statistics.wiki",
+      "sha256": "87e52303d6cb3a46dd40cbfca6cd2c7840b54289daa9ccb72a7bc46912438ca7",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trail_Statistics"
+    },
+    {
+      "page": "S.t.a.s.h blueprint",
+      "revision": 15338041,
+      "revision_time": "2026-09-09T19:33:12Z",
+      "file": "S.t.a.s.h_blueprint.wiki",
+      "sha256": "206cdc1da92422688f833c5de09c0c0a98b28933297c68d47c9c4ca039e0f41d",
+      "url": "https://oldschool.runescape.wiki/w/S.t.a.s.h_blueprint"
+    },
+    {
+      "page": "Bank note",
+      "revision": 15376223,
+      "revision_time": "2026-10-19T19:28:07Z",
+      "file": "Bank_note.wiki",
+      "sha256": "ed6089db5a670403df0611bba704b3d283f2571d210af473b2321f67c95dda43",
+      "url": "https://oldschool.runescape.wiki/w/Bank_note"
+    },
+    {
+      "page": "Third Age Warrior",
+      "revision": 15200126,
+      "revision_time": "2026-04-28T07:25:47Z",
+      "file": "Third_Age_Warrior.wiki",
+      "sha256": "d8dbc1cd8d8800f0e6e3834c8c4373d9e6aa6f4cdf8f202fb7908d9f9c23ed42",
+      "url": "https://oldschool.runescape.wiki/w/Third_Age_Warrior"
+    },
+    {
+      "page": "Third Age Ranger",
+      "revision": 15200128,
+      "revision_time": "2026-04-28T07:25:48Z",
+      "file": "Third_Age_Ranger.wiki",
+      "sha256": "ed5fdb1000a59d7e4d1558b8ac3ebfb7f6900b12e3b36fe31bcb7736e4a93205",
+      "url": "https://oldschool.runescape.wiki/w/Third_Age_Ranger"
+    },
+    {
+      "page": "Third Age Mage",
+      "revision": 15200127,
+      "revision_time": "2026-04-28T07:25:48Z",
+      "file": "Third_Age_Mage.wiki",
+      "sha256": "38dfd53ecce4397c79fce7e011611768276185a851d5b4b8613e65cce82e8b93",
+      "url": "https://oldschool.runescape.wiki/w/Third_Age_Mage"
+    },
+    {
+      "page": "Item Retrieval Service",
+      "revision": 15350506,
+      "revision_time": "2026-09-18T19:15:09Z",
+      "file": "Item_Retrieval_Service.wiki",
+      "sha256": "22243f0f26f18270951804fc1b620d6e3e0fb7f5c4c5df428efda2e16c848c27",
+      "url": "https://oldschool.runescape.wiki/w/Item_Retrieval_Service"
+    },
+    {
+      "page": "Transcript:Uri",
+      "revision": 15267517,
+      "revision_time": "2026-07-19T13:36:09Z",
+      "file": "Transcript_Uri.wiki",
+      "sha256": "d51d73a079635223b846019f6cea8f8eed0e154b8c34d7b47ad911b856bd75bf",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AUri"
+    },
+    {
+      "page": "Double agent",
+      "revision": 15199596,
+      "revision_time": "2026-04-28T07:21:37Z",
+      "file": "Double_agent.wiki",
+      "sha256": "fa7a749e08886469a76c8f140399b385789af6f8b15568b1d6deddf41f837232",
+      "url": "https://oldschool.runescape.wiki/w/Double_agent"
+    },
+    {
+      "page": "Saradomin wizard",
+      "revision": 15382759,
+      "revision_time": "2026-10-26T13:02:53Z",
+      "file": "Saradomin_wizard.wiki",
+      "sha256": "c5a2a5addc63c5217733afaa7a14208a64adc5219634a2f4da50f41c64b59c67",
+      "url": "https://oldschool.runescape.wiki/w/Saradomin_wizard"
+    },
+    {
+      "page": "Zamorak wizard",
+      "revision": 15302930,
+      "revision_time": "2026-08-16T10:18:14Z",
+      "file": "Zamorak_wizard.wiki",
+      "sha256": "cd0b069f9fa04242bd326db82e508b2a00959bf097b9108f8662138f9da30462",
+      "url": "https://oldschool.runescape.wiki/w/Zamorak_wizard"
+    },
+    {
+      "page": "Ancient Wizard",
+      "revision": 15355202,
+      "revision_time": "2026-09-24T06:15:13Z",
+      "file": "Ancient_Wizard.wiki",
+      "sha256": "6b2a0bc7b68ee4ac8be15d36521131ebe4961219b7c5863731d046b66cfe65b0",
+      "url": "https://oldschool.runescape.wiki/w/Ancient_Wizard"
+    },
+    {
+      "page": "Brassican Mage",
+      "revision": 15375119,
+      "revision_time": "2026-10-18T15:31:08Z",
+      "file": "Brassican_Mage.wiki",
+      "sha256": "caf846b4c99c5c0c4771218307e0e99c3b9f9ff891d82099b2432336ebbecce5",
+      "url": "https://oldschool.runescape.wiki/w/Brassican_Mage"
+    },
+    {
+      "page": "Falo the Bard/Challenges",
+      "missing": true
+    },
+    {
+      "page": "Transcript:Mimic",
+      "revision": 14996569,
+      "revision_time": "2025-09-29T16:54:03Z",
+      "file": "Transcript_Mimic.wiki",
+      "sha256": "4320420fbdbf70f7d78b5d9359ed3e1c34e6e395ff24ab4c381929ccb925cfe3",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AMimic"
+    },
+    {
+      "page": "Sherlock",
+      "revision": 15392246,
+      "revision_time": "2026-11-03T16:32:17Z",
+      "file": "Sherlock.wiki",
+      "sha256": "e71b6de520573716ff6da3ca78c79f6c43c4a25012aae99add2bd194821b1ea2",
+      "url": "https://oldschool.runescape.wiki/w/Sherlock"
+    },
+    {
+      "page": "Armadylean guard",
+      "revision": 15384117,
+      "revision_time": "2026-10-27T22:50:23Z",
+      "file": "Armadylean_guard.wiki",
+      "sha256": "359da7fa668a362175230a28437999b8cf5fbd90edc77ce25e093514783404a2",
+      "url": "https://oldschool.runescape.wiki/w/Armadylean_guard"
+    },
+    {
+      "page": "Bandosian guard",
+      "revision": 15356200,
+      "revision_time": "2026-09-26T03:57:55Z",
+      "file": "Bandosian_guard.wiki",
+      "sha256": "c9c105468f4a4604efc61afb855f959583aa4f447c90e8bfe87a631eda11840d",
+      "url": "https://oldschool.runescape.wiki/w/Bandosian_guard"
+    },
+    {
+      "page": "Treasure Trails Guide Coordinates Intro",
+      "missing": true
+    },
+    {
+      "page": "Light box",
+      "revision": 15187673,
+      "revision_time": "2026-04-22T04:16:36Z",
+      "file": "Light_box.wiki",
+      "sha256": "4626afb78b4eb70131aab042691806e2ad9a291018999b64fd7c31e0868b22f1",
+      "url": "https://oldschool.runescape.wiki/w/Light_box"
+    },
+    {
+      "page": "Puzzle box",
+      "revision": 15185934,
+      "revision_time": "2026-04-22T03:15:09Z",
+      "file": "Puzzle_box.wiki",
+      "sha256": "981b6c79b24191f6e45a31034f7b3bc73eeaf2440b5f0bf9ad86aaae491728e2",
+      "url": "https://oldschool.runescape.wiki/w/Puzzle_box"
+    },
+    {
+      "page": "Transcript:Sherlock",
+      "revision": 15255825,
+      "revision_time": "2026-07-07T09:46:05Z",
+      "file": "Transcript_Sherlock.wiki",
+      "sha256": "4733acf0a854a4a115d10c0edb0426f4979997581dae8aa6df7f41330f276461",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ASherlock"
+    },
+    {
+      "page": "Transcript:Falo the Bard",
+      "revision": 15079095,
+      "revision_time": "2025-12-06T00:10:26Z",
+      "file": "Transcript_Falo_the_Bard.wiki",
+      "sha256": "bc77824edde984dd18d3b647c85e486e187bb8695acf48d0991dec30f080858b",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AFalo_the_Bard"
+    },
+    {
+      "page": "Template:Treasure Trails Guide Coordinates Intro",
+      "revision": 15330961,
+      "revision_time": "2026-09-04T19:54:06Z",
+      "file": "Template_Treasure_Trails_Guide_Coordinates_Intro.wiki",
+      "sha256": "ea5e40f96f3cf72e6d8120e316e669c9e8fe2f35f94aa6f22ec2b4a179b38662",
+      "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Coordinates_Intro"
+    },
+    {
+      "page": "Template:Treasure Trails Guide Emote Clues Intro",
+      "revision": 14435986,
+      "revision_time": "2023-07-16T13:26:01Z",
+      "file": "Template_Treasure_Trails_Guide_Emote_Clues_Intro.wiki",
+      "sha256": "96d9c9dc76d6e04906a82f7666b326d5aa431ba28347eb1c31e327b9a9418744",
+      "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Emote_Clues_Intro"
+    },
+    {
+      "page": "Template:Treasure Trails Guide Anagrams Intro",
+      "revision": 14435989,
+      "revision_time": "2023-07-16T13:27:53Z",
+      "file": "Template_Treasure_Trails_Guide_Anagrams_Intro.wiki",
+      "sha256": "cc6475e4ba4b867575af046e15fa8fc7e88fd4f52db4aedefc970e91d5ae2567",
+      "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Anagrams_Intro"
+    },
+    {
+      "page": "Template:Cryptics",
+      "revision": 14097345,
+      "revision_time": "2021-06-17T01:40:22Z",
+      "file": "Template_Cryptics.wiki",
+      "sha256": "e452b958d1df99fb69be3f20e30df78e725988f6101ec87ed25dc0865824bb95",
+      "url": "https://oldschool.runescape.wiki/w/Template%3ACryptics"
+    },
+    {
+      "page": "Transcript:Reward casket (master)",
+      "missing": true
+    },
+    {
+      "page": "Jorral",
+      "revision": 15256447,
+      "revision_time": "2026-07-07T17:37:58Z",
+      "file": "Jorral.wiki",
+      "sha256": "8bdd7233965bbf7632d52a2505bdf71c4b388ad2cd7e238820b0eb92656530c9",
+      "url": "https://oldschool.runescape.wiki/w/Jorral"
+    },
+    {
+      "page": "Mandrith",
+      "revision": 15382757,
+      "revision_time": "2026-10-26T13:01:40Z",
+      "file": "Mandrith.wiki",
+      "sha256": "b9d378d81d34cb982d9f83c868a8270c8993522bd98fc36b8cd1864b227c6c48",
+      "url": "https://oldschool.runescape.wiki/w/Mandrith"
+    },
+    {
+      "page": "Strange device",
+      "revision": 15373639,
+      "revision_time": "2026-10-16T02:01:45Z",
+      "file": "Strange_device.wiki",
+      "sha256": "6e232302457666373bd1899bfa742b5a03ff924ecf4dd57025bb9bf63ded83b9",
+      "url": "https://oldschool.runescape.wiki/w/Strange_device"
+    },
+    {
+      "page": "Template:Treasure Trails Guide Hot Cold Intro",
+      "revision": 15376193,
+      "revision_time": "2026-10-19T18:56:38Z",
+      "file": "Template_Treasure_Trails_Guide_Hot_Cold_Intro.wiki",
+      "sha256": "73705fdd0d9e32fe6d1baf3a042966d881407b1e6bdd432d270a0ca4136193b4",
+      "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Hot_Cold_Intro"
+    },
+    {
+      "page": "Goreu",
+      "revision": 15388208,
+      "revision_time": "2026-11-01T15:14:45Z",
+      "file": "Goreu.wiki",
+      "sha256": "92e746c047bb7642e075f73eb4a7569b9f2dbbfe77afdc040b3fb2d95cd0e654",
+      "url": "https://oldschool.runescape.wiki/w/Goreu"
+    },
+    {
+      "page": "Template:Treasure Trails Guide Cryptic Clues Intro",
+      "revision": 14854995,
+      "revision_time": "2025-02-24T20:38:33Z",
+      "file": "Template_Treasure_Trails_Guide_Cryptic_Clues_Intro.wiki",
+      "sha256": "858b08a7b9142386c72f867dcb7e1406dbe2d19e80e2741a39e14db0fa3e060d",
+      "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Cryptic_Clues_Intro"
+    },
+    {
+      "page": "Torn clue scroll",
+      "revision": 15263135,
+      "revision_time": "2026-07-14T16:08:44Z",
+      "file": "Torn_clue_scroll.wiki",
+      "sha256": "b0a1d981bb44fe5eb86d3e5dd9df2cc3bacf1ebe08593cc999459b9834fab984",
+      "url": "https://oldschool.runescape.wiki/w/Torn_clue_scroll"
+    },
+    {
+      "page": "Captain Harlan",
+      "revision": 15397099,
+      "revision_time": "2026-11-09T00:23:37Z",
+      "file": "Captain_Harlan.wiki",
+      "sha256": "be433a1f8546085609f3737ed2d7564a9a5475f72184058eb18161f159346258",
+      "url": "https://oldschool.runescape.wiki/w/Captain_Harlan"
+    },
+    {
+      "page": "Wizard Traiborn",
+      "revision": 15002750,
+      "revision_time": "2025-10-12T13:04:44Z",
+      "file": "Wizard_Traiborn.wiki",
+      "sha256": "db7282f06c991fbf8f349cc560594756b52dfce63ad884e99dc5a53866976c31",
+      "url": "https://oldschool.runescape.wiki/w/Wizard_Traiborn"
+    },
+    {
+      "page": "Lumbridge Guide",
+      "revision": 15401287,
+      "revision_time": "2026-11-12T18:08:50Z",
+      "file": "Lumbridge_Guide.wiki",
+      "sha256": "49c7aa7961a0a848154a771b4e26665b552771dcaa9e45f84fba507352dc5076",
+      "url": "https://oldschool.runescape.wiki/w/Lumbridge_Guide"
+    },
+    {
+      "page": "Radimus Erkle",
+      "revision": 14927498,
+      "revision_time": "2025-06-27T00:07:25Z",
+      "file": "Radimus_Erkle.wiki",
+      "sha256": "c0773fa1bc601c82a98e33568c9808084f465986f4acab49fd69999658a2e847",
+      "url": "https://oldschool.runescape.wiki/w/Radimus_Erkle"
+    },
+    {
+      "page": "Transcript:Torn clue scroll",
+      "revision": 14375727,
+      "revision_time": "2023-02-11T20:05:28Z",
+      "file": "Transcript_Torn_clue_scroll.wiki",
+      "sha256": "65b55bf23335aada229ad1344a4d33a478aea94f1f093bcb072586d10dbf5d53",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ATorn_clue_scroll"
+    },
+    {
+      "page": "Transcript:Abbot Langley",
+      "revision": 15324395,
+      "revision_time": "2026-08-29T11:06:14Z",
+      "file": "Transcript_Abbot_Langley.wiki",
+      "sha256": "2b711b2d6a23d2dfdf80cd90cb228bc475b20618e88c871e0ebea23eea353f7a",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AAbbot_Langley"
+    },
+    {
+      "page": "Transcript:Robin",
+      "revision": 15173500,
+      "revision_time": "2026-04-12T01:00:38Z",
+      "file": "Transcript_Robin.wiki",
+      "sha256": "ca568c7567fda8eef9f961d33d90c10e306e1916b903b01d489ecefb3bca85ce",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ARobin"
+    },
+    {
+      "page": "Gold leaf",
+      "revision": 15184226,
+      "revision_time": "2026-04-22T03:01:15Z",
+      "file": "Gold_leaf.wiki",
+      "sha256": "6fe35d5f2c1bf4bb4ca647ea515ca4f9eeaa7b12d0600c4ac79fb090683809ce",
+      "url": "https://oldschool.runescape.wiki/w/Gold_leaf"
+    },
+    {
+      "page": "Steel nails",
+      "revision": 15218378,
+      "revision_time": "2026-05-27T22:14:21Z",
+      "file": "Steel_nails.wiki",
+      "sha256": "158ac28ef9b53ab32552760ce9743fdeda51f4a7a5019c10c92a51747a9b7811",
+      "url": "https://oldschool.runescape.wiki/w/Steel_nails"
+    },
+    {
+      "page": "Nails",
+      "revision": 15068452,
+      "revision_time": "2025-11-26T18:24:55Z",
+      "file": "Nails.wiki",
+      "sha256": "c36722bb956d845716f423b6a465785906c0c155cca917a3a07e84c13651a839",
+      "url": "https://oldschool.runescape.wiki/w/Nails"
+    },
+    {
+      "page": "Hammer",
+      "revision": 15398500,
+      "revision_time": "2026-11-10T22:37:53Z",
+      "file": "Hammer.wiki",
+      "sha256": "92a796491b43eddad005911eaf2aad218a6f6ead3720e22729c1c367a17e64cc",
+      "url": "https://oldschool.runescape.wiki/w/Hammer"
+    },
+    {
+      "page": "Saw",
+      "revision": 15214288,
+      "revision_time": "2026-05-21T02:13:16Z",
+      "file": "Saw.wiki",
+      "sha256": "b1774ec8ada9c5aafd4695c2d8c5dc938ea69232061e954842c273dc11048485",
+      "url": "https://oldschool.runescape.wiki/w/Saw"
+    },
+    {
+      "page": "Imcando hammer",
+      "revision": 15325383,
+      "revision_time": "2026-08-30T11:44:39Z",
+      "file": "Imcando_hammer.wiki",
+      "sha256": "b9abe43a88eafa03f0b321f07bf98c6160ee22c50efadf056ac5966164aafcde",
+      "url": "https://oldschool.runescape.wiki/w/Imcando_hammer"
+    },
+    {
+      "page": "Amy's saw",
+      "revision": 15391407,
+      "revision_time": "2026-11-03T13:32:05Z",
+      "file": "Amy's_saw.wiki",
+      "sha256": "2d320f73b78539906db3b4f4baeac884ea3f9c82c08d18c83a9532a1860e16d2",
+      "url": "https://oldschool.runescape.wiki/w/Amy%27s_saw"
+    },
+    {
+      "page": "Crystal saw",
+      "revision": 15367086,
+      "revision_time": "2026-10-06T19:49:43Z",
+      "file": "Crystal_saw.wiki",
+      "sha256": "58ff80cef11d6435788fa9f24ef1261a7723ab8884d8287277d436ca39c9be96",
+      "url": "https://oldschool.runescape.wiki/w/Crystal_saw"
+    },
+    {
+      "page": "Imcando hammer (off-hand)",
+      "revision": 15397614,
+      "revision_time": "2026-11-09T18:41:46Z",
+      "file": "Imcando_hammer_(off-hand).wiki",
+      "sha256": "7ae8f18fae4f9de6f5901b441592092c3367824f4d007ea3a99eb9b8df5f4657",
+      "url": "https://oldschool.runescape.wiki/w/Imcando_hammer_%28off-hand%29"
+    },
+    {
+      "page": "Amy's saw (off-hand)",
+      "revision": 15284105,
+      "revision_time": "2026-07-31T10:21:11Z",
+      "file": "Amy's_saw_(off-hand).wiki",
+      "sha256": "b6a5a699171fd709da89e371b8aba6e888f2b725d25a132aaecacef15a37e3b5",
+      "url": "https://oldschool.runescape.wiki/w/Amy%27s_saw_%28off-hand%29"
+    },
+    {
+      "page": "Transcript:Jorral",
+      "revision": 15248065,
+      "revision_time": "2026-07-02T04:29:58Z",
+      "file": "Transcript_Jorral.wiki",
+      "sha256": "3843700e9cdf208437023664297747dc607217fc75bf9985a87b8d204d332bb4",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AJorral"
+    },
+    {
+      "page": "Challenge scroll",
+      "revision": 15186746,
+      "revision_time": "2026-04-22T04:10:27Z",
+      "file": "Challenge_scroll.wiki",
+      "sha256": "27177f50a23c9518066b25f6226ccc23ff7363a53a9d2b0139201cf1271cb1a2",
+      "url": "https://oldschool.runescape.wiki/w/Challenge_scroll"
+    },
+    {
+      "page": "Challenge scroll (Sherlock)",
+      "missing": true
+    },
+    {
+      "page": "Barrows gloves",
+      "revision": 15322401,
+      "revision_time": "2026-08-27T21:40:07Z",
+      "file": "Barrows_gloves.wiki",
+      "sha256": "4fc678f43cce873dcb9bd2194784527098700c1e6348d6e355726d684d101810",
+      "url": "https://oldschool.runescape.wiki/w/Barrows_gloves"
+    },
+    {
+      "page": "Noticeboard (Watson's house)",
+      "revision": 15101341,
+      "revision_time": "2026-01-07T12:41:24Z",
+      "file": "Noticeboard_(Watson's_house).wiki",
+      "sha256": "13b1a92cee9b28bc837947ff43e56462bd307cd48e8ec8be843167cf38338c16",
+      "url": "https://oldschool.runescape.wiki/w/Noticeboard_%28Watson%27s_house%29"
+    },
+    {
+      "page": "S.t.a.s.h chart",
+      "revision": 15194550,
+      "revision_time": "2026-04-22T06:24:36Z",
+      "file": "S.t.a.s.h_chart.wiki",
+      "sha256": "faa867baef599078d4074538122c293b7329175b5c4ef09a64ffddbebec40ec6",
+      "url": "https://oldschool.runescape.wiki/w/S.t.a.s.h_chart"
+    },
+    {
+      "page": "Transcript:Baraek",
+      "revision": 15315303,
+      "revision_time": "2026-08-21T05:40:22Z",
+      "file": "Transcript_Baraek.wiki",
+      "sha256": "d9662f1136a478067aae4a0fde28eb96e0d09f61749d68e4599bf90c0a1b1bfb",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ABaraek"
+    },
+    {
+      "page": "Transcript:Father Aereck",
+      "revision": 15396508,
+      "revision_time": "2026-11-07T23:05:28Z",
+      "file": "Transcript_Father_Aereck.wiki",
+      "sha256": "11f5b2057e67207ffb78f7942299048d8e1514bbe75d2c542806cdfa159344dd",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AFather_Aereck"
+    },
+    {
+      "page": "Transcript:Drezel",
+      "revision": 15328852,
+      "revision_time": "2026-09-02T20:10:53Z",
+      "file": "Transcript_Drezel.wiki",
+      "sha256": "9c589c8e7017ef3e6fc2b4a38d014bded05ce9f60799c94dc78cf75f7fdc5029",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ADrezel"
+    },
+    {
+      "page": "Transcript:Wizard Traiborn",
+      "revision": 15079315,
+      "revision_time": "2025-12-06T03:12:52Z",
+      "file": "Transcript_Wizard_Traiborn.wiki",
+      "sha256": "836ecab9b18ff835bb13310c4102b1a066ba3aee3c266a14a076af9e691c1c62",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AWizard_Traiborn"
+    },
+    {
+      "page": "Transcript:Luthas",
+      "revision": 15284269,
+      "revision_time": "2026-07-31T12:21:28Z",
+      "file": "Transcript_Luthas.wiki",
+      "sha256": "67894d4b226fbd3aa47885a4720f1f205c0cb39702e014f0865dc4c3af1cd985",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ALuthas"
+    },
+    {
+      "page": "Transcript:Vannaka",
+      "revision": 15279938,
+      "revision_time": "2026-07-29T12:46:50Z",
+      "file": "Transcript_Vannaka.wiki",
+      "sha256": "2eeceafd3f42be73fcdcdd44de3f310845b11448f7f291a7e33708d7ec1464e2",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AVannaka"
+    },
+    {
+      "page": "Transcript:Captain Tobias",
+      "revision": 15315412,
+      "revision_time": "2026-08-21T06:05:22Z",
+      "file": "Transcript_Captain_Tobias.wiki",
+      "sha256": "5fb9862f5dd3e7ab1a29500e181d588c013e385a7581b544ae176e4c381dad7c",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ACaptain_Tobias"
+    },
+    {
+      "page": "Transcript:Doomsayer",
+      "revision": 15392128,
+      "revision_time": "2026-11-03T15:45:39Z",
+      "file": "Transcript_Doomsayer.wiki",
+      "sha256": "957d9a37c166d8ce14b953059c93d96b3093f6079a5101b17529d21b94952e97",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ADoomsayer"
+    },
+    {
+      "page": "Transcript:Martin Thwait",
+      "revision": 14789754,
+      "revision_time": "2024-10-28T06:26:28Z",
+      "file": "Transcript_Martin_Thwait.wiki",
+      "sha256": "9ae114faf844970724e0004530f97b700a5f11978470ba5721e69925bd87dc97",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AMartin_Thwait"
+    },
+    {
+      "page": "Transcript:Weird Old Man",
+      "revision": 14615959,
+      "revision_time": "2024-03-28T23:22:55Z",
+      "file": "Transcript_Weird_Old_Man.wiki",
+      "sha256": "d94d72620ef932fb8b046205eb4c78c3284337c14a7289a3d1201c4e4aa406b7",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AWeird_Old_Man"
+    },
+    {
+      "page": "Transcript:Mandrith",
+      "revision": 15255766,
+      "revision_time": "2026-07-07T09:26:24Z",
+      "file": "Transcript_Mandrith.wiki",
+      "sha256": "23567de4c9e251a5100de99bf2a72cbc63c4352a2d318b890c51ff8691aea14e",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AMandrith"
+    },
+    {
+      "page": "Transcript:Old crone",
+      "revision": 15058797,
+      "revision_time": "2025-11-23T10:43:31Z",
+      "file": "Transcript_Old_crone.wiki",
+      "sha256": "3314e13bff7a861a2d5d28280563ad3517503db1cc8f5a859d4cd306233b5740",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AOld_crone"
+    },
+    {
+      "page": "Transcript:Gunnjorn",
+      "revision": 15095249,
+      "revision_time": "2025-12-27T06:11:31Z",
+      "file": "Transcript_Gunnjorn.wiki",
+      "sha256": "d631c83ff55d34afa2153f43606bf514da1e106f64179a0cdc0a539331976efe",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AGunnjorn"
+    },
+    {
+      "page": "Transcript:Lumbridge Guide",
+      "revision": 15396094,
+      "revision_time": "2026-11-07T11:15:31Z",
+      "file": "Transcript_Lumbridge_Guide.wiki",
+      "sha256": "ef46052ef7b8e69b0b2c3e8e2a97c968bc39fdc99fca0ea16cecbf11ea77effa",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ALumbridge_Guide"
+    },
+    {
+      "page": "Transcript:Radimus Erkle",
+      "revision": 15007792,
+      "revision_time": "2025-10-19T23:12:50Z",
+      "file": "Transcript_Radimus_Erkle.wiki",
+      "sha256": "680283d88aa561020e37b802e18f5da85f75409e5193e7b8aa0011bf45f3965d",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ARadimus_Erkle"
+    },
+    {
+      "page": "Slayer Tower",
+      "revision": 15399874,
+      "revision_time": "2026-11-11T19:57:17Z",
+      "file": "Slayer_Tower.wiki",
+      "sha256": "d634ee51c47b87db6b89ec4a29796edfbfd6a5c63fc948025d73563fad344043",
+      "url": "https://oldschool.runescape.wiki/w/Slayer_Tower"
+    },
+    {
+      "page": "Nechryael",
+      "revision": 15385695,
+      "revision_time": "2026-10-29T16:23:44Z",
+      "file": "Nechryael.wiki",
+      "sha256": "4b6b69932ca9b60c9078eef3308086c7cdd080109454d9b6b2e60a04d09490d4",
+      "url": "https://oldschool.runescape.wiki/w/Nechryael"
+    },
+    {
+      "page": "Gem stall",
+      "revision": 15362094,
+      "revision_time": "2026-10-03T12:46:29Z",
+      "file": "Gem_stall.wiki",
+      "sha256": "e1a6a6106605fdd0502c2d7bd1a3cd284bfe4f5ff34b7af586720776672cccbe",
+      "url": "https://oldschool.runescape.wiki/w/Gem_stall"
+    },
+    {
+      "page": "Treasure Trails/Full guide/Easy",
+      "revision": 15026500,
+      "revision_time": "2025-11-13T05:31:18Z",
+      "file": "Treasure_Trails__Full_guide__Easy.wiki",
+      "sha256": "0c8a9625b4635c56e467b03b5d7316b976e5726c0caba59fd3e80fb1cd0f0681",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Full_guide/Easy"
+    },
+    {
+      "page": "Treasure Trails/Full guide/Medium",
+      "revision": 15399244,
+      "revision_time": "2026-11-11T15:21:09Z",
+      "file": "Treasure_Trails__Full_guide__Medium.wiki",
+      "sha256": "06c8156a7d5b2ea9a925f845b703b02ef4f6f595f8468b9e540db215bec7ef13",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Full_guide/Medium"
+    },
+    {
+      "page": "Treasure Trails/Full guide/Hard",
+      "revision": 15263478,
+      "revision_time": "2026-07-14T21:32:34Z",
+      "file": "Treasure_Trails__Full_guide__Hard.wiki",
+      "sha256": "e70fff4836f01d0334f420598a8e8afd8a66bd380149d3dea50fed366f745697",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Full_guide/Hard"
+    },
+    {
+      "page": "Treasure Trails/Full guide/Elite",
+      "revision": 15230460,
+      "revision_time": "2026-06-09T19:51:38Z",
+      "file": "Treasure_Trails__Full_guide__Elite.wiki",
+      "sha256": "2ec06acbe3ceda6a067b3fe3d1794c4b5e62b5b8ad2234df077a4fc7890cc5fc",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Full_guide/Elite"
+    },
+    {
+      "page": "Treasure Trails/Full guide/Master",
+      "revision": 15384814,
+      "revision_time": "2026-10-28T18:00:22Z",
+      "file": "Treasure_Trails__Full_guide__Master.wiki",
+      "sha256": "9799ee40c443d4623a9fa28b8c2150566317d38525bf210e524b0ec2ec012830",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Full_guide/Master"
+    },
+    {
+      "page": "Bloodhound",
+      "revision": 15375113,
+      "revision_time": "2026-10-18T15:29:45Z",
+      "file": "Bloodhound.wiki",
+      "sha256": "06e1c845e3e860c12cb78cbc39d17a5c8cefcb7878fc128a6e11ccbd7761b997",
+      "url": "https://oldschool.runescape.wiki/w/Bloodhound"
+    },
+    {
+      "page": "Call follower",
+      "revision": 15338208,
+      "revision_time": "2026-09-09T23:29:48Z",
+      "file": "Call_follower.wiki",
+      "sha256": "a42ea37838b868b1d7fb7aced64b0cd5d84e0f701cc9ac563a32edc9b4bea006",
+      "url": "https://oldschool.runescape.wiki/w/Call_follower"
+    },
+    {
+      "page": "Dog",
+      "revision": 15389611,
+      "revision_time": "2026-11-02T06:28:48Z",
+      "file": "Dog.wiki",
+      "sha256": "759a68641192b708c47d46a2d34541401e9c73c03b63af676837d759465345ed",
+      "url": "https://oldschool.runescape.wiki/w/Dog"
+    },
+    {
+      "page": "Sweets",
+      "revision": 15334486,
+      "revision_time": "2026-09-08T08:37:04Z",
+      "file": "Sweets.wiki",
+      "sha256": "5acc53af213164956595cf98a32673c4779cb18ebe1c3be4c3beda8869942a9f",
+      "url": "https://oldschool.runescape.wiki/w/Sweets"
+    },
+    {
+      "page": "Sweet",
+      "revision": 15344088,
+      "revision_time": "2026-09-15T16:30:54Z",
+      "file": "Sweet.wiki",
+      "sha256": "fdd11f2d06a71b20294927d81ad8336e6f5515c2c02c92e86f7876351969d4fe",
+      "url": "https://oldschool.runescape.wiki/w/Sweet"
+    },
+    {
+      "page": "Keyhole (The Mimic)",
+      "revision": 15334464,
+      "revision_time": "2026-09-08T08:34:58Z",
+      "file": "Keyhole_(The_Mimic).wiki",
+      "sha256": "c923af6543b9b2bd271aadfa476cbf03d21679076e55bbe64a54f8de8d10d208",
+      "url": "https://oldschool.runescape.wiki/w/Keyhole_(The_Mimic)"
+    },
+    {
+      "page": "Amulet of Glory (scenery)",
+      "revision": 15330215,
+      "revision_time": "2026-09-03T19:14:18Z",
+      "file": "Amulet_of_Glory_(scenery).wiki",
+      "sha256": "0fbb81f17fc5b95d6c84e79f1dd1b4f493d299bfab4a4240f05852e7213cddd8",
+      "url": "https://oldschool.runescape.wiki/w/Amulet_of_Glory_(scenery)"
+    },
+    {
+      "page": "Coins (The Mimic)",
+      "revision": 14914004,
+      "revision_time": "2025-06-02T06:18:02Z",
+      "file": "Coins_(The_Mimic).wiki",
+      "sha256": "40756b75acd53e8d2424dafb5e412433939d8bb29b93619a7295d12455b622cc",
+      "url": "https://oldschool.runescape.wiki/w/Coins_(The_Mimic)"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "unchanged": true,
+  "staged": false,
+  "inputs": {
+    "C:\\RSPS\\work\\gpt-b\\game\\src\\main\\kotlin\\gg\\rsmod\\game\\tools\\importer\\ClueInterfaceImportTool.kt": "c2086547e909bd2e7dbe0536d0fce4c80cf6eef943c2e084e65dc62509c92817",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\main\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailStatistics.kt": "4f8a92b70acee43bd957ab5d64f25cbb1a6b91a55ea0120d82f10497f4fb33b7",
+    "C:\\RSPS\\work\\gpt-b\\game\\src\\test\\kotlin\\gg\\rsmod\\game\\tools\\importer\\ClueBoardInterfaceImportTests.kt": "3d7a91672f4fb6bcd5d71b6ce96404a33112c17ffacfae1a03ecf7d6bac4b1fa",
+    "C:\\RSPS\\work\\gpt-b\\game\\plugins\\src\\test\\kotlin\\gg\\rsmod\\plugins\\content\\scrolls\\TreasureTrailStatisticsTests.kt": "38923b8458b842565529250222ac6228f265a8db79e4c1dbaa2237db6ac14735",
+    "C:\\RSPS\\work\\gpt-b\\docs\\CLUE\\cache\\board-interfaces.json": "0e9065c605bdfd3a1f371d233b00e98d73376f6c11332d5245b8bb0d13658d06",
+    "C:\\RSPS\\work\\gpt-b\\tools\\clue\\ClueBoardClientRegression.java": "db44b0153d320cf34607d09d977891fa020dbac759ac3c39b739e7440cb1e64b",
+    "C:\\RSPS\\work\\gpt-b\\data\\cfg\\clue\\watson-contributors.json": "708bba732baab6600a6afdeb4bfa0796a103accef81c18e0b38892acfb8dcd14"
+  },
+  "tests": "JUnit version 4.13.2\n....PROBLEM CLUE contributor paper not imported; account state unchanged\n.PROBLEM CLUE statistics paper not imported; account state unchanged\n..\nTime: 51,931\n\nOK (7 tests)\n\n",
+  "nativeDecoder": true,
+  "note": "No cache/client writes or loaded-client acceptance"
+}

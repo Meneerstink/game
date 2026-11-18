@@ -1,0 +1,33 @@
+{{External|rs}}
+{{Infobox Item
+|name = Gold leaf
+|image = [[File:Gold leaf.png]]
+|release = [[31 May]] [[2006]]
+|update = PLAYER-OWNED HOUSES!
+|members = Yes
+|quest = No
+|tradeable = Yes
+|equipable = No
+|stackable = No
+|noteable = Yes
+|options = Drop
+|examine = A very delicate sheet of gold.
+|value = 100000
+|weight = 1.000
+|exchange = Yes
+|id = 8784
+|leagueRegion = Fremennik,Varlamore
+}}
+[[File:Gold leaf detail.png|left|140px]]
+'''Gold leaf''' is an item used in [[Construction]], yielding 300 Construction experience per leaf used when building many decorative items for a [[player-owned house]]. It is also used for master [[STASH|STASH units]]. It can be bought from the [[Stonemason]] in south-western [[Keldagrim]] or [[Metla]] in [[Stonecutter Outpost]] for 130,000 [[coins]]. It cannot be made by players.
+
+__TOC__
+
+==Products==
+{{Uses material list|Gold leaf}}
+
+==Shop locations==
+{{Store locations list|Gold leaf}}
+
+{{Construction items}}
+{{Gold}}

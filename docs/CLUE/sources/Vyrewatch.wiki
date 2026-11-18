@@ -1,0 +1,380 @@
+{{External|rs}}
+{{otheruses|the vampyric vanguards|the outfit|Vyrewatch outfit}}
+{{HasTask|Vampyres}}
+{{Infobox Monster
+|version1 = Level 87
+|version2 = Level 105
+|version3 = Level 110
+|version4 = Level 120
+|version5 = Level 125
+|name = Vyrewatch
+|image = [[File:Vyrewatch.png|250px]]
+|release1 = [[24 May]] [[2018]]
+|release2 = [[4 September]] [[2006]]
+|release3 = [[4 September]] [[2006]]
+|release4 = [[4 September]] [[2006]]
+|release5 = [[4 September]] [[2006]]
+|update1 = A Taste of Hope
+|update2 = Myreque Pt III - Darkness of Hallowvale
+|update3 = Myreque Pt III - Darkness of Hallowvale
+|update4 = Myreque Pt III - Darkness of Hallowvale
+|update5 = Myreque Pt III - Darkness of Hallowvale
+|members = Yes
+|combat1 = 87
+|combat2 = 105
+|combat3 = 110
+|combat4 = 120
+|combat5 = 125
+|size = 1
+|examine1 = An evil, bloodsucking vampyre.
+|examine2 = {{*}} An evil, bloodsucking vampyre. <br/>{{*}} A thirsty-looking, airborne bloodsucker! ''(when flying)''
+|examine3 = {{*}} An evil, bloodsucking vampyre. <br/>{{*}} A thirsty-looking, airborne bloodsucker! ''(when flying)''
+|examine4 = {{*}} An evil, bloodsucking vampyre. <br/>{{*}} A thirsty-looking, airborne bloodsucker! ''(when flying)''
+|examine5 = {{*}} An evil, bloodsucking vampyre. <br/>{{*}} A thirsty-looking, airborne bloodsucker! ''(when flying)''
+|attributes = vampyre3
+|xpbonus = 0
+|max hit1 = 8
+|max hit2 = 10
+|max hit3 = 11
+|max hit4 = 12
+|max hit5 = 13
+|aggressive = Yes, unless wearing [[Vyre noble clothing]]
+|poisonous = No
+|attack style = [[Crush]]
+|attack speed1 = 8
+|attack speed2 = 4
+|attack speed3 = 8
+|attack speed4 = 8
+|attack speed5 = 8
+|respawn1 = N/A
+|respawn2 = 25
+|respawn3 = 25
+|respawn4 = 25
+|respawn5 = 25
+|slayxp1 = 90
+|slayxp2 = 90
+|slayxp3 = 90
+|slayxp4 = 105
+|slayxp5 = 110
+|cat = Vampyres
+|assignedby = mazchna,vannaka,chaeldar,konar,nieve,duradel
+|hitpoints1 = 75
+|hitpoints2 = 90
+|hitpoints3 = 90
+|hitpoints4 = 105
+|hitpoints5 = 110
+|att1 = 80
+|att2 = 105
+|att3 = 110
+|att4 = 120
+|att5 = 120
+|str1 = 75
+|str2 = 86
+|str3 = 96
+|str4 = 106
+|str5 = 116
+|def1 = 75
+|def2 = 85
+|def3 = 85
+|def4 = 85
+|def5 = 85
+|mage1 = 75
+|mage2 = 105
+|mage3 = 110
+|mage4 = 120
+|mage5 = 120
+|range1 = 1
+|range2 = 105
+|range3 = 110
+|range4 = 120
+|range5 = 120
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|poisonresistance = 100
+|venomresistance = 100
+|immunecannon = Yes
+|immunethrall1 = Yes
+|immunethrall2 = No
+|immunethrall3 = Yes
+|immunethrall4 = Yes
+|immunethrall5 = Yes
+|id1 = 8252,8253,8254,8255,8256,8257,8258,8259
+|id2 = 3709,3713,3717,3721,3725,3729,3748,3752,3756,3760,8300,8301,8302,8303,8304,8305,8306,8307,9740,9738,9736,9737,9742,9739,9741,9735
+|id3 = 3710,3714,3718,3722,3726,3730,3749,3753,3757,3761
+|id4 = 3711,3715,3719,3723,3727,3731,3750,3754,3758,3762
+|id5 = 3712,3716,3720,3724,3728,3732,3751,3755,3759,3763
+}}
+[[File:Vyrewatch chathead.png|left]]
+The '''Vyrewatch''' are the [[vampyre|vampyric]] vanguard responsible for enforcing the racial policy of [[Morytania]] and suppress any resistance to the [[House Drakan|Drakan]] overlords. 
+
+Vyrewatch in [[Meiyerditch]] are not aggressive but can initiate "aggression" if a player is near them. This aggression can be lowered by wearing pieces of the [[vyrewatch outfit]], with each piece adding a 20% chance to avoid detection. If a vyrewatch takes an interest in the player and manages to get next to them, the vyre will drop down and speak to the player, demanding a blood tithe. The player has one of four options; letting them take a tithe, which deals light damage, being sent to the [[Meiyerditch mine|mines]], fight them or attempt to distract them. If the distract fails, the vyre will tithe the player, the same as the first option.
+
+In addition to the flying variety, there is a group of grounded, level 105 Vyrewatch north of [[Crombwick Manor]] in [[Slepe]]. This variant is different in that they act like normal monsters would and attack significantly faster than the flying variant.
+
+Wearing a set of [[Vyre noble clothing]] will make all vyrewatch tolerant of the player. This requirement is lifted after the third fight with [[Lowerniel Drakan]] in [[The Blood Moon Rises]], where all vyrewatch will become tolerant of the player.
+
+Vyrewatch are considered [[Vampyre (attribute)|tier 3 vampyres]], meaning that they will only take damage from corresponding sources, such as the [[Ivandis flail]], [[blisterwood weaponry]], [[hallowed flail]] and [[sunspear]]. [[Efaritay's aid]] will not allow normal weapons to damage vyrewatch, but the +15% accuracy and damage bonus will still apply.
+
+==Locations==
+{{LocTableHead}}
+{{LocLine
+|name = Vyrewatch
+|location = [[Meiyerditch]]
+|levels = 110
+|members = Yes
+|mapID = 0
+|plane = 0
+|x:3624,y:3322|x:3600,y:3245|x:3615,y:3248|x:3626,y:3245|x:3629,y:3252|x:3630,y:3279|x:3636,y:3270|x:3593,y:3208|x:3606,y:3217|x:3607,y:3225|x:3611,y:3205|x:3626,y:3224|x:3634,y:3200|x:3597,y:3193|x:3601,y:3183|x:3614,y:3189|x:3621,y:3182|x:3629,y:3190|x:3638,y:3187|x:3631,y:3305
+|mtype = pin
+|leagueRegion = Morytania
+}}
+
+{{LocLine
+|name = Vyrewatch
+|location = [[Meiyerditch]] {{FloorNumber|uk=1}}
+|levels = 120
+|members = Yes
+|mapID = 0
+|plane = 1
+|x:3596,y:3307|x:3601,y:3297|x:3591,y:3271|x:3593,y:3281|x:3601,y:3271|x:3606,y:3280|x:3614,y:3287|x:3616,y:3267|x:3617,y:3307|x:3621,y:3280|x:3629,y:3310|x:3630,y:3298|x:3635,y:3267|x:3636,y:3286|x:3641,y:3315|x:3643,y:3300|x:3644,y:3275|x:3645,y:3285|x:3589,y:3212|x:3589,y:3229|x:3589,y:3253|x:3590,y:3261|x:3595,y:3207|x:3595,y:3215|x:3601,y:3225|x:3605,y:3254|x:3607,y:3239|x:3591,y:3197|x:3637,y:3237|x:3618,y:3204|x:3589,y:3169|x:3598,y:3172|x:3629,y:3219
+|mtype = pin
+|leagueRegion = Morytania
+}}
+
+{{LocLine
+|name = Vyrewatch
+|location = [[Meiyerditch]] {{FloorNumber|uk=2}}
+|levels = 110
+|members = Yes
+|mapID = 0
+|plane = 2
+|x:3619,y:3209|x:3628,y:3324|x:3642,y:3323|x:3598,y:3293|x:3613,y:3290
+|mtype = pin
+|leagueRegion = Morytania
+}}
+
+{{LocLine
+|name = Vyrewatch
+|location = [[Meiyerditch]] {{FloorNumber|uk=3}}
+|levels = 120, 125
+|members = Yes
+|mapID = 0
+|plane = 3
+|x:3610,y:3208|x:3622,y:3212
+|mtype = pin
+|leagueRegion = Morytania
+}}
+
+{{LocLine
+|name = Vyrewatch
+|location = [[Slepe]]
+|levels = 105
+|members = Yes
+|mapID = 0
+|plane = 0
+|x:3713,y:3368|x:3719,y:3373|x:3722,y:3369|x:3728,y:3374|x:3730,y:3365|x:3737,y:3377|x:3740,y:3371|x:3745,y:3382|x:3748,y:3376|x:3750,y:3370
+|mtype = pin
+|leagueRegion = Morytania
+}}
+
+{{LocLine
+|name = Vyrewatch
+|location = [[Darkmeyer]]
+|levels = 105
+|members = Yes
+|mapID = 0
+|plane = 0
+|x:3651,y:3379|x:3653,y:3340|x:3655,y:3368|x:3657,y:3355|x:3644,y:3340|x:3614,y:3379|x:3630,y:3393|x:3633,y:3376
+|mtype = pin
+|leagueRegion = Morytania
+}}
+
+{{LocTableBottom}}
+
+==Success chance==
+The chance of successfully distracting a vyrewatch after being halted for a blood tithe scales with the player's Thieving level.{{CiteTwitter|author=JagexAsh|url=https://twitter.com/JagexAsh/status/1542878494119657478|date=1 July 2022|archiveurl=https://reldo.runescape.wiki/i/100703|archivedate=7 December 2022|quote=[(...) If time permits could you shed some light on the success rate of distracting Vyrewatch? I just did Darkness of Hallowvale on a lower level alt and had a terrible time, even with the Vyre outfit 😓] The skill-based roll is 0% at level 1 Thieving, 99% at level 99. In addition to passing that, the game needs to be able to find a tile for you to run towards, about 4 tiles away.}} In addition, a valid game square must be found about four squares away for the player to escape to in order for a vyrewatch to be successfully distracted.
+{{Skilling success chart
+|label=Vyrewatch distraction chance
+|xlabel=Thieving level
+|label1=Distract|low1=0|high1=252|image1=Thieving icon.png|color1=#330332
+}}
+
+==Slayer==
+In order to receive a Slayer task for [[Vyre]]s, a player must have at least 38 Slayer.
+
+When killing Vyrewatch for Vampyre Slayer tasks, players are encouraged to complete the task in [[Slepe]]. This is recommended only to players that have completed [[A Taste of Hope]].
+
+Players utilizing a general prayer armour setup can use [[drakan's medallion]] to teleport to [[Ver Sinhaza]] for banking and run north to Slepe where they can use an Altar of Zamorak to restore prayer points on their way to slaying Vyrewatch immediately north of the [[Crombwick Manor]]. An empty inventory with a single [[combat potion]] can be used to maximise a player's collection of [[vampyre dust]] and [[runite bar]]s, while praying [[Protect from Melee]] at this location.
+
+Players that have done the [[Sins of the Father]] quest on the other hand can slay [[Vyrewatch Sentinel]]s in Darkmeyer, which have a more lucrative drop table and are very close to an Altar.
+
+==Drops==
+{{DropLogProject|kills=107827}}
+
+{| class="wikitable"
+! rowspan="2" |[[Konar quo Maten|Konar]] task
+! colspan="2" |Average drop value
+|-
+![[Grand Exchange|GE]]
+![[High Level Alchemy|HA]]
+|-
+|{{No}}
+|{{Coins|{{Average drop value|mob=Vyrewatch|raw=y}}}}
+|{{Coins|{{Average drop value|mob=Vyrewatch|alch=yes|raw=y}}}}
+|-
+|{{Yes}}
+|{{Coins|{{Average drop value|mob=Vyrewatch|brimstone=yes|raw=y}}}}
+|{{Coins|{{Average drop value|mob=Vyrewatch|brimstone=yes|alch=yes|raw=y}}}}
+|}
+
+===100%===
+{{DropsTableHead}}
+{{DropsLine|name=Vampyre dust|quantity=1|rarity=Always}}
+{{DropsTableBottom}}
+
+===Weapons and armour===
+{{DropsTableHead}}
+{{DropsLine|name=Rune dagger|quantity=1|rarity=6/96}}
+{{DropsLine|name=Adamant platelegs|quantity=1|rarity=2/96}}
+{{DropsLine|name=Adamant platebody|quantity=1|rarity=6/96}}
+{{DropsLine|name=Rune platelegs|quantity=1|rarity=2/96}}
+{{DropsLine|name=Mithril axe|quantity=1|rarity=6/96}}
+{{DropsLine|name=Rune full helm|quantity=1|rarity=1/96}}
+{{DropsTableBottom}}
+
+===Runes and ammunition===
+{{DropsTableHead}}
+{{DropsLine|name=Death rune|quantity=4-12|rarity=10/96}}
+{{DropsLine|name=Blood rune|quantity=4-12|rarity=10/96}}
+{{DropsLine|name=Nature rune|quantity=6-14|rarity=10/96}}
+{{DropsLine|name=Adamant arrow|quantity=8-16|rarity=4/96}}
+{{DropsLine|name=Rune javelin|quantity=5-15|rarity=2/96}}
+{{DropsTableBottom}}
+
+===Herbs===
+{{HerbDropTableInfo|1/96}}
+{{DropsTableHead}}
+{{HerbDropLines|1/96}}
+{{DropsTableBottom}}
+
+===Seeds===
+{{GeneralSeedDropTableInfo|1/96}} The exact rates depend slightly on the combat level of the monster; the rates for level 105 are shown below.
+{{DropsTableHead}}
+{{GeneralSeedDropLines|1/96|105}}
+{{DropsTableBottom}}
+
+===Bolt tips===
+{{DropsTableHead}}
+{{DropsLine|name=Opal bolt tips|quantity=4-10|rarity=9/5376}}
+{{DropsLine|name=Jade bolt tips|quantity=4-10|rarity=3/5376}}
+{{DropsLine|name=Topaz bolt tips|quantity=4-10|rarity=3/5376}}
+{{DropsLine|name=Pearl bolt tips|quantity=4-10|rarity=9/5376}}
+{{DropsLine|name=Sapphire bolt tips|quantity=4-10|rarity=3/5376}}
+{{DropsLine|name=Emerald bolt tips|quantity=4-10|rarity=5/5376}}
+{{DropsLine|name=Ruby bolt tips|quantity=4-10|rarity=6/5376}}
+{{DropsLine|name=Diamond bolt tips|quantity=4-10|rarity=9/5376}}
+{{DropsLine|name=Dragonstone bolt tips|quantity=4-10|rarity=6/5376}}
+{{DropsLine|name=Onyx bolt tips|quantity=4-10|rarity=3/5376}}
+{{DropsTableBottom}}
+
+===Materials===
+{{DropsTableHead}}
+{{DropsLine|name=Adamantite ore|quantity=1|rarity=2/96}}
+{{DropsLine|name=Coal|quantity=6|rarity=4/96}}
+{{DropsLine|name=Runite bar|quantity=1|rarity=2/96}}
+{{DropsLine|name=Mort myre fungus|quantity=2|rarity=2/96}}
+{{DropsLine|name=Yew logs|quantity=4|rarity=2/96}}
+{{DropsLine|name=Bark|quantity=4-8|rarity=4/96}}
+{{DropsTableBottom}}
+
+===Coins===
+{{DropsTableHead}}
+{{DropsLine|name=Coins|quantity=100-1000|rarity=15/96|gemw=No}}
+{{DropsTableBottom}}
+
+===Rare and Gem drop table===
+{{RareDropTable|1/96|1/96|naturetalisman=yes}}
+
+===Tertiary===
+{{DropsTableHead}}
+{{DropsLineClue|type=hard|rarity=1/128}}
+{{DropsLine|name=Brimstone key|quantity=1|rarity={{Brimstone rarity|87}}|altrarity={{Brimstone rarity|125}}|altraritydash=yes|raritynotes=<ref group=d>Brimstone keys are only dropped if killed on a [[Slayer task]] given by [[Konar quo Maten]].</ref>|gemw=No|leagueRegion=Morytania&Kourend}}
+{{DropsTableBottom}}
+{{Reflist|group=d}}
+
+==Sound effects==
+{{Incomplete|Are sound effect ID 2992 and 2993 not used for this NPC?}}
+{{SFXTableHead}}
+{{SFXLine|file=Vyrewatch hit.wav|desc=Being attacked}}
+{{SFXLine|file=Vyrewatch attack.wav|desc=Attacking}}
+{{SFXLine|file=Vyrewatch death.wav|desc=Dying}}
+{{SFXLine|file=Vampyre arrives.wav|desc=Taking interest}}
+{{SFXTableBottom}}
+
+==Dialogue==
+{{hastranscript|NPC}}
+
+==Gallery==
+<gallery captionalign="center" widths="150">
+Vyrewatch (male, 1) chathead.png|A vyrewatch variant chathead.
+Vyrewatch (male, 2) chathead.png|A vyrewatch variant chathead.
+Vyrewatch (male, 3) chathead.png|A vyrewatch variant chathead.
+Vyrewatch (male, 4) chathead.png|A vyrewatch variant chathead.
+Vyrewatch (female, 1) chathead.png|A vyrewatch variant chathead.
+Vyrewatch (female, 2) chathead.png|A vyrewatch variant chathead.
+Vyrewatch (female, 3) chathead.png|A vyrewatch variant chathead.
+Vyrewatch (female, 4) chathead.png|A vyrewatch variant chathead.
+Vyrewatch (male, 1).png|A vyrewatch variant.
+Vyrewatch (male, 2).png|A vyrewatch variant.
+Vyrewatch (male, 3).png|A vyrewatch variant.
+Vyrewatch (male, 4).png|A vyrewatch variant.
+Vyrewatch (female, 1).png|A vyrewatch variant.
+Vyrewatch (female, 2).png|A vyrewatch variant.
+Vyrewatch (female, 3).png|A vyrewatch variant.
+Vyrewatch (female, 4).png|A vyrewatch variant.
+Vyrewatch (male, flying, 1).png|A vyrewatch variant in flight.
+Vyrewatch (male, flying, 2).png|A vyrewatch variant in flight.
+Vyrewatch (male, flying, 3).png|A vyrewatch variant in flight.
+Vyrewatch (male, flying, 4).png|A vyrewatch variant in flight.
+Vyrewatch (female, flying, 1).png|A vyrewatch variant in flight.
+Vyrewatch (female, flying, 2).png|A vyrewatch variant in flight.
+Vyrewatch (female, flying, 3).png|A vyrewatch variant in flight.
+Vyrewatch (female, flying, 4).png|A vyrewatch variant in flight.
+</gallery>
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 30 September 2020
+|update = Last Poll 72 Updates
+|poll =
+|change = The dark bow can no longer damage vyrewatch.
+}}
+{{Subject changes
+|date = 7 June 2018
+|update = The Theatre of Blood
+|change = Players may now force a vyrewatch to show interest in them to get to the mines faster. This includes the vyrewatch guarding the bank at the Theatre.
+}}
+{{Subject changes footer}}
+
+==References==
+{{Reflist}}
+
+{{Vampyres}}
+{{Slayer monsters}}
+{{Darkness of Hallowvale}}
+{{A Taste of Hope}}
+{{Darkmeyer}}
+{{Meiyerditch}}
+{{Slepe}}

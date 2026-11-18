@@ -34,6 +34,10 @@ class OpHeld5Handler : MessageHandler<OpHeld5Message> {
         @Volatile
         var confirm: ((Player, Item, Int) -> Boolean)? = null
 
+        /** Content-specific floor timing, applied only to player drops after confirmation. */
+        @Volatile
+        var configureFloor: ((GroundItem) -> Unit)? = null
+
         /** The floor drop itself: the item leaves [slot] (only while it is still there) and lands under the player. */
         fun drop(
             client: Player,
@@ -41,7 +45,7 @@ class OpHeld5Handler : MessageHandler<OpHeld5Message> {
             item: Item,
             slot: Int,
         ) {
-            if (client.inventory[slot]?.id != item.id) return
+            if (client.inventory[slot] !== item) return
             val remove = client.inventory.remove(item, assureFullRemoval = false, beginSlot = slot)
             gg.rsmod.game.model.AvTrace.log { "drop item=${item.id} removed=${remove.completed}" }
             if (remove.completed > 0) {
@@ -50,6 +54,7 @@ class OpHeld5Handler : MessageHandler<OpHeld5Message> {
                 remove.firstOrNull()?.takeIf { droppedAs == null }?.let { removed ->
                     floor.copyAttr(removed.item.attr)
                 }
+                configureFloor?.invoke(floor)
                 client.write(SynthSoundMessage(2739, 1, 0))
                 world.spawn(floor)
                 world

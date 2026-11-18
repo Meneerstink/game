@@ -1,0 +1,48 @@
+<noinclude>{{Treasure Trails Guide Ciphers Intro}}
+==Medium Ciphers==
+</noinclude>{| class="wikitable sortable"
+!Cipher
+!Solution
+!Shift distance
+!Location
+![[Challenge scrolls (Treasure Trails)|Challenge]] answer
+|-
+|[[BMJ UIF LFCBC TFMMFS]]
+|[[Ali the Kebab seller]] 
+
+(Known as '''Isma'il The Kebab Seller''' after [[The Feud]] quest)
+|<nowiki>+1</nowiki>
+|[[Pollnivneach]]
+|399
+|-
+|[[BZOSZHM GZQKZM]]
+|[[Captain Harlan]]
+|<nowiki>+1</nowiki>
+|[[Lumbridge]] (combat tutor)
+|666
+|-
+|[[ECRVCKP MJCNGF]]
+|[[Captain Khaled]]
+|<nowiki>+2</nowiki>
+|Large eastern building in [[Port Piscarilius]]. The reminisce teleport [[The Fisher's Flute]] in [[Kharedst's memoirs]]/the [[Book of the Dead]] takes you to just west of the building.
+|5
+|-
+|[[GUHCHO]]
+|[[Drezel]]
+|<nowiki>+3</nowiki>
+|[[Paterdomus Temple]]; Drezel can be found in the cave north of the Paterdomus Temple, which lies next to [[Canifis]]. Drezel is also an NPC for several quests ([[fairy rings|fairy]] code {{Fairycode|CKS}} and then go north-west to the end of the bridge, where you can climb down the trapdoor to find Drezel)
+|7
+|-
+|[[QSPGFTTPS HSBDLMFCPOF]]
+|[[Professor Gracklebone]]
+|<nowiki>+1</nowiki>
+|[[Arceuus Library]], {{FloorNumber|uk=0}} ([[fairy ring]] code {{Fairycode|CIS}})
+|9
+|-
+|[[XJABSE USBJCPSO]]
+|[[Wizard Traiborn]]
+|<nowiki>+1</nowiki>
+|[[Wizards' Tower]], {{FloorNumber|uk=1}} ([[fairy ring]] code {{Fairycode|DIS}})
+|3150
+|}
+{{Reflist|group=c}}
