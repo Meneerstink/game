@@ -21,9 +21,24 @@ object NigelDialogue {
             }
             4 -> {
                 val store = NigelRewardStore.active ?: return@with
-                when (options("Do you have any spare exit portal blueprints?", "Home Teleport animation.", "Never mind.")) {
-                    1 -> if (Dmm2Interactions.near(player, npc)) store.reclaimExitBlueprints(player)
-                    2 -> {
+                // Transcript:Nigel: the blueprint question is only offered once the Wilderness house theme is unlocked; the player asks
+                // the long question, Nigel 'Of course, here you go.', player 'Thank you, Nigel.' (Claude 18-11).
+                val blueprints = NigelRewardStore.unlocked(player, NigelRewardStore.Reward.BLUEPRINTS)
+                val menu = listOfNotNull(if (blueprints) "Do you have any spare exit portal blueprints?" else null, "Home Teleport animation.", "Never mind.")
+                when (menu.getOrNull(options(*menu.toTypedArray()) - 1)) {
+                    "Do you have any spare exit portal blueprints?" -> {
+                        chatPlayer("Do you have any spare blueprints to recolour my exit portal in my player-owned house?")
+                        if (!Dmm2Interactions.near(player, npc)) return@with
+                        when (store.reclaimExitBlueprints(player)) {
+                            NigelRewardStore.Result.OK -> {
+                                chatNpc("Of course, here you go.", npc = npc.id)
+                                chatPlayer("Thank you, Nigel.")
+                            }
+                            NigelRewardStore.Result.NO_SPACE -> player.message("You don't have enough inventory space.")
+                            else -> Unit
+                        }
+                    }
+                    "Home Teleport animation." -> {
                         val choice = options("Default.", "Armageddon.", "Annihilation.") - 1
                         val selected = NigelRewardStore.Teleport.values().getOrNull(choice) ?: return@with
                         if (Dmm2Interactions.near(player, npc)) store.selectTeleport(player, selected)
