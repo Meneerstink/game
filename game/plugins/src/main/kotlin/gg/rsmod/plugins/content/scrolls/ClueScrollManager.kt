@@ -179,6 +179,8 @@ class ClueScrollManager(
                 val item = ClueOwnership.carried(player, tier) ?: return@on_item_option
                 prepare(player, item, tier)
                 val step = activeStep(player, tier) ?: return@on_item_option
+                // CLUE-QH 18-11: the Quest Helper shows this clue's solution, arrow and map icon (RuneLite Clue Scroll plugin).
+                ClueHelper.onRead(player, tier)
                 if (TreasureTrailNumberChallenge.read(player, step)) return@on_item_option
                 if (TreasureTrailSherlock.read(player, step)) return@on_item_option
                 if (TreasureTrailMaps.read(player, step)) return@on_item_option

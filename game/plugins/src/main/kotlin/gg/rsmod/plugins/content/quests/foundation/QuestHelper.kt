@@ -113,7 +113,7 @@ object QuestHelper {
     fun needsTimer(player: Player): Boolean =
         tracked(player) != null || FoundationQuests.SHORT.any { FoundationQuests.inProgress(player, it) }
 
-    private fun clearArrow(player: Player) {
+    fun clearArrow(player: Player) {
         player.write(HintArrowMessage(slot = SLOT, type = HintArrowMessage.TYPE_CLEAR))
     }
 
@@ -121,7 +121,7 @@ object QuestHelper {
     private val LAST_HINTS = AttributeKey<String>()
 
     /** `qht|x|z|plane|npc` - the step's target for the client's world-map icon, minimap arrow and npc outline; `qht` clears. */
-    private fun sendTarget(
+    fun sendTarget(
         player: Player,
         tile: Tile?,
         npc: Int,
@@ -159,7 +159,7 @@ object QuestHelper {
     }
 
     /** The helper is off or idle: no map icon, minimap arrow, outline or highlights. */
-    private fun clearClientHints(player: Player) {
+    fun clearClientHints(player: Player) {
         sendTarget(player, null, -1)
         sendDialogueHints(player, null, 0)
     }
@@ -192,6 +192,8 @@ object QuestHelper {
         }
         // The side panel follows every stage change (a step done, a quest started or finished).
         QuestHelperPanel.push(player)
+        // CLUE-QH 18-11: a read clue scroll owns the panel, arrow and map icon (ClueHelper); the quest gets them back after.
+        if (gg.rsmod.plugins.content.scrolls.ClueHelper.active(player)) return
         val quest = tracked(player) ?: return
         if (!enabled(player)) {
             // Plugin off: nothing on screen; the tracked quest is kept for when it is switched on again.
@@ -374,6 +376,30 @@ object QuestHelper {
             player.setComponentText(ID, L.INSTRUCTION, instruction)
             val where = placeName?.replaceFirstChar { it.uppercase() } ?: "-"
             player.setComponentText(ID, L.GOTO, "Go to: $where" + if (dangerous) " <col=ff3030>(Dangerous)</col>" else "")
+            player.setComponentText(ID, L.TIP, tip ?: "")
+        }
+
+        /**
+         * CLUE-QH 18-11 (ClueHelper): the same panel for a read clue scroll - RuneLite's clue overlay title ("Anagram Clue"), the
+         * tier as the label, no progress bar (OSRS never shows a trail's length), the solution, its place and the answer/items.
+         */
+        fun showClue(player: Player, title: String, label: String, instruction: String, where: String?, tip: String?) {
+            val (parent, child) = slot(player)
+            val there = player.interfaces.getInterfaceAt(parent, child)
+            if (there != -1 && there != ID) {
+                player.attr.remove(SHOWN)
+                return
+            }
+            val key = "clue:$title:$label:${player.interfaces.displayMode}:$where:$instruction:$tip"
+            if (there == ID && player.attr[SHOWN] == key) return
+            if (there != ID) player.openInterface(ID, gg.rsmod.plugins.api.InterfaceDestination.MAIN_SCREEN_OVERLAY)
+            player.attr[SHOWN] = key
+            val L = gg.rsmod.game.tools.importer.QuestHelperPanelImportTool
+            player.setComponentText(ID, L.TITLE, title)
+            player.setComponentText(ID, L.STEP, label)
+            for (i in 0 until L.SEGMENTS) player.setComponentHidden(ID, L.SEGMENT_FIRST + i, hidden = true)
+            player.setComponentText(ID, L.INSTRUCTION, instruction)
+            player.setComponentText(ID, L.GOTO, where?.let { "Go to: ${it.replaceFirstChar { c -> c.uppercase() }}" } ?: "")
             player.setComponentText(ID, L.TIP, tip ?: "")
         }
 
