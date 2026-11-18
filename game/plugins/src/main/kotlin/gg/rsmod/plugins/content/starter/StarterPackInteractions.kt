@@ -20,7 +20,12 @@ import gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction
 /** Starter/Chronicle wiki revisions and Transcript:Chronicle 14828423; presentation is supplied by Claude. */
 object StarterPackInteractions {
     val DESTINATION = Tile(3201, 3355)
-    @Volatile var chronicleAppearance: TeleportType? = null
+    /**
+     * Claude 18-11 (lead, advice chosen - GPT-A 7.2 left it null): four OSRS recordings (PHASE7-SOURCES 7.2) show the ordinary standard
+     * teleport pose (arms out, purple orb, shrink) for the Chronicle; the montages hide the exact ticks. So the Chronicle uses OUR standard
+     * spellbook teleport (MODERN: same look, delay, Tele Block and Deadman gates as every standard teleport here).
+     */
+    @Volatile var chronicleAppearance: TeleportType? = TeleportType.MODERN
     enum class Result { OK, NOT_READY, ITEM_CHANGED, NO_CHARGES, WILDERNESS, FULL, NO_CARDS, BLOCKED }
 
     fun charges(player: Player): Int = (player.attr[DeadmanStarterPack.CHRONICLE_CHARGES] ?: 0).coerceIn(0, 1000)
