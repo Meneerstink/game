@@ -15118,3 +15118,228 @@
   examine: "Looks like a guy not to be messed with."
 - id: 15316
   examine: "Looks like a guy not to be messed with."
+# N634 deel 3 (Claude 18-11): gespawnde 2011-npc's zonder examine, OSRS Wiki op NAAM (1 unieke examine; sailing-teksten weggelaten)
+- id: 3541
+  examine: "A flea infested, pale looking excuse of a man."
+- id: 3545
+  examine: "A citizen of Burgh de Rott."
+- id: 3671
+  examine: "Looks like he could do with a sip of amontillado."
+- id: 3680
+  examine: "A young boy handing out flyers."
+- id: 3725
+  examine: "Smaller than the average goblin."
+- id: 3777
+  examine: "Cheerful, helpful and optimistic, I'll bet."
+- id: 3787
+  examine: "One of the Knights of the Round Table."
+- id: 3801
+  examine: "Indentured servant of a Knight."
+- id: 3806
+  examine: "Miss Millicent Miller the Miller of Mill Lane Mill."
+- id: 3807
+  examine: "Gillie the Milkmaid milks cows. She's udderly fantastic at it."
+- id: 3920
+  examine: "The barmaid of the Esoterican Arms."
+- id: 3922
+  examine: "Runs the general store."
+- id: 3928
+  examine: "A Fremennik teenager."
+- id: 3930
+  examine: "A Fremennik teenager."
+- id: 3932
+  examine: "A Fremennik teenager."
+- id: 3935
+  examine: "A dwarf who's currently living in Miscellania."
+- id: 3937
+  examine: "A dwarf miner. He's shoring up the walls."
+- id: 3938
+  examine: "A rather scared-looking dwarf. He doesn't seem all that drunk."
+- id: 4285
+  examine: "A powerful warrior, guarding the Warriors' Guild."
+- id: 4288
+  examine: "Used to be a black knight."
+- id: 4289
+  examine: "Blademistress, skillful female warrior."
+- id: 4293
+  examine: "Food shopkeeper."
+- id: 4294
+  examine: "Potion shopkeeper."
+- id: 4295
+  examine: "Armour shopkeeper."
+- id: 4376
+  examine: "Litara, a barbarian explorer."
+- id: 4493
+  examine: "An ugly green creature."
+- id: 4494
+  examine: "An ugly green creature."
+- id: 4560
+  examine: "Perhaps this gardener might look after your crops for you."
+- id: 4563
+  examine: "A seller of crossbow parts."
+- id: 4570
+  examine: "A farmer's enemy."
+- id: 4571
+  examine: "A farmer's enemy."
+- id: 4575
+  examine: "A lazy gnome."
+- id: 4585
+  examine: "A gnome mage on sabbatical."
+- id: 4591
+  examine: "A gnome whom likes antiques."
+- id: 4592
+  examine: "A gnome spinner."
+- id: 4607
+  examine: "A witch's black cat."
+- id: 4710
+  examine: "Roald's advisor - he seems to be a follower of Saradomin."
+- id: 4900
+  examine: "Looks a bit crafty."
+- id: 4901
+  examine: "Mending some nets."
+- id: 4905
+  examine: "The master smithing tutor."
+- id: 4906
+  examine: "A chip off the old block."
+- id: 4946
+  examine: "The Master of Fire!"
+- id: 5110
+  examine: "He acts as if he owns the place."
+- id: 5111
+  examine: "He seems to be making odd sucking noises with his teeth."
+- id: 5120
+  examine: "A very large, very dangerous-looking birdy."
+- id: 5146
+  examine: "How cute!"
+- id: 5147
+  examine: "The black sheep of the family."
+- id: 5198
+  examine: "She's watching you."
+- id: 5200
+  examine: "The hat's a dead give away."
+- id: 5268
+  examine: "Runs the craft stall."
+- id: 5279
+  examine: "Preach, my brother!"
+- id: 5531
+  examine: "Antisocial."
+- id: 5532
+  examine: "Come, old broomstick, you are needed."
+- id: 5770
+  examine: "A respected member of the Dorgeshuun Council."
+- id: 5804
+  examine: "A goblin baby."
+- id: 5913
+  examine: "Runes are his passion."
+- id: 5916
+  examine: "Does what too many people aren't interested in doing."
+- id: 5925
+  examine: "Newspaper seller."
+- id: 5930
+  examine: "Jacques Netis - a slightly pompous art expert."
+- id: 5932
+  examine: "An archaeologist hard at work."
+- id: 5933
+  examine: "An archaeologist hard at work."
+- id: 5934
+  examine: "An archaeologist hard at work."
+- id: 5935
+  examine: "An archaeologist hard at work."
+- id: 5938
+  examine: "A lady with lots of information about the Museum."
+- id: 5939
+  examine: "A brave adventurer."
+- id: 5940
+  examine: "Looks like he knows a thing or two."
+- id: 5987
+  examine: "A gnarly old man."
+- id: 6085
+  examine: "His job is to keep the ship in tip-top condition."
+- id: 6112
+  examine: "Aww, cute."
+- id: 6135
+  examine: "Get useful information from this guy."
+- id: 6136
+  examine: "Get useful information from this guy."
+- id: 6137
+  examine: "Get useful information from this guy."
+- id: 6139
+  examine: "Get useful information from this guy."
+- id: 6972
+  examine: "Loves nature."
+- id: 6973
+  examine: "Loves nature."
+- id: 6974
+  examine: "Loves nature."
+- id: 6975
+  examine: "Loves nature."
+- id: 6976
+  examine: "Loves nature."
+- id: 6977
+  examine: "Loves nature."
+- id: 6978
+  examine: "Loves nature."
+- id: 6979
+  examine: "Loves nature."
+- id: 6980
+  examine: "Loves nature."
+- id: 7153
+  examine: "A student busy studying the digsite."
+- id: 7154
+  examine: "A student busy studying the digsite."
+- id: 7155
+  examine: "A student busy studying the digsite."
+- id: 7156
+  examine: "A student busy studying the digsite."
+- id: 7157
+  examine: "A student busy studying the digsite."
+- id: 7726
+  examine: "Library assistant, to be exact."
+- id: 8172
+  examine: "A well dressed nobleman."
+- id: 8273
+  examine: "He looks dangerous!"
+- id: 8274
+  examine: "He looks dangerous!"
+- id: 8864
+  examine: "Dummy"
+- id: 11699
+  examine: "An expert on fishing."
+- id: 11700
+  examine: "An old sea dog."
+- id: 14377
+  examine: "A wanderer who's made his home in the depths of the wilderness."
+- id: 14378
+  examine: "Pledged to protect Ferox Enclave."
+- id: 14379
+  examine: "Seeking knowledge and answers."
+- id: 14380
+  examine: "Seeking knowledge and answers."
+- id: 14381
+  examine: "Seeking knowledge and answers."
+- id: 14382
+  examine: "Looks after the Wilderness Loot Chest."
+- id: 14386
+  examine: "Let's hope she doesn't have arachnophobia."
+- id: 14387
+  examine: "Said to have gone toe to toe with Callisto with just his bear hands."
+- id: 14388
+  examine: "Vanquisher of evil and breaker of bones."
+- id: 14390
+  examine: "He looks a bit aggressive."
+- id: 14391
+  examine: "Owner of the Old Nite pub."
+- id: 14392
+  examine: "Haunted by the sound of trees falling in empty forests."
+- id: 14393
+  examine: "She runs a little chapel here."
+- id: 14395
+  examine: "Appears to have a whole host of things to trade."
+- id: 14396
+  examine: "A mysterious mage in search for the best fighters."
+- id: 14398
+  examine: "Slightly magical."
+- id: 14399
+  examine: "Slightly magical."
+- id: 14400
+  examine: "Slightly magical."
