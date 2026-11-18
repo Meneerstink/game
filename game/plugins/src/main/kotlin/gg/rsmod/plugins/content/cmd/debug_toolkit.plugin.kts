@@ -64,7 +64,9 @@ val lockSince = java.util.concurrent.ConcurrentHashMap<String, Int>()
 val reportedInvariants: MutableSet<String> = java.util.concurrent.ConcurrentHashMap.newKeySet()
 val CARDINALS = listOf(gg.rsmod.game.model.Direction.NORTH, gg.rsmod.game.model.Direction.EAST, gg.rsmod.game.model.Direction.SOUTH, gg.rsmod.game.model.Direction.WEST)
 
-fun stuck(tile: gg.rsmod.game.model.Tile): Boolean = CARDINALS.none { world.collision.canTraverse(tile = tile, direction = it, projectile = false, water = false) }
+// N636 18-11: a swimmer (npc def walkMask 0x4: the river ducks) moves on water tiles only - checking it as a land walker reported every
+// swimming duck as 'stuck' while it swam (bot sample 18-11 03:5x: ducks 46/2693 moved 3-4 tiles in 25 s). [water] = test as a swimmer.
+fun stuck(tile: gg.rsmod.game.model.Tile, water: Boolean = false): Boolean = CARDINALS.none { world.collision.canTraverse(tile = tile, direction = it, projectile = false, water = water) }
 
 fun reportOnce(
     key: String,
@@ -149,7 +151,7 @@ on_world_init {
                 if (players.isEmpty()) return@runCatching
                 world.npcs.forEach { n ->
                     if (n.isDead() || players.none { it.tile.height == n.tile.height && it.tile.isWithinRadius(n.tile, 20) }) return@forEach
-                    if (n.getSize() == 1 && n.walkRadius > 0 && stuck(n.tile)) {
+                    if (n.getSize() == 1 && n.walkRadius > 0 && stuck(n.tile, water = (runCatching { n.def.walkMask }.getOrDefault(0) and 0x4) != 0)) {
                         reportOnce("n:${n.index}:${n.tile}", Trace.Cat.NPCPATH) { "stuck: npc ${n.id} '${runCatching { n.def.name }.getOrDefault("?")}' #${n.index} at ${n.tile.x},${n.tile.z},${n.tile.height} cannot step in any direction (spawned or moved into scenery)" }
                     }
                     val hp = n.getCurrentLifepoints()
