@@ -14801,7 +14801,7 @@
 - id: 15125
   examine: "A phantom of Kephri." # OSRS 11776 (N462 ToA)
 - id: 15126
-  examine: "A big dead croc." # OSRS 11730 (N462 ToA)
+  examine: "A big gluttonous croc." # OSRS 11730 (N462 ToA; wiki Zebak examine1 Normal - 18-11 was the dead-form text)
 - id: 15127
   examine: "Scaley." # OSRS 11731 (N462 ToA)
 - id: 15128
