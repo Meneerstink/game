@@ -15417,3 +15417,14 @@
   examine: "White and fluffy."
 - id: 6116
   examine: "A messy bird."
+# N634 deel 6 (Claude 18-11 02:4x): AMBIGU Bankers via dezelfde chathead-modellen als een banker met bekende OSRS-examine (npc_examines_gender.py)
+- id: 2759
+  examine: "Good with money."
+- id: 4457
+  examine: "He can look after my money."
+- id: 4458
+  examine: "Good with money."
+- id: 4459
+  examine: "Good with money."
+- id: 6200
+  examine: "He can look after my money."
