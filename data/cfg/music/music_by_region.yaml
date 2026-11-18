@@ -3032,3 +3032,15 @@ beyond_the_meadow:  # N632 OSRS Wiki 'heard around the Mess and Watson''s house'
   index: 1028
   areas:
     - region: 6455
+# N638 OSRS Wiki A Dangerous Game (#646, cacheid 684): 'unlocks in the Wilderness Slayer Cave' and plays in Callisto's Den, Hunter's End,
+# Skeletal Tomb, Vet'ion's Rest, Silk Chasm, Web Chasm and the Escape Caves (our imported squares, OsrsRegionImportTool N522 batches).
+a_dangerous_game:
+  index: 1029
+  areas:
+    - region: 13473
+    - region: 13215
+    - region: 7092
+    - region: 7604
+    - region: 13727
+    - region: 6580
+    - region: 13472
