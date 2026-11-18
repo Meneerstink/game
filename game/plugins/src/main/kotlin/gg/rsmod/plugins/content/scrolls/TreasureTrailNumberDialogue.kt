@@ -68,9 +68,18 @@ object TreasureTrailNumberDialogue {
                     return@queue
                 }
                 chatNpc(text.correct, npc = npc.id, wrap = true)
-                // Claude 18-11: OSRS chat 'You have completed this challenge scroll.' (RuneLite ClueScrollPlugin.onChatMessage matches it).
-                if (!terminated && TreasureTrailNumberChallenge.answer(player, current, answer) == TreasureTrailNumberChallenge.Answer.CORRECT)
+                // Claude 18-11: Transcript:Drezel/Father_Aereck/Gnome_Coach/Bolkoy/Otto_Godblessed - after the correct answer the tbox
+                // '<npc> has given you another clue scroll!' (the handover line with 'another clue scroll'), not the dig chat line. A casket
+                // has no transcribed line -> the standard 'You've found a casket!' stays.
+                val another = text.handover?.replace("a challenge scroll!", "another clue scroll!")?.takeIf { it != text.handover }
+                val result = if (terminated) null else TreasureTrailNumberChallenge.answer(player, current, answer,
+                    messages = if (another != null) "" to "You've found a casket!" else null)
+                if (result == TreasureTrailNumberChallenge.Answer.CORRECT) {
+                    // OSRS chat 'You have completed this challenge scroll.' (RuneLite ClueScrollPlugin.onChatMessage matches it).
                     player.message("You have completed this challenge scroll.")
+                    val casket = step.tier.casketId >= 0 && player.inventory.contains(step.tier.casketId)
+                    if (another != null && !casket) messageBox(another)
+                }
             }
         }
         return true

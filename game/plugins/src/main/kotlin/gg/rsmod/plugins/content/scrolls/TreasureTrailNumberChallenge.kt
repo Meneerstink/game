@@ -34,12 +34,12 @@ object TreasureTrailNumberChallenge {
         return current(player, step)?.copy(first = true)
     }
 
-    fun answer(player: Player, assignment: Assignment, answer: Int): Answer {
+    fun answer(player: Player, assignment: Assignment, answer: Int, messages: Pair<String, String>? = null): Answer {
         val step = assignment.contract.step as? TreasureTrailSourceStep ?: return Answer.STALE
         val current = current(player, step) ?: return Answer.STALE
         if (!assignment.contract.valid(player) || current.contract.scroll !== assignment.contract.scroll) return Answer.STALE
         if (current.source !== assignment.source || answer !in current.source.answers) return Answer.WRONG
-        return if (assignment.contract.advance(player)) Answer.CORRECT else Answer.STALE
+        return if (assignment.contract.advance(player, messages = messages)) Answer.CORRECT else Answer.STALE
     }
 
     fun read(player: Player, step: ClueStep): Boolean {
