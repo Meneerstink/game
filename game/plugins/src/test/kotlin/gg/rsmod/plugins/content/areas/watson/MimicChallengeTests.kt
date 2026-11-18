@@ -44,7 +44,7 @@ class MimicChallengeTests {
         val player=recoveryPlayer()
         val source=Item(ClueScrollTier.ELITE.casketId)
         player.inventory[0]=source
-        assertFalse(MimicCaskets.convert(player,0,source,ClueScrollTier.ELITE))
+        assertFalse(MimicCaskets.convert(player,0,source,ClueScrollTier.ELITE,encounterReady=false))
         assertSame(source,player.inventory[0])
         assertNull(player.attr[MimicCaskets.RECEIVED])
         assertNull(source.getAttr(ItemAttribute.MIMIC_SOURCE_TIER))

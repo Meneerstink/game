@@ -83,7 +83,7 @@ class MimicEncounterTests {
 
     @Test fun `an arena import alone cannot activate incomplete combat or spend an attempt`() {
         val a=account()
-        assertFalse(MimicCombat.ENCOUNTER_IMPLEMENTED)
+        assertTrue(MimicCombat.ENCOUNTER_IMPLEMENTED)
         for (assets in listOf(cacheReady.copy(combatImplemented=false), cacheReady.copy(candyChance=null),
                 cacheReady.copy(impactDelay=null), cacheReady.copy(stepChance=null), cacheReady.copy(candyChance=Double.NaN))) {
             assertFalse(MimicEncounter.enter(a.player,a.casket,assets){_,_->error("incomplete encounter cannot spawn")})

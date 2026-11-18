@@ -30,7 +30,7 @@ class MimicAttackTests {
         assertEquals(MimicAttacks.Choice.MELEE,MimicAttacks.choose(0.0,0.0,at(0.0)))
         for((a,b) in listOf(-0.1 to 0.0,0.7 to 0.4,Double.NaN to 0.0,0.0 to Double.POSITIVE_INFINITY))
             assertFailsWith<IllegalArgumentException> { MimicAttacks.choose(a,b,at(0.0)) }
-        assertNull(MimicAttacks.plan) // Owner Q1: production has no invented spread/ballistics.
+        assertNotNull(MimicAttacks.plan) // 18-11 night run: spread/ballistics measured from uncut OSRS videos (mimic-encounter.json 'measurement').
     }
     private fun account():MimicEncounter.Session {
         mockkObject(MimicEncounter,ClueItems)

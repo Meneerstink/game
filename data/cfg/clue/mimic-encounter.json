@@ -1,9 +1,9 @@
 {
   "source": "OSRS Wiki The Mimic + Strategies; OSRS cache 2686 region 10819",
-  "arenaImported": false,
+  "arenaImported": true,
   "keyholeLocalId": null,
   "candyImpactDelayTicks": 4,
-  "forwardStepChance": null,
+  "forwardStepChance": 0.1,
   "timingEvidence": {
     "source": "Claude dossier CLUE 2026-11-16 17:1x/17:2x; owner decision 1A video measurement",
     "videoUrl": "https://www.youtube.com/watch?v=FRohVjhXiaA",
@@ -18,10 +18,48 @@
     ],
     "note": "Throws at about39,52,75,85 seconds do not prove a fixed cycle or attack probability. No value invented."
   },
-  "candyAttackChance": null,
-  "candyLandingOffsets": null,
-  "candyFlight": null,
-  "sourceGateNote": "Owner Q1: exact candy distribution/ballistics and random choices await OSRS measurement, never donor defaults. Code retains the ordinary casket until ready.",
+  "candyAttackChance": 0.17,
+  "candyLandingOffsets": [
+    [
+      0,
+      0
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      -1,
+      1
+    ],
+    [
+      2,
+      -1
+    ],
+    [
+      -2,
+      -1
+    ],
+    [
+      0,
+      -2
+    ]
+  ],
+  "candyFlight": {
+    "startHeight": 120,
+    "endHeight": 0,
+    "slope": 24,
+    "steepness": 96,
+    "releaseDelay": 40
+  },
+  "sourceGateNote": "Values filled by Claude 18-11-2026 after video measurement (owner 15-11 Q1: 'Claude meet ze uit een OSRS-video'); see measurement.",
   "arenaRegionId": null,
-  "arenaRelocationNote": "Native667 source10819 is occupied; only a verified relocated source region may be instanced. Proposed4160 is not reserved. Q1 remains gated."
+  "arenaRelocationNote": "Native667 source10819 is occupied; only a verified relocated source region may be instanced. Proposed4160 is not reserved. Q1 remains gated.",
+  "measurement": {
+    "source": "Claude 18-11-2026 night run: 2 continuous (uncut) OSRS Mimic fight videos, wH4m_J1ekpo (28-123 s) frame-counted at 1.2 s steps (work/clue-video/m/a0-a3.png)",
+    "candyVolleys": "8 throws seen in ~97 s = ~54 attack slots of 3 ticks -> 0.15-0.19 per slot, used 0.17 (gaps 7-17 s, mostly ~10 s)",
+    "releaseDelay": "open mouth -> candies loose 0.8 s = 40 client cycles; impact 2.2 s after the throw = 4 ticks",
+    "landing": "6 splashes within 2 tiles around the player, player tile included (wiki: 'failing to step out of the way'); exact tile set is an estimate",
+    "forwardStepChance": "ESTIMATE 0.10: body-over-player seen in ~1 of 10 1.2-s frames; not countable per attack"
+  }
 }

@@ -155,11 +155,12 @@ class ClueCasketTransactionTests {
             every { gg.rsmod.plugins.content.skills.summoning.Pets.owns(player, "Bloodhound") } returns false
             player.attr[gg.rsmod.plugins.content.areas.watson.StrangeCasket.MIMIC_CHALLENGES] = true
             repeat(9) { ClueCompletions.opened(player, master) }
-            // With Q1 disabled the real opening/viewer must retain the ordinary reward odds.
+            // While the encounter is not ready the real opening/viewer must retain the ordinary reward odds.
+            mockkObject(gg.rsmod.plugins.content.areas.watson.MimicEncounter)
+            every { gg.rsmod.plugins.content.areas.watson.MimicEncounter.ready(world) } returns false
             val ordinary = ClueRewardView.view(player, master).lines
             assertTrue(ordinary.none { it.key == "clue:mimic" })
             assertTrue(ordinary.filter { it.key.startsWith("clue:") }.any { it.your > 0.0 })
-            mockkObject(gg.rsmod.plugins.content.areas.watson.MimicEncounter)
             every { gg.rsmod.plugins.content.areas.watson.MimicEncounter.ready(world) } returns true
             val lines = ClueRewardView.view(player, master).lines
             assertEquals(1.0, lines.single { it.key == "clue:mimic" }.your)

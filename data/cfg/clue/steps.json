@@ -5014,5 +5014,3306 @@
     "source": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Cryptic_clues/Master",
     "sourceFile": "Treasure_Trails__Guide__Cryptic_clues__Master.wiki",
     "sourceSha256": "789fce0ceb7142a9343cb555cf92d6b6f0b51615fcb8db42298c3a428e785701"
+  },
+  {
+    "key": "Clue scroll (easy) - Dig under Ithoi's cabin",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "Dig under Ithoi's cabin.",
+    "points": [
+      [
+        2529,
+        2838,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dig_under_Ithoi%27s_cabin",
+    "sourceFile": "Clue_scroll_(easy)_-_Dig_under_Ithoi's_cabin.wiki",
+    "sourceSha256": "19b25e78b21cea0328e536164c3f41e44aac2519bc6253f02bd6d3ddb2472c14",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (easy) - Dig where only the skilled, wealthy, or brave can choose not to visit again",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "Dig where only the skilled, the wealthy, or the brave can choose not to visit again.",
+    "points": [
+      [
+        3221,
+        3219,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dig_where_only_the_skilled%2C_wealthy%2C_or_brave_can_choose_not_to_visit_again",
+    "sourceFile": "Clue_scroll_(easy)_-_Dig_where_only_the_skilled,_wealthy,_or_brave_can_choose_not_to_visit_again.wiki",
+    "sourceSha256": "3294920db9f8c5bf2726bd5b7ed0df07bb64e692560ff58d7f6d854735bae7bd",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (elite) - A ring of water surrounds 4 powerful rings",
+    "tier": "elite",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "A ring of water surrounds 4 powerful rings, dig above the ladder located there.",
+    "points": [
+      [
+        1910,
+        4367,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_A_ring_of_water_surrounds_4_powerful_rings",
+    "sourceFile": "Clue_scroll_(elite)_-_A_ring_of_water_surrounds_4_powerful_rings.wiki",
+    "sourceSha256": "83e902b4aa4d37f74eefea7945652b184333fd6414023d66fa3716e38eaedee8",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (elite) - Dig under Razorlor's toad batta",
+    "tier": "elite",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "Dig under Razorlor's toad batta.",
+    "points": [
+      [
+        3139,
+        4554,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_Dig_under_Razorlor%27s_toad_batta",
+    "sourceFile": "Clue_scroll_(elite)_-_Dig_under_Razorlor's_toad_batta.wiki",
+    "sourceSha256": "db5b0bd89b2f98bf691feb3edd1f2db880d05c2c368a680943322dbcac2c2630",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (elite) - Dig where the forces of Zamorak and Saradomin collide",
+    "tier": "elite",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "Dig where the forces of Zamorak and Saradomin collide.",
+    "points": [
+      [
+        3049,
+        4839,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_Dig_where_the_forces_of_Zamorak_and_Saradomin_collide",
+    "sourceFile": "Clue_scroll_(elite)_-_Dig_where_the_forces_of_Zamorak_and_Saradomin_collide.wiki",
+    "sourceSha256": "0c27d06c7ee1ecc3894aa324638a4edf310db9b32d239caa25dac9712f52be39",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (elite) - Green is the colour of my death",
+    "tier": "elite",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "Green is the colour of my death as the winter-guise, I swoop towards the ground.",
+    "points": [
+      [
+        2780,
+        3783,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_Green_is_the_colour_of_my_death",
+    "sourceFile": "Clue_scroll_(elite)_-_Green_is_the_colour_of_my_death.wiki",
+    "sourceSha256": "85932ff4d70546d2fa0df982bba1182c9440d2997755873afb7fbd6eb8204010",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (elite) - Right on the blessed border, cursed by the evil ones",
+    "tier": "elite",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "Right on the blessed border, cursed by the evil ones. On the spot inaccessible by both; I will be waiting. The bugs' imminent possession holds the answer.",
+    "points": [
+      [
+        3410,
+        3324,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_Right_on_the_blessed_border%2C_cursed_by_the_evil_ones",
+    "sourceFile": "Clue_scroll_(elite)_-_Right_on_the_blessed_border,_cursed_by_the_evil_ones.wiki",
+    "sourceSha256": "ed30886acc259ca7c219058d14384ee02b7692d12c805ac4f0a12da81dba993f",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (elite) - More resources than I can handle",
+    "tier": "elite",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "More resources than I can handle, but in a very dangerous area. Can't wait to strike gold!",
+    "points": [
+      [
+        3183,
+        3941,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_More_resources_than_I_can_handle",
+    "sourceFile": "Clue_scroll_(elite)_-_More_resources_than_I_can_handle.wiki",
+    "sourceSha256": "43a2f54f89829a3d7208e0e487783c6a30fa11b8603fab1222954c33712803ad",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (elite) - The beasts retreat, for their Queen is gone",
+    "tier": "elite",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "The beasts retreat, for their Queen is gone; the song of this town still plays on. Dig near the birthplace of a blade, be careful not to melt your spade.",
+    "points": [
+      [
+        2342,
+        3677,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28elite%29_-_The_beasts_retreat%2C_for_their_Queen_is_gone",
+    "sourceFile": "Clue_scroll_(elite)_-_The_beasts_retreat,_for_their_Queen_is_gone.wiki",
+    "sourceSha256": "d9ed9725ffa364f83c884ea523bdee5189e84b99f436c4cb1b300bcee6387a4c",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 00.00N 07.13W",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "00 degrees 00 minutes north<br>07 degrees 13 minutes west",
+    "points": [
+      [
+        2209,
+        3161,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_00.00N_07.13W",
+    "sourceFile": "Clue_scroll_(hard)_-_00.00N_07.13W.wiki",
+    "sourceSha256": "a59daa9f3f49fbd2cb5ad5e1fb780a18f0b7525f610c063e1a07f73e6384a4b3",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 01.24N 08.05W",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "01 degrees 24 minutes north<br>08 degrees 05 minutes west",
+    "points": [
+      [
+        2181,
+        3206,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_01.24N_08.05W",
+    "sourceFile": "Clue_scroll_(hard)_-_01.24N_08.05W.wiki",
+    "sourceSha256": "f6732c28ce8357dc86623a952d8d9afd1e6dc688baa53f5e51f50f2674f88e55",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 02.48N 34.33E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "02 degrees 48 minutes north<br>34 degrees 33 minutes east",
+    "points": [
+      [
+        3546,
+        3251,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_02.48N_34.33E",
+    "sourceFile": "Clue_scroll_(hard)_-_02.48N_34.33E.wiki",
+    "sourceSha256": "220de406acbdbfad354e3e92d30bb09753f0d56a446d31460230cf2bb45649a2",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 02.56N 34.30E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "02 degrees 56 minutes north<br>34 degrees 30 minutes east",
+    "points": [
+      [
+        3544,
+        3255,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_02.56N_34.30E",
+    "sourceFile": "Clue_scroll_(hard)_-_02.56N_34.30E.wiki",
+    "sourceSha256": "01b607e0368f9751f683486984539aae59a0d288478e775a12a9c84834cb3744",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 03.18N 12.31E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "03 degrees 18 minutes north<br>12 degrees 31 minutes east",
+    "points": [
+      [
+        2841,
+        3267,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_03.18N_12.31E",
+    "sourceFile": "Clue_scroll_(hard)_-_03.18N_12.31E.wiki",
+    "sourceSha256": "1763dc904d955876e8be8af593ac663121b729136a8625c3b0a692aa09448abe",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 03.45S 22.45E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "03 degrees 45 minutes south<br>22 degrees 45 minutes east",
+    "points": [
+      [
+        3168,
+        3041,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_03.45S_22.45E",
+    "sourceFile": "Clue_scroll_(hard)_-_03.45S_22.45E.wiki",
+    "sourceSha256": "cef6d95d03abb44db88b0edc5a79688c2a7d305f9e7b3f342725ff8ce80ca9e4",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 04.03S 03.11E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "04 degrees 03 minutes south<br>03 degrees 11 minutes east",
+    "points": [
+      [
+        2542,
+        3031,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_04.03S_03.11E",
+    "sourceFile": "Clue_scroll_(hard)_-_04.03S_03.11E.wiki",
+    "sourceSha256": "728e5a795033cdbcf51a6136c4f2dfda3ef34dc43a1fd6ac1ac33d96cfcec0dd",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 04.05S 04.24E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "04 degrees 05 minutes south<br>04 degrees 24 minutes east",
+    "points": [
+      [
+        2581,
+        3030,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_04.05S_04.24E",
+    "sourceFile": "Clue_scroll_(hard)_-_04.05S_04.24E.wiki",
+    "sourceSha256": "f4dc0331bb0c552fb88362e11e69f06e561546e12c110eccf6108143e544374f",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 04.16S 16.16E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "04 degrees 16 minutes south<br>16 degrees 16 minutes east",
+    "points": [
+      [
+        2961,
+        3024,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_04.16S_16.16E",
+    "sourceFile": "Clue_scroll_(hard)_-_04.16S_16.16E.wiki",
+    "sourceSha256": "2ec1d2b13b39a41e055a875d533802ea76afbe80058acbe4ee11decd73a17043",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 04.41N 03.09W",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "04 degrees 41 minutes north<br>03 degrees 09 minutes west",
+    "points": [
+      [
+        2339,
+        3311,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_04.41N_03.09W",
+    "sourceFile": "Clue_scroll_(hard)_-_04.41N_03.09W.wiki",
+    "sourceSha256": "cb6e3c78f009c43742fff4bec3cb78e7a5d72a1581c3568d63b7d7de18cbc7c3",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 05.37N 31.15E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "05 degrees 37 minutes north<br>31 degrees 15 minutes east",
+    "points": [
+      [
+        3440,
+        3341,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_05.37N_31.15E",
+    "sourceFile": "Clue_scroll_(hard)_-_05.37N_31.15E.wiki",
+    "sourceSha256": "c63e755d0005e80398174ad9d227067aae4b3c0e94f92473ffb68eae5e0ffb27",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 05.50S 10.05E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "05 degrees 50 minutes south<br>10 degrees 05 minutes east",
+    "points": [
+      [
+        2763,
+        2974,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_05.50S_10.05E",
+    "sourceFile": "Clue_scroll_(hard)_-_05.50S_10.05E.wiki",
+    "sourceSha256": "bc5235664b930d1dc558289cdbd39d6b70e16a22797abf6194042eb9e99ee8c7",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 06.00S 21.48E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "06 degrees 00 minutes south<br>21 degrees 48 minutes east",
+    "points": [
+      [
+        3138,
+        2969,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_06.00S_21.48E",
+    "sourceFile": "Clue_scroll_(hard)_-_06.00S_21.48E.wiki",
+    "sourceSha256": "2945698ef56c677115ce271e165b506d0f1886d6332b9dd0790ca4de009af38b",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 06.11S 15.07E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "06 degrees 11 minutes south<br>15 degrees 07 minutes east",
+    "points": [
+      [
+        2924,
+        2963,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_06.11S_15.07E",
+    "sourceFile": "Clue_scroll_(hard)_-_06.11S_15.07E.wiki",
+    "sourceSha256": "d43ddd48cc5c8389ef3ef3d6f7ad4e39a4218cd1a74bbae2c78c2f9d30f31995",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 07.43S 12.26E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "07 degrees 43 minutes south<br>12 degrees 26 minutes east",
+    "points": [
+      [
+        2838,
+        2914,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_07.43S_12.26E",
+    "sourceFile": "Clue_scroll_(hard)_-_07.43S_12.26E.wiki",
+    "sourceSha256": "96ca2da6787ea80ef47317b029ae9e7f10bae6e78bb7e63740aed7e71c00f4e4",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 08.03N 31.16E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "08 degrees 03 minutes north<br>31 degrees 16 minutes east",
+    "points": [
+      [
+        3441,
+        3419,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_08.03N_31.16E",
+    "sourceFile": "Clue_scroll_(hard)_-_08.03N_31.16E.wiki",
+    "sourceSha256": "94fa12b0bf399c0e4593ebb4b1ceda0501e16dda6ce6a6e0b94f624d6f34dfca",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 08.05S 15.56E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "08 degrees 05 minutes south<br>15 degrees 56 minutes east",
+    "points": [
+      [
+        2950,
+        2902,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_08.05S_15.56E",
+    "sourceFile": "Clue_scroll_(hard)_-_08.05S_15.56E.wiki",
+    "sourceSha256": "d5447a63f7aab3da53a6cff6358f0e3af4ba976f938510ed177ba2a25d4e40a7",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 08.26S 10.28E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "08 degrees 26 minutes south<br>10 degrees 28 minutes east",
+    "points": [
+      [
+        2775,
+        2891,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_08.26S_10.28E",
+    "sourceFile": "Clue_scroll_(hard)_-_08.26S_10.28E.wiki",
+    "sourceSha256": "71823417c8b1a1c05858b15803f91926a266744be638f80efd60d9a4cc411e16",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 13.46N 21.01E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "13 degrees 46 minutes north<br>21 degrees 01 minutes east",
+    "points": [
+      [
+        3113,
+        3602,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_13.46N_21.01E",
+    "sourceFile": "Clue_scroll_(hard)_-_13.46N_21.01E.wiki",
+    "sourceSha256": "19710f41de07058323f9e3e9b744091d6bad2408c35c46be630a11113aa98a75",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 16.03N 14.07E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "16 degrees 03 minutes north<br>14 degrees 07 minutes east",
+    "points": [
+      [
+        2892,
+        3675,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_16.03N_14.07E",
+    "sourceFile": "Clue_scroll_(hard)_-_16.03N_14.07E.wiki",
+    "sourceSha256": "92d4031f60a4d33b5943abb0e712e3106b9b75d4e3d66fb8684e6d7b26e723e7",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 16.07N 22.45E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "16 degrees 07 minutes north<br>22 degrees 45 minutes east",
+    "points": [
+      [
+        3168,
+        3677,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_16.07N_22.45E",
+    "sourceFile": "Clue_scroll_(hard)_-_16.07N_22.45E.wiki",
+    "sourceSha256": "d64dc9cc23845b918b2e24c2695521ef688425af726683fe5a70fd485e169143",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 16.31N 12.54E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "16 degrees 31 minutes north<br>12 degrees 54 minutes east",
+    "points": [
+      [
+        2853,
+        3690,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_16.31N_12.54E",
+    "sourceFile": "Clue_scroll_(hard)_-_16.31N_12.54E.wiki",
+    "sourceSha256": "6f71eed098cc5893c4d2740db29896e36772b60d55bc1ddde2d5795d60da2f98",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 16.35N 27.01E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "16 degrees 35 minutes north<br>27 degrees 01 minutes east",
+    "points": [
+      [
+        3305,
+        3692,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_16.35N_27.01E",
+    "sourceFile": "Clue_scroll_(hard)_-_16.35N_27.01E.wiki",
+    "sourceSha256": "c8d042a9bdcffbf97ab50504ffb107bb194e0868894a943cf0d9db9cfacc6a03",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 16.43N 19.13E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "16 degrees 43 minutes north<br>19 degrees 13 minutes east",
+    "points": [
+      [
+        3055,
+        3696,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_16.43N_19.13E",
+    "sourceFile": "Clue_scroll_(hard)_-_16.43N_19.13E.wiki",
+    "sourceSha256": "9709c93815e82cafacc237230d1d962220c77f778622ca264a63bc516f350447",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 16.43N 26.56E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "16 degrees 43 minutes north<br>26 degrees 56 minutes east",
+    "points": [
+      [
+        3302,
+        3696,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_16.43N_26.56E",
+    "sourceFile": "Clue_scroll_(hard)_-_16.43N_26.56E.wiki",
+    "sourceSha256": "4b2c6be7d0c111527a7cfd99db9ce9fda3e3f1b42f4038da6ad111d7e68d0c43",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 16.45N 03.05W",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "16 degrees 45 minutes north<br>03 degrees 05 minutes west",
+    "points": [
+      [
+        2341,
+        3697,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_16.45N_03.05W",
+    "sourceFile": "Clue_scroll_(hard)_-_16.45N_03.05W.wiki",
+    "sourceSha256": "f3d22ac3c027313eda93ea7d9a9342dcfb84a864a258462ff8a3d75028561419",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 17.50N 08.30E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "17 degrees 50 minutes north<br>08 degrees 30 minutes east",
+    "points": [
+      [
+        2712,
+        3732,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_17.50N_08.30E",
+    "sourceFile": "Clue_scroll_(hard)_-_17.50N_08.30E.wiki",
+    "sourceSha256": "151e30d5e6b6340a7023acd4dbebd043bd539529e6fa0c699c85018e0b9c6714",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 18.22N 16.33E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "18 degrees 22 minutes north<br>16 degrees 33 minutes east",
+    "points": [
+      [
+        2970,
+        3749,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_18.22N_16.33E",
+    "sourceFile": "Clue_scroll_(hard)_-_18.22N_16.33E.wiki",
+    "sourceSha256": "54d7b51d7494231bc5b9c07597f46c89f08eef1550efcdea5de15be754519b0d",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 18.50N 20.26E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "18 degrees 50 minutes north<br>20 degrees 26 minutes east",
+    "points": [
+      [
+        3094,
+        3764,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_18.50N_20.26E",
+    "sourceFile": "Clue_scroll_(hard)_-_18.50N_20.26E.wiki",
+    "sourceSha256": "37c739b27e0b9a755015d940ef99910502bab1d4b2e896703243174c64b7319d",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 19.00N 27.13E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "19 degrees 00 minutes north<br>27 degrees 13 minutes east",
+    "points": [
+      [
+        3311,
+        3769,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_19.00N_27.13E",
+    "sourceFile": "Clue_scroll_(hard)_-_19.00N_27.13E.wiki",
+    "sourceSha256": "7ad4983e4d4e624b8b6fdadebac68b325e7dab175df85c9261af993e0094131b",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 19.09N 21.58E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "19 degrees 09 minutes north<br>21 degrees 58 minutes east",
+    "points": [
+      [
+        3143,
+        3774,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_19.09N_21.58E",
+    "sourceFile": "Clue_scroll_(hard)_-_19.09N_21.58E.wiki",
+    "sourceSha256": "cd51034a30887884fd1e579cabbd8f189a1f9bf403e7cc83569bb6e7080f62ca",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 19.43N 25.07E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "19 degrees 43 minutes north<br>25 degrees 07 minutes east",
+    "points": [
+      [
+        3244,
+        3792,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_19.43N_25.07E",
+    "sourceFile": "Clue_scroll_(hard)_-_19.43N_25.07E.wiki",
+    "sourceSha256": "22cfc95f54db21351799478896e9498709130dd468500a3c7838ff6fbe8ec688",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 20.05N 21.52E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "20 degrees 05 minutes north<br>21 degrees 52 minutes east",
+    "points": [
+      [
+        3140,
+        3804,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_20.05N_21.52E",
+    "sourceFile": "Clue_scroll_(hard)_-_20.05N_21.52E.wiki",
+    "sourceSha256": "08ca75de2aef67d3b21572fb5213223d480c5a899a424f98cf935118e8853a6e",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 20.33N 15.48E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "20 degrees 33 minutes north<br>15 degrees 48 minutes east",
+    "points": [
+      [
+        2946,
+        3819,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_20.33N_15.48E",
+    "sourceFile": "Clue_scroll_(hard)_-_20.33N_15.48E.wiki",
+    "sourceSha256": "96311eaa30896b699ac1e302e7a50e968f2b75d516e65370cc8a7304ece748db",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 21.24N 17.54E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "21 degrees 24 minutes north<br>17 degrees 54 minutes east",
+    "points": [
+      [
+        3013,
+        3846,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_21.24N_17.54E",
+    "sourceFile": "Clue_scroll_(hard)_-_21.24N_17.54E.wiki",
+    "sourceSha256": "8a9390c46b3a984f7c6fc292c2cd73cc6510533f6d3a4f1c4617240b567bc6e7",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 22.35N 19.18E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "22 degrees 35 minutes north<br>19 degrees 18 minutes east",
+    "points": [
+      [
+        3058,
+        3884,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_22.35N_19.18E",
+    "sourceFile": "Clue_scroll_(hard)_-_22.35N_19.18E.wiki",
+    "sourceSha256": "85cad6cd67d2430f782653407808596ed8b699c110ee520b9ee75dc2803063e6",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 22.45N 26.33E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "22 degrees 45 minutes north<br>26 degrees 33 minutes east",
+    "points": [
+      [
+        3290,
+        3889,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_22.45N_26.33E",
+    "sourceFile": "Clue_scroll_(hard)_-_22.45N_26.33E.wiki",
+    "sourceSha256": "0fb10073a748fdd680055b9c7ac26937a21585e94224f8773df212e72ab3f34a",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 23.03N 02.01E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "23 degrees 03 minutes north<br>02 degrees 01 minutes east",
+    "points": [
+      [
+        2505,
+        3899,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_23.03N_02.01E",
+    "sourceFile": "Clue_scroll_(hard)_-_23.03N_02.01E.wiki",
+    "sourceSha256": "4de7133306cffbfb04e90a66402be420cca8408b2ca2aa6a726066d6c2683f89",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 23.30N 16.33E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "23 degrees 30 minutes north<br>16 degrees 33 minutes east",
+    "points": [
+      [
+        2970,
+        3913,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_23.30N_16.33E",
+    "sourceFile": "Clue_scroll_(hard)_-_23.30N_16.33E.wiki",
+    "sourceSha256": "2b9cb90050a2326bb8fc0a59212dc36bf85232a72b458be7fd50698c440282f1",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 24.24N 26.24E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "24 degrees 24 minutes north<br>26 degrees 24 minutes east",
+    "points": [
+      [
+        3285,
+        3942,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_24.24N_26.24E",
+    "sourceFile": "Clue_scroll_(hard)_-_24.24N_26.24E.wiki",
+    "sourceSha256": "26a12a820d71fbbcc7e745514ce22349231d95311835827b39ba1e7b1a4907ff",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 24.56N 22.28E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "24 degrees 56 minutes north<br>22 degrees 28 minutes east",
+    "points": [
+      [
+        3159,
+        3959,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_24.56N_22.28E",
+    "sourceFile": "Clue_scroll_(hard)_-_24.56N_22.28E.wiki",
+    "sourceSha256": "c982fc253147027faf1e2832eeede8ba7e438bd4e1577cff335c3ea5fe0e0339",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 24.58N 18.43E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "24 degrees 58 minutes north<br>18 degrees 43 minutes east",
+    "points": [
+      [
+        3039,
+        3960,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_24.58N_18.43E",
+    "sourceFile": "Clue_scroll_(hard)_-_24.58N_18.43E.wiki",
+    "sourceSha256": "31b87defe33f2069086718c23480448ece244f606d8bdd3da64289349d9a7670",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 25.03N 17.05E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "25 degrees 03 minutes north<br>17 degrees 05 minutes east",
+    "points": [
+      [
+        2987,
+        3963,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_25.03N_17.05E",
+    "sourceFile": "Clue_scroll_(hard)_-_25.03N_17.05E.wiki",
+    "sourceSha256": "49f0d7b27465a2a6d51146e1733c17b47df5120d989671dbe52e28f020a382c7",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - 25.03N 23.24E",
+    "tier": "hard",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "25 degrees 03 minutes north<br>23 degrees 24 minutes east",
+    "points": [
+      [
+        3189,
+        3963,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "GUARD",
+      "guards": [
+        2954
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_25.03N_23.24E",
+    "sourceFile": "Clue_scroll_(hard)_-_25.03N_23.24E.wiki",
+    "sourceSha256": "1b0886fd10d8cf330a7ab582d64a2d44511f886c9a1e83763be3deed845b4b76",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - And so on, and so on, and so on",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "And so on, and so on, and so on. Walking from the land of many unimportant things leads to a choice of paths.",
+    "points": [
+      [
+        2591,
+        3879,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_And_so_on%2C_and_so_on%2C_and_so_on",
+    "sourceFile": "Clue_scroll_(hard)_-_And_so_on,_and_so_on,_and_so_on.wiki",
+    "sourceSha256": "0f44423f36054c4da39693238ff1895dce939f5061d76fee6532f1a25057c882",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - AIQ0440",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "A I Q 0 4 4 0",
+    "points": [
+      [
+        3000,
+        3110,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_AIQ0440",
+    "sourceFile": "Clue_scroll_(hard)_-_AIQ0440.wiki",
+    "sourceSha256": "9a739e8cc1c6062663c3c9324e32ae69da7ade20647927368072627ad96024da",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - AIR2331",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "A I R 2 3 3 1",
+    "points": [
+      [
+        2702,
+        3246,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_AIR2331",
+    "sourceFile": "Clue_scroll_(hard)_-_AIR2331.wiki",
+    "sourceSha256": "bda31bdc2e2074ba00963c5dd364e0e732bb27fb201fa94093b083f5fba2a2da",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - ALP1140",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "A L P 1 1 4 0",
+    "points": [
+      [
+        2504,
+        3633,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_ALP1140",
+    "sourceFile": "Clue_scroll_(hard)_-_ALP1140.wiki",
+    "sourceSha256": "4638227cb1e8b7fcd2e136b0ed4c8ba46c642e9173f65ee845a1fd9ef860cd5d",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - BIP7013",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "B I P 7 0 1 3",
+    "points": [
+      [
+        3407,
+        3330,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_BIP7013",
+    "sourceFile": "Clue_scroll_(hard)_-_BIP7013.wiki",
+    "sourceSha256": "ddaf6893debb0ecac1bac6ebd50bcf9041e6883e1043213cd9a9133ec50b26d8",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - BJR1123",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "B J R 1 1 2 3",
+    "points": [
+      [
+        2648,
+        4729,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_BJR1123",
+    "sourceFile": "Clue_scroll_(hard)_-_BJR1123.wiki",
+    "sourceSha256": "5e03d822dd85d3129da2d58415f9ef25ea29bba40480fd71a7ecc738056a25b8",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - BLP6200",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "B L P 6 2 0 0",
+    "points": [
+      [
+        2439,
+        5132,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_BLP6200",
+    "sourceFile": "Clue_scroll_(hard)_-_BLP6200.wiki",
+    "sourceSha256": "0e7de1572e6232bcb1269e2d54da6af063dc73a85c367bdc519f6dbcc25a2d8e",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - Come to the evil ledge",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "Come to the {{color|#ff7000|evil ledge,}}\n{{Colour|#000000|Yew know yew want to.}}\nTry not to get stung.",
+    "points": [
+      [
+        3089,
+        3468,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Come_to_the_evil_ledge",
+    "sourceFile": "Clue_scroll_(hard)_-_Come_to_the_evil_ledge.wiki",
+    "sourceSha256": "94c9484d29146d60ac4e0aeb80fae9a9c04901a4cb62fcf0cbc41f5c189c5efa",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - Covered in shadows",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "Covered in shadows, the centre of the circle is where you will find the answer.",
+    "points": [
+      [
+        3488,
+        3289,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Covered_in_shadows",
+    "sourceFile": "Clue_scroll_(hard)_-_Covered_in_shadows.wiki",
+    "sourceSha256": "8b6e97c569f6dd5ddebcf4d934376e836c47877eb2f5c169a57139d34b9b755b",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - Dig where 4 siblings and I all live with our evil overlord",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "Dig where 4 siblings and I all live with our evil overlord.",
+    "points": [
+      [
+        3195,
+        3357,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Dig_where_4_siblings_and_I_all_live_with_our_evil_overlord",
+    "sourceFile": "Clue_scroll_(hard)_-_Dig_where_4_siblings_and_I_all_live_with_our_evil_overlord.wiki",
+    "sourceSha256": "c5269068572e4863af72eb5a907fdd650146c001b75aef49d2e972aa3445f486",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - DIP8511",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "D I P 8 5 1 1",
+    "points": [
+      [
+        3041,
+        4770,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_DIP8511",
+    "sourceFile": "Clue_scroll_(hard)_-_DIP8511.wiki",
+    "sourceSha256": "0308276010dff8b39dadd61d0e7f09d1f7fd24d3d6a3d6f3662946f8bb10e1f8",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - I am a token of the greatest love",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "I am a token of the greatest love. I have no beginning or end. My eye is red, I can fit like a glove. Go to the place where it's money they lend, And dig by the gate to be my friend.",
+    "points": [
+      [
+        3191,
+        9825,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_I_am_a_token_of_the_greatest_love",
+    "sourceFile": "Clue_scroll_(hard)_-_I_am_a_token_of_the_greatest_love.wiki",
+    "sourceSha256": "4ae4e72be3f514ab5da13bd736fcb386bc9b5c5b866be9faf68e85d833fd2d8f",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - I lie lonely and forgotten in mid wilderness",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "I lie lonely and forgotten in mid wilderness, where the dead rise from their beds. Feel free to quarrel and wind me up, and dig while you shoot their heads.",
+    "points": [
+      [
+        3174,
+        3663,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_I_lie_lonely_and_forgotten_in_mid_wilderness",
+    "sourceFile": "Clue_scroll_(hard)_-_I_lie_lonely_and_forgotten_in_mid_wilderness.wiki",
+    "sourceSha256": "60e044b3b427cf3bf67a4181df51e804b2a1a48db02d2211ba605f07dccdf3b0",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - Mine was the strangest birth under the sun",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "Mine was the strangest birth under the sun. I left the crimson sack, yet life had not begun. Entered the world, and yet was seen by none.",
+    "points": [
+      [
+        2832,
+        9586,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Mine_was_the_strangest_birth_under_the_sun",
+    "sourceFile": "Clue_scroll_(hard)_-_Mine_was_the_strangest_birth_under_the_sun.wiki",
+    "sourceSha256": "cc8c2d7bd16d9656f9e0b1fec4d36bcc5a448d7ceea506240fc0c0b3455df251",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - My giant guardians below the market streets",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "My giant guardians below the market streets would be fans of rock and roll, if only they could grab hold of it. Dig near my green bubbles!",
+    "points": [
+      [
+        3161,
+        9904,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_My_giant_guardians_below_the_market_streets",
+    "sourceFile": "Clue_scroll_(hard)_-_My_giant_guardians_below_the_market_streets.wiki",
+    "sourceSha256": "ac0315c83bd8f4bada8e2a3983ede2bf062918a484d78d1e23309713257e96ef",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - Rotting next to a ditch",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "Rotting next to a ditch. Dig next to the fish.",
+    "points": [
+      [
+        3547,
+        3183,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Rotting_next_to_a_ditch",
+    "sourceFile": "Clue_scroll_(hard)_-_Rotting_next_to_a_ditch.wiki",
+    "sourceSha256": "c5d828f16084b26df93f40b2aab629ffaa437d45e65fbc40e63f22cb5bc85899",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - THEY'RE EVERYWHERE!!!!",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "THEY'RE EVERYWHERE!!!! But they were here first. Dig for treasure where the ground is rich with ore.",
+    "points": [
+      [
+        3081,
+        3421,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_THEY%27RE_EVERYWHERE%21%21%21%21",
+    "sourceFile": "Clue_scroll_(hard)_-_THEY'RE_EVERYWHERE!!!!.wiki",
+    "sourceSha256": "3a9254dd3d59d69ef4e19f08b1e8698727aa3387f1ba4593990afe407b860e16",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - The beasts to my east snap claws and tails",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "The beasts to my east snap claws and tails, The rest to my west can slide and eat fish. The force to my north will jump and they'll wail, Come dig by my fire and make a wish.",
+    "points": [
+      [
+        2598,
+        3267,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_The_beasts_to_my_east_snap_claws_and_tails",
+    "sourceFile": "Clue_scroll_(hard)_-_The_beasts_to_my_east_snap_claws_and_tails.wiki",
+    "sourceSha256": "4e2af4637b25015a9840949924863c48124a760681c04bc5c15071aa97943ee3",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - Where the best are commemorated",
+    "tier": "hard",
+    "kind": "CRYPTIC",
+    "action": "DIG",
+    "hint": "Where the best are commemorated, and a celebratory cup, not just for beer.",
+    "points": [
+      [
+        3388,
+        3152,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Where_the_best_are_commemorated",
+    "sourceFile": "Clue_scroll_(hard)_-_Where_the_best_are_commemorated.wiki",
+    "sourceSha256": "d2fd6e406482b66655632c6a546d4922cc6a6c46f72a576b45526e26fcd78055",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 00.05S 01.13E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "00 degrees 05 minutes south<br>01 degrees 13 minutes east",
+    "points": [
+      [
+        2479,
+        3158,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_00.05S_01.13E",
+    "sourceFile": "Clue_scroll_(medium)_-_00.05S_01.13E.wiki",
+    "sourceSha256": "87e56bb4f0a3e89750a15e72038c454d344ddd7a82e82e4c8dcecad896e4e3f8",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 00.18S 09.28E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "00 degrees 18 minutes south<br>09 degrees 28 minutes east",
+    "points": [
+      [
+        2743,
+        3151,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_00.18S_09.28E",
+    "sourceFile": "Clue_scroll_(medium)_-_00.18S_09.28E.wiki",
+    "sourceSha256": "a0880306197b2c8d3e9a80200d76dc6382494ae3788ed7792a0e4cff5030a8c7",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 01.18S 14.15E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "01 degrees 18 minutes south<br>14 degrees 15 minutes east",
+    "points": [
+      [
+        2896,
+        3119,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_01.18S_14.15E",
+    "sourceFile": "Clue_scroll_(medium)_-_01.18S_14.15E.wiki",
+    "sourceSha256": "0ae18f6cd85f3176761fbf77b861ae908dccbd67dad42fabd387d87fbe69a522",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 01.26N 08.01E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "01 degrees 26 minutes north<br>08 degrees 01 minutes east",
+    "points": [
+      [
+        2697,
+        3207,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_01.26N_08.01E",
+    "sourceFile": "Clue_scroll_(medium)_-_01.26N_08.01E.wiki",
+    "sourceSha256": "a320d87d332c652611db3c31b8061e984ef3f8f8e9ee0a25c15c7927bd511ce7",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 01.35S 07.28E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "01 degrees 35 minutes south<br>07 degrees 28 minutes east",
+    "points": [
+      [
+        2679,
+        3110,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_01.35S_07.28E",
+    "sourceFile": "Clue_scroll_(medium)_-_01.35S_07.28E.wiki",
+    "sourceSha256": "38c09afdf743bfb8042abce837d88cb322b7fb124173e85cbfe1b3a5543f1534",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 02.16N 12.07E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "02 degrees 16 minutes north<br>12 degrees 07 minutes east",
+    "points": [
+      [
+        2828,
+        3234,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_02.16N_12.07E",
+    "sourceFile": "Clue_scroll_(medium)_-_02.16N_12.07E.wiki",
+    "sourceSha256": "f81d3d10dce6451bfe1e92d7380208f7777366d1d87171180f3541d74ba83d40",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 02.43S 33.26E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "02 degrees 43 minutes south<br>33 degrees 26 minutes east",
+    "points": [
+      [
+        3510,
+        3074,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_02.43S_33.26E",
+    "sourceFile": "Clue_scroll_(medium)_-_02.43S_33.26E.wiki",
+    "sourceSha256": "ca4e7161bb6fc2b09d07cf21090b0eaeaf760def0a95ebc76bde23451734067f",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 02.50N 06.20E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "02 degrees 50 minutes north<br>06 degrees 20 minutes east",
+    "points": [
+      [
+        2643,
+        3252,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_02.50N_06.20E",
+    "sourceFile": "Clue_scroll_(medium)_-_02.50N_06.20E.wiki",
+    "sourceSha256": "b858f28c3272bdb894f6dd83b8c6f539276a307361db999ae14cab504bd12de1",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 03.07S 03.41W",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "03 degrees 07 minutes south<br>03 degrees 41 minutes west",
+    "points": [
+      [
+        2322,
+        3061,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_03.07S_03.41W",
+    "sourceFile": "Clue_scroll_(medium)_-_03.07S_03.41W.wiki",
+    "sourceSha256": "204bffd3b2070632948f7fe0cbbff005eb9522d60adf82a94f353ccddacc96ba",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 03.35S 13.35E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "03 degrees 35 minutes south<br>13 degrees 35 minutes east",
+    "points": [
+      [
+        2875,
+        3046,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_03.35S_13.35E",
+    "sourceFile": "Clue_scroll_(medium)_-_03.35S_13.35E.wiki",
+    "sourceSha256": "e846e3c26501a0bd4d2a7df6d5660f3e2f7951823118ee9013eeeacee3e0014b",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 04.00S 12.46E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "04 degrees 00 minutes south<br>12 degrees 46 minutes east",
+    "points": [
+      [
+        2849,
+        3033,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_04.00S_12.46E",
+    "sourceFile": "Clue_scroll_(medium)_-_04.00S_12.46E.wiki",
+    "sourceSha256": "af4fe04a942754d0257a21386c6d0fee29377f335832d76b7abc5235c99a853c",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 04.13N 12.45E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "04 degrees 13 minutes north<br>12 degrees 45 minutes east",
+    "points": [
+      [
+        2848,
+        3296,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_04.13N_12.45E",
+    "sourceFile": "Clue_scroll_(medium)_-_04.13N_12.45E.wiki",
+    "sourceSha256": "ad6d874971f970c3fa624629f6f74d69d8e3517f3136d044e56b58f5744cd40a",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 05.20S 04.28E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "05 degrees 20 minutes south<br>04 degrees 28 minutes east",
+    "points": [
+      [
+        2583,
+        2990,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_05.20S_04.28E",
+    "sourceFile": "Clue_scroll_(medium)_-_05.20S_04.28E.wiki",
+    "sourceSha256": "e7dff94cf52d693faa5a81d418b3a0a47d99f6e1d74cd648ca91a3936632f6fa",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 06.31N 01.46W",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "06 degrees 31 minutes north<br>01 degrees 46 minutes west",
+    "points": [
+      [
+        2383,
+        3370,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_06.31N_01.46W",
+    "sourceFile": "Clue_scroll_(medium)_-_06.31N_01.46W.wiki",
+    "sourceSha256": "705f7f31da2557c49be6bc0e05b1dcd3d6606d103c257cc42c5e9e09e228eadd",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 06.41N 27.15E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "06 degrees 41 minutes north<br>27 degrees 15 minutes east",
+    "points": [
+      [
+        3312,
+        3375,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_06.41N_27.15E",
+    "sourceFile": "Clue_scroll_(medium)_-_06.41N_27.15E.wiki",
+    "sourceSha256": "c1450362db3e13d17fcb0e146b2c23e0c1bf7632265ad6c9546b34d02121060f",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 06.58N 21.16E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "06 degrees 58 minutes north<br>21 degrees 16 minutes east",
+    "points": [
+      [
+        3121,
+        3384,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_06.58N_21.16E",
+    "sourceFile": "Clue_scroll_(medium)_-_06.58N_21.16E.wiki",
+    "sourceSha256": "d2b6c66763316a18619f88afad1d1957cef729aeab6f6eb9da1da7cd5b3c1549",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 07.05N 30.56E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "07 degrees 05 minutes north<br>30 degrees 56 minutes east",
+    "points": [
+      [
+        3430,
+        3388,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_07.05N_30.56E",
+    "sourceFile": "Clue_scroll_(medium)_-_07.05N_30.56E.wiki",
+    "sourceSha256": "cd211d2ca4e8a71dd83ad1859260ae6d9398fbdf443c449b4d9d94ed317c4f9c",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 07.33N 15.00E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "07 degrees 33 minutes north<br>15 degrees 00 minutes east",
+    "points": [
+      [
+        2920,
+        3403,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_07.33N_15.00E",
+    "sourceFile": "Clue_scroll_(medium)_-_07.33N_15.00E.wiki",
+    "sourceSha256": "0cc80878544acf37b0973f88a2b5096193d675437bca9872ae30b7fb0f8324b5",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 08.11S 04.48E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "08 degrees 11 minutes south<br>04 degrees 48 minutes east",
+    "points": [
+      [
+        2594,
+        2899,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_08.11S_04.48E",
+    "sourceFile": "Clue_scroll_(medium)_-_08.11S_04.48E.wiki",
+    "sourceSha256": "1ca3f28c35f94b0a82b3f2945bf240a9d7a2b8f1ea1c90f455ecd287dfc9b63d",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 08.33N 01.39W",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "08 degrees 33 minutes north<br>01 degrees 39 minutes west",
+    "points": [
+      [
+        2387,
+        3435,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_08.33N_01.39W",
+    "sourceFile": "Clue_scroll_(medium)_-_08.33N_01.39W.wiki",
+    "sourceSha256": "862e8605d9e071f2037a29e2f7b2a90e28604fdd4a2d9db003e0777ce4e3f790",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 09.33N 02.15E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "09 degrees 33 minutes north<br>02 degrees 15 minutes east",
+    "points": [
+      [
+        2512,
+        3467,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_09.33N_02.15E",
+    "sourceFile": "Clue_scroll_(medium)_-_09.33N_02.15E.wiki",
+    "sourceSha256": "071e5bb1a4724ab220bb09ac93b9748522c5badd6b46df50460a2a3962bb04d5",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 09.35N 01.50W",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "09 degrees 35 minutes north<br>01 degrees 50 minutes west",
+    "points": [
+      [
+        2381,
+        3468,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_09.35N_01.50W",
+    "sourceFile": "Clue_scroll_(medium)_-_09.35N_01.50W.wiki",
+    "sourceSha256": "493c22fcebda8a635184b43691202ac1a7d73990457aaa871206d3aa40f88e37",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 09.48N 17.39E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "09 degrees 48 minutes north<br>17 degrees 39 minutes east",
+    "points": [
+      [
+        3005,
+        3475,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_09.48N_17.39E",
+    "sourceFile": "Clue_scroll_(medium)_-_09.48N_17.39E.wiki",
+    "sourceSha256": "bc0249b4ce001021b4845941a61cde8fc3834da6cc20f3e143d94d008659e78d",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 10.45N 04.31E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "10 degrees 45 minutes north<br>04 degrees 31 minutes east",
+    "points": [
+      [
+        2585,
+        3505,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_10.45N_04.31E",
+    "sourceFile": "Clue_scroll_(medium)_-_10.45N_04.31E.wiki",
+    "sourceSha256": "46baacff961ea7bbf8305e963b47f1990cdb17fc6d4a8d24615e24542a70798f",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 11.03N 31.20E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "11 degrees 03 minutes north<br>31 degrees 20 minutes east",
+    "points": [
+      [
+        3443,
+        3515,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_11.03N_31.20E",
+    "sourceFile": "Clue_scroll_(medium)_-_11.03N_31.20E.wiki",
+    "sourceSha256": "40233e0fcc30aaa8e3fa3608a10504fececa0f7bbeb47ba3f76a90e70ee3cf7b",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 11.05N 00.45W",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "11 degrees 05 minutes north<br>00 degrees 45 minutes west",
+    "points": [
+      [
+        2416,
+        3516,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_11.05N_00.45W",
+    "sourceFile": "Clue_scroll_(medium)_-_11.05N_00.45W.wiki",
+    "sourceSha256": "c543b79614a9fa365edc3273e0fe2a0fad7aec5ce5883f4efd3ac5dbf55db955",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 11.18N 30.54E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "11 degrees 18 minutes north<br>30 degrees 54 minutes east",
+    "points": [
+      [
+        3429,
+        3523,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_11.18N_30.54E",
+    "sourceFile": "Clue_scroll_(medium)_-_11.18N_30.54E.wiki",
+    "sourceSha256": "c897782455b499fc6eefbee981c99254e8b04fb94d9c079361a975a3b4f802ab",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 11.33N 02.24W",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "11 degrees 33 minutes north<br>02 degrees 24 minutes west",
+    "points": [
+      [
+        2363,
+        3531,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_11.33N_02.24W",
+    "sourceFile": "Clue_scroll_(medium)_-_11.33N_02.24W.wiki",
+    "sourceSha256": "2f3a22755ed9c300c06b89cff656541118db32381972886cff0834c3d7ab6b73",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 11.41N 14.58E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "11 degrees 41 minutes north<br>14 degrees 58 minutes east",
+    "points": [
+      [
+        2919,
+        3535,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_11.41N_14.58E",
+    "sourceFile": "Clue_scroll_(medium)_-_11.41N_14.58E.wiki",
+    "sourceSha256": "863ea1230273f9f2218d9c0046dcceee55178ad9ed4079dae7eade9332420234",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 12.28N 34.37E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "12 degrees 28 minutes north<br>34 degrees 37 minutes east",
+    "points": [
+      [
+        3548,
+        3560,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_12.28N_34.37E",
+    "sourceFile": "Clue_scroll_(medium)_-_12.28N_34.37E.wiki",
+    "sourceSha256": "076881d72c6836c7e032eb9f017d85fd458825f87e87292f9d101c3266d7194c",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 14.54N 09.13E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "14 degrees 54 minutes north<br>09 degrees 13 minutes east",
+    "points": [
+      [
+        2735,
+        3638,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_14.54N_09.13E",
+    "sourceFile": "Clue_scroll_(medium)_-_14.54N_09.13E.wiki",
+    "sourceSha256": "c6cb118f5b4771e31cca2b45a28ee4a74c7d64519406b0cbb83c087e4e181cf0",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 15.22N 07.31E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "15 degrees 22 minutes north<br>07 degrees 31 minutes east",
+    "points": [
+      [
+        2681,
+        3653,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_15.22N_07.31E",
+    "sourceFile": "Clue_scroll_(medium)_-_15.22N_07.31E.wiki",
+    "sourceSha256": "01b3c3518b57e16c17e61e1cdd2b6029ce910552e2cfb2796e176d7bc92e6ef9",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 22.30N 03.01E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "22 degrees 30 minutes north<br>03 degrees 01 minutes east",
+    "points": [
+      [
+        2537,
+        3881,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_22.30N_03.01E",
+    "sourceFile": "Clue_scroll_(medium)_-_22.30N_03.01E.wiki",
+    "sourceSha256": "087031f6b44c5e62df75347d933ba313d301a1f28773ecf3b86965cbf377119c",
+    "additionalSource": true
   }
 ]
