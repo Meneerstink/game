@@ -112,6 +112,20 @@ class GeHomeHallCollisionTests {
 
     private data class Step(val from: Tile, val dir: Direction)
 
+    /** The step that first reached each tile in [walk] - the failure messages print the route to a bad tile. */
+    private val firstStep = HashMap<Tile, Step>()
+
+    private fun routeTo(tile: Tile): String {
+        val route = ArrayList<String>()
+        var t = tile
+        while (route.size < 12) {
+            val step = firstStep[t] ?: break
+            route += "${step.from.x},${step.from.z} ${step.dir}"
+            t = step.from
+        }
+        return route.joinToString(" <- ")
+    }
+
     /** Every tile a player reaches on [level] from its [entrances] with the server's own step rule, and every step taken. */
     private fun walk(level: Int): Pair<Set<Tile>, List<Step>> {
         val seen = HashSet<Tile>()
@@ -125,7 +139,10 @@ class GeHomeHallCollisionTests {
                 if (next.x !in WALK_X || next.z !in WALK_Z) continue
                 if (!world.collision.canStep(t, dir)) continue
                 steps += Step(t, dir)
-                if (seen.add(next)) queue += next
+                if (seen.add(next)) {
+                    queue += next
+                    firstStep.putIfAbsent(next, Step(t, dir))
+                }
             }
         }
         return seen to steps
@@ -179,7 +196,9 @@ class GeHomeHallCollisionTests {
                 0 to listOf(Tile(3164, 3488, 0), Tile(3160, 3495, 0), Tile(3169, 3495, 0)) + GeHomeHall.STAIRS.map { it.floor },
                 1 to listOf(Tile(3164, 3488, 1), Tile(3164, 3483, 1), Tile(3164, 3500, 1), Tile(3155, 3491, 1), Tile(3174, 3491, 1)),
                 // 3165,3488: the aisle between the south card tables since the owner moved them (10-09/10-10, N19; 3164 is under one).
-                2 to listOf(Tile(3165, 3488, 2), Tile(3159, 3490, 2), Tile(3170, 3490, 2), Tile(3164, 3484, 2), Tile(3164, 3499, 2), Tile(3156, 3491, 2), Tile(3173, 3491, 2)),
+                // T7 (15-11): NOT the north balcony 3164,3499 - the owner moved the two casino tables to 3162/3167,3497 (world_edits
+                // groups 646 + 657), which closes the north aisle; in-game unreachable too (clipmap 08:4x). Owner's layout stays (advice A).
+                2 to listOf(Tile(3165, 3488, 2), Tile(3159, 3490, 2), Tile(3170, 3490, 2), Tile(3164, 3484, 2), Tile(3156, 3491, 2), Tile(3173, 3491, 2)),
             )
         wanted.forEach { (level, tiles) ->
             val (reached, _) = walk(level)
@@ -215,7 +234,7 @@ class GeHomeHallCollisionTests {
             val balconies = if (level == 1) RoyalHallMapTool.BALCONIES else RoyalHallMapTool.BALCONIES_2
             reached.forEach { t ->
                 val ground = map.tiles[level][t.x - 49 * 64][t.z - 54 * 64]
-                if (ground.overlayId == 0) problems += "level $level ${t.x},${t.z}: walkable air (no floor)"
+                if (ground.overlayId == 0) problems += "level $level ${t.x},${t.z}: walkable air (no floor), reached via ${routeTo(t)}"
                 val hall = t.x in floorX && t.z in floorZ
                 val balcony = balconies.any { t.x in it.xs && t.z in it.zs }
                 // The upper doorways' wall-ring tiles lead onto the balconies (and are part of them).

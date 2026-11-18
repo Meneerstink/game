@@ -1,0 +1,52 @@
+﻿{
+    "purpose":  "Code assistance and contradictory candidate evidence only; no behaviour or numbers adopted into gameplay",
+    "commit":  "b9b93706618a7b7fe7e5ea30e9a9ef35ba09673e",
+    "sourcePolicy":  "OSRS Wiki and OSRS cache remain the task behavioural authorities",
+    "temperatureCandidates":  "200+,150-199,100-149,70-99,30-69,15-29,0-14; message fragments only, not a complete verified chat sentence",
+    "rotationConflict":  "SpawnLocation comment says250*10ticks(25min), Wiki says approximately45min Wilderness time",
+    "locationConflict":  "19 centres with3x3rects differ from17Wiki circles(radius5); one centre explicitly marked Incorrect?",
+    "sources":  [
+                    {
+                        "name":  "MageArenaTemperature.java",
+                        "url":  "https://github.com/Zoinkwiz/quest-helper/blob/b9b93706618a7b7fe7e5ea30e9a9ef35ba09673e/src/main/java/com/questhelper/helpers/miniquests/themagearenaii/MageArenaTemperature.java",
+                        "bytes":  2440,
+                        "sha256":  "34afe32a117dda883d617a3765dcddf92f82d5ecadd057e63d63f67696c31e40"
+                    },
+                    {
+                        "name":  "MageArenaTemperatureChange.java",
+                        "url":  "https://github.com/Zoinkwiz/quest-helper/blob/b9b93706618a7b7fe7e5ea30e9a9ef35ba09673e/src/main/java/com/questhelper/helpers/miniquests/themagearenaii/MageArenaTemperatureChange.java",
+                        "bytes":  2052,
+                        "sha256":  "7cb513497be82f2237cd981dc202392ea41c0139b89b7d7df9f9c29bebc295b2"
+                    },
+                    {
+                        "name":  "MageArenaSpawnLocation.java",
+                        "url":  "https://github.com/Zoinkwiz/quest-helper/blob/b9b93706618a7b7fe7e5ea30e9a9ef35ba09673e/src/main/java/com/questhelper/helpers/miniquests/themagearenaii/MageArenaSpawnLocation.java",
+                        "bytes":  3677,
+                        "sha256":  "bd5d7ea06b29ff7e22c7220c258dcfd48290e03ae7c9dbb046b5ce07e9b3271b"
+                    },
+                    {
+                        "name":  "MA2Locator.java",
+                        "url":  "https://github.com/Zoinkwiz/quest-helper/blob/b9b93706618a7b7fe7e5ea30e9a9ef35ba09673e/src/main/java/com/questhelper/helpers/miniquests/themagearenaii/MA2Locator.java",
+                        "bytes":  6995,
+                        "sha256":  "cd424725b4655d870d8591ec3f081de0e061ae287706ef287dfaf10bacaa8399"
+                    },
+                    {
+                        "name":  "MageArenaSolver.java",
+                        "url":  "https://github.com/Zoinkwiz/quest-helper/blob/b9b93706618a7b7fe7e5ea30e9a9ef35ba09673e/src/main/java/com/questhelper/helpers/miniquests/themagearenaii/MageArenaSolver.java",
+                        "bytes":  8012,
+                        "sha256":  "954212a50fec40a0bd8713f0f2dd79a74ae31747d46b005417655b9efcdb4397"
+                    },
+                    {
+                        "name":  "MageArenaBossStep.java",
+                        "url":  "https://github.com/Zoinkwiz/quest-helper/blob/b9b93706618a7b7fe7e5ea30e9a9ef35ba09673e/src/main/java/com/questhelper/helpers/miniquests/themagearenaii/MageArenaBossStep.java",
+                        "bytes":  17454,
+                        "sha256":  "fbd6ff1083a04385a7986d7a042d656a298db0751b5d0dec037337499a23f159"
+                    },
+                    {
+                        "name":  "TheMageArenaII.java",
+                        "url":  "https://github.com/Zoinkwiz/quest-helper/blob/b9b93706618a7b7fe7e5ea30e9a9ef35ba09673e/src/main/java/com/questhelper/helpers/miniquests/themagearenaii/TheMageArenaII.java",
+                        "bytes":  13962,
+                        "sha256":  "207cd334e5f8e3645408afdd77875c2837f076d8295eb867fd8a5071f490bdb1"
+                    }
+                ]
+}

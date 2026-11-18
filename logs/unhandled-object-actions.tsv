@@ -218,3 +218,605 @@ item-on-item	22717	22717	item	22717	from_slot=3 to_slot=3 from_component=679:0 t
 item-on-npc	22717	22717	item	-1	target=9 tile=Tile{x=2967, z=3384, height=0}	0	0	0	0	0
 button	8	8	button	3	interface=261 opcode=61	0	0	0	0	0
 button	49	49	button	3	interface=743 opcode=61	0	0	0	0	0
+item-on-item	22632	22632	item	22632	from_slot=17 to_slot=17 from_component=679:0 to_component=679:0	0	0	0	0	0
+item-on-item	11690	11690	item	23644	from_slot=17 to_slot=16 from_component=679:0 to_component=679:0	0	0	0	0	0
+item-on-item	22624	22624	item	22624	from_slot=23 to_slot=23 from_component=679:0 to_component=679:0	0	0	0	0	0
+item-on-item	22708	22708	item	22708	from_slot=16 to_slot=16 from_component=679:0 to_component=679:0	0	0	0	0	0
+button	17	17	button	3	interface=192 opcode=61	0	0	0	0	0
+button	10	10	button	3	interface=190 opcode=61	0	0	0	0	0
+button	175	175	button	3	interface=746 opcode=61	0	0	0	0	0
+item-on-item	23848	23848	item	23848	from_slot=18 to_slot=18 from_component=679:0 to_component=679:0	0	0	0	0	0
+item-on-item	315	315	item	315	from_slot=3 to_slot=3 from_component=679:0 to_component=679:0	0	0	0	0	0
+button	22	22	button	3	interface=751 opcode=61	0	0	0	0	0
+button	132	132	button	3	interface=548 opcode=61	0	0	0	0	0
+button	104	104	button	3	interface=548 opcode=61	0	0	0	0	0
+button	105	105	button	3	interface=548 opcode=61	0	0	0	0	0
+button	106	106	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	130	130	button	3	interface=548 opcode=61	0	0	0	0	0
+button	99	99	button	3	interface=1056 opcode=61	0	0	0	0	0
+button	90	90	button	3	interface=1056 opcode=61	0	0	0	0	0
+button	162	162	button	3	interface=1056 opcode=61	0	0	0	0	0
+button	126	126	button	3	interface=1056 opcode=61	0	0	0	0	0
+button	102	102	button	3	interface=1056 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	100	100	button	3	interface=548 opcode=61	0	0	0	0	0
+button	101	101	button	3	interface=548 opcode=61	0	0	0	0	0
+button	27	27	button	3	interface=1109 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	132	132	button	3	interface=548 opcode=61	0	0	0	0	0
+button	5	5	button	3	interface=755 opcode=61	0	0	0	0	0
+button	22	22	button	3	interface=751 opcode=61	0	0	0	0	0
+npc	14394	14394	Perdu	3	tile=Tile{x=3162, z=3495, height=0}	0	0	0	0	0
+item	15332	15332	item	1	slot=18	0	0	0	0	0
+item-on-item	23857	23857	item	23857	from_slot=5 to_slot=5 from_component=679:0 to_component=679:0	0	0	0	0	0
+button	175	175	button	3	interface=746 opcode=61	0	0	0	0	0
+item	468	468	item	1	slot=0	0	0	0	0	0
+item	470	470	item	1	slot=0	0	0	0	0	0
+item	472	472	item	1	slot=0	0	0	0	0	0
+item	474	474	item	1	slot=0	0	0	0	0	0
+item	476	476	item	1	slot=0	0	0	0	0	0
+item	478	478	item	1	slot=0	0	0	0	0	0
+item	492	492	item	1	slot=0	0	0	0	0	0
+item	496	496	item	1	slot=0	0	0	0	0	0
+item	498	498	item	1	slot=0	0	0	0	0	0
+item	500	500	item	1	slot=0	0	0	0	0	0
+item	502	502	item	1	slot=0	0	0	0	0	0
+item	504	504	item	1	slot=0	0	0	0	0	0
+item	506	506	item	1	slot=0	0	0	0	0	0
+item	599	599	item	1	slot=0	0	0	0	0	0
+item	466	466	item	1	slot=0	0	0	0	0	0
+item	494	494	item	1	slot=0	0	0	0	0	0
+item	713	713	item	1	slot=0	0	0	0	0	0
+item	762	762	item	1	slot=0	0	0	0	0	0
+item	770	770	item	1	slot=0	0	0	0	0	0
+item	766	766	item	1	slot=0	0	0	0	0	0
+item	764	764	item	1	slot=0	0	0	0	0	0
+item	468	468	item	1	slot=0	0	0	0	0	0
+item	470	470	item	1	slot=0	0	0	0	0	0
+item	472	472	item	1	slot=0	0	0	0	0	0
+item	474	474	item	1	slot=0	0	0	0	0	0
+item	476	476	item	1	slot=0	0	0	0	0	0
+item	478	478	item	1	slot=0	0	0	0	0	0
+item	492	492	item	1	slot=0	0	0	0	0	0
+item	496	496	item	1	slot=0	0	0	0	0	0
+item	498	498	item	1	slot=0	0	0	0	0	0
+item	500	500	item	1	slot=0	0	0	0	0	0
+item	502	502	item	1	slot=0	0	0	0	0	0
+item	504	504	item	1	slot=0	0	0	0	0	0
+item	506	506	item	1	slot=0	0	0	0	0	0
+item	599	599	item	1	slot=0	0	0	0	0	0
+item	770	770	item	1	slot=0	0	0	0	0	0
+item	494	494	item	1	slot=0	0	0	0	0	0
+item	713	713	item	1	slot=0	0	0	0	0	0
+item	762	762	item	1	slot=0	0	0	0	0	0
+item	766	766	item	1	slot=0	0	0	0	0	0
+item	466	466	item	1	slot=0	0	0	0	0	0
+item	468	468	item	1	slot=0	0	0	0	0	0
+item	470	470	item	1	slot=0	0	0	0	0	0
+item	472	472	item	1	slot=0	0	0	0	0	0
+item	474	474	item	1	slot=0	0	0	0	0	0
+item	476	476	item	1	slot=0	0	0	0	0	0
+item	478	478	item	1	slot=0	0	0	0	0	0
+item	492	492	item	1	slot=0	0	0	0	0	0
+item	496	496	item	1	slot=0	0	0	0	0	0
+item	498	498	item	1	slot=0	0	0	0	0	0
+item	500	500	item	1	slot=0	0	0	0	0	0
+item	502	502	item	1	slot=0	0	0	0	0	0
+item	504	504	item	1	slot=0	0	0	0	0	0
+item	506	506	item	1	slot=0	0	0	0	0	0
+item	599	599	item	1	slot=0	0	0	0	0	0
+item	770	770	item	1	slot=0	0	0	0	0	0
+item	494	494	item	1	slot=0	0	0	0	0	0
+item	713	713	item	1	slot=0	0	0	0	0	0
+item	762	762	item	1	slot=0	0	0	0	0	0
+item	766	766	item	1	slot=0	0	0	0	0	0
+item	466	466	item	1	slot=0	0	0	0	0	0
+item	764	764	item	1	slot=0	0	0	0	0	0
+item	2513	2513	item	1	slot=0	0	0	0	0	0
+item	23847	23847	item	1	slot=0	0	0	0	0	0
+item	23848	23848	item	1	slot=0	0	0	0	0	0
+button	4	4	button	3	interface=137 opcode=61	0	0	0	0	0
+item-on-item	22326	22326	item	22326	from_slot=10 to_slot=10 from_component=679:0 to_component=679:0	0	0	0	0	0
+item-on-item	23011	23011	item	23017	from_slot=9 to_slot=7 from_component=679:0 to_component=679:0	0	0	0	0	0
+item-on-item	23017	23017	item	23017	from_slot=7 to_slot=7 from_component=679:0 to_component=679:0	0	0	0	0	0
+item	2513	2513	item	1	slot=0	0	0	0	0	0
+item	23847	23847	item	1	slot=0	0	0	0	0	0
+item	23848	23848	item	1	slot=0	0	0	0	0	0
+npc	14394	14394	Perdu	3	tile=Tile{x=3162, z=3495, height=0}	0	0	0	0	0
+npc	14394	14394	Perdu	3	tile=Tile{x=3162, z=3495, height=0}	0	0	0	0	0
+item	15509	15509	item	2	slot=14	0	0	0	0	0
+button	19	19	button	5	interface=751 opcode=52	0	0	0	0	0
+button	22	22	button	5	interface=751 opcode=52	0	0	0	0	0
+button	8	8	button	5	interface=751 opcode=52	0	0	0	0	0
+button	25	25	button	5	interface=751 opcode=52	0	0	0	0	0
+button	25	25	button	4	interface=751 opcode=4	0	0	0	0	0
+button	8	8	button	4	interface=751 opcode=4	0	0	0	0	0
+button	22	22	button	2	interface=751 opcode=64	0	0	0	0	0
+button	8	8	button	3	interface=751 opcode=61	0	0	0	0	0
+button	25	25	button	2	interface=751 opcode=64	0	0	0	0	0
+button	8	8	button	2	interface=751 opcode=64	0	0	0	0	0
+button	19	19	button	2	interface=751 opcode=64	0	0	0	0	0
+button	22	22	button	3	interface=751 opcode=61	0	0	0	0	0
+button	25	25	button	3	interface=751 opcode=61	0	0	0	0	0
+button	54	54	button	3	interface=137 opcode=61	0	0	0	0	0
+button	28	28	button	3	interface=751 opcode=61	0	0	0	0	0
+button	118	118	button	3	interface=1096 opcode=61	0	0	0	0	0
+button	413	413	button	3	interface=1096 opcode=61	0	0	0	0	0
+button	58	58	button	3	interface=1110 opcode=61	0	0	0	0	0
+button	54	54	button	3	interface=1110 opcode=61	0	0	0	0	0
+button	56	56	button	3	interface=1110 opcode=61	0	0	0	0	0
+button	27	27	button	3	interface=1109 opcode=61	0	0	0	0	0
+item	15332	15332	item	1	slot=21	0	0	0	0	0
+option	34878	34878	Cliffside	1	Climb	10	2	2951	3681	0
+button	0	0	button	4	interface=679 opcode=52	0	0	0	0	0
+npc	14394	14394	Perdu	3	tile=Tile{x=3162, z=3495, height=0}	0	0	0	0	0
+item-on-item	23730	23730	item	22734	from_slot=17 to_slot=16 from_component=679:0 to_component=679:0	0	0	0	0	0
+option	2675	2675	Mine door entrance	1	Open	0	1	3301	3036	0
+option	2675	2675	Mine door entrance	2	Watch	0	1	3301	3036	0
+item-on-npc	2349	2349	item	-1	target=6841 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6841 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6796 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6796 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6847 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6871 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6808 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=7370 tile=Tile{x=2657, z=2638, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=7370 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6851 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6833 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6833 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6875 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6877 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6879 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6881 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6883 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6885 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6887 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6824 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6991 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6827 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6827 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6817 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6849 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6849 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6800 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-item	23979	23979	item	23979	from_slot=26 to_slot=26 from_component=679:0 to_component=679:0	0	0	0	0	0
+button	27	27	button	3	interface=1109 opcode=61	0	0	0	0	0
+button	58	58	button	3	interface=1110 opcode=61	0	0	0	0	0
+button	54	54	button	3	interface=1110 opcode=61	0	0	0	0	0
+button	56	56	button	3	interface=1110 opcode=61	0	0	0	0	0
+button	118	118	button	3	interface=1096 opcode=61	0	0	0	0	0
+button	413	413	button	3	interface=1096 opcode=61	0	0	0	0	0
+button	0	0	button	5	interface=679 opcode=81	0	0	0	0	0
+button	0	0	button	5	interface=679 opcode=81	0	0	0	0	0
+button	0	0	button	5	interface=679 opcode=81	0	0	0	0	0
+button	0	0	button	5	interface=679 opcode=81	0	0	0	0	0
+button	0	0	button	5	interface=679 opcode=81	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6841 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6841 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6796 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6796 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6847 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6871 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6808 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=7370 tile=Tile{x=2657, z=2638, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=7370 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6851 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6833 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6833 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6875 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6877 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6879 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6881 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6883 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6885 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6887 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6824 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6991 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6841 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6841 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6796 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6796 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6827 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6827 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6847 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6871 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6817 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6808 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=7370 tile=Tile{x=2657, z=2638, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=7370 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6849 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6849 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6851 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6833 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6833 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6800 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6875 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6877 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6879 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6881 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6883 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6885 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6887 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6824 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6991 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6827 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6827 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6817 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6849 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6849 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+button	0	0	button	5	interface=679 opcode=81	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6800 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+npc	13938	13938	Herald of Varrock	3	tile=Tile{x=3240, z=3433, height=0}	0	0	0	0	0
+button	0	0	button	5	interface=679 opcode=81	0	0	0	0	0
+button	0	0	button	5	interface=679 opcode=81	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6841 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6841 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6796 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6796 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6847 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6871 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6808 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=7370 tile=Tile{x=2657, z=2638, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=7370 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6851 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6833 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6833 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6875 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6877 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6879 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6881 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6883 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6885 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6887 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6824 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6991 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6827 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6827 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6817 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6849 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6849 tile=Tile{x=3064, z=3398, height=0}	0	0	0	0	0
+item-on-npc	2349	2349	item	-1	target=6800 tile=Tile{x=3066, z=3398, height=0}	0	0	0	0	0
+button	0	0	button	5	interface=679 opcode=81	0	0	0	0	0
+item	466	466	item	1	slot=0	0	0	0	0	0
+item	468	468	item	1	slot=0	0	0	0	0	0
+item	470	470	item	1	slot=0	0	0	0	0	0
+item	472	472	item	1	slot=0	0	0	0	0	0
+item	474	474	item	1	slot=0	0	0	0	0	0
+item	476	476	item	1	slot=0	0	0	0	0	0
+item	478	478	item	1	slot=0	0	0	0	0	0
+item	492	492	item	1	slot=0	0	0	0	0	0
+item	494	494	item	1	slot=0	0	0	0	0	0
+item	496	496	item	1	slot=0	0	0	0	0	0
+item	498	498	item	1	slot=0	0	0	0	0	0
+item	500	500	item	1	slot=0	0	0	0	0	0
+item	502	502	item	1	slot=0	0	0	0	0	0
+item	504	504	item	1	slot=0	0	0	0	0	0
+item	506	506	item	1	slot=0	0	0	0	0	0
+item	6741	6741	item	1	slot=0	0	0	0	0	0
+item	7952	7952	item	1	slot=0	0	0	0	0	0
+item-on-item	12790	12790	item	23685	from_slot=15 to_slot=4 from_component=679:0 to_component=679:0	0	0	0	0	0
+button	0	0	button	5	interface=679 opcode=81	0	0	0	0	0
+button	0	0	button	5	interface=679 opcode=81	0	0	0	0	0
+button	0	0	button	5	interface=679 opcode=81	0	0	0	0	0
+button	0	0	button	5	interface=679 opcode=81	0	0	0	0	0
+button	0	0	button	5	interface=679 opcode=81	0	0	0	0	0
+button	5	5	button	3	interface=755 opcode=61	0	0	0	0	0
+button	6	6	button	3	interface=623 opcode=61	0	0	0	0	0
+button	22	22	button	3	interface=623 opcode=61	0	0	0	0	0
+item-on-item	22726	22726	item	10132	from_slot=9 to_slot=6 from_component=679:0 to_component=679:0	0	0	0	0	0
+item-on-item	12790	12790	item	12790	from_slot=0 to_slot=0 from_component=679:0 to_component=679:0	0	0	0	0	0
+item-on-item	4696	4696	item	4696	from_slot=5 to_slot=5 from_component=679:0 to_component=679:0	0	0	0	0	0
+button	22	22	button	3	interface=734 opcode=61	0	0	0	0	0
+item-on-item	22717	22717	item	22717	from_slot=4 to_slot=4 from_component=679:0 to_component=679:0	0	0	0	0	0
+item-on-item	561	561	item	561	from_slot=10 to_slot=10 from_component=679:0 to_component=679:0	0	0	0	0	0
+item-on-item	22717	22717	item	23747	from_slot=4 to_slot=9 from_component=679:0 to_component=679:0	0	0	0	0	0
+button	5	5	button	3	interface=755 opcode=61	0	0	0	0	0
+item	11734	11734	item	1	slot=14	0	0	0	0	0
+item	26384	26384	Big door	2347	item 2347	0	0	2851	5333	2
+button	6	6	button	3	interface=755 opcode=61	0	0	0	0	0
+button	5	5	button	3	interface=755 opcode=61	0	0	0	0	0
+button	13	13	button	3	interface=755 opcode=61	0	0	0	0	0
+item-on-item	22750	22750	item	22750	from_slot=15 to_slot=15 from_component=679:0 to_component=679:0	0	0	0	0	0
+item-on-item	12093	12093	item	8013	from_slot=0 to_slot=1 from_component=679:0 to_component=679:0	0	0	0	0	0
+npc	2778	2778	Iffie	3	tile=Tile{x=3095, z=3499, height=0}	0	0	0	0	0
+button	175	175	button	3	interface=746 opcode=61	0	0	0	0	0
+button	23	23	button	3	interface=550 opcode=61	0	0	0	0	0
+item-on-npc	1761	1761	item	-1	target=919 tile=Tile{x=3128, z=3245, height=0}	0	0	0	0	0
+item-on-npc	1761	1761	item	-1	target=919 tile=Tile{x=3128, z=3245, height=0}	0	0	0	0	0
+item-on-npc	1761	1761	item	-1	target=919 tile=Tile{x=3130, z=3246, height=0}	0	0	0	0	0
+button	4	4	button	3	interface=137 opcode=61	0	0	0	0	0
+button	0	0	button	5	interface=679 opcode=81	0	0	0	0	0
+button	0	0	button	5	interface=679 opcode=81	0	0	0	0	0
+button	0	0	button	5	interface=679 opcode=81	0	0	0	0	0
+item-on-item	12804	12804	item	12804	from_slot=20 to_slot=20 from_component=679:0 to_component=679:0	0	0	0	0	0
+button	12	12	button	3	interface=271 opcode=61	0	0	0	0	0
+option	17239	17239	Singing bowl	1	Inspect	10	0	3163	3494	0
+button	5	5	button	3	interface=755 opcode=61	0	0	0	0	0
+button	54	54	button	3	interface=755 opcode=61	0	0	0	0	0
+button	12	12	button	3	interface=755 opcode=61	0	0	0	0	0
+option	17239	17239	Singing bowl	1	Inspect	10	0	3163	3494	0
+item-on-item	22880	22880	item	22880	from_slot=13 to_slot=13 from_component=679:0 to_component=679:0	0	0	0	0	0
+button	12	12	button	3	interface=271 opcode=61	0	0	0	0	0
+item	36514	36514		8839	item 8839	22	1	2683	2670	0
+item-on-npc	1761	1761	item	-1	target=919 tile=Tile{x=3128, z=3245, height=0}	0	0	0	0	0
+item-on-npc	1761	1761	item	-1	target=919 tile=Tile{x=3128, z=3245, height=0}	0	0	0	0	0
+item-on-npc	1761	1761	item	-1	target=919 tile=Tile{x=3128, z=3245, height=0}	0	0	0	0	0
+npc	5956	5956	Void Knight	3	tile=Tile{x=2654, z=2658, height=0}	0	0	0	0	0
+item-on-item	19785	19785	item	19785	from_slot=4 to_slot=4 from_component=679:0 to_component=679:0	0	0	0	0	0
+npc	12195	12195	Captain Ethar	3	tile=Tile{x=2644, z=2676, height=0}	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+item-on-item	23067	23067	item	23067	from_slot=23 to_slot=23 from_component=679:0 to_component=679:0	0	0	0	0	0
+button	132	132	button	3	interface=548 opcode=61	0	0	0	0	0
+button	104	104	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	102	102	button	3	interface=548 opcode=61	0	0	0	0	0
+button	100	100	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	129	129	button	3	interface=548 opcode=61	0	0	0	0	0
+button	130	130	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	104	104	button	3	interface=548 opcode=61	0	0	0	0	0
+button	105	105	button	3	interface=548 opcode=61	0	0	0	0	0
+button	106	106	button	3	interface=548 opcode=61	0	0	0	0	0
+button	132	132	button	3	interface=548 opcode=61	0	0	0	0	0
+button	131	131	button	3	interface=548 opcode=61	0	0	0	0	0
+button	23	23	button	3	interface=550 opcode=61	0	0	0	0	0
+button	131	131	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	12	12	button	3	interface=271 opcode=61	0	0	0	0	0
+button	54	54	button	3	interface=137 opcode=61	0	0	0	0	0
+button	173	173	button	3	interface=1056 opcode=61	0	0	0	0	0
+button	174	174	button	3	interface=1056 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	131	131	button	3	interface=548 opcode=61	0	0	0	0	0
+button	130	130	button	3	interface=548 opcode=61	0	0	0	0	0
+button	129	129	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	132	132	button	3	interface=548 opcode=61	0	0	0	0	0
+button	104	104	button	3	interface=548 opcode=61	0	0	0	0	0
+button	100	100	button	3	interface=548 opcode=61	0	0	0	0	0
+button	4	4	button	3	interface=137 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	23	23	button	3	interface=550 opcode=61	0	0	0	0	0
+button	12	12	button	3	interface=271 opcode=61	0	0	0	0	0
+item-on-item	1391	1391	item	23028	from_slot=21 to_slot=1 from_component=679:0 to_component=679:0	0	0	0	0	0
+item-on-item	23028	23028	item	1391	from_slot=1 to_slot=21 from_component=679:0 to_component=679:0	0	0	0	0	0
+item-on-item	23028	23028	item	1391	from_slot=1 to_slot=5 from_component=679:0 to_component=679:0	0	0	0	0	0
+button	175	175	button	3	interface=746 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	130	130	button	3	interface=548 opcode=61	0	0	0	0	0
+button	131	131	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	132	132	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	129	129	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	131	131	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	178	178	button	3	interface=548 opcode=61	0	0	0	0	0
+button	131	131	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	12	12	button	3	interface=271 opcode=61	0	0	0	0	0
+button	132	132	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	131	131	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	102	102	button	3	interface=548 opcode=61	0	0	0	0	0
+button	12	12	button	3	interface=271 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	129	129	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	132	132	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	100	100	button	3	interface=548 opcode=61	0	0	0	0	0
+button	102	102	button	3	interface=548 opcode=61	0	0	0	0	0
+button	54	54	button	3	interface=594 opcode=61	0	0	0	0	0
+button	300	300	button	3	interface=594 opcode=61	0	0	0	0	0
+button	28	28	button	3	interface=550 opcode=61	0	0	0	0	0
+button	49	49	button	3	interface=550 opcode=61	0	0	0	0	0
+button	44	44	button	3	interface=550 opcode=61	0	0	0	0	0
+button	39	39	button	3	interface=550 opcode=61	0	0	0	0	0
+button	118	118	button	3	interface=1096 opcode=61	0	0	0	0	0
+button	413	413	button	3	interface=1096 opcode=61	0	0	0	0	0
+option	55344	55344	Chest	1	Open	10	1	2941	3681	0
+button	102	102	button	3	interface=548 opcode=61	0	0	0	0	0
+button	101	101	button	3	interface=548 opcode=61	0	0	0	0	0
+button	27	27	button	3	interface=1109 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	131	131	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	12	12	button	3	interface=271 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	100	100	button	3	interface=548 opcode=61	0	0	0	0	0
+button	132	132	button	3	interface=548 opcode=61	0	0	0	0	0
+button	131	131	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	105	105	button	3	interface=548 opcode=61	0	0	0	0	0
+button	104	104	button	3	interface=548 opcode=61	0	0	0	0	0
+button	102	102	button	3	interface=548 opcode=61	0	0	0	0	0
+button	101	101	button	3	interface=548 opcode=61	0	0	0	0	0
+button	27	27	button	3	interface=1109 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	100	100	button	3	interface=548 opcode=61	0	0	0	0	0
+button	101	101	button	3	interface=548 opcode=61	0	0	0	0	0
+button	27	27	button	3	interface=1109 opcode=61	0	0	0	0	0
+button	106	106	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	102	102	button	3	interface=548 opcode=61	0	0	0	0	0
+button	104	104	button	3	interface=548 opcode=61	0	0	0	0	0
+button	132	132	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	129	129	button	3	interface=548 opcode=61	0	0	0	0	0
+button	54	54	button	3	interface=594 opcode=61	0	0	0	0	0
+button	265	265	button	3	interface=594 opcode=61	0	0	0	0	0
+button	132	132	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+item-on-item	10499	10499	item	20768	from_slot=4 to_slot=1 from_component=679:0 to_component=679:0	0	0	0	0	0
+item-on-item	19333	19333	item	19333	from_slot=1 to_slot=1 from_component=679:0 to_component=679:0	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+item	19867	19867	item	1	slot=0	0	0	0	0	0
+item	19868	19868	item	1	slot=1	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	132	132	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	100	100	button	3	interface=548 opcode=61	0	0	0	0	0
+button	101	101	button	3	interface=548 opcode=61	0	0	0	0	0
+button	102	102	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	129	129	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	100	100	button	3	interface=548 opcode=61	0	0	0	0	0
+button	23	23	button	3	interface=550 opcode=61	0	0	0	0	0
+button	104	104	button	3	interface=548 opcode=61	0	0	0	0	0
+button	54	54	button	3	interface=137 opcode=61	0	0	0	0	0
+button	54	54	button	2	interface=137 opcode=64	0	0	0	0	0
+button	4	4	button	3	interface=137 opcode=61	0	0	0	0	0
+button	54	54	button	5	interface=137 opcode=52	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	101	101	button	3	interface=548 opcode=61	0	0	0	0	0
+button	28	28	button	3	interface=550 opcode=61	0	0	0	0	0
+button	102	102	button	3	interface=548 opcode=61	0	0	0	0	0
+button	49	49	button	3	interface=550 opcode=61	0	0	0	0	0
+button	39	39	button	3	interface=550 opcode=61	0	0	0	0	0
+button	44	44	button	3	interface=550 opcode=61	0	0	0	0	0
+button	47	47	button	3	interface=550 opcode=61	0	0	0	0	0
+button	178	178	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+item-on-item	12790	12790	item	12790	from_slot=10 to_slot=10 from_component=679:0 to_component=679:0	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+npc	3373	3373	Max	3	tile=Tile{x=3158, z=3489, height=1}	0	0	0	0	0
+npc	14407	14407	Guard	1	tile=Tile{x=3173, z=3472, height=0}	0	0	0	0	0
+item	9469	9469	item	1	slot=6	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	132	132	button	3	interface=548 opcode=61	0	0	0	0	0
+button	135	135	button	3	interface=548 opcode=61	0	0	0	0	0
+button	131	131	button	3	interface=548 opcode=61	0	0	0	0	0
+button	178	178	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	60	60	button	3	interface=583 opcode=61	0	0	0	0	0
+item	24200	24200	Shield	23857	item 23857	4	1	3168	3497	0
+item-on-item	24017	24017	item	24017	from_slot=8 to_slot=8 from_component=679:0 to_component=679:0	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	27	27	button	3	interface=1109 opcode=61	0	0	0	0	0
+button	21	21	button	3	interface=1109 opcode=61	0	0	0	0	0
+button	58	58	button	3	interface=1110 opcode=61	0	0	0	0	0
+button	56	56	button	3	interface=1110 opcode=61	0	0	0	0	0
+button	106	106	button	3	interface=548 opcode=61	0	0	0	0	0
+button	105	105	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	104	104	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+item-on-item	431	431	item	3801	from_slot=9 to_slot=10 from_component=679:0 to_component=679:0	0	0	0	0	0
+item-on-item	1783	1783	item	1991	from_slot=6 to_slot=5 from_component=679:0 to_component=679:0	0	0	0	0	0
+button	27	27	button	3	interface=1109 opcode=61	0	0	0	0	0
+button	21	21	button	3	interface=1109 opcode=61	0	0	0	0	0
+button	174	174	button	3	interface=1056 opcode=61	0	0	0	0	0
+item	8016	8016	item	1	slot=11	0	0	0	0	0
+item-on-item	1955	1955	item	1955	from_slot=8 to_slot=8 from_component=679:0 to_component=679:0	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	106	106	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	118	118	button	3	interface=1096 opcode=61	0	0	0	0	0
+button	413	413	button	3	interface=1096 opcode=61	0	0	0	0	0
+item	11791	11791	item	2	slot=0	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	5	5	button	3	interface=193 opcode=61	0	0	0	0	0
+button	7	7	button	3	interface=193 opcode=61	0	0	0	0	0
+button	9	9	button	3	interface=193 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	131	131	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	130	130	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	131	131	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	134	134	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	136	136	button	3	interface=548 opcode=61	0	0	0	0	0
+button	182	182	button	3	interface=548 opcode=61	0	0	0	0	0
+button	131	131	button	3	interface=548 opcode=61	0	0	0	0	0
+button	133	133	button	3	interface=548 opcode=61	0	0	0	0	0
+button	105	105	button	3	interface=548 opcode=61	0	0	0	0	0

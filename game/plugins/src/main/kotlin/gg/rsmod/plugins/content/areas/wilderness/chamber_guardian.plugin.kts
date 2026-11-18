@@ -20,8 +20,8 @@ create_shop(
 
 on_npc_option(chamberGuardian, option = "talk-to") {
     player.queue {
-        if (player.attr.has(prayedAtStatue)) {
-            if (player.attr.has(receivedStaff)) {
+        if (MageArena.completed(player) && player.attr[prayedAtStatue] == true) {
+            if (player.attr[receivedStaff] == true) {
                 afterClaimingFreeStaffDialogue(this)
             } else {
                 afterPrayingAtStatueDialogue(this)
@@ -33,7 +33,7 @@ on_npc_option(chamberGuardian, option = "talk-to") {
 }
 
 on_npc_option(chamberGuardian, option = "trade") {
-    player.openShop("Mage Arena Staves")
+    if (MageArena.completed(player)) player.openShop("Mage Arena Staves")
 }
 
 suspend fun beforePrayingAtStatueDialogue(it: QueueTask) {
@@ -61,16 +61,13 @@ suspend fun afterPrayingAtStatueDialogue(it: QueueTask) {
         "cape awarded to you by your chosen god, are all the",
         "weapons and armour you will need here.",
     )
-    if (it.player.hasItem(Items.ZAMORAK_CAPE)) {
-        it.player.inventory.add(Items.ZAMORAK_STAFF)
+    when (MageArena.claimFirstStaff(it.player)) {
+        MageArena.StaffResult.GRANTED -> it.messageBox("The guardian hands you an ornate magic staff.")
+        MageArena.StaffResult.NO_CAPE -> it.chatNpc("Once you have your cape come back to me,", "and I shall supply you with a mage staff ready for battle.")
+        MageArena.StaffResult.INVENTORY_FULL -> it.player.message("Not enough space in your inventory.")
+        MageArena.StaffResult.ALREADY_CLAIMED -> afterClaimingFreeStaffDialogue(it)
+        MageArena.StaffResult.NOT_COMPLETED -> beforePrayingAtStatueDialogue(it)
     }
-    if (it.player.hasItem(Items.GUTHIX_CAPE)) {
-        it.player.inventory.add(Items.GUTHIX_STAFF)
-    }
-    if (it.player.hasItem(Items.SARADOMIN_CAPE)) {
-        it.player.inventory.add(Items.SARADOMIN_STAFF)
-    }
-    it.player.attr.put(receivedStaff, true)
 }
 
 suspend fun afterClaimingFreeStaffDialogue(it: QueueTask) {

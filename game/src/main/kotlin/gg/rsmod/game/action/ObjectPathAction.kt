@@ -232,7 +232,10 @@ object ObjectPathAction {
         val rot = obj.rot
         var width = def.width
         var length = def.length
-        val clipMask = def.clipMask
+        // Only the low 4 bits are the N/E/S/W access sides. OSRS-imported locs can carry a higher bit too (CoX entrance steps 29777:
+        // opcode 69 = 30 = 0x10 + 14) - unmasked, the rotation below shifted it into the side bits and closed all four sides
+        // ('I can't reach that!' from the free tile in front, testserver 15-11 21:46). 667 locs are always < 16, so nothing changes there.
+        val clipMask = def.clipMask and 0xF
 
         val wall = type == ObjectType.LENGTHWISE_WALL.value || type == ObjectType.DIAGONAL_WALL.value
         val diagonal = type == ObjectType.DIAGONAL_WALL.value || type == ObjectType.DIAGONAL_INTERACTABLE.value

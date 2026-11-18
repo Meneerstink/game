@@ -49,6 +49,12 @@ object Combat {
     val NPC_ONLY_TARGET_ATTR = AttributeKey<Boolean>()
     /** An npc whose cache combat verb is not "Attack" (ToA Scabaras obelisk 11698: "Hit") - players may still fight it. */
     val PLAYER_ATTACKABLE_ATTR = AttributeKey<Boolean>()
+    /**
+     * An owner-bound npc that stands in the shared world (`publicOwner`, everybody sees it) but is NOT a familiar: only its owner
+     * may attack it (Mage Arena II followers + Derwen's energy balls; Wiki Mage Arena II: another player's follower can occupy
+     * your spawn, so they are world-visible). Without this the public-familiar rule refused exactly the owner (14-11 23:3x).
+     */
+    val OWNER_ONLY_TARGET_ATTR = AttributeKey<Boolean>()
 
     /**
      * The single-way "already under attack" window. OSRS Wiki "PJ timer": "In single-way combat when under attack by a monster,
@@ -143,13 +149,21 @@ object Combat {
         pawn: Pawn,
         target: Pawn,
         combatClass: CombatClass,
-    ): Boolean = canEngage(pawn, target) && getStrategy(combatClass).canAttack(pawn, target)
+    ): Boolean = bulwarkAllows(pawn, combatClass == CombatClass.MAGIC) && canEngage(pawn, target) && getStrategy(combatClass).canAttack(pawn, target)
 
     fun canAttack(
         pawn: Pawn,
         target: Pawn,
         strategy: CombatStrategy,
-    ): Boolean = canEngage(pawn, target) && strategy.canAttack(pawn, target)
+    ): Boolean = bulwarkAllows(pawn, strategy is MagicCombatStrategy) && canEngage(pawn, target) && strategy.canAttack(pawn, target)
+
+    /** Dinh's bulwark (DinhsBulwark): no attack in Block, no combat spells ('Your bulwark gets in the way.'). Others: always true. */
+    private fun bulwarkAllows(pawn: Pawn, magic: Boolean): Boolean {
+        val p = pawn as? Player ?: return true
+        val refusal = gg.rsmod.plugins.content.activity.cox.DinhsBulwark.refusal(p, magic) ?: return true
+        if (refusal.isNotEmpty()) p.message(refusal)
+        return false
+    }
 
     fun isAttackDelayReady(pawn: Pawn): Boolean = !pawn.timers.has(ATTACK_DELAY) &&
         !pawn.timers.has(gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.ICE_ATTACK_LOCK)
@@ -541,7 +555,12 @@ object Combat {
             // attack their own familiar, and single-way combat must not open a second target.
             // `publicOwner` is the existing familiar visibility marker; private owner-bound NPCs
             // keep the ordinary cache-option gate below.
-            val publicFamiliar = target.owner != null && target.publicOwner
+            val ownerOnly = target.owner != null && target.attr[OWNER_ONLY_TARGET_ATTR] == true
+            if (ownerOnly && pawn is Player && target.owner !== pawn) {
+                if (pawn.world.plugins.notifyAttackRefusal) pawn.message("You can't attack this npc.")
+                return false
+            }
+            val publicFamiliar = target.owner != null && target.publicOwner && !ownerOnly
             if (publicFamiliar && pawn is Player) {
                 if (target.owner === pawn || !pawn.tile.isMulti(pawn.world) || !target.tile.isMulti(pawn.world)) {
                     if (pawn.world.plugins.notifyAttackRefusal) pawn.message("You can't attack this npc.")

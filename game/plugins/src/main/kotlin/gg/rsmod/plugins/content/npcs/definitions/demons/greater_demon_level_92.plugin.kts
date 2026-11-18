@@ -23,30 +23,29 @@ val greaterdemon =
         }
         /** Running total: 246 **/
         main {
-            total(246)
-            // RUNES
-            obj(Items.FIRE_RUNE, quantity = (37..75).random(), slots = 16)
-            obj(Items.CHAOS_RUNE, quantity = 15, slots = 6)
-            obj(Items.DEATH_RUNE, quantity = 5, slots = 6)
-            // WEAPONS AND ARMOUR
-            obj(Items.STEEL_2H_SWORD, quantity = 1, slots = 8)
-            obj(Items.STEEL_HATCHET, quantity = 1, slots = 6)
-            obj(Items.STEEL_BATTLEAXE, quantity = 1, slots = 6)
-            obj(Items.MITHRIL_KITESHIELD, quantity = 1, slots = 2)
-            obj(Items.ADAMANT_PLATELEGS, quantity = 1, slots = 2)
-            obj(Items.RUNE_FULL_HELM, quantity = 1, slots = 2)
-            // COINS
-            obj(Items.COINS_995, quantity = 132, slots = 80)
-            obj(Items.COINS_995, quantity = 44, slots = 58)
-            obj(Items.COINS_995, quantity = 220, slots = 20)
-            obj(Items.COINS_995, quantity = 11, slots = 14)
-            obj(Items.COINS_995, quantity = 460, slots = 2)
-            // OTHER
-            obj(Items.TUNA, quantity = 1, slots = 6)
-            obj(Items.GOLD_BAR, quantity = 1, slots = 4)
-            obj(Items.THREAD, quantity = 10, slots = 4)
-            // TABLES
-            table(Gems.gemTable, slots = 10)
+            // N614 (15-11): exactly the OSRS Wiki Greater demon (level 92) table over 128. Before: total 246 filling 252 (every rate diluted)
+            // and one fire-rune line 'quantity = (37..75).random()' (any amount 37-75) where the wiki has two lines: 75 at 8/128, 37 at 1/128.
+            total(128)
+            obj(Items.STEEL_2H_SWORD, quantity = 1, slots = 4)
+            obj(Items.STEEL_HATCHET, quantity = 1, slots = 3)
+            obj(Items.STEEL_BATTLEAXE, quantity = 1, slots = 3)
+            obj(Items.MITHRIL_KITESHIELD, quantity = 1, slots = 1)
+            obj(Items.ADAMANT_PLATELEGS, quantity = 1, slots = 1)
+            obj(Items.RUNE_FULL_HELM, quantity = 1, slots = 1)
+            obj(Items.FIRE_RUNE, quantity = 75, slots = 8)
+            obj(Items.CHAOS_RUNE, quantity = 15, slots = 3)
+            obj(Items.DEATH_RUNE, quantity = 5, slots = 3)
+            obj(Items.FIRE_RUNE, quantity = 37, slots = 1)
+            obj(Items.COINS_995, quantity = 132, slots = 40)
+            obj(Items.COINS_995, quantity = 44, slots = 29)
+            obj(Items.COINS_995, quantity = 220, slots = 10)
+            obj(Items.COINS_995, quantity = 11, slots = 7)
+            obj(Items.COINS_995, quantity = 460, slots = 1)
+            nothing(slots = 2)
+            obj(Items.TUNA, quantity = 1, slots = 3)
+            obj(Items.GOLD_BAR, quantity = 1, slots = 2)
+            obj(Items.THREAD, quantity = 10, slots = 1)
+            table(Gems.gemTable, slots = 5)
         }
         table("Charms") {
             total(1000)

@@ -14801,7 +14801,7 @@
 - id: 15125
   examine: "A phantom of Kephri." # OSRS 11776 (N462 ToA)
 - id: 15126
-  examine: "A big dead croc." # OSRS 11730 (N462 ToA)
+  examine: "A big gluttonous croc." # OSRS 11730 (N462 ToA; wiki Zebak examine1 Normal - 18-11 was the dead-form text)
 - id: 15127
   examine: "Scaley." # OSRS 11731 (N462 ToA)
 - id: 15128
@@ -14837,3 +14837,594 @@
 # N462: OSRS npc 461; https://oldschool.runescape.wiki/w/Desert_Lizard?oldid=15389340 L16. Local id resolved from toa/ids.tsv.
 - id: 15202
   examine: "A cold-blooded creature, partial to warmth."
+# N415: Mage Arena imports (local ids from data/cfg/mage-arena/ids.tsv). Wiki Kolodion: every duel form 'He's a shape-shifter.'; Wiki Porazdir / Derwen / Justiciar Zachariah examines (same as their Breach copies 14446-14448). The Derwen energy ball has no sourced examine.
+- id: 15222
+  examine: "He's a shape-shifter."
+- id: 15223
+  examine: "He's a shape-shifter."
+- id: 15224
+  examine: "He's a shape-shifter."
+- id: 15225
+  examine: "He's a shape-shifter."
+- id: 15226
+  examine: "He's a shape-shifter."
+- id: 15227
+  examine: "A powerful Saradominist justiciar."
+- id: 15231
+  examine: "A powerful Saradominist justiciar."
+- id: 15228
+  examine: "An ancient Guthixian Ent."
+- id: 15232
+  examine: "An ancient Guthixian Ent."
+- id: 15230
+  examine: "A rage-filled Zamorakian Demon."
+- id: 15233
+  examine: "A rage-filled Zamorakian Demon."
+# N634 (Claude 18-11): CoX/ToA npc examines from the OSRS Wiki (infobox_monster/infobox_npc, first form), work/claude-scripts/npc_examines.py
+- id: 15238
+  examine: "Formerly a member of Xeric's elite tactical unit."
+- id: 15239
+  examine: "Formerly a member of Xeric's elite tactical unit."
+- id: 15240
+  examine: "Formerly a member of Xeric's elite tactical unit."
+- id: 15241
+  examine: "Formerly a member of Xeric's elite tactical unit."
+- id: 15242
+  examine: "Queen of the Abyssal Vespine. Her lifeforce is sustained by her connection to the Abyss."
+- id: 15243
+  examine: "Queen of the Abyssal Vespine. Her lifeforce is sustained by her connection to the Abyss."
+- id: 15244
+  examine: "Queen of the Abyssal Vespine. Her lifeforce is sustained by her connection to the Abyss."
+- id: 15245
+  examine: "A portal has opened into the Abyss!"
+- id: 15250
+  examine: "A soldier of Queen Vespula."
+- id: 15251
+  examine: "A soldier of Queen Vespula."
+- id: 15252
+  examine: "Xeric's former artisan."
+- id: 15253
+  examine: "Xeric's former artisan."
+- id: 15254
+  examine: "Xeric's former artisan."
+- id: 15255
+  examine: "Xeric's former artisan in a rage."
+- id: 15256
+  examine: "Xeric's former artisan in a rage."
+- id: 15257
+  examine: "Xeric's former artisan."
+- id: 15258
+  examine: "A feral denizen of the caves."
+- id: 15259
+  examine: "A feral denizen of the caves."
+- id: 15260
+  examine: "It grips very tightly."
+- id: 15261
+  examine: "Ferocious. It's unnerving."
+- id: 15262
+  examine: "The Great Olm's great manicure."
+- id: 15263
+  examine: "It grips very tightly."
+- id: 15264
+  examine: "Ferocious. It's unnerving."
+- id: 15265
+  examine: "The Great Olm's great manicure."
+- id: 15269
+  examine: "They wouldn't enjoy the circus."
+- id: 15270
+  examine: "They wouldn't enjoy the circus."
+- id: 15271
+  examine: "A mutated guardian of Xeric."
+- id: 15272
+  examine: "A mutated guardian of Xeric."
+- id: 15273
+  examine: "A mutated guardian of Xeric."
+- id: 15276
+  examine: "A former High Priest, fused with the rock and bound to the dark crystals."
+- id: 15277
+  examine: "A former High Priest, fused with the rock and bound to the dark crystals."
+- id: 15278
+  examine: "The crystal is glowing with power."
+- id: 15279
+  examine: "A guardian statue carved from the rock."
+- id: 15280
+  examine: "A guardian statue carved from the rock."
+- id: 15281
+  examine: "A guardian statue carved from the rock."
+- id: 15282
+  examine: "A guardian statue carved from the rock."
+- id: 15283
+  examine: "A mystic from a race created during the darker days of Kourend."
+- id: 15284
+  examine: "A mystic from a race created during the darker days of Kourend."
+- id: 15294
+  examine: "Lord of the Icefiends."
+- id: 15295
+  examine: "Lord of the Icefiends."
+- id: 15311
+  examine: "Sounds like some kind of hybrid clothing, actually."
+- id: 15312
+  examine: "Sounds like some kind of hybrid clothing, actually."
+- id: 15313
+  examine: "Sounds like some kind of hybrid clothing, actually."
+- id: 15197
+  examine: "They seem to be in some sort of trance."
+- id: 15216
+  examine: "This isn't really the most convenient time to be under attack!"
+- id: 15157
+  examine: "Never smile at a..."
+- id: 15213
+  examine: "An undead baboon brawler."
+- id: 15214
+  examine: "An undead baboon thrower."
+- id: 15215
+  examine: "An undead baboon mage."
+- id: 15161
+  examine: "Looks gross."
+- id: 15162
+  examine: "Looks gross."
+- id: 15175
+  examine: "An ancient body of power."
+# N634 deel 2 (Claude 18-11): niet-vechtende CoX/ToA/DMM2-npc examines (wiki infobox_npc)
+- id: 15246
+  examine: "An indigenous inhabitant of the caves."
+- id: 15247
+  examine: "An indigenous inhabitant of the caves."
+- id: 15248
+  examine: "An indigenous inhabitant of the caves."
+- id: 15249
+  examine: "An indigenous inhabitant of the caves."
+- id: 15274
+  examine: "Grotesque."
+- id: 15285
+  examine: "Aww, cute."
+- id: 15286
+  examine: "The gems on its rocky carapace are glowing dimly."
+- id: 15287
+  examine: "The gems on its rocky carapace are glowing red."
+- id: 15288
+  examine: "The gems on its rocky carapace are glowing green."
+- id: 15289
+  examine: "The gems on its rocky carapace are glowing blue."
+- id: 15290
+  examine: "A white focus of energy."
+- id: 15291
+  examine: "A red focus of energy."
+- id: 15292
+  examine: "A green focus of energy."
+- id: 15293
+  examine: "A blue focus of energy."
+- id: 15297
+  examine: "Maybe it's tasty."
+- id: 15298
+  examine: "Maybe it's tasty."
+- id: 15299
+  examine: "Maybe it's tasty."
+- id: 15300
+  examine: "Maybe it's tasty."
+- id: 15301
+  examine: "Maybe it's tasty."
+- id: 15302
+  examine: "Maybe it's tasty."
+- id: 15303
+  examine: "Maybe it's tasty."
+- id: 15304
+  examine: "Its bulbous eyes and pasty colour are typical of these underground creatures."
+- id: 15305
+  examine: "A high ranking officer of the Shayzien Army."
+- id: 15306
+  examine: "An experienced mountaineer."
+- id: 15307
+  examine: "An experienced mountaineer."
+- id: 15308
+  examine: "Smells like lizard, talks like people."
+- id: 15309
+  examine: "Imprisonment has reduced it to a feral creature of pure instinct."
+- id: 15310
+  examine: "Imprisonment has reduced it to a feral creature of pure instinct."
+- id: 15138
+  examine: "Tumeken's avatar of companionship."
+- id: 15139
+  examine: "Tumeken's avatar of resourcefulness."
+- id: 15140
+  examine: "Tumeken's avatar of isolation."
+- id: 15141
+  examine: "Tumeken's avatar of health."
+- id: 15142
+  examine: "A long-dead pharaoh."
+- id: 15143
+  examine: "A long-dead pharaoh."
+- id: 15144
+  examine: "A long-dead spirit."
+- id: 15145
+  examine: "A long-dead pharaoh."
+- id: 15146
+  examine: "A long-dead pharaoh."
+- id: 15147
+  examine: "He's here to help."
+- id: 15148
+  examine: "Eeek! A ghost!"
+- id: 15149
+  examine: "The all-powerful Devourer."
+- id: 15152
+  examine: "It needs a lot more water."
+- id: 15153
+  examine: "It needs a lot more water."
+- id: 15154
+  examine: "It needs more water."
+- id: 15155
+  examine: "It needs a bit more water."
+- id: 15156
+  examine: "A healthy and nourished palm."
+- id: 15158
+  examine: "It looks to be glimmering slightly."
+- id: 15159
+  examine: "The cracks are starting to show."
+- id: 15160
+  examine: "A magical orb."
+- id: 15163
+  examine: "Doesn't look tasty."
+- id: 15164
+  examine: "Doesn't look tasty."
+- id: 15166
+  examine: "Wet."
+- id: 15167
+  examine: "Wet and bloody."
+- id: 15170
+  examine: "What?"
+- id: 15171
+  examine: "Wait... what?"
+- id: 15174
+  examine: "An ancient body of power."
+- id: 15176
+  examine: "An ancient body of power."
+- id: 15198
+  examine: "The heart of an ancient automaton."
+- id: 15178
+  examine: "A throbbing energy source."
+- id: 15180
+  examine: "I should stop examining this and get out of the way!"
+- id: 15181
+  examine: "I should stop examining this and get out of the way!"
+- id: 15187
+  examine: "A magical orb."
+- id: 15188
+  examine: "A magical orb."
+- id: 15189
+  examine: "A magical orb."
+- id: 15190
+  examine: "A magical orb."
+- id: 15191
+  examine: "A magical orb."
+- id: 15194
+  examine: "A spy from Al Kharid."
+- id: 15195
+  examine: "A spy from Al Kharid."
+- id: 15217
+  examine: "She's a bit dead."
+- id: 15218
+  examine: "A big dead croc."
+- id: 15219
+  examine: "Scaley."
+- id: 15220
+  examine: "An ancient automaton imbued with the power of Elidinis."
+- id: 15221
+  examine: "An ancient automaton imbued with the power of Tumeken."
+- id: 15315
+  examine: "A mistress of the arcane arts - aka finance."
+- id: 15314
+  examine: "A master of the arcane arts - aka finance."
+- id: 15317
+  examine: "Looks like a guy not to be messed with."
+- id: 15316
+  examine: "Looks like a guy not to be messed with."
+# N634 deel 3 (Claude 18-11): gespawnde 2011-npc's zonder examine, OSRS Wiki op NAAM (1 unieke examine; sailing-teksten weggelaten)
+- id: 3541
+  examine: "A flea infested, pale looking excuse of a man."
+- id: 3545
+  examine: "A citizen of Burgh de Rott."
+- id: 3671
+  examine: "Looks like he could do with a sip of amontillado."
+- id: 3680
+  examine: "A young boy handing out flyers."
+- id: 3725
+  examine: "Smaller than the average goblin."
+- id: 3777
+  examine: "Cheerful, helpful and optimistic, I'll bet."
+- id: 3787
+  examine: "One of the Knights of the Round Table."
+- id: 3801
+  examine: "Indentured servant of a Knight."
+- id: 3806
+  examine: "Miss Millicent Miller the Miller of Mill Lane Mill."
+- id: 3807
+  examine: "Gillie the Milkmaid milks cows. She's udderly fantastic at it."
+- id: 3920
+  examine: "The barmaid of the Esoterican Arms."
+- id: 3922
+  examine: "Runs the general store."
+- id: 3928
+  examine: "A Fremennik teenager."
+- id: 3930
+  examine: "A Fremennik teenager."
+- id: 3932
+  examine: "A Fremennik teenager."
+- id: 3935
+  examine: "A dwarf who's currently living in Miscellania."
+- id: 3937
+  examine: "A dwarf miner. He's shoring up the walls."
+- id: 3938
+  examine: "A rather scared-looking dwarf. He doesn't seem all that drunk."
+- id: 4285
+  examine: "A powerful warrior, guarding the Warriors' Guild."
+- id: 4288
+  examine: "Used to be a black knight."
+- id: 4289
+  examine: "Blademistress, skillful female warrior."
+- id: 4293
+  examine: "Food shopkeeper."
+- id: 4294
+  examine: "Potion shopkeeper."
+- id: 4295
+  examine: "Armour shopkeeper."
+- id: 4376
+  examine: "Litara, a barbarian explorer."
+- id: 4493
+  examine: "An ugly green creature."
+- id: 4494
+  examine: "An ugly green creature."
+- id: 4560
+  examine: "Perhaps this gardener might look after your crops for you."
+- id: 4563
+  examine: "A seller of crossbow parts."
+- id: 4570
+  examine: "A farmer's enemy."
+- id: 4571
+  examine: "A farmer's enemy."
+- id: 4575
+  examine: "A lazy gnome."
+- id: 4585
+  examine: "A gnome mage on sabbatical."
+- id: 4591
+  examine: "A gnome whom likes antiques."
+- id: 4592
+  examine: "A gnome spinner."
+- id: 4607
+  examine: "A witch's black cat."
+- id: 4710
+  examine: "Roald's advisor - he seems to be a follower of Saradomin."
+- id: 4900
+  examine: "Looks a bit crafty."
+- id: 4901
+  examine: "Mending some nets."
+- id: 4905
+  examine: "The master smithing tutor."
+- id: 4906
+  examine: "A chip off the old block."
+- id: 4946
+  examine: "The Master of Fire!"
+- id: 5110
+  examine: "He acts as if he owns the place."
+- id: 5111
+  examine: "He seems to be making odd sucking noises with his teeth."
+- id: 5120
+  examine: "A very large, very dangerous-looking birdy."
+- id: 5146
+  examine: "How cute!"
+- id: 5147
+  examine: "The black sheep of the family."
+- id: 5198
+  examine: "She's watching you."
+- id: 5200
+  examine: "The hat's a dead give away."
+- id: 5268
+  examine: "Runs the craft stall."
+- id: 5279
+  examine: "Preach, my brother!"
+- id: 5531
+  examine: "Antisocial."
+- id: 5532
+  examine: "Come, old broomstick, you are needed."
+- id: 5770
+  examine: "A respected member of the Dorgeshuun Council."
+- id: 5804
+  examine: "A goblin baby."
+- id: 5913
+  examine: "Runes are his passion."
+- id: 5916
+  examine: "Does what too many people aren't interested in doing."
+- id: 5925
+  examine: "Newspaper seller."
+- id: 5930
+  examine: "Jacques Netis - a slightly pompous art expert."
+- id: 5932
+  examine: "An archaeologist hard at work."
+- id: 5933
+  examine: "An archaeologist hard at work."
+- id: 5934
+  examine: "An archaeologist hard at work."
+- id: 5935
+  examine: "An archaeologist hard at work."
+- id: 5938
+  examine: "A lady with lots of information about the Museum."
+- id: 5939
+  examine: "A brave adventurer."
+- id: 5940
+  examine: "Looks like he knows a thing or two."
+- id: 5987
+  examine: "A gnarly old man."
+- id: 6085
+  examine: "His job is to keep the ship in tip-top condition."
+- id: 6112
+  examine: "Aww, cute."
+- id: 6135
+  examine: "Get useful information from this guy."
+- id: 6136
+  examine: "Get useful information from this guy."
+- id: 6137
+  examine: "Get useful information from this guy."
+- id: 6139
+  examine: "Get useful information from this guy."
+- id: 6972
+  examine: "Loves nature."
+- id: 6973
+  examine: "Loves nature."
+- id: 6974
+  examine: "Loves nature."
+- id: 6975
+  examine: "Loves nature."
+- id: 6976
+  examine: "Loves nature."
+- id: 6977
+  examine: "Loves nature."
+- id: 6978
+  examine: "Loves nature."
+- id: 6979
+  examine: "Loves nature."
+- id: 6980
+  examine: "Loves nature."
+- id: 7153
+  examine: "A student busy studying the digsite."
+- id: 7154
+  examine: "A student busy studying the digsite."
+- id: 7155
+  examine: "A student busy studying the digsite."
+- id: 7156
+  examine: "A student busy studying the digsite."
+- id: 7157
+  examine: "A student busy studying the digsite."
+- id: 7726
+  examine: "Library assistant, to be exact."
+- id: 8172
+  examine: "A well dressed nobleman."
+- id: 8273
+  examine: "He looks dangerous!"
+- id: 8274
+  examine: "He looks dangerous!"
+- id: 8864
+  examine: "Dummy"
+- id: 11699
+  examine: "An expert on fishing."
+- id: 11700
+  examine: "An old sea dog."
+- id: 14377
+  examine: "A wanderer who's made his home in the depths of the wilderness."
+- id: 14378
+  examine: "Pledged to protect Ferox Enclave."
+- id: 14379
+  examine: "Seeking knowledge and answers."
+- id: 14380
+  examine: "Seeking knowledge and answers."
+- id: 14381
+  examine: "Seeking knowledge and answers."
+- id: 14382
+  examine: "Looks after the Wilderness Loot Chest."
+- id: 14386
+  examine: "Let's hope she doesn't have arachnophobia."
+- id: 14387
+  examine: "Said to have gone toe to toe with Callisto with just his bear hands."
+- id: 14388
+  examine: "Vanquisher of evil and breaker of bones."
+- id: 14390
+  examine: "He looks a bit aggressive."
+- id: 14391
+  examine: "Owner of the Old Nite pub."
+- id: 14392
+  examine: "Haunted by the sound of trees falling in empty forests."
+- id: 14393
+  examine: "She runs a little chapel here."
+- id: 14395
+  examine: "Appears to have a whole host of things to trade."
+- id: 14396
+  examine: "A mysterious mage in search for the best fighters."
+- id: 14398
+  examine: "Slightly magical."
+- id: 14399
+  examine: "Slightly magical."
+- id: 14400
+  examine: "Slightly magical."
+# N634 deel 4 (Claude 18-11): ambiguous names resolved by combat level (npc_examines_ambigu.py)
+- id: 4387
+  examine: "Eeek! A ghost!"
+- id: 4392
+  examine: "Dead man walking."
+- id: 4393
+  examine: "Dead man walking."
+- id: 4394
+  examine: "The walking dead."
+- id: 4401
+  examine: "Incey wincey... with a nasty bite."
+- id: 4409
+  examine: "An ugly green creature."
+- id: 4410
+  examine: "An ugly green creature."
+- id: 4411
+  examine: "These goblins have grown strong."
+- id: 4412
+  examine: "An ugly green creature."
+- id: 4413
+  examine: "Not man's best friend."
+- id: 4414
+  examine: "Not man's best friend."
+- id: 4418
+  examine: "Gorak by name, Gorak by nature."
+- id: 5349
+  examine: "Eeek! A ghost!"
+- id: 5350
+  examine: "Eeek! A ghost!"
+- id: 5351
+  examine: "Eeek! A ghost!"
+- id: 5352
+  examine: "Eeek! A ghost!"
+- id: 5369
+  examine: "Eeek! A ghost!"
+- id: 5370
+  examine: "Eeek! A ghost!"
+- id: 5371
+  examine: "Eeek! A ghost!"
+- id: 5375
+  examine: "Dead man walking."
+- id: 5376
+  examine: "Dead man walking."
+- id: 5377
+  examine: "Dead man walking."
+- id: 5378
+  examine: "Dead man walking."
+- id: 5379
+  examine: "The walking dead."
+- id: 5380
+  examine: "The walking dead."
+- id: 6047
+  examine: "A social killer."
+- id: 6115
+  examine: "A messy bird."
+- id: 13246
+  examine: "An ugly, smelly creature, with a spear."
+# N634 deel 5 (Claude 18-11): ambiguous names via a twin npc (same name + same models) that already has an examine
+- id: 4456
+  examine: "He looks a little piratey."
+- id: 5148
+  examine: "Freshly sheared."
+- id: 5149
+  examine: "Freshly sheared."
+- id: 5156
+  examine: "White and fluffy."
+- id: 5157
+  examine: "White and fluffy."
+- id: 5160
+  examine: "White and fluffy."
+- id: 5161
+  examine: "White and fluffy."
+- id: 6116
+  examine: "A messy bird."
+# N634 deel 6 (Claude 18-11 02:4x): AMBIGU Bankers via dezelfde chathead-modellen als een banker met bekende OSRS-examine (npc_examines_gender.py)
+- id: 2759
+  examine: "Good with money."
+- id: 4457
+  examine: "He can look after my money."
+- id: 4458
+  examine: "Good with money."
+- id: 4459
+  examine: "Good with money."
+- id: 6200
+  examine: "He can look after my money."

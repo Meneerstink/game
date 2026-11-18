@@ -49,6 +49,10 @@ object DeathRules {
         val definitions = player.world.definitions
         val def = definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, itemId)
         val plain = if (def?.noted == true) def.noteLinkId else itemId
+        // N415 (Wiki Mage Arena II / Enchanted symbol): the remains are always lost on death and the symbol is replaced free at
+        // Kolodion - both only exist in the Wilderness part of the miniquest.
+        if (gg.rsmod.plugins.content.areas.wilderness.MageArenaII.isRemains(plain) ||
+            plain == gg.rsmod.plugins.content.areas.wilderness.MageArenaII.assets.symbol) return true
         return plain == gg.rsmod.plugins.api.cfg.Items.PHOENIX_NECKLACE || LootKeys.isFoodOrPotion(definitions, plain)
     }
 

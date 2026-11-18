@@ -57,8 +57,26 @@ object OptionTitleSwords {
         title: String,
     ) {
         val l = LAYERS[interfaceId] ?: return
-        val swords = choose(interfaceId, N108Ui.textWidth(player.world, FONT, title))
+        val font = titleFont(N108Ui.textWidth(player.world, FONT, title)) { N108Ui.textWidth(player.world, it, title) }
+        // The client's RspsUi font hook keeps the last font per component: every title states its own (only changes are sent).
+        N108Ui.fonts(player, interfaceId, listOf(1 to font))
+        val swords = choose(interfaceId, N108Ui.textWidth(player.world, font, title))
         player.setComponentHidden(interfaceId, l[0], swords != Swords.NARROW)
         player.setComponentHidden(interfaceId, l[2], swords != Swords.WIDE)
     }
+
+    /** Width of the title component (component 1 of 228-238, centred). */
+    const val TITLE_WIDTH = 480
+
+    /**
+     * DMM2 testclient 17-11 (Nigel: 'Would you like to adjust earning combat experience or hitpoints experience?' lost its W and ?):
+     * a title wider than its 480 px component was cut at both ends. Like N384 (familiar name bar), such a title is drawn in the
+     * smaller p12, else p11 font so the whole question stays readable; every title that fits keeps the chatbox's own q8.
+     */
+    fun titleFont(q8Width: Int, width: (String) -> Int): String =
+        when {
+            q8Width <= TITLE_WIDTH - 2 * MARGIN -> FONT
+            width("p12_full") <= TITLE_WIDTH - 2 * MARGIN -> "p12_full"
+            else -> "p11_full"
+        }
 }

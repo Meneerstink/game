@@ -1,0 +1,288 @@
+package gg.rsmod.plugins.content.activity.cox.rooms
+
+import gg.rsmod.game.model.Hit
+import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.combat.CombatClass
+import gg.rsmod.game.model.entity.GameObject
+import gg.rsmod.game.model.entity.Npc
+import gg.rsmod.game.model.entity.Player
+import gg.rsmod.plugins.api.EquipmentType
+import gg.rsmod.plugins.api.ext.*
+import gg.rsmod.plugins.content.activity.cox.CoxIds
+import gg.rsmod.plugins.content.activity.cox.CoxLaidRoom
+import gg.rsmod.plugins.content.activity.cox.CoxRaid
+
+/**
+ * The Crab puzzle (CRAB_PUZZLE). Wiki (Jewelled Crab; Strategies, Crab puzzle; Gaining points): an energy focus travels the room, turning at
+ * every jewelled crab and taking its colour; brought to the small crystal of its colour it lights it; four lit shatter the dark crystal.
+ * The crabs can't be hurt; striking one turns it red (melee), blue (magic) or green (ranged); 'Smash' with a hammer/blunt weapon turns it red
+ * and stuns it (50-60 ticks solo, 30-40 for 2-3, 20-30 for 4-5, 10-20 for 6+); points per crystal to whoever's crab sent the orb there.
+ * tsps rsprox (3389): the orb fizzles at the end of its path (gfx 119, sound 219), the next comes as it goes a tick later; meeting a crab it
+ * takes its colour (sound 3274); at the wrong crystal it bursts as a bolt, on a player as a wave; lighting turns the crystal white (29762,
+ * sound 1476), 400 points, the dark crystal brightens a step 1-3 ticks later; four lit: crabs go at 4 ticks, the dark crystal shatters at 5
+ * (gfx 1326); struck crabs keep their colour ~12 ticks; smash: player 1755, crab gfx 245, sounds 556/2727; crabs bite with 2368.
+ * ONZEKER (tsps): tiles, orb every 5 ticks turning clockwise at each crab (two at once fizzle it), a player in its way takes 25% of their
+ * hitpoints (and anyone beside), which crystal needs which colour, bites up to 10.
+ */
+class CrabsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, floor, laid) {
+    private val crabs = mutableListOf<Npc>()
+    private val colourUntil = HashMap<Npc, Int>()
+    private val colourOf = HashMap<Npc, Int>()
+    private val crystalTiles = mutableListOf<Tile>()
+    private val lit = BooleanArray(4)
+    private var dark: GameObject? = null
+    private var focus: Npc? = null
+    /** Where the orb set out from on its last step (a step that did not happen ends it). */
+    private var stepFrom: Tile? = null
+    private var focusColour = WHITE_FOCUS
+    private var direction = 0
+    private var sender: Player? = null
+    private var nextFocusAt = 0
+    private val lastHitBy = HashMap<Npc, Player>()
+    private val nextBite = HashMap<Npc, Int>()
+    /**
+     * Smash stuns a crab where it stands (Wiki: 50-60 ticks solo ... 10-20 for 6+) - longer than its red colour lasts (Wiki 'The crab will
+     * retain the colour for roughly five seconds'; tsps ~12 ticks). 16-11: the stun was the colour's own timer, so a smashed crab stayed
+     * red for the whole stun and a solo raider could never pin a WHITE crab (the 'resmash' of the solo guides) - version 0 needs three.
+     */
+    private val stunnedUntil = HashMap<Npc, Int>()
+
+    override fun load() {
+        CRABS[variant].forEach { s -> spawn(WHITE_CRAB, tile(s.x, s.z))?.let { crabs += it; colourOf[it] = WHITE_CRAB } }
+        SMALL[variant].forEach { crystalTiles += tile(it.x, it.z) }
+        val d = DARK[variant]
+        dark = placeLoc(29753, tile(d.x, d.z, 2))
+        nextFocusAt = tick + 5
+    }
+
+    override fun onTick() {
+        if (completed) return
+        for (c in crabs) {
+            val until = colourUntil[c] ?: continue
+            if (tick >= until) { colourUntil.remove(c); colourOf[c] = WHITE_CRAB; c.setTransmogId(-1) }
+        }
+        for (c in crabs) {
+            if (colourUntil.containsKey(c)) continue
+            val near = raiders().firstOrNull { it.tile.getDistance(c.tile) <= 3 } ?: continue
+            // Stunned: it stays put (it still bites a raider beside it - Wiki: stunning 'keeps their aggression').
+            val stunned = tick < (stunnedUntil[c] ?: 0)
+            if (!meleeReach(c, near.tile)) { if (!stunned) c.walkTo(besideOf(near.tile, c.tile)); continue }
+            if (tick >= (nextBite[c] ?: 0)) { nextBite[c] = tick + 4; animate(c, 2368); attack(c, near, 10, CombatClass.MELEE) }
+        }
+        if (focus == null && tick >= nextFocusAt) sendFocus() else if (focus != null) moveFocus()
+    }
+
+    private fun sendFocus() {
+        val s = FOCUS[variant]
+        focus = spawn(WHITE_FOCUS, tile(s.x, s.z))
+        focusColour = WHITE_FOCUS
+        stepFrom = null
+        direction = (START_DIRECTION[variant] + laid.rotation) and 3
+        sender = null
+    }
+
+    private fun endFocus(how: String) {
+        val f = focus ?: return
+        focus = null
+        nextFocusAt = tick + 1
+        val at = Tile(f.tile)
+        val burst = BURST[focusColour] ?: BURST.getValue(WHITE_FOCUS)
+        when (how) {
+            "fizzle" -> { gfxOn(f, burst.first, height = 80); areaSound(at, 219, radius = 6) }
+            "bolt" -> { gfxAt(burst.first, at, height = 80, delay = 10); areaSound(at, 1294, radius = 6, delay = 10) }
+            "wave" -> { gfxAt(burst.second, at, height = 80, delay = 10); areaSound(at, 223, radius = 6, delay = 10) }
+        }
+        f.stopMovement()
+        later(1) { remove(f) }
+    }
+
+    /**
+     * Where a following crab heads: the free tile straight beside [player] nearest to it (16-11: walking to the player's own tile, a crab
+     * standing diagonally only had the occupied tile as its step and stood still - it could never be led onto the orb's row).
+     */
+    private fun besideOf(player: Tile, from: Tile): Tile =
+        listOf(1 to 0, -1 to 0, 0 to 1, 0 to -1).map { (dx, dz) -> player.transform(dx, dz) }
+            .filter { t -> crabs.none { alive(it) && it.tile.x == t.x && it.tile.z == t.z } }
+            // a tile it can stand on (not a crystal / wall): open towards the player it follows
+            .filter { t -> world.collision.canTraverse(t, gg.rsmod.game.model.Direction.between(t, player), projectile = false, water = false) }
+            .minByOrNull { maxOf(kotlin.math.abs(it.x - from.x), kotlin.math.abs(it.z - from.z)) * 4 + kotlin.math.abs(it.x - from.x) + kotlin.math.abs(it.z - from.z) }
+            ?: player
+
+    private fun crabAt(x: Int, z: Int) = crabs.firstOrNull { alive(it) && it.tile.x == x && it.tile.z == z }
+
+    private fun moveFocus() {
+        val f = focus ?: return
+        val here = f.tile
+        val crystal = crystalTiles.indexOfFirst { it.x == here.x && it.z == here.z }
+        if (crystal >= 0) { reachCrystal(crystal); return }
+        raiders().firstOrNull { it.tile.x == here.x && it.tile.z == here.z }?.let { p ->
+            val dmg = (minOf(99, p.getCurrentLifepoints()) + 3) / 4
+            raiders().filter { it.tile.getDistance(p.tile) <= 1 }.forEach { damage(null, it, dmg) }
+            endFocus("wave"); return
+        }
+        var turns = 0
+        while (true) {
+            val (dx, dz) = DIRECTIONS[direction]
+            val x = here.x + dx; val z = here.z + dz
+            val crab = crabAt(x, z)
+            if (crab != null) {
+                val colour = colourOf[crab] ?: WHITE_CRAB
+                val crabOrb = WHITE_FOCUS + (colour - WHITE_CRAB)
+                // Wiki (CoX/Strategies, Crab puzzle): 'A coloured orb cannot make contact with a crab of a different colour - if this
+                // happens, the orb disappears.' A white orb takes the colour of a coloured crab (Wiki Energy focus).
+                if (focusColour != WHITE_FOCUS && focusColour != crabOrb) { endFocus("fizzle"); return }
+                if (focusColour == WHITE_FOCUS && colour != WHITE_CRAB) {
+                    focusColour = crabOrb
+                    CoxIds.npc(focusColour)?.let { f.setTransmogId(it) }
+                    areaSound(here, 3274, radius = 6)
+                }
+                lastHitBy[crab]?.let { sender = it }
+                if (++turns >= 2) { endFocus("fizzle"); return }
+                // The turn per version, see [TURN].
+                direction = (direction + TURN[variant]) and 3
+                continue
+            }
+            val next = Tile(x, z, here.height)
+            // A small crystal is a solid loc (type 10): the orb can never step onto its tile - it hits it from the tile before (16-11:
+            // the orb stood at 6508,13 for ever in front of the crystal at 6508,12).
+            val hitCrystal = crystalTiles.indexOfFirst { it.x == x && it.z == z }
+            if (hitCrystal >= 0) { reachCrystal(hitCrystal); return }
+            // The end of its path (tsps: 'The orb fizzles at the end of its path'): a step out of this tile OR into a shut tile (16-11:
+            // only the way out was checked - at 6505,6 the orb tried the walled 6505,5 for ever and no new orb ever came).
+            val way = gg.rsmod.game.model.Direction.between(here, next)
+            val open = world.collision.canTraverse(here, way, projectile = false, water = false) &&
+                world.collision.canTraverse(next, way.getOpposite(), projectile = false, water = false)
+            // ... and a step that did not happen last tick (the orb still where it set out from) ends it too, never a stuck orb.
+            if (!open || stepFrom?.let { it.x == here.x && it.z == here.z } == true) { endFocus("fizzle"); return }
+            stepFrom = Tile(here)
+            f.walkTo(next, detectCollision = false)
+            return
+        }
+    }
+
+    private fun reachCrystal(index: Int) {
+        if (lit[index] || focusColour != NEEDS[index]) { endFocus("bolt"); return }
+        lit[index] = true
+        val t = crystalTiles[index]
+        world.getObject(t, gg.rsmod.game.model.collision.ObjectType.INTERACTABLE)?.let { small ->
+            val rot = small.rot; world.remove(small)
+            CoxIds.loc(29762)?.let { world.spawn(gg.rsmod.game.model.entity.DynamicObject(it, 10, rot, Tile(t))) }
+        }
+        gfxAt(119, t, height = 80, delay = 10)
+        areaSound(t, 1476, radius = 6, delay = 10)
+        sender?.takeIf { it.isOnline }?.let { raid.addPoints(it.username, 400) }
+        endFocus("used")
+        val litCount = lit.count { it }
+        // tsps rsprox: the dark crystal brightens a step (RAIDS_LASERCRABS_BIGCRYSTAL_2..5 = 29754-29757) 1-3 ticks later.
+        later(if (litCount >= 4) 1 else 3) {
+            val d = dark ?: return@later
+            val next = CoxIds.loc(29753 + litCount) ?: return@later
+            val t = Tile(d.tile); val rot = d.rot
+            removeLoc(d)
+            dark = gg.rsmod.game.model.entity.DynamicObject(next, 10, rot, t).also { world.spawn(it) }
+        }
+        if (litCount < 4) return
+        completed = true
+        later(4) { crabs.toList().forEach { remove(it) } }
+        later(5) {
+            val d = dark ?: return@later
+            listOf(Triple(0, 0, 0), Triple(-1, 1, 5), Triple(-1, 0, 10)).forEach { (dx, dz, delay) -> gfxAt(1326, d.tile.transform(dx, dz), delay = delay) }
+            removeLoc(d); dark = null
+        }
+    }
+
+    override fun passRefusal(p: Player, passage: Tile): String? = blockedNear(passage, listOfNotNull(dark?.tile))
+
+    /** The crabs take no damage; a hit colours them by the attack's style (Wiki). */
+    override fun incoming(npc: Npc, hit: Hit) {
+        if (npc !in crabs) return
+        hit.hitmarks.forEach { it.damage = 0 }
+        val colour = when (hit.sourceCombatClass) { CombatClass.MAGIC -> BLUE_CRAB; CombatClass.RANGED -> GREEN_CRAB; else -> RED_CRAB }
+        colour(npc, colour, COLOUR_TICKS)
+        (hit.source as? Player)?.let { p -> lastHitBy[npc] = p; gg.rsmod.plugins.content.combat.Combat.reset(p) }
+    }
+
+    private fun colour(crab: Npc, osrs: Int, ticks: Int) {
+        colourOf[crab] = osrs
+        CoxIds.npc(osrs)?.let { crab.setTransmogId(it) }
+        colourUntil[crab] = tick + ticks
+    }
+
+    /**
+     * TEST ONLY (command port 'coxcrabs', test server): puts the room's crabs on [spots] in order - each stunned for [ticks] and, when its
+     * colour is not white, coloured that long - and every other crab stunned where it stands. Proves the orb's route rules with exact
+     * crab tiles; luring/smashing a crab there is the player's part (proven separately with the bot). Returns what it did.
+     */
+    fun testSet(spots: List<Pair<Tile, Int>>, ticks: Int): String {
+        val alive = crabs.filter { alive(it) }
+        spots.forEachIndexed { i, (t, osrs) ->
+            val c = alive.getOrNull(i) ?: return@forEachIndexed
+            c.stopMovement(); c.moveTo(t)
+            stunnedUntil[c] = tick + ticks
+            if (osrs != WHITE_CRAB) colour(c, osrs, ticks) else { colourUntil.remove(c); colourOf[c] = WHITE_CRAB; c.setTransmogId(-1) }
+        }
+        alive.drop(spots.size).forEach { stunnedUntil[it] = tick + ticks }
+        return alive.take(spots.size).joinToString { "${it.index}@${it.tile.x},${it.tile.z}:${colourOf[it]}" }
+    }
+
+    /** 'Smash' (Wiki): needs a hammer or blunt weapon; red and stunned by party size. */
+    fun smash(p: Player, crab: Npc) {
+        if (crab !in crabs) return
+        val weapon = p.getEquipment(EquipmentType.WEAPON)?.getDef(world.definitions)?.name?.lowercase() ?: ""
+        val blunt = Regex("hammer|maul|bludgeon|frying pan|meat tenderiser").containsMatchIn(weapon)
+        if (!blunt && !p.inventory.contains(2347)) { p.message("You don't have a suitable weapon equipped for hammering the crab."); return }
+        animatePlayer(p, 1755)
+        areaSound(crab.tile, 556, radius = 5, delay = 20)
+        areaSound(crab.tile, 2727, radius = 5, delay = 30)
+        val n = scaling().size
+        val ticks = when { n <= 1 -> world.random(50..60); n <= 3 -> world.random(30..40); n <= 5 -> world.random(20..30); else -> world.random(10..20) }
+        colour(crab, RED_CRAB, COLOUR_TICKS)
+        stunnedUntil[crab] = tick + ticks
+        lastHitBy[crab] = p
+        gfxOn(crab, 245, height = 100, delay = 30)
+        crab.stopMovement()
+    }
+
+    companion object {
+        const val WHITE_CRAB = 7576
+        const val RED_CRAB = 7577
+        const val GREEN_CRAB = 7578
+        const val BLUE_CRAB = 7579
+        const val WHITE_FOCUS = 7580
+        /** How long a struck crab keeps its colour (tsps rsprox ~12 ticks; Wiki 'roughly five seconds'). */
+        const val COLOUR_TICKS = 12
+        /** The orb each small crystal (by index) needs (tsps): white, blue, green, red. */
+        val NEEDS = listOf(7580, 7583, 7582, 7581)
+        /**
+         * The orb's way out of the 'Glowing carving' (29752, 1x3, the Wiki's 'carved sculpture') per version, in template terms (index
+         * into [DIRECTIONS]), turned with the room: straight away from the carving, from the tile in front of its middle. Cache 2686
+         * (ObjectPlacementProbeTool, templates at z+1536): v0 carving 3276,5352 orientation 2 -> east; v1 3317,5364 orientation 3 ->
+         * south; v2 3347,5357 orientation 0 -> west. Guide video 'JEWELLED CRABS - In 90 Seconds or Less' 50-60 s (version 0): the orb
+         * leaves the carving and runs straight along the room's edge away from it (16-11 chat 2; the 13:xx 'north' for v0 was wrong).
+         */
+        val START_DIRECTION = listOf(0, 1, 2)
+        /**
+         * How the orb turns at a crab per version (+1 = clockwise = to the orb's right). Guide video 'JEWELLED CRABS - In 90 Seconds or
+         * Less': 'every time the white orb impacts a crab it is deflected to the right of the orb's perspective' (its 13-25 s clip: two
+         * right turns); Wiki Strategies: 'All layouts need three crabs' - with the right turn version 0 (orb down the west edge, every
+         * crystal on its left) needs exactly three per crystal: down the lane, a crab turns it west, a second north, a third east along
+         * the crystal's row (16-11: a left turn for v0 tried first needed only one crab = against the Wiki; rejected).
+         */
+        val TURN = listOf(1, 1, 1)
+        /** East, south, west, north: clockwise. */
+        val DIRECTIONS = listOf(1 to 0, 0 to -1, -1 to 0, 0 to 1)
+        val BURST = mapOf(7580 to (119 to 160), 7581 to (128 to 157), 7582 to (119 to 166), 7583 to (122 to 163))
+        val FOCUS = listOf(Tile(3277, 5353), Tile(3318, 5363), Tile(3346, 5358))
+        val CRABS = listOf(
+            listOf(Tile(3286, 5354), Tile(3280, 5358), Tile(3281, 5365), Tile(3287, 5361)),
+            listOf(Tile(3306, 5358), Tile(3311, 5353), Tile(3313, 5361), Tile(3318, 5356)),
+            listOf(Tile(3337, 5356), Tile(3335, 5362), Tile(3341, 5366), Tile(3344, 5361)),
+        )
+        val DARK = listOf(Tile(3272, 5365), Tile(3308, 5366), Tile(3349, 5366))
+        val SMALL = listOf(
+            listOf(Tile(3283, 5356), Tile(3279, 5366), Tile(3282, 5362), Tile(3287, 5359)),
+            listOf(Tile(3311, 5356), Tile(3320, 5360), Tile(3306, 5361), Tile(3305, 5356)),
+            listOf(Tile(3341, 5355), Tile(3337, 5354), Tile(3340, 5363), Tile(3340, 5367)),
+        )
+    }
+}

@@ -213,7 +213,8 @@ class QuestTabTests {
         QuestGuideUi.ROWS.flatMap { it.quests }.forEach { q -> assertTrue(rows.any { it.key == (QuestGuideUi.NAMES[q] ?: q.name) }, q.name) }
         QuestGuideUi.ROWS.flatMap { it.quests }.forEach { q -> assertTrue(QuestTab.REQUIREMENTS.containsKey(QuestGuideUi.NAMES[q] ?: q.name), "requirements of ${q.name}") }
         // N103: only the Quest Tutor quests; folding the longest one open still fits the rows.
-        assertEquals(3 + 8, rows.size)
+        assertEquals(3 + 8 + 2, rows.size)
+        assertEquals(listOf("Mage Arena I", "Mage Arena II"), rows.takeLast(2).map { it.key })
         assertTrue(rows.size + 7 <= gg.rsmod.game.tools.importer.N108InterfaceImportTool.QP.ROWS)
     }
 

@@ -80,6 +80,8 @@ abstract class GameObject : Entity {
      * [ObjectDef.transforms] and [ObjectDef.varp]/[ObjectDef.varbit].
      */
     fun getTransform(player: Player): Int {
+        // A per-player alias (LocAddChange of another loc on this tile for this player only) wins: that is what his client shows.
+        gg.rsmod.game.model.attr.locAliasOf(player, this)?.let { return it }
         val world = player.world
         val def = getDef(world.definitions)
         val transforms = def.transforms ?: return id

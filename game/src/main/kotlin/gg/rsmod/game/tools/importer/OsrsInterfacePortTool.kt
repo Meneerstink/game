@@ -32,8 +32,13 @@ import java.io.File
 object OsrsInterfacePortTool {
     val SOURCE_CACHE = OsrsItemImportTool.SOURCE_CACHE
     val TARGETS = OsrsItemImportTool.TARGETS
-    val JSON = File(RspsPaths.root("team/dossiers/N462-notities/toa/cache/interfaces.json"))
-    val REPORT = File(RspsPaths.root("team/dossiers/N462-notities/toa/94-toa-interfaces-claude.tsv"))
+    // CoX 15-11: the raid's own decode/report/table ('cox' as the group list) - a CoX run must never read or merge into the ToA files.
+    private var raid = "toa"
+    val JSON get() = File(RspsPaths.root(if (raid == "cox") "team/dossiers/COX-notities/cache/interfaces.json" else "team/dossiers/N462-notities/toa/cache/interfaces.json"))
+    val REPORT get() = File(RspsPaths.root(if (raid == "cox") "team/dossiers/COX-notities/94-cox-interfaces-claude.tsv" else "team/dossiers/N462-notities/toa/94-toa-interfaces-claude.tsv"))
+    private val TABLE get() = File(RspsPaths.data("cfg/$raid/interfaces.tsv"))
+    /** CoX (tsps rsprox): 499 recruitment board, 500 party tab, 507 party details, 513 points overlay, 539 rewards. */
+    val COX = listOf(499, 500, 507, 513, 539, 271, 550) // + storage units (tsps Storage.ChambersOfXeric.js: private 271, shared 550; the side panel = 667 1125)
     const val INDEX_INTERFACES = 3
     const val INDEX_SPRITES = 8
     const val SPRITE_FLOOR = 8819
@@ -321,6 +326,148 @@ object OsrsInterfacePortTool {
             sprites += 4661; sprites += 4662
             extras += "hud party slots (6577) components=$first..${next - 1} (per slot: text, filler graphic; slot i text=$first+2i, filler=$first+2i+1)"
         }
+        if (group == 500) {
+            // CoX party tab (osrs-dumps@5cdf0f47 [clientscript,raids_sidepanel_init] 1538 + [proc,raids_sidepanel_data] 1540): in the bottom
+            // layer 500:12 a thinbox, the data line (p11 0xff981f, size 6/23 minus/abs at 0,2 centre/top: "Party size: ... Combat level: ...")
+            // and the progress line (p12 0xff981f, size 6/24 minus/minus at 0,2 centre/bottom: "Waiting for your leader..." etc.). The
+            // leader's "Start raid" (500:14, width parawidth("Start raid", p12) + 20, op 1 "Start raid", drawn by [proc,raids_sidepanel_drawbutton]
+            // = v2 stone button) is rebuilt as a hidden stone button 74x25 centred at the bottom of 500:12; the server shows it.
+            val first = next
+            list += C(next++, 3, 0, 0, 0, 0, 12, 1, 1, 1, 1, false, colour = 0x0e0e0c)
+            list += C(next++, 3, 0, 0, 2, 2, 12, 1, 1, 1, 1, false, colour = 0x474745)
+            val data = next
+            list += C(next++, 4, 0, 2, 6, 23, 12, 1, 0, 1, 0, false, font = font(494), text = "", alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+            val progress = next
+            list += C(next++, 4, 0, 2, 6, 24, 12, 1, 1, 1, 2, false, font = font(495), text = "", alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+            val start = stoneButton(12, 0, 3, 74, 25, 1, 2, "Start raid", hidden = true)
+            extras += "party tab bottom components=$first..${next - 1} (thinbox 2, data text=$data, progress text=$progress, start button=$start)"
+            // [clientscript,raids_sidepanel_initlines] 1547 / [proc,raids_sidepanel_entry_setup] 1551: member row r in the list 500:10 = a white
+            // filled rectangle 13 high at (0, r*13) (trans 255 even = invisible, 235 odd) and p11 0xff981f centred shadowed texts: name (width =
+            // the list minus 87 = sort_name 500:7), combat level (32 wide), skill total (the 55 px left). Max party 8 (owner besluit 5a) -> 8 rows,
+            // hidden; the server fills ([clientscript,raids_sidepanel_addline] 1548: name | combat | total) and shows them.
+            val rowsFirst = next
+            for (r in 0 until 8) {
+                list += C(next++, 3, 0, r * 13, 0, 13, 10, 1, 0, 1, 0, true, colour = 0xffffff, filled = true, opacity = if (r % 2 == 0) 255 else 235)
+                list += C(next++, 4, 0, r * 13, 87, 13, 10, 1, 0, 0, 0, true, font = font(494), alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+                list += C(next++, 4, 55, r * 13, 32, 13, 10, 0, 0, 2, 0, true, font = font(494), alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+                list += C(next++, 4, 0, r * 13, 55, 13, 10, 0, 0, 2, 0, true, font = font(494), alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+            }
+            // [proc,raids_sidepanel_setsort] 1554 -> [proc,raids_sidepanel_sortbutton_draw] 1556 per header 500:7 name / 500:8 combat / 500:9
+            // total: "sortarrows,0" (1050) 7x5 centred, trans 0 on the default sort (%raids_listsort_details 0 = name), 100 on the others.
+            val arrowsFirst = next
+            listOf(7 to 0, 8 to 100, 9 to 100).forEach { (p, trans) ->
+                sprites += 1050
+                list += C(next++, 5, 0, 0, 7, 5, p, 0, 0, 1, 1, false, sprite = 1050, opacity = trans)
+            }
+            extras += "party tab rows components=$rowsFirst..${arrowsFirst - 1} (per row 4 from $rowsFirst + 4r: background, name, combat, total); " +
+                "sort arrows=$arrowsFirst..${next - 1}"
+        }
+        if (group == 513) {
+            // CoX points overlay ([clientscript,raids_overlay_init] 1505 -> [proc,raids_overlay_content] 4663 / [proc,raids_overlay_databox]
+            // 1511) in raids_overlay:data 513:3: a tiling tradebacking, a thinstonebox, the labels "Total:<br><name>:<br>Time:" (p12 0xff981f,
+            // left/centre) and the values (p12 white, right/centre), both size minus 8. The script sizes 513:3 to the widest line + 8 by 49;
+            // 667 has no server IF_SETSIZE -> a fixed 140 x 49 (ONZEKER: fits a 12-character name and 131,071 points).
+            val index = list.indexOfFirst { it.id == 3 }
+            val o = list[index]
+            list[index] = C(o.id, o.type, o.x, o.y, 140, 49, o.parent, 0, 0, o.xMode, o.yMode, o.hidden)
+            val first = next
+            sprites += TRADEBACKING
+            list += C(next++, 5, 0, 0, 0, 0, 3, 1, 1, 1, 1, false, sprite = TRADEBACKING, tiling = true)
+            list += C(next++, 3, 0, 0, 0, 0, 3, 1, 1, 1, 1, false, colour = 0x383023)
+            list += C(next++, 3, 0, 0, 2, 2, 3, 1, 1, 1, 1, false, colour = 0x5a5245)
+            val labels = next
+            list += C(next++, 4, 0, 0, 8, 0, 3, 1, 1, 1, 1, false, font = font(495), text = "Total:<br>:<br>Time:", alignX = 0, alignY = 1,
+                shadow = true, colour = 0xff981f)
+            val values = next
+            list += C(next++, 4, 0, 0, 8, 0, 3, 1, 1, 1, 1, false, font = font(495), text = "", alignX = 2, alignY = 1, shadow = true,
+                colour = 0xffffff)
+            extras += "points overlay components=$first..${next - 1} (labels=$labels, values=$values; data box 513:3 = 140x49)"
+        }
+        if (group == 499) {
+            // CoX recruiting board 'Raiding Parties' ([clientscript,raids_partylist_init] 1563 / [clientscript,raids_partylist_addline] 1566 /
+            // [proc,raids_partylist_entry_init] 1567): party row r = 499:16+r (40 rows) in the list 499:15, 18 high, op 1 "View party:", a white
+            // filled background (trans 245 even / 230 odd) and p12 centred shadowed texts at the header columns 499:7..14: members 35 (0xff981f),
+            // target size 45 ("/ <n>" or grey "-"), leader name 145, preferred combat 40, preferred skill total 45, scaling 35, challenge 20
+            // (grey), age right-aligned in the last 94. Rows hidden; the server fills and shows them. Header arrows ([proc,raids_partylist_
+            // sortbutton_draw] 1572): "sortarrows,0" (1050) 7x5 centred, trans 0 on the default sort (%raids_listsort_list 0 = members), 100 else.
+            val first = next
+            val columns = listOf(0 to 35, 35 to 45, 80 to 145, 225 to 40, 265 to 45, 310 to 35, 345 to 20)
+            for (r in 0 until 40) {
+                val row = 16 + r
+                val index = list.indexOfFirst { it.id == row }
+                list[index] = C(row, 0, 0, r * 18, 0, 18, 15, 1, 0, 1, 0, true, ops = listOf("View party:"))
+                list += C(next++, 3, 0, 0, 0, 0, row, 1, 1, 1, 1, false, colour = 0xffffff, filled = true, opacity = if (r % 2 == 0) 245 else 230)
+                columns.forEachIndexed { c, (x, w) ->
+                    list += C(next++, 4, x, 0, w, 0, row, 0, 1, 0, 1, false, font = font(495), alignX = 1, alignY = 1, shadow = true,
+                        colour = if (c == 6) 0x9f9f9f else 0xff981f)
+                }
+                list += C(next++, 4, 18, 0, 94, 0, row, 0, 1, 2, 1, false, font = font(495), alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+            }
+            list.first { it.id == 15 }.scrollH = 40 * 18
+            val arrows = next
+            (7..14).forEach { p ->
+                sprites += 1050
+                list += C(next++, 5, 0, 0, 7, 5, p, 0, 0, 1, 1, false, sprite = 1050, opacity = if (p == 7) 0 else 100)
+            }
+            // [proc,raids_partylist_setpartybutton] / [proc,script1558]: 499:57 "Refresh", 499:59 "Make party" | "My party" (stone buttons).
+            val refresh = stoneButton(3, 80, 0, 100, 25, 0, 2, "Refresh", hidden = false)
+            val make = stoneButton(3, 80, 0, 100, 25, 2, 2, "Make party", hidden = true)
+            val mine = stoneButton(3, 80, 0, 100, 25, 2, 2, "My party", hidden = true)
+            extras += "party rows components=$first..${arrows - 1} (per row 16+r: background + 8 texts = 9 each from $first + 9r) arrows=$arrows.." +
+                "${arrows + 7} buttons refresh=$refresh make=$make mine=$mine"
+        }
+        if (group == 507) {
+            // CoX party details ([clientscript,raids_partydetails_init] 1516 / [clientscript,script1524] / [proc,script1530] /
+            // [clientscript,raids_partydetails_addline] 1517; osrs-dumps@5cdf0f47). The frame 507:2 gets ~steelborder at run time with the
+            // title ("Raiding Party of <leader> (<n>)", Wiki gallery) -> static steelborder, the server sets the title text.
+            val title = steelborder(2, "")
+            // script1530: each preference layer (13 size, 17 combat, 21 skill total, 22 scaling, 23 challenge, 24 map layout) holds one p11
+            // 0xff981f centred shadowed text over the whole layer ("Preferred party size: 4" ... - script1533 fills it).
+            val prefs = listOf(13, 17, 21, 22, 23, 24).associateWith { p ->
+                val t = next
+                list += C(next++, 4, 0, 0, 0, 0, p, 1, 1, 1, 1, false, font = font(494), text = "", alignX = 1, alignY = 1, shadow = true,
+                    colour = 0xff981f)
+                t
+            }
+            // script1524 -> [proc,script1558]: a stone button in each button layer (32 advertise, 33 disband, 34 join, 35 back, 36 refresh),
+            // labels set by the server ("<col=00ff00>Join</col>" / "<col=ff0000>Leave</col>", "Advertise (<n>)" / "De-list",
+            // "<col=ff0000>Disband</col>", "Back", "Refresh"); the layers stay hidden until the server shows the ones that apply.
+            val buttons = listOf(32, 33, 34, 35, 36).associateWith { b ->
+                val o = list.first { it.id == b }
+                val labels = mapOf(32 to "Advertise", 33 to "Disband", 34 to "Join", 35 to "Back", 36 to "Refresh")
+                stoneButton(b, 0, 0, o.w, o.h, 0, 0, labels.getValue(b), text = "")
+            }
+            // raids_partydetails_addline: member row r = a white filled rectangle 14 high at (0, r*14) ([proc,raids_partydetails_entry_init]:
+            // trans 235 like the side panel's odd rows - ONZEKER which rows) and p11 0xff981f centred shadowed texts: name (the width of
+            // sort_name 507:7 = 102), combat (sort_comlevel 507:8 = 30), skill total (30), kill count (the rest, right). Party max 8
+            // (besluit 5a) -> 8 rows, hidden; the server fills and shows them.
+            val rowsFirst = next
+            for (r in 0 until 8) {
+                list += C(next++, 3, 0, r * 14, 0, 14, 11, 1, 0, 1, 0, true, colour = 0xffffff, filled = true, opacity = if (r % 2 == 0) 255 else 235)
+                list += C(next++, 4, 0, r * 14, 102, 14, 11, 0, 0, 0, 0, true, font = font(494), alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+                list += C(next++, 4, 102, r * 14, 30, 14, 11, 0, 0, 0, 0, true, font = font(494), alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+                list += C(next++, 4, 132, r * 14, 30, 14, 11, 0, 0, 0, 0, true, font = font(494), alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+                list += C(next++, 4, 0, r * 14, 162, 14, 11, 1, 0, 2, 0, true, font = font(494), alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+            }
+            list.first { it.id == 11 }.scrollH = 8 * 14
+            extras += "party details title=$title prefs=${prefs.entries.joinToString(",") { "${it.key}:${it.value}" }} " +
+                "buttons=${buttons.entries.joinToString(",") { "${it.key}:${it.value}" }} rows=$rowsFirst..${next - 1} (per row 5 from $rowsFirst + 5r: " +
+                "background, name, combat, total, kills)"
+        }
+        if (group == 539) {
+            // CoX rewards ([clientscript,raids_rewards_init] 1579 -> [proc,raids_rewards_build] 1581 / [proc,raids_rewards_drawitem] 1582) in
+            // raids_rewards:items 539:5: item i (inv raids_rewards) = a 36x32 object graphic, outline 1, shadow 0x333333, op 1 "Take", op 10
+            // "Examine" (667: op 2), at (0, i*37) for i < 3, else (46, (i-2)*37); the reward book (needsrewardbook) at (46, 0). Six slots
+            // + the book, hidden; the server sets the objects (IF_SETOBJECT) and shows them.
+            val first = next
+            for (i in 0 until 6) {
+                val (x, y) = if (i < 3) 0 to i * 37 else 46 to (i - 2) * 37
+                list += C(next++, 5, x, y, 36, 32, 5, 0, 0, 0, 0, true, ops = listOf("Take", "Examine"))
+            }
+            val book = next
+            list += C(next++, 5, 46, 0, 36, 32, 5, 0, 0, 0, 0, true, ops = listOf("Take", "Examine"))
+            extras += "reward slots components=$first..${next - 1} (6 items, book=$book)"
+        }
         if (group == 771) {
             // toa_chests:items (771:10, 92x119): the script that draws the chest's items (inv 811) is not in the dump. ONZEKER: twelve 36x32 item
             // slots, 3 columns x 4 rows (x 0/28/56, y 0/29/58/87) - one roll holds up to 10 lines (3 commons, pet, thread, jewel, clue, 3 kits,
@@ -328,6 +475,20 @@ object OsrsInterfacePortTool {
             val first = next
             for (slot in 0 until 12) list += C(next++, 5, (slot % 3) * 28, (slot / 3) * 29, 36, 32, 10, 0, 0, 0, 0, true)
             extras += "chest items (ONZEKER layout) components=$first..${next - 1}"
+        }
+        if (group == 271 || group == 550) {
+            // CoX storage units (OSRS onLoad 404 / 1589 fill the item layer 271:6 / 550:7 from inv 583 / 582 - not run by the 667 client).
+            // ONZEKER layout: 8 columns at the inventory pitch (42 x 36) inside the layer, which scrolls ([scrollH]); private holds at most
+            // 120 (Massive), shared 1,500 (250 shown). Ops (tsps 'Withdraw/deposit 1, 5, 10, All, X'): Withdraw-1/5/10/All/X. Slots start hidden; the
+            // server sets the objects (IF_SETOBJECT) and shows them.
+            val layer = if (group == 271) 6 else 7
+            // Shared: 250 slots (Small unit) - every slot is its own component with its own IF_SETEVENTS; LATER the bigger tiers.
+            val count = if (group == 271) 120 else 250
+            val first = next
+            for (slot in 0 until count) list += C(next++, 5, (slot % 8) * 42, (slot / 8) * 36, 36, 32, layer, 0, 0, 0, 0, true,
+                ops = listOf("Withdraw-1", "Withdraw-5", "Withdraw-10", "Withdraw-All", "Withdraw-X"))
+            list.first { it.id == layer }.scrollH = ((count + 7) / 8) * 36
+            extras += "storage slots (${if (group == 271) "private" else "shared"}) components=$first..${next - 1}"
         }
         if (group == 778) {
             // [proc,toa_midraidloot_bag_draw] (6784) into toa_midraidloot_bag:items (778:5): one 36x32 item graphic per bag slot at
@@ -531,7 +692,8 @@ object OsrsInterfacePortTool {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val groups = args.first().let { if (it == "toa") TOA else it.split(',').map(String::toInt) }
+        raid = if (args.first() == "cox" || "--cox" in args) "cox" else "toa"
+        val groups = args.first().let { if (it == "toa") TOA else if (it == "cox") COX else it.split(',').map(String::toInt) }
         val apply = "--apply" in args
         val root = ObjectMapper().readTree(JSON)
         val library = CacheLibrary(TARGETS[0])
@@ -550,7 +712,7 @@ object OsrsInterfacePortTool {
         val ported = groups.map { g -> port(g, root[g.toString()] ?: error("group $g not in $JSON"), fonts) }
         // --reuse (07-11): re-port onto the interface/sprite ids of the previous run (data/cfg/toa/interfaces.tsv) - the server and the
         // ported scripts already point at them; only groups/sprites not in that table get new ids.
-        val previous = if ("--reuse" in args) File(RspsPaths.data("cfg/toa/interfaces.tsv")).takeIf { it.isFile }?.readLines()
+        val previous = if ("--reuse" in args) TABLE.takeIf { it.isFile }?.readLines()
             ?.filter { it.isNotBlank() && !it.startsWith("#") }?.map { it.split('\t') }.orEmpty() else emptyList()
         val oldInterfaces = previous.filter { it[0] == "interface" }.associate { it[1].toInt() to it[2].toInt() }
         val oldSprites = previous.filter { it[0] == "sprite" }.associate { it[1].toInt() to it[2].toInt() }
@@ -607,7 +769,7 @@ object OsrsInterfacePortTool {
         // The server reads the ids at start (activity/toa/ui/ToaInterfaces.kt): interface per OSRS group, sprite per OSRS sprite.
         // N604 (12-11): MERGE into the table - a run for some groups used to overwrite it with only those groups and their sprites, so
         // the server lost the ids of every other ported window (481, 482, 771, 773, 775-778) until the file was merged by hand.
-        val table = File(RspsPaths.data("cfg/toa/interfaces.tsv")).apply { parentFile.mkdirs() }
+        val table = TABLE.apply { parentFile.mkdirs() }
         val merged = LinkedHashMap<Pair<String, String>, String>()
         if (table.isFile) table.readLines().filter { it.isNotBlank() && !it.startsWith("#") }.forEach { line ->
             val f = line.split('\t'); if (f.size >= 3) merged[f[0] to f[1]] = line

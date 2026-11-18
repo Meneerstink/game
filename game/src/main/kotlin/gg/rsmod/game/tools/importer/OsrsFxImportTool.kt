@@ -34,6 +34,9 @@ object OsrsFxImportTool {
      */
     val BATCHES: Map<String, List<Int>> =
         mapOf(
+            // N415: gameval GUTHIX_CLAW_GREEN, MA2_GUTHIX_PROJ(_SMALL), MA2_ZAMORAK_PROJ,
+            // WILD_ZEALOT_SWORD_PROJ and WILD_ZEALOT_LIGHTNING. Includes specials omitted by Breach.
+            "mage-arena" to listOf(1511, 1512, 1513, 1514, 1515, 1518),
             "fxpilot" to
                 listOf(
                     1228, 1229, // SOTD_SPECIAL_START / EXTRA (Power of Death)
@@ -227,6 +230,15 @@ object OsrsFxImportTool {
             "toa-census-fx-existing" to listOf(131, 1463),
             // N609 14-11: Zebak additional acid splatter = TOB_XARPUS_ACIDSPIT 1555 (ToA Extended Zebak PROJECTILE_ID_VENOM_SPLASH).
             "toa-zebak-splash" to listOf(1555),
+            // CoX rooms (dossier COX.txt 15-11 22:5x): RuneLite gameval SpotanimID LIZARDMAN_SPIT 1291, LIZARDSHAMAN_SPIT_ACID /
+            // _ACID_SPLASH / _SPAWN_EXPLODE 1293-1295, SKELETON_BIG_CASTING_PURPLE / _RED 1321-1322, RAIDS_ICEDEMON_* 1324-1325,
+            // RAIDS_LASERCRABS_SHATTERCRYSTAL 1326, RAIDS_VASANISTIRIO_* 1327-1330, RAIDS_VANGUARD_* 1331-1334, RAIDS_OLM_* / OLM_*
+            // 1337-1363, RAIDS_VESPULA_* 1364-1368, OLM_CRYSTAL_BOMB_EXPLODE 40, MOTHERLODE_ROCKFALL 645 (Guardians' stomp rock),
+            // WILD_FALLOFF_METEOR_BLAST / _FLYING 659-660 (Tekton's sparks). Used ids per room: tsps docs chambers-of-xeric.md (rsprox).
+            "cox-fx" to listOf(1291, 1293, 1294, 1295, 1321, 1322) + (1324..1334).toList() + (1337..1368).toList() + listOf(40, 645, 659, 660),
+            // Elder maul special 'Pulverize' (Wiki: added 29 May 2024): gameval SpotanimID SPOTANIM_ELDER_MAUL_SPECIAL 2804 (seq 11125
+            // VFX_ELDER_MAUL_SPECIAL) and SPOTANIM_ELDER_MAUL_SPECIAL_IMPACT 2805 (seq 11126).
+            "cox-maul-fx" to listOf(2804, 2805),
         )
 
     /**
@@ -293,6 +305,30 @@ object OsrsFxImportTool {
             // N462 Necropolis squares (OsrsRegionImportTool 'necropolis'): gameval AnimationID HAZARDOUS_WATER_SUNBAKED_01_3X3_IDLE_01 13509,
             // _2X2_IDLE_01 13510, _2X2_IDLE_02 13511, _1X1_IDLE_01 13512, _1X1_IDLE_02 13513, SEAWEED_SURFACE_IDLE01 13564.
             "necropolis-seq" to listOf(13509, 13510, 13511, 13512, 13513, 13564),
+            // CoX entrance squares (OsrsRegionImportTool 'cox-entrance', dry-run 15-11 15:29): gameval AnimationID WATER_FOAM 522,
+            // POLLBOOTH 7156 (loc animations of the Mount Quidamortem / BLS scenery).
+            "cox-entrance-seq" to listOf(522, 7156),
+            // CoX raid map (OsrsRegionImportTool 'cox-map', dry-run 15-11 15:54): gameval AnimationID LAVABUBBLES 493, DEVIOUS_DEAD 2995,
+            // DORGESH_WIRE_CHIMNEY_SMOKE 5745, FRIS_GEYSER 5771, HEAL_CASTING_LOOP 7390, RAIDS_VESPULAR_PORTAL_ACTIVE 7499,
+            // RAIDS_OLMS_LAIR_ENTRANCE 7503 (loc animations of the room templates + Olm's chamber).
+            "cox-map-seq" to listOf(493, 2995, 5745, 5771, 7390, 7499, 7503),
+            // CoX loot beams RAIDS_REWARD_LOOTBEAM_BASIC 30029 / _SPECIAL 30030 (loc-tool 'cox-locs' dropped their animation): gameval
+            // AnimationID ENAKH_LIGHT_STREAMING 3101.
+            "cox-lootbeam-seq" to listOf(3101),
+            // CoX room locs (OsrsLocImportTool 'cox-rooms' dry-run 15-11 23:0x dropped their animations): gameval FIRE_EFFECT 3105 (lit
+            // brazier), GODWARS_SNOWING_ANIM 7000 (ice demon storm), PRIF_AGILITY_SHORTCUT_PORTAL_IDLE 8456 (mystics' portals),
+            // DRAGON_SLAYER_QIP_FIRE 6645 (Tekton/Vasa fire), CASTLEWARS_PORTALGLOW 1433 (tightrope barrier), RAIDS_VESPULAR_PORTAL_CLOSED
+            // 7501 (Vespula's pillars); + EMOTE_STAMPFEET 4278 (the Guardians' stomp, tsps rsprox).
+            "cox-rooms-seq" to listOf(3105, 7000, 8456, 6645, 1433, 7501, 4278),
+            // CoX 15-11 23:4x: gameval SKELETON_UPDATE_MAGE_CASTING_SWANSONG 5528 (Skeletal Mystics' cast) is an OSRS skeleton-update
+            // sequence (its siblings 5485/5491 came in classic with the npcs), not the 667 one.
+            "cox-rooms-seq2" to listOf(5528),
+            // CoX weapons (dossier COX.txt 21:3x): gameval HUMAN_DINHS_BULWARK_CRUSH 7507 / _READY 7508 / _RUN 7509 / _WALK 7510 / _BASH 7511
+            // / _BLOCK 7512, HUMAN_ELDER_MAUL_READY 7518 / _RUN 7519 / _WALK 7520 (its _ATTACK 7516 / _BLOCK 7517 are in already, OsrsSeq),
+            // SPOT_DINHS_BULWARK_IDLE 7522 / _BLOCK 7523.
+            "cox-weapons-seq" to listOf(7507, 7508, 7509, 7510, 7511, 7512, 7518, 7519, 7520, 7522, 7523),
+            // Elder maul special: gameval AnimationID HUMAN_ELDER_MAUL_SPEC 11124 (Wiki 'Pulverize', added 29 May 2024).
+            "cox-maul-seq" to listOf(11124),
             // N462 07-11 square 13098 ('necropolis-west'): gameval AnimationID TEMPLETREK_BOAT_RIPPLES 3743, LIGHT_BEAM_BUTTERFLY 9845,
             // SAILING_BT_VFX_WATER_RAPIDS01_GENTLE01 13159 (loc animations of its scenery).
             "necropolis-west-seq" to listOf(3743, 9845, 13159),
@@ -421,6 +457,11 @@ object OsrsFxImportTool {
             // Owner 2026-09-19 (breach monsters "sounds, animations, everything"): OSRS server-sent attack / hit / death sounds of the
             // OSRS-only breach monsters are not public, so the owner chose real OSRS sounds picked by Jagex config name (OSRS Wiki
             // "List of sound IDs", raw wikitext 2026-09-19). Imported even where the id is below ~3800 so the bytes are OSRS's own.
+            // CoX (tsps rsprox captures): sounds above ~3800 differ between the caches - room-crystal shatter 3821, Vasa's stomp 3834,
+            // the Mystics' portal overlay 3952.
+            "cox-synth" to listOf(3821, 3834, 3952),
+            // Elder maul special (OSRS Wiki 'List of sound IDs'): 8984 elder_maul_special_attack_composite_01 (swing + hit in one).
+            "cox-maul-synth" to listOf(8984),
             "breachsfx" to
                 listOf(
                     400, 404, 403, // demon_attack / demon_hit / demon_death (Porazdir, ADAPTED family)

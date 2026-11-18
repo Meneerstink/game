@@ -37,4 +37,10 @@ enum class WeaponType(
      * from it (Staff of the dead, Toxic staff of the dead, Staff of Balance). Without this entry the server read them as unarmed.
      */
     BLADED_STAFF(id = 26),
+
+    /**
+     * N631 (Claude 18-11): client style set 28 (item param 686, added to clientscript 1142 by PartisanStyleSetTool): Stab / Lunge / Pound /
+     * Block - OSRS Wiki Weapons/Categories "Partisan" (Keris partisan + ornaments). Category 28 = first case free in 1142 (1-27 taken).
+     */
+    PARTISAN(id = 28),
 }

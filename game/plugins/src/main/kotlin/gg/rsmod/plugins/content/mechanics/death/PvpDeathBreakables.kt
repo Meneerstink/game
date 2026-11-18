@@ -66,7 +66,8 @@ object PvpDeathBreakables {
             Breakable(Items.MASORI_ASSEMBLER, Items.MASORI_ASSEMBLER_BROKEN, killerCoins = 0, repairCost = 240_000),
             Breakable(Items.MASORI_ASSEMBLER_MAX_CAPE, Items.MASORI_ASSEMBLER_MAX_CAPE_BROKEN, killerCoins = 0, repairCost = 240_000),
             Breakable(Items.DIZANAS_MAX_CAPE, Items.DIZANAS_MAX_CAPE_BROKEN, killerCoins = 0, repairCost = 400_000),
-        ).associateBy { it.itemId } + N247_BREAKABLES.associateBy { it.itemId }
+        ).associateBy { it.itemId } + N247_BREAKABLES.associateBy { it.itemId } +
+            gg.rsmod.plugins.content.items.osrs.AncientCape.breakables().associateBy { it.itemId }
 
     /** A broken id repairs into the first (canonical) item that breaks into it (Void helms and Elite void have 667 copies). */
     private val byBrokenId = entries.values.groupBy { it.brokenId }.mapValues { it.value.first() }

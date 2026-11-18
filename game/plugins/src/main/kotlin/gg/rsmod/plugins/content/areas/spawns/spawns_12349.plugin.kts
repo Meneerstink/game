@@ -23,7 +23,7 @@ spawn_npc(npc = Npcs.BATTLE_MAGE, x = 3111, z = 3933, walkRadius = 5, direction 
 
 spawn_npc(npc = Npcs.BATTLE_MAGE_914, x = 3114, z = 3933, walkRadius = 5, direction = Direction.EAST)
 
-spawn_npc(npc = Npcs.KOLODION_907, x = 3105, z = 3933, walkRadius = 5, direction = Direction.EAST)
+// N415: Kolodion is spawned by MageArena.start for the individual duel, never as a shared farmable NPC.
 
 spawn_npc(npc = Npcs.GIANT_BAT, x = 3073, z = 3961, walkRadius = 5) // N522 OSRS O0324 Giant bat
 spawn_npc(npc = Npcs.GIANT_BAT, x = 3074, z = 3952, walkRadius = 5) // N522 OSRS O0325 Giant bat

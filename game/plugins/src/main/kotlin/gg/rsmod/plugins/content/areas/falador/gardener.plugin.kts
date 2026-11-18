@@ -10,11 +10,21 @@ import gg.rsmod.plugins.content.scrolls.ClueScrollManager
  */
 val GARDENER_SPAWNED_ATTR = AttributeKey<Boolean>(persistenceKey = "gardener_spawned")
 
+/**
+ * 18-11 (WACHTWERK 1): every spade dig plays the dig animation (830) AND the spade sound (Sfx.DIGSPADE 1470: wiki Spade sound
+ * 'Digging'; seq 830 carries no frame sound). Before, a dig anywhere but here/Barrows - also on a clue spot - showed nothing.
+ * No chat line when nothing is found: OSRS has none on record (wiki Spade, RuneLite clue plugin), so none is invented.
+ */
+fun digWithSpade(player: gg.rsmod.game.model.entity.Player) {
+    player.animate(Anims.DIG_SPADE)
+    player.playSound(Sfx.DIGSPADE)
+}
+
 on_item_option(Items.SPADE, "Dig") {
     if ((player.tile.x == 2999 || player.tile.x == 3000) && player.tile.z == 3383) {
         if (player.getCurrentStage(PiratesTreasure) != 3) {
             player.lockingQueue(lockState = LockState.DELAY_ACTIONS) {
-                player.animate(Anims.DIG_SPADE)
+                digWithSpade(player)
                 wait(2)
             }
             player.animate(Anims.DIG_SPADE)
@@ -27,7 +37,7 @@ on_item_option(Items.SPADE, "Dig") {
             }
             else {
                 player.lockingQueue(lockState = LockState.DELAY_ACTIONS) {
-                    player.animate(Anims.DIG_SPADE)
+                    digWithSpade(player)
                     wait(3)
                     PiratesTreasure.finishQuest(player)
                 }
@@ -42,7 +52,7 @@ on_item_option(Items.SPADE, "Dig") {
                 world = world
             )
             player.lockingQueue {
-                player.animate(Anims.DIG_SPADE)
+                digWithSpade(player)
                 world.spawn(gardener)
                 gardener.respawns = false
                 wait(2)
@@ -52,6 +62,7 @@ on_item_option(Items.SPADE, "Dig") {
             }
         }
     } else if (!Barrows.digMound(player)) {
+        digWithSpade(player)
         ClueScrollManager.tryDig(player)
     }
 }

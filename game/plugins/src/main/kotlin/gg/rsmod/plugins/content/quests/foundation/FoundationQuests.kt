@@ -1571,12 +1571,11 @@ object FoundationQuests {
             CompletedOsrsQuest("Children of the Sun", 1, OsrsQuestVarps.CHILDREN_OF_THE_SUN, OsrsQuestSlots.CHILDREN_OF_THE_SUN, "The plot in Varrock was uncovered."),
             CompletedOsrsQuest("Secrets of the North", 2, OsrsQuestVarps.SECRETS_OF_THE_NORTH, OsrsQuestSlots.SECRETS_OF_THE_NORTH, "The secrets of the Weiss mountains were revealed."),
             CompletedOsrsQuest("Bone Voyage", 1, OsrsQuestVarps.BONE_VOYAGE, OsrsQuestSlots.BONE_VOYAGE, "The Varrock Museum's barge reached Fossil Island."),
-            CompletedOsrsQuest("Mage Arena II", 0, OsrsQuestVarps.MAGE_ARENA_II, OsrsQuestSlots.MAGE_ARENA_II, "Kolodion's enchanted god capes were earned."),
         )
 
     /** Registers every quest with the quest tab (Quest.quests) exactly once, at plugin load. */
     fun register() {
-        (SHORT + COMPLETED).forEach { quest -> if (Quest.quests.none { it.slot == quest.slot }) Quest.addQuest(quest) }
+        (SHORT + COMPLETED + gg.rsmod.plugins.content.areas.wilderness.MageArenaIIQuest).forEach { quest -> if (Quest.quests.none { it.slot == quest.slot }) Quest.addQuest(quest) }
     }
 
     /** The existing "refresh" of the quest list (QuestExt.advanceToNextStage): the grouping varbit flips and back. */

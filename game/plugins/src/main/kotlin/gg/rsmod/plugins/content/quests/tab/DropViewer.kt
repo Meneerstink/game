@@ -301,6 +301,16 @@ object DropViewer {
      */
     @Volatile var CHEST_YAN = 1140
 
+    /**
+     * CoX (16-11): the Great Olm npc (OSRS 7554) is an invisible 8-vertex box (model 27997, alpha 254) - the head players see is the loc
+     * OLM_HEAD 29881 (gameval ObjectID; its first model = the head). So the CoX entry shows that loc's model. `::dvzoom` with 7 numbers
+     * tunes zoom / xan / yan live. 17-11 (testclient next to wiki File:Great_Olm.png, screens/GRAFISCH/dvolm/crops*.png): 4200/0 = head
+     * straight on, larger zooms clip the model away; 5000/160/512 = three-quarter view like the wiki picture's head.
+     */
+    @Volatile var COX_ZOOM = 5000
+    @Volatile var COX_XAN = 160
+    @Volatile var COX_YAN = 512
+
     /** Model camera distance (client zoom2d: bigger = further away): base + per extra tile of npc size. `::dvzoom` tunes it live. */
     @Volatile var THUMB_BASE = 1500
     @Volatile var THUMB_PER = 1100
@@ -348,8 +358,15 @@ object DropViewer {
         // Model: the npc; the Deadman's Chest its own loc model (N277, owner 2026-10-24 - it showed Zemouregal before).
         val chestModel = if (source.kind == DropSources.Kind.CHEST) chestModel(player) else -1
         val modelNpc = if (source.kind == DropSources.Kind.CHEST && chestModel < 0) DeadmanChestIds.guardianNpc else source.modelNpc
+        val coxModel = if (source.kind == DropSources.Kind.COX) {
+            gg.rsmod.plugins.content.activity.cox.CoxIds.loc(29881)?.let { N108Ui.locModel(world, it) } ?: -1
+        } else -1
         if (source.modelItem >= 0) {
             N108Ui.item(player, i, V.MODEL, source.modelItem, 1)
+            N108Ui.anim(player, i, V.MODEL, -1)
+            N108Ui.hidden(player, i, V.MODEL, false)
+        } else if (coxModel >= 0) {
+            N108Ui.plainModel(player, N108Ui.hash(i, V.MODEL), coxModel, COX_ZOOM, COX_XAN, false, COX_YAN)
             N108Ui.anim(player, i, V.MODEL, -1)
             N108Ui.hidden(player, i, V.MODEL, false)
         } else if (chestModel >= 0) {
@@ -514,6 +531,8 @@ object DropViewer {
             DropSources.Kind.IMPLING_JAR -> "Loot from one jar"
             // N462: the chances are those of one reference raid (DropSources.toaView); the count is the account's completions.
             DropSources.Kind.TOA -> "Solo Normal, ${N108Ui.number(DropSources.TOA_REFERENCE_POINTS)} points${dot}Raids <col=ffffff>${N108Ui.number(player.attr[gg.rsmod.plugins.content.activity.toa.ToaChest.COMPLETIONS] ?: 0)}</col>"
+            // CoX: the chances of one reference raid (DropSources.coxView); the count is the account's completions.
+            DropSources.Kind.COX -> "Solo, ${N108Ui.number(DropSources.COX_REFERENCE_POINTS)} points${dot}Raids <col=ffffff>${N108Ui.number(player.attr[gg.rsmod.plugins.content.activity.cox.CoxRewards.COMPLETIONS] ?: 0)}</col>"
             else -> {
                 val level = if (source.level > 0) "<col=ffff00>Level ${source.level}</col>$dot" else ""
                 "${level}Kill count <col=ffffff>${N108Ui.number(kc)}</col>"

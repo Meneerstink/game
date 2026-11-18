@@ -35,6 +35,13 @@ object QuestStatus {
     val MAX_POINTS: Int get() = QuestList.ENTRIES.sumOf { it.points }
 
     fun state(player: Player, slot: Int): State {
+        if (slot == gg.rsmod.plugins.content.areas.wilderness.MageArenaII.SLOT) {
+            return when (gg.rsmod.plugins.content.areas.wilderness.MageArenaII.displayStage(player)) {
+                2 -> State.COMPLETED
+                1 -> State.IN_PROGRESS
+                else -> State.NOT_STARTED
+            }
+        }
         val choice = CHOICE_QUESTS[slot] ?: return State.COMPLETED
         val stage = choice.stage(player)
         return when {
@@ -66,6 +73,7 @@ object QuestStatus {
      * Login: legacy accounts get their eight choice quests (once), then the client is brought in line with the status.
      */
     fun login(player: Player) {
+        gg.rsmod.plugins.content.areas.wilderness.MageArenaII.migrate(player)
         // N462 owner E2: the old always-complete Beneath Cursed Sands entry stays completed (once, before anything reads it).
         BeneathCursedSands.migrate(player)
         if (QuestChoices.isLegacy(player)) QuestChoices.applyLegacy(player)
@@ -79,6 +87,11 @@ object QuestStatus {
      * the maximum, then the quest list refresh so colours and order follow at once. Call after any status change.
      */
     fun sync(player: Player) {
+        // N415 owner2B: grandfather the old complete flag before replacing it with the new display mirror.
+        val ma2 = gg.rsmod.plugins.content.areas.wilderness.MageArenaII
+        ma2.migrate(player)
+        val stage = ma2.displayStage(player)
+        if (player.getVarp(ma2.VARP) != stage) player.setVarp(ma2.VARP, stage)
         QuestList.ENTRIES.forEach { entry ->
             if (state(player, entry.slot) == State.COMPLETED && entry.progress.read(player) != COMPLETE) entry.progress.complete(player)
         }

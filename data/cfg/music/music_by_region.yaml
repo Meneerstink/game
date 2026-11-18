@@ -3022,3 +3022,25 @@ laid_to_rest:  # ToA burial chamber, rewards (OSRS 14672)
   index: 953
   areas:
     - region: 17000
+# CoX 16-11: OSRS Wiki Ascent (#527, cache 494) 'Unlocked near Mount Quidamortem' - the CoX entrance square (OSRS 4919, imported in place).
+# The raid floors play Upper Depths / Lower Depths / Fire in the Deep from the raid code (CoxMusic: one template square for every floor).
+ascent:
+  index: 1024
+  areas:
+    - region: 4919
+beyond_the_meadow:  # N632 OSRS Wiki 'heard around the Mess and Watson''s house' (cacheid 707)
+  index: 1028
+  areas:
+    - region: 6455
+# N638 OSRS Wiki A Dangerous Game (#646, cacheid 684): 'unlocks in the Wilderness Slayer Cave' and plays in Callisto's Den, Hunter's End,
+# Skeletal Tomb, Vet'ion's Rest, Silk Chasm, Web Chasm and the Escape Caves (our imported squares, OsrsRegionImportTool N522 batches).
+a_dangerous_game:
+  index: 1029
+  areas:
+    - region: 13473
+    - region: 13215
+    - region: 7092
+    - region: 7604
+    - region: 13727
+    - region: 6580
+    - region: 13472

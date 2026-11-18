@@ -95,6 +95,10 @@ TELEOTHER.forEach { (data, dest) ->
 
 /* Charge: for 7 minutes the god spells hit up to 30 instead of 20 while wearing the matching cape. */
 on_magic_spell_button("Charge") { metadata ->
+    if (!gg.rsmod.plugins.content.areas.wilderness.MageArena.canCharge(player)) {
+        player.message("You must claim a god staff from the Chamber guardian before casting Charge.")
+        return@on_magic_spell_button
+    }
     if (player.timers.has(GOD_SPELL_CHARGE_TIMER)) {
         player.message("You already have a charged spell active.")
         return@on_magic_spell_button

@@ -43,7 +43,10 @@ class ToaScene(private val raid: ToaRaid) {
         for (door in DOORS) {
             val source = when {
                 door.path in raid.progress.completedPaths -> door.sourceId + 2
-                raid.progress.activePath == door.path -> door.sourceId
+                // N613 17-11: OSRS (Kaoz Entry guide 439 s raid start + 1085 s between paths) shows the path symbol (TOA_NEXUS_*_DOOR,
+                // 2 models: door + symbol) on every open door while no path is active; _UNSELECTED (door model only) is for the
+                // other doors while a path IS active. Before: no active path -> all UNSELECTED = no symbols in the Nexus.
+                raid.progress.activePath == null || raid.progress.activePath == door.path -> door.sourceId
                 else -> door.sourceId + 1
             }
             place(ToaIds.loc(source), door.tile, door.rotation)

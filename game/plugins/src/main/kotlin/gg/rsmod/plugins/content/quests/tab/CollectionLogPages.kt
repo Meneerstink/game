@@ -73,6 +73,7 @@ object CollectionLogPages {
     /** N462: cache 2686 enum 4805 (ToA collection log): guardian, shadow (u), ward, Masori x3, lightbearer, fang, thread, 4 jewels, 3 kits,
      *  cache of runes, Icthlarin's shroud 1-5, 5 remnants. */
     const val TOA = "toa"
+    const val COX = "cox"
     val TOA_ITEMS = listOf(27352, 27277, 25985, 27226, 27229, 27232, 25975, 26219, 27279, 27283, 27285, 27289, 30893, 27255, 27248, 27372,
         27293, 27257, 27259, 27261, 27263, 27265, 27377, 27378, 27379, 27380, 27381)
 
@@ -143,7 +144,7 @@ object CollectionLogPages {
                 continue
             }
             // N462: the ToA page is built below from the OSRS log list (enum 4805), not from the chest's view.
-            if (boss.kind == DropSources.Kind.TOA) continue
+            if (boss.kind == DropSources.Kind.TOA || boss.kind == DropSources.Kind.COX) continue
             if (boss.kind == DropSources.Kind.BARROWS) {
                 val items = Barrows.REWARD_ARMOUR.values.flatMap { it.toList() } + Items.BOLT_RACK
                 pages += Page("barrows", Category.BOSSES, "Barrows Chests", listOf("barrows"), items.filter { it in Barrows.COLLECTION_LOG_ITEMS }, "Barrows Chests opened")
@@ -184,6 +185,12 @@ object CollectionLogPages {
         // Bosses (our log has no Raids tab); the count is the account's raid completions (ToaChest.COMPLETIONS, all modes together).
         TOA_ITEMS.mapNotNull(gg.rsmod.plugins.content.activity.toa.core.ToaLootItems::local).takeIf { it.isNotEmpty() }?.let {
             pages += Page(TOA, Category.BOSSES, "Tombs of Amascut", listOf(TOA), it, "Tombs of Amascut completions")
+        }
+        // ---- CoX: the 23 slots of the OSRS log in cache order (cache 2686 enum 2139 = CoxLootItems.LOG_ITEMS), under Bosses like ToA, once
+        // the raid is released (CoxRelease.OPEN); the count is the account's completions (CoxRewards.COMPLETIONS).
+        if (gg.rsmod.plugins.content.activity.cox.CoxRelease.OPEN) {
+            gg.rsmod.plugins.content.activity.cox.CoxLootItems.LOG_ITEMS.mapNotNull(gg.rsmod.plugins.content.activity.cox.CoxLootItems::local)
+                .takeIf { it.isNotEmpty() }?.let { pages += Page(COX, Category.BOSSES, "Chambers of Xeric", listOf(COX), it, "Chambers of Xeric completions") }
         }
         // ---- Other: N423 (owner 2026-10-29 23:4x: "alle 5 in de Collection Log") the five burden trinkets - three drop, two are sold.
         val revenants = sources.filter { s -> s.npcs.any { it in gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantCaveRevenants.BY_ID || it == gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.NPC } }

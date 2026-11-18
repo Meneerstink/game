@@ -116,12 +116,16 @@ class PerduLostPropertyTests {
     @Test
     fun `a broken or locked imbued cape counts as owning one`() {
         val player = newPlayer()
+        player.attr[gg.rsmod.plugins.content.areas.wilderness.MageArenaII.STARTED] = true
+        player.attr[gg.rsmod.plugins.content.areas.wilderness.MageArenaII.DELIVERED] = 7
         player.inventory[0] = Item(Items.IMBUED_ZAMORAK_CAPE)
         PerduLostProperty.observe(player)
         player.inventory[0] = Item(Items.IMBUED_ZAMORAK_CAPE_BROKEN)
         assertTrue(PerduLostProperty.available(player).none { it.itemId == Items.IMBUED_ZAMORAK_CAPE })
         player.inventory[0] = null
         assertEquals(250_000L, PerduLostProperty.available(player).single { it.itemId == Items.IMBUED_ZAMORAK_CAPE }.price)
+        player.attr[gg.rsmod.plugins.content.areas.wilderness.MageArenaII.DELIVERED] = 3
+        assertTrue(PerduLostProperty.available(player).none { it.itemId in gg.rsmod.plugins.content.items.osrs.AncientCape.GOD_CAPES }, "owned imported gear and old Perdu observation are not earned MA2")
     }
 
     @Test

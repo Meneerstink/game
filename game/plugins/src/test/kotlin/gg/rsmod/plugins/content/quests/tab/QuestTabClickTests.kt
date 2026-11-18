@@ -175,13 +175,13 @@ class QuestTabClickTests {
     @Test
     fun `exactly thirty rows enable the final physical slot and collapsing clears its old event`() {
         val f = Fixture()
-        // 11 headings/choice quests + 6 + 7 + 6 prerequisites = all 30 existing cache rows, without pagination.
-        listOf("Desert Treasure", "Dragon Slayer II", "Monkey Madness II").forEach { f.click(it, toggle = true) }
+        // 13 headings/quest rows (including MA1/MA2) + 6 + 7 + 4 prerequisites =30 without pagination.
+        listOf("Desert Treasure", "Dragon Slayer II", "Lunar Diplomacy").forEach { f.click(it, toggle = true) }
         assertEquals(QP.ROWS, f.rows().size)
-        assertEquals("Watchtower", f.rows().last().key)
+        assertEquals("Mage Arena II", f.rows().last().key)
         f.assertEvents()
         QuestTab.questClick(f.player, QP.ROWS - 1)
-        assertEquals("Watchtower", f.text(14))
+        assertEquals("Mage Arena II", f.text(14))
         f.click("Desert Treasure", toggle = true)
         f.assertEvents()
         f.sent.clear()

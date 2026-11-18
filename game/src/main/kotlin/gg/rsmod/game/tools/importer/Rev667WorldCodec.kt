@@ -338,6 +338,8 @@ class Rev667LocType(val id: Int) {
                         repeat(n + 1) { buf.u16() }
                     }
                     ModelArchive.LOC_WIDE_TRANSFORMS -> {
+                        // CLUE STASH (client c1de063f LocType 242): multiloc with g4 destination ids - varbit g2, varp g2, fallback g4,
+                        // count g1, count+1 g4 ids.
                         buf.u16(); buf.u16(); buf.i32()
                         repeat(buf.u8() + 1) { buf.i32() }
                     }
@@ -405,12 +407,14 @@ class Rev667LocType(val id: Int) {
          *
          * [multiloc] keeps a varbit transform table instead: the 667 varbit that selects the variant and the local loc id of
          * each variant, the last entry being the default (-1 = none), written as opcode 92 (77 when there is no default).
+         * [multilocVarp]: the selector is a whole VARP instead of a varbit (the 667 client reads either: varbit 0xFFFF + varp).
          */
         fun encodeFromModern(
             src: ModernObjectDef,
             modelRemap: (Int) -> Int,
             dropped: MutableList<String>,
             multiloc: Pair<Int, IntArray>? = null,
+            multilocVarp: Boolean = false,
             seqRemap: ((Int) -> Int?)? = null,
         ): ByteArray {
             val out = ByteArrayOutputStream()
@@ -573,8 +577,8 @@ class Rev667LocType(val id: Int) {
                 val default = dest.last()
                 val wide = dest.any { it >= 65535 }
                 u8(if (wide) ModelArchive.LOC_WIDE_TRANSFORMS else if (default != -1) 92 else 77)
-                u16(varbit)
-                u16(0xFFFF)
+                u16(if (multilocVarp) 0xFFFF else varbit)
+                u16(if (multilocVarp) varbit else 0xFFFF)
                 fun destination(value: Int) {
                     if (wide) { out.write(value ushr 24); out.write(value ushr 16); out.write(value ushr 8); out.write(value) }
                     else u16(if (value == -1) 0xFFFF else value)

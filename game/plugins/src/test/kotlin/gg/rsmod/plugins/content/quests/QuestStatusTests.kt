@@ -113,7 +113,8 @@ class QuestStatusTests {
         val library = CacheLibrary(CACHE_PATH)
         val script =
             try {
-                library.data(QuestListCacheTool.CLIENTSCRIPT_INDEX, QuestListCacheTool.PROGRESS_SCRIPT, 0)!!
+                // N415 cache work belongs to Claude: test the planned pure script patch without writing either cache.
+                QuestListCacheTool.patchProgressScript(library.data(QuestListCacheTool.CLIENTSCRIPT_INDEX, QuestListCacheTool.PROGRESS_SCRIPT, 0)!!)
             } finally {
                 library.close()
             }
@@ -165,11 +166,11 @@ class QuestStatusTests {
     // ------------------------------------------------------------------------------------------------ the status
 
     @Test
-    fun `a new account has everything completed except the eight choice quests`() {
+    fun `a new account has reference quests completed but must earn choice quests and Mage Arena II`() {
         val account = Account(isNew = true)
         QuestStatus.login(account.player)
         QuestList.ENTRIES.forEach { entry ->
-            if (entry.slot in choiceSlots) {
+            if (entry.slot in choiceSlots || entry.slot == gg.rsmod.plugins.content.areas.wilderness.MageArenaII.SLOT) {
                 assertEquals(State.NOT_STARTED, QuestStatus.state(account.player, entry.slot), entry.name)
                 assertEquals(0, entry.progress.read(account.player), entry.name)
             } else {
@@ -177,8 +178,9 @@ class QuestStatusTests {
                 assertEquals(QuestStatus.COMPLETE, entry.progress.read(account.player), "${entry.name}: the client must show it completed")
             }
         }
-        assertEquals(349 - 26, QuestStatus.points(account.player))
-        assertEquals(349 - 26, account.player.getVarp(Varps.QUEST_POINTS))
+        // 26 points in the eight choice quests + 2 for Beneath Cursed Sands (N462 owner E2: a new account plays the short version).
+        assertEquals(349 - 28, QuestStatus.points(account.player))
+        assertEquals(349 - 28, account.player.getVarp(Varps.QUEST_POINTS))
         assertEquals(349, account.player.getVarp(Varps.MAX_QUEST_POINTS))
         assertFalse(QuestStatus.hasAllQuestPoints(account.player))
     }
@@ -214,7 +216,7 @@ class QuestStatusTests {
         assertEquals(QuestStatus.COMPLETE, QuestList.entry(DragonSlayerII.slot)!!.progress.read(account.player))
         // Live: Quest Points follow at once and the list is told to rebuild: the grouping varbit 4536 is flipped and back,
         // which re-sends its varp - a varp the list rebuild (clientscript 2169) is triggered by (1384 from 2165, or 1402).
-        assertEquals(349 - 26 + 5, account.player.getVarp(Varps.QUEST_POINTS))
+        assertEquals(349 - 28 + 5, account.player.getVarp(Varps.QUEST_POINTS))
         account.varps.clean()
         KingsRansom.setStage(account.player, 2)
         assertEquals(State.IN_PROGRESS, QuestStatus.state(account.player, KingsRansom))
@@ -224,7 +226,7 @@ class QuestStatusTests {
         assertTrue(account.varps.isDirty(refreshVarp), "quest list refresh sent")
         assertTrue(FoundationRewards.complete(account.player, KingsRansom))
         assertEquals(State.COMPLETED, QuestStatus.state(account.player, KingsRansom))
-        assertEquals(349 - 26 + 5 + 1, account.player.getVarp(Varps.QUEST_POINTS))
+        assertEquals(349 - 28 + 5 + 1, account.player.getVarp(Varps.QUEST_POINTS))
         // The Deadman Groups panel reads the same status.
         QuestStatus.CHOICE_QUESTS.values.forEach { quest ->
             assertEquals(QuestStatus.isCompleted(account.player, quest), DeadmanGroupsView.questFinished(account.player, quest), quest.name)

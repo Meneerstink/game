@@ -234,6 +234,7 @@ fun Pawn.dealHit(
     hitType: HitType,
     bonusDamage: Int = 0,
     applyDeflectProtection: Boolean = true,
+    sourceSpellId: Int? = null,
 ): PawnHit {
     SinglesPlus.recordAttack(this, target)
     gg.rsmod.plugins.content.scrolls.ClueGuardianPvp.recordAttack(attr[DAMAGE_CREDIT_ATTR]?.get() ?: this, target)
@@ -268,6 +269,8 @@ fun Pawn.dealHit(
         damage = gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.modifyIncomingDamage(target, hitType, damage.toInt()).toDouble()
         // Elysian / Divine spirit shield passive (SpiritShields).
         damage = SpiritShields.modifyIncomingDamage(target, damage.toInt()).toDouble()
+        // Dinh's bulwark 'Block': -20% from NPCs only (Wiki: not in PvP), 8 ticks after switching (DinhsBulwark).
+        if (this is Npc) damage = gg.rsmod.plugins.content.activity.cox.DinhsBulwark.modifyIncoming(target, damage.toInt()).toDouble()
     }
     // Tormented demons: fire shield and style prayer (see TormentedDemonCombatScript).
     // RCV-012 B7: misses reach the rule too - both donors count every hit, a miss included, toward the prayer switch.
@@ -280,9 +283,18 @@ fun Pawn.dealHit(
         }
         damage = gg.rsmod.plugins.content.combat.scripts.impl.TormentedDemonCombatScript.modifyIncomingDamage(target, this, style, damage.toInt(), weapon).toDouble()
     }
+    // N635: Salarin the twisted only takes Strike spells (always the highest unlocked Bolt's max), recoil and venom (OSRS Wiki).
+    if (target is Npc && gg.rsmod.plugins.content.combat.scripts.impl.SalarinTheTwisted.isSalarin(target)) {
+        damage = gg.rsmod.plugins.content.combat.scripts.impl.SalarinTheTwisted.modifyIncomingDamage(target, this, hitType, damage.toInt(), landHit, sourceSpellId).toDouble()
+    }
     // Corporeal Beast: melee and ranged damage is halved unless dealt with a Corpbane weapon on the stab style (OSRS Wiki).
     if (target is Npc && target.id == gg.rsmod.plugins.api.cfg.Npcs.CORPOREAL_BEAST && damage > 0) {
         damage = gg.rsmod.plugins.content.combat.scripts.impl.CorporealBeastCombatScript.modifyIncomingDamage(this, hitType, damage.toInt()).toDouble()
+    }
+    // N415: reject Kolodion's forbidden styles before launch-time XP, as well as at impact.
+    if (target is Npc && damage > 0) {
+        damage = gg.rsmod.plugins.content.areas.wilderness.MageArena.modifyIncomingDamage(target, this, hitType, damage.toInt()).toDouble()
+        damage = gg.rsmod.plugins.content.areas.wilderness.MageArenaIIGuardians.modifyIncomingDamage(target, hitType, damage.toInt(), sourceSpellId).toDouble()
     }
     // Desert Treasure: Fareed only takes magic damage from water spells (quests/foundation/QuestBosses).
     if (target is Npc && damage > 0) {
@@ -341,6 +353,7 @@ fun Pawn.dealHit(
     // OSRS hitsplats (owner 2026-10-09): the attacker sees its own hit lit and, from a player, the max splat at its max hit.
     hit.source = this
     hit.sourceCombatClass = curseHitStyle
+    hit.sourceSpellId = if (curseHitStyle == CombatClass.MAGIC) sourceSpellId else null
     hit.sourceMaxHit = kotlin.math.floor(maxHit + 1e-9).toInt() + bonusDamage
 
     val pawnHit = PawnHit(hit, executeHit)

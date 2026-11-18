@@ -1,14 +1,13 @@
 package gg.rsmod.plugins.content.areas.wilderness
 
-import gg.rsmod.game.model.attr.COMPLETED_MAGE_ARENA
-import gg.rsmod.plugins.content.magic.TeleportType
-import gg.rsmod.plugins.content.magic.teleport
 
 val kolodion = Npcs.KOLODION
 
 on_npc_option(kolodion, option = "talk-to") {
     player.queue {
-        if (player.attr.has(COMPLETED_MAGE_ARENA)) {
+        if (MageArenaII.started(player)) {
+            MageArenaIIDialogue.talk(this)
+        } else if (MageArena.completed(player)) {
             mageArenaCompletedDialogue(this)
         } else {
             kolodionDialogue(this)
@@ -32,6 +31,28 @@ suspend fun kolodionDialogue(it: QueueTask) {
 }
 
 suspend fun mageArenaCompletedDialogue(it: QueueTask) {
+    if (it.player.attr[gg.rsmod.game.model.attr.prayedAtStatue] == true) {
+        it.chatPlayer("Hello, Kolodion.")
+        it.chatNpc("Hey there, how are you? Are you enjoying the bloodshed?")
+        val options = mutableListOf("I think I've had enough for now.", "How can I use my new spells outside of the arena?")
+        if (MageArenaII.assets.ready) options += "Are there any more challenges available?"
+        when (it.options(*options.toTypedArray())) {
+            1 -> {
+                it.chatPlayer("I think I've had enough for now.")
+                it.chatNpc("A shame. You're a good battle mage. I hope to see you soon.")
+            }
+            2 -> {
+                it.chatPlayer("How can I use my new spells outside of the arena?")
+                it.chatNpc("Experience, my friend, experience. Once you've used the spell enough times in the arena, you'll be able to use them in the rest of Gielinor.")
+                it.chatPlayer("Good stuff.")
+                it.chatNpc("Not so good for the citizens; they won't stand a chance.")
+                it.chatPlayer("How am I doing so far?")
+                GodSpellTraining.SPELLS.forEach { training -> it.chatNpc(GodSpellTraining.progress(it.player, training)) }
+            }
+            3 -> MageArenaIIDialogue.challenge(it)
+        }
+        return
+    }
     it.chatPlayer("Hello, Kolodion.")
     it.chatNpc(
         "Well done, young adventurer;",
@@ -80,7 +101,10 @@ suspend fun yesIndeedy(it: QueueTask) {
 }
 
 suspend fun okayLetsFight(it: QueueTask) {
-    val playerSpawnTile = Tile(x = 3104, z = 3933)
+    if (it.player.skills.getMaxLevel(Skills.MAGIC) < 60) {
+        it.chatNpc("Hah! A wizard of your level? Don't be absurd.")
+        return
+    }
     it.chatPlayer("Okay, let's fight.")
     it.chatNpc("I must first check that you are up to scratch.")
     it.chatPlayer("You don't need to worry about that.")
@@ -90,7 +114,7 @@ suspend fun okayLetsFight(it: QueueTask) {
         "you must prove yourself against me.",
     )
     // The player is teleported to the Mage Arena to fight against Kolodion
-    it.player.teleport(playerSpawnTile, TeleportType.MODERN)
+    MageArena.start(it.player)
     // (End of dialogue)
 }
 

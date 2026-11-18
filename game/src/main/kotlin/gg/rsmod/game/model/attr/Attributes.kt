@@ -302,6 +302,20 @@ val GROUNDITEM_PICKUP_TRANSACTION = AttributeKey<WeakReference<ItemTransaction>>
 val INTERACTING_OBJ_ATTR = AttributeKey<WeakReference<out GameObject>>()
 
 /**
+ * Per-player loc aliases (16-11, CoX leader 'Reload'): the world keeps one object, but this player's client was sent another loc id on
+ * that tile (LocAddChange). Key = [locAliasKey] (the world object's tile + id), value = the id the client shows. A click on the shown id
+ * finds the world object (OpLoc handlers) and [GameObject.getTransform] answers the shown id, so its `on_obj_option` handlers run. Used
+ * instead of a cache multiloc because the 667 loc type stores multiloc variants as u16 (our imported locs are >= 65536).
+ */
+val LOC_ALIAS_ATTR = AttributeKey<MutableMap<Long, Int>>()
+
+fun locAliasKey(tile: Tile, id: Int): Long =
+    ((tile.height.toLong() and 3) shl 54) or ((tile.x.toLong() and 0x7FFF) shl 39) or ((tile.z.toLong() and 0x7FFF) shl 24) or (id.toLong() and 0xFFFFFF)
+
+/** The id [player]'s client shows for [obj] when a [LOC_ALIAS_ATTR] entry exists, else null. */
+fun locAliasOf(player: Player, obj: GameObject): Int? = player.attr[LOC_ALIAS_ATTR]?.get(locAliasKey(obj.tile, obj.id))
+
+/**
  * The [Npc] that was last clicked on.
  */
 val INTERACTING_NPC_ATTR = AttributeKey<WeakReference<Npc>>()

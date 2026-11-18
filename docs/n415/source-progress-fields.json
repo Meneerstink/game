@@ -1,0 +1,58 @@
+{
+  "varPlayers": {
+    "MAGEARENA": 267,
+    "SARAMAGE": 268,
+    "GUTHMAGE": 269,
+    "ZAMOMAGE": 270,
+    "MAGEARENA_CHARGE": 272,
+    "MA2_PERM_2": 1675
+  },
+  "ma2Varbits2686": [
+    {
+      "sourceVarbit": 6062,
+      "baseVarp": 1675,
+      "leastBit": 0,
+      "mostBit": 7
+    },
+    {
+      "sourceVarbit": 6063,
+      "baseVarp": 1675,
+      "leastBit": 8,
+      "mostBit": 8
+    },
+    {
+      "sourceVarbit": 6064,
+      "baseVarp": 1675,
+      "leastBit": 9,
+      "mostBit": 9
+    },
+    {
+      "sourceVarbit": 6065,
+      "baseVarp": 1675,
+      "leastBit": 10,
+      "mostBit": 10
+    },
+    {
+      "sourceVarbit": 6066,
+      "baseVarp": 1675,
+      "leastBit": 8,
+      "mostBit": 10
+    },
+    {
+      "sourceVarbit": 6067,
+      "baseVarp": 1675,
+      "leastBit": 11,
+      "mostBit": 13
+    }
+  ],
+  "gamevalSources": [
+    {
+      "url": "https://github.com/runelite/runelite/blob/master/runelite-api/src/main/java/net/runelite/api/gameval/VarPlayerID.java",
+      "sha256": "bd4aba401d4bfa2473c72c6bf728165f6de1bb925811d239294696164035a549"
+    },
+    {
+      "url": "https://github.com/runelite/runelite/blob/master/runelite-api/src/main/java/net/runelite/api/gameval/VarbitID.java",
+      "sha256": "148899f162c9e2b8cff13f100744cf5bdb005321f3ae9849c19860e090b448be"
+    }
+  ]
+}

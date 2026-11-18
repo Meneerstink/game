@@ -261,6 +261,24 @@ object StoreCatalogue {
 
     val ENTRIES: List<Entry> by lazy { build() }
 
+    /**
+     * Owner besluit 8a (15-11 14:1x, like ToA E1): the Chambers of Xeric drops that were sold here leave the store once the raid's drop
+     * is live (CoxRelease.OPEN); whoever bought one keeps it: Ancestral hat/top/bottom and the Dragon hunter crossbow. The Twisted
+     * ancestral colour kit STAYS: OSRS gives it only for a Challenge Mode raid (Wiki: 'obtained upon completing a Chambers of Xeric
+     * raid in Challenge Mode', 1/75) and Challenge Mode comes later (besluit 2a) - it leaves with the CM release. No other CoX unique
+     * was ever sold (dossier COX.txt 02:2x).
+     */
+    val COX_DROPS = setOf(Items.ANCESTRAL_HAT, Items.ANCESTRAL_ROBE_TOP, Items.ANCESTRAL_ROBE_BOTTOM, Items.DRAGON_HUNTER_CROSSBOW)
+
+    /**
+     * Owner besluit E1 (06-11 19:1x; N622, carried out 16-11 with owner answer 2A): Osmumten's fang, the three Masori pieces and the
+     * Thread of Elidinis left the stores - the Tombs of Amascut drop them (live since 14-11); whoever bought one keeps it. The ToA kits
+     * (Masori crafting kit, Menaphite ornament kit) stay: besluit E4 gives them as raid rewards AND they stay store items.
+     */
+    val TOA_DROPS = setOf(Items.OSMUMTENS_FANG, Items.MASORI_MASK, Items.MASORI_BODY, Items.MASORI_CHAPS, Items.THREAD_OF_ELIDINIS)
+
+    private fun coxDropsOut(): Set<Int> = if (gg.rsmod.plugins.content.activity.cox.CoxRelease.OPEN) COX_DROPS else emptySet()
+
     /** Donator categories that are PvM gear too (owner 2026-09-29 list: Torture, Anguish, Ancestral, Masori, DHCB, Fang, Blowpipe...). */
     val DONATOR_PVM_GEAR = setOf("Jewellery", "Boots", "Armour", "Weapons")
 
@@ -328,10 +346,12 @@ object StoreCatalogue {
             .forEach { list += itemEntry(d, it, 500, "Jewellery", tier = Tier.ELITE) }
         listOf(Items.ETERNAL_BOOTS, Items.PEGASIAN_BOOTS, Items.PRIMORDIAL_BOOTS)
             .forEach { list += itemEntry(d, it, 500, "Boots", tier = Tier.ELITE) }
-        listOf(Items.ANCESTRAL_HAT, Items.ANCESTRAL_ROBE_TOP, Items.ANCESTRAL_ROBE_BOTTOM, Items.MASORI_MASK, Items.MASORI_BODY, Items.MASORI_CHAPS)
+        listOf(Items.ANCESTRAL_HAT, Items.ANCESTRAL_ROBE_TOP, Items.ANCESTRAL_ROBE_BOTTOM)
+            .filterNot { it in coxDropsOut() }
             .forEach { list += itemEntry(d, it, 750, "Armour", tier = Tier.ELITE) }
         // Charged weapons are sold empty/uncharged: the player supplies scales, darts and charges (no free consumables with gear).
-        listOf(Items.DRAGON_HUNTER_CROSSBOW, Items.DRAGON_HUNTER_LANCE, Items.OSMUMTENS_FANG, Items.TOXIC_BLOWPIPE_EMPTY, Items.UNCHARGED_TOXIC_TRIDENT)
+        listOf(Items.DRAGON_HUNTER_CROSSBOW, Items.DRAGON_HUNTER_LANCE, Items.TOXIC_BLOWPIPE_EMPTY, Items.UNCHARGED_TOXIC_TRIDENT)
+            .filterNot { it in coxDropsOut() }
             .forEach { list += itemEntry(d, it, 1_000, "Weapons", tier = Tier.PRESTIGE) }
         // 3rd Age (OsrsItemImportTool; 23422/23424/23426 have no generated constant yet: cloak, druidic robe bottoms, plateskirt).
         listOf(Items.THIRDAGE_AXE, Items.THIRDAGE_BOW, Items.THIRDAGE_LONGSWORD, Items.THIRDAGE_PICKAXE, Items.THIRDAGE_WAND, 23422, 23424, 23426)
@@ -341,8 +361,7 @@ object StoreCatalogue {
         listOf(Items.ELDER_CHAOS_ROBES_ORNAMENT_KIT, Items.DAGONHAI_ROBES_ORNAMENT_KIT, Items.HEAVY_BALLISTA_ORNAMENT_KIT)
             .forEach { list += kitEntry(m, it, "Deadman kits", price = 750, tradeable = TradeablePolicy.UNTRADEABLE) }
         // Owner 2026-10-10: Void and elite void are earned only through Pest Control (Void Knights' rewards), never in a mansion store.
-        listOf(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_GUTHIX_CAPE, Items.IMBUED_ZAMORAK_CAPE)
-            .forEach { list += itemEntry(m, it, 400, "Imbued capes") }
+        // N415: the three imbued god capes left the Deadman Shop - Mage Arena II earns them (owner question V3, advice chosen).
         // Imbues (owner page 2026-09-29): the existing base ring + Deadman Points; the normal ring stays a PvM/GE product.
         listOf(Items.RING_OF_THE_GODS to Items.RING_OF_THE_GODS_I, Items.TYRANNICAL_RING to Items.TYRANNICAL_RING_I,
             Items.TREASONOUS_RING to Items.TREASONOUS_RING_I, Items.RING_OF_SUFFERING to Items.RING_OF_SUFFERING_I,
@@ -351,7 +370,7 @@ object StoreCatalogue {
         list += itemEntry(m, Items.RUNE_POUCH, 500, "Utility")
         // Owner 2026-10-17 (N101): the Trinket of fairies left the shop too (chest and breach loot only).
         // The Divine rune pouch is made by the player: Rune pouch + Thread of Elidinis + needle (rune_pouch.plugin.kts).
-        list += itemEntry(m, Items.THREAD_OF_ELIDINIS, 500, "Utility")
+        // N622 (besluit E1): the Thread of Elidinis left the shop - Tombs of Amascut drop (TOA_DROPS).
         list += upgradeEntry(m, Items.DRAGON_DEFENDER, Items.DRAGON_DEFENDER_T, 400, "Defenders")
         list += upgradeEntry(m, Items.RUNE_DEFENDER, Items.RUNE_DEFENDER_T, 250, "Defenders")
         // Owner 2026-10-17 (N101): the 17 Ancient Warriors pieces, Elder chaos, Heavy ballista and the Voidwaker parts left the shop - they
@@ -423,9 +442,12 @@ object StoreCatalogue {
         list += itemEntry(l, 23570, 25_000, "Clue cosmetics") // Ring of 3rd Age
 
         // Max cape look unlocks (owner 2026-09-19): earnable with Loyalty Points and buyable with Donator Points.
-        gg.rsmod.plugins.content.items.osrs.MaxCapes.VARIANTS.forEach { variant ->
+        // N415 owner 2026-11-14 20:0x (3A): with Mage Arena II live the imbued god capes are earnable, so their max cape looks leave the
+        // Donator store; looks already bought stay unlocked (stored per player), the Loyalty offer is unchanged.
+        val imbuedGodCapes = setOf(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_ZAMORAK_CAPE, Items.IMBUED_GUTHIX_CAPE)
+        gg.rsmod.plugins.content.items.osrs.MaxCapes.STORE_LOOK_VARIANTS.forEach { variant ->
             list += lookUnlockEntry(l, variant, 20_000)
-            list += lookUnlockEntry(d, variant, TIER_PRICE.getValue(Tier.PREMIUM))
+            if (variant.component !in imbuedGodCapes) list += lookUnlockEntry(d, variant, TIER_PRICE.getValue(Tier.PREMIUM))
         }
         // OSRS pets (owner 2026-09-30): tier 1 Donator, tier 2 Deadman, tier 3 Loyalty; boss-drop pets are never sold (StorePets).
         list += StorePets.entries()

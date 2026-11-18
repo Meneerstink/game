@@ -205,6 +205,9 @@ object QuestTab {
                 if (isOpen) reqs.forEach { r -> out += QuestRow(KIND_SUB, r, if (done) "q_ck7" else "q_dot5", "<col=b3a78f>$r</col>", null, null) }
             }
         }
+        val ma2 = gg.rsmod.plugins.content.areas.wilderness.MageArenaII
+        out += QuestRow(KIND_QUEST, "Mage Arena I", if (gg.rsmod.plugins.content.areas.wilderness.MageArena.completed(player)) "q_ck" else "q_dot", "Mage Arena I", null, null)
+        out += QuestRow(KIND_QUEST, "Mage Arena II", if (ma2.completed(player)) "q_ck" else "q_dot", "Mage Arena II", null, null)
         return out
     }
 

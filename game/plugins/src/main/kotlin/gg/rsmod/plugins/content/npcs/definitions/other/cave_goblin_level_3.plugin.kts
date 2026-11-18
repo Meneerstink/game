@@ -26,7 +26,7 @@ val goblin =
             obj(Items.TINDERBOX_590, slots = 4)
             obj(Items.BRASS_NECKLACE, slots = 1)
 
-            nothing(slots = 16)
+            nothing(slots = 6) // N614 (15-11): OSRS Wiki Cave goblin (monster) Nothing 6/50; 16 made the table fill 60 of 50
         }
         table("Charms") {
             total(1000)

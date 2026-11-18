@@ -73,7 +73,7 @@ object TrouverLockables {
             locked(Items.VOID_RANGER_HELM, Items.VOID_RANGER_HELM_L, Items.VOID_RANGER_HELM_L_BROKEN, Items.VOID_RANGER_HELM_L_MANGLED),
             locked(Items.VOID_MELEE_HELM, Items.VOID_MELEE_HELM_L, Items.VOID_MELEE_HELM_L_BROKEN, Items.VOID_MELEE_HELM_L_MANGLED),
             locked(Items.INFERNAL_MAX_CAPE, Items.INFERNAL_MAX_CAPE_L, Items.INFERNAL_MAX_CAPE_L_BROKEN, Items.INFERNAL_MAX_CAPE_L_MANGLED),
-        )
+        ) + gg.rsmod.plugins.content.items.osrs.AncientCape.lockables()
 
     /** The 667 duplicates of a lockable item; each locks as (and unlocks into) the main item. */
     val ALIASES: Map<Int, Int> =

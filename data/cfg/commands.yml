@@ -136,6 +136,11 @@
   usage: "::camangle <pitch> <yaw>"
   description: "Dev tool: force your camera angle."
   example: "::camangle 300 0"
+- name: camat
+  rank: admin
+  usage: "::camat [@x,z] <dx> <dz> <height> <ldx> <ldz> <lheight>"
+  description: "Dev tool: fixed camera relative to your tile (or the @x,z anchor), looking at an offset point (graphics photo points)."
+  example: "::camat 0 -10 2600 0 0 0"
 - name: camlookat
   rank: admin
   usage: "::camlookat <x> <z> <height> <step> <speed>"
@@ -974,7 +979,7 @@
   example: "::deadmantasks"
 - name: dvzoom
   rank: admin
-  usage: "::dvzoom <thumb base> <thumb per tile> <head base> <head per tile>"
+  usage: "::dvzoom <thumb base> <thumb per tile> <head base> <head per tile> [cox zoom] [cox xan] [cox yan]"
   description: "Tune the camera distance of the Drop Viewer's npc models (the client fits them to their box)."
   example: "::dvzoom 1500 1100 1500 1100"
 - name: uisearch
@@ -1400,11 +1405,56 @@
   usage: "::gear_maxmage"
   description: "Test set: max magic gear (counterpart of gear_max / gear_maxrange). Worn gear goes to the bank. Test bots follow it with bot_buff.sh."
   example: "::gear_maxmage"
+- name: gear_magearena
+  rank: owner
+  usage: "::gear_magearena"
+  description: "Test set: max god-spell magic for Mage Arena (Ancestral, charged Toxic staff of the dead, Elidinis' ward (f), occult, tormented). Worn gear goes to the bank."
+  example: "::gear_magearena"
 - name: toastart
   rank: admin
   usage: "::toastart [entry|normal|expert]"
   description: "Test server only: put yourself in the ToA lobby and start a solo raid in that mode."
   example: "::toastart normal"
+- name: coxstart
+  rank: admin
+  usage: "::coxstart [layout 0-26] [seed] | ::coxstart find <ROOM> [version 0-2]"
+  description: "Test server / check accounts only: start a solo Chambers of Xeric raid with that OSRS layout code (random without one)."
+  example: "::coxstart 6 42"
+- name: coxroom
+  rank: admin
+  usage: "::coxroom <floor 1|2> <room index> | ::coxroom olm | ::coxroom olmgate"
+  description: "Test server / check accounts only: teleport to the middle of a room of your Chambers of Xeric raid."
+  example: "::coxroom 1 3"
+- name: coxbegin
+  rank: admin
+  usage: "::coxbegin"
+  description: "Test server / check accounts only: start your Chambers of Xeric raid (opens the first room's passage) until the party tab is built."
+  example: "::coxbegin"
+- name: coxpoints
+  rank: admin
+  usage: "::coxpoints [n]"
+  description: "Test server / check accounts only: add n Chambers of Xeric points to yourself and show your/total points."
+  example: "::coxpoints 1000"
+- name: coxloot
+  rank: admin
+  usage: "::coxloot"
+  description: "Test server / check accounts only: complete your Chambers of Xeric raid now (Ancient chest loot by points) and open the rewards."
+  example: "::coxloot"
+- name: coxleave
+  rank: admin
+  usage: "::coxleave"
+  description: "Test server / check accounts only: leave the Chambers of Xeric raid to the entrance steps."
+  example: "::coxleave"
+- name: coxclear
+  rank: admin
+  usage: "::coxclear"
+  description: "Test server / check accounts only: kill every monster of the Chambers of Xeric room you stand in."
+  example: "::coxclear"
+- name: coxrooms
+  rank: admin
+  usage: "::coxrooms"
+  description: "Test server / check accounts only: list the rooms of your Chambers of Xeric raid with their encounter state."
+  example: "::coxrooms"
 - name: toajoin
   rank: admin
   usage: "::toajoin <leader>"

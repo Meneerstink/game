@@ -291001,7 +291001,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: 5
+    weapon_type: 28
     attack_speed: 4
     attack_stab: 58
     attack_slash: -2
@@ -291034,7 +291034,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: 5
+    weapon_type: 28
     attack_speed: 4
     attack_stab: 58
     attack_slash: -2
@@ -291068,7 +291068,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: 5
+    weapon_type: 28
     attack_speed: 4
     attack_stab: 58
     attack_slash: -2
@@ -291102,7 +291102,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: 5
+    weapon_type: 28
     attack_speed: 4
     attack_stab: 58
     attack_slash: -2
@@ -291136,7 +291136,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: 5
+    weapon_type: 28
     attack_speed: 4
     attack_stab: 58
     attack_slash: -2
@@ -296401,7 +296401,74 @@
     equip_slot: 1
     equip_type: -1
     appearance_id: 6938
+- id: 24742
+  name: "Justiciar's hand"
+  examine: "The hand of a Saradominist justiciar."
+  tradeable: false
+  weight: 0.35
+  equipment: null
+- id: 24743
+  name: "Ent's roots"
+  examine: "The roots of a Guthixian Ent."
+  tradeable: false
+  weight: 0.35
+  equipment: null
+- id: 24744
+  name: "Demon's heart"
+  examine: "The heart of a Zamorakian Demon."
+  tradeable: false
+  weight: 0.35
+  equipment: null
+- id: 24745
+  name: "Enchanted symbol"
+  examine: "An enchanted symbol used to locate magical beings in the Wilderness."
+  tradeable: false
+  weight: 0.004
+  equipment: null
+- id: 24746
+  name: "Imbued ancient max cape"
+  examine: "The cape worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6778
     remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 2.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24747
+  name: "Imbued ancient max hood"
+  examine: "The hood worn by only the most experienced players."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6779
+    remove_head: true
     remove_beard: false
     remove_arms: false
     weapon_type: -1
@@ -296440,6 +296507,25 @@
     equip_slot: 0
     equip_type: -1
     appearance_id: 6939
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24748
+  name: "Imbued ancient max cape (broken)"
+  examine: "The cape worn by only the most experienced players. This one is broken."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24749
+  name: "Imbued ancient cape"
+  examine: "A cape from an almighty god, imbued with great power."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6780
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -296454,6 +296540,12 @@
     defence_slash: 0
     defence_crush: 0
     defence_magic: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 15
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
@@ -296635,6 +296727,27 @@
     equip_slot: 10
     equip_type: -1
     appearance_id: 6944
+    magic_damage: 2.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24750
+  name: "Imbued ancient cape (broken)"
+  examine: "A cape from an almighty god, imbued with great power."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24751
+  name: "Imbued ancient cape (l)"
+  examine: "A cape from an almighty god, imbued with great power."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6782
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -296805,6 +296918,58 @@
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 2.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24752
+  name: "Ancient fabric"
+  examine: "A shadowy material that can be used to alter an imbued god cape."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24753
+  name: "Imbued ancient cape (l) (broken)"
+  examine: "A cape from an almighty god, imbued with great power."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24754
+  name: "Imbued ancient cape (l) (mangled)"
+  examine: "A cape from an almighty god, imbued with great power."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24936
+  name: "Elder maul"
+  examine: "A maul crafted from the component parts of Tekton."
+  tradeable: true
+  weight: 5.443
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6787
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 10
+    attack_speed: 6
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 135
     attack_magic: 0
     attack_ranged: 0
     defence_stab: 0
@@ -296823,6 +296988,17 @@
     absorb_ranged: 0
 - id: 25283
   name: "Cyclops head"
+    melee_strength: 147
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2504
+    skill_reqs: [{'skill': 0, 'level': 75}, {'skill': 2, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24937
+  name: "Elder maul"
   examine: "Swamp this note at any bank for the equivalent item"
   tradeable: true
   weight: 0.0
@@ -296862,6 +297038,42 @@
     absorb_ranged: 0
 - id: 25285
   name: "Nunchaku"
+- id: 24938
+  name: "Dinh's bulwark"
+  examine: "Is it... looking at me?"
+  tradeable: true
+  weight: 30.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6788
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 10
+    attack_speed: 5
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 124
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 106
+    defence_slash: 109
+    defence_crush: 109
+    defence_magic: -10
+    defence_ranged: 148
+    summoning: 0
+    melee_strength: 38
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2504
+    skill_reqs: [{'skill': 0, 'level': 75}, {'skill': 1, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24939
+  name: "Dinh's bulwark"
   examine: "Swamp this note at any bank for the equivalent item"
   tradeable: true
   weight: 0.0
@@ -299065,6 +299277,915 @@
     equip_slot: 3
     equip_type: 5
     appearance_id: 7003
+- id: 24755
+  name: "Kindling"
+  examine: "It feels weak, but it might be okay for burning."
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 24756
+  name: "Empty gourd vial"
+  examine: "An empty hollowed out fruit. It could be used as a makeshift vial."
+  tradeable: true
+  weight: 0.01
+  equipment: null
+- id: 24757
+  name: "Water-filled gourd vial"
+  examine: "A hollowed out fruit filled with water."
+  tradeable: true
+  weight: 0.035
+  equipment: null
+- id: 24758
+  name: "Cave worms"
+  examine: "For use with a fishing rod."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24759
+  name: "Burnt fish"
+  examine: "I should not try eating this."
+  tradeable: false
+  weight: 0.35
+  equipment: null
+- id: 24760
+  name: "Raw pysk fish (0)"
+  examine: "I should try cooking this."
+  tradeable: true
+  weight: 0.45
+  equipment: null
+- id: 24761
+  name: "Pysk fish (0)"
+  examine: "I should try eating this."
+  tradeable: true
+  weight: 0.4
+  equipment: null
+- id: 24762
+  name: "Raw suphi fish (1)"
+  examine: "I should try cooking this."
+  tradeable: true
+  weight: 0.45
+  equipment: null
+- id: 24763
+  name: "Suphi fish (1)"
+  examine: "I should try eating this."
+  tradeable: true
+  weight: 0.4
+  equipment: null
+- id: 24764
+  name: "Raw leckish fish (2)"
+  examine: "I should try cooking this."
+  tradeable: true
+  weight: 0.45
+  equipment: null
+- id: 24765
+  name: "Leckish fish (2)"
+  examine: "I should try eating this."
+  tradeable: true
+  weight: 0.4
+  equipment: null
+- id: 24766
+  name: "Raw brawk fish (3)"
+  examine: "I should try cooking this."
+  tradeable: true
+  weight: 0.45
+  equipment: null
+- id: 24767
+  name: "Brawk fish (3)"
+  examine: "I should try eating this."
+  tradeable: true
+  weight: 0.4
+  equipment: null
+- id: 24768
+  name: "Raw mycil fish (4)"
+  examine: "I should try cooking this."
+  tradeable: true
+  weight: 0.45
+  equipment: null
+- id: 24769
+  name: "Mycil fish (4)"
+  examine: "I should try eating this."
+  tradeable: true
+  weight: 0.4
+  equipment: null
+- id: 24770
+  name: "Raw roqed fish (5)"
+  examine: "I should try cooking this."
+  tradeable: true
+  weight: 0.45
+  equipment: null
+- id: 24771
+  name: "Roqed fish (5)"
+  examine: "I should try eating this."
+  tradeable: true
+  weight: 0.4
+  equipment: null
+- id: 24772
+  name: "Raw kyren fish (6)"
+  examine: "I should try cooking this."
+  tradeable: true
+  weight: 0.45
+  equipment: null
+- id: 24773
+  name: "Kyren fish (6)"
+  examine: "I should try eating this."
+  tradeable: true
+  weight: 0.4
+  equipment: null
+- id: 24774
+  name: "Burnt bat"
+  examine: "Well done, you made it even less appetising."
+  tradeable: false
+  weight: 0.35
+  equipment: null
+- id: 24775
+  name: "Raw guanic bat (0)"
+  examine: "Looks like it might taste like chicken, if the chicken were dead for a week."
+  tradeable: true
+  weight: 0.35
+  equipment: null
+- id: 24776
+  name: "Guanic bat (0)"
+  examine: "Probably won't kill you."
+  tradeable: true
+  weight: 0.3
+  equipment: null
+- id: 24777
+  name: "Raw prael bat (1)"
+  examine: "Looks like it might taste like chicken, if the chicken were dead for a week."
+  tradeable: true
+  weight: 0.35
+  equipment: null
+- id: 24778
+  name: "Prael bat (1)"
+  examine: "Probably won't kill you."
+  tradeable: true
+  weight: 0.3
+  equipment: null
+- id: 24779
+  name: "Raw giral bat (2)"
+  examine: "Looks like it might taste like chicken, if the chicken were dead for a week."
+  tradeable: true
+  weight: 0.35
+  equipment: null
+- id: 24780
+  name: "Giral bat (2)"
+  examine: "Probably won't kill you."
+  tradeable: true
+  weight: 0.3
+  equipment: null
+- id: 24781
+  name: "Raw phluxia bat (3)"
+  examine: "Looks like it might taste like chicken, if the chicken were dead for a week."
+  tradeable: true
+  weight: 0.35
+  equipment: null
+- id: 24782
+  name: "Phluxia bat (3)"
+  examine: "Probably won't kill you."
+  tradeable: true
+  weight: 0.3
+  equipment: null
+- id: 24783
+  name: "Raw kryket bat (4)"
+  examine: "Looks like it might taste like chicken, if the chicken were dead for a week."
+  tradeable: true
+  weight: 0.35
+  equipment: null
+- id: 24784
+  name: "Kryket bat (4)"
+  examine: "Probably won't kill you."
+  tradeable: true
+  weight: 0.3
+  equipment: null
+- id: 24785
+  name: "Raw murng bat (5)"
+  examine: "Looks like it might taste like chicken, if the chicken were dead for a week."
+  tradeable: true
+  weight: 0.35
+  equipment: null
+- id: 24786
+  name: "Murng bat (5)"
+  examine: "Probably won't kill you."
+  tradeable: true
+  weight: 0.3
+  equipment: null
+- id: 24787
+  name: "Raw psykk bat (6)"
+  examine: "Looks like it might taste like chicken, if the chicken were dead for a week."
+  tradeable: true
+  weight: 0.35
+  equipment: null
+- id: 24788
+  name: "Psykk bat (6)"
+  examine: "Probably won't kill you."
+  tradeable: true
+  weight: 0.3
+  equipment: null
+- id: 24789
+  name: "Keystone crystal"
+  examine: "A power emanates from the crystal."
+  tradeable: true
+  weight: 0.907
+  equipment: null
+- id: 24790
+  name: "Cavern grubs"
+  examine: "Freshly hatched. They smell utterly revolting, but they're quite juicy."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24791
+  name: "Creature keeper's journal"
+  examine: "Journal of a deceased creature keeper."
+  tradeable: false
+  weight: 0.28
+  equipment: null
+- id: 24792
+  name: "Nistirio's manifesto"
+  examine: "The ancient writings of a crazed mage."
+  tradeable: false
+  weight: 0.28
+  equipment: null
+- id: 24793
+  name: "Tekton's journal"
+  examine: "Scrawled jottings of a diminished mind."
+  tradeable: false
+  weight: 0.28
+  equipment: null
+- id: 24794
+  name: "Medivaemia blossom"
+  examine: "The flower of the Medivaemia root."
+  tradeable: true
+  weight: 0.015
+  equipment: null
+- id: 24795
+  name: "Transdimensional notes"
+  examine: "Ancient notes on transdimensional travel."
+  tradeable: false
+  weight: 0.11
+  equipment: null
+- id: 24796
+  name: "Vanguard judgement"
+  examine: "The Judgement of the Vanguard."
+  tradeable: false
+  weight: 0.11
+  equipment: null
+- id: 24797
+  name: "Houndmaster's diary"
+  examine: "Confessions of a troubled soul."
+  tradeable: false
+  weight: 0.11
+  equipment: null
+- id: 24798
+  name: "Dark journal"
+  examine: "Looks like it's been locked away for a long time in a damp cave."
+  tradeable: false
+  weight: 0.19
+  equipment: null
+- id: 24799
+  name: "Grimy noxifer"
+  examine: "Eww, it's grimy."
+  tradeable: true
+  weight: 0.007
+  equipment: null
+- id: 24800
+  name: "Noxifer"
+  examine: "Lovely, it's been cleaned."
+  tradeable: true
+  weight: 0.007
+  equipment: null
+- id: 24805
+  name: "Noxifer seed"
+  examine: "Noxifer in seed form. Hopefully there's somewhere to plant this."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24806
+  name: "Grimy golpar"
+  examine: "Eww, it's grimy."
+  tradeable: true
+  weight: 0.007
+  equipment: null
+- id: 24807
+  name: "Golpar"
+  examine: "Lovely, it's been cleaned."
+  tradeable: true
+  weight: 0.007
+  equipment: null
+- id: 24812
+  name: "Golpar seed"
+  examine: "Golpar in seed form. Hopefully there's somewhere to plant this."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24813
+  name: "Grimy buchu leaf"
+  examine: "Eww, it's grimy."
+  tradeable: true
+  weight: 0.007
+  equipment: null
+- id: 24814
+  name: "Buchu leaf"
+  examine: "Lovely, it's been cleaned."
+  tradeable: true
+  weight: 0.007
+  equipment: null
+- id: 24819
+  name: "Buchu seed"
+  examine: "Buchu leaf in seed form. Hopefully there's somewhere to plant this."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24820
+  name: "Stinkhorn mushroom"
+  examine: "Whatever potion I make out of this, let's hope it tastes better than this smells."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24821
+  name: "Endarkened juice"
+  examine: "A dark magic has imbued this juice."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24822
+  name: "Cicely"
+  examine: "This flower feels very cold to the touch."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24823
+  name: "Elder (-)(1)"
+  examine: "The potion blends the fury and bravery of Xeric's elder warriors. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24824
+  name: "Elder (-)(2)"
+  examine: "The potion blends the fury and bravery of Xeric's elder warriors. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24825
+  name: "Elder (-)(3)"
+  examine: "The potion blends the fury and bravery of Xeric's elder warriors. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24826
+  name: "Elder (-)(4)"
+  examine: "The potion blends the fury and bravery of Xeric's elder warriors. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24827
+  name: "Elder potion (1)"
+  examine: "The potion blends the fury and bravery of Xeric's elder warriors. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24828
+  name: "Elder potion (2)"
+  examine: "The potion blends the fury and bravery of Xeric's elder warriors. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24829
+  name: "Elder potion (3)"
+  examine: "The potion blends the fury and bravery of Xeric's elder warriors. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24830
+  name: "Elder potion (4)"
+  examine: "The potion blends the fury and bravery of Xeric's elder warriors. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24831
+  name: "Elder (+)(1)"
+  examine: "The potion blends the fury and bravery of Xeric's elder warriors. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24832
+  name: "Elder (+)(2)"
+  examine: "The potion blends the fury and bravery of Xeric's elder warriors. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24833
+  name: "Elder (+)(3)"
+  examine: "The potion blends the fury and bravery of Xeric's elder warriors. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24834
+  name: "Elder (+)(4)"
+  examine: "The potion blends the fury and bravery of Xeric's elder warriors. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24835
+  name: "Twisted (-)(1)"
+  examine: "The potion blends the dexterity and devastation of Xeric's twisted archers. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24836
+  name: "Twisted (-)(2)"
+  examine: "The potion blends the dexterity and devastation of Xeric's twisted archers. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24837
+  name: "Twisted (-)(3)"
+  examine: "The potion blends the dexterity and devastation of Xeric's twisted archers. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24838
+  name: "Twisted (-)(4)"
+  examine: "The potion blends the dexterity and devastation of Xeric's twisted archers. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24839
+  name: "Twisted potion (1)"
+  examine: "The potion blends the dexterity and devastation of Xeric's twisted archers. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24840
+  name: "Twisted potion (2)"
+  examine: "The potion blends the dexterity and devastation of Xeric's twisted archers. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24841
+  name: "Twisted potion (3)"
+  examine: "The potion blends the dexterity and devastation of Xeric's twisted archers. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24842
+  name: "Twisted potion (4)"
+  examine: "The potion blends the dexterity and devastation of Xeric's twisted archers. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24843
+  name: "Twisted (+)(1)"
+  examine: "The potion blends the dexterity and devastation of Xeric's twisted archers. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24844
+  name: "Twisted (+)(2)"
+  examine: "The potion blends the dexterity and devastation of Xeric's twisted archers. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24845
+  name: "Twisted (+)(3)"
+  examine: "The potion blends the dexterity and devastation of Xeric's twisted archers. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24846
+  name: "Twisted (+)(4)"
+  examine: "The potion blends the dexterity and devastation of Xeric's twisted archers. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24847
+  name: "Kodai (-)(1)"
+  examine: "The potion blends the cruelty and darkness of Xeric's kodai wizards. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24848
+  name: "Kodai (-)(2)"
+  examine: "The potion blends the cruelty and darkness of Xeric's kodai wizards. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24849
+  name: "Kodai (-)(3)"
+  examine: "The potion blends the cruelty and darkness of Xeric's kodai wizards. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24850
+  name: "Kodai (-)(4)"
+  examine: "The potion blends the cruelty and darkness of Xeric's kodai wizards. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24851
+  name: "Kodai potion (1)"
+  examine: "The potion blends the cruelty and darkness of Xeric's kodai wizards. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24852
+  name: "Kodai potion (2)"
+  examine: "The potion blends the cruelty and darkness of Xeric's kodai wizards. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24853
+  name: "Kodai potion (3)"
+  examine: "The potion blends the cruelty and darkness of Xeric's kodai wizards. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24854
+  name: "Kodai potion (4)"
+  examine: "The potion blends the cruelty and darkness of Xeric's kodai wizards. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24855
+  name: "Kodai (+)(1)"
+  examine: "The potion blends the cruelty and darkness of Xeric's kodai wizards. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24856
+  name: "Kodai (+)(2)"
+  examine: "The potion blends the cruelty and darkness of Xeric's kodai wizards. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24857
+  name: "Kodai (+)(3)"
+  examine: "The potion blends the cruelty and darkness of Xeric's kodai wizards. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24858
+  name: "Kodai (+)(4)"
+  examine: "The potion blends the cruelty and darkness of Xeric's kodai wizards. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24859
+  name: "Revitalisation (-)(1)"
+  examine: "This potion will aid stat recovery. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24860
+  name: "Revitalisation (-)(2)"
+  examine: "This potion will aid stat recovery. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24861
+  name: "Revitalisation (-)(3)"
+  examine: "This potion will aid stat recovery. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24862
+  name: "Revitalisation (-)(4)"
+  examine: "This potion will aid stat recovery. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24863
+  name: "Revitalisation potion (1)"
+  examine: "This potion will aid stat recovery. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24864
+  name: "Revitalisation potion (2)"
+  examine: "This potion will aid stat recovery. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24865
+  name: "Revitalisation potion (3)"
+  examine: "This potion will aid stat recovery. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24866
+  name: "Revitalisation potion (4)"
+  examine: "This potion will aid stat recovery. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24867
+  name: "Revitalisation (+)(1)"
+  examine: "This potion will aid stat recovery. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24868
+  name: "Revitalisation (+)(2)"
+  examine: "This potion will aid stat recovery. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24869
+  name: "Revitalisation (+)(3)"
+  examine: "This potion will aid stat recovery. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24870
+  name: "Revitalisation (+)(4)"
+  examine: "This potion will aid stat recovery. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24871
+  name: "Prayer enhance (-)(1)"
+  examine: "This potion imbues one with a prayer restore effect temporarily. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24872
+  name: "Prayer enhance (-)(2)"
+  examine: "This potion imbues one with a prayer restore effect temporarily. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24873
+  name: "Prayer enhance (-)(3)"
+  examine: "This potion imbues one with a prayer restore effect temporarily. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24874
+  name: "Prayer enhance (-)(4)"
+  examine: "This potion imbues one with a prayer restore effect temporarily. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24875
+  name: "Prayer enhance (1)"
+  examine: "This potion imbues one with a prayer restore effect temporarily. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24876
+  name: "Prayer enhance (2)"
+  examine: "This potion imbues one with a prayer restore effect temporarily. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24877
+  name: "Prayer enhance (3)"
+  examine: "This potion imbues one with a prayer restore effect temporarily. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24878
+  name: "Prayer enhance (4)"
+  examine: "This potion imbues one with a prayer restore effect temporarily. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24879
+  name: "Prayer enhance (+)(1)"
+  examine: "This potion imbues one with a prayer restore effect temporarily. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24880
+  name: "Prayer enhance (+)(2)"
+  examine: "This potion imbues one with a prayer restore effect temporarily. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24881
+  name: "Prayer enhance (+)(3)"
+  examine: "This potion imbues one with a prayer restore effect temporarily. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24882
+  name: "Prayer enhance (+)(4)"
+  examine: "This potion imbues one with a prayer restore effect temporarily. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24883
+  name: "Xeric's aid (-)(1)"
+  examine: "The power of Xeric is stored within this potion. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24884
+  name: "Xeric's aid (-)(2)"
+  examine: "The power of Xeric is stored within this potion. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24885
+  name: "Xeric's aid (-)(3)"
+  examine: "The power of Xeric is stored within this potion. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24886
+  name: "Xeric's aid (-)(4)"
+  examine: "The power of Xeric is stored within this potion. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24887
+  name: "Xeric's aid (1)"
+  examine: "The power of Xeric is stored within this potion. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24888
+  name: "Xeric's aid (2)"
+  examine: "The power of Xeric is stored within this potion. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24889
+  name: "Xeric's aid (3)"
+  examine: "The power of Xeric is stored within this potion. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24890
+  name: "Xeric's aid (4)"
+  examine: "The power of Xeric is stored within this potion. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24891
+  name: "Xeric's aid (+)(1)"
+  examine: "The power of Xeric is stored within this potion. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24892
+  name: "Xeric's aid (+)(2)"
+  examine: "The power of Xeric is stored within this potion. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24893
+  name: "Xeric's aid (+)(3)"
+  examine: "The power of Xeric is stored within this potion. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24894
+  name: "Xeric's aid (+)(4)"
+  examine: "The power of Xeric is stored within this potion. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24895
+  name: "Overload (-)(1)"
+  examine: "The power of elder warriors, twisted archers and kodai wizards combined; extremely dangerous. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24896
+  name: "Overload (-)(2)"
+  examine: "The power of elder warriors, twisted archers and kodai wizards combined; extremely dangerous. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24897
+  name: "Overload (-)(3)"
+  examine: "The power of elder warriors, twisted archers and kodai wizards combined; extremely dangerous. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24898
+  name: "Overload (-)(4)"
+  examine: "The power of elder warriors, twisted archers and kodai wizards combined; extremely dangerous. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24899
+  name: "Overload (1)"
+  examine: "The power of elder warriors, twisted archers and kodai wizards combined; extremely dangerous. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24900
+  name: "Overload (2)"
+  examine: "The power of elder warriors, twisted archers and kodai wizards combined; extremely dangerous. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24901
+  name: "Overload (3)"
+  examine: "The power of elder warriors, twisted archers and kodai wizards combined; extremely dangerous. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24902
+  name: "Overload (4)"
+  examine: "The power of elder warriors, twisted archers and kodai wizards combined; extremely dangerous. It was mixed reasonably well."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24903
+  name: "Overload (+)(1)"
+  examine: "The power of elder warriors, twisted archers and kodai wizards combined; extremely dangerous. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24904
+  name: "Overload (+)(2)"
+  examine: "The power of elder warriors, twisted archers and kodai wizards combined; extremely dangerous. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24905
+  name: "Overload (+)(3)"
+  examine: "The power of elder warriors, twisted archers and kodai wizards combined; extremely dangerous. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24906
+  name: "Overload (+)(4)"
+  examine: "The power of elder warriors, twisted archers and kodai wizards combined; extremely dangerous. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24907
+  name: "Dark relic"
+  examine: "An ancient object emanating a dark power."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 24908
+  name: "Mallignum root plank"
+  examine: "Tekton's old building materials."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24909
+  name: "Small storage unit"
+  examine: "Small storage unit"
+  tradeable: false
+  weight: 10.0
+  equipment: null
+- id: 24910
+  name: "Medium storage unit"
+  examine: "Medium storage unit"
+  tradeable: false
+  weight: 10.0
+  equipment: null
+- id: 24911
+  name: "Large storage unit"
+  examine: "Large storage unit"
+  tradeable: false
+  weight: 10.0
+  equipment: null
+- id: 24912
+  name: "Medium storage unit"
+  examine: "Medium storage unit"
+  tradeable: false
+  weight: 10.0
+  equipment: null
+- id: 24913
+  name: "Large storage unit"
+  examine: "Large storage unit"
+  tradeable: false
+  weight: 10.0
+  equipment: null
+- id: 24914
+  name: "Large storage unit"
+  examine: "Large storage unit"
+  tradeable: false
+  weight: 10.0
+  equipment: null
+- id: 24915
+  name: "Ancient tablet"
+  examine: "Strange glowing symbols are inscribed in this tablet."
+  tradeable: false
+  weight: 2.0
+  equipment: null
+- id: 24916
+  name: "Torn prayer scroll"
+  examine: "Scrawled words that can invoke the power of the gods."
+  tradeable: true
+  weight: 0.015
+  equipment: null
+- id: 24917
+  name: "Xeric's talisman (inert)"
+  examine: "A dormant relic of the ancient times of Kourend."
+  tradeable: false
+  weight: 0.06
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 6785
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -299113,6 +300234,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
+    attack_magic: 2
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
@@ -299377,6 +300499,15 @@
     equip_slot: 4
     equip_type: -1
     appearance_id: 7011
+- id: 24918
+  name: "Xeric's talisman"
+  examine: "An enervated relic of the ancient times of Kourend."
+  tradeable: false
+  weight: 0.06
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 6786
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -299659,11 +300790,13 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
+    attack_magic: 3
     attack_ranged: 0
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
     defence_magic: 0
+    defence_magic: 1
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
@@ -299858,5 +300991,75 @@
   name: "Mimic scroll case"
   examine: "Maybe I should open it..."
   tradeable: false
+- id: 24924
+  name: "Antipoison (-)(1)"
+  examine: "The potion purges the lizardmen's poison. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24925
+  name: "Antipoison (-)(2)"
+  examine: "The potion purges the lizardmen's poison. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24926
+  name: "Antipoison (-)(3)"
+  examine: "The potion purges the lizardmen's poison. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24927
+  name: "Antipoison (-)(4)"
+  examine: "The potion purges the lizardmen's poison. It was mixed particularly badly."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24928
+  name: "Antipoison potion (1)"
+  examine: "The potion purges the lizardmen's poison."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24929
+  name: "Antipoison potion (2)"
+  examine: "The potion purges the lizardmen's poison."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24930
+  name: "Antipoison potion (3)"
+  examine: "The potion purges the lizardmen's poison."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24931
+  name: "Antipoison potion (4)"
+  examine: "The potion purges the lizardmen's poison."
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24932
+  name: "Antipoison (+)(1)"
+  examine: "The potion purges the lizardmen's poison. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24933
+  name: "Antipoison (+)(2)"
+  examine: "The potion purges the lizardmen's poison. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24934
+  name: "Antipoison (+)(3)"
+  examine: "The potion purges the lizardmen's poison. It was mixed perfectly!"
+  tradeable: true
+  weight: 0.02
+  equipment: null
+- id: 24935
+  name: "Antipoison (+)(4)"
+  examine: "The potion purges the lizardmen's poison. It was mixed perfectly!"
+  tradeable: true
   weight: 0.02
   equipment: null

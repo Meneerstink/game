@@ -62,6 +62,12 @@ object OsrsRegionImportTool {
          * overlay ids are the shared pre-2008 floors (OSRS 9 and rev-667 9 are both rgb 505050), so 11 -> 11 (rgb 665d58, stone).
          */
         val overlayOverrides: Map<Int, Int> = emptyMap(),
+        /**
+         * CoX 16-11: OSRS underlay id -> rev-667 overlay id for tiles that end up WITHOUT an overlay. Every rev-667 underlay carries a
+         * texture, so OSRS's black void underlay (71 = 030303) drew as texture 521 (beige planes beside the raid rooms, visual-2 photos);
+         * a plain black overlay on those tiles draws them black as OSRS does.
+         */
+        val voidUnderlayOverlay: Map<Int, Int> = emptyMap(),
         /** OSRS loc types left out of the squares (the server places its own working copy, or the content is not ours). */
         val excludeOsrsLocs: Set<Int> = emptySet(),
         /**
@@ -86,6 +92,13 @@ object OsrsRegionImportTool {
          * time; the replace is pinned on its current bytes).
          */
         val newOverlaySlots: List<Int>? = null,
+        /**
+         * N633 (Claude 18-11): OSRS overlay id -> rev-667 TEXTURE id (imported with OsrsTextureImportTool). Each gets the first free slot of
+         * [newOverlaySlots] (same free/unused proof) as a textured definition (OSRS rgb + that texture, opcodes 1/3/11 like the rev-667
+         * textured overlays, e.g. 39 = 01 rgb 03 tex 0b 7f 00), so a textured OSRS floor (Watson's house wood, OSRS texture 51) draws its
+         * own OSRS texture instead of the nearest rev-667 one. Requires [newOverlaySlots].
+         */
+        val texturedOverlays: Map<Int, Int> = emptyMap(),
         /**
          * Second pass of a [squareOffset] batch that already exists: rewrite only the tile files of the target squares (+ the overlay
          * definitions of [newOverlaySlots]); loc files, loc types and models stay as the first pass wrote them.
@@ -291,6 +304,40 @@ object OsrsRegionImportTool {
             "tob-area-tiles" to Batch(listOf(14642, 12613, 13125, 13122, 13123, 12612, 12611), emptyList(), "Theatre of Blood tiles without flag 0x8",
                 replaceSquares = setOf(14642, 12613, 13125, 13122, 13123, 12612, 12611), clearTileFlags = 0x8, tilesOnly = true),
             "web-chasm" to Batch(listOf(6580), listOf(47078), "Web Chasm (Spindel)"),
+            // CoX (owner 2026-11-15 14:3x 'chambers of xeric volledig zoals toa'; dossier COX.txt): entrance Mount Quidamortem 4919 (ingang
+            // 1245,3557) + the fairy ring BLS route 5174 (ring 1295,3493) + 4918/5175 between them - all four absent from our 667 map, in place.
+            "cox-entrance" to Batch(listOf(4918, 4919, 5174, 5175), emptyList(), "Chambers of Xeric entrance: Mount Quidamortem + fairy ring BLS",
+                clearTileFlags = 0x8, dropHiddenOverlays = true),
+            // CoX 15-11 18:3x (test client screens\COX\pad-midden.png: the lake south of the mountain drew as a flat dark-grey plate while the
+            // minimap shows water): OSRS overlay 5 (water texture 1) had gone to the grey 133 (404044, tex 301) and overlay 6 (water texture 25)
+            // to the lilac 38 - both onto our water overlay 6 (rgb 387b61), as the wilderness imports do (6 to 6). Re-tile only.
+            "cox-entrance-water" to Batch(listOf(4918, 4919, 5174, 5175), emptyList(), "Chambers of Xeric entrance water on the rev-667 water overlay",
+                clearTileFlags = 0x8, dropHiddenOverlays = true, retileTargets = true, overlayOverrides = mapOf(5 to 6, 6 to 6)),
+            // N633 (owner 18-11 'de vloer bij watson house was grafisch defect'): Watson's house (6455, WatsonHouseImportTool 09-14) took the
+            // nearest-colour floor for OSRS overlay 52 (wood, OSRS texture 51) = our 39 (texture 493, white with blue drops). No rev-667
+            // texture or plain overlay looks like it (textuur_match.py), so: OSRS texture 51 imported as rev-667 texture 1426
+            // (OsrsTextureImportTool 51 17 51) on slot 212, freed first (OverlaySlotFreeTool 212 211: its one tile in m54_58 -> the
+            // same-colour 211). Re-tile only. ORDER: texture import -> slot free -> this batch.
+            "watson-floor" to Batch(listOf(6455), emptyList(), "Watson's house floor: OSRS wood texture 51 on overlay 212 (N633)",
+                retileTargets = true, newOverlaySlots = listOf(212), texturedOverlays = mapOf(51 to 1426), // OSRS overlay DEF 51 = tile value 52 (plan 02:04: 262 tiles tex 51)
+                // N633 18-11 02:3x: the Hosidius river + lake (OSRS water def 5 = 919 tiles, deep-water 444/447/450 = 255 tiles) fell to the
+                // nearest colour (grey 133 / green 161). Same water class as the Necropolis -> rev-667 blue water 111 (60769a tex 669).
+                overlayOverrides = NECROPOLIS_SEA),
+            // CoX raid map: the room template banks x 51-52 y 80-89 (RuneLite InstanceTemplates + tsps CoxLayout: rooms chunk x 408/412/416,
+            // chunk y 644-712, wall chunk 416,647) and the Olm's chamber 12889 (chunks 402..406 x 713..719). 7 of them are rev-667 squares in
+            // use (13138 13140 13141 13145 13393 13401 12889) -> the whole block moves +0,+24 squares (= +1536 tiles, same z-offset as ToA) to
+            // x 50-52 y 104-113: free in xteas, outside the ToA bank (64-70 x 104-108), no code there (Claude 15-11 14:5x).
+            // 15-11 dry-run: 'No modern key for 13142' - squares y 86-88 hold nothing in OSRS (rooms use chunk y 644-683 = squares 80-85 and
+            // the upstairs starts 712-715 = square 89), so only those.
+            "cox-map" to Batch(((80..85) + 89).flatMap { y -> listOf((51 shl 8) or y, (52 shl 8) or y) } + 12889, emptyList(),
+                "Chambers of Xeric room banks + Olm (moved +0,+24)", clearTileFlags = 0x8, dropHiddenOverlays = true, squareOffset = 0 to 24),
+            // CoX 15-11 18:4x (test client screens\COX\rooms-6-42: a pale speckled plain all round the rooms where OSRS is black): OSRS
+            // overlay 36 (rgb 0, NO texture, 45742 tiles = the void round the rooms) had gone to our 38 (rgb 0, texture 17) -> our plain black
+            // 51 (rgb 0, no texture). Only that one: 'plainOverlaysStayPlain' sent 16 (663300) to a grey 249 and 29 (eeeeee) to a blue 150
+            // (dry-run 18:37), so those keep the first pass' choice. Re-tile only.
+            "cox-map-floors" to Batch(((80..85) + 89).flatMap { y -> listOf((51 shl 8) or y, (52 shl 8) or y) } + 12889, emptyList(),
+                "Chambers of Xeric floors: the black void on a plain black overlay", clearTileFlags = 0x8, dropHiddenOverlays = true,
+                squareOffset = 0 to 24, retileTargets = true, overlayOverrides = mapOf(36 to 51), voidUnderlayOverlay = mapOf(71 to 51, 138 to 51, 102 to 51)),
             // N462 ToA map (owner 2026-11-06 17:5x 'kaart importeren'; ChatGPT-A N462-notities\toa\40-*.tsv, cache 2499 squares byte-equal to
             // 2686): the raid block - nexus 14160, Scabaras 14162/Kephri 14164, Het 14674/Akkha 14676, Apmeken 15186/Ba-Ba 15188,
             // Crondis 15698/Zebak 15700, Wardens 15184/15696, rewards 14672 (OSRS squares 55..61 x 80..84). Five of them are rev-667
@@ -646,6 +693,32 @@ object OsrsRegionImportTool {
                             if (!hidden && (v - 1) !in batch.overlayOverrides) uses.merge(v, 1, Int::plus)
                         }
                     }
+                    // N633: textured OSRS overlays first, each on its own proven-free slot with the given rev-667 texture.
+                    val texturedSlots = slots.take(batch.texturedOverlays.size)
+                    check(texturedSlots.size == batch.texturedOverlays.size) { "not enough newOverlaySlots for texturedOverlays" }
+                    batch.texturedOverlays.entries.zip(texturedSlots).forEach { (entry, slot) ->
+                        val (osrsOverlay, texture) = entry
+                        val def = modernOverlays[osrsOverlay] ?: error("OSRS overlay $osrsOverlay missing")
+                        check(texture in 0..0xFFFE) { "texture $texture outside u16" }
+                        val out = java.io.ByteArrayOutputStream()
+                        out.write(1); out.write((def.rgb shr 16) and 0xFF); out.write((def.rgb shr 8) and 0xFF); out.write(def.rgb and 0xFF)
+                        out.write(3); out.write((texture shr 8) and 0xFF); out.write(texture and 0xFF)
+                        if (!def.hideUnderlay) out.write(5)
+                        if (def.secondaryRgb != -1) { out.write(7); out.write((def.secondaryRgb shr 16) and 0xFF); out.write((def.secondaryRgb shr 8) and 0xFF); out.write(def.secondaryRgb and 0xFF) }
+                        out.write(11); out.write(0x7F)
+                        out.write(0)
+                        val bytes = out.toByteArray()
+                        val back = Rev667FloorCodec.decodeOverlay(bytes)
+                        check(back.rgb == def.rgb && back.texture == texture && back.occludes == def.hideUnderlay) { "overlay $slot encode/decode mismatch" }
+                        newOverlays[slot] = back
+                        forcedOverlay[osrsOverlay + 1] = slot
+                        val current = overlayIndex.file(slot)?.data
+                        mutations += CacheMutation(Rev667RegionProbeTool.CONFIG_INDEX, Rev667RegionProbeTool.OVERLAY_GROUP, slot, bytes,
+                            "$name overlay $slot = OSRS overlay $osrsOverlay rgb ${Integer.toHexString(def.rgb)} texture $texture (N633)",
+                            expectedCurrentSha1 = current?.takeIf { !it.contentEquals(bytes) }?.let { CacheItemProbeTool.sha1(it) })
+                        println("NEW_TEXTURED_OVERLAY $slot <- OSRS $osrsOverlay rgb=${Integer.toHexString(def.rgb)} texture=$texture")
+                    }
+                    val plainSlots = slots.drop(texturedSlots.size)
                     val ranked = uses.entries.mapNotNull { (v, n) ->
                         val def = modernOverlays[v - 1] ?: return@mapNotNull null
                         if (def.texture != -1) return@mapNotNull null
@@ -653,7 +726,7 @@ object OsrsRegionImportTool {
                         val distance = Rev667FloorCodec.colourDistance(def.rgb, (localOverlays[best] ?: error("overlay $best")).rgb)
                         Triple(v, n.toLong() * distance, distance)
                     }.filter { it.third > 0 }.sortedByDescending { it.second }
-                    ranked.take(slots.count()).zip(slots.toList()).forEach { (pick, slot) ->
+                    ranked.take(plainSlots.count()).zip(plainSlots).forEach { (pick, slot) ->
                         val def = modernOverlays[pick.first - 1]!!
                         val local = Rev667OverlayDef(def.rgb, -1, def.hideUnderlay, def.secondaryRgb)
                         newOverlays[slot] = local
@@ -765,6 +838,10 @@ object OsrsRegionImportTool {
                         dst.overlayId = if (src.overlayId != 0 && !hidden) mapOverlay(src.overlayId) else 0
                         if (dst.overlayId != 0) overlayUse.merge(src.overlayId, 1, Int::plus)
                         dst.underlayId = if (src.underlayId != 0) mapUnderlay(src.underlayId) else 0
+                        if (dst.overlayId == 0 && src.underlayId != 0) batch.voidUnderlayOverlay[src.underlayId - 1]?.let { void ->
+                            dst.overlayId = void + 1; dst.overlayShape = 0; dst.overlayRotation = 0
+                            overlayUse.merge(-src.underlayId, 1, Int::plus)
+                        }
                     }
                     val locs =
                         if (batch.locsOnlyWithout != null) {

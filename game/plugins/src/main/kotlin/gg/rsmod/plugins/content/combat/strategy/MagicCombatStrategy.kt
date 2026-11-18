@@ -65,6 +65,9 @@ object MagicCombatStrategy : CombatStrategy {
                 return RangedCombatStrategy.canAttack(pawn, target)
             }
             val spell = pawn.attr[Combat.CASTING_SPELL]!!
+            if (!gg.rsmod.plugins.content.areas.wilderness.GodSpellTraining.canCast(pawn, target, spell)) {
+                return failCast(pawn)
+            }
             // Audit S-02: the spell must belong to the active spellbook (a modified client cast Ancient spells from the standard
             // book through spell-on-player/npc). Only autocast used to check this.
             if (!pawn.hasSpellbook(gg.rsmod.plugins.content.combat.magic.Autocast.bookOf(spell))) {
@@ -280,6 +283,7 @@ object MagicCombatStrategy : CombatStrategy {
             MagicSpells
                 .getMetadata(spell.uniqueId)
                 ?.let { requirement -> MagicSpells.removeRunes(pawn, requirement.runes, spellId = spell.uniqueId) }
+            gg.rsmod.plugins.content.areas.wilderness.GodSpellTraining.cast(pawn, target, spell)
             // Charged tomes use one charge per qualifying combat cast (Tomes).
             gg.rsmod.plugins.content.items.osrs.Tomes.afterCast(pawn, spell)
             // Blue moon armour Frostweaver: a chance for an instant spear melee attack after a bind or ice spell (MoonSets).
@@ -430,6 +434,7 @@ object MagicCombatStrategy : CombatStrategy {
                 landHit = landHit,
                 delay = hitDelay,
                 hitType = HitType.MAGIC,
+                sourceSpellId = spell.uniqueId,
             )
         val damage = pawnHit.hit.hitmarks.sumOf { it.damage }
         // N570 Slayer's staff (e): one charge per Magic Dart that hits a task monster (after the max hit above used it).

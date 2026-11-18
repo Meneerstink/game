@@ -1,0 +1,124 @@
+package gg.rsmod.plugins.content.areas.wilderness
+
+import gg.rsmod.game.fs.DefinitionSet
+import gg.rsmod.game.fs.def.NpcDef
+import gg.rsmod.game.model.Hit
+import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.World
+import gg.rsmod.game.model.combat.CombatClass
+import gg.rsmod.game.model.combat.SlayerAssignment
+import gg.rsmod.game.model.entity.Npc
+import gg.rsmod.plugins.api.BonusSlot
+import gg.rsmod.plugins.api.HitType
+import gg.rsmod.plugins.api.NpcSpecies
+import gg.rsmod.plugins.content.combat.Combat
+import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkObject
+import kotlin.test.*
+
+class MageArenaIIGuardianTests {
+    private val localNpc: (Int) -> Int? = { 50_000 + it }
+    private fun npc(id: Int): Npc {
+        val definitions = mockk<DefinitionSet>()
+        every { definitions.get(NpcDef::class.java, any()) } answers { NpcDef(secondArg()).apply { name = "MA2 guardian" } }
+        val world = mockk<World>(relaxed = true)
+        every { world.definitions } returns definitions
+        return Npc(id, Tile(3200, 3900), world).apply { stats = Npc.Stats(5) }
+    }
+
+    @Test fun `regular stats use real320HP Derwen80Magic and calculated XP bonuses exactly once`() {
+        MageArenaIIGuardians.ALL.forEach { guardian ->
+            val def = MageArenaIIGuardians.definition(guardian) { it + 60_000 }!!
+            assertEquals(320, def.lifepoints)
+            assertEquals(6, def.attackSpeed)
+            assertEquals(0, def.respawnDelay)
+            assertTrue(def.waitFullDeathAnimation && def.poisonImmunity && def.venomImmunity)
+            assertEquals(-60, def.bonuses[BonusSlot.DEFENCE_MAGIC.id])
+            assertEquals(listOf(200, 200, 200, 200), listOf(BonusSlot.DEFENCE_STAB, BonusSlot.DEFENCE_SLASH,
+                BonusSlot.DEFENCE_CRUSH, BonusSlot.DEFENCE_RANGED).map { def.bonuses[it.id] })
+            val actor = npc(localNpc(guardian.upstream)!!)
+            actor.combatDef = def
+            // World.setNpcDefaults copies bonuses as well as stats; assigning combatDef alone does not.
+            def.bonuses.forEachIndexed { index, bonus -> actor.equipmentBonuses[index] = bonus }
+            def.stats.forEachIndexed { index, level -> actor.stats.setMaxLevel(index, level) }
+            assertEquals(1.0 + guardian.xpBonusPercent / 100.0, Combat.getNpcXpMultiplier(actor), 1e-9,
+                "the shared formula must not apply the Wiki XP bonus twice")
+            if (guardian.god == MageArenaII.God.ZAMORAK) {
+                assertEquals(SlayerAssignment.BLACK_DEMON, def.slayerAssignment)
+                assertEquals(376.0, def.slayerXp)
+                assertTrue(NpcSpecies.DEMON in def.species)
+            } else assertNull(def.slayerAssignment)
+        }
+        val derwen = MageArenaIIGuardians.ALL.single { it.god == MageArenaII.God.GUTHIX }
+        assertEquals(80, derwen.magic)
+        assertEquals(180, derwen.magicBonus)
+    }
+
+    @Test fun `missing bindings never substitute OSRS ids or Breach actors`() {
+        for (id in listOf(14446, 14447, 14448, 7858, 7859, 7860)) {
+            assertNull(MageArenaIIGuardians.forNpc(id, localNpc))
+            assertNull(MageArenaIIGuardians.forNpc(id) { null })
+        }
+        MageArenaIIGuardians.ALL.forEach { guardian ->
+            assertSame(guardian, MageArenaIIGuardians.forNpc(localNpc(guardian.upstream)!!, localNpc))
+            assertNull(MageArenaIIGuardians.definition(guardian) { null })
+        }
+    }
+
+    @Test fun `launch gate blocks every wrong god nonmagic and built in spell but leaves Breach damage alone`() {
+        mockkObject(MageArenaAssets)
+        try {
+            every { MageArenaAssets.npc(any()) } answers { localNpc(firstArg()) }
+            MageArenaIIGuardians.ALL.forEach { guardian ->
+                val actor = npc(localNpc(guardian.upstream)!!)
+                for (spell in listOf(null, CombatSpell.WIND_STRIKE) + MageArenaIIGuardians.ALL.map { it.spell }) {
+                    for (type in listOf(HitType.MAGIC, HitType.CRIT_MAGIC, HitType.MELEE, HitType.RANGE)) {
+                        val expected = if (spell == guardian.spell && type in listOf(HitType.MAGIC, HitType.CRIT_MAGIC)) 30 else 0
+                        assertEquals(expected, MageArenaIIGuardians.modifyIncomingDamage(actor, type, 30, spell?.uniqueId))
+                    }
+                }
+            }
+            for (id in listOf(14446, 14447, 14448)) {
+                assertEquals(30, MageArenaIIGuardians.modifyIncomingDamage(npc(id), HitType.MELEE, 30, null))
+            }
+        } finally { unmockkObject(MageArenaAssets) }
+    }
+
+    @Test fun `in flight hit retains its original spell and cannot become a god spell after a later cast`() {
+        MageArenaIIGuardians.ALL.forEach { guardian ->
+            val matching = Hit.Builder().addHit(30, HitType.MAGIC.id).build().apply {
+                sourceCombatClass = CombatClass.MAGIC
+                sourceSpellId = guardian.spell.uniqueId
+            }
+            val wrong = Hit.Builder().addHit(30, HitType.MAGIC.id).build().apply {
+                sourceCombatClass = CombatClass.MAGIC
+                sourceSpellId = CombatSpell.WIND_STRIKE.uniqueId
+            }
+            MageArenaIIGuardians.modifyHit(guardian, wrong)
+            MageArenaIIGuardians.modifyHit(guardian, matching)
+            assertEquals(0, wrong.hitmarks.single().damage)
+            assertEquals(30, matching.hitmarks.single().damage)
+            // A powered-staff hit has no spell id, irrespective of a previously selected god spell.
+            matching.sourceSpellId = null
+            MageArenaIIGuardians.modifyHit(guardian, matching)
+            assertEquals(0, matching.hitmarks.single().damage)
+        }
+    }
+
+    @Test fun `sourced recoil exception does not let an untyped or mixed hit bypass spell immunity`() {
+        MageArenaIIGuardians.ALL.forEach { guardian ->
+            val hit = Hit.Builder().addHit(4, HitType.REFLECTED.id).addHit(30, HitType.MAGIC.id).build()
+            MageArenaIIGuardians.modifyHit(guardian, hit)
+            assertEquals(listOf(4, 0), hit.hitmarks.map { it.damage })
+            val mixed = Hit.Builder().addHit(30, HitType.MAGIC.id).addHit(20, HitType.MELEE.id).build().apply {
+                sourceCombatClass = CombatClass.MAGIC
+                sourceSpellId = guardian.spell.uniqueId
+            }
+            MageArenaIIGuardians.modifyHit(guardian, mixed)
+            assertEquals(listOf(30, 0), mixed.hitmarks.map { it.damage })
+        }
+    }
+}

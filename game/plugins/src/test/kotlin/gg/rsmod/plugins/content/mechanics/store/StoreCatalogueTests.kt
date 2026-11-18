@@ -71,11 +71,17 @@ class StoreCatalogueTests {
     }
 
     @Test
-    fun `every max cape variant look is unlockable for Loyalty and Donator points and requires its real component`() {
-        gg.rsmod.plugins.content.items.osrs.MaxCapes.VARIANTS.forEach { variant ->
+    fun `approved max cape looks keep their Loyalty and Donator offers without auto pricing new variants`() {
+        // N415 owner 3A: the imbued god max looks leave the Donator store once Mage Arena II makes the capes earnable.
+        val imbued = setOf(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_ZAMORAK_CAPE, Items.IMBUED_GUTHIX_CAPE)
+        gg.rsmod.plugins.content.items.osrs.MaxCapes.STORE_LOOK_VARIANTS.forEach { variant ->
             val unlocks = StoreCatalogue.ENTRIES.filter { it.kind == Kind.UNLOCK && it.purchaseItem == variant.cape }
-            assertEquals(setOf(Shop.LOYALTY, Shop.DONATOR), unlocks.map { it.shop }.toSet(), "look ${variant.cape}")
+            val expected = if (variant.component in imbued) setOf(Shop.LOYALTY) else setOf(Shop.LOYALTY, Shop.DONATOR)
+            assertEquals(expected, unlocks.map { it.shop }.toSet(), "look ${variant.cape}")
             unlocks.forEach { assertEquals(listOf(variant.component), it.requiredBaseItems) }
+        }
+        gg.rsmod.plugins.content.items.osrs.AncientCape.assets.max?.let { ancient ->
+            assertTrue(StoreCatalogue.ENTRIES.none { it.kind == Kind.UNLOCK && it.purchaseItem == ancient })
         }
     }
 
@@ -237,16 +243,39 @@ class StoreCatalogueTests {
     }
 
     @Test
+    fun `the Chambers of Xeric drops leave the store once the raid is open (besluit 8a)`() {
+        // Owner besluit 8a (15-11, like ToA E1): Ancestral and the Dragon hunter crossbow come from the raid now; the Twisted ancestral
+        // colour kit is a Challenge Mode reward (Wiki) and stays until CM opens.
+        val sold = StoreCatalogue.ENTRIES.filter { it.kind != StoreCatalogue.Kind.UNLOCK }.map { it.purchaseItem }.toSet()
+        if (gg.rsmod.plugins.content.activity.cox.CoxRelease.OPEN) {
+            StoreCatalogue.COX_DROPS.forEach { assertTrue(it !in sold, "CoX drop $it still sold") }
+        } else {
+            StoreCatalogue.COX_DROPS.forEach { assertTrue(it in sold, "CoX drop $it should stay until the raid opens") }
+        }
+        // The rest of the Donator gear stays.
+        listOf(Items.DRAGON_HUNTER_LANCE, Items.FURY_ORNAMENT_KIT, Items.TWISTED_ANCESTRAL_COLOUR_KIT).forEach { assertTrue(it in sold, "$it") }
+    }
+
+    @Test
+    fun `the Tombs of Amascut drops left the store (besluit E1, N622)`() {
+        val sold = StoreCatalogue.ENTRIES.filter { it.kind != StoreCatalogue.Kind.UNLOCK }.map { it.purchaseItem }.toSet()
+        StoreCatalogue.TOA_DROPS.forEach { assertTrue(it !in sold, "ToA drop $it still sold") }
+        // The ToA kits stay store items (besluit E4: also raid rewards).
+        listOf(Items.MASORI_CRAFTING_KIT, Items.MENAPHITE_ORNAMENT_KIT).forEach { assertTrue(it in sold, "$it") }
+    }
+
+    @Test
     fun `kits, pets, capes and cosmetics land in their own category`() {
         val section = { item: Int -> StoreCatalogue.section(StoreCatalogue.ENTRIES.first { it.purchaseItem == item && it.kind != StoreCatalogue.Kind.UNLOCK }) }
         assertEquals(StoreCatalogue.Section.ORNAMENTS, section(Items.ARMADYL_GODSWORD_ORNAMENT_KIT))
         assertEquals(StoreCatalogue.Section.ORNAMENTS, section(Items.ELDER_CHAOS_ROBES_ORNAMENT_KIT))
         // N326: the Loyalty upgrade kits (orbs, Ward upgrade kit, Masori crafting kit) are gear, not a look.
         listOf(Items.WARD_UPGRADE_KIT, Items.MASORI_CRAFTING_KIT, Items.HARMONISED_ORB).forEach { assertEquals(StoreCatalogue.Section.GEAR, section(it), "$it") }
-        assertEquals(StoreCatalogue.Section.GEAR, section(Items.ANCESTRAL_HAT))
+        assertEquals(StoreCatalogue.Section.GEAR, section(Items.DRAGON_HUNTER_LANCE))
         assertEquals(StoreCatalogue.Section.GEAR, section(Items.RING_OF_THE_GODS_I))
         assertEquals(StoreCatalogue.Section.PETS, section(Items.HELLKITTEN))
-        assertEquals(StoreCatalogue.Section.CAPES, section(Items.IMBUED_ZAMORAK_CAPE))
+        // N415 (owner question V3, advice chosen): the imbued god capes left the Deadman Shop - Mage Arena II earns them.
+        assertTrue(StoreCatalogue.ENTRIES.none { it.purchaseItem == Items.IMBUED_ZAMORAK_CAPE && it.kind != StoreCatalogue.Kind.UNLOCK })
         assertEquals(StoreCatalogue.Section.COSMETICS, section(Items.SANTA_HAT))
         StoreCatalogue.ENTRIES.filter { it.kind == StoreCatalogue.Kind.UNLOCK }.forEach { assertEquals(StoreCatalogue.Section.CAPES, StoreCatalogue.section(it)) }
     }

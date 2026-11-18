@@ -11,7 +11,6 @@ import gg.rsmod.game.model.attr.INTERACTING_OPT_ATTR
 import gg.rsmod.game.model.attr.ID_INSPECTOR_ATTR
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.model.entity.GameObject
-import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.priv.Privilege
 import java.lang.ref.WeakReference
 
@@ -28,7 +27,7 @@ class OpLoc3Handler : MessageHandler<OpLoc3Message> {
          * If tile is too far away, don't process it.
          */
         val tile = Tile(message.x, message.z, client.tile.height)
-        if (!tile.viewableFrom(client.tile, Player.TILE_VIEW_DISTANCE)) {
+        if (!client.inBuildArea(tile)) {
             gg.rsmod.game.model.AvTrace.log { "loc-op3 refused gate=view id=${message.id} at=$tile from=${client.tile}" }
             return
         }
@@ -47,8 +46,8 @@ class OpLoc3Handler : MessageHandler<OpLoc3Message> {
         val chunk = world.chunks.getOrCreate(tile)
         val obj =
             chunk.getEntities<GameObject>(tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT).firstOrNull {
-                it.id ==
-                    message.id
+                it.id == message.id ||
+                    gg.rsmod.game.model.attr.locAliasOf(client, it) == message.id
             }
                 ?: run {
                     gg.rsmod.game.model.AvTrace.log { "loc-op3 refused gate=no-object id=${message.id} at=$tile" }

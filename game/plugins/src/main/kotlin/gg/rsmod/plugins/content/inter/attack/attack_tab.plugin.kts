@@ -37,7 +37,10 @@ on_item_unequip(item = Items.LIGHTBEARER) {
  */
 listOf(11, 12, 13, 14).forEachIndexed { style, component ->
     on_button(interfaceId = 884, component = component) {
+        val wasBlocking = gg.rsmod.plugins.content.activity.cox.DinhsBulwark.blocking(player)
         player.setVarp(AttackTab.ATTACK_STYLE_VARP, style)
+        if (gg.rsmod.plugins.content.activity.cox.DinhsBulwark.wields(player))
+            gg.rsmod.plugins.content.activity.cox.DinhsBulwark.changed(player, wasBlocking, gg.rsmod.game.model.timer.ATTACK_DELAY)
         // Choosing a melee style turns autocast off and empties the Spell box (owner 2026-10-09 174151 / 175432).
         gg.rsmod.plugins.content.combat.magic.Autocast.onMeleeStyle(player)
     }

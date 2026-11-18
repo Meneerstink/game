@@ -135,8 +135,13 @@ object OsrsTextureImportTool {
                     val v = row[col][0].toInt()
                     // 667 scroll speeds are whole steps: a moving template never rounds down to a still texture (ADAPTED:
                     // the slowest 667 step when the OSRS ratio falls below it).
-                    val scaled = v * tex.speed / tmpl.speed
-                    row[col][0] = (if (v != 0 && scaled == 0) Integer.signum(v) else scaled).toByte()
+                    // Claude 18-11 (N633): a still OSRS texture (speed 0, e.g. wood 51) stays still; a still template keeps its own speeds.
+                    val scaled = when {
+                        tex.speed == 0 -> 0
+                        tmpl.speed == 0 -> v
+                        else -> v * tex.speed / tmpl.speed
+                    }
+                    row[col][0] = (if (v != 0 && scaled == 0 && tex.speed != 0) Integer.signum(v) else scaled).toByte()
                 }
                 materialsBytes = Materials(materials.present + true, materials.rows + arrayOf(row)).encode()
                 check(Materials.decode(materialsBytes).present.size == newTexture + 1)

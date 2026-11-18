@@ -21,7 +21,9 @@ class CorporealBeastOsrsRulesTests {
 
     @Test
     fun `Corpbane list is the wiki list with poisoned and degraded forms`() {
-        assertEquals(29, script.CORPBANE_WEAPONS.size)
+        // N623 (18-11): + "Osmumten's fang (or)" - wiki: the ornament kit version "retains all the effects" of the fang.
+        assertEquals(30, script.CORPBANE_WEAPONS.size)
+        assertTrue(script.isCorpbaneWeapon("Osmumten's fang (or)"), "fang (or)")
         script.CORPBANE_WEAPONS.forEach { assertTrue(script.isCorpbaneWeapon(it), it) }
         listOf("Dragon spear (p++)", "Rune spear (kp)", "Black spear (p+)", "Iron spear (p)", "Guthan's warspear 75", "Vesta's spear (deg)")
             .forEach { assertTrue(script.isCorpbaneWeapon(it), it) }

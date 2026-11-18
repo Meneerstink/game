@@ -1,0 +1,40 @@
+{
+    "purpose":  "Additional primary-source facts for N415 review; no cache modifications",
+    "sources":  [
+                    {
+                        "url":  "https://oldschool.runescape.wiki/w/Battle_mage?action=raw",
+                        "sha256":  "ddce671f9863f88587b39953dd6c0609c573bc8d22b4c161bc62fa028722623e",
+                        "captured":  "2026-11-14T18:02:59.4192943Z"
+                    },
+                    {
+                        "url":  "https://oldschool.runescape.wiki/w/Collection_log?action=raw",
+                        "sha256":  "560dc4ca440a168ba22d36c4f9d2747ed032ddf021be0ae8722d3741cd6f15b6",
+                        "captured":  "2026-11-14T18:04:37.4281352Z"
+                    },
+                    {
+                        "url":  "https://oldschool.runescape.wiki/w/God_capes?action=raw",
+                        "sha256":  "a4faa777fcdc4eaa11562b02c060d8b7d23043a0a2eb7dc2f7cf369e2f1a68d7",
+                        "captured":  "2026-11-14T18:03:00.1236817Z"
+                    },
+                    {
+                        "url":  "https://oldschool.runescape.wiki/w/Charge?action=raw",
+                        "sha256":  "d92f36575ecd2d22f1e1a5ede58d0781d8ccc3033c67ad2e81faa182573ae87f",
+                        "captured":  "2026-11-14T18:04:36.9715300Z"
+                    },
+                    {
+                        "url":  "https://oldschool.runescape.wiki/w/Accursed_sceptre_(a)?action=raw",
+                        "sha256":  "c17e75783729f9414cf79cbc2d8800e6c2a6982cd325d5b368bde1bfe076b3af",
+                        "captured":  "2026-11-14T18:02:59.8501726Z"
+                    },
+                    {
+                        "url":  "https://oldschool.runescape.wiki/w/Thammaron%27s_sceptre_(a)?action=raw",
+                        "sha256":  "50ba68ca8215c430aee189bb3914b66c1c16012c99d018d95a530402a2d21bd8",
+                        "captured":  "2026-11-14T18:02:59.6211639Z"
+                    },
+                    {
+                        "url":  "https://oldschool.runescape.wiki/w/Template:Infobox_Monster/doc?action=raw",
+                        "sha256":  "1b6b09aa8d061eeea3cd3235c50856cf1bb20f72d754824b9f399ee6c629917c",
+                        "captured":  "2026-11-14T17:53:21.4236122Z"
+                    }
+                ]
+}

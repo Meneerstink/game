@@ -81,6 +81,17 @@ object OsrsItemImportTool {
      */
     val BATCHES: Map<String, List<Spec>> by lazy {
         mapOf(
+            // N415: OSRS Wiki + cache 2686 MA2 remains/symbol. Local ids come from the importer, never the upstream ids.
+            // Ancient fabric/capes are absent in 2686 and intentionally require an isolated newer-source batch.
+            "mage-arena" to listOf(Spec(21797), Spec(21798), Spec(21799), Spec(21800)),
+            // N415: names/models/options verified read-only in OpenRS2 2762 (build242, 2026-11-11).
+            // Explicit isolated RSPS_OSRS_SOURCE_CACHE override is required: 2686 predates these items.
+            // No Pete Kayer, Deadman-event cosmetic or unverified darker variant is imported.
+            "mage-arena-ancient" to listOf(
+                Spec(34625), Spec(34627), Spec(34629),
+                Spec(34633, rev667Params = mapOf(749 to 6, 750 to 75)),
+                Spec(34635), Spec(34637, rev667Params = mapOf(749 to 6, 750 to 75)), Spec(34641),
+            ),
             "pilot" to
                 listOf(
                     Spec(12002, noted = true, rev667Params = mapOf(749 to 6, 750 to 70)), // Occult necklace
@@ -280,11 +291,11 @@ object OsrsItemImportTool {
             //  - Osmumten's fang (or): the fang's own client params (Eviscerate 687) with OSRS 436 = Attack 82.
             "toa-items" to
                 listOf(
-                    Spec(25979, rev667Params = mapOf(686 to 5), weaponType = 5), // Keris partisan
-                    Spec(25981, rev667Params = mapOf(686 to 5, 749 to 0, 750 to 80), weaponType = 5), // Keris partisan of breaching
-                    Spec(27287, rev667Params = mapOf(686 to 5, 749 to 0, 750 to 80), weaponType = 5), // Keris partisan of corruption
-                    Spec(27291, rev667Params = mapOf(686 to 5, 749 to 0, 750 to 80), weaponType = 5), // Keris partisan of the sun
-                    Spec(30891, rev667Params = mapOf(686 to 5, 749 to 0, 750 to 80), weaponType = 5), // Keris partisan of amascut
+                    Spec(25979, rev667Params = mapOf(686 to 28), weaponType = 28), // Keris partisan - N631: Partisan style set 28 (PartisanStyleSetTool)
+                    Spec(25981, rev667Params = mapOf(686 to 28, 749 to 0, 750 to 80), weaponType = 28), // Keris partisan of breaching
+                    Spec(27287, rev667Params = mapOf(686 to 28, 749 to 0, 750 to 80), weaponType = 28), // Keris partisan of corruption
+                    Spec(27291, rev667Params = mapOf(686 to 28, 749 to 0, 750 to 80), weaponType = 28), // Keris partisan of the sun
+                    Spec(30891, rev667Params = mapOf(686 to 28, 749 to 0, 750 to 80), weaponType = 28), // Keris partisan of amascut
                     Spec(27283), Spec(27285), Spec(27289), Spec(30893), // Breach of the Scarab, Eye of the Corruptor, Jewel of the Sun, Jewel of Amascut
                     Spec(27275, rev667Params = staffParams(85), weaponType = 1), // Tumeken's shadow
                     Spec(27277, noted = true, rev667Params = staffParams(85), weaponType = 1), // Tumeken's shadow (uncharged)
@@ -309,6 +320,28 @@ object OsrsItemImportTool {
                     Spec(27368), Spec(27369), // Dawn scarab egg, Ancient key
                     Spec(27300), Spec(27302), Spec(27304), Spec(27306), Spec(27308), Spec(27310), Spec(27312), // ToA books
                 ),
+            // CoX (owner 2026-11-15 14:3x; dossier COX.txt 'ITEMS BIJ ONS'): every raid item without weapon params (RuneLite gameval ItemID
+            // RAIDS_*): wood 20799, vials 20800/20801, fishing bait 20853, fish + bats raw/cooked/burnt 20854-20883, tightrope keystone 20884,
+            // cavern grubs 20885, the six raid books 20886/20888/20890/20893/20895/20897 + dark journal 20899, Vespula herb 20892, herbs/seeds
+            // 20901-20912, the seven potion families x weak/normal/strong x 4-1 doses 20913-20996, dark relic 21027, mallignum root plank
+            // 21036, storage-unit kits 21037-21042, ancient tablet 21046, torn prayer scroll 21047, Xeric's talisman (inert 13392 / 13393).
+            // Raid items are untradeable in OSRS: no noted variants. Elder maul / Dinh's bulwark (weapon params + special) come separately.
+            "cox-items" to
+                (listOf(20799, 20800, 20801) + (20853..20885) + listOf(20886, 20888, 20890, 20892, 20893, 20895, 20897, 20899) + (20901..20996) +
+                    listOf(21027, 21036) + (21037..21042) + listOf(21046, 21047, 13392, 13393)).map { Spec(it) },
+            // CoX chest commons that the revision-667 cache has under other ids (OSRS 13391 = 667 Brass hand, 13573 = 667 Bowl of honey):
+            // Lizardman fang 13391, Saltpetre 13421 (noted on the Wiki table), Dynamite 13573 (noted).
+            "cox-commons" to listOf(Spec(13391), Spec(13421, noted = true), Spec(13573, noted = true)),
+            // CoX antipoisons (Wiki Antipoison (-) / Antipoison potion / Antipoison (+)): RAIDS_VIAL_ANTIPOISON_WEAK/-/STRONG_1-4, untradeable.
+            "cox-antipoison" to (25754..25765).map { Spec(it) },
+            // CoX weapons (Wiki Elder maul / Dinh's bulwark; tradeable, noted). Two wield requirements = 749/750 + 751/752 (667 Granite maul 4153:
+            // 0/50 + 2/50, style set 686 10, special bar 687 1). Elder maul: 'Blunt' styles = the 667 hammer set 10, Attack + Strength 75.
+            // Dinh's bulwark: Attack + Defence 75; OSRS styles 'Bulwark' (Pummel / Block) have no 667 set - set 10 until the client set exists
+            // (dossier COX.txt, OPEN). Their stances come from BAS 2530 / 2531 (RenderAnimations, cox_raid.plugin.kts), not param 644.
+            "cox-weapons" to listOf(
+                Spec(21003, noted = true, rev667Params = mapOf(686 to 10, 687 to 1, 749 to 0, 750 to 75, 751 to 2, 752 to 75), weaponType = 10, attackAudio = 2504),
+                Spec(21015, noted = true, rev667Params = mapOf(686 to 10, 687 to 1, 749 to 0, 750 to 75, 751 to 1, 752 to 75), weaponType = 10, attackAudio = 2504),
+            ),
             // N462 Beneath Cursed Sands (short quest) reward: Circlet of water (uncharged) 26967 and charged 26969 (OSRS Wiki Circlet of water;
             // GPT-A 60-quest.tsv). The Keris partisan comes from toa-items.
             "bcs-items" to listOf(Spec(26967), Spec(26969)),

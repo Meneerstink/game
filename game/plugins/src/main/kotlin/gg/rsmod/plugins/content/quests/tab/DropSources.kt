@@ -43,7 +43,7 @@ import kotlin.math.pow
 object DropSources {
     enum class Group(val title: String) { FAVOURITES("Favourites"), DEADMAN("Deadman"), BOSSES("Bosses"), MONSTERS("Monsters"), CLUES("Clues") }
 
-    enum class Kind { NPC, BREACH, CHEST, GUARDIAN, BARROWS, JAD, TOA, CLUE, MIMIC, IMPLING_JAR }
+    enum class Kind { NPC, BREACH, CHEST, GUARDIAN, BARROWS, JAD, TOA, COX, CLUE, MIMIC, IMPLING_JAR }
 
     class Source(
         val key: String,
@@ -89,6 +89,7 @@ object DropSources {
             "dagannoth supreme", "tormented demon", "glacor", "wildywyrm", "bork", "nex", "general graardor", "kree'arra",
             "commander zilyana", "k'ril tsutsaroth", "giant mole", "chaos fanatic", "crazy archaeologist", "scorpia", "venenatis", "spindel",
             "vet'ion", "callisto", "artio", "calvar'ion", "kalphite king", "queen black dragon", "tztok-jad", "jad", "revenant maledictus",
+            "porazdir", "derwen", "justiciar zachariah",
         )
 
     @Volatile private var built: List<Source>? = null
@@ -157,6 +158,10 @@ object DropSources {
         // N462: the Tombs of Amascut reward chest (key = the Collection Log page CollectionLogPages.TOA); model Tumeken's Warden (OSRS 11762).
         gg.rsmod.plugins.content.activity.toa.ToaIds.npc(11762)?.let { warden ->
             out += Source(CollectionLogPages.TOA, "Tombs of Amascut", warden, intArrayOf(), 0, Group.BOSSES, Kind.TOA)
+        }
+        // CoX: the Ancient chest (key = the Collection Log page CollectionLogPages.COX); model the Great Olm's head (OSRS 7554).
+        if (gg.rsmod.plugins.content.activity.cox.CoxRelease.OPEN) gg.rsmod.plugins.content.activity.cox.CoxIds.npc(7554)?.let { olm ->
+            out += Source(CollectionLogPages.COX, "Chambers of Xeric", olm, intArrayOf(), 0, Group.BOSSES, Kind.COX)
         }
         // Maledictus awards two dragon rolls but is a separate kill, model and source.
         val maledictus = gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.NPC
@@ -260,6 +265,7 @@ object DropSources {
                 checkNotNull(gg.rsmod.plugins.content.scrolls.ClueCompletions.tierForKey(source.key)))
             Kind.IMPLING_JAR -> gg.rsmod.plugins.content.scrolls.ClueImplingView.view(player,
                 checkNotNull(gg.rsmod.plugins.content.skills.hunter.ImplingData.byJar(source.modelItem)))
+            Kind.COX -> coxView(world)
         }
     }
 
@@ -614,6 +620,43 @@ object DropSources {
         (loot.CHALLENGE_KITS + loot.REMNANTS.first()).forEach { osrs ->
             val id = local(osrs) ?: return@forEach
             lines += Line("toa:challenge:$osrs", id, itemName(world, id), "1", 0.0, 0.0, note = "Expert, nobody died")
+        }
+        return View(emptyList(), sorted(world, lines))
+    }
+
+    /**
+     * CoX: the Ancient chest for one reference raid of [COX_REFERENCE_POINTS] points (OSRS Wiki Ancient chest, Olmlet note: 'with 26,025
+     * points per raid, the Olmlet rate is ~1/1,765'), solo, normal mode - every chance from CoxLoot (Wiki numbers). Shown only once the raid
+     * is released (CoxRelease.OPEN).
+     */
+    const val COX_REFERENCE_POINTS = 26_025
+
+    private fun coxView(world: World): View {
+        val loot = gg.rsmod.plugins.content.activity.cox.CoxLoot
+        val local = gg.rsmod.plugins.content.activity.cox.CoxLootItems::local
+        val unique = minOf(COX_REFERENCE_POINTS, loot.UNIQUE_CAP).toDouble() / loot.POINTS_PER_PERCENT / 100.0
+        val weights = loot.UNIQUES.sumOf { it.weight }.toDouble()
+        val lines = ArrayList<Line>()
+        loot.UNIQUES.forEach { u ->
+            val id = local(u.osrs) ?: return@forEach
+            val p = unique * u.weight / weights
+            lines += Line("cox:${u.osrs}", id, itemName(world, id), "1", p, p)
+        }
+        local(loot.OLMLET)?.let { id -> val p = unique / 53.0; lines += Line("cox:pet", id, itemName(world, id), "1", p, p, Tag.PET) }
+        local(loot.ELITE_CLUE)?.let { id -> val p = (1 - unique) / 12.0; lines += Line("cox:clue", id, itemName(world, id), "1", p, p) }
+        local(loot.ANCIENT_TABLET)?.let { id -> val p = (1 - unique) / 10.0; lines += Line("cox:tablet", id, itemName(world, id), "1", p, p, note = "If you do not own one") }
+        local(loot.DARK_JOURNAL)?.let { id -> lines += Line("cox:journal", id, itemName(world, id), "1", 1.0, 1.0, note = "If it is not in your bank") }
+        // Two different rolls on the 33 commons; quantities at the reference points (max x points / 131,071).
+        val share = minOf(COX_REFERENCE_POINTS, loot.COMMON_CAP).toDouble() / loot.COMMON_CAP
+        val commons = loot.COMMONS.mapNotNull { c ->
+            val id = local(c.osrs) ?: return@mapNotNull null
+            val shown = if (c.noted) world.definitions.getNullable(ItemDef::class.java, id)?.noteLinkId?.takeIf { it > 0 } ?: id else id
+            val p = 2.0 / loot.COMMONS.size * (1 - unique)
+            Line("cox:common:${c.osrs}", shown, itemName(world, shown), maxOf(1, (c.max * share).toInt()).toString(), p, p)
+        }
+        local(560)?.let { icon ->
+            val p = 1 - unique
+            lines += Line("cox:commons", icon, "Common loot", "1", p, p, Tag.TABLE, sorted(world, commons), sub = "2 different rolls, without a unique")
         }
         return View(emptyList(), sorted(world, lines))
     }

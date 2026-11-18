@@ -205,6 +205,10 @@ class Bank {
                 player.filterableMessage("A magical force prevents you from banking this item!")
                 return DepositResult(0, success = false, bankFull = false)
             }
+            if (gg.rsmod.plugins.content.areas.wilderness.MageArenaII.isRemains(item.id)) {
+                player.filterableMessage("You can't bank this item.")
+                return DepositResult(0, success = false, bankFull = false)
+            }
             // Audit D-01: a loot key's loot lives with the key, so the key itself can't be banked.
             if (gg.rsmod.plugins.content.mechanics.pvp.LootKeys.isKey(item.id)) {
                 player.filterableMessage("You can't bank a loot key. Open it at Skully instead.")

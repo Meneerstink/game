@@ -562,7 +562,9 @@ enum class PickpocketTarget(
         drops =
             DropTableFactory.build {
                 main {
-                    total(1100)
+                    // N614 (15-11): the H.A.M. member table + the four 667 store-room keys (4 slots each) fill 1116; no OSRS source for the keys
+                    // (OSRS H.A.M. guards are not pickpocketable), so the rates stay as they already rolled - only the declared total now matches.
+                    total(1116)
                     obj(Items.BRONZE_ARROW, quantityRange = 1..13, slots = 33)
                     obj(Items.BRONZE_HATCHET, slots = 33)
                     obj(Items.BRONZE_DAGGER, slots = 33)

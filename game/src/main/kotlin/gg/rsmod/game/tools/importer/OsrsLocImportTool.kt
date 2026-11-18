@@ -26,6 +26,30 @@ object OsrsLocImportTool {
             // N462 07-11: the empty rocks of the OSRS ore rocks imported with the Necropolis (RuneLite gameval ObjectID ROCKS1 11390 /
             // ROCKS2 11391; CLAYROCK1..ADAMANTITEROCK2 deplete to them) - OsrsImportedRocks sets them as the depleted form.
             "necropolis-rocks" to listOf(11390, 11391),
+            // CoX (dossier COX.txt): server-placed locs that are not on the cache map - RAIDS_REWARD_CHEST 30028 'Ancient chest' (Search; the
+            // crystal 30027 by the steps turns into it when the Olm dies, tsps), RAIDS_REWARD_LOOTBEAM_BASIC 30029 / _SPECIAL 30030, and the
+            // first room's closed bank chest 47419 (47420 -> 47419 as the raid begins, tsps rsprox).
+            "cox-locs" to listOf(30028, 30029, 30030, 47419),
+            // CoX first-room steps for the leader before the start (gameval RAIDS_EXIT_STEPS_RELOAD 50000; child of the multiloc 49999, tsps Reload).
+            // 16-11 18:xx: ONLY 50000 - the multiloc 49999 cannot point at ids >= 65535 (u16, rolled back); the leader is shown it per player.
+            "cox-reload" to listOf(50000),
+            // CoX rooms (dossier COX.txt 15-11 23:xx): the locs the rooms' encounters place (not on the cache map), ids from the tsps room
+            // units (rsprox captures) = gameval RAIDS_*: crab crystals 29753/29762, guardian blocker 26209, ice-demon lit brazier/storm
+            // 29748/29876, muttadile tendrils/rocks/felled tree 29767/30012/30013, mystics' Mark of Power + portals 29741/49996-49998, Olm
+            // rising/risen head + claws 29880/29881/29883/29884/29886/29887, acid/crystal clusters 30032-30034, bomb 29766, resources stump
+            // 29764, scavenger shortcuts 29736-29740, shaman tendrils 29768, Tekton crystal/fire/block 30017/30021/30023, thieving chest/
+            // trough states 29743/29745/29874, tightrope barrier 29749, Vasa crystals/exit/fire 29774/29775/30016/30019, Vespula
+            // tendrils/root/boils/pillars 30024/30068/30070/30071/30073.
+            "cox-rooms" to listOf(29753, 29762, 26209, 29748, 29876, 29767, 30012, 30013, 29741, 49996, 49997, 49998, 29880, 29881, 29883,
+                29884, 29886, 29887, 30032, 30033, 30034, 29766, 29764, 29736, 29737, 29738, 29739, 29740, 29768, 30017, 30021, 30023, 29743,
+                29745, 29874, 29749, 29774, 29775, 30016, 30019, 30024, 30068, 30070, 30071, 30073),
+            // CoX crab puzzle: the dark crystal brightening a step per lit crystal (gameval RAIDS_LASERCRABS_* 29754-29757, tsps OBJECT.DARK + lit).
+            "cox-rooms2" to listOf(29754, 29755, 29756, 29757),
+            // CoX herb patches: the growing / grown patch per herb and stage (tsps Resources GROWING_PATCHES 29997-30011: noxifer 29997, golpar
+            // 29998, buchu 29999, + 3 a stage to stage 4).
+            "cox-patches" to (29997..30011).toList(),
+            // CoX storage units, the upgraded tiers (Wiki: small 29770, medium 29779, large 29780, massive 37978; tiny 29769 is on the map).
+            "cox-storage" to listOf(29770, 29779, 29780, 37978),
             // Owner 2026-09-19 (exact OSRS Deadman breaches): OSRS Wiki "Breach (scenery)" id 49561 and "Boss Spawn" id 49563.
             "deadman-breach" to listOf(49561, 49563),
             // Owner 2026-10-10 ("de rejuvenation pool model van osrs importeren en die in de poh plaatsen"): OSRS loc 29241
@@ -93,11 +117,29 @@ object OsrsLocImportTool {
     private val MULTILOC_VARBITS: Map<Int, Int> = mapOf(29150 to 357)
 
     /**
+     * Multilocs kept on a whole 667 VARP (no fitting varbit): CoX first-room steps RAIDS_EXIT_STEPS_MULTI 49999 -> 29778 steps / 50000
+     * Reload (the leader before the start, tsps). Varp 2386: defined in the 667 cache, used by no clientscript (CS2 scan 16-11), the
+     * client source nor the server (dossier COX.txt 16:3x) - the server sets it to 1 for the raid's leader (CoxRaids).
+     */
+    private val MULTILOC_VARPS: Map<Int, Int> = mapOf(49999 to 2386)
+
+    /**
      * Construction build-mode options a batch drops: the house is furnished, never built, so "Remove"/"Upgrade" would be
      * dead menu entries (the same clean-up [PohObjectOptionTool] does for the rev-667 POH locs).
      */
     private val STRIPPED_OPTIONS: Map<String, Set<String>> =
         mapOf("poh-pool" to setOf("Remove", "Upgrade"), "poh-house" to setOf("Remove", "Upgrade", "Arceuus", "Configuration"))
+
+    /** The raid's id table (data/cfg/cox/ids.tsv, 'loc<TAB>osrs<TAB>local<TAB>...') for a 'cox-' batch; empty otherwise. */
+    internal fun raidIds(batch: String): Map<String, Int> {
+        if (!batch.startsWith("cox-")) return emptyMap()
+        val file = File(gg.rsmod.game.RspsPaths.data("cfg/cox/ids.tsv"))
+        if (!file.isFile) return emptyMap()
+        return file.readLines().mapNotNull { line ->
+            val p = line.split('\t')
+            if (p.size < 3) null else p[2].toIntOrNull()?.let { "${p[0]}:${p[1]}" to it }
+        }.toMap()
+    }
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -159,18 +201,26 @@ object OsrsLocImportTool {
                     }
                     // A re-import rewrites the loc id the asset map already records, pinned to the bytes it replaces, so
                     // fixing a batch never leaves the first import behind as an orphan loc.
-                    val previous = importedSeqs["osrs_loc_loc:$osrsId"]
+                    // 16-11: locs that came in with a REGION import (CoX map: 29778 -> 66678, 49999 -> 66835) are only in the raid's id
+                    // table, not in the asset map - re-use them too, or the batch makes a second copy and the map keeps the old one.
+                    val previous = importedSeqs["osrs_loc_loc:$osrsId"] ?: raidIds(args[0])["loc:$osrsId"]
                     val localId = previous ?: nextLocId++
                     locIdMap[osrsId] = localId
+                    val multilocVarp = osrsId in MULTILOC_VARPS
                     val multiloc =
-                        MULTILOC_VARBITS[osrsId]?.let { varbit ->
+                        (MULTILOC_VARBITS[osrsId] ?: MULTILOC_VARPS[osrsId])?.let { varbit ->
                             val table = def.transforms ?: error("loc $osrsId has no transform table")
                             val default = table.last().let { if (it == -1) -1 else locIdMap[it] ?: error("loc $osrsId: default variant $it not in this batch") }
                             varbit to IntArray(table.size) { i -> if (i == table.size - 1 || table[i] == -1) default else locIdMap[table[i]] ?: default }
                         }
-                    multiloc?.let { (varbit, dest) -> println("PLAN multiloc $osrsId varbit ${def.varbitId}->$varbit transforms=${def.transforms?.toList()}->${dest.toList()}") }
+                    // 16-11 (CoX Reload, rolled back): the rev-667 loc type stores every transform as an UNSIGNED SHORT (65535 = none) and
+                    // the client reads it so - a variant id >= 65535 silently wraps (66678 -> 1142). Refuse instead of writing a wrong loc.
+                    multiloc?.let { (_, dest) ->
+                        check(dest.all { it == -1 || it < 65535 }) { "loc $osrsId: multiloc variants ${dest.toList()} - ids >= 65535 do not fit the 667 loc type (u16)" }
+                    }
+                    multiloc?.let { (varbit, dest) -> println("PLAN multiloc $osrsId ${if (multilocVarp) "varp" else "varbit"} ${def.varbitId}->$varbit transforms=${def.transforms?.toList()}->${dest.toList()}") }
                     // The loc's idle animation points at the local id OsrsFxImportTool gave the OSRS sequence.
-                    val bytes = Rev667LocType.encodeFromModern(def, { modelIdMap.getValue(it) }, dropped, multiloc) { importedSeqs["seq:$it"] }
+                    val bytes = Rev667LocType.encodeFromModern(def, { modelIdMap.getValue(it) }, dropped, multiloc, multilocVarp) { importedSeqs["seq:$it"] }
                     check(Rev667LocType.decode(localId, bytes).allModels == def.models.map { modelIdMap.getValue(it) }) { "loc $osrsId model mismatch" }
                     val current = if (previous == null) null else library.data(FeroxImportTool.LOC_INDEX, localId ushr 8, localId and 0xFF)
                     mutations +=

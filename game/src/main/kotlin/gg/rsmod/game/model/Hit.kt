@@ -57,6 +57,9 @@ class Hit private constructor(
     /** N462: the attack style this hit was launched with (dealHit), also for a miss - not the attacker's style at impact. */
     var sourceCombatClass: gg.rsmod.game.model.combat.CombatClass? = null
 
+    /** The spell that launched this hit, if any. Never read mutable caster spell state at projectile impact. */
+    var sourceSpellId: Int? = null
+
     /** Damage at which the target and source see the [HitmarkGroup.max] splat; NPC or unknown sources never do. */
     fun maxHitThreshold(): Int {
         val player = source?.entityType?.isPlayer == true

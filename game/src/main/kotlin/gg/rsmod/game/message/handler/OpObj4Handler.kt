@@ -6,7 +6,6 @@ import gg.rsmod.game.model.ExamineEntityType
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.Client
-import gg.rsmod.game.model.entity.Player
 
 /**
  * @author Tom <rspsmods@gmail.com>
@@ -21,7 +20,7 @@ class OpObj4Handler : MessageHandler<OpObj4Message> {
          * If tile is too far away, don't process it.
          */
         val tile = Tile(message.x, message.z, client.tile.height)
-        if (!tile.viewableFrom(client.tile, Player.TILE_VIEW_DISTANCE)) {
+        if (!client.inBuildArea(tile)) {
             return
         }
 

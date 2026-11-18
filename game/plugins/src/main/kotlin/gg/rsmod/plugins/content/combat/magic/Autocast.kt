@@ -26,24 +26,29 @@ import gg.rsmod.plugins.content.mechanics.pvp.AreaState
  * - "Autocast": "an attack option available for all Magic weapons (except powered staves and salamanders)".
  * - "Ancient Magicks": "Unlike the standard spells, Ancient Magicks combat spells can only be autocast with particular Magic weapons" -
  *   ancient staff, ancient sceptres, Blue moon spear, master wand, kodai wand, dragon hunter wand, nightmare / eldritch / volatile
- *   nightmare staff, Thammaron's / Accursed sceptre (a) (not on this server), Ahrim's staff only with the amulet of the damned (not on
+ *   nightmare staff, Thammaron's / Accursed sceptre (a)/(au), Ahrim's staff only with the amulet of the damned (not on
  *   this server, so Ahrim's staff never autocasts Ancient Magicks here). Zuriel's staff is not in the OSRS table: it autocasts only
  *   its own Miasmic spells (owner 2026-09-24: "not all staffs have ancient, use the OSRS wiki").
  * - "God spells": Saradomin Strike needs a Saradomin staff or staff of light; Claws of Guthix a Guthix staff, void knight mace or
- *   staff of balance; Flames of Zamorak a Zamorak staff, staff of the dead or toxic staff of the dead - to cast and to autocast.
+ *   staff of balance; Flames of Zamorak a Zamorak staff, staff of the dead or toxic staff of the dead. The three basic god staves
+ *   permit manual god casts only (OSRS Wiki God spells / Saradomin staff); other compatible staves can autocast them.
  * - Iban Blast / Magic Dart / Miasmic spells: the weapons in [CombatSpell.requiredWeapons].
  * - "Harmonised nightmare staff": "cannot autocast any other spells (including Ancient Magicks)" -> standard spells only.
  */
 object AutocastWeapons {
     private val STAFF_OF_LIGHT = setOf(Items.STAFF_OF_LIGHT, Items.STAFF_OF_LIGHT_22207, Items.STAFF_OF_LIGHT_22209, Items.STAFF_OF_LIGHT_22211, Items.STAFF_OF_LIGHT_22213)
 
-    /** God spells: the weapons that may cast them - manually and on autocast. */
+    /** God spells: weapons that may cast manually. The basic god staves cannot autocast their god spells. */
     val GOD_SPELL_WEAPONS: Map<CombatSpell, Set<Int>> =
         mapOf(
             CombatSpell.SARADOMIN_STRIKE to setOf(Items.SARADOMIN_STAFF) + STAFF_OF_LIGHT,
             CombatSpell.CLAWS_OF_GUTHIX to setOf(Items.GUTHIX_STAFF, Items.VOID_KNIGHT_MACE, Items.STAFF_OF_BALANCE),
-            CombatSpell.FLAMES_OF_ZAMORAK to setOf(Items.ZAMORAK_STAFF, Items.STAFF_OF_THE_DEAD, Items.TOXIC_STAFF_UNCHARGED, Items.TOXIC_STAFF_OF_THE_DEAD),
+            CombatSpell.FLAMES_OF_ZAMORAK to setOf(Items.ZAMORAK_STAFF, Items.STAFF_OF_THE_DEAD, Items.TOXIC_STAFF_UNCHARGED, Items.TOXIC_STAFF_OF_THE_DEAD,
+                // Wiki Thammaron's/Accursed sceptre (a): charged and uncharged autocasting variants both support Flames.
+                Items.THAMMARONS_SCEPTRE_A, Items.THAMMARONS_SCEPTRE_AU, Items.ACCURSED_SCEPTRE_A, Items.ACCURSED_SCEPTRE_AU),
         )
+
+    private val MANUAL_GOD_STAVES = setOf(Items.SARADOMIN_STAFF, Items.GUTHIX_STAFF, Items.ZAMORAK_STAFF)
 
     /**
      * Weapons that may autocast Ancient Magicks - exactly the OSRS Wiki "Autocast" Ancient Magicks table (read 2026-09-24) for the
@@ -126,6 +131,7 @@ object AutocastWeapons {
         if (spell.autoCastId <= 0 || spell.componentId == -1) return "That spell can't be autocast."
         val required = requiredWeapons(spell)
         if (required.isNotEmpty() && definition.id !in required) return requiredWeaponMessage(spell)
+        if (spell in GOD_SPELL_WEAPONS && definition.id in MANUAL_GOD_STAVES) return "You can't autocast that spell with this weapon."
         if (spell.interfaceId == Autocast.ANCIENT_BOOK) {
             // Amulet of the damned with Ahrim's set: "The staff can autocast Ancient Magicks" (AmuletOfTheDamned).
             val ahrim = player != null && definition.name.startsWith("Ahrim's staff", ignoreCase = true) && gg.rsmod.plugins.content.items.osrs.AmuletOfTheDamned.ahrimCanAutocastAncients(player)

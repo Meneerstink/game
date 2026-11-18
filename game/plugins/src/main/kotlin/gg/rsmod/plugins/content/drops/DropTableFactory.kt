@@ -380,7 +380,7 @@ object DropTableFactory {
             is DropEntry.NothingDrop -> emptyList()
             is DropEntry.ItemDrop -> listOf(drop.item)
             is DropEntry.MultiDrop -> drop.getDrop()
-            is DropEntry.TableDrop -> drop.getDrop()
+            is DropEntry.TableDrop -> (1..drop.rolls).flatMap { drop.getDrop() }
             is DropEntry.ItemRangeDrop -> listOf(drop.getDrop())
         }
     }
@@ -399,7 +399,7 @@ object DropTableFactory {
         return when (val drop = table.entries[at].drop) {
             is DropEntry.ItemDrop -> listOf(drop.item)
             is DropEntry.MultiDrop -> drop.getDrop()
-            is DropEntry.TableDrop -> drop.getDrop()
+            is DropEntry.TableDrop -> (1..drop.rolls).flatMap { drop.getDrop() }
             is DropEntry.ItemRangeDrop -> listOf(drop.getDrop())
             DropEntry.NothingDrop -> emptyList()
         }
@@ -571,6 +571,8 @@ class TableBuilder(
         table: DropTableBuilder.() -> Unit,
         slots: Int = 1,
         label: String? = DropTableNames.of(table),
+        /** N614: rolls of the nested table per hit (OSRS Nechryael rare seed table = 2). */
+        rolls: Int = 1,
     ) {
         val tab =
             DropTableBuilder(player, prng)
@@ -579,7 +581,7 @@ class TableBuilder(
                 .first()
 
         occupiedSlots += slots
-        entries.add(Entry(occupiedSlots, DropEntry.TableDrop(tab, label)))
+        entries.add(Entry(occupiedSlots, DropEntry.TableDrop(tab, label, rolls)))
     }
 
     /**

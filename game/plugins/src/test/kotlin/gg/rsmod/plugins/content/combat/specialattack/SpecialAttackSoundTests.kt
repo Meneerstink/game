@@ -70,6 +70,9 @@ class SpecialAttackSoundTests {
             Exemption.FrameSound("moon_specials.plugin.kts", "Items.ECLIPSE_ATLATL", 15456),
             Exemption.FrameSound("noxious_halberd.plugin.kts", "Items.NOXIOUS_HALBERD", 15463),
             Exemption.GraphicSound("staff_of_the_dead.plugin.kts", "StaffOfTheDead.POWER_OF_DEATH_ENERGY", 2319, 2982),
+            // CoX 16-11: Shield Bash (Dinh's bulwark) - no sound in the Wiki 'List of sound IDs', the imported OSRS sequence 7511 is
+            // silent (SeqSoundProbeTool SEQ_17695 SILENT). Open until an OSRS source is found (dossier COX.txt).
+            Exemption.OpenN3("cox_weapon_specials.plugin.kts", "SpecialAttacks.register(50, bulwark)"),
         )
 
     /** Every registration block in every plugin script, cut at the next registration in the same file. */

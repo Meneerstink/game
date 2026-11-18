@@ -18,6 +18,10 @@ class OsrsWeaponLooksTests {
         mapOf(
             23690 to "Ale of the gods - cosmetic, attacks unarmed (punch/kick) like OSRS",
             23770 to "Tzhaar-ket-om (t) - no source names its OSRS attack sequence (SOURCE_GAP); keeps the ket-om class",
+            // N630: powered staff - OSRS Wiki: every style casts the built-in spell (no melee); PoweredStaves.usingBuiltInSpell is true
+            // for every style, the cast plays TOA_SPELL_TUMEKEN01_CAST01 9543 (PoweredStaffCombatStrategy.look), never a weapon look.
+            24658 to "Tumeken's shadow - powered staff, attacks only with its built-in spell (cast seq 9543)",
+            24659 to "Tumeken's shadow (uncharged) - powered staff, no melee style (OSRS: cannot attack without charges)",
         )
 
     private fun importedWeapons(): Map<Int, String> {

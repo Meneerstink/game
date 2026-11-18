@@ -21,7 +21,8 @@ object DropViewerPlaces {
     fun spawnOf(world: World, id: Int): Tile? {
         spawns[id]?.let { return it }
         var found: Tile? = null
-        world.npcs.forEach { npc -> if (found == null && npc.id == id) found = Tile(npc.spawnTile) }
+        // N415: an owned npc (a Mage Arena II follower, Kolodion's duel forms) is a per-player spawn, never a fixed place.
+        world.npcs.forEach { npc -> if (found == null && npc.id == id && npc.owner == null) found = Tile(npc.spawnTile) }
         return found?.also { spawns[id] = it }
     }
 
@@ -42,6 +43,8 @@ object DropViewerPlaces {
                 DropSources.Kind.BARROWS -> Tile(3565, 3289)
                 // N462: the Jaltevas Pyramid entrance in the Necropolis (toa_necropolis.plugin.kts ENTRANCE).
                 DropSources.Kind.TOA -> Tile(3357, 2711)
+                // CoX: the entrance steps on Mount Quidamortem (cox_raid.plugin.kts, RAIDS_ENTRANCE_STEPS 29777 at 1232,3573).
+                DropSources.Kind.COX -> Tile(1232, 3573)
                 else -> spawnOf(world, source.modelNpc)
             } ?: return null
         return place(world, tile)

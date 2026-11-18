@@ -5,6 +5,7 @@ import gg.rsmod.game.model.Trace
 import gg.rsmod.game.model.entity.GameObject
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.priv.Privilege
+import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.content.combat.getCombatTarget
 import java.io.File
 import java.time.LocalDateTime
@@ -63,7 +64,9 @@ val lockSince = java.util.concurrent.ConcurrentHashMap<String, Int>()
 val reportedInvariants: MutableSet<String> = java.util.concurrent.ConcurrentHashMap.newKeySet()
 val CARDINALS = listOf(gg.rsmod.game.model.Direction.NORTH, gg.rsmod.game.model.Direction.EAST, gg.rsmod.game.model.Direction.SOUTH, gg.rsmod.game.model.Direction.WEST)
 
-fun stuck(tile: gg.rsmod.game.model.Tile): Boolean = CARDINALS.none { world.collision.canTraverse(tile = tile, direction = it, projectile = false, water = false) }
+// N636 18-11: a swimmer (npc def walkMask 0x4: the river ducks) moves on water tiles only - checking it as a land walker reported every
+// swimming duck as 'stuck' while it swam (bot sample 18-11 03:5x: ducks 46/2693 moved 3-4 tiles in 25 s). [water] = test as a swimmer.
+fun stuck(tile: gg.rsmod.game.model.Tile, water: Boolean = false): Boolean = CARDINALS.none { world.collision.canTraverse(tile = tile, direction = it, projectile = false, water = water) }
 
 fun reportOnce(
     key: String,
@@ -148,7 +151,7 @@ on_world_init {
                 if (players.isEmpty()) return@runCatching
                 world.npcs.forEach { n ->
                     if (n.isDead() || players.none { it.tile.height == n.tile.height && it.tile.isWithinRadius(n.tile, 20) }) return@forEach
-                    if (n.getSize() == 1 && n.walkRadius > 0 && stuck(n.tile)) {
+                    if (n.getSize() == 1 && n.walkRadius > 0 && stuck(n.tile, water = (runCatching { n.def.walkMask }.getOrDefault(0) and 0x4) != 0)) {
                         reportOnce("n:${n.index}:${n.tile}", Trace.Cat.NPCPATH) { "stuck: npc ${n.id} '${runCatching { n.def.name }.getOrDefault("?")}' #${n.index} at ${n.tile.x},${n.tile.z},${n.tile.height} cannot step in any direction (spawned or moved into scenery)" }
                     }
                     val hp = n.getCurrentLifepoints()
@@ -534,6 +537,45 @@ gg.rsmod.game.CommandServerCommands.handlers["pairpos"] = { w, a ->
     if (p == null || o == null) "usage: pairpos <a> <b>" else "tick=${w.currentCycle} ${p.username}@${p.tile.x},${p.tile.z} ${o.username}@${o.tile.x},${o.tile.z}"
 }
 // `opnpcitem <name> <inventory slot> <npc id>`: use an inventory item on the nearest npc with that id (OpNpcT, the real handler path).
+// `multiat <name>` (N603 15-11): whether the player's tile is multi-combat (Tile.isMulti, the same check combat uses) and whether it
+// is an instance tile - proves an instance's zone without needing two attackers.
+gg.rsmod.game.CommandServerCommands.handlers["multiat"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    if (p == null) "usage: multiat <name>"
+    else {
+        val t = p.tile
+        val map = w.instanceAllocator.getMap(t)
+        "${p.username} at ${t.x},${t.z},${t.height} region ${t.regionId}: multi=${t.isMulti(w)} instance=${map != null}"
+    }
+}
+// `menutest <name> <n>` (N605 15-11): opens a plain options() menu with n entries ('Option 1'..'Option n') and reports the pick in the
+// chat - the paged 6+ menus can be checked in the client without walking to a content NPC.
+gg.rsmod.game.CommandServerCommands.handlers["menutest"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    val n = a.getOrNull(1)?.toIntOrNull()
+    if (p == null || n == null || n !in 1..20) "usage: menutest <name> <1-20>"
+    else {
+        p.queue {
+            val pick = options(*(1..n).map { "Option $it" }.toTypedArray(), title = "Menu test ($n)")
+            p.message("menutest picked $pick")
+        }
+        "menutest $n for ${p.username}"
+    }
+}
+// `opheldu <name> <from item id> <to item id>` (N415 15-11): use one inventory item on another through the real OpHeldU route (the
+// client's 'Use X -> Y'), e.g. Ancient fabric on an imbued god cape - the first inventory slot holding each id is used.
+gg.rsmod.game.CommandServerCommands.handlers["opheldu"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
+    val from = a.getOrNull(1)?.toIntOrNull()
+    val to = a.getOrNull(2)?.toIntOrNull()
+    val fromSlot = if (p != null && from != null) p.inventory.rawItems.indexOfFirst { it?.id == from } else -1
+    val toSlot = if (p != null && to != null) p.inventory.rawItems.indexOfFirst { it?.id == to } else -1
+    if (p == null || fromSlot < 0 || toSlot < 0) "usage: opheldu <name> <from item id> <to item id> (both in the inventory)"
+    else {
+        val msg = gg.rsmod.game.message.impl.OpHeldUMessage(679 shl 16, fromSlot, from!!, 679 shl 16, toSlot, to!!)
+        if (p.gameSystem.inject(msg)) "used $from (slot $fromSlot) on $to (slot $toSlot) for ${p.username}" else "no handler"
+    }
+}
 gg.rsmod.game.CommandServerCommands.handlers["opnpcitem"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
     val slot = a.getOrNull(1)?.toIntOrNull()
@@ -841,4 +883,115 @@ fun writeBugReport(
     file.writeText(out.toString())
     Trace.log(Trace.Cat.INPUT) { "bug report ${file.name} by ${player.username}: $text" }
     return file
+}
+// N415 test: `ma2state <name> <ma1|trained|started|remains|completed>` sets a Mage Arena stage for own-client checks (testserver saves nothing).
+// ma1 = MA1 done + statue + first staff; trained = + 100 casts of all three god spells; started = + MA2 started (talk to Kolodion for
+// the symbol); remains = + Saradomin and Guthix remains handed in (one follower left to track).
+gg.rsmod.game.CommandServerCommands.handlers["ma2state"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    val stage = a.getOrNull(1) ?: "trained"
+    if (p == null) {
+        "usage: ma2state <name> <ma1|trained|started|remains|completed>"
+    } else {
+        val ma2 = gg.rsmod.plugins.content.areas.wilderness.MageArenaII
+        p.attr[gg.rsmod.game.model.attr.COMPLETED_MAGE_ARENA] = true
+        p.attr[gg.rsmod.game.model.attr.prayedAtStatue] = true
+        p.attr[gg.rsmod.game.model.attr.receivedStaff] = true
+        p.attr[ma2.MIGRATED] = true
+        // A test account counts as a legacy account (owner 2B: legacy = MA2 completed): start from a clean miniquest state.
+        p.attr[ma2.LEGACY_COMPLETED] = false; p.attr[ma2.STARTED] = false; p.attr[ma2.DELIVERED] = 0; p.attr[ma2.CREDITS] = 0
+        p.attr[ma2.FIRST_IMBUE] = false
+        if (stage != "ma1") gg.rsmod.plugins.content.areas.wilderness.GodSpellTraining.SPELLS.forEach { p.attr[it.key] = 100 }
+        if (stage == "started" || stage == "remains") p.attr[ma2.STARTED] = true
+        if (stage == "completed") {
+            // 15-11: all three remains handed in and the first free imbue used (as after a real run: ma2_full.sh + ma2_finish.sh).
+            p.attr[ma2.STARTED] = true
+            p.attr[ma2.DELIVERED] = gg.rsmod.plugins.content.areas.wilderness.MageArenaII.ALL_REMAINS
+            p.attr[ma2.FIRST_IMBUE] = true
+        }
+        if (stage == "remains") {
+            p.attr[ma2.DELIVERED] = gg.rsmod.plugins.content.areas.wilderness.MageArenaII.God.SARADOMIN.bit or gg.rsmod.plugins.content.areas.wilderness.MageArenaII.God.GUTHIX.bit
+            p.attr[ma2.CREDITS] = gg.rsmod.plugins.content.areas.wilderness.MageArenaII.God.SARADOMIN.bit or gg.rsmod.plugins.content.areas.wilderness.MageArenaII.God.GUTHIX.bit
+        }
+        "${p.username} Mage Arena state $stage"
+    }
+}
+// `dlg <name> [option 1-5]` (15-11 00:1x): answers the player's open dialogue from the server - no option = 'Click here to continue',
+// an option = that choice (options() reads button - 1). Same ResumePauseButton message the client sends, so scripts no longer need the
+// client to draw (a client hidden behind other windows does not process hook keys; owner watches YouTube).
+gg.rsmod.game.CommandServerCommands.handlers["dlg"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
+    val option = a.getOrNull(1)?.toIntOrNull()
+    if (p == null || (option != null && option !in 1..5)) "usage: dlg <name> [option 1-5]"
+    else if (p.gameSystem.inject(gg.rsmod.game.message.impl.ResumePauseButtonMessage(0, 0, (option ?: 0) + 1)))
+        "dlg ${option ?: "continue"} for ${p.username}"
+    else "no handler"
+}
+// `botlogin <name> <x> <z> [height]` / `botlogout <name>` (15-11 00:2x): a test player WITHOUT a client (conformance bot: real Client
+// without a socket, 99 all, never saved) - logic tests no longer depend on a client that has to draw (owner watches YouTube: a hidden
+// client times out on hook login/keys/shots). Drive it with the usual `as`/`opnpc`/`opheld`/`dlg` commands.
+val cmdBots = mutableMapOf<String, gg.rsmod.game.model.entity.Client>()
+gg.rsmod.game.CommandServerCommands.handlers["botlogin"] = { w, a ->
+    val name = a.getOrNull(0)
+    val n = a.drop(1).filter { it != "admin" }.map { it.toIntOrNull() }
+    if (name == null || n.size < 2 || n.take(2).any { it == null }) "usage: botlogin <name> <x> <z> [height] [admin]"
+    else if (w.getPlayerForName(name) != null) "$name is already online"
+    else {
+        // N620 15-11: a bot placed inside an object stands still silently (PvP test 'Attack' did nothing at 3093,3541) -> the nearest
+        // standable tile, and the reply says so.
+        val asked = gg.rsmod.game.model.Tile(n[0]!!, n[1]!!, n.getOrNull(2) ?: 0)
+        val at = TestLib.nearestStandable(w, asked) ?: asked
+        val bot = gg.rsmod.plugins.content.cmd.conformance.Bots.create(w, at, name)
+        // N620: 'admin' = the team test accounts' privilege, so a bot can run the player test commands (gear_max, god, botstate ...).
+        if ("admin" in a && System.getProperty("rsps.testServer") == "true") {
+            // The team test accounts' privilege (owner powers: gear_max, god ...) - TeamTestAccounts.PRIVILEGE_ID, as their login gets.
+            bot.privilege = w.privileges.get(gg.rsmod.game.service.serializer.TeamTestAccounts.PRIVILEGE_ID) ?: bot.privilege
+        }
+        cmdBots[name] = bot
+        "bot $name online at ${bot.tile.x},${bot.tile.z},${bot.tile.height}" + (if (at != asked) " (moved: ${asked.x},${asked.z} is not standable)" else "")
+    }
+}
+gg.rsmod.game.CommandServerCommands.handlers["botlogout"] = { w, a ->
+    val bot = cmdBots.remove(a.getOrNull(0) ?: "")
+    if (bot == null) "usage: botlogout <name> (a bot made with botlogin)"
+    else {
+        // Player.handleLogout without the save (as toa_bot.logoutBot): the same hooks a real logout runs.
+        runCatching { bot.interruptQueues() }
+        runCatching { bot.world.plugins.executeLogout(bot) }
+        runCatching { bot.world.unregister(bot) }
+        "bot ${bot.username} logged out"
+    }
+}
+// N415 test: `ma2where <name>` - the player's current follower locations (point index, south-west tile) and rotation steps left.
+gg.rsmod.game.CommandServerCommands.handlers["ma2where"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    if (p == null) "usage: ma2where <name>" else {
+        val t = gg.rsmod.plugins.content.areas.wilderness.MageArenaIITracking
+        val ma2 = gg.rsmod.plugins.content.areas.wilderness.MageArenaII
+        "${p.username} locations=${t.locations(p)?.mapIndexed { i, l -> "${gg.rsmod.plugins.content.areas.wilderness.MageArenaII.God.values()[i]}@${l.point}:${l.tile.x},${l.tile.z}" }} steps=${p.attr[t.STEPS_LEFT]}" +
+            " started=${ma2.started(p)} completed=${ma2.completed(p)} delivered=${p.attr[ma2.DELIVERED]} trackable=${ma2.trackable(p)}" +
+            " usable=${t.usableAt(p.tile)} wild=${p.tile.getWildernessLevel()} symbol=${ma2.assets.symbol}" +
+            " held=${gg.rsmod.plugins.content.areas.wilderness.MageArenaII.God.values().filter { ma2.holdsRemains(p, it) }}"
+    }
+}
+// N415 test: `ma2cast <name> <saradomin|guthix|zamorak>` - selects that god spell on autocast (wield an autocasting god weapon first:
+// staff of light / void knight mace / staff of the dead), so a scripted `opnpc` fight casts the follower's matching spell.
+gg.rsmod.game.CommandServerCommands.handlers["ma2cast"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    val spell = when (a.getOrNull(1)) {
+        "saradomin" -> gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.SARADOMIN_STRIKE
+        "guthix" -> gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.CLAWS_OF_GUTHIX
+        "zamorak" -> gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.FLAMES_OF_ZAMORAK
+        // Any other combat spell by its enum name (MA1 duel: e.g. fire_wave with a staff of fire).
+        else -> a.getOrNull(1)?.let { n -> gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.values().firstOrNull { it.name.equals(n, true) } }
+    }
+    if (p == null || spell == null) "usage: ma2cast <name> <saradomin|guthix|zamorak>" else {
+        gg.rsmod.plugins.content.combat.magic.Autocast.select(p, spell, gg.rsmod.plugins.content.combat.magic.Autocast.Mode.STANDARD)
+        "${p.username} autocast ${spell.name} -> ${gg.rsmod.plugins.content.combat.magic.Autocast.resolve(p)?.name ?: "REFUSED"}"
+    }
+}
+// N415 test: `ma1duel <name>` - starts the Mage Arena I duel as the Kolodion dialogue does (MageArena.start; 60 base Magic needed).
+gg.rsmod.game.CommandServerCommands.handlers["ma1duel"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    if (p == null) "usage: ma1duel <name>" else "${p.username} duel started=${gg.rsmod.plugins.content.areas.wilderness.MageArena.start(p)} form=${p.attr[gg.rsmod.plugins.content.areas.wilderness.MageArena.FORM] ?: 0}"
 }

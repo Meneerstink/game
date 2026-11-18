@@ -237,7 +237,9 @@ on_obj_option(obj = Objs.LOG_BALANCE_2297, option = "Walk-across") {
 on_obj_option(obj = Objs.ROCKS_2328, option = "Climb") {
     if (!player.wildernessLevel(49)) return@on_obj_option
     obstacle { target ->
-        if (player.tile.z <= target.tile.z) return@obstacle
+        // Only the top (south) side refuses; a click from beside the row (same z, N599 2026-11-15: 2992,3936 -> rock 2993 did
+        // nothing, no message) walks to the course-side tile first like the other rocks of the row.
+        if (player.tile.z < target.tile.z) return@obstacle
         walkToTile(player, Tile(player.tile.x.coerceIn(2993, 2995), 3937))
         face(player, Direction.SOUTH)
         player.animate(3378)

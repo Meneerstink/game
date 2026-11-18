@@ -1,237 +1,61 @@
 package gg.rsmod.plugins.content.areas.wilderness
 
-import gg.rsmod.game.model.attr.COMPLETED_MAGE_ARENA
+import gg.rsmod.game.model.combat.SlayerAssignment
 import gg.rsmod.game.model.attr.prayedAtStatue
-import gg.rsmod.plugins.content.drops.DropTableFactory
-import gg.rsmod.plugins.content.magic.TeleportType
-import gg.rsmod.plugins.content.magic.teleport
 import gg.rsmod.plugins.content.skills.agility.darkanForceMove
 
-val humanForm = Npcs.KOLODION_907
-val ogreForm = Npcs.KOLODION_908
-val trollForm = Npcs.KOLODION_11301
-val darkBeastForm = Npcs.KOLODION_11302
-val demonForm = Npcs.KOLODION_911
+// OSRS overhead lines per form, in duel order (human, ogre, spider, ethereal, demon).
+val FORM_SHOUTS = listOf(
+    "You must prove yourself... now!",
+    "This is only the beginning; you can't beat me!",
+    "Foolish mortal; I am unstoppable.",
+    "Now you feel it... The dark energy.",
+    "Aaaaaaaarrgghhhh! The power!",
+)
 
-on_npc_spawn(npc = humanForm) {
-    npc.forceChat("You must prove yourself... now!")
-    npc.graphic(Gfx.MAGEARENA_TRANSFORM_POOF, 100)
+can_equip_any_item { player, item ->
+    val allowed = MageArena.canEquip(player, item)
+    if (!allowed) player.message("God staves cannot be wielded with the cape of another god.")
+    allowed
 }
 
-on_npc_spawn(npc = ogreForm) {
-    npc.forceChat("This is only the beginning; you can't beat me!")
-    npc.graphic(Gfx.MAGEARENA_TRANSFORM_POOF, 100)
+MageArena.FORMS.forEachIndexed { index, form ->
+    on_npc_spawn(npc = form.npc) {
+        npc.forceChat(FORM_SHOUTS[index])
+        npc.graphic(Gfx.MAGEARENA_TRANSFORM_POOF, 100)
+    }
 }
 
-on_npc_spawn(npc = trollForm) {
-    npc.forceChat("Foolish mortal; I am unstoppable.")
-    npc.graphic(Gfx.MAGEARENA_TRANSFORM_POOF, 100)
-}
-
-on_npc_spawn(npc = darkBeastForm) {
-    npc.forceChat("Now you feel it... The dark energy.")
-    npc.graphic(Gfx.MAGEARENA_TRANSFORM_POOF, 100)
-}
-
-on_npc_spawn(npc = demonForm) {
-    npc.forceChat("Aaaaaaaarrgghhhh! The power!")
-    npc.graphic(Gfx.MAGEARENA_TRANSFORM_POOF, 100)
-}
-
-val ids = intArrayOf(Npcs.KOLODION_907)
-
-val table = DropTableFactory
-val wizard =
-    table.build {
-        guaranteed {
-            obj(Items.BONES)
+// Each transformation belongs to one player's duel; there is no ordinary monster loot/respawn.
+MageArena.FORMS.forEachIndexed { index, form ->
+    on_npc_death(form.npc) { MageArena.killed(npc) }
+    set_combat_def(form.npc) {
+        configs {
+            attackSpeed = form.speed
+            spell = 503 // Magic fallback only; NpcAttacks retains all three existing god-spell sections for these ids.
+            respawnDelay = 0
+            completesEncounter = index == MageArena.FORMS.lastIndex
         }
-    }
-
-table.register(wizard, *ids)
-
-on_npc_death(humanForm) {
-    world.spawn(Npc(ogreForm, npc.tile, world))
-    npc.graphic(Gfx.MAGEARENA_TELEPORT_BALL, 100)
-}
-
-on_npc_death(ogreForm) {
-    world.spawn(Npc(trollForm, npc.tile, world))
-}
-
-on_npc_death(trollForm) {
-    world.spawn(Npc(darkBeastForm, npc.tile, world))
-}
-
-on_npc_death(darkBeastForm) {
-    world.spawn(Npc(demonForm, npc.tile, world))
-}
-
-on_npc_death(demonForm) {
-    val p = npc.killer() ?: return@on_npc_death
-    val playerSpawnTile = Tile(x = 2541, z = 4715)
-    p.teleport(playerSpawnTile, TeleportType.MODERN)
-    p.attr[COMPLETED_MAGE_ARENA] = true
-}
-
-set_combat_def(humanForm) {
-    configs {
-        attackSpeed = 7
-        spell = 503
-        respawnDelay = 10
-    }
-    stats {
-        hitpoints = 30
-        attack = 0
-        strength = 0
-        defence = 0
-        magic = 60
-        ranged = 0
-    }
-    bonuses {
-        attackStab = 0
-        attackCrush = 0
-        defenceStab = 99999
-        defenceSlash = 9999
-        defenceCrush = 9999
-        defenceMagic = 0
-        defenceRanged = 9999
-    }
-    anims {
-        attack = 811
-        death = 2888
-        block = 404
-    }
-    aggro {
-        radius = 10
-    }
-}
-
-set_combat_def(ogreForm) {
-    configs {
-        attackSpeed = 7
-        respawnDelay = 0
-    }
-    stats {
-        hitpoints = 650
-        attack = 85
-        strength = 98
-        defence = 105
-        magic = 80
-        ranged = 1
-    }
-    bonuses {
-        attackStab = 0
-        attackCrush = 0
-        defenceStab = 99999
-        defenceSlash = 9999
-        defenceCrush = 9999
-        defenceMagic = 0
-        defenceRanged = 9999
-    }
-    anims {
-        attack = 8577
-        death = 8576
-        block = 8578
-    }
-    aggro {
-        radius = 10
-    }
-}
-
-set_combat_def(trollForm) {
-    configs {
-        attackSpeed = 7
-        respawnDelay = 0
-    }
-    stats {
-        hitpoints = 650
-        attack = 85
-        strength = 98
-        defence = 105
-        magic = 80
-        ranged = 1
-    }
-    bonuses {
-        attackStab = 0
-        attackCrush = 0
-        defenceStab = 99999
-        defenceSlash = 9999
-        defenceCrush = 9999
-        defenceMagic = 0
-        defenceRanged = 9999
-    }
-    anims {
-        attack = 13790
-        death = 13785
-        block = 13787
-    }
-    aggro {
-        radius = 10
-    }
-}
-
-set_combat_def(darkBeastForm) {
-    configs {
-        attackSpeed = 7
-        respawnDelay = 0
-    }
-    stats {
-        hitpoints = 780
-        attack = 85
-        strength = 98
-        defence = 105
-        magic = 80
-        ranged = 1
-    }
-    bonuses {
-        attackStab = 0
-        attackCrush = 0
-        defenceStab = 99999
-        defenceSlash = 9999
-        defenceCrush = 9999
-        defenceMagic = 0
-        defenceRanged = 9999
-    }
-    anims {
-        attack = 2731
-        death = 2733
-        block = 2732
-    }
-    aggro {
-        radius = 10
-    }
-}
-
-set_combat_def(demonForm) {
-    configs {
-        attackSpeed = 4
-        respawnDelay = 0
-    }
-    stats {
-        hitpoints = 1070
-        attack = 85
-        strength = 98
-        defence = 105
-        magic = 80
-        ranged = 1
-    }
-    bonuses {
-        attackStab = 0
-        attackCrush = 0
-        defenceStab = 99999
-        defenceSlash = 9999
-        defenceCrush = 9999
-        defenceMagic = 0
-        defenceRanged = 9999
-    }
-    anims {
-        attack = 64
-        death = 67
-        block = 65
-    }
-    aggro {
-        radius = 10
+        stats {
+            hitpoints = form.hp * 10 // NpcCombatDsl accepts 667 authored HP units, then converts to real HP.
+            attack = form.attack
+            strength = form.strength
+            defence = form.defence
+            magic = form.magic
+            ranged = 1
+        }
+        anims {
+            val (cast, death, block) = form.anims()
+            attack = cast
+            this.death = death
+            this.block = block
+        }
+        aggro { radius = 0 } // The duel explicitly targets its owner after landing/each transformation.
+        if (index == MageArena.FORMS.lastIndex) {
+            // OSRS Wiki Kolodion: only the final demon counts for black demon assignments,107 Slayer XP.
+            species { +NpcSpecies.DEMON }
+            slayer { assignment = SlayerAssignment.BLACK_DEMON; experience = 107.0 }
+        }
     }
 }
 
@@ -294,7 +118,7 @@ fun prayToSaradomin(
                 4 -> wait(1)
                 5 -> {
                     val floorSpawnTile = Tile(x = 2500, z = 4720)
-                    val SARADOMIN_CAPE = GroundItem(Items.SARADOMIN_CAPE, 1, Tile(x = 2500, z = 4720, 0))
+                    val SARADOMIN_CAPE = GroundItem(Items.SARADOMIN_CAPE, 1, Tile(x = 2500, z = 4720, 0), p)
                     player.world.spawn(SARADOMIN_CAPE)
                     player.world.spawn(TileGraphic(floorSpawnTile, id = Gfx.SMALL_SMOKE_POOF, height = 0))
                 }
@@ -327,7 +151,7 @@ fun prayToGuthix(
                 4 -> wait(1)
                 5 -> {
                     val floorSpawnTile = Tile(x = 2507, z = 4723)
-                    val GUTHIX_CAPE = GroundItem(Items.GUTHIX_CAPE, 1, Tile(x = 2507, z = 4723, 0))
+                    val GUTHIX_CAPE = GroundItem(Items.GUTHIX_CAPE, 1, Tile(x = 2507, z = 4723, 0), p)
                     player.world.spawn(GUTHIX_CAPE)
                     player.world.spawn(TileGraphic(floorSpawnTile, id = Gfx.SMALL_SMOKE_POOF, height = 0))
                 }
@@ -360,7 +184,7 @@ fun prayToZamorak(
                 4 -> wait(1)
                 5 -> {
                     val floorSpawnTile = Tile(x = 2516, z = 4720)
-                    val ZAMORAK_CAPE = GroundItem(Items.ZAMORAK_CAPE, 1, Tile(x = 2516, z = 4720, 0))
+                    val ZAMORAK_CAPE = GroundItem(Items.ZAMORAK_CAPE, 1, Tile(x = 2516, z = 4720, 0), p)
                     player.world.spawn(ZAMORAK_CAPE)
                     player.world.spawn(TileGraphic(floorSpawnTile, id = Gfx.SMALL_SMOKE_POOF, height = 0))
                 }
@@ -381,16 +205,8 @@ on_obj_option(obj = Objs.STATUE_OF_GUTHIX, option = "pray at", lineOfSightDistan
     if (obj.isSpawned(world)) {
         player.faceTile(obj.tile, 3, 3)
         player.queue {
-            if (!player.attr.has(COMPLETED_MAGE_ARENA)) {
+            if (!MageArena.completed(player)) {
                 messageBox("Guthix is disappointed in your resolve...")
-                return@queue
-            }
-            if (player.hasItem(Items.GUTHIX_CAPE)) {
-                messageBox("You have already received a blessing from Guthix.")
-                return@queue
-            }
-            if (player.hasItem(Items.ZAMORAK_CAPE) || player.hasItem(Items.SARADOMIN_CAPE)) {
-                messageBox("You have already received a blessing from another God.")
                 return@queue
             }
             prayToGuthix(player, obj)
@@ -404,16 +220,8 @@ on_obj_option(obj = Objs.STATUE_OF_ZAMORAK_2874, option = "pray at", lineOfSight
     if (obj.isSpawned(world)) {
         player.faceTile(obj.tile, 3, 3)
         player.queue {
-            if (!player.attr.has(COMPLETED_MAGE_ARENA)) {
+            if (!MageArena.completed(player)) {
                 messageBox("Zamorak is disappointed in your resolve...")
-                return@queue
-            }
-            if (player.hasItem(Items.ZAMORAK_CAPE)) {
-                messageBox("You have already received a blessing from Zamorak.")
-                return@queue
-            }
-            if (player.hasItem(Items.SARADOMIN_CAPE) || player.hasItem(Items.GUTHIX_CAPE)) {
-                messageBox("You have already received a blessing from another God.")
                 return@queue
             }
             prayToZamorak(player, obj)
@@ -427,16 +235,8 @@ on_obj_option(obj = Objs.STATUE_OF_SARADOMIN_2873, option = "pray at", lineOfSig
     if (obj.isSpawned(world)) {
         player.faceTile(obj.tile, 3, 3)
         player.queue {
-            if (!player.attr.has(COMPLETED_MAGE_ARENA)) {
+            if (!MageArena.completed(player)) {
                 messageBox("Saradomin is disappointed in your resolve...")
-                return@queue
-            }
-            if (player.hasItem(Items.SARADOMIN_CAPE)) {
-                messageBox("You have already received a blessing from Guthix.")
-                return@queue
-            }
-            if (player.hasItem(Items.ZAMORAK_CAPE) || player.hasItem(Items.GUTHIX_CAPE)) {
-                messageBox("You have already received a blessing from another God.")
                 return@queue
             }
             prayToSaradomin(player, obj)
@@ -450,7 +250,7 @@ on_obj_option(obj = Objs.SPARKLING_POOL, option = "step-into", lineOfSightDistan
     if (obj.isSpawned(world)) {
         player.faceTile(obj.tile, 3, 3)
         player.queue {
-            if (!player.attr.has(COMPLETED_MAGE_ARENA)) {
+            if (!MageArena.completed(player)) {
                 messageBox("A magical force stops you from stepping into the pool.")
                 return@queue
             }
@@ -464,7 +264,7 @@ on_obj_option(obj = Objs.SPARKLING_POOL_2879, option = "step-into", lineOfSightD
     if (obj.isSpawned(world)) {
         player.faceTile(obj.tile, 3, 3)
         player.queue {
-            if (!player.attr.has(COMPLETED_MAGE_ARENA)) {
+            if (!MageArena.completed(player)) {
                 messageBox("A magical force stops you from stepping into the pool.")
                 return@queue
             }

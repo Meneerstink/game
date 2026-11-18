@@ -57,6 +57,10 @@ object OsrsNpcImportTool {
      */
     val BATCHES: Map<String, List<Int>> by lazy {
         mapOf(
+            // N415: regular MA1/MA2 actors, deliberately separate from the Deadman breach definitions below.
+            // RuneLite gameval KOLHUMAN/KOLOGRE/KOLSPIDER/KOLETHEREAL/KOLDEMON; MA2_BOSS_* and MA2_GUTHIX_HEALER.
+            // This batch only plans imports unless Claude explicitly runs --apply through CacheTransaction.
+            "mage-arena" to listOf(1605, 1606, 1607, 1608, 1609, 5977, 7513, 7514, 7515, 7858, 7859, 7860),
             // OSRS Wiki "Ferox Enclave" personalities, ids from each npc's infobox.
             "ferox" to
                 listOf(
@@ -155,6 +159,14 @@ object OsrsNpcImportTool {
             // N462 Necropolis G6 (ChatGPT-B2 07-11): OSRS Crocodile 4184 (== 11581 == 11582 byte-identical) x12 and Desert Lizard 459/460/461
             // (459 == 12003) x4 - the local 667 Crocodile 6779 / Lizard 2803 are other meshes.
             "necropolis" to listOf(4184, 459, 460, 461),
+            // CoX (owner 2026-11-15 14:3x; dossier COX.txt FASE 4, RuneLite gameval NpcID, all CLASSIC per OsrsNpcProbeTool 15-11 17:3x):
+            // corridor boulder 7489, party group holders 7490/7491, Vanguards 7525-7529, Vespula 7530-7532 + portal 7533 + lux grubs
+            // 7534-7537 + vespine soldiers 7538/7539, Tekton 7540-7545, scavenger beasts 7548/7549, Great Olm head/claws 7550-7557 + fire
+            // 7558, Deathly ranger/mage 7559/7560, Muttadiles 7561-7563 + meat tree 7564, Vasa 7565-7568, Guardians 7569-7572, Lizardman
+            // shamans 7573/7574 + spawn 7575, Jewelled crabs 7576-7579 + energy focus 7580-7583, Ice demon 7584/7585, Icefiend 7586, bats
+            // 7587-7593, cave snake 7594, Captain Rimor 7595, Mountain Guides 7599/7600, Swamp Priest 7601, Corrupted scavengers
+            // 7602/7603, Skeletal Mystics 7604-7606. (Normal mode only - Challenge Mode later, owner besluit 2a.)
+            "cox-npcs" to (listOf(7489, 7490, 7491) + (7525..7545) + listOf(7548, 7549) + (7550..7595) + listOf(7599, 7600, 7601) + (7602..7606)),
         )
     }
 
@@ -163,11 +175,15 @@ object OsrsNpcImportTool {
      * The OSRS graves 9856/9857 are gravestone models, not a humanoid rig; the POH combat dummies 10507/8598/10508-10512 are posts.
      */
     val STATIC_NPCS =
-        setOf(9856, 9857, 10507, 8598, 10508, 10509, 10510, 10511, 10512, 6601) + // 6601 Runite rocks (N522 deel 5)
+        setOf(9856, 9857, 10507, 8598, 10508, 10509, 10510, 10511, 10512, 6601,
+            7514) + // N415: OSRS2686 Energy ball has no movement sequences; never give it the humanoid fallback.
             // N462 ToA: no movement sequences in OSRS (GPT-A 50-skeletal-consumenten.tsv directSeqRefs {}): obelisks, palms, Het's Seal,
             // eggs, jug 11735, boulder 11737, helper npcs and rubble.
             setOf(11698, 11699, 11700, 11701, 11702, 11703, 11704, 11706, 11707, 11728, 11729, 11735, 11737, 11744, 11745, 11784, 11785,
-                11786, 11787, 11788, 11805)
+                11786, 11787, 11788, 11805) +
+            // CoX: no movement sequences in OSRS (OsrsNpcProbeTool 15-11: MOVEMENT {} / stand null) - group holders, Abyssal portal,
+            // the Great Olm's head and claws (animated through spawn/attack seqs), meat tree, glowing crystal.
+            setOf(7490, 7491, 7533, 7550, 7551, 7552, 7553, 7554, 7555, 7556, 7557, 7564, 7568)
 
     /**
      * Batches whose entries are renamed clones of an OSRS npc: the same models, BAS and options, only the cache name changed.
@@ -190,6 +206,15 @@ object OsrsNpcImportTool {
      */
     val EXTRA_SEQS: Map<String, List<Int>> =
         mapOf(
+            // N415: RuneLite AnimationID ZAMORAK_DEMON_BOSS_*, ENT_BOSS_*, WILD_ZEALOT_*.
+            // Combat/special/spawn/death sequences do not all appear in the NPC movement definition.
+            "mage-arena" to listOf(7838, 7840, 7841, 7842, 7843, 7844, 7846, 7848, 7849, 7850,
+                7853, 7854, 7962, 7963, 7964, 7965, 7966,
+                // MA1 OSRS Kolodion forms (KOLHUMAN..KOLDEMON 1605-1609): each rig's casting / block / death (gameval names):
+                // GIANT_CASTING 132, GIANT_BLOCK 129, GIANT_DEATH 131 (ogre form on the giant rig); SPIDER_UPDATE_CASTING_LARGE 5322,
+                // _DEFEND_LARGE 5320, _DEATH_LARGE 5321; HUMAN_TRANS_CASTING 812, HUMAN_TRANSDEATH 843, HUMAN_UNARMEDBLOCK 424 (ethereal);
+                // DEMON_ATTACK 64, DEMON_BLOCK 65, DEMON_DEATH 67; HUMAN_CASTING 811 and HUMAN_DEATH 836 (human form).
+                132, 129, 131, 5322, 5320, 5321, 812, 843, 424, 64, 65, 67, 811, 836),
             "mimic" to listOf(8308, 8309, 8310),
             // deadman-guard: the gnome guards' combat on the OSRS gnome skeleton (base of GNOME_READY 2331): GNOME_ATTACKBOW 12043,
             // GNOME_ATTACKSWORD 12045, GNOME_BLOCK 12046, GNOME_DEATH 12048 (RuneLite gameval AnimationID, 2026-09-24).
@@ -239,6 +264,18 @@ object OsrsNpcImportTool {
             "toa-classic" to listOf(2035, 2038, 2039, 9804) + (9720..9736).toList() + listOf(9518),
             // necropolis: CROC_PARRY 2035 / CROC_DEATH 2038 / CROC_ATTACK 2039; SLAYER_LIZARD_ATTACK 2776 / _DEFEND 2777 / _DEATH 2778.
             "necropolis" to listOf(2035, 2038, 2039, 2776, 2777, 2778),
+            // cox-npcs: every sequence on each CoX rig's own frame base (OsrsNpcProbeTool skeleton 15-11 17:3x, COX.txt): Vasa 7407-7416 +
+            // 7985, Muttadiles 7417-7426 + 7982 (not 12205 HIPPO_IDLE on the same base), Vanguards 7427-7447 + 7984, Vespula 7448-7462 + 7986 + 8639, lux grubs
+            // 7463-7466, Tekton 7473-7495 + 7983 + 8637, scavengers 254-258 + 5356 + 7496-7498, shamans 6946 7152 7157-7160 7191-7196
+            // 8198-8200, crabs 1310-1316 + 2368, energy focus 502 8196, icefiend 1578-1582 7820, bats 29-36, cave snake 4037-4042 7333,
+            // fire 6646 6853 8187 12093; the Great Olm OLM_HEAD_* / OLM_HAND_* 7334-7383 + 7469-7472 + OLM_GENERIC_RANGE_PROJ 7504 +
+            // OLM_BURNWITHME_TRAVEL 7505 + RAIDS_CRYSTAL_SMASHING 7506; shared rigs by gameval name: Ice demon DEMON_WALK 63 / ATTACK 64 /
+            // BLOCK 65 / READY 66 / DEATH 67 / CASTING 69, Skeletal Mystic SKELETON_UPDATE_WALK 5479 / READY 5483 / ATTACK_WEAPON 5485 /
+            // DEFEND 5489 / DEATH 5491 / MAGE_CASTING 5523; Guardians stand HUMAN_STAFFREADY_STATUE 7526.
+            "cox-npcs" to ((7407..7495).toList() + listOf(7982, 7983, 7984, 7985, 7986, 8637, 8639) + listOf(254, 255, 256, 257, 258, 5356) +
+                listOf(6946, 7152, 7157, 7158, 7159, 7160, 7191, 7192, 7193, 7194, 7195, 7196, 8198, 8199, 8200) + (1310..1316) + listOf(2368, 502, 8196) +
+                (1578..1582) + listOf(7820) + (29..36) + (4037..4042) + listOf(7333, 6646, 6853, 8187, 12093) + (7334..7383) + listOf(7504, 7505, 7506) +
+                listOf(63, 64, 65, 66, 67, 69, 5479, 5483, 5485, 5489, 5491, 5523, 7526) + (7496..7498)).distinct(),
             "venenatis" to listOf(9989, 9990, 9991, 9992, 9993, 6249, 6250, 6251, 4925, 4927, 4929, 5327, 5328, 5329),
             "rev-caves" to listOf(169, 170, 172, 6184, 6183, 6182, 1582, 1581, 1580, 163, 165, 167, 4652, 4651, 4653, 6562, 6566, 6576, 64, 65, 67, 4320, 4322, 4321, 2731, 2732, 2733, 386, 424, 836, 80, 89, 92),
             // deadman-breach: attack / defend / death sequences, chosen by RuneLite gameval AnimationID name among the OSRS sequences
