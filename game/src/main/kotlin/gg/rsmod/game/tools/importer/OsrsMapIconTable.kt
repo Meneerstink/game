@@ -19,7 +19,9 @@ object OsrsMapIconTable {
         )
 
     /** SOURCE_BLOCKED scenes: 22 is an empty OSRS frame, the rest have no 667 picture (nearest diff >= 0.11). */
-    val BLOCKED_SCENES = setOf(22, 81, 82, 101, 102, 103, 128, 129, 146, 147, 148, 149, 250, 251)
+    // N625 (18-11): + 151 (Clay rocks 65339, Necropolis/ToA import) - OsrsLocMapDataTool plan 18-11: 'SCENE osrs=151 -> msi=BLOCKED (nearest 92
+    // diff 0,305)', no 667 picture.
+    val BLOCKED_SCENES = setOf(0, 22, 24, 81, 82, 101, 102, 103, 115, 116, 117, 121, 128, 129, 131, 146, 147, 148, 149, 151, 196, 232, 234, 235, 236, 250, 251, 260)
 
     /** SOURCE_BLOCKED areas (no 667 picture), the OSRS quest-start icons 792/831 (= our quest icon 1116; owner N227: no quest icons on the map - OsrsLocMapDataTool skips them) and 652 (Death's Office: DeathsOfficeMapImportTool puts 1108 on one loc per entrance). */
     val BLOCKED_AREAS = setOf(13, 66, 71, 91, 792, 831, OsrsLocMapDataTool.DEATHS_OFFICE_AREA)
