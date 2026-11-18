@@ -10,7 +10,7 @@ import org.junit.Test
 
 /** N631: OSRS Wiki Weapons/Categories "Partisan" (Keris partisan) - Stab / Lunge / Pound (crush) / Block, not the dagger's Slash. */
 class PartisanStyleTests {
-    private fun style(s: CombatStyle) = AttackStyleData.getAttackStyleType(WeaponType.PARTISAN, s)!!
+    private fun style(s: CombatStyle) = WeaponCombatData.getAttackStyleType(WeaponType.PARTISAN, s)!!
 
     @Test
     fun `partisan styles are the OSRS stab, lunge, pound and block`() {
