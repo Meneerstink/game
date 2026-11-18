@@ -72402,3 +72402,268 @@
 # N462: OSRS loc 11391; https://oldschool.runescape.wiki/w/Rocks_(empty)?oldid=15073028 L25. Local id resolved from toa/ids.tsv.
 - id: 66312
   examine: "Stoney!"
+# N634 (Claude 18-11): CoX loc examines from the OSRS Wiki infobox versions (work/claude-scripts/loc_examines.py)
+- id: 66334
+  examine: "Found near the water's edge."
+- id: 66338
+  examine: "This tree has long been dead."
+- id: 66339
+  examine: "It's only useful for firewood now."
+- id: 66340
+  examine: "A tree found in tropical areas."
+- id: 66341
+  examine: "This tree has been cut down."
+- id: 66346
+  examine: "This old tree is rotting away."
+- id: 66356
+  examine: "Makes you cry."
+- id: 66377
+  examine: "Hot!"
+- id: 66378
+  examine: "Now that's what I call slimline!"
+- id: 66379
+  examine: "He looks very relaxed."
+- id: 66380
+  examine: "Now he's just too thin."
+- id: 66381
+  examine: "These fat fungi take up so much room."
+- id: 66382
+  examine: "These fat fungi take up so much room."
+- id: 66392
+  examine: "Found near the water's edge."
+- id: 66393
+  examine: "Found near the water's edge."
+- id: 66403
+  examine: "A bit bluer than I usually like my fires."
+- id: 66404
+  examine: "Lets you put items into your bank."
+- id: 66418
+  examine: "A dead bush."
+- id: 66419
+  examine: "A dead bush."
+- id: 66633
+  examine: "A terrible stench arises from these tendrils, better keep your distance."
+- id: 66634
+  examine: "Not what you'd call inviting!"
+- id: 66476
+  examine: "Good for sitting on."
+- id: 66484
+  examine: "Looks abandoned."
+- id: 66492
+  examine: "A Lovakengj transport system."
+- id: 66493
+  examine: "The dwarves use it to control the minecarts."
+- id: 66659
+  examine: "Good for hitting things!"
+- id: 66660
+  examine: "So far, so good."
+- id: 66661
+  examine: "It doesn't look very inviting."
+- id: 66863
+  examine: "How inconvenient."
+- id: 66864
+  examine: "How convenient."
+- id: 66865
+  examine: "How inconvenient."
+- id: 66866
+  examine: "How convenient."
+- id: 66867
+  examine: "Take courage - get a little boulder."
+- id: 66848
+  examine: "The skeletal mystics' ritual is causing it to glow."
+- id: 66662
+  examine: "Looks locked."
+- id: 66872
+  examine: "It's open."
+- id: 66873
+  examine: "Some cocoons have hatched."
+- id: 66663
+  examine: "An empty trough for feeding animals."
+- id: 66664
+  examine: "It's dead."
+- id: 66843
+  examine: "It's lit."
+- id: 66875
+  examine: "I wonder if there is something that can dispel this?"
+- id: 66665
+  examine: "One foot after another..."
+- id: 66666
+  examine: "A power emanates from the crystal."
+- id: 66885
+  examine: "A fairly dark crystal that's blocking the way."
+- id: 66886
+  examine: "A slightly dark crystal that's blocking the way."
+- id: 66887
+  examine: "A dim crystal that's blocking the way."
+- id: 66672
+  examine: "Looks like you could chop some wood off here."
+- id: 66862
+  examine: "Hopefully it'll grow back."
+- id: 66673
+  examine: "What sort of herbs could grow down here?"
+- id: 66861
+  examine: "Tick tock."
+- id: 66845
+  examine: "Not something you really want to touch."
+- id: 66868
+  examine: "Not something you really want to touch."
+- id: 66674
+  examine: "For holding items."
+- id: 66675
+  examine: "I wonder how long they've been down here."
+- id: 66676
+  examine: "A tree bearing a vessel shaped fruit."
+- id: 66677
+  examine: "Weeds really do grow everywhere."
+- id: 66495
+  examine: "For party recruitment."
+- id: 66692
+  examine: "A large shining green crystal."
+- id: 66729
+  examine: "One foot after another..."
+- id: 66730
+  examine: "One foot after another..."
+- id: 66758
+  examine: "A common weed."
+- id: 66759
+  examine: "A common weed."
+- id: 66760
+  examine: "A stylised representation of Xeric."
+- id: 66761
+  examine: "An electromagnetic field is emanating from this giant anvil."
+- id: 66874
+  examine: "Grub's up."
+- id: 66762
+  examine: "He's dead."
+- id: 66844
+  examine: "The power of the icefiends has created a storm of ice."
+- id: 66764
+  examine: "Fresh warm water. This should be good for mixing potions with."
+- id: 66765
+  examine: "It looks like you can pass through it."
+- id: 66768
+  examine: "Crystals poke out of this large cracked up rock."
+- id: 66769
+  examine: "Something is stirring beneath the water."
+- id: 66512
+  examine: "An ancient Xerician Priest... or possibly Xeric himself? It's weathered beyond recognition."
+- id: 66518
+  examine: "Who disturbs my slumber?"
+- id: 66519
+  examine: "Who disturbed their slumber? Lost their head too, it seems."
+- id: 66520
+  examine: "Someone should really put that back."
+- id: 66521
+  examine: "Completely drained of all power."
+- id: 66522
+  examine: "Completely drained of all power."
+- id: 66550
+  examine: "Slain during a battle with the Shayzien Army."
+- id: 66551
+  examine: "Slain during a battle with the Shayzien Army."
+- id: 66553
+  examine: "A rather spooky lamp."
+- id: 66775
+  examine: "Glory does not lie up there."
+- id: 66776
+  examine: "Emergency exit."
+- id: 66889
+  examine: "A noxifer herb is growing here."
+- id: 66890
+  examine: "A golpar herb is growing here."
+- id: 66891
+  examine: "A buchu leaf is growing here."
+- id: 66892
+  examine: "A noxifer herb is growing here."
+- id: 66893
+  examine: "A golpar herb is growing here."
+- id: 66894
+  examine: "A buchu leaf is growing here."
+- id: 66895
+  examine: "A noxifer herb is growing here."
+- id: 66896
+  examine: "A golpar herb is growing here."
+- id: 66897
+  examine: "A buchu leaf is growing here."
+- id: 66898
+  examine: "A noxifer leaf herb is growing here."
+- id: 66899
+  examine: "A golpar herb is growing here."
+- id: 66900
+  examine: "A buchu leaf is growing here."
+- id: 66901
+  examine: "A noxifer herb has grown here."
+- id: 66902
+  examine: "A golpar herb has grown here."
+- id: 66903
+  examine: "A buchu leaf has grown here."
+- id: 66846
+  examine: "A bloodstained pile of rocks."
+- id: 66847
+  examine: "All of the meat has been stripped from this tree."
+- id: 66777
+  examine: "A small blood crystal."
+- id: 66879
+  examine: "There's something weird about this fire, but it's definitely hot."
+- id: 66870
+  examine: "This looks like it will hurt."
+- id: 66880
+  examine: "Not something you really want to touch."
+- id: 66779
+  examine: "There seems to be something locked in the heart of the crystal."
+- id: 66836
+  examine: "Someone must have really wanted to protect whatever they kept in here."
+- id: 66859
+  examine: "They're moving..."
+- id: 66860
+  examine: "They grew quick!"
+- id: 66811
+  examine: "A strange focus of energy."
+- id: 66881
+  examine: "The medivaemia has flowered."
+- id: 66813
+  examine: "This medivaemia has no flowers."
+- id: 66883
+  examine: "The pustule has popped. How pleasant."
+- id: 66826
+  examine: "A bucket of blood."
+- id: 66827
+  examine: "For whom?"
+- id: 66554
+  examine: "It looks rough, but it's secure."
+- id: 66558
+  examine: "In case you left something in storage in the Chambers of Xeric."
+- id: 66828
+  examine: "Useful for lighting a fire."
+- id: 66829
+  examine: "Useful for chopping wood."
+- id: 66830
+  examine: "So far, so good."
+- id: 66831
+  examine: "Glory does not lie up there."
+- id: 66560
+  examine: "See challenge mode scores here."
+- id: 66832
+  examine: "Used for mining."
+- id: 66575
+  examine: "A beautiful pine tree."
+- id: 66576
+  examine: "A beautiful pine tree."
+- id: 66577
+  examine: "A beautiful pine tree."
+- id: 66583
+  examine: "For sleeping in."
+- id: 66584
+  examine: "There's an assortment of camping equipment here."
+- id: 66585
+  examine: "A recently dug hole."
+- id: 66586
+  examine: "Looks like someone was cooking something here."
+- id: 66591
+  examine: "This would be considered a small redwood, but it's still huge!"
+- id: 66592
+  examine: "This would be considered a small redwood, but it's still huge!"
+- id: 66839
+  examine: "I used to be able to access my bank from here. It's no longer working."
+- id: 66834
+  examine: "I can access my bank from here!"
