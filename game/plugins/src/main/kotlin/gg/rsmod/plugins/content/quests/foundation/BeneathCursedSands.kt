@@ -120,7 +120,7 @@ object BeneathCursedSands : ShortQuest(
                         tile = HEAD_GUARD_TILE,
                         shout = "Die...",
                     ),
-                tip = "The Head Menaphite Guard hits with stab attacks (max 16) and mocks overhead prayers.",
+                tip = "He hits with stab attacks (max 16) and mocks overhead prayers.",
                 talk = {
                     if (options("Let's go.", "I need to do something first.") != 1) {
                         chatPlayer("I need to do something first.")
@@ -187,7 +187,8 @@ const val JAMILA = gg.rsmod.plugins.api.cfg.Npcs.JAMILA
 val SOPHANEM_STALL = Tile(3311, 2779, 0)
 
 /** OSRS Wiki Maisa (Beneath Cursed Sands version): campsite east of Sophanem, map 3378,2794. */
-val MAISA_CAMP = Tile(3378, 2794, 0)
+// 2026-11-19 (N640 red tests): the OSRS tile 3378,2794 is covered by the imported Cushion (loc 65382), so Maisa could not be reached - one tile south-west.
+val MAISA_CAMP = Tile(3377, 2793, 0)
 
 /**
  * The fight at the necropolis excavation, on the stairway before the pyramid entrance. ONZEKER: no source gives the tile; cache 13354

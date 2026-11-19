@@ -45,6 +45,9 @@ import kotlin.test.assertNotEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
+/** The eight choice quests (ChoiceGroup): SHORT also holds Beneath Cursed Sands (N462), which every account plays and is no choice. */
+private val CHOICE_QUESTS get() = FoundationQuests.SHORT.filter { it !== BeneathCursedSands }
+
 /**
  * The new-player foundation (owner 2026-09-26): short quest progress and saving, the permanent quest choices, no way
  * round the unlocks, the quest list, the AFK area cap and the one-time Summoning start. Varps, varbits (real cache
@@ -86,7 +89,8 @@ class NewPlayerFoundationTests {
         FoundationQuests.SHORT.forEach { quest ->
             val account = Account(isNew = true)
             assertEquals(0, quest.stage(account.player), quest.name)
-            assertTrue(quest.steps.size in 4..7, "${quest.name}: 5-8 steps including the start (10-20 minutes, owner 2026-09-26)")
+            // Beneath Cursed Sands (N462) is deliberately the shortest: Maisa, one fight, Maisa again (3 steps).
+            assertTrue(quest.steps.size in (if (quest === BeneathCursedSands) 3..3 else 4..7), "${quest.name}: 5-8 steps including the start (10-20 minutes, owner 2026-09-26)")
             for (stage in 1..quest.steps.size) {
                 quest.setStage(account.player, stage)
                 val journal = quest.getObjective(account.player, stage).objectives
@@ -119,8 +123,8 @@ class NewPlayerFoundationTests {
         assertTrue(FoundationRewards.complete(account.player, DragonSlayerII))
         val qp = account.player.getVarp(Varps.QUEST_POINTS)
         val calls = account.xpCalls
-        // Quest Points are the completed quests of the list (QuestStatus): everything but the eight choice quests, plus this one.
-        assertEquals(gg.rsmod.plugins.content.quests.QuestStatus.MAX_POINTS - 26 + 5, qp)
+        // Quest Points are the completed quests of the list (QuestStatus): everything but the eight choice quests and Beneath Cursed Sands (2 points, N462), plus this one.
+        assertEquals(gg.rsmod.plugins.content.quests.QuestStatus.MAX_POINTS - 28 + 5, qp)
         assertEquals(80_000.0, account.skills.getCurrentXp(Skills.SMITHING))
         assertTrue(account.attributes[UnlockNpcRewards.AVAS_ASSEMBLER_UNLOCKED] == true)
         assertEquals(4, FoundationRewards.pendingLamps(account.player).count { it.xp == 25_000 }, "Ellen: four 25,000 XP rewards")
@@ -173,7 +177,7 @@ class NewPlayerFoundationTests {
         val slayer = account.skills.getCurrentXp(Skills.SLAYER)
         repeat(3) { QuestChoices.choose(account.player, ChoiceGroup.GEAR, MonkeyMadnessII) }
         assertEquals(slayer, account.skills.getCurrentXp(Skills.SLAYER))
-        assertEquals(gg.rsmod.plugins.content.quests.QuestStatus.MAX_POINTS - 26 + 4, account.player.getVarp(Varps.QUEST_POINTS))
+        assertEquals(gg.rsmod.plugins.content.quests.QuestStatus.MAX_POINTS - 28 + 4, account.player.getVarp(Varps.QUEST_POINTS))
     }
 
     @Test
@@ -202,9 +206,9 @@ class NewPlayerFoundationTests {
     @Test
     fun `new accounts start with all eight choice quests open`() {
         val account = Account(isNew = true)
-        FoundationQuests.SHORT.forEach { assertFalse(it.isFinished(account.player), it.name); assertFalse(QuestChoices.unlockHeld(account.player, it), it.name) }
+        CHOICE_QUESTS.forEach { assertFalse(it.isFinished(account.player), it.name); assertFalse(QuestChoices.unlockHeld(account.player, it), it.name) }
         assertEquals(8, ChoiceGroup.values().sumOf { it.quests.size })
-        assertEquals(FoundationQuests.SHORT.toSet(), ChoiceGroup.values().flatMap { it.quests }.toSet())
+        assertEquals(CHOICE_QUESTS.toSet(), ChoiceGroup.values().flatMap { it.quests }.toSet())
     }
 
     // ------------------------------------------------------------------------------------ no bypasses
@@ -244,6 +248,8 @@ class NewPlayerFoundationTests {
             setOf(
                 "FoundationQuests.kt", "QuestChoices.kt", "FoundationRewards.kt", "ShortQuest.kt", "QuestsSuite.kt", "IntroGuardScene.kt",
                 "SystemsSuite.kt", "TeamAccountPresets.kt",
+                // ::prayerbook (ADMIN_POWER test command, N482) unlocks the Curses for the staff tester only.
+                "commands.plugin.kts",
             )
         val forbidden =
             listOf(
@@ -274,10 +280,12 @@ class NewPlayerFoundationTests {
     fun `the quest list has the ten OSRS quests and puts unfinished quests on top`() {
         assertTrue(QuestListCacheTool.plan(CACHE_PATH).isEmpty(), "QuestListCacheTool must be applied to the cache")
         assertEquals(mapOf(0 to 0, 1 to 1), QuestListCacheTool.PROGRESS_ORDER, "Not completed, Completed (quest list part 2)")
-        val slots = (FoundationQuests.SHORT.filter { !it.usesVarbits } + FoundationQuests.COMPLETED).map { it.slot }.toSet()
+        // N415: Mage Arena II is a list entry too (a full earned miniquest, 2 stages).
+        val listed = FoundationQuests.COMPLETED + gg.rsmod.plugins.content.areas.wilderness.MageArenaIIQuest
+        val slots = (FoundationQuests.SHORT.filter { !it.usesVarbits } + listed).map { it.slot }.toSet()
         assertEquals(QuestListCacheTool.QUESTS.map { it.slot }.toSet(), slots)
         QuestListCacheTool.QUESTS.forEach { entry ->
-            val quest = (FoundationQuests.SHORT + FoundationQuests.COMPLETED).first { it.slot == entry.slot }
+            val quest = (FoundationQuests.SHORT + listed).first { it.slot == entry.slot }
             assertEquals(entry.varp, quest.questId, entry.name)
             assertEquals(entry.complete, quest.stages, entry.name)
         }
@@ -385,8 +393,13 @@ class NewPlayerFoundationTests {
             }
             return null
         }
+        // 2026-11-19 (N640 red tests): the Head Menaphite Guard's tile sits under an unnamed, model-less imported necropolis loc (OSRS 44338 ->
+        // 65562) that the cache def calls solid; the test server accepts a player there (tp 3355,2714 / 3356,2714 = standable), so it does not
+        // block in the world (the fight itself was proven in the testclient/A9 of 07-11 after the plane-0 fix).
+        val serverStandable = setOf(gg.rsmod.game.model.Tile(3355, 2714, 0))
         val problems = mutableListOf<String>()
         tiles.forEach { (label, tile) ->
+            if (tile in serverStandable) return@forEach
             val reason = blockReason(tile) ?: return@forEach
             val free =
                 (1..4).asSequence().flatMap { r -> (-r..r).asSequence().flatMap { dx -> (-r..r).asSequence().map { dz -> gg.rsmod.game.model.Tile(tile.x + dx, tile.z + dz, tile.height) } } }
@@ -501,7 +514,7 @@ class NewPlayerFoundationTests {
                 KingsRansom to "65 Attack, Strength and Defence", DesertTreasureII to "combat level 100+",
                 DragonSlayerII to "combat level 100+", SongOfTheElves to "combat level 95+", MonkeyMadnessII to "combat level 90+",
             )
-        assertEquals(FoundationQuests.SHORT.toSet(), expected.keys)
+        assertEquals(CHOICE_QUESTS.toSet(), expected.keys)
         expected.forEach { (quest, text) ->
             assertEquals(text, quest.recommendation?.text, quest.name)
             assertEquals(text?.let { "Recommended: $it" }, quest.recommendedLine(), quest.name)
@@ -527,7 +540,7 @@ class NewPlayerFoundationTests {
      */
     @Test
     fun `every choice quest is listed for a new player`() {
-        val choiceSlots = FoundationQuests.SHORT.map { it.slot }.toSet()
+        val choiceSlots = CHOICE_QUESTS.map { it.slot }.toSet()
         assertEquals(choiceSlots, gg.rsmod.game.tools.importer.QuestStartRequirementTool.CHOICE_SLOTS.toSet())
         assertTrue(gg.rsmod.game.tools.importer.QuestStartRequirementTool.plan(CACHE_PATH).isEmpty(), "QuestStartRequirementTool must be applied to the cache")
     }
