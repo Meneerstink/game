@@ -53,7 +53,7 @@ object GeHomeHall {
         mapOf(
             Npcs.BOB to 1, Npcs.ARCHAEOLOGIST to 1, Npcs.ONEIROMANCER to 1, Npcs.AZZANADRA to 2,
             Npcs.MAX to 1, Npcs.KURADAL_9085 to 1, Npcs.WISE_OLD_MAN to 1, Npcs.PIKKUPSTIX to 1,
-            QUARTERMASTER to 1, Npcs.PERDU to 1, BREACH_TRADER to 1, Npcs.MANDRITH to 1,
+            QUARTERMASTER to 1, Npcs.PERDU to 1, Npcs.MANDRITH to 1,
             DONATOR_STORE to 1, DEADMAN_STORE to 1, Npcs.AVA to 1, Npcs.ALECK to 1,
             // Party Pete and the Drunken Dwarf: removed from the lounge by the owner himself (world_edits.json, 2026-09-27).
             Npcs.KING_NARNODE_SHAREEN to 1,
@@ -65,6 +65,8 @@ object GeHomeHall {
             Npcs.EVIL_DAVE, Npcs.LUCIEN, Npcs.LUCIEN_273, Npcs.SIR_TIFFY_CASHIEN, Npcs.TOOL_LEPRECHAUN, Npcs.PENGUIN_5428, Npcs.PING, Npcs.PONG,
             // Owner 2026-10-09 213012 ("Xuan weg"): the Loyalty Shop stays reachable as a tab of the 78 Store.
             Npcs.XUAN,
+            // DMM2 (live 2026-11-18): the Breach Trader is retired (world_edits.json npc_remove 14478) - Nigel + Deadman Points replace him.
+            BREACH_TRADER,
         )
 
     /**

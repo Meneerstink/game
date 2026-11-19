@@ -21,6 +21,8 @@ import org.junit.Test
 class OptionsPagingTests {
     private class Fixture {
         val player = mockk<Player>(relaxed = true)
+        // N108Ui.cache (title fonts) needs a real attribute map; a relaxed mock cannot be cast to its HashMap.
+        init { io.mockk.every { player.attr } returns gg.rsmod.game.model.attr.AttributeMap() }
         val queues = PawnQueueTaskSet()
         val sent = mutableListOf<Message>()
 

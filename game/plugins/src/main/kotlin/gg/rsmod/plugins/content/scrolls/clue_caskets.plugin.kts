@@ -28,7 +28,9 @@ ClueScrollTier.values().filter { it.casketId >= 0 }.forEach { tier ->
                     }
                 }
                 if (MimicCaskets.held(player)) {
-                    if (options("Yes", "No", title = "You already have a Mimic, and cannot be given another one. Do you wish to open the casket anyway?") != 1) return@queue
+                    // N640 (19-11): the OSRS sentence is wider than the 480 px options title line in every font -> the statement in a message box, the question as the title.
+                    messageBox("You already have a Mimic, and cannot be given another one.")
+                    if (options("Yes", "No", title = "Do you wish to open the casket anyway?") != 1) return@queue
                 } else if (MimicCaskets.selected(player, tier)) {
                     if (!gg.rsmod.plugins.content.areas.watson.MimicEncounter.ready(player.world)) {
                         player.message("This challenge is temporarily unavailable.")
