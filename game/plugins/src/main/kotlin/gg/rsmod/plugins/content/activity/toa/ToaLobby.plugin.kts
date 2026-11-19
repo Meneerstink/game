@@ -42,14 +42,24 @@ ToaIds.loc(46080)?.let { chest ->
         // A dialogue holds five lines: with all five shrouds offered the hood comes once one of them is taken.
         val lines = (offer.map { "Take Icthlarin's shroud (tier ${it.first})." } + listOfNotNull(hood?.let { "Take Icthlarin's hood." })).take(5)
         val ids = (offer.map { it.second } + listOfNotNull(hood)).take(5)
-        if (ids.isEmpty()) return@on_obj_option
+        // TOA-1911 V2 (owner 19-11 19:4x 'met melding'): no source for an empty search (wiki transcript incomplete, no video) ->
+        // self-written OSRS-style chat lines.
+        if (ids.isEmpty()) {
+            player.message(if (done < tiers.first().first) "You need at least ${tiers.first().first} Normal or Expert mode completions to take anything from this chest."
+                else "There is nothing more for you to take from the chest.")
+            return@on_obj_option
+        }
         player.queue {
             val picked = ids.getOrNull(options(*lines.toTypedArray()) - 1) ?: return@queue
-            if (player.inventory.freeSlotCount == 0) return@queue
+            if (player.inventory.freeSlotCount == 0) {
+                player.message("You don't have enough inventory space.")
+                return@queue
+            }
             player.inventory.add(picked)
             if (picked == hood) return@queue
             gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, gg.rsmod.plugins.content.quests.tab.CollectionLogPages.TOA, listOf(picked to 1))
-            messageBox("You take a mysterious shroud from the chest.")
+            // TOA-1911: the transcript's tbox carries the shroud's picture ('pic=Icthlarin's shroud (tier N) detail.png').
+            itemMessageBox("You take a mysterious shroud from the chest.", picked)
         }
     }
     // Icthlarin's shroud (tier 1)?oldid=15191015 l.23: 'the right-click "Change" option to alter the cape's appearance to other tiers,

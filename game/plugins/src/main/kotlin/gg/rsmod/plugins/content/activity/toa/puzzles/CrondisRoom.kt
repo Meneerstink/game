@@ -215,33 +215,88 @@ class CrondisRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
         }
     }
 
+    /**
+     * TOA-1911 (eigenaar 19-11 punt 20: 'bewegende speren in het zuiden visueel niet goed (gaten tijdens bewegen, tegel klopt niet met
+     * OSRS)'). The old schedule fired ONE spear row every 2 ticks (a 20-tick crawl, always 1-2 spears out), cut every thrust off after
+     * 1 tick with the second sequence 9564, ran the south wave away from the waterfall, and drew the poison as the red vine FLOOR loc
+     * 45418/45419 (toa_crondis_poison_tile) - a brown band over the whole width. OSRS (Kaoz Entry guide 7:37-7:52, 60 fps at 1x by the
+     * stream clock; cache2686 dump.seq/dump.spot):
+     * - spears: every [SPEAR_PERIOD] ticks all ten spears of a corridor thrust in one wave from the exit end towards the waterfall within
+     *   ~2 ticks (first 7:49.15, last 7:50.25; 7:37 / 7:43.3 / 7:49.15 = ~6 s apart). One sequence per thrust: crondis_spear_trap_activate
+     *   9563 (thrust + retract 1.8 s, rest, wind-up = 5.9 s = the period); the spear is out ~1.4 s -> it hits on the tick after the trigger.
+     * - poison: the waterfall statue sends crondis_column_trap_anim 2129/2130 (model 46216, crondis_poison_spotanim: 16 x 5 + 15 cycles,
+     *   the light warning cloud then the dark one) down 2-3 of the 5 columns, each next tile 10 client cycles later (the same 10-cycle
+     *   stagger as crondis_poison_tile_activate_01..10), every [POISON_PERIOD] ticks (7:43.0 / 7:46.6 / 7:50.6). Only the dark cloud
+     *   hurts (Strategies 785): tile k from the waterfall is dark from ~0.6 s to ~1.6 s after its start.
+     * ONZEKER: the exact damage ticks, the column choice (video: columns 1+3, 0+2+3) and the offset between corridors are measured or
+     * inferred, not published.
+     */
     private fun traps(ref: ToaPuzzleReferences.Crondis) {
+        spears(ref)
+        poison(ref)
+    }
+
+    private fun spears(ref: ToaPuzzleReferences.Crondis) {
         for (trap in ref.trapEvents.value) {
-            if (tick < trap.cycle) continue
-            val phase = (tick - trap.cycle) % ref.trapRepeatCycles.value
-            if (trap.cueLoc != null && trap.cueTile != null && (phase == 0 || phase == trap.warningCycles)) {
-                val obj = place(trap.cueLoc, trap.cueTile, 10, trap.cueRotation)
-                val sequence = if (phase == 0) trap.warningSequence else trap.activeSequence
-                if (obj != null && sequence != null) {
-                    val animation = ToaIds.seq(sequence)
-                    if (animation == null) missing("seq:$sequence (Crondis spear cue)")
-                    else players.forEach { it.write(LocAnimMessage(obj, animation)) }
-                }
+            val cueLoc = trap.cueLoc ?: continue
+            val cue = trap.cueTile ?: continue
+            // Rows from the exit end (0) to the waterfall (9): south corridors run 5267 -> 5258, north ones 5293 -> 5302.
+            val row = if (cue.z > PALM_TILE.z) cue.z - NORTH_SPEARS_FIRST else SOUTH_SPEARS_LAST - cue.z
+            val offset = trap.cycle + row / 4 // trap.cycle = the schedule's start (tests postpone it)
+            if (tick < offset) continue
+            val phase = (tick - offset) % SPEAR_PERIOD
+            if (phase == 0) {
+                val obj = place(cueLoc, cue, 10, trap.cueRotation)
+                val animation = trap.activeSequence?.let { ToaIds.seq(it) }
+                if (obj != null && animation != null) players.forEach { it.write(LocAnimMessage(obj, animation)) }
+                else if (animation == null) missing("seq:${trap.activeSequence} (Crondis spear)")
             }
-            if (phase == 0) trap.warningLoc?.let { loc -> trap.tiles.forEach { place(loc, it, 22) } }
-            if (phase == trap.warningCycles) trap.activeLoc?.let { loc -> trap.tiles.forEach { place(loc, it, 22) } }
-            if (trap.activeLoc != null && phase == trap.warningCycles + trap.duration) trap.tiles.forEach { unplace(it) }
-            if (phase in trap.warningCycles until trap.warningCycles + trap.duration) {
-                players.filter { source(it.tile) in trap.tiles }.forEach { player ->
-                    //Water-container Wiki25: rare16% loss, otherwise50%; exact rare probability remains T18.
-                    puzzle.obstacle(player.uid, raid.world.currentCycle,
-                        if (raid.world.randomDouble() < ref.minorSpillChance.value) 0.84 else 0.5)
-                    damage(player, raid.world.random(0..trap.maxHit))
-                    // Strategies785: each actual trap hit drains Defence6, Agility3, Prayer2.
-                    drain(player, Skills.DEFENCE, 6); drain(player, Skills.AGILITY, 3); drain(player, Skills.PRAYER, 2)
+            if (phase == 1) players.filter { source(it.tile) in trap.tiles }.forEach { trapHit(ref, it, trap.maxHit) }
+        }
+    }
+
+    private class PoisonWave(val start: Int, val lane: Int, val north: Boolean, val columns: List<Int>)
+    private val poisonWaves = mutableListOf<PoisonWave>()
+
+    private fun poison(ref: ToaPuzzleReferences.Crondis) {
+        val start = ref.trapEvents.value.minOfOrNull { it.cycle } ?: return
+        if (tick >= start && (tick - start) % POISON_PERIOD == 0) {
+            for (lane in LANES) for (north in listOf(false, true)) {
+                val columns = (0..4).shuffled(java.util.Random(raid.world.random.nextLong())).take(if (raid.world.random(1) == 0) 2 else 3).sorted()
+                val wave = PoisonWave(tick, lane, north, columns)
+                poisonWaves += wave
+                players.forEach { viewer ->
+                    for (column in columns) for (k in 0 until POISON_LENGTH) {
+                        // 2129 carries the cloud's synth 6509/6495 on frames 1/6 - once per column, 2130 is the same cloud without sound.
+                        ToaPuzzleVisuals.spotDelayed(viewer, if (k == 0) 2129 else 2130, instance(poisonTile(wave, column, k)), k * 10)
+                    }
                 }
             }
         }
+        poisonWaves.removeAll { tick - it.start > 8 }
+        val hit = hashSetOf<PlayerUID>()
+        for (wave in poisonWaves) {
+            val t = tick - wave.start
+            if (t < 1) continue
+            // Dark on tile k while k*0.2 s + 0.6 <= t*0.6 s <= k*0.2 s + 1.6  ->  3t-8 <= k <= 3t-3.
+            val dark = (3 * t - 8).coerceAtLeast(0)..(3 * t - 3).coerceAtMost(POISON_LENGTH - 1)
+            if (dark.isEmpty()) continue
+            val tiles = wave.columns.flatMap { column -> dark.map { poisonTile(wave, column, it) } }.toSet()
+            players.filter { it.uid !in hit && source(it.tile) in tiles }.forEach { hit += it.uid; trapHit(ref, it, POISON_MAX_HIT) }
+        }
+    }
+
+    /** Column 0..4 across the corridor (x lane..lane+4), tile k counted from the waterfall: south 5255 -> 5270, north 5305 -> 5290. */
+    private fun poisonTile(wave: PoisonWave, column: Int, k: Int) =
+        Tile(wave.lane + column, if (wave.north) 5305 - k else 5255 + k)
+
+    private fun trapHit(ref: ToaPuzzleReferences.Crondis, player: Player, maxHit: Int) {
+        //Water-container Wiki25: rare16% loss, otherwise50%; exact rare probability remains T18.
+        puzzle.obstacle(player.uid, raid.world.currentCycle,
+            if (raid.world.randomDouble() < ref.minorSpillChance.value) 0.84 else 0.5)
+        damage(player, raid.world.random(0..maxHit))
+        // Strategies785: each actual trap hit drains Defence6, Agility3, Prayer2.
+        drain(player, Skills.DEFENCE, 6); drain(player, Skills.AGILITY, 3); drain(player, Skills.PRAYER, 2)
     }
 
     private fun waterfall(index: Int, isDry: Boolean) {
@@ -267,6 +322,14 @@ class CrondisRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
         val PALM_TILE = Tile(3934, 5278)
         // Cache2686 5/15698/1, 40-loc-placements.tsv: every45398, preserving north/south order.
         val WATERFALLS = listOf(Tile(3926, 5250), Tile(3926, 5306), Tile(3940, 5250), Tile(3940, 5306))
+        // TOA-1911 trap schedule (see traps()): corridors x LANES..+4, spear rows 5258..5267 (south) / 5293..5302 (north).
+        val LANES = listOf(3927, 3941)
+        const val SOUTH_SPEARS_LAST = 5267
+        const val NORTH_SPEARS_FIRST = 5293
+        const val SPEAR_PERIOD = 10
+        const val POISON_PERIOD = 6
+        const val POISON_LENGTH = 16
+        const val POISON_MAX_HIT = 6
         // Crocodile wiki infobox + cache2686 NPC11705 stats/params; opcode77 is HP, not Ranged.
         val CROCODILE_DEF = NpcCombatDef.DEFAULT.copy(lifepoints = 30, stats = listOf(150, 60, 100, 30, 1), attackSpeed = 7,
             attackStyleType = StyleType.CRUSH, poisonImmunity = true, venomImmunity = true,

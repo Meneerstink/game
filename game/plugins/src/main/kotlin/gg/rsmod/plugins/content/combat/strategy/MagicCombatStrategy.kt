@@ -505,7 +505,7 @@ object MagicCombatStrategy : CombatStrategy {
                 val bark = gg.rsmod.plugins.content.items.osrs.BarkArmour
                 // Audit I-08: Zuriel's staff, blood spells heal 50 % more.
                 val heal = gg.rsmod.plugins.content.items.osrs.ZurielsStaff.bloodHeal(pawn, bark.bloodHeal(damage, bark.bloodbarkPieces(pawn), sceptres.boosted(pawn)))
-                if (heal > 0) {
+                if (heal > 0 && !gg.rsmod.plugins.content.combat.LifeLeech.immune(target)) {
                     when (pawn) {
                         is Player -> pawn.heal(heal, capValue = sceptres.overhealCap(pawn, pawn.getMaximumLifepoints()))
                         is Npc -> pawn.setCurrentLifepoints(minOf(pawn.getCurrentLifepoints() + heal, pawn.getMaximumLifepoints()))

@@ -4,6 +4,10 @@ import gg.rsmod.plugins.content.combat.PlayerAttackRules
 
 PlayerAttackRules.register(ToaEncounter::playerAttackRule)
 
+// TOA-1911 punt 24: OSRS Wiki Zebak "He is notably immune to all life leech effects" (blood fury, sanguinesti, blood spells, Soul Split,
+// onyx bolts, Guthan's) - LifeLeech skips only the attacker's heal.
+ToaBossNpcs.local(ToaBossNpcs.ZEBAK)?.let { gg.rsmod.plugins.content.combat.LifeLeech.registerImmune(it) }
+
 // N606: the OSRS boss HP HUD (interface 303) for every ToA boss fight, Het's Seal and the Crondis palm (Kaoz Entry guide, screens/N606/hpbar-osrs).
 gg.rsmod.plugins.content.mechanics.hud.BossHpHud.providers += { player ->
     // Only in the boss's own room (a member waiting in the Nexus at the same height is also 'eligible' for the encounter).

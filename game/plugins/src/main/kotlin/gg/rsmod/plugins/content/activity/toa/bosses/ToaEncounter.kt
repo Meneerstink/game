@@ -364,7 +364,7 @@ abstract class ToaBossSession(npc: Npc, input: ToaEncounterContext) {
         return distance(tile, t, size) == 0 || gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(
             actor.world.collision, tile, 1, 1, t, size, size)
     }
-    fun follow(p: Player) { if (!meleeReach(p.tile)) npc.walkTo(p.tile) }
+    fun follow(p: Player) { if (!meleeReach(p.tile)) npc.walkTo(gg.rsmod.plugins.content.activity.toa.ToaFollow.approach(npc, p.tile)) }
     /** Resolve protection at impact (Zebak), and cancel on phase/death/logout/teleport/reset. */
     fun attack(p: Player, maxHit: Int, style: CombatClass?, delay: Int = 0,
         protectedNumerator: Int = 0, protectedDenominator: Int = 1, accuracy: Boolean = true,

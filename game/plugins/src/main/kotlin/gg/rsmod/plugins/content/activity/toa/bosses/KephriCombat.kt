@@ -83,6 +83,7 @@ object KephriCombat : CombatScript() {
             ToaBossFx.spot(2141)?.let { npc.graphic(it) }
         }
         private val arcaneCharge = mutableMapOf<Npc, Int>()
+        private val soldierNext = mutableMapOf<Npc, Int>()
         private val maxHitTargets = mutableSetOf<Npc>()
         private fun defaultSpecial() {
             // ONZEKER T14: which special comes first; they alternate Dung Strike / Mass Incubation (dung in its place with too many scarabs).
@@ -178,7 +179,10 @@ object KephriCombat : CombatScript() {
                 when (id) {
                     ToaBossNpcs.SPITTING -> {
                         val victims = players().filter { distance(it.tile, scarab.tile, scarab.getSize()) <= 8 }
+                        // TOA-1911 (eigenaar 'niet aggressive'): infobox aggressive=Yes. Out of range it walks to the nearest player
+                        // every tick (was blocked behind Kephri's body by naive pathing and never moved - testclient 19-11).
                         if (victims.isEmpty()) players().minByOrNull { it.tile.getDistance(scarab.tile) }?.let { scarab.walkTo(it.tile) }
+                        else scarab.stopMovement()
                         if (tick % SPITTING_STATS.speed == 0 && victims.isNotEmpty()) {
                             scarab.facePawn(victims.first())
                             animate(9588, scarab)
@@ -191,10 +195,15 @@ object KephriCombat : CombatScript() {
                         }
                     }
                     ToaBossNpcs.SOLDIER -> {
-                        if (tick % SOLDIER_STATS.speed == 0) players().minByOrNull { it.tile.getDistance(scarab.tile) }?.let { p ->
+                        // TOA-1911 (eigenaar 'niet aggressive'): it chased only once per 7 ticks (walkTo inside the attack-speed check).
+                        // Infobox aggressive=Yes, speed 7: follow the nearest player EVERY tick, swing as soon as in reach and off cooldown.
+                        players().minByOrNull { it.tile.getDistance(scarab.tile) }?.let { p ->
                             scarab.facePawn(p)
-                            scarab.walkTo(p.tile)
-                            if (actorMeleeReach(scarab, p.tile)) { animate(9587, scarab); attack(p, ToaScale.damage(17, context), CombatClass.MELEE, 1, actor = scarab) } // Soldier Scarab infobox max17.
+                            if (!actorMeleeReach(scarab, p.tile)) scarab.walkTo(p.tile)
+                            else if (tick >= (soldierNext[scarab] ?: 0)) {
+                                soldierNext[scarab] = tick + SOLDIER_STATS.speed
+                                animate(9587, scarab); attack(p, ToaScale.damage(17, context), CombatClass.MELEE, 1, actor = scarab) // Soldier Scarab infobox max17.
+                            }
                         }
                         if (tick % 8 == 0) { // ONZEKER T14: ~5sec rounds to8ticks;5-7linear by current HP as Strategies says.
                             val amount = 5 + 2 * scarab.getCurrentLifepoints() / scarab.getMaximumLifepoints().coerceAtLeast(1)
@@ -211,9 +220,8 @@ object KephriCombat : CombatScript() {
                         if (charge >= 24) {
                             players().forEach { attack(it, ToaScale.damage(66, context), CombatClass.MAGIC, 3, 1, 3, accuracy = false, actor = scarab) }
                             arcaneCharge[scarab] = 0
-                            val route = listOf(centre.transform(6, -6), centre.transform(-6, 6), centre.transform(0, -7), centre.transform(6, 6))
-                            val index = route.indexOfFirst { sameTile(it, scarab.tile) }.coerceAtLeast(0)
-                            scarab.moveTo(fitFloor(route[(index + 1) % route.size], scarab.getSize()))
+                            // TOA-1911: no teleport after firing - Kephri wiki changelog 'Arcane Scarabs should no longer ... teleport
+                            // immediately after firing'. It relocates only through arcaneRelocation (2+N hits or one hit of 39+).
                         }
                     }
                 }
@@ -398,6 +406,8 @@ object KephriCombat : CombatScript() {
                 ToaBossFx.weakness(child, gg.rsmod.plugins.content.combat.formula.ElementalWeakness.Element.FIRE, 50)
                 child.stats.setMaxLevel(2, spec.defence); child.stats.setCurrentLevel(2, spec.defence)
                 overlords[id] = child
+                // TOA-1911: the mobile overlords path AROUND Kephri's 5x5 body (naive steps stood still behind her).
+                if (id != ToaBossNpcs.ARCANE) child.smartPathfinding = true
                 if (id == ToaBossNpcs.ARCANE) arcaneRelocation(child, listOf(centre.transform(6, -6), centre.transform(-6, 6),
                     centre.transform(0, -7), centre.transform(6, 6)), 39) // T13: individual Arcane page/Mod Ash explicitly says39 or more; prefer over older Strategies40.
             }
@@ -439,7 +449,7 @@ object KephriCombat : CombatScript() {
             } }
         }
         override fun close() {
-            cleanupDung.forEach { it() }; cleanupDung.clear(); dung.clear(); eggs.clear(); overlords.clear(); agile.clear(); maxHitTargets.clear(); arcaneCharge.clear()
+            cleanupDung.forEach { it() }; cleanupDung.clear(); dung.clear(); eggs.clear(); overlords.clear(); agile.clear(); maxHitTargets.clear(); arcaneCharge.clear(); soldierNext.clear()
             super.close()
         }
     }

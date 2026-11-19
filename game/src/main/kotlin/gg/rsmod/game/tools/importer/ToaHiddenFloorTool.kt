@@ -10,7 +10,9 @@ import java.io.File
  * the same RGB ff00ff, no texture/secondary colour and no occlusion. Restore the source mask and its shape;
  * retain every height, underlay, flag and environment byte. No definition or client change.
  * Sources: cache2686 overlay41 and ToA terrain; 667 FloorOverlayType.colour, Class306.loadBlended/loadUnblended.
- * Usage: plan|apply [cox]
+ * Usage: plan|apply [cox|necropolis]
+ * necropolis (TOA-1911 punt 4, 19-11): same hidden-overlay mapping as cox on the Necropolis exterior squares (OsrsRegionImportTool
+ * 'necropolis' dropped them -> world map + minimap showed the sand underlay where OSRS draws dark buildings/pyramid and brown paths).
  * cox (16-11 GRAFISCH, eigenaar 19:5x): same mask in the Chambers of Xeric squares (ToaUpperTileFlagTool 'cox', +0,+24). The CoX
  * batches dropped it and 'cox-map-floors' then laid the black void overlay (tile value 52) on those tiles, hiding the lava planes
  * that OSRS shows through the mask (Tekton/Vanguard: OSRS yellow lava, ours black/beige). Only where the OSRS source tile IS the mask.
@@ -20,6 +22,7 @@ object ToaHiddenFloorTool {
     const val LOCAL_OVERLAY = 41
     val TARGETS = ToaUpperTileFlagTool.targets("raid") + ToaUpperTileFlagTool.targets("lobby")
     val COX_TARGETS = ToaUpperTileFlagTool.targets("cox")
+    val NECRO_TARGETS = ToaUpperTileFlagTool.targets("necropolis")
 
     /** CoX: the plain black void overlay (tile value) that 'cox-map-floors' put over the dropped masks; may be replaced by the mask. */
     const val COX_VOID_TILE_VALUE = 52
@@ -27,7 +30,7 @@ object ToaHiddenFloorTool {
     /** Only the uncoloured source mask: other hidden overlays have separate minimap colours, left for their own repair. */
     fun preserveMask(tileValue: Int, source: ModernOverlayDef?, squares: List<Int>): Boolean =
         tileValue == SOURCE_OVERLAY + 1 && source != null && source.rgb == 0xFF00FF && source.texture == -1 &&
-            !source.hideUnderlay && source.secondaryRgb == -1 && squares.isNotEmpty() && squares.all { it in TARGETS || it in COX_TARGETS }
+            !source.hideUnderlay && source.secondaryRgb == -1 && squares.isNotEmpty() && squares.all { it in TARGETS || it in COX_TARGETS || it in NECRO_TARGETS }
 
     fun validateNative(def: Rev667OverlayDef) {
         check(def.rgb == 0xFF00FF && def.texture == -1 && !def.occludes && def.blendRgb == -1) {
@@ -84,10 +87,11 @@ object ToaHiddenFloorTool {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        require(args.size in 1..2 && args[0] in setOf("plan", "apply") && (args.size == 1 || args[1] == "cox")) { "Usage: plan|apply [cox]" }
-        val cox = args.getOrNull(1) == "cox"
-        val targets = if (cox) COX_TARGETS else TARGETS
-        val replaceable = if (cox) setOf(COX_VOID_TILE_VALUE) else emptySet()
+        require(args.size in 1..2 && args[0] in setOf("plan", "apply") && (args.size == 1 || args[1] in setOf("cox", "necropolis"))) { "Usage: plan|apply [cox|necropolis]" }
+        val necro = args.getOrNull(1) == "necropolis"
+        val cox = args.getOrNull(1) == "cox" || necro
+        val targets = if (necro) NECRO_TARGETS else if (cox) COX_TARGETS else TARGETS
+        val replaceable = if (cox && !necro) setOf(COX_VOID_TILE_VALUE) else emptySet()
         var valueMap: Map<Int, Int> = mapOf(SOURCE_OVERLAY + 1 to LOCAL_OVERLAY + 1)
         val paths = listOf(RspsPaths.data("cache"), RspsPaths.root("file-server/cache"))
         val mutations = mutableListOf<CacheMutation>()
@@ -116,7 +120,7 @@ object ToaHiddenFloorTool {
                     val (after, counts) = restore(before, source, replaceable, valueMap)
                     println("HIDDEN_FLOOR source=$square target=$name restored=${counts.toList()}")
                     if (!before.contentEquals(after)) mutations += CacheMutation(5, archive.id, 0, after,
-                        "${if (cox) "CoX" else "ToA"} $name: restore source overlay41 transparent masks", CacheItemProbeTool.sha1(before))
+                        "${if (necro) "Necropolis" else if (cox) "CoX" else "ToA"} $name: restore OSRS hidden overlays", CacheItemProbeTool.sha1(before))
                 }
             } finally { game.close(); files.close() }
         }

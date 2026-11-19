@@ -1365,7 +1365,7 @@ object AncientCurses {
                 lifespan = CURSE_PROJECTILE_LIFESPAN,
             ),
         )
-        attacker.heal(soulSplitFifths(attacker, SOUL_SPLIT_HEAL_REMAINDER, damage))
+        if (!gg.rsmod.plugins.content.combat.LifeLeech.immune(target)) attacker.heal(soulSplitFifths(attacker, SOUL_SPLIT_HEAL_REMAINDER, damage))
         if (target is Player) target.decreasePrayerPoints(soulSplitFifths(target, SOUL_SPLIT_DRAIN_REMAINDER, damage))
         attacker.playSound(SOUL_SPLIT_HIT_SOUND, volume = Prayers.PRAYER_SOUND_VOLUME)
         // Graphic packet delays are 20 ms client cycles; one game tick is 30 cycles.

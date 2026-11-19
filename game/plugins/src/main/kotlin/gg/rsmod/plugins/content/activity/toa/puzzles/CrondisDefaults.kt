@@ -29,7 +29,7 @@ object CrondisDefaults {
         crocodileAttackSequence = evidence(9804, "ONZEKER T18: RuneLite CROC_ATTACK_MERGE in ToA action cluster; fallback classic CROC_ATTACK2039"),
         crocodileDeathSequence = evidence(2038, "RuneLite CROC_DEATH2038;50-seq-defs classic crocodile rig"),
         palmBiteWater = evidence(18.0, "ONZEKER T18: nearest published same-crocodile fixed bite18; exact palm water reduction unprovided"),
-        trapEvents = evidence(traps(), "ONZEKER T18:40-loc45416 exact spear anchors; water lanes inferred from45398 waterfall bounds; warning/hit phases provisional"),
+        trapEvents = evidence(traps(), "40-loc45416 exact spear anchors; wave timing TOA-1911 (CrondisRoom.traps, Kaoz Entry 7:37-7:52 + cache2686 seq 9563)"),
         trapRepeatCycles = evidence(20, "ONZEKER T18: corridor flow across16 tiles + warning/recovery; sequence9547=1tick is a visual cue, not a proven repeat interval"),
         minorSpillChance = evidence(0.01, "ONZEKER T18: Water_container article25 publishes a slight chance of16% loss instead of50%; provisional1% chance, using same container's minimum displayed1% as nearest published percentage"),
     )
@@ -42,18 +42,12 @@ object CrondisDefaults {
                 val left = row % 2 == 0
                 val x = if (left) lane else lane + 2
                 val z = first + row
-                add(ToaPuzzleReferences.Trap(cycle = row * 2, warningCycles = 1,
+                add(ToaPuzzleReferences.Trap(cycle = 0, warningCycles = 1, // TOA-1911: row order/stagger in CrondisRoom.spears()
                     tiles = (x..x + 2).map { Tile(it, z) }.toSet(), maxHit = 6,
                     warningLoc = null, activeLoc = null, cueLoc = 45416, cueTile = Tile(x, z),
                     cueRotation = if (left) 2 else 0, warningSequence = 9563, activeSequence = 9564))
             }
-            //Strategies785: lighter warning precedes dark damaging poison flowing away from each waterfall.
-            for (row in 0 until 16) {
-                val z = if (north) 5305 - row else 5255 + row
-                add(ToaPuzzleReferences.Trap(cycle = row, warningCycles = 1,
-                    tiles = (lane..lane + 4).map { Tile(it, z) }.toSet(), maxHit = 6,
-                    warningLoc = 45418, activeLoc = 45419))
-            }
+            // TOA-1911: the poison clouds are spotanims 2129/2130 run by CrondisRoom.poison(); 45418/45419 are the red vine FLOOR locs.
         }
     }
 }

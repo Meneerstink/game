@@ -238,6 +238,10 @@ object OsrsFxImportTool {
             "toa-census-fx-existing" to listOf(131, 1463),
             // N609 14-11: Zebak additional acid splatter = TOB_XARPUS_ACIDSPIT 1555 (ToA Extended Zebak PROJECTILE_ID_VENOM_SPLASH).
             "toa-zebak-splash" to listOf(1555),
+            // TOA-1911 19-11 (eigenaar: Path of Crondis): the waterfall statue's poison clouds = CRONDIS_COLUMN_TRAP_ANIM 2129 (+ _2 2130,
+            // _3 2131; model 46216, seqs crondis_poison_spotanim 9559-9561; RuneLite raid-recorder GO_CRONDIS_WATER_HAZARD 2129). Before this
+            // the room placed the red vine FLOOR locs 45418/45419 (toa_crondis_poison_tile) as 'poison' - a brown band, never in OSRS.
+            "toa-crondis-poison" to listOf(2129, 2130, 2131),
             // CoX rooms (dossier COX.txt 15-11 22:5x): RuneLite gameval SpotanimID LIZARDMAN_SPIT 1291, LIZARDSHAMAN_SPIT_ACID /
             // _ACID_SPLASH / _SPAWN_EXPLODE 1293-1295, SKELETON_BIG_CASTING_PURPLE / _RED 1321-1322, RAIDS_ICEDEMON_* 1324-1325,
             // RAIDS_LASERCRABS_SHATTERCRYSTAL 1326, RAIDS_VASANISTIRIO_* 1327-1330, RAIDS_VANGUARD_* 1331-1334, RAIDS_OLM_* / OLM_*

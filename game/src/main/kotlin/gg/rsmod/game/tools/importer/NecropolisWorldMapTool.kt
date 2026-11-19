@@ -39,6 +39,28 @@ object NecropolisWorldMapTool {
             out.toByteArray()
         }
 
+    /**
+     * TOA-1911 punt 4 (19-11): OSRS draws upper-plane tiles flagged 0x8 ('render on the level below', e.g. the pyramid and the building
+     * roofs: plane 1, settings 9/b, hidden overlay 219 with minimap colour 2e2e42) on the ground-level world map - mejrs layer 0 shows
+     * them dark filled; [FeroxWorldMapTool.encodeSquare] reads plane 0 only, so our map showed the sand below. Highest flagged plane wins.
+     * Returns how many ground tiles took an upper floor.
+     */
+    fun lowerFlaggedFloors(tiles: Rev667TileMap): Int {
+        var n = 0
+        for (x in 0 until 64) for (z in 0 until 64) {
+            val upper = (3 downTo 1).map { tiles.tiles[it][x][z] }.firstOrNull { t ->
+                (t.flags and 0x8) != 0 && ((t.overlayId and 0xFF) != 0 || (t.underlayId and 0xFF) != 0)
+            } ?: continue
+            val ground = tiles.tiles[0][x][z]
+            if ((upper.underlayId and 0xFF) != 0) ground.underlayId = upper.underlayId
+            ground.overlayId = upper.overlayId
+            ground.overlayShape = upper.overlayShape
+            ground.overlayRotation = upper.overlayRotation
+            n++
+        }
+        return n
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         val mode = args.getOrNull(0) ?: "plan"
@@ -61,6 +83,7 @@ object NecropolisWorldMapTool {
                 check(r.square) { "square ${r.x}_${r.z} is stored as chunks" }
                 out.write(current, copied, r.start - copied)
                 val (tiles, locs) = FeroxWorldMapTool.landscape(library, keys, r.x, r.z)
+                println("square ${r.x}_${r.z}: ${lowerFlaggedFloors(tiles)} tiles from flagged upper planes")
                 val rebuilt = FeroxWorldMapTool.encodeSquare(r.x, r.z, tiles, locs, area, def)
                 val old = current.copyOfRange(r.start, r.end)
                 if (!old.contentEquals(rebuilt)) changed++
@@ -75,6 +98,7 @@ object NecropolisWorldMapTool {
             SQUARES.filter { (x, z) -> area.records.none { it.x == x && it.z == z } }.forEach { (x, z) ->
                 val land = runCatching { FeroxWorldMapTool.landscape(library, keys, x, z) }.getOrNull()
                 if (land == null) { println("square ${x}_$z: no landscape either - left out"); return@forEach }
+                println("square ${x}_$z: ${lowerFlaggedFloors(land.first)} tiles from flagged upper planes")
                 out.write(FeroxWorldMapTool.encodeSquare(x, z, land.first, land.second, area, def))
                 println("square ${x}_$z: APPENDED new record"); appended++; changed++
             }

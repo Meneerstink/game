@@ -133,7 +133,7 @@ object PoweredStaffCombatStrategy : CombatStrategy {
         if (leech) {
             pawnHit.hit.addAction {
                 look.healGfx?.let { player.graphic(it) }
-                PoweredStaves.leechHeal(damage).takeIf { it > 0 }?.let { player.heal(it) }
+                if (!gg.rsmod.plugins.content.combat.LifeLeech.immune(target)) PoweredStaves.leechHeal(damage).takeIf { it > 0 }?.let { player.heal(it) }
             }
         }
         // Trident of the Swamp: 25 % venom on successful hits.

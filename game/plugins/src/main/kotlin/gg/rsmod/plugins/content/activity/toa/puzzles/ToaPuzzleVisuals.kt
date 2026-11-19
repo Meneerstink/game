@@ -25,6 +25,14 @@ object ToaPuzzleVisuals {
         viewer.write(MapAnimMessage(id, 0, 0,
             (tile.height shl 28) or (tile.x shl 14) or (tile.z and 0x3fff) or (1 shl 30), 0))
     }
+
+    /** [spot] that starts [delay] client cycles (20 ms) later - TOA-1911 Crondis poison: one tile every 10 cycles, like OSRS. */
+    fun spotDelayed(viewer: Player, osrs: Int, tile: Tile, delay: Int) {
+        val id = ToaIds.spot(osrs) ?: run { unavailable("spot:$osrs"); return }
+        if (viewer.tile.height != tile.height || !viewer.tile.isWithinRadius(tile, 32)) return
+        viewer.write(MapAnimMessage(id, 0, delay,
+            (tile.height shl 28) or (tile.x shl 14) or (tile.z and 0x3fff) or (1 shl 30), 0))
+    }
     /**45494/45495 use the SAME model45425, differing in sequence9503/9502 (50-loc-defs).
      * Animate the existing45494 per viewer: replacing it with a fake45495 makes OpLoc's exact-ID lookup reject every solo repair.
      */

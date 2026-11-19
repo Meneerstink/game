@@ -317,7 +317,10 @@ class ApmekenRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
             val bonuses = listOf(offensive, offensive, offensive, offensive, offensive,
                 meleeDef, meleeDef, meleeDef, magicDef, rangeDef, offensive, 0, 0, 0)
             val scaled = level * (250 + raidLevel) / 250
-            return NpcCombatDef.DEFAULT.copy(lifepoints = type.hp, stats = listOf(scaled, level, defence * (250 + raidLevel) / 250, scaled, scaled),
+            // TOA-1911 punt 17: the Brawler/Thrower/Mage infoboxes (wiki 19-11) publish 'range = 40' for BOTH sizes (the large ones only
+            // raise att/str/mage to 60); Shaman/Volatile/Cursed range 60, Thrall 40.
+            val ranged = (if (type.combat) 40 else level) * (250 + raidLevel) / 250
+            return NpcCombatDef.DEFAULT.copy(lifepoints = type.hp, stats = listOf(scaled, level, defence * (250 + raidLevel) / 250, scaled, ranged),
                 attackSpeed = if (type == Baboon.SHAMAN) 8 else 4, bonuses = bonuses, attackStyleType = StyleType.CRUSH,
                 poisonImmunity = type != Baboon.SHAMAN, venomImmunity = type != Baboon.SHAMAN)
         }

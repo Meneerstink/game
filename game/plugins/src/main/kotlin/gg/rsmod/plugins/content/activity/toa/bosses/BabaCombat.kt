@@ -238,6 +238,13 @@ object BabaCombat : CombatScript() {
                 specialDirector(this)
                 // Strategies1338: subsequent aggro is based on current HP; stable room order resolves equal HP (ONZEKER T16).
                 target = live.minByOrNull { it.getCurrentLifepoints() }
+            } else if (tick >= nextAttack) {
+                // TOA-1911 (eigenaar 19-11 'Ba-Ba kan gesafespot worden'): specials only ran after a LANDED melee swing, so a player
+                // out of her reach (behind rubble / a sarcophagus, ranging) was never attacked at all. Strategies 1338-1349: Rockfall,
+                // Rock Throw and the baboon call hit every player in the arena wherever they stand - the attack cycle keeps running
+                // while she cannot reach her target (no melee in that slot), so standing out of reach is never safe.
+                nextAttack = tick + stats.speed
+                specialDirector(this)
             }
         }
         private fun leaveThroneFor(tank: Player) {

@@ -17,13 +17,19 @@ object ToaEnvironmentTrialTool {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        require(args.isNotEmpty() && args[0] in setOf("plan", "apply", "revert", "ambient-plan", "ambient-apply")) {
-            "Usage: plan <sun256> | apply <sun256> | revert | ambient-plan <amb256> | ambient-apply <amb256>"
+        require(args.isNotEmpty() && args[0] in setOf("plan", "apply", "revert", "ambient-plan", "ambient-apply", "fog-plan", "fog-apply")) {
+            "Usage: plan <sun256> | apply <sun256> | revert | ambient-plan <amb256> | ambient-apply <amb256> | fog-plan <rrggbb> | fog-apply <rrggbb>"
         }
         // N615 17-11: client RspsAreaLighting honours the ToA trailer at every light detail -> 'ambient-*' sets the 0x2 value (bytes 2..3).
         val ambient = args[0].startsWith("ambient-")
+        // TOA-1911 19-11 (eigenaar punt 12 'uitzoomen: bruin + zwarte blokken die verdwijnen bij draaien', foto 165149): the trailer's 0x20
+        // colour (Environment.anInt9538, client Environment.java 'g4' - background + distance fog, read outside the lightDetail branch) is
+        // 0x1b150d = the brown (27,21,13) behind the rooms; OSRS draws the void black (Kaoz Entry 7:24 = 5,5,5), like CoX (CoxEnvironmentTool,
+        // GRAFISCH 16-11 K5). 'fog-*' replaces only that colour; the field offset is walked from the flag byte.
+        val fog = args[0].startsWith("fog-")
         val revert = args[0] == "revert"
-        val sun = if (revert) -1 else requireNotNull(args.getOrNull(1)?.toIntOrNull()) { "value missing" }.also { require(it in 1..1024) }
+        val fogColour = if (fog) requireNotNull(args.getOrNull(1)?.toIntOrNull(16)) { "rrggbb missing" } else 0
+        val sun = if (revert || fog) -1 else requireNotNull(args.getOrNull(1)?.toIntOrNull()) { "value missing" }.also { require(it in 1..1024) }
         val paths = listOf(RspsPaths.data("cache"), RspsPaths.root("file-server/cache"))
         // optional 3rd arg = ToaUpperTileFlagTool scope (necropolis, cox ...) - for reading the trailers of other areas (plan only).
         val targets = args.getOrNull(2)?.let { require(args[0].endsWith("plan")) { "scope only with plan" }; ToaUpperTileFlagTool.targets(it) }
@@ -40,6 +46,13 @@ object ToaEnvironmentTrialTool {
                 val map = Rev667TileCodec.decode(before)
                 val t = map.trailing
                 val newTrailing: ByteArray = when {
+                    fog -> {
+                        val at = fogOffset(t)
+                        if (at == null) { println("SKIP $name trailer ${t.joinToString("") { "%02x".format(it) }}"); continue }
+                        val now = (t[at].toInt() and 0xFF shl 24) or (t[at + 1].toInt() and 0xFF shl 16) or (t[at + 2].toInt() and 0xFF shl 8) or (t[at + 3].toInt() and 0xFF)
+                        if (now == fogColour) { println("SAME $name"); continue }
+                        t.copyOf().also { for (i in 0 until 4) it[at + i] = (fogColour shr (24 - 8 * i)).toByte() }
+                    }
                     ambient && t.size >= 4 && t[0] == 0.toByte() && (t[1].toInt() and 0x2) != 0 ->
                         if (((t[2].toInt() and 0xFF) shl 8 or (t[3].toInt() and 0xFF)) == sun) { println("SAME $name"); continue }
                         else t.copyOf().also { it[2] = (sun shr 8).toByte(); it[3] = sun.toByte() }
@@ -56,16 +69,31 @@ object ToaEnvironmentTrialTool {
                 val after = Rev667TileCodec.encode(map)
                 println("ENV $name OUD ${t.joinToString("") { "%02x".format(it) }} -> NIEUW ${newTrailing.joinToString("") { "%02x".format(it) }}")
                 if (!before.contentEquals(after)) mutations += CacheMutation(5, archive.id, 0, after,
-                    "N609 env trial $name sun=${if (revert) "default" else "$sun/256"}", CacheItemProbeTool.sha1(before))
+                    if (fog) "TOA-1911 env $name fog=%06x".format(fogColour) else "N609 env trial $name sun=${if (revert) "default" else "$sun/256"}",
+                    CacheItemProbeTool.sha1(before))
             }
         } finally { game.close(); files.close() }
         if (mutations.isEmpty()) { println("NOTHING_TO_DO"); return }
         val tx = CacheTransaction(paths, mutations)
         val plan = tx.preflight()
         check(tx.blockingErrors(plan).isEmpty()) { tx.blockingErrors(plan).joinToString("\n") }
-        if (args[0] == "plan" || args[0] == "ambient-plan") { println("DRY_RUN ${tx.id} maps=${mutations.size}"); return }
+        if (args[0].endsWith("plan")) { println("DRY_RUN ${tx.id} maps=${mutations.size}"); return }
         val result = tx.apply(plan)
         check(tx.verify().isEmpty()) { "Cache verification failed: ${tx.id}" }
         println("ENV_TRIAL transaction=${tx.id} applied=${result.applied} skipped=${result.skipped} verified=true")
+    }
+
+    /** Offset of the 0x20 colour in a code-0 trailer (client Environment: 0x1 g4, 0x2 g2, 0x4 g2, 0x8 g2, 0x10 3x g2s, 0x20 g4), or null. */
+    internal fun fogOffset(t: ByteArray): Int? {
+        if (t.size < 2 || t[0] != 0.toByte()) return null
+        val flags = t[1].toInt() and 0xFF
+        if (flags and 0x20 == 0) return null
+        var at = 2
+        if (flags and 0x1 != 0) at += 4
+        if (flags and 0x2 != 0) at += 2
+        if (flags and 0x4 != 0) at += 2
+        if (flags and 0x8 != 0) at += 2
+        if (flags and 0x10 != 0) at += 6
+        return at.takeIf { it + 4 <= t.size }
     }
 }

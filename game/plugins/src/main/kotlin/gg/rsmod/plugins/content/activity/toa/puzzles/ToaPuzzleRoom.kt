@@ -163,7 +163,7 @@ abstract class ToaPuzzleRoom(val raid: ToaRaid) : ToaRoom {
         return MeleeReach.bordersWithoutWall(raid.world.collision, npc.tile, size, size, tile, 1, 1)
     }
     protected fun follow(npc: Npc, tile: Tile) {
-        if (!npc.timers.has(FROZEN_TIMER) && !inMeleeRange(npc, tile)) npc.walkTo(tile)
+        if (!npc.timers.has(FROZEN_TIMER) && !inMeleeRange(npc, tile)) npc.walkTo(gg.rsmod.plugins.content.activity.toa.ToaFollow.approach(npc, tile))
         else npc.stopMovement()
     }
 

@@ -5277,3 +5277,9 @@ spotanim	379	3398	model 66062 (N609 census, OsrsFxImportTool toa-census-fx)
 spotanim	131	3115	model 4051 (N609 census, OsrsFxImportTool toa-census-fx)
 spotanim	1463	3074	model 4034 (N609 census, OsrsFxImportTool toa-census-fx)
 spotanim	1555	3399	model 6298 (N609 Zebak extra-spetter, OsrsFxImportTool toa-zebak-splash)
+spotanim	2129	3475	model 67575 (TOA-1911 Crondis poison, OsrsFxImportTool toa-crondis-poison)
+seq	9559	17774	spotanim 2129
+spotanim	2130	3476	model 67575 (TOA-1911 Crondis poison, OsrsFxImportTool toa-crondis-poison)
+seq	9560	17775	spotanim 2130
+spotanim	2131	3477	model 67575 (TOA-1911 Crondis poison, OsrsFxImportTool toa-crondis-poison)
+seq	9561	17776	spotanim 2131

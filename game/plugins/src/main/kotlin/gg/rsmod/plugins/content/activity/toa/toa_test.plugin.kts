@@ -49,6 +49,16 @@ on_command("toahp", Privilege.ADMIN_POWER) {
     player.message("ToA test hp $hp on ${npcs.size} npc(s): ${npcs.joinToString { "${it.id}" }}")
 }
 
+// TOA-1911 (eigenaar 19-11 'kist in de lobby doet niets'; 'spawn commands maken'): set your Normal/Expert completion count so the
+// Icthlarin's shroud chest (100/500/1,000/1,500/2,000) and the shrouds' "Change" option can be tested. Same gate as the jumps.
+on_command("toacompletions", Privilege.ADMIN_POWER) {
+    if (!gg.rsmod.plugins.content.activity.toa.ToaTestGate.allowed(player)) return@on_command
+    val n = player.getCommandArgs().firstOrNull()?.toIntOrNull()?.coerceAtLeast(0) ?: return@on_command
+    gg.rsmod.plugins.content.activity.toa.ToaTestGate.jumped(player, "toacompletions $n")
+    player.attr[gg.rsmod.plugins.content.activity.toa.ToaChest.COMPLETIONS_NORMAL_EXPERT] = n
+    player.message("ToA test: Normal/Expert completions = $n.")
+}
+
 on_command("toaroom", Privilege.ADMIN_POWER) {
     if (!gg.rsmod.plugins.content.activity.toa.ToaTestGate.allowed(player)) return@on_command
     gg.rsmod.plugins.content.activity.toa.ToaTestGate.jumped(player, "toaroom ${player.getCommandArgs().joinToString(" ")}")

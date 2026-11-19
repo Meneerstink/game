@@ -1500,6 +1500,11 @@
   usage: "::toahp <n>"
   description: "ToA test jump: set every living npc of your current ToA room to n hitpoints. Test server, and on live only check78/check79."
   example: "::toahp 50"
+- name: toacompletions
+  rank: admin
+  usage: "::toacompletions <n>"
+  description: "ToA test: set your Normal/Expert completion count (Icthlarin's shroud chest in the lobby, shroud 'Change'). Test server, and on live only check78/check79."
+  example: "::toacompletions 2000"
 - name: drink
   rank: admin
   usage: "::drink <potion name part>"

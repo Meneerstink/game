@@ -233,6 +233,9 @@ object AkkhaCombat : CombatScript() {
             shadows.values.toList().forEach { remove(it) }; shadows.clear()
             Quadrant.values().forEach { q -> spawn(ToaBossNpcs.AKKHA_SHADOW, shadowTile(q), SHADOW_STATS)?.let {
                 shadows[q] = it
+                // TOA-1911 (eigenaar 19-11 'akkha shadows kijken de verkeerde kant op'): a spawned npc keeps the default south facing;
+                // the shadows stand in the four corners and turn towards the arena centre where Akkha channels from (Kaoz Entry 29:0x).
+                it.faceTile(centre)
                 ToaBossFx.weakness(it, gg.rsmod.plugins.content.combat.formula.ElementalWeakness.Element.AIR, 60) // Shadow Wiki infobox.
             } }
             message(if (shadowStage == 1) "Shadows appear throughout the room!" else "The shadows in the room are restored!")

@@ -407,7 +407,8 @@ fun Pawn.dealHit(
     // Amulet of blood fury: every successful melee hit (specials and multi-hits included) uses a charge and may heal (BloodFury).
     if (this is Player && hitType == HitType.MELEE && executeHit) {
         val attacker = this
-        hit.addAction { gg.rsmod.plugins.content.items.osrs.BloodFury.onMeleeHit(attacker, hit.hitmarks.sumOf { it.damage }) }
+        val leechTarget = target
+        hit.addAction { gg.rsmod.plugins.content.items.osrs.BloodFury.onMeleeHit(attacker, if (LifeLeech.immune(leechTarget)) 0 else hit.hitmarks.sumOf { it.damage }) }
     }
 
     // Poisoned weapons and ammunition: 1/4 melee, 1/8 ranged on a landed non-zero hit (WeaponPoison, OSRS Wiki "Poison").
@@ -545,7 +546,7 @@ fun Pawn.dealHit(
             // Lifesteal further-foundations pass (2026-09-02): Guthan's Infestation set effect,
             // an attacker-side "on damage dealt" effect like Sap/Leech above it. See
             // GuthanLifesteal.kt for the sourcing note.
-            GuthanLifesteal.onDamageDealt(pawn, getCombatClass(pawn), totalDamage)
+            if (!LifeLeech.immune(target)) GuthanLifesteal.onDamageDealt(pawn, getCombatClass(pawn), totalDamage)
             // Stat-drain further-foundations pass (2026-09-02): Ahrim's Blighted Aura set
             // effect (the "Barrows" entry of the master plan's "Stat drain" item; BGS's own
             // drain is wired separately in its own special-attack plugin.kts, and DWH is
