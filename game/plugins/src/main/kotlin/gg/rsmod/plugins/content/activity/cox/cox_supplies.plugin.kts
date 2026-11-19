@@ -60,3 +60,9 @@ CoxIds.loc(29875)?.let { body ->
         player.queue { messageBox("You find the creature keeper's journal.") }
     }
 }
+
+/** N640: Dark relic (OSRS 21027) - Commune (pick a skill, XP = level x 150/50) and Destroy, see CoxDarkRelic. */
+CoxIds.item(CoxDarkRelic.OSRS_ITEM)?.let { id ->
+    if (hasOp(id, "Commune")) on_item_option(id, option = "Commune") { CoxDarkRelic.commune(player, player.getInteractingItemSlot(), id) }
+    if (hasOp(id, "Destroy")) on_item_option(id, option = "Destroy") { CoxDarkRelic.destroy(player, player.getInteractingItemSlot(), id) }
+}

@@ -38,6 +38,8 @@ internal class N11Fixture : AutoCloseable {
     init {
         every { definitions.get(ItemDef::class.java, any()) } answers { def(secondArg()) }
         every { definitions.getNullable(ItemDef::class.java, any()) } answers { def(secondArg()) }
+        // teleport_items binds the Necropolis obelisk (Commune) through on_obj_option, which reads the loc def: any loc offers Commune here.
+        every { definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, any()) } answers { gg.rsmod.game.fs.def.ObjectDef(secondArg()).apply { options[0] = "Commune" } }
         every { player.world } returns world
         every { world.definitions } returns definitions
         every { world.plugins } returns repo

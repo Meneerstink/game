@@ -162688,14 +162688,14 @@
     },
     "osrs_id": 11529,
     "source": "osrs",
-    "attack_anim": 428,
-    "block_anim": 430,
-    "death_anim": 836,
+    "attack_anim": -1,
+    "block_anim": -1,
+    "death_anim": -1,
     "death_delay": 0,
     "respawn_delay": 60,
     "attack_gfx": -1,
     "attack_projectile": -1,
     "matrix_style": null,
-    "anim_source": "N462: OSRS Wiki infobox stats; halberd stab 428/block 430 ONZEKER (npc def has only halberd walk 1205-1208)"
+    "anim_source": "N640: OSRS Wiki infobox stats; NO attack/block/death anim - 428/430/836 are 667-skeleton ids and the imported OSRS skeleton (idle 813, walk 1205-1208) has no sourced attack anims (SOURCE_GAP, 2026-11-19)"
   }
 ]

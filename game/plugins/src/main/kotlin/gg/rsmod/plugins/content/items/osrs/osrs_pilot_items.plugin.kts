@@ -65,3 +65,25 @@ on_item_option(item = Items.AVERNIC_DEFENDER, option = "Dismantle") {
         }
     }
 }
+
+/*
+ * N640 (red OsrsEquipment2ImportTests, key 24661): the ToA ornaments (Cursed phalanx on Osmumten's fang -> fang (or); the breaching /
+ * corruption / sun / Amascut jewels on the Keris partisan) have local, imported ids, so they cannot be CombinationData rows - their
+ * Dismantle existed above but nothing attached the kit. Same behaviour as every ornament kit: "Are you sure" item GUI (AttachConfirm,
+ * the result has Dismantle), the kit is used up in the combination, the base becomes the ornamented item, attach sound + item GUI.
+ */
+val combinationResults = gg.rsmod.plugins.content.items.combine.CombinationData.values().map { it.resultItem }.toSet()
+OsrsOrnamentKits.ALL.filter { it.ornamented !in combinationResults }.forEach { ornament ->
+    gg.rsmod.plugins.content.items.combine.AttachConfirm.route(ornament.kit, ornament.base, ornament.ornamented)
+    on_item_on_item(item1 = ornament.kit, item2 = ornament.base) {
+        val first = player.attr[gg.rsmod.game.model.attr.INTERACTING_ITEM_SLOT] ?: return@on_item_on_item
+        val second = player.attr[gg.rsmod.game.model.attr.OTHER_ITEM_SLOT_ATTR] ?: return@on_item_on_item
+        val kitSlot = if (player.inventory[first]?.id == ornament.kit) first else second
+        val baseSlot = if (kitSlot == first) second else first
+        if (player.inventory[kitSlot]?.id != ornament.kit || player.inventory[baseSlot]?.id != ornament.base) return@on_item_on_item
+        player.inventory.remove(item = ornament.kit, beginSlot = kitSlot)
+        player.inventory[baseSlot] = gg.rsmod.game.model.item.Item(ornament.ornamented)
+        gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player, ornament.kit, ornament.base)
+        player.queue { itemMessageBox(ornament.attachMessage, item = ornament.ornamented) }
+    }
+}

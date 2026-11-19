@@ -103,7 +103,10 @@ class OsrsEquipment2ImportTests {
     fun `ornament kits combine and dismantle for the whole roster, rancour is a crafting upgrade`() {
         val kits = CombinationData.values().associateBy { it.resultItem }
         OsrsOrnamentKits.ALL.forEach { o ->
-            assertEquals(setOf(o.kit, o.base), kits.getValue(o.ornamented).items.toSet(), "combine for ${o.ornamented}")
+            // The imported ToA ornaments (fang (or), the Keris partisans) have local ids and attach through osrs_pilot_items.plugin.kts
+            // (N640), not through a CombinationData row.
+            kits[o.ornamented]?.let { assertEquals(setOf(o.kit, o.base), it.items.toSet(), "combine for ${o.ornamented}") }
+                ?: assertTrue(o.pvpConvert.not(), "${o.ornamented} has no combination row, so it must be a ToA ornament (pvpConvert = false)")
             // The detach option is the item's own cache option: "Dismantle" (OSRS imports) or "Split" (667 native (or)/(sp), fury (or)).
             assertTrue(o.detachOption in DEFINITIONS.get(ItemDef::class.java, o.ornamented).inventoryMenu, "${o.ornamented} has ${o.detachOption}")
         }

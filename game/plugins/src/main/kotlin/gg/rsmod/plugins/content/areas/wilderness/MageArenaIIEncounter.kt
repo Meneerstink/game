@@ -171,7 +171,10 @@ object MageArenaIIEncounter {
         state.healers.forEach { if (it.isSpawned()) it.world.remove(it) }
         state.healers.clear()
         val owner = state.owner.get()
-        if (state.teleBlockApplied && owner != null) owner.timers.remove(TELEBLOCK_TIMER)
+        if (state.teleBlockApplied && owner != null) {
+            owner.timers.remove(TELEBLOCK_TIMER)
+            owner.timers.remove(gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.TELEBLOCK_WARNING_TIMER)
+        }
         state.teleBlockApplied = false
         occupied.entries.removeIf { it.key == state.point }
     }
@@ -290,7 +293,7 @@ object MageArenaIIEncounter {
             wait(SPECIAL_LAND_TICKS)
             if (!npc.isAlive() || !target.isOnline || target.timers.has(TELEBLOCK_TIMER)) return@queue
             if (MagicCombatFormula.getAccuracy(npc, target) < npc.world.randomDouble()) { target.graphic(Graphic(85, 124)); return@queue }
-            target.timers[TELEBLOCK_TIMER] = if (protects(target, CombatClass.MAGIC)) TELE_BLOCK_PROTECTED_TICKS else TELE_BLOCK_TICKS
+            gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.teleblock(target, if (protects(target, CombatClass.MAGIC)) TELE_BLOCK_PROTECTED_TICKS else TELE_BLOCK_TICKS)
             state.teleBlockApplied = true
             target.message("A teleport block has been cast on you!")
         }
