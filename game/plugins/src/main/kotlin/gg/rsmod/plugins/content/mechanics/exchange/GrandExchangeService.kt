@@ -80,7 +80,10 @@ class GrandExchangeService(
         definitions = world.definitions
         this.world = world
         // "buy-limits" (optional service property): the table's path; unit tests run from game/plugins, not the repo root.
-        GeBuyLimits.load(File(serviceProperties.getOrDefault("buy-limits", GeBuyLimits.DEFAULT_PATH)))
+        GeBuyLimits.load(
+            File(serviceProperties.getOrDefault("buy-limits", GeBuyLimits.DEFAULT_PATH)),
+            File(serviceProperties.getOrDefault("buy-limits-osrs", GeBuyLimits.OSRS_OVERLAY_PATH)),
+        )
         load()
         // Audit T-11: in the running server the book is written off the game thread (see save()).
         asyncWrites = serviceProperties.getOrDefault("async-writes", true)

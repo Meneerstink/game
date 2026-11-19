@@ -22,6 +22,13 @@ import java.io.FileReader
  */
 object GeBuyLimits {
     const val DEFAULT_PATH = "./data/cfg/ge/buy-limits.json"
+
+    /**
+     * N577 (owner 2026-11-19 "ja volg je adviezen"): the Void table above is 2011; this overlay holds the CURRENT OSRS limit of every
+     * tradeable, unnoted item whose name matches an OSRS Grand Exchange item (OSRS Wiki Module:GELimits + prices.runescape.wiki
+     * mapping, both agree on every row, 2026-11-19). A row overrides the Void limit of the same id or adds one the Void table lacks.
+     */
+    const val OSRS_OVERLAY_PATH = "./data/cfg/ge/buy-limits-osrs.json"
     const val WINDOW_MS = 4L * 60 * 60 * 1000
 
     class Row(
@@ -33,9 +40,17 @@ object GeBuyLimits {
     @Volatile
     private var limits: Map<Int, Int> = emptyMap()
 
-    fun load(file: File = File(DEFAULT_PATH)): Int {
+    fun load(
+        file: File = File(DEFAULT_PATH),
+        overlay: File? = null,
+    ): Int {
         val rows: Array<Row> = FileReader(file).use { Gson().fromJson(it, Array<Row>::class.java) }
-        limits = rows.associate { it.id to it.limit }
+        val merged = rows.associate { it.id to it.limit }.toMutableMap()
+        if (overlay != null && overlay.isFile) {
+            val osrs: Array<Row> = FileReader(overlay).use { Gson().fromJson(it, Array<Row>::class.java) }
+            osrs.forEach { if (it.limit > 0) merged[it.id] = it.limit }
+        }
+        limits = merged
         return limits.size
     }
 

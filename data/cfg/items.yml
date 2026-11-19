@@ -173,7 +173,7 @@
 - id: 28
   name: "Insect repellent"
   examine: "Drives away all known 6 legged creatures."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 29
@@ -185,7 +185,7 @@
 - id: 30
   name: "Bucket of wax"
   examine: "It's a bucket of wax."
-  tradeable: false
+  tradeable: true
   weight: 2.5
   equipment: null
 - id: 31
@@ -1851,7 +1851,7 @@
   name: "Fish food"
   examine: "A box of fish food / Keeps your pet fish strong and healthy."
   destroy_message: "You can reclaim this item from the place you found it."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 273
@@ -19672,7 +19672,7 @@
 - id: 1573
   name: "Doogle leaves"
   examine: "A tasty herb good for seasoning."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 1574
@@ -23140,7 +23140,7 @@
 - id: 1969
   name: "Spinach roll"
   examine: "A home made spinach thing."
-  tradeable: false
+  tradeable: true
   weight: 0.1
   equipment: null
 - id: 1970
@@ -24310,7 +24310,7 @@
 - id: 2164
   name: "Batta tin"
   examine: "A deep tin used to make gnome battas in."
-  tradeable: false
+  tradeable: true
   weight: 0.1
   equipment: null
 - id: 2165
@@ -34482,7 +34482,7 @@
 - id: 3107
   name: "Spiked boots"
   examine: "Climbing boots with spikes."
-  tradeable: false
+  tradeable: true
   weight: 0.3
   equipment:
     equip_slot: 10
@@ -39233,7 +39233,7 @@
 - id: 3678
   name: "Flamtaer hammer"
   examine: "An exquisitely shaped tool specially designed for fixing temples."
-  tradeable: false
+  tradeable: true
   weight: 1.3
   equipment: null
 - id: 3679
@@ -42421,7 +42421,7 @@
 - id: 4012
   name: "Monkey nuts"
   examine: "They are Monkey Nuts. Yummy."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 4013
@@ -42433,7 +42433,7 @@
 - id: 4014
   name: "Monkey bar"
   examine: "It's a monkey bar. It looks highly nutritious."
-  tradeable: false
+  tradeable: true
   weight: 0.1
   equipment: null
 - id: 4015
@@ -42445,7 +42445,7 @@
 - id: 4016
   name: "Banana stew"
   examine: "It's a bowl full of mushy banana"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 4017
@@ -50829,7 +50829,7 @@
 - id: 4668
   name: "Garlic powder"
   examine: "Finely ground garlic powder."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 4669
@@ -50995,7 +50995,7 @@
 - id: 4687
   name: "Bucket of sap"
   examine: "It's a bucket of sap."
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment: null
 - id: 4688
@@ -51007,7 +51007,7 @@
 - id: 4689
   name: "Pile of salt"
   examine: "A little heap of salt."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 4690
@@ -59390,31 +59390,31 @@
 - id: 5370
   name: "Oak sapling"
   examine: "This sapling is ready to be planted in a tree patch."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment: null
 - id: 5371
   name: "Willow sapling"
   examine: "This sapling is ready to be replanted in a tree patch."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment: null
 - id: 5372
   name: "Maple sapling"
   examine: "This sapling is ready to be planted in a tree patch."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment: null
 - id: 5373
   name: "Yew sapling"
   examine: "This sapling is ready to be planted in a tree patch."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment: null
 - id: 5374
   name: "Magic sapling"
   examine: "This sapling is ready to be planted in a tree patch."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment: null
 - id: 5375
@@ -60146,49 +60146,49 @@
 - id: 5496
   name: "Apple sapling"
   examine: "This sapling is ready to be replanted in a fruit tree patch."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment: null
 - id: 5497
   name: "Banana sapling"
   examine: "This sapling is ready to be replanted in a fruit tree patch."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment: null
 - id: 5498
   name: "Orange sapling"
   examine: "This sapling is ready to be replanted in a fruit tree patch."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment: null
 - id: 5499
   name: "Curry sapling"
   examine: "This sapling is ready to be replanted in a fruit tree patch."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment: null
 - id: 5500
   name: "Pineapple sapling"
   examine: "This sapling is ready to be replanted in a fruit tree patch."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment: null
 - id: 5501
   name: "Papaya sapling"
   examine: "This sapling is ready to be replanted in a fruit tree patch."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment: null
 - id: 5502
   name: "Palm sapling"
   examine: "This sapling is ready to be replanted in a fruit tree patch."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment: null
 - id: 5503
   name: "Calquat sapling"
   examine: "This sapling is ready to be planted in a tree patch."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment: null
 - id: 5504
@@ -75792,7 +75792,7 @@
 - id: 6750
   name: "Black desert shirt"
   examine: "A desert shirt stained black with mushroom ink."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 4
@@ -75828,7 +75828,7 @@
 - id: 6752
   name: "Black desert robe"
   examine: "A desert robe stained black with mushroom ink."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 7
@@ -77476,7 +77476,7 @@
 - id: 6891
   name: "Arena book"
   examine: "A book about the Training Arena."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment: null
 - id: 6892
@@ -83635,7 +83635,7 @@
 - id: 7468
   name: "Pot of cornflour"
   examine: "It's cornflour in a pot."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment: null
 - id: 7469
@@ -103096,7 +103096,7 @@
 - id: 9522
   name: "Batta tin"
   examine: "A deep tin used to make gnome battas in."
-  tradeable: false
+  tradeable: true
   weight: 0.1
   equipment: null
 - id: 9523
@@ -103108,7 +103108,7 @@
 - id: 9524
   name: "Batta tin"
   examine: "A deep tin used to make gnome battas in."
-  tradeable: false
+  tradeable: true
   weight: 0.1
   equipment: null
 - id: 9525
@@ -115763,7 +115763,7 @@
 - id: 10496
   name: "Polished buttons"
   examine: "Shiny!"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 10497
@@ -124765,7 +124765,7 @@
 - id: 10999
   name: "Goblin book"
   examine: "A tattered goblin holy book."
-  tradeable: false
+  tradeable: true
   weight: 0.1
   equipment: null
 - id: 11000
@@ -173955,7 +173955,7 @@
 - id: 14589
   name: "White lily seed"
   examine: "A white lily seed - plant in a flower patch."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 14590
@@ -285322,13 +285322,13 @@
 - id: 23744
   name: "Aether rune"
   examine: "A combined cosmic and soul rune."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 23745
   name: "Aether catalyst"
   examine: "A piece of the cosmos' soul? Or souls belonging to the cosmos?"
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 23746
