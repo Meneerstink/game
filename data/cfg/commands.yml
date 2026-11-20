@@ -1547,7 +1547,19 @@
   example: "::botunlock ruinous"
 
 - name: cluestep
-  rank: owner
+  rank: admin
   usage: "::cluestep <easy|medium|hard|elite|78> [list|step id|unique text]"
   description: "Client test: choose an installed step on your ordinary clue; normal trail length, requirements and rewards remain."
   example: "::cluestep hard BLUE GRIM"
+
+- name: cluemega
+  rank: admin
+  usage: "::cluemega [item id]"
+  description: "Test server only: show the gold 78 mega-rare world message without a real roll (default item 20011)."
+  example: "::cluemega 20011"
+
+- name: cluemimic
+  rank: admin
+  usage: "::cluemimic [elite|master]"
+  description: "Test server only: give a converted Mimic casket at once, no roll."
+  example: "::cluemimic elite"
