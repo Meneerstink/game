@@ -462,6 +462,8 @@ class ModernObjectDef(val id: Int) {
     var ambientSoundId = -1
     var ambientSoundRadius = 0
     var ambientSoundRetain = 0
+    /** Opcode 79 (random ambient sounds): [minDelay, maxDelay, radius, retain, ids...]; null when absent. */
+    var randomAmbient: IntArray? = null
     var mapAreaId = -1
     var randomizeAnimStart = true
     var deferAnimChange = false
@@ -581,12 +583,12 @@ class ModernObjectDef(val id: Int) {
                         def.ambientSoundRetain = buf.u8()
                     }
                     79 -> {
-                        buf.u16()
-                        buf.u16()
-                        buf.u8()
-                        buf.u8()
+                        val minDelay = buf.u16()
+                        val maxDelay = buf.u16()
+                        val radius = buf.u8()
+                        val retain = buf.u8()
                         val n = buf.u8()
-                        repeat(n) { buf.u16() }
+                        def.randomAmbient = intArrayOf(minDelay, maxDelay, radius, retain) + IntArray(n) { buf.u16() }
                     }
                     81 -> {
                         def.contouredGround = 1

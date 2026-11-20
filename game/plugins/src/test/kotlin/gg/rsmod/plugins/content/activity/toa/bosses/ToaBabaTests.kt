@@ -154,8 +154,8 @@ class ToaBabaTests {
         repeat(10) { s.cycle() }
         assertEquals(1, starts); assertEquals(1, s.rollingStage); assertTrue(s.rolling)
     }
-    @Test fun `default baboon count remains within published one to four for all groups`() {
-        assertEquals(listOf(1, 1, 2, 2, 3, 3, 4, 4), (1..8).map(BabaCombat::baboonCount))
+    @Test fun `default baboon count remains within published two to four for all groups`() {
+        assertEquals(listOf(2, 2, 2, 2, 3, 3, 4, 4), (1..8).map(BabaCombat::baboonCount))
         assertEquals(BabaCombat.rollingInterval(true), BabaCombat.rollingInterval(false))
     }
     @Test fun `2025 melee prayer fully blocks Ba-Ba and ignores obsolete Quiet Prayers`() {

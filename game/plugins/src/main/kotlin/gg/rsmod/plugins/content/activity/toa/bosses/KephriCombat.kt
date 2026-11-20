@@ -155,14 +155,20 @@ object KephriCombat : CombatScript() {
             val count = swarmCount(shieldBreaks)
             val cap = ToaScale.hp(STATS.hp, context) * 115 / 100 // ONZEKER T14: Wiki says approximately115%.
             shield = 0
-            val edges = listOf(centre.transform(8, 8), centre.transform(8, -8), centre.transform(0, -9),
-                centre.transform(-8, -8), centre.transform(-8, 8), centre.transform(0, 9))
+            // NACHTRUN 20-11 (wiki Kephri_Shield_Spawn_locations.png, 6 vakken van 3 tegels op de rand; wiki-tekst NE,SE,S,SW,NW,N; foto-camera
+            // kijkt van west naar oost: boven = oostmuur): NE/SE = oostmuur z centre+3 / -5, SW/NW = westmuur zelfde z, N/S = noord-/zuidmuur bij
+            // x centre+1. De vloer loopt x centre-8..+7, z centre-9..+7 (clipmap 20-11), dus de OUDE hoektegels (+-8,+-8) en (0,+9) lagen
+            // BUITEN de arena. Per spawn een willekeurige tegel van de 3 (lang de muur); kloksgewijs vanaf een willekeurige start.
+            val edges = listOf(centre.transform(7, 3) to true, centre.transform(7, -5) to true, centre.transform(1, -9) to false,
+                centre.transform(-8, -5) to true, centre.transform(-8, 3) to true, centre.transform(1, 7) to false)
             var at = 0
             val start = npc.world.random(5)
             val schedule = List(count) { i ->
                 // ONZEKER T14: second24swarm phase truncates the published28schedule, no measured skip probability.
                 at += firstSwarmInterval(i)
-                at to edges[(start + i) % edges.size]
+                val (base, alongZ) = edges[(start + i) % edges.size]
+                val spread = npc.world.random(2) - 1
+                at to (if (alongZ) base.transform(0, spread) else base.transform(spread, 0))
             }
             val heal = (ToaScale.hp(STATS.hp, context) / (10 + context.partySize - 1)).coerceAtLeast(1)
             swarms(schedule, List(count) { heal }, { tile -> tile.getDistance(centre).coerceAtLeast(1) }, cap)

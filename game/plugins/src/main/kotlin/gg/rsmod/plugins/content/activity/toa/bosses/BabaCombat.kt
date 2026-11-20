@@ -29,8 +29,8 @@ object BabaCombat : CombatScript() {
     fun crackedHp(@Suppress("UNUSED_PARAMETER") path: Int): Int = 25 // Owner: no path level variants.
     /** Boulder page oldid15197004 table: half the ordinary group HP slope, no raid-level multiplier. */
     fun boulderHp(size: Int): Int { require(size in 1..8); return listOf(25, 36, 47, 55, 62, 70, 77, 85)[size - 1] }
-    // ONZEKER T16: interpolate published1-4baboons as one per two party members, capped4.
-    fun baboonCount(size: Int) = ((size + 1) / 2).coerceIn(1, 4)
+    // TOA-1911 20-11: wiki Strategies = level 77 baboons "ranging from 2-4 depending on party size"; vanilla solo video (baba-8LEeT_kwl7c, 340-350 s) shows 2 baboons with HP bars. One per two members, clamped 2..4 (ONZEKER: exact group steps).
+    fun baboonCount(size: Int) = ((size + 1) / 2).coerceIn(2, 4)
     // N606 13-11: measured in the Kaoz Entry guide (static camera, work/claude-scripts/baba_rows_measure.py, 1447.8-1449.4 and
     // 1452.2-1455.8 s): rows travel ~40-42 px/s and lie 141-152 px apart = 3.4-3.75 s = ~6 ticks between sets (3 rows on the floor
     // at a time; 4 gave 6 rows, owner 12-11 'geen opening'). No Boulderdash variant.
@@ -315,7 +315,7 @@ object BabaCombat : CombatScript() {
             // toa-mistake-tracker BabaDetector BABA_SLAM_GRAPHICS_ID 'spawning under the player'; raid-recorder GO_BABA_SLAM).
             later(delay) { players().filter { p -> tiles.any { sameTile(it, p.tile) } }.forEach { gfx(1103, Tile(it.tile)); attack(it, damageAt(it), null, accuracy = false) } }
         }
-        /** Counts/positions are source inputs: T16 only proves 1-4, not a team-size formula. */
+        /** Counts/positions are source inputs: wiki 2-4 (TOA-1911 20-11); exact team-size steps unproven. */
         fun summonBaboons(tiles: List<Tile>) {
             require(tiles.size in 1..4)
             baboons.removeAll { !it.isSpawned() || it.isDead() }

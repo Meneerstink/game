@@ -30,6 +30,8 @@ object OsrsLocImportTool {
             "dmm2-advanced-loot" to listOf(49564, 49565),
             // Apply OsrsFxImportTool toa-akkha-marker-seq first; reuses these four existing loc/model ids and restores seq9759.
             "toa-akkha-markers" to listOf(45868, 45869, 45870, 45871),
+            // TOA-1911 20-11: Wardens P1 UFO pyramids (45748/45749 appear, 45750/45751 load = red/yellow); apply OsrsFxImportTool toa-wardens-pyramid-seq first.
+            "toa-wardens-pyramids" to listOf(45748, 45749, 45750, 45751),
             // N462 07-11: the empty rocks of the OSRS ore rocks imported with the Necropolis (RuneLite gameval ObjectID ROCKS1 11390 /
             // ROCKS2 11391; CLAYROCK1..ADAMANTITEROCK2 deplete to them) - OsrsImportedRocks sets them as the depleted form.
             "necropolis-rocks" to listOf(11390, 11391),

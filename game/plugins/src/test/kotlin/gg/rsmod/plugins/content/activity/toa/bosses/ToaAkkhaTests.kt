@@ -50,6 +50,7 @@ class ToaAkkhaTests {
         every { p.isOnline } returns true; every { p.isDead() } returns false
         every { p.tile } returns Tile(3201, 3199); every { p.equipmentBonuses } returns IntArray(18)
         every { p.equipment[3] } returns null
+        every { p.attr } returns gg.rsmod.game.model.attr.AttributeMap()
         val s = AkkhaCombat.Session(f.npc, ToaTestContext(players = listOf(p)))
         val auto = mockk<ToaAutoAttack>(relaxed = true)
         s.autoEvidence = CombatClass.values().associateWith { auto }; s.target = p
@@ -87,6 +88,7 @@ class ToaAkkhaTests {
         every { p.isOnline } returns true; every { p.isDead() } returns false
         every { p.tile } returns Tile(3201, 3199); every { p.equipmentBonuses } returns IntArray(18)
         every { p.equipment[3] } returns null
+        every { p.attr } returns gg.rsmod.game.model.attr.AttributeMap()
         val s = AkkhaCombat.Session(f.npc, ToaTestContext(players = listOf(p)))
         val auto = mockk<ToaAutoAttack>(relaxed = true)
         s.autoEvidence = CombatClass.values().associateWith { auto }; s.target = p

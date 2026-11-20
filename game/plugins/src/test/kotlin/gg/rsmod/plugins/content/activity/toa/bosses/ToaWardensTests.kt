@@ -110,20 +110,24 @@ class ToaWardensTests {
         assertEquals(0, delivered(10), "orb with8ticks left must be cancelled")
         assertEquals(0, delivered(6, reset = true), "wipe/close must still cancel the carried shot")
     }
-    @Test fun `windmill has all four arms instead of leaving two entire quadrants safe`() {
-        val origin = gg.rsmod.game.model.Tile(3808, 5154, 1)
-        val first = WardensCombat.windmillTiles(origin, 0)
-        for (distance in listOf(1, 6, 12)) {
-            for ((dx, dz) in listOf(0 to 1, 1 to 0, 0 to -1, -1 to 0))
-                assertTrue(origin.transform(dx * distance, dz * distance) in first)
-        }
-        assertFalse(origin in first)
-        assertFalse(origin.transform(13, 0) in first)
-        val diagonal = WardensCombat.windmillTiles(origin, 1)
-        for ((dx, dz) in listOf(1 to 1, 1 to -1, -1 to -1, -1 to 1))
-            assertTrue(origin.transform(dx * 6, dz * 6) in diagonal)
-        assertFalse(origin.transform(6, 0) in diagonal)
-        assertEquals(first, WardensCombat.windmillTiles(origin, 8))
+    @Test fun `windmill sweeps 18 degree wedges of all four arms and repeats every five steps`() {
+        val centre = gg.rsmod.game.model.Tile(3808, 5154, 1)
+        // diagram bands (clockwise from north, mod 90): D [0,18) starts, then C, B, A, E anti-clockwise; the cardinal lines are the D+C overlap
+        val first = WardensCombat.windmillTiles(centre, 0)
+        for ((dx, dz) in listOf(0 to 1, 1 to 0, 0 to -1, -1 to 0)) assertTrue(centre.transform(dx * 6, dz * 6) in first, "cardinal tiles are hit in the first step")
+        assertTrue(centre.transform(1, 8) in first, "just east of north is band D")
+        assertFalse(centre.transform(-1, 8) in first, "just west of north is band C, hit one step later")
+        assertTrue(centre.transform(-1, 8) in WardensCombat.windmillTiles(centre, 1))
+        assertFalse(centre in first)
+        assertFalse(centre.transform(1, 1) in first, "the obelisk itself")
+        val diagonal = WardensCombat.windmillTiles(centre, 3)
+        for ((dx, dz) in listOf(1 to 1, 1 to -1, -1 to -1, -1 to 1)) assertTrue(centre.transform(dx * 6, dz * 6) in diagonal)
+        assertFalse(centre.transform(6, 0) in diagonal)
+        assertEquals(first, WardensCombat.windmillTiles(centre, 5))
+        assertEquals(first, WardensCombat.windmillTiles(centre, 10))
+        // the five wedges together cover the whole 21x23 floor
+        val all = (0 until 5).flatMap { WardensCombat.windmillTiles(centre, it) }.toSet()
+        assertEquals(21 * 23 - 9, all.size)
     }
     @Test fun `P2 protection swaps on core return and P3 shows all prayers only during siphons`() {
         val icons = gg.rsmod.plugins.content.activity.toa.ToaHeadIcons
@@ -289,6 +293,12 @@ class ToaWardensTests {
         s.obeliskSpecial(WardensCombat.ObeliskSpecial.LIGHTNING) { count++ }
         s.obeliskSpecial(WardensCombat.ObeliskSpecial.CONVERGING) { count++ }
         assertEquals(4, count)
+    }
+    @Test fun `lightning skull spares exactly the eight cardinal tiles at distance 1 and 2 (wiki WardenP2Skull)`() {
+        val safe = (-3..3).flatMap { dx -> (-3..3).map { dz -> dx to dz } }.filter { (dx, dz) -> WardensCombat.lightningSafe(dx, dz) }
+        assertEquals(setOf(-2 to 0, -1 to 0, 1 to 0, 2 to 0, 0 to -2, 0 to -1, 0 to 1, 0 to 2), safe.toSet())
+        assertFalse(WardensCombat.lightningSafe(0, 0)) // the skull tile itself is hit
+        assertFalse(WardensCombat.lightningSafe(1, 1)) // diagonals are hit
     }
     @Test fun `phantoms follow surviving P3 warden, not the P2 one`() {
         assertEquals(listOf(11777, 11776), WardensCombat.phantoms(WardensCombat.Warden.ELIDINIS))

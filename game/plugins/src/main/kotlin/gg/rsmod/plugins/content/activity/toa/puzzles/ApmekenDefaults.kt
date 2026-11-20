@@ -98,6 +98,12 @@ object ApmekenDefaults {
             ApmekenPuzzle.Action.VENT -> task.remainingSites.filterValues { it > 0 }.keys.forEach {
                 ToaPuzzleVisuals.spot(viewer, 2136, ToaMap.instance(raid.map, ApmekenRoom.VENTS[it]))
             }
+            // NACHTRUN 20-11: pillar task = the same red sight skull at the broken pillar's base corner (Tellacon aPse4YudPRQ 142-150 s:
+            // skull at the foot of the pillar; ToaTime PILLAR_LOCATION_POINT (60,56)/(60,64) = two of the pillar bases, SKULL_1 gfx 2134).
+            // 20-11 testclient: on the 3x3 loc origin the skull is hidden inside the pillar mesh -> drawn on the repair (front) tile. ONZEKER: 2134 vs 2135.
+            ApmekenPuzzle.Action.PILLAR -> task.remainingSites.filterValues { it > 0 }.keys.forEach {
+                ToaPuzzleVisuals.spot(viewer, 2134, ToaMap.instance(raid.map, ApmekenRoom.PILLAR_FRONTS[it]))
+            }
             ApmekenPuzzle.Action.CORRUPTION -> {
                 val current = raid.activePlayers().filter { it.uid in task.corrupted }.toSet()
                 (previousCorrupted - current).forEach { ToaPuzzleVisuals.playerSpot(viewer, it, null) }

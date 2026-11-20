@@ -223,6 +223,7 @@ object ZebakCombat : CombatScript() {
             }
             if (!isEnraged && enraged(npc.getCurrentLifepoints(), npc.getMaximumLifepoints())) {
                 isEnraged = true; pending.clear(); newPhase(); specialUntil = tick
+                npc.attr[gg.rsmod.game.model.attr.EXAMINE_OVERRIDE_ATTR] = "He seems a tad upset." // wiki Zebak examine2 (OSRS npc 11732)
                 specialNpcs.toList().forEach { remove(it) }; specialNpcs.clear(); jugs.clear(); rocks.clear()
                 animate(9628); tail?.let { animate(9629, it) }
                 npc.combatDef = npc.combatDef.copy(attackSpeed = attackInterval(true, context.pathLevel))

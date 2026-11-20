@@ -30,6 +30,7 @@ object ToaIds {
     fun npcSeq(osrsNpc: Int, osrsSeq: Int): Int? = table["npcseq:$osrsNpc:$osrsSeq"] ?: table["seq:$osrsSeq"]
     fun seq(osrs: Int): Int? = table["seq:$osrs"]
     fun spot(osrs: Int): Int? = table["spotanim:$osrs"]
+    fun synth(osrs: Int): Int? = table["synth:$osrs"]
     fun item(osrs: Int): Int? = table["item:$osrs"]
 
     /** Local item -> the OSRS item it was imported from (ToA supplies: dose arithmetic on the OSRS ids). */

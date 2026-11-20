@@ -50,12 +50,15 @@ on_command("toamech", Privilege.ADMIN_POWER) {
                 val d = gg.rsmod.game.model.Direction.values().filter { it != gg.rsmod.game.model.Direction.NONE }.random()
                 s.unstableOrb(s.centre.transform(-d.getDeltaX() * 8, -d.getDeltaZ() * 8), d, 17, 1, 22)
             },
+            // TOA-1911 nachtrun 20-11: the real final stand (Akkha enrage: orbDirector runs every tick), to measure the orb density next to OSRS.
+            "enrage" to { s.enterEnrage() },
             "shadow" to {
                 if (s.shadowStage == 0) s.restoreShadows()
                 repeat(gg.rsmod.plugins.content.activity.toa.bosses.AkkhaCombat.STATS.speed * 6) { s.shadowChargeDirector(s) }
             })
         is gg.rsmod.plugins.content.activity.toa.bosses.WardensCombat.Session -> mapOf(
             "p1" to { s.p1Director(s) }, "p2" to { s.p2Director(s) },
+            "ufo" to { s.ufos(gg.rsmod.plugins.content.activity.toa.bosses.WardensCombat.Warden.ELIDINIS) }, "ufo2" to { s.ufos(gg.rsmod.plugins.content.activity.toa.bosses.WardensCombat.Warden.TUMEKEN) },
             // N609 13-11: each P2 obelisk special on demand (wiki Strategies: Converging / Windmill / Lightning Skull; Kaoz 2243-2248 s).
             "converging" to { s.defaultObelisk(gg.rsmod.plugins.content.activity.toa.bosses.WardensCombat.ObeliskSpecial.CONVERGING) },
             "windmill" to { s.defaultObelisk(gg.rsmod.plugins.content.activity.toa.bosses.WardensCombat.ObeliskSpecial.WINDMILL) },

@@ -23,7 +23,8 @@ class OpNpc6Handler : MessageHandler<OpNpc6Message> {
 
         log(client, "Npc option 6: index=%d, npc=%s", message.index, npc)
 
-        world.sendExamine(client, npc.id, ExamineEntityType.NPC)
+        val override = npc.attr[gg.rsmod.game.model.attr.EXAMINE_OVERRIDE_ATTR]
+        if (override != null) client.writeMessage(override) else world.sendExamine(client, npc.id, ExamineEntityType.NPC)
         world.npcExamineExtra?.invoke(npc)?.let { client.writeMessage(it) }
     }
 }

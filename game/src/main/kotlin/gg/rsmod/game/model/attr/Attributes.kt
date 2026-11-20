@@ -108,6 +108,12 @@ val FACING_PAWN_ATTR = AttributeKey<WeakReference<Pawn>>()
 val HOLD_FACING_ATTR = AttributeKey<Boolean>()
 
 /**
+ * Examine text that replaces the cache examine of THIS npc (TOA-1911 20-11): OSRS swaps some bosses to a second npc id when they
+ * change phase (Zebak 11730 'A big gluttonous croc.' -> enraged 11732 'He seems a tad upset.'), we keep one npc and change the text.
+ */
+val EXAMINE_OVERRIDE_ATTR = AttributeKey<String>()
+
+/**
  * World cycle until which a player frozen by a Deadman guard (Wizguard Ice Barrage) may not pick up
  * or telegrab ground items. OSRS Wiki "Deadman Mode" changelog: "A player frozen by guards cannot
  * pickup or telegrab items." Checked by `PluginRepository.canPickupGroundItem`.

@@ -321,6 +321,10 @@ object OsrsFxImportTool {
             // N601: the Memory Blast preview is a glowing floor symbol loc, not the elemental hit spot on a shadow npc.
             // Cache2686 locs45868-45871 all reference FX_SYMBOL_FLOOR_GLOW01 (9759), classic 90-client-cycle clip.
             "toa-akkha-marker-seq" to listOf(9759),
+            // TOA-1911 20-11 (nachtrun, Wardens P1 UFOs): the pyramids (locs 45748-45751, 3x3) animate with gameval TOA_WARDENS01_PYARMID_APPEAR 9525,
+            // _LEAVE 9526, _PYRAMID_LOAD 9527, _PYRAMID_ATTACK 9524 (the hit, RuneLite Mistake Tracker PYRAMID_ACTIVE_ANIMATION_ID) and _INVISIBLE 9528
+            // (classic frames in cache 2686). The 07-11 loc import dropped their idle seq (not imported then): OsrsLocImportTool toa-wardens-pyramids restores it.
+            "toa-wardens-pyramid-seq" to listOf(9524, 9525, 9526, 9527, 9528),
             "toa-map-seq" to listOf(1071, 3445, 3542, 6374, 9495, 9497, 9498, 9499, 9500, 9501, 9503, 9504, 9562, 9712, 9808),
             // N462 Necropolis squares (OsrsRegionImportTool 'necropolis'): gameval AnimationID HAZARDOUS_WATER_SUNBAKED_01_3X3_IDLE_01 13509,
             // _2X2_IDLE_01 13510, _2X2_IDLE_02 13511, _1X1_IDLE_01 13512, _1X1_IDLE_02 13513, SEAWEED_SURFACE_IDLE01 13564.
@@ -482,6 +486,10 @@ object OsrsFxImportTool {
             "cox-synth" to listOf(3821, 3834, 3952),
             // Elder maul special (OSRS Wiki 'List of sound IDs'): 8984 elder_maul_special_attack_composite_01 (swing + hit in one).
             "cox-maul-synth" to listOf(8984),
+            // TOA-1911 20-11: TOA_AMP_SKULL_APPEARS (ToaTime plugin SIGHT_SOUND_EFFECT_ID): plays with every new Apmeken task / sight change.
+            "toa-apmeken-skull-synth" to listOf(6574),
+            // TOA-1911 20-11: ambient loc sounds of the ToA rooms (frogs, wind, water, bats, rumble ...; LocAmbientSoundTool): the OSRS loc import drops them.
+            "toa-ambient-synth" to listOf(1992,2041,2043,2044,2045,2046,2048,2065,2077,2150,2158,2169,2184,2185,3050,3051,3052,3053,3054,3055,3083,3109,3139,4037,4039,4123,4976,4979,6270,6273,6274,6275,6276,6278,6279,6280,6281,6283,6284,6285,6286,6287,6288,6289,6290,6291,6292,6293,6294,6295,6296,6297,6298,6299,6301,6302,6303,6305,6306,6307,6308,6309,6310,6311,6312,6313,6314,6315,6317,6319,6320,6321,6322,6323,6324,6325,6326,6327,6328,6329,6331,6332,6333,6334,6335,6336,6337,6338,6339,6341,6342,6343,6344,6345,6346,6347,6348,6349,6350,6351,6352,6353,6354,6355,6356,6357,6358,6360,6361,6362,6363,6364,6366,6367,6368,6370,6371,6372,6373,6374,6375,6376,6377,6378,6379,6380,6381,6382,6383,6384,6385,6386,6387,6388,6389,6390,6391,6392,6393,6395,6396,6397,6398,6399,6400,6401,6402,6403,6404),
             "breachsfx" to
                 listOf(
                     400, 404, 403, // demon_attack / demon_hit / demon_death (Porazdir, ADAPTED family)

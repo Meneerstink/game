@@ -43,6 +43,9 @@ object WardensCombat : CombatScript() {
     const val CHARGE_STEPS = 20
     /** ONZEKER T20: flight of the ejected/returning core projectile (2239/2240 have no seq); see exposeCore. */
     const val CORE_FLIGHT = 2
+    /** UFO pyramid lattice offsets (dx, dz) mod 4 from the obelisk centre: Elidinis' red set and Tumeken's yellow set (see Session.ufos). */
+    val UFO_RED = Pair(0, 0)
+    val UFO_YELLOW = Pair(2, 2)
     val P3_ORIGIN = Tile(3934, 5145, 1)
     val P3_CENTRE = Tile(3936, 5158, 1)
     val P3_ENTRY = Tile(3936, 5156, 1)
@@ -73,11 +76,33 @@ object WardensCombat : CombatScript() {
         if ((warden == Warden.ELIDINIS) == (returnedCores % 2 == 0)) CombatClass.MAGIC else CombatClass.RANGED
     /** Akkha's Phantom oldid15196965: ranged first, then three attacks of each style. */
     fun akkhaPhantomStyle(attackIndex: Int): CombatClass = if (attackIndex / 3 % 2 == 0) CombatClass.RANGED else CombatClass.MAGIC
-    /** Strategies1484: FOUR windmill arms, with the existing eight-position clockwise rotation. */
-    fun windmillTiles(origin: Tile, rotation: Int): Set<Tile> = (0 until 4).flatMap { arm ->
-        val direction = gg.rsmod.game.model.Direction.ANGLED_ORDER[Math.floorMod(rotation + arm * 2, 8)]
-        (1..12).map { n -> origin.transform(direction.getDeltaX() * n, direction.getDeltaZ() * n) }
-    }.toSet()
+    /** Walkable P1/P2 floor around the obelisk centre: 21 columns x 23 rows (wiki 'Warden phase 2 - Windmill rotation' diagram; clipmap 6677..6699 incl. the stair edges). */
+    const val ARENA_ROWS = 11
+    /** Number of windmill strikes: 5 wedge positions twice + the closing cardinal one (Kaoz Entry guide 2241.8-2259.7 s: 11 strikes 1.8 s = 3 ticks apart). */
+    const val WINDMILL_STEPS = 11
+    /**
+     * Windmill Beam (Strategies; wiki diagram 'Warden phase 2 - Windmill rotation'): FOUR arms 90 degrees apart sweep ANTI-clockwise (diagram caption
+     * + Kaoz 2241.8 s -> 2243.6 s: the south arm moves from the west side back to the middle). The floor is cut into 18-degree wedges around the
+     * obelisk (fitted exactly to the diagram: bands D [0,18), E [18,36), A [36,54), B [54,72), C [72,90) degrees clockwise from north, mod 90);
+     * every strike lights one wedge of each arm. Order D, C, B, A, E ('starts at the brightest blue', D); the cardinal lines are the striped
+     * overlap of D and C. Steps 0..4 repeat in steps 5..9, step 10 = D again (two laps, like the video). ONZEKER: the first band (D) comes from
+     * the 'brightest blue = start' remark; the wedge-to-tile rounding on the diagonals follows the diagram colours exactly.
+     */
+    fun windmillTiles(centre: Tile, step: Int): Set<Tile> {
+        val time = Math.floorMod(step, 5)
+        val tiles = mutableSetOf<Tile>()
+        for (dx in -ARENA_HALF_WIDTH..ARENA_HALF_WIDTH) for (dz in -ARENA_ROWS..ARENA_ROWS) {
+            if (kotlin.math.abs(dx) <= 1 && kotlin.math.abs(dz) <= 1) continue // the obelisk
+            val theta = (Math.toDegrees(Math.atan2(dx.toDouble(), dz.toDouble())) + 360.0) % 90.0
+            val axis = dx == 0 || dz == 0
+            val band = Math.floorMod(-(theta / 18.0).toInt(), 5)
+            if (band == time || (axis && time == 1)) tiles += centre.transform(dx, dz)
+        }
+        return tiles
+    }
+    /** Lightning Skull 7x7 area (offset from the skull tile): the 8 tiles 1-2 steps north/east/south/west are safe (wiki WardenP2Skull.png). */
+    fun lightningSafe(dx: Int, dz: Int): Boolean =
+        (dz == 0 && kotlin.math.abs(dx) in 1..2) || (dx == 0 && kotlin.math.abs(dz) in 1..2)
     fun phantoms(warden: Warden) = if (warden == Warden.ELIDINIS) listOf(11777, 11776) else listOf(11774, 11775)
     override suspend fun handleSpecialCombat(it: QueueTask) {
         val npc = it.npc
@@ -306,12 +331,44 @@ object WardensCombat : CombatScript() {
             } else {
                 // ONZEKER T02/T20: UFO positions use room-relative3x3grid; interval4 from obelisk cast clip; base26 P3 published max.
                 charging[w]?.let { animate(9666, it) } // ONZEKER T02/T20: measured special clip for UFO discharge.
-                val x = if (w == Warden.ELIDINIS) -5 else 5
-                for (z in -12..0 step 4) {
-                    val tile = centre.transform(x, z + 6); gfx(2235, tile)
-                    later(4) { players().filter { it.tile.isWithinRadius(tile, 1) }.forEach { attack(it, ToaScale.damage(26, context, path = false), null, accuracy = false) } }
-                }
+                ufos(w)
             }
+        }
+        /**
+         * Strategies 'UFOs - small floating pyramids will spread throughout the area and discharge damaging lights' (wiki picture
+         * 'Wardens charging': Elidinis = RED). OSRS locs TOA_WARDENS_PYRAMID01/02 45748/45749 (appear 9525), _LOAD 45750/45751 (idle 9527),
+         * attack clip 9524 hits the 3x3 around the pyramid one tick after it starts (RuneLite Mistake Tracker WardensP1P2Detector:
+         * PYRAMID_ACTIVE_ANIMATION_ID 9524, hit delay 1). Kaoz Entry guide 2035.8-2040.6 s: pyramids appear, glow ~4 s (7 ticks), flash, leave.
+         * Layout = a square lattice with spacing 4 (3x3 blocks with a one-tile gap), Tumeken's set shifted by (2,2) so that together they
+         * cover everything except the edge (Strategies: 'stand at the edge of the arena, adjacent to the stairs'); see mechanics-wardens.tsv.
+         */
+        fun ufos(w: Warden) {
+            val red = w == Warden.ELIDINIS
+            val (ox, oz) = if (red) UFO_RED else UFO_YELLOW
+            val spots = mutableListOf<Tile>()
+            // Only pyramids whose whole 3x3 lies on the 21x23 floor: the edge columns by the stairs stay safe when both Wardens fire at once (Strategies).
+            for (dx in -(ARENA_HALF_WIDTH - 1)..(ARENA_HALF_WIDTH - 1)) for (dz in -ARENA_ROWS..ARENA_ROWS) {
+                if (Math.floorMod(dx - ox, 4) != 0 || Math.floorMod(dz - oz, 4) != 0) continue
+                if (dx == 0 && dz == 0) continue // the obelisk itself
+                spots += centre.transform(dx, dz)
+            }
+            val appear = if (red) 45748 else 45749
+            val load = if (red) 45750 else 45751
+            val cleanups = spots.map { placeObject(appear, it) }.toMutableList()
+            later(2) {
+                cleanups.forEach { it() }; cleanups.clear()
+                spots.forEach { cleanups += placeObject(load, it) }
+            }
+            later(7) {
+                val attackSeq = gg.rsmod.plugins.content.activity.toa.ToaIds.seq(9524)
+                val locId = ToaBossFx.loc(load)
+                if (attackSeq != null && locId != null) spots.forEach { t -> players().forEach { p -> p.write(gg.rsmod.game.message.impl.LocAnimMessage(gg.rsmod.game.model.entity.DynamicObject(locId, 10, 0, t), attackSeq)) } }
+            }
+            later(8) {
+                val hit = players().filter { p -> spots.any { it.height == p.tile.height && kotlin.math.abs(it.x - p.tile.x) <= 1 && kotlin.math.abs(it.z - p.tile.z) <= 1 } }
+                hit.forEach { attack(it, ToaScale.damage(26, context, path = false), null, accuracy = false) }
+            }
+            later(10) { cleanups.forEach { it() }; cleanups.clear() }
         }
         private fun defaultP2() {
             p2Attacks++
@@ -387,23 +444,33 @@ object WardensCombat : CombatScript() {
                     hurt(tiles, delay)
                 }
                 when (kind) {
-                    ObeliskSpecial.CONVERGING -> repeat(8) { i ->
-                        val row = mutableSetOf<Tile>()
-                        for (x in -8..8) { row += origin.transform(x, 8 - i); row += origin.transform(x, i - 8) }
-                        beam(row, 2 + i)
-                        val column = mutableSetOf<Tile>()
-                        for (z in -8..8) { column += origin.transform(8 - i, z); column += origin.transform(i - 8, z) }
-                        beam(column, 10 + i)
+                    // TOA-1911 20-11: the beams ran over a 17x17 area around the obelisk's SW tile; the real floor is 21 columns x 23 rows around the centre
+                    // (wiki windmill diagram; Strategies 'two beams heading north and south of the arena ... another two to the east and west').
+                    ObeliskSpecial.CONVERGING -> {
+                        repeat(ARENA_ROWS + 1) { i ->
+                            val row = mutableSetOf<Tile>()
+                            for (x in -ARENA_HALF_WIDTH..ARENA_HALF_WIDTH) { row += centre.transform(x, ARENA_ROWS - i); row += centre.transform(x, i - ARENA_ROWS) }
+                            beam(row, 2 + i)
+                        }
+                        repeat(ARENA_HALF_WIDTH + 1) { i ->
+                            val column = mutableSetOf<Tile>()
+                            for (z in -ARENA_ROWS..ARENA_ROWS) { column += centre.transform(ARENA_HALF_WIDTH - i, z); column += centre.transform(i - ARENA_HALF_WIDTH, z) }
+                            beam(column, 2 + ARENA_ROWS + 1 + i)
+                        }
                     }
-                    ObeliskSpecial.WINDMILL -> repeat(8) { i -> beam(windmillTiles(origin, i), 2 + i * 2) }
+                    ObeliskSpecial.WINDMILL -> repeat(WINDMILL_STEPS) { i -> beam(windmillTiles(centre, i), 2 + i * 3) }
                     ObeliskSpecial.LIGHTNING -> players().map { Tile(it.tile) }.forEach { t ->
                         val tiles = mutableSetOf<Tile>()
-                        for (dx in -3..3) for (dz in -3..3) if (!(kotlin.math.abs(dx) == 2 && dz == 0 || kotlin.math.abs(dz) == 2 && dx == 0)) tiles += t.transform(dx, dz)
+                        // TOA-1911 nachtrun 20-11: wiki image WardenP2Skull.png (green = safe) = the TWO tiles in each cardinal direction
+                        // (distance 1 AND 2, 8 tiles); the centre (skull tile) and every diagonal tile are hit. Was: only distance 2 spared.
+                        for (dx in -3..3) for (dz in -3..3) if (!lightningSafe(dx, dz)) tiles += t.transform(dx, dz)
                         // Wiki Strategies: 'launch several red skulls and discharge lightning outwards in 7x7 areas centred on where each skull
                         // landed' - skull = PROJECTILE_ID_LIGHTNING 2225 (ToA Extended WardenP2), lightning = WARDENS_LIGHTNING 2197 per tile.
+                        // TOA-1911 nachtrun 20-11: the P2 skull's strike graphic is 2198 (RuneLite toa-mistake-tracker WardensP1P2Detector
+                        // BOMB_GRAPHICS_ID 2198, LIGHTNING_HIT_DELAY 0; cache recolour 9162 = YELLOW bolts, wiki obelisk_lightning.png).
+                        // 2197 (red, recolour 968) is the P3 shadow lightning only. Was: 2197 on every tile (red) + a 2198 flash at launch.
                         ToaBossFx.tileProjectile(npc, origin, t, 2225, 4)
-                        gfx(2198, t)
-                        later(4) { tiles.forEach { gfx(2197, it) } }
+                        later(4) { tiles.forEach { gfx(2198, it) } }
                         hurt(tiles, 4)
                     }
                 }

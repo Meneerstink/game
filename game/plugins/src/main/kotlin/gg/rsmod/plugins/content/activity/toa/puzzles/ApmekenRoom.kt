@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.activity.toa.puzzles
 
+import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.game.model.PlayerUID
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.combat.CombatClass
@@ -113,6 +114,14 @@ class ApmekenRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
         return result == ApmekenPuzzle.Result.PERFORMED || result == ApmekenPuzzle.Result.COMPLETE
     }
 
+    /** TOA_AMP_SKULL_APPEARS (synth 6574): ToaTime plugin SIGHT_SOUND_EFFECT_ID, plays for the sight holder with every new task / sight change.
+     * ONZEKER: skull graphics 2134/2135 at fixed scene points (ToaTime PILLAR/VENT_LOCATION_POINT) are not placed - the scene->room mapping
+     * of those points is not derivable from the plugin alone and the Kaoz frames show no skull. */
+    private fun skullSound() {
+        val id = gg.rsmod.plugins.content.activity.toa.ToaIds.synth(6574) ?: return
+        players.firstOrNull { it.uid == puzzle.sight }?.playSound(id)
+    }
+
     private fun drawSight() {
         val draw = reference?.drawSight?.value ?: return
         val holder = players.firstOrNull { it.uid == puzzle.sight }
@@ -154,7 +163,7 @@ class ApmekenRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
             players.forEach { it.message(text); damage(it, ref.missedActionDamage.value(raid.roster.size, missed)) }; drawSight()
         }
         if (tick > 0 && tick % ref.sightCycle.value == 0 && players.isNotEmpty()) {
-            puzzle.transferSight(ref.chooseSight.value(players).uid); drawSight()
+            puzzle.transferSight(ref.chooseSight.value(players).uid); drawSight(); skullSound()
         }
         for (task in ref.tasks.value) {
             if (tick < task.cycle || (tick - task.cycle) % ref.taskRepeatCycles.value != 0) continue
@@ -163,7 +172,7 @@ class ApmekenRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
                 // Strategies1291 literal for the party; N610 14-11: the holder of Apmeken's sight gets what the issue is (the exact OSRS
                 // game messages RuneLite ToA Extended Apmeken MESSAGE_SENSE_ROOF_SUPPORTS / MESSAGE_SENSE_FUMES reads). Corruption: no source.
                 players.forEach { it.message(senseMessage(task.type, it.uid == puzzle.sight)) }
-                drawSight()
+                drawSight(); skullSound()
             }
         }
         pending.filter { it.first <= tick }.toList().forEach { pending.remove(it); if (live) it.second() }

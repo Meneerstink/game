@@ -66,8 +66,14 @@ object AkkhaCombat : CombatScript() {
         override val minimumDefence = 70 // Wiki Akkha/Strategies1110.
         var style = CombatClass.MELEE
             set(value) {
+                val changed = value != field
                 field = value
                 if (!enraged) showProtection()
+                // Wiki Akkha Changes 14 Sep 2022: "Players will now stop attacking when Akkha changes attack styles/protection prayers"
+                // (never reverted): every player attacking him loses the target and has to click Attack again.
+                if (changed && !enraged) players().forEach { p ->
+                    if (p.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR]?.get() === npc) gg.rsmod.plugins.content.combat.Combat.reset(p)
+                }
             }
         var autos = 0
         var shadowStage = 0
@@ -212,11 +218,22 @@ object AkkhaCombat : CombatScript() {
             } }
         }
         private fun defaultOrbs() {
-            // ONZEKER T12: spawn cadence uses published6tick attack interval; travel one tile/tick, base shadow max22.
-            if (tick % stats.speed != 0) return
-            val d = Direction.values().filter { it != Direction.NONE }.random()
-            val edge = centre.transform(-d.getDeltaX() * 8, -d.getDeltaZ() * 8)
-            unstableOrb(edge, d, 17, 1, 22)
+            // TOA-1911 nachtrun 20-11 (eigenaar: elke mechanic naast OSRS): OSRS final stand = 'numerous Unstable Orbs all over the arena'
+            // (pre-nerf video NoXUxDnB4M0: orbs start at the rim, 6 -> 35 visible in 12 ticks, ~50 steady), each moving 1 tile/tick in ONE
+            // direction across the platform. Was: 1 orb per 6 ticks, always through the centre. ONZEKER: exact spawn tiles / direction set (no source).
+            // MEASURED CURRENT VERSION (wiki 25 Jun 2025 'enrage phase now spawns fewer orbs'; Iron Verde video mT3DJ4ad8Bw 1264-1294 s, Oct 2025):
+            // ~20-25 orbs on the whole platform at steady state, i.e. ~45% of the pre-nerf ~50 -> ~1.2 new orbs per tick (x ~18 ticks of travel).
+            val n = 1 + (if (tick % 5 == 0) 1 else 0)
+            val dirs = Direction.ANGLED_ORDER.toList() // the 8 compass directions in ring order
+            repeat(n) {
+                val angle = Math.toRadians(npc.world.random(359).toDouble())
+                val rim = centre.transform(Math.round(Math.cos(angle) * 8).toInt(), Math.round(Math.sin(angle) * 8).toInt())
+                // heading = the compass direction pointing best towards the centre, now and then turned one step (45 degrees)
+                val best = dirs.indices.maxByOrNull { i -> -(dirs[i].getDeltaX() * Math.cos(angle) + dirs[i].getDeltaZ() * Math.sin(angle)) } ?: 0
+                val jitter = npc.world.random(5).let { if (it == 0) -1 else if (it == 1) 1 else 0 }
+                val d = dirs[Math.floorMod(best + jitter, dirs.size)]
+                unstableOrb(rim, d, 17, 1, 22)
+            }
         }
         private fun chargeShadows() {
             if (memoryActive || shadowStage == 0) return
