@@ -348,6 +348,16 @@ object ZebakCombat : CombatScript() {
                 animate(9628); tail?.let { animate(9629, it) }
                 gfx(2184, npc.getCentreTile())
                 val standing = rocks.filter { it.hp > 0 }
+                // TOA-1911 nachtrun 20-11 (2e deel): the roar's soundwave is visible on the floor - Kaoz Zebak guide 192.3 s + wiki
+                // 'Fighting Zebak.png' show rows of dust puffs over the whole platform (graphics object 2184 = RuneLite toa-mistake-tracker
+                // ZebakDetector EARTHQUAKE_GRAPHICS_ID: a player standing on one is hit), none in the lee of a rock. We only drew one
+                // puff on Zebak. ONZEKER: whether OSRS spreads it in a travelling wave (all tiles at once here).
+                for (dx in -5..8) for (dz in -8..8) {
+                    val t = centre.transform(dx, dz)
+                    if (npc.world.collision.isClipped(t) || !onPlatform(t)) continue
+                    if (standing.any { behindRock(t, it.tile, direction) }) continue
+                    gfx(2184, t)
+                }
                 players().filter { p -> standing.none { behindRock(p.tile, it.tile, direction) } }.forEach {
                     attack(it, ToaScale.damage(baseDamage, context), null, accuracy = false)
                     // ONZEKER T18: unquantified roar shove uses the same encounter's one-step wave displacement.
