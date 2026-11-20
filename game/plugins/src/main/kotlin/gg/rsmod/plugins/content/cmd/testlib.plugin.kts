@@ -86,6 +86,22 @@ CommandServerCommands.handlers["npcstats"] = { w, a ->
     }
 }
 
+// `npchp <npc index> <hp>` (DMM-ARMAGEDDON 20-11, owner 'testcommando maken'): sets one npc's CURRENT lifepoints (at most its maximum,
+// at least 1) so a fight that matters only at the kill - a 3000-hp breach monster's MvP/loot/DP - can be tested by bots in seconds.
+// The npc keeps everything else (breach ledger, attrs); only the test server (rsps.testServer) accepts it.
+CommandServerCommands.handlers["npchp"] = { w, a ->
+    val n = a.getOrNull(0)?.toIntOrNull()?.let { i -> w.npcs.entries.filterNotNull().firstOrNull { it.index == i } }
+    val hp = a.getOrNull(1)?.toIntOrNull()
+    if (!gg.rsmod.util.io.SharedDataFiles.testServer()) {
+        "npchp: only on the test server"
+    } else if (n == null || hp == null) {
+        "usage: npchp <npc index> <hp>"
+    } else {
+        n.setCurrentLifepoints(hp.coerceIn(1, n.getMaximumLifepoints()))
+        "npchp ${n.id}#${n.index}: hp=${n.getCurrentLifepoints()}/${n.getMaximumLifepoints()}"
+    }
+}
+
 CommandServerCommands.handlers["testevents"] = { _, a ->
     val p = findPlayer(a)
     if (p == null) {
