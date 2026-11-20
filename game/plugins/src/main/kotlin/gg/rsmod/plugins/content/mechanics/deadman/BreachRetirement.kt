@@ -23,17 +23,18 @@ object BreachRetirement {
     fun migrate(player: Player, release: Boolean = enabled): Result {
         if (!release) return Result.DISABLED
         if (player.attr[MIGRATED] == 1) return Result.ALREADY_DONE
-        val old = player.attr[BreachPoints.BALANCE] ?: 0
-        val earned = player.attr[BreachPoints.EARNED] ?: 0
+        val old = player.attr[BreachPoints.LEGACY_BALANCE] ?: 0
+        val earned = player.attr[BreachPoints.LEGACY_EARNED] ?: 0
         val current = player.attr[DP] ?: 0
         val normalizedDp = if (current < 0) Int.MAX_VALUE.toLong() else current.toLong()
         val total = normalizedDp + converted(old)
         if (total > Int.MAX_VALUE) return Result.OVERFLOW
-        player.attr[DP] = total.toInt()
+        // ROOT_CAUSES #4: a balance is written through PointBalance only.
+        gg.rsmod.game.model.attr.PointBalance.set(player.attr, DP, total)
         player.attr[OLD_BALANCE] = old
         player.attr[OLD_EARNED] = earned
-        player.attr.remove(BreachPoints.BALANCE)
-        player.attr.remove(BreachPoints.EARNED)
+        player.attr.remove(BreachPoints.LEGACY_BALANCE)
+        player.attr.remove(BreachPoints.LEGACY_EARNED)
         player.attr[MIGRATED] = 1
         player.persistNow()
         return Result.OK

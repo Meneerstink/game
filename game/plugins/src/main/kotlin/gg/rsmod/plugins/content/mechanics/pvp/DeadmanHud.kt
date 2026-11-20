@@ -83,7 +83,7 @@ object DeadmanHud {
             State.DANGEROUS -> TEXT_DANGEROUS
         }
 
-    /** "81-95": the levels this player may attack and be attacked by, the same everywhere. */
+    /** "71-90": the Armageddon combat bracket this player fights in (DMM-ARMAGEDDON D8), the same everywhere. */
     fun bracketText(combatLevel: Int): String {
         val bracket = AreaState.bracketOf(combatLevel)
         return "${bracket.first}-${bracket.last}"
@@ -104,8 +104,13 @@ object DeadmanHud {
      */
     const val INTRO_SCENE_COMBAT = 88
 
+    /** DMM-ARMAGEDDON D8: a bracket never goes down, so the box shows the highest bracket reached (lowest level of it at least). */
     fun hudCombatLevel(player: Player): Int =
-        if (gg.rsmod.plugins.content.quests.foundation.TutorIntro.isActive(player)) INTRO_SCENE_COMBAT else player.combatLevel
+        if (gg.rsmod.plugins.content.quests.foundation.TutorIntro.isActive(player)) {
+            INTRO_SCENE_COMBAT
+        } else {
+            maxOf(player.combatLevel, DeadmanBrackets.of(player).levels.first)
+        }
 
     fun zoneText(
         label: String,

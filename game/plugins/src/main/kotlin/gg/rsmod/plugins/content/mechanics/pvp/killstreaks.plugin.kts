@@ -13,7 +13,3 @@ on_command("killstreaks") {
     player.filterableMessage("Your best: $mine, current: $current.")
 }
 
-on_command("pkpoints") {
-    val points = player.attr[PK_POINTS_ATTR] ?: 0
-    player.filterableMessage("You have $points PK points.")
-}

@@ -55,6 +55,9 @@ object CoxRewards {
         uniqueFinders.addAll(uniques.keys)
         byName.forEach { (name, player) ->
             player.attr[COMPLETIONS] = (player.attr[COMPLETIONS] ?: 0) + 1
+            // DMM-ARMAGEDDON D4: Deadman Points per completion (first 10x, half after 100).
+            val dp = gg.rsmod.plugins.content.mechanics.deadman.BossDeadmanPoints
+            dp.award(player, "Chambers of Xeric", dp.COX, player.attr[COMPLETIONS] ?: 0)
             val drops = CoxLoot.chest(uniques[name], points[name] ?: 0, owned(player, CoxLoot.ANCIENT_TABLET), owned(player, CoxLoot.DARK_JOURNAL), random)
             pending[name] = drops.mapNotNull { d ->
                 val local = CoxLootItems.local(d.osrs) ?: return@mapNotNull null

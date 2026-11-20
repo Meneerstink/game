@@ -10,15 +10,14 @@ import java.util.concurrent.ConcurrentHashMap
 /** Persisted per-player PvP progress. */
 val CURRENT_KILLSTREAK_ATTR = AttributeKey<Int>(persistenceKey = "current_killstreak")
 val BEST_KILLSTREAK_ATTR = AttributeKey<Int>(persistenceKey = "best_killstreak")
-val PK_POINTS_ATTR = AttributeKey<Int>(persistenceKey = "pk_points")
 
 /**
- * Wilderness PvP killstreak tracking, a PK-points economy, and a simple cross-restart
+ * Wilderness PvP killstreak tracking, Deadman Points per valid kill, and a simple cross-restart
  * killstreak leaderboard.
  *
- * PROJECT_PLAN SS14: victim loot is the primary reward; PK points are a limited *secondary*
- * reward, never raw GP for a kill. Provisional here: 2 points per kill, +1 per 5 streak the
- * killer is on, capped bonus - see IMPLEMENTATION_STATUS.md.
+ * PROJECT_PLAN SS14: victim loot is the primary reward; points are a limited *secondary* reward, never raw GP for a kill.
+ * DMM-ARMAGEDDON (owner 20-11-2026: "deadmanpunten loyalty en donator punten zijn de enige punten in onze rsps de rest
+ * verwijderen"): the separate PK points are gone; a valid kill pays only Deadman Points (+1 per 5 streak, capped bonus).
  *
  * ponytail: the leaderboard is a flat "name:streak" text file (`data/killstreak_leaderboard.txt`),
  * not a database - fine at the ~20-50 concurrent player target.
@@ -29,7 +28,6 @@ val PK_POINTS_ATTR = AttributeKey<Int>(persistenceKey = "pk_points")
  * every restart) is gone; the persisted [ValidPkKill] cooldowns replace it.
  */
 object Killstreaks {
-    private const val POINTS_PER_KILL = 2
     private val leaderboardFile = gg.rsmod.util.io.SharedDataFiles.of("data/killstreak_leaderboard.txt")
     private val leaderboard = ConcurrentHashMap<String, Int>()
 
@@ -103,14 +101,7 @@ object Killstreaks {
         killer.filterableMessage("Killstreak: $newStreak.")
 
         val streakBonus = (newStreak / 5).coerceAtMost(10)
-        val points = POINTS_PER_KILL + streakBonus
-        // N106: both balances stop at 2,147,483,647 (PointBalance.add), never wrap.
-        val pkBefore = PointBalance.of(killer.attr, PK_POINTS_ATTR)
-        if (PointBalance.add(killer.attr, PK_POINTS_ATTR, points) - pkBefore < points) {
-            killer.message("Your PK points are at the maximum.")
-        } else {
-            killer.message("You have been awarded $points PK points.")
-        }
+        // N106: the balance stops at 2,147,483,647 (PointBalance.add), never wraps.
         // Deadman Points (store currency, earned only through Deadman/PvP kills). PROVISIONAL amount.
         val deadmanPoints = DEADMAN_POINTS_PER_KILL + streakBonus
         val deadmanKey = gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Currency.DEADMAN.attr

@@ -54,7 +54,16 @@ private val CHOICE_QUESTS get() = FoundationQuests.SHORT.filter { it !== Beneath
  * definitions), skills and containers are real; the rest of the player is a relaxed mock.
  */
 class NewPlayerFoundationTests {
-    private class Account(isNew: Boolean, varps: VarpSet = VarpSet((0..MAX_VARP).toSet())) {
+    /**
+     * [cohort]: the quest cohort of a new account. Most tests here cover the Quest Guide rules of the "choice" accounts (made
+     * before DMM-ARMAGEDDON, they keep those rules); null lets [QuestChoices.cohort] decide, as for an account made today.
+     */
+    private class Account(
+        isNew: Boolean,
+        varps: VarpSet = VarpSet((0..MAX_VARP).toSet()),
+        cohort: String? = QuestChoices.CHOICE,
+        combatLevel: Int = 3,
+    ) {
         val attributes = AttributeMap()
         val skills = SkillSet(25)
         val inventory = ItemContainer(DEFINITIONS, INVENTORY_KEY)
@@ -63,9 +72,12 @@ class NewPlayerFoundationTests {
         val world = mockk<World>(relaxed = true)
         val player = mockk<Player>(relaxed = true)
         var xpCalls = 0
+        var level = combatLevel
 
         init {
             if (isNew) attributes[NEW_ACCOUNT_ATTR] = true
+            if (isNew && cohort != null) attributes[QuestChoices.COHORT] = cohort
+            every { player.combatLevel } answers { level }
             every { world.definitions } returns DEFINITIONS
             every { player.world } returns world
             every { player.attr } returns attributes
@@ -209,6 +221,128 @@ class NewPlayerFoundationTests {
         CHOICE_QUESTS.forEach { assertFalse(it.isFinished(account.player), it.name); assertFalse(QuestChoices.unlockHeld(account.player, it), it.name) }
         assertEquals(8, ChoiceGroup.values().sumOf { it.quests.size })
         assertEquals(CHOICE_QUESTS.toSet(), ChoiceGroup.values().flatMap { it.quests }.toSet())
+    }
+
+    // ------------------------------------------------------------------------ DMM-ARMAGEDDON quest brackets
+
+    private fun done(account: Account, name: String) = gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(account.player, name)
+
+    /** Reaches the bracket of [level] the way the level-up plugin does it. */
+    private fun levelTo(account: Account, level: Int) {
+        account.level = level
+        gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.onCombatLevelRaised(account.player)?.let { QuestBrackets.onBracketReached(account.player) }
+    }
+
+    /** Owner 20-11-2026 "precies de foto": an account made today gets the quests of the photo per combat bracket. */
+    @Test
+    fun `a new account starts with only the first bracket's photo quests, the rest of the list stays completed`() {
+        val account = Account(isNew = true, cohort = null)
+        assertEquals(QuestChoices.ARMAGEDDON, QuestChoices.cohort(account.player))
+        gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.recordAtLogin(account.player)
+        assertTrue(done(account, "Ernest the Chicken"))
+        assertTrue(done(account, "Fairy Tale II - Cure a Queen"))
+        assertTrue(done(account, "Lost City"))
+        assertFalse(done(account, "Plague City"))
+        assertFalse(done(account, "Monkey Madness"))
+        assertFalse(done(account, "Dragon Slayer"))
+        assertFalse(done(account, "Recipe for Disaster"))
+        assertFalse(done(account, "King's Ransom"))
+        // A quest that is not on the photo keeps the server rule: completed.
+        val other = gg.rsmod.plugins.content.quests.QuestList.ENTRIES.first { it.slot !in QuestBrackets.PHOTO_SLOTS && gg.rsmod.plugins.content.quests.QuestStatus.CHOICE_QUESTS[it.slot] == null && it.slot != gg.rsmod.plugins.content.areas.wilderness.MageArenaII.SLOT }
+        assertTrue(gg.rsmod.plugins.content.quests.QuestStatus.state(account.player, other.slot) == gg.rsmod.plugins.content.quests.QuestStatus.State.COMPLETED, other.name)
+        // A photo quest played for real counts, whatever the bracket.
+        val plague = gg.rsmod.plugins.content.quests.QuestList.ENTRIES.first { it.name == "Plague City" }
+        plague.progress.complete(account.player)
+        assertTrue(done(account, "Plague City"))
+    }
+
+    @Test
+    fun `the photo's choice quests are no Quest Guide choice for a new account, the others still are`() {
+        val account = Account(isNew = true, cohort = null)
+        assertEquals(listOf<ShortQuest>(DesertTreasureII), QuestChoices.available(account.player, ChoiceGroup.MAGIC))
+        assertEquals(listOf<ShortQuest>(TempleAtSenntisten), QuestChoices.available(account.player, ChoiceGroup.PRAYER))
+        assertEquals(listOf<ShortQuest>(SongOfTheElves), QuestChoices.available(account.player, ChoiceGroup.GEAR))
+        assertEquals(QuestChoices.Result.VIA_BRACKET, QuestChoices.choose(account.player, ChoiceGroup.MAGIC, LunarDiplomacy))
+        assertEquals(QuestChoices.Result.VIA_BRACKET, QuestChoices.choose(account.player, ChoiceGroup.PRAYER, KingsRansom))
+        assertFalse(LunarDiplomacy.isFinished(account.player))
+        assertEquals(QuestChoices.Result.CHOSEN, QuestChoices.choose(account.player, ChoiceGroup.MAGIC, DesertTreasureII))
+    }
+
+    @Test
+    fun `a new bracket unlocks its quests and one storyline of the player's choice, without experience`() {
+        val account = Account(isNew = true, cohort = null)
+        gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.recordAtLogin(account.player)
+        assertTrue(QuestBrackets.openChoices(account.player).isEmpty())
+        assertEquals(QuestBrackets.Result.NOT_REACHED, QuestBrackets.choose(account.player, gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.Bracket.B51_70, 1))
+
+        levelTo(account, 60)
+        assertEquals(listOf(gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.Bracket.B51_70), QuestBrackets.openChoices(account.player).map { it.bracket })
+        assertFalse(done(account, "The Fremennik Trials"))
+        val magicXp = account.skills.getCurrentXp(Skills.MAGIC)
+        assertEquals(QuestBrackets.Result.CHOSEN, QuestBrackets.choose(account.player, gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.Bracket.B51_70, 1))
+        assertTrue(done(account, "The Fremennik Trials"))
+        assertTrue(done(account, "The Fremennik Isles"))
+        assertTrue(LunarDiplomacy.isFinished(account.player))
+        assertTrue(QuestChoices.unlockHeld(account.player, LunarDiplomacy), "Lunar magic is unlocked")
+        assertEquals(magicXp, account.skills.getCurrentXp(Skills.MAGIC), "no quest experience for an automatic unlock")
+        assertFalse(done(account, "Plague City"), "the other storyline stays locked")
+        assertEquals(QuestBrackets.Result.ALREADY_CHOSEN, QuestBrackets.choose(account.player, gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.Bracket.B51_70, 2))
+        assertTrue(QuestBrackets.openChoices(account.player).isEmpty())
+
+        // Two brackets at once (a big level jump): both storylines wait for a choice, the fixed lists unlock at once.
+        levelTo(account, 120)
+        assertEquals(3, QuestBrackets.openChoices(account.player).size)
+        assertTrue(done(account, "Monkey Madness"))
+        assertTrue(done(account, "Dragon Slayer"))
+        assertTrue(done(account, "Recipe for Disaster"))
+        assertTrue(KingsRansom.isFinished(account.player))
+        assertTrue(QuestChoices.unlockHeld(account.player, KingsRansom))
+        assertFalse(MonkeyMadnessII.isFinished(account.player))
+        assertEquals(QuestBrackets.Result.CHOSEN, QuestBrackets.choose(account.player, gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.Bracket.B71_90, 1))
+        assertTrue(MonkeyMadnessII.isFinished(account.player))
+        assertEquals(0.0, account.skills.getCurrentXp(Skills.SLAYER))
+        // A lower level never takes a bracket back.
+        account.level = 40
+        assertEquals(gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.Bracket.B111_PLUS, gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.of(account.player))
+        assertTrue(done(account, "Dragon Slayer"))
+    }
+
+    @Test
+    fun `the Culinaromancer's gloves follow the bracket's Recipe for Disaster subquests`() {
+        val account = Account(isNew = true, cohort = null)
+        gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.recordAtLogin(account.player)
+        assertEquals(-1, QuestBrackets.rfdSubquests(account.player))
+        assertTrue(QuestBrackets.gloveRefusal(account.player, 0) != null)
+        levelTo(account, 60)
+        assertEquals(6, QuestBrackets.rfdSubquests(account.player))
+        // The quest is in progress at the stage that puts the Culinaromancer's Chest in the cellar (measured 20-11).
+        assertEquals(QuestBrackets.RFD_CHEST_STAGE, account.player.getVarbit(QuestBrackets.RFD_VARBIT))
+        assertEquals(
+            gg.rsmod.plugins.content.quests.QuestStatus.State.IN_PROGRESS,
+            gg.rsmod.plugins.content.quests.QuestStatus.state(account.player, QuestBrackets.slot("Recipe for Disaster")),
+        )
+        assertNull(QuestBrackets.gloveRefusal(account.player, 6))
+        assertTrue(QuestBrackets.gloveRefusal(account.player, 7) != null)
+        levelTo(account, 80)
+        assertNull(QuestBrackets.gloveRefusal(account.player, 7))
+        levelTo(account, 100)
+        assertNull(QuestBrackets.gloveRefusal(account.player, 8))
+        assertTrue(QuestBrackets.gloveRefusal(account.player, 9) != null, "barrows gloves need the whole quest")
+        levelTo(account, 111)
+        assertNull(QuestBrackets.gloveRefusal(account.player, 9))
+    }
+
+    @Test
+    fun `existing accounts keep everything - legacy and choice accounts see no bracket locks`() {
+        val legacy = Account(isNew = false)
+        assertFalse(QuestBrackets.applies(legacy.player))
+        assertTrue(done(legacy, "Plague City"))
+        assertTrue(done(legacy, "Recipe for Disaster"))
+        assertEquals(QuestBrackets.RFD_COMPLETE, QuestBrackets.rfdSubquests(legacy.player))
+        val choice = Account(isNew = true)
+        assertFalse(QuestBrackets.applies(choice.player))
+        assertTrue(done(choice, "Monkey Madness"))
+        assertTrue(QuestChoices.available(choice.player, ChoiceGroup.MAGIC).contains(LunarDiplomacy))
     }
 
     // ------------------------------------------------------------------------------------ no bypasses

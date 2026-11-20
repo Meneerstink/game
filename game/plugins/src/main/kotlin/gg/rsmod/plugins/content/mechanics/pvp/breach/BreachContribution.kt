@@ -3,9 +3,12 @@ package gg.rsmod.plugins.content.mechanics.pvp.breach
 /**
  * One breach monster's damage ledger, keyed by lower-case account name (stable across relogs) in first-damage order.
  *
- * Two rankings are read from it and must never be confused (OSRS Wiki, Deadman: Annihilation):
- *  * loot: "Drops are received by the first 16 players to deal damage to a breach monster" - [lootEligible], by ORDER;
- *  * points: "The top 100 damage dealers to breach NPCs will earn 1 point per damage dealt" - [pointEarners], by AMOUNT.
+ * DMM-ARMAGEDDON D3 (owner 20-11-2026, OSRS Wiki Deadman: Armageddon "Breach boss rewards"): "The MvP (player with the most damage
+ * to the boss) will have a chance to get a unique drop. The non-MvPs (top 15 players that have dealt damage to the boss) will receive
+ * regular breach loot ... Players who did damage to the breach monsters but did not do enough damage to be in the top 15 damage
+ * dealers will not receive loot or points for that kill." Owner 20-11: the MvP gets the regular loot too, so the rewarded group is
+ * the MvP + the next 15 = [BreachLoot.ELIGIBLE] by DAMAGE ([ranking]); loot and Deadman Points use the same group.
+ * (Before: Deadman: Annihilation - the first 16 by ORDER got loot, the top 100 by damage got Breach Points.)
  */
 class BreachContribution {
     private val damage = LinkedHashMap<String, Int>()
@@ -23,10 +26,13 @@ class BreachContribution {
 
     fun damageOf(username: String): Int = damage[username.lowercase()] ?: 0
 
-    /** The first [BreachLoot.ELIGIBLE] accounts to deal damage, in that order - not the biggest hitters. */
-    fun lootEligible(): List<String> = damage.keys.take(BreachLoot.ELIGIBLE)
+    /**
+     * The rewarded accounts with their damage, biggest first, at most [BreachLoot.ELIGIBLE]; ties keep first-damage order (stable
+     * sort). Index 0 is the MvP.
+     */
+    fun ranking(): List<Pair<String, Int>> =
+        damage.entries.sortedByDescending { it.value }.take(BreachLoot.ELIGIBLE).map { it.key to it.value }
 
-    /** The [BreachPoints.EARNERS] biggest damage dealers with their damage; ties keep first-damage order. */
-    fun pointEarners(): List<Pair<String, Int>> =
-        damage.entries.sortedByDescending { it.value }.take(BreachPoints.EARNERS).map { it.key to it.value }
+    /** The MvP: most damage (first to deal it on a tie), or null when nobody hit. */
+    fun mvp(): String? = ranking().firstOrNull()?.first
 }

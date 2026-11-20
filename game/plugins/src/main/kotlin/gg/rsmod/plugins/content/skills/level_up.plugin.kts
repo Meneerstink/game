@@ -99,6 +99,11 @@ set_level_up_logic {
         if (changed) {
             // N92/N100: a new Annihilation tier (61, 81, 96) -> the red rate line, once per rise.
             gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationTier.announceIfRaised(player)
+            // DMM-ARMAGEDDON D8: a new combat bracket -> its PvP protection hour and its quests.
+            val bracketBefore = player.attr[gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.REACHED] ?: -1
+            gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.onCombatLevelRaised(player)?.let {
+                gg.rsmod.plugins.content.quests.foundation.QuestBrackets.onBracketReached(player, bracketBefore)
+            }
             player.attr[LAST_COMBAT_LEVEL] = oldCombat
             val combatArray = Skills.COMBAT_MILESTONE_ARRAY
             val lastCombat = player.attr[LAST_COMBAT_LEVEL] ?: player.combatLevel

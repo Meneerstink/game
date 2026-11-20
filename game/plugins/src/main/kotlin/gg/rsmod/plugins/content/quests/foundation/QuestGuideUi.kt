@@ -142,7 +142,9 @@ object QuestGuideUi {
                 player.setComponentPosition(INTERFACE_ID, card, L.cardX(c, group.quests.size), L.rowY(r))
                 val finished = quest.isFinished(player)
                 val isChosen = quest == chosen
-                val lockedOut = rowLocked && !isChosen && !finished
+                // DMM-ARMAGEDDON D7: a quest of the bracket photo is not a Quest Guide choice for a new account.
+                val viaBracket = QuestBrackets.viaBracket(player, quest) && !finished
+                val lockedOut = (rowLocked && !isChosen && !finished) || viaBracket
                 val selected = !rowLocked && quest == pick
                 // Faces: 0 normal, 1 selected, 2 chosen, 3 locked.
                 val face =
@@ -156,12 +158,13 @@ object QuestGuideUi {
                 player.setComponentHidden(INTERFACE_ID, card + L.CARD_TICK, hidden = !(isChosen || finished))
                 player.setComponentHidden(INTERFACE_ID, card + L.CARD_LOCK, hidden = !lockedOut)
                 // The mouse-over light only on a card that can still be picked.
-                val pickable = !rowLocked && !finished
+                val pickable = !rowLocked && !finished && !viaBracket
                 player.setComponentSprite(INTERFACE_ID, card + L.CARD_HOVER, if (pickable) gg.rsmod.game.tools.importer.ChoosePathArtTool.HOVER else -1)
                 player.setComponentItem(INTERFACE_ID, card + L.CARD_ICON, ICON[quest] ?: quest.reward.icon, 1)
                 val name = NAMES[quest] ?: quest.name
                 player.setComponentText(INTERFACE_ID, card + L.CARD_NAME, if (lockedOut) "$GREY$name$END" else name)
-                player.setComponentText(INTERFACE_ID, card + L.CARD_DESC, if (lockedOut) "${GREY}Complete the quest<br>to unlock$END" else UNLOCKS[quest] ?: "")
+                val lockedText = if (viaBracket) "${GREY}Unlocked by a<br>combat bracket$END" else "${GREY}Complete the quest<br>to unlock$END"
+                player.setComponentText(INTERFACE_ID, card + L.CARD_DESC, if (lockedOut) lockedText else UNLOCKS[quest] ?: "")
             }
         }
         val confirming = player.attr[CONFIRMING]
@@ -172,7 +175,7 @@ object QuestGuideUi {
         if (!isOpen(player) || player.attr[CONFIRMING] != null) return
         val group = ROWS.getOrNull(row) ?: return
         val quest = group.quests.getOrNull(card) ?: return
-        if (locked(player, group) || quest.isFinished(player)) return
+        if (locked(player, group) || quest.isFinished(player) || QuestBrackets.viaBracket(player, quest)) return
         val picks = picks(player)
         picks[row] = quest.name
         setPicks(player, picks)
@@ -209,6 +212,7 @@ object QuestGuideUi {
             QuestChoices.Result.ALREADY_COMPLETE -> player.message("You have completed ${pick.name} already.")
             QuestChoices.Result.LEGACY_ACCOUNT -> player.message("Your quests were all recorded long before these choices existed.")
             QuestChoices.Result.NOT_IN_GROUP -> Unit
+            QuestChoices.Result.VIA_BRACKET -> player.message("${pick.name} is unlocked by your combat bracket, not chosen here.")
         }
         draw(player)
     }

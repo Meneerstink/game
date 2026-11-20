@@ -33,6 +33,13 @@ object QuestChoices {
     const val LEGACY = "legacy"
     const val CHOICE = "choice"
 
+    /**
+     * DMM-ARMAGEDDON D7 (owner 20-11-2026): accounts made from this release on unlock the quests of the Armageddon photo per
+     * combat bracket ([QuestBrackets]); the Quest Guide keeps only the choice quests that are not on the photo. Existing "choice"
+     * accounts keep the old rules.
+     */
+    const val ARMAGEDDON = "armageddon"
+
     /** Short labels for the choice menu: what each option unlocks. */
     val UNLOCK_LABEL: Map<ShortQuest, String> =
         mapOf(
@@ -48,21 +55,27 @@ object QuestChoices {
 
     fun cohort(player: Player): String {
         player.attr[COHORT]?.let { return it }
-        val cohort = if (player.attr[NEW_ACCOUNT_ATTR] == true) CHOICE else LEGACY
+        val cohort = if (player.attr[NEW_ACCOUNT_ATTR] == true) ARMAGEDDON else LEGACY
         player.attr[COHORT] = cohort
         return cohort
     }
 
     fun isLegacy(player: Player): Boolean = cohort(player) == LEGACY
 
+    fun isArmageddon(player: Player): Boolean = cohort(player) == ARMAGEDDON
+
     fun chosen(player: Player, group: ChoiceGroup): ShortQuest? =
         player.attr[group.key]?.let { name -> group.quests.firstOrNull { it.name == name } }
 
     /** The options still open in [group]: nothing once a choice is made, never a quest the player already finished. */
     fun available(player: Player, group: ChoiceGroup): List<ShortQuest> =
-        if (isLegacy(player) || chosen(player, group) != null) emptyList() else group.quests.filterNot { it.isFinished(player) }
+        if (isLegacy(player) || chosen(player, group) != null) {
+            emptyList()
+        } else {
+            group.quests.filterNot { it.isFinished(player) || QuestBrackets.viaBracket(player, it) }
+        }
 
-    enum class Result { CHOSEN, LEGACY_ACCOUNT, ALREADY_CHOSEN, NOT_IN_GROUP, ALREADY_COMPLETE }
+    enum class Result { CHOSEN, LEGACY_ACCOUNT, ALREADY_CHOSEN, NOT_IN_GROUP, ALREADY_COMPLETE, VIA_BRACKET }
 
     /**
      * Makes [quest] the permanent choice of [group]. The choice is stored before the reward is handed out and nothing
@@ -73,6 +86,7 @@ object QuestChoices {
         if (quest !in group.quests) return Result.NOT_IN_GROUP
         if (player.attr[group.key] != null) return Result.ALREADY_CHOSEN
         if (quest.isFinished(player)) return Result.ALREADY_COMPLETE
+        if (QuestBrackets.viaBracket(player, quest)) return Result.VIA_BRACKET
         player.attr[group.key] = quest.name
         FoundationRewards.complete(player, quest)
         return Result.CHOSEN

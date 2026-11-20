@@ -320,7 +320,8 @@ object BreachSim {
                     wait(18)
                     val spot = arena.firstOrNull { gapTo2(it, home) in 2..4 && DeadmanBreach.fits(world, it, 1) } ?: home
                     val real = DeadmanBreach.spawnMonster(world, 14454, spot, DeadmanBreach.LOCAL_SPAWN_RADIUS) // Malevolent Mage, 1x1
-                    val pointsBefore = BreachPoints.balance(bot)
+                    val dpKey = gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Currency.DEADMAN.attr
+                    val pointsBefore = bot.attr[dpKey] ?: 0
                     DeadmanBreach.recordDamage(real, bot, 300)
                     real.hit(real.getCurrentLifepoints() + 10)
                     repeat(15) { wait(1); bot.setCurrentLifepoints(LIFE) }
@@ -330,9 +331,8 @@ object BreachSim {
                         world.chunks.get(t, createIfNeeded = false)?.getEntities<gg.rsmod.game.model.entity.GroundItem>(t, gg.rsmod.game.model.EntityType.GROUND_ITEM)?.let { items += it }
                     }
                     val mine = items.filter { it.isOwnedBy(bot) }
-                    val emblem = mine.any { it.item == BreachIds.ARCHAIC_EMBLEM_TIER_5 }
-                    val points = BreachPoints.balance(bot) - pointsBefore
-                    out("rewards: real monster killed -> drops for player=${mine.size} emblem=$emblem points+=$points ${if (mine.isNotEmpty() && points > 0) "OK" else "BUG:no-rewards"}")
+                    val points = (bot.attr[dpKey] ?: 0) - pointsBefore
+                    out("rewards: real monster killed -> drops for player=${mine.size} deadman points+=$points ${if (mine.isNotEmpty() && points > 0) "OK" else "BUG:no-rewards"}")
                     mine.forEach { world.remove(it) }
                 }
             } catch (e: Exception) {

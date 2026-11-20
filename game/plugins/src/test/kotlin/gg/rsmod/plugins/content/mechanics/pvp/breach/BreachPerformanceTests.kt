@@ -18,10 +18,9 @@ class BreachPerformanceTests {
         val names = (1..250).map { "player$it" }
         val start = System.nanoTime()
         repeat(40) { round -> names.forEach { ledger.add(it, 1 + (round % 7)) } } // 10,000 landed hits
-        val loot = ledger.lootEligible()
-        val points = ledger.pointEarners()
+        val ranking = ledger.ranking()
         val ms = (System.nanoTime() - start) / 1_000_000
-        assertTrue(loot.size == BreachLoot.ELIGIBLE && points.size == BreachPoints.EARNERS)
+        assertTrue(ranking.size == BreachLoot.ELIGIBLE)
         assertTrue(ms < 500, "10,000 hits + ranking took $ms ms")
     }
 

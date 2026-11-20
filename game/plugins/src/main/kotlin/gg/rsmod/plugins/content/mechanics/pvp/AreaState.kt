@@ -287,15 +287,18 @@ object AreaState {
     const val MIN_COMBAT_LEVEL = 3
     const val MAX_COMBAT_LEVEL = 138
 
+    /**
+     * DMM-ARMAGEDDON D8 (owner 20-11-2026, "alleen eigen bracket"): two players may fight only inside the same Deadman: Armageddon
+     * combat bracket ([DeadmanBrackets]: 3-50, 51-70, 71-90, 91-110, 111-138) - OSRS gives every bracket its own world. This
+     * replaces the +/-[MAX_COMBAT_LEVEL_DIFFERENCE] rule; the name stays so every gate keeps calling the one check.
+     */
     fun isWithinCombatLevelRange(
         attacker: gg.rsmod.game.model.entity.Player,
         target: gg.rsmod.game.model.entity.Player,
-    ): Boolean = abs(attacker.combatLevel - target.combatLevel) <= MAX_COMBAT_LEVEL_DIFFERENCE
+    ): Boolean = DeadmanBrackets.sameBracket(attacker, target)
 
-    /** The attackable bracket for [combatLevel], clamped to real combat levels, e.g. 88 -> 74..102. */
-    fun bracketOf(combatLevel: Int): IntRange =
-        (combatLevel - MAX_COMBAT_LEVEL_DIFFERENCE).coerceAtLeast(MIN_COMBAT_LEVEL)..
-            (combatLevel + MAX_COMBAT_LEVEL_DIFFERENCE).coerceAtMost(MAX_COMBAT_LEVEL)
+    /** The attackable levels for [combatLevel]: its Armageddon bracket, e.g. 88 -> 71..90. */
+    fun bracketOf(combatLevel: Int): IntRange = DeadmanBrackets.forCombatLevel(combatLevel).levels
 
     /** True when [tile] is a PvP-enabled (dangerous) tile - the single predicate the HUD, the guards,
      * the PvP gate and the danger warning share. */

@@ -12,14 +12,18 @@ import kotlin.test.assertTrue
  * included), the HUD shows exactly that bracket, and the danger signs are grouped per opening.
  */
 class DeadmanBracketTests {
+    /** DMM-ARMAGEDDON D8 (owner 20-11-2026): the five Armageddon brackets replace the +/-14 range; the last one runs to 138. */
     @Test
-    fun `the bracket is 14 levels either side, clamped to real combat levels`() {
-        assertEquals(14, AreaState.MAX_COMBAT_LEVEL_DIFFERENCE)
-        assertEquals(74..102, AreaState.bracketOf(88))
-        assertEquals(3..17, AreaState.bracketOf(3))
-        assertEquals(124..138, AreaState.bracketOf(138))
-        assertEquals("74-102", DeadmanHud.bracketText(88))
-        assertEquals("3-17", DeadmanHud.bracketText(3))
+    fun `the bracket is the Armageddon bracket of the combat level`() {
+        assertEquals(71..90, AreaState.bracketOf(88))
+        assertEquals(3..50, AreaState.bracketOf(3))
+        assertEquals(3..50, AreaState.bracketOf(50))
+        assertEquals(51..70, AreaState.bracketOf(51))
+        assertEquals(91..110, AreaState.bracketOf(110))
+        assertEquals(111..138, AreaState.bracketOf(111))
+        assertEquals(111..138, AreaState.bracketOf(138))
+        assertEquals("71-90", DeadmanHud.bracketText(88))
+        assertEquals("3-50", DeadmanHud.bracketText(3))
     }
 
     @Test
@@ -29,9 +33,9 @@ class DeadmanBracketTests {
         assertEquals('|', DeadmanHud.FIELD_SEPARATOR)
         assertEquals("Warning: You are entering a dangerous zone.", DeadmanHud.DANGER_WARNING)
         // Two fields in single-way combat, a third "M" field (the crossed swords) in a multicombat area.
-        assertEquals("Deadman|74-102", DeadmanHud.zoneText(DeadmanHud.TEXT_DANGEROUS, 88, multi = false))
-        assertEquals("Deadman|74-102|M", DeadmanHud.zoneText(DeadmanHud.TEXT_DANGEROUS, 88, multi = true))
-        assertEquals("Level: 3|3-17|M", DeadmanHud.zoneText("Level: 3", 3, multi = true))
+        assertEquals("Deadman|71-90", DeadmanHud.zoneText(DeadmanHud.TEXT_DANGEROUS, 88, multi = false))
+        assertEquals("Deadman|71-90|M", DeadmanHud.zoneText(DeadmanHud.TEXT_DANGEROUS, 88, multi = true))
+        assertEquals("Level: 3|3-50|M", DeadmanHud.zoneText("Level: 3", 3, multi = true))
     }
 
     @Test

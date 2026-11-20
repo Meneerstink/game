@@ -3,10 +3,12 @@ package gg.rsmod.plugins.content.quests
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.cfg.Varps
 import gg.rsmod.plugins.api.ext.getVarp
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.setVarp
 import gg.rsmod.plugins.content.quests.foundation.BeneathCursedSands
 import gg.rsmod.plugins.content.quests.foundation.ChoiceGroup
 import gg.rsmod.plugins.content.quests.foundation.FoundationQuests
+import gg.rsmod.plugins.content.quests.foundation.QuestBrackets
 import gg.rsmod.plugins.content.quests.foundation.QuestChoices
 import gg.rsmod.plugins.content.quests.foundation.ShortQuest
 
@@ -42,7 +44,18 @@ object QuestStatus {
                 else -> State.NOT_STARTED
             }
         }
-        val choice = CHOICE_QUESTS[slot] ?: return State.COMPLETED
+        val choice = CHOICE_QUESTS[slot]
+        if (choice == null) {
+            // DMM-ARMAGEDDON D7: for new accounts the quests of the Armageddon photo wait for their combat bracket / storyline,
+            // unless they were really played (the list entry's own progress).
+            if (!QuestBrackets.gates(player, slot)) return State.COMPLETED
+            if (QuestBrackets.isUnlocked(player, slot)) return State.COMPLETED
+            return when (QuestList.ENTRIES.firstOrNull { it.slot == slot }?.progress?.read?.invoke(player) ?: 0) {
+                COMPLETE -> State.COMPLETED
+                1 -> State.IN_PROGRESS
+                else -> State.NOT_STARTED
+            }
+        }
         val stage = choice.stage(player)
         return when {
             stage >= choice.completedValue -> State.COMPLETED
@@ -77,7 +90,12 @@ object QuestStatus {
         // N462 owner E2: the old always-complete Beneath Cursed Sands entry stays completed (once, before anything reads it).
         BeneathCursedSands.migrate(player)
         if (QuestChoices.isLegacy(player)) QuestChoices.applyLegacy(player)
+        // DMM-ARMAGEDDON D7: the short quests of every reached bracket (idempotent).
+        QuestBrackets.ensure(player)
         sync(player)
+        QuestBrackets.openChoices(player).firstOrNull()?.let {
+            player.message("<col=ef1020>You can still unlock a storyline of the ${it.bracket.label} bracket at the Quest Guide.</col>")
+        }
         // N501: a finished Desert Treasure II without the Ring of shadows anywhere gets it once.
         gg.rsmod.plugins.content.quests.foundation.RingOfShadowsReclaim.onLogin(player)
     }

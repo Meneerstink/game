@@ -1,59 +1,54 @@
 package gg.rsmod.plugins.content.mechanics.pvp.breach
 
 import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.model.attr.PointBalance
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.content.mechanics.store.StoreCatalogue
 
 /**
- * Breach Points (owner 2026-09-23: a separate currency, never Deadman Points).
+ * Breach damage pays DEADMAN POINTS (DMM-ARMAGEDDON D3, owner 20-11-2026).
  *
- * OSRS Wiki "Deadman: Annihilation": "The top 100 damage dealers to breach NPCs will earn 1 point per damage dealt" and "After a
- * player earns 75,000 points from breaches, they will no longer be able to earn points there." The event-day cap ("5,000 x the
- * number of days since the start of the event") belongs to a time-boxed event this permanent world does not have and is not
- * applied (ADAPTED). An Archaic emblem (tier 5) trades in for [EMBLEM_TIER_5_VALUE] points ("Archaic emblem" table,
- * Annihilation points); emblem points are spending money and do not count towards the damage cap.
+ * The separate Breach Points currency is gone - owner 20-11: "deadmanpunten loyalty en donator punten zijn de enige punten in onze
+ * rsps de rest verwijderen" (no Breach Trader, no balance, no emblem trade-in). OSRS Wiki Deadman: Armageddon/Points: "Breaches -
+ * 1 point per damage dealt to Breach bosses - 42000" and "After earning a total of 42,000 Points from Breaches, no more points will
+ * be earned from damaging Breach bosses, although loot will still be awarded"; only the rewarded group (MvP + 15,
+ * [BreachContribution.ranking]) earns them ("will not receive loot or points for that kill").
+ *
+ * [LEGACY_BALANCE] / [LEGACY_EARNED] are the old save keys, read only by [gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement]
+ * to convert an old balance into Deadman Points once and clear it.
  */
 object BreachPoints {
-    const val EARNERS = 100
-    const val DAMAGE_CAP = 75_000
-    const val EMBLEM_TIER_5_VALUE = 1_500_000
+    /** Lifetime Deadman Points a player can earn from breach damage. */
+    const val DP_CAP = 42_000
 
-    /** Spendable balance. */
-    val BALANCE = AttributeKey<Int>("breach_points")
+    /** Old Breach Points balance (save key), migration only. */
+    val LEGACY_BALANCE = AttributeKey<Int>("breach_points")
 
-    /** Lifetime points earned from breach damage (the 75,000 cap). */
-    val EARNED = AttributeKey<Int>("breach_points_earned")
+    /** Old lifetime Breach Points earned (save key), migration only. */
+    val LEGACY_EARNED = AttributeKey<Int>("breach_points_earned")
 
-    fun balance(player: Player): Int = player.attr[BALANCE] ?: 0
+    /** Lifetime Deadman Points earned from breach damage (the [DP_CAP]). */
+    val DP_EARNED = AttributeKey<Int>("breach_dp_earned")
 
-    fun earned(player: Player): Int = player.attr[EARNED] ?: 0
+    fun dpEarned(player: Player): Int = player.attr[DP_EARNED] ?: 0
 
-    /** Awards up to [damage] points within the lifetime cap; returns the points actually given. */
-    fun award(
+    /** Pays up to [damage] Deadman Points within the lifetime cap; returns the points actually given. */
+    fun awardDp(
         player: Player,
         damage: Int,
     ): Int {
-        if (gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled) return 0
-        val room = (DAMAGE_CAP - earned(player)).coerceAtLeast(0)
-        val given = damage.coerceAtMost(room).coerceAtLeast(0)
+        val room = (DP_CAP - dpEarned(player)).coerceAtLeast(0)
+        val wanted = damage.coerceAtMost(room).coerceAtLeast(0)
+        if (wanted == 0) return 0
+        val key = StoreCatalogue.Currency.DEADMAN.attr
+        val before = PointBalance.of(player.attr, key)
+        val given = (PointBalance.add(player.attr, key, wanted) - before).toInt().coerceAtLeast(0)
         if (given == 0) return 0
-        player.attr[EARNED] = earned(player) + given
-        addBalance(player, given)
-        val capNote = if (earned(player) >= DAMAGE_CAP) " You have reached the ${"%,d".format(DAMAGE_CAP)} breach point limit." else ""
-        player.message("You earn ${"%,d".format(given)} Breach Points (total ${"%,d".format(balance(player))}).$capNote")
+        player.attr[DP_EARNED] = dpEarned(player) + given
+        val capNote =
+            if (dpEarned(player) >= DP_CAP) " You have reached the ${"%,d".format(DP_CAP)} point limit for breaches." else ""
+        player.message("You earn ${"%,d".format(given)} Deadman Points for your breach damage.$capNote")
         return given
-    }
-
-    fun addBalance(
-        player: Player,
-        amount: Int,
-    ) {
-        if (gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled) return
-        // N106: the one balance helper (stops at 2,147,483,647; a negative amount is an admin take, floored at 0).
-        if (amount >= 0) {
-            gg.rsmod.game.model.attr.PointBalance.add(player.attr, BALANCE, amount)
-        } else {
-            gg.rsmod.game.model.attr.PointBalance.adjust(player.attr, BALANCE, amount.toLong())
-        }
     }
 }

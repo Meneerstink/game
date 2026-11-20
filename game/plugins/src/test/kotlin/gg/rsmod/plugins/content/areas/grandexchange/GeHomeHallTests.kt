@@ -115,7 +115,7 @@ class GeHomeHallTests {
         // No code spawns a hall npc any more.
         val root = File("src/main/kotlin/gg/rsmod/plugins/content")
         assertFalse("spawn_npc(" in File(root, "areas/grandexchange/ge_home_hall.plugin.kts").readText())
-        assertFalse("spawn_npc(npc = BREACH_TRADER" in File(root, "mechanics/pvp/breach/breach_shop.plugin.kts").readText())
+        assertFalse(File(root, "mechanics/pvp/breach/breach_shop.plugin.kts").exists(), "the Breach Trader shop is gone (DMM-ARMAGEDDON)")
         assertFalse("spawnAll" in File(root, "mechanics/store/StoreNpcs.kt").readText())
         val casino = File(root, "activity/casino/casino_grandexchange.plugin.kts").readText()
         assertFalse("spawn_npc(" in casino || "spawn_obj(" in casino, "the old Grand Exchange casino pit is still spawned")

@@ -6,6 +6,7 @@ import gg.rsmod.game.model.timer.NEW_PLAYER_PROTECTION_TIMER
 import gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER
 import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 import gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection
+import gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate
 import gg.rsmod.plugins.content.mechanics.pvp.Killstreaks
 import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
@@ -124,6 +125,9 @@ object QuestTabInfo {
                     listOf(
                         Fact("Valid player kill", col(GOLD, "${Killstreaks.DEADMAN_POINTS_PER_KILL}")),
                         Fact("Killstreak", "+1 per 5 kills (up to +10)"),
+                        // DMM-ARMAGEDDON D3 + D4 (owner 20-11-2026).
+                        Fact("Boss kill", "4-150, first kill 10x, half after 100"),
+                        Fact("Breach damage", "1 per damage (max ${number(gg.rsmod.plugins.content.mechanics.pvp.breach.BreachPoints.DP_CAP)})"),
                         Fact("Deadman Tasks", DeadmanTasks.Tier.values().joinToString(" / ") { "${DeadmanTasks.DP.getValue(it)}" } + " per task"),
                         Fact("Deadman emblem", "its value when cashed in"),
                         Fact("Spend them", "Deadman Store"),
@@ -209,14 +213,12 @@ object QuestTabInfo {
                 Fact("Opens at (UTC)", "$hours:00"),
                 Fact("Monsters appear", "for about 15 minutes"),
                 Fact("Left alive", "gone about 30 minutes later"),
-                if (!gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled) Fact("${BreachLoot.EMBLEM_DAMAGE}+ damage", col(GOLD, "Archaic emblem (tier 5)") + ", once") else null,
+                // DMM-ARMAGEDDON D3 (owner 20-11-2026): MvP + the next 15 by damage get loot and Deadman Points; only the MvP the unique.
+                Fact("Top ${BreachLoot.ELIGIBLE} damage", col(GOLD, "loot + Deadman Points")),
                 Fact("PvP protection", col(RED, "cannot attack them")),
             ),
-            text = if (gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled)
-                "Monsters you help kill drop loot. Nigel at the Grand Exchange offers Deadman rewards for Deadman Points. " +
-                    "Blood money is earned from valid player kills. Perdu at the Grand Exchange tells you where the breach is."
-            else "Monsters you help kill drop loot and give Breach Points for your damage - spend them with the Breach Trader, " +
-                "$STORES. Perdu at the Grand Exchange tells you where the breach is.",
+            text = "The player with the most damage (MvP) can also get a unique drop - the only way to get corrupted weapons. " +
+                "Below the top ${BreachLoot.ELIGIBLE} you get nothing. Perdu at the Grand Exchange tells you where the breach is.",
             bar = bar,
             map = map,
         )
@@ -283,8 +285,7 @@ object QuestTabInfo {
                 Fact("Paused", "in an instance or AFK ~1 minute"),
                 Fact("Teleport while skulled", col(RED, "$gate s countdown")),
             ),
-            text = "You can keep playing while the countdown runs. Hit in the last $gate seconds? Then you cannot teleport until that " +
-                "time has passed.",
+            text = "Being hit or doing anything else (eating, attacking back) cancels the countdown - start it again.",
             bar = if (skulled) "Your skull: ${col(RED, QuestTab.clock(left))} left" else "You are not skulled",
         )
     }
@@ -293,31 +294,35 @@ object QuestTabInfo {
         val mine = AnnihilationTier.of(player)
         val rows = listOf(listOf("Level", "Combat XP", "Skills XP", "Drops")) +
             AnnihilationTier.values().map { listOf(if (it == mine) "${it.label}  (you)" else it.label, rate(it.combatXp), rate(it.skillingXp), rate(it.dropRate)) }
-        val range = AreaState.bracketOf(player.combatLevel)
+        // DMM-ARMAGEDDON D8: the player's bracket never goes down, so it is the reached one (not the bare combat level).
+        val range = gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.of(player).levels
         return Page(
             "Your combat level sets your rates",
             table = rows,
             highlight = 1 + AnnihilationTier.values().indexOf(mine),
             text = "Prayer and Hitpoints count as combat skills. Your rates never go down again. Quests, lamps and other " +
                 "rewards give their exact XP.<br><br>" +
-                "You can only fight players up to ${AreaState.MAX_COMBAT_LEVEL_DIFFERENCE} levels above or below you.",
+                "You only fight players of your own combat bracket (see below).",
             bar = "You: combat ${col(WHITE, "${player.combatLevel}")} - you fight ${col(WHITE, "${range.first} - ${range.last}")}",
         )
     }
 
     private fun teleportPage(player: Player): Page {
         val gate = seconds(SevenSecondAction.DURATION_CYCLES)
+        // DMM-ARMAGEDDON D1: the windows count from the attack, the wiki wording one tick less (5.4 s player, 2.4 s monster).
+        val pvpWait = String.format(Locale.ROOT, "%.1f", (DeadmanTimerGate.PVP_HIT_TELEPORT_BLOCK_CYCLES - 1) * 0.6)
+        val npcWait = String.format(Locale.ROOT, "%.1f", (DeadmanTimerGate.NPC_HIT_TELEPORT_BLOCK_CYCLES - 1) * 0.6)
         val skulled = PvpSkull.hasSkullTimer(player)
         return Page(
             "When you can get away",
             listOf(
                 Fact("Unskulled, out of combat", col(GREEN, "at once")),
                 Fact("Skulled", col(RED, "$gate s countdown")),
-                Fact("Hit in the last $gate s", "wait until that time passes"),
-                Fact("Boss hits in a boss area", col(GREEN, "never stop it")),
-                Fact("A player's hit", col(RED, "always stops it")),
+                Fact("Hit by a player", "wait $pvpWait s"),
+                Fact("Hit by a monster or boss", "wait $npcWait s"),
+                Fact("Monster hits in minigames", col(GREEN, "never stop it")),
             ),
-            text = "The countdown lets you keep playing while it runs.",
+            text = "Being hit or doing anything else cancels the countdown. Logging out works the same way.",
             bar = if (skulled) "You are skulled: teleports take ${col(RED, "$gate s")}" else "You are not skulled",
         )
     }

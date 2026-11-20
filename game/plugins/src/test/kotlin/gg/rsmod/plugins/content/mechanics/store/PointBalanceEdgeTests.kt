@@ -33,7 +33,6 @@ import gg.rsmod.plugins.content.activity.pest_control.PEST_POINTS
 import gg.rsmod.plugins.content.daily.DailyObjectives
 import gg.rsmod.plugins.content.mechanics.pvp.BEST_KILLSTREAK_ATTR
 import gg.rsmod.plugins.content.mechanics.pvp.Killstreaks
-import gg.rsmod.plugins.content.mechanics.pvp.PK_POINTS_ATTR
 import gg.rsmod.plugins.content.mechanics.pvp.ValidPkKill
 import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachPoints
 import gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem
@@ -43,6 +42,7 @@ import io.mockk.mockk
 import io.netty.channel.embedded.EmbeddedChannel
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
@@ -155,16 +155,15 @@ class PointBalanceEdgeTests {
     // ------------------------------------------------------------------------------------------------ Deadman / PK adds
 
     @Test
-    fun `owner case - a valid PvP kill at the edge pays Deadman and PK points up to the maximum, never negative`() {
+    fun `owner case - a valid PvP kill at the edge pays Deadman Points up to the maximum, never negative`() {
         val killer = player("n106killer")
         val victim = player("n106victim")
         killer.attr[DEADMAN] = OWNER_EDGE_DEADMAN
-        killer.attr[PK_POINTS_ATTR] = MAX - 1
         killer.attr[BEST_KILLSTREAK_ATTR] = 1_000 // no leaderboard write from the test
         Killstreaks.onJudgedKill(killer, victim, ValidPkKill.Verdict.VALID)
         assertTrue("the kill was paid: ${messages(killer)}", messages(killer).any { it.contains("Deadman Points") })
         assertEquals("Deadman Points after +${Killstreaks.DEADMAN_POINTS_PER_KILL} at 2,147,483,640", MAX, killer.attr[DEADMAN])
-        assertEquals("PK points after a kill at MAX-1", MAX, killer.attr[PK_POINTS_ATTR])
+        assertFalse("no PK points any more (DMM-ARMAGEDDON)", messages(killer).any { it.contains("PK points") })
     }
 
     @Test
@@ -177,7 +176,7 @@ class PointBalanceEdgeTests {
     }
 
     @Test
-    fun `givepoints for every 78 Store currency and Breach saturates at the maximum and floors at zero`() {
+    fun `givepoints for every 78 Store currency saturates at the maximum and floors at zero`() {
         val admin = player("n106give", admin = true)
         val target = player("n106getter")
         for (currency in StoreCatalogue.Currency.values()) {
@@ -188,9 +187,10 @@ class PointBalanceEdgeTests {
             assertTrue(repo.executeCommand(admin, "givepoints", arrayOf("n106getter", currency.name.lowercase(), "-5")))
             assertEquals("${currency.name} taken below zero", 0, target.attr[currency.attr])
         }
-        target.attr[BreachPoints.BALANCE] = OWNER_EDGE
-        assertTrue(repo.executeCommand(admin, "givepoints", arrayOf("n106getter", "breach", "1000000")))
-        assertEquals("Breach +1,000,000 at the edge", MAX, target.attr[BreachPoints.BALANCE])
+        // DMM-ARMAGEDDON (owner 20-11): Breach Points no longer exist - givepoints has no "breach" currency to raise.
+        target.attr[BreachPoints.LEGACY_BALANCE] = OWNER_EDGE
+        repo.executeCommand(admin, "givepoints", arrayOf("n106getter", "breach", "1000000"))
+        assertEquals("the legacy breach balance is not a currency any more", OWNER_EDGE, target.attr[BreachPoints.LEGACY_BALANCE])
     }
 
     // ------------------------------------------------------------------------------------------------------------ takes
@@ -227,8 +227,7 @@ class PointBalanceEdgeTests {
             before.attr[DEADMAN] = -2_000_000_001
             before.attr[StoreCatalogue.Currency.DONATOR.attr] = -1_999_999_999 // old build: maxpoints then addloyalty 147483650
             before.attr[SLAYER_POINTS] = -5 // old build: MAX + 2147483643
-            before.attr[PK_POINTS_ATTR] = Int.MIN_VALUE
-            before.attr[BreachPoints.BALANCE] = 100 // healthy: untouched
+            before.attr[BreachPoints.LEGACY_BALANCE] = 100 // healthy: untouched
             assertTrue("saved", serializer.saveClientData(before))
             val json = dir.resolve("n106wrapped").toFile().readText()
             assertTrue("the wrapped value is really in the save: $json", json.contains("\"loyalty_points\": -2147483549"))
@@ -240,8 +239,7 @@ class PointBalanceEdgeTests {
             assertEquals("Deadman wrapped -> maximum", MAX, after.attr[DEADMAN])
             assertEquals("Donator -1,999,999,999 (a wrap by an admin add) -> maximum", MAX, after.attr[StoreCatalogue.Currency.DONATOR.attr])
             assertEquals("Slayer -5 (a wrap by MAX + 2147483643) -> maximum", MAX, after.attr[SLAYER_POINTS])
-            assertEquals("PK Int.MIN_VALUE -> maximum", MAX, after.attr[PK_POINTS_ATTR])
-            assertEquals("a healthy Breach balance is untouched", 100, after.attr[BreachPoints.BALANCE])
+            assertEquals("a healthy Breach balance is untouched", 100, after.attr[BreachPoints.LEGACY_BALANCE])
             assertEquals("a currency the account never had stays absent", null, after.attr[PEST_POINTS])
             assertEquals("the first +50 play-time reward after the repair stops at the maximum", MAX, after.addLoyalty(50))
             assertEquals("the repair marker is saved on the account", 1, after.attr[PointBalance.REPAIR_MARKER])
@@ -280,7 +278,7 @@ class PointBalanceEdgeTests {
     fun `login repair - every balance key used in the sources is in the repair list`() {
         val keys =
             StoreCatalogue.Currency.values().map { it.attr } +
-                listOf(LOYALTY, SLAYER_POINTS, PK_POINTS_ATTR, BreachPoints.BALANCE, PEST_POINTS, gg.rsmod.plugins.content.activity.penguin_hide_and_seek.PenguinPoints)
+                listOf(LOYALTY, SLAYER_POINTS, BreachPoints.LEGACY_BALANCE, PEST_POINTS, gg.rsmod.plugins.content.activity.penguin_hide_and_seek.PenguinPoints)
         keys.forEach { assertTrue("${it.persistenceKey} is repaired at login", it.persistenceKey in PointBalance.PERSISTENCE_KEYS) }
         assertEquals("no stray key in the list", keys.map { it.persistenceKey }.toSet(), PointBalance.PERSISTENCE_KEYS.toSet())
     }
@@ -291,9 +289,8 @@ class PointBalanceEdgeTests {
         attrs[LOYALTY] = -1
         attrs[DEADMAN] = -1_999_999_999
         attrs[SLAYER_POINTS] = -2_000_000_000
-        attrs[PK_POINTS_ATTR] = Int.MIN_VALUE
         val repairs = PointBalance.repairWrapped(attrs).associate { it.key to it.new }
-        assertEquals(setOf("loyalty_points", "deadman_points", "slayer_points", "pk_points"), repairs.keys)
+        assertEquals(setOf("loyalty_points", "deadman_points", "slayer_points"), repairs.keys)
         repairs.values.forEach { assertEquals(MAX, it) }
         assertEquals(MAX, attrs[LOYALTY])
         assertEquals(MAX, attrs[DEADMAN])
@@ -338,7 +335,7 @@ class PointBalanceEdgeTests {
 
     @Test
     fun `relog - every balance at the maximum is saved and loaded as 2,147,483,647 and an add after relog still stops there`() {
-        val keys = StoreCatalogue.Currency.values().map { it.attr } + listOf(BreachPoints.BALANCE, PK_POINTS_ATTR, SLAYER_POINTS)
+        val keys = StoreCatalogue.Currency.values().map { it.attr } + listOf(BreachPoints.LEGACY_BALANCE, SLAYER_POINTS)
         val dir = java.nio.file.Files.createTempDirectory("n106-saves")
         try {
             val serializer = gg.rsmod.game.service.serializer.json.JsonPlayerSerializer()

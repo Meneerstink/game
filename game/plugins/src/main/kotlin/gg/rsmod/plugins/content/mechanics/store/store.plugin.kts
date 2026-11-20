@@ -3,7 +3,6 @@ package gg.rsmod.plugins.content.mechanics.store
 import gg.rsmod.game.model.attr.PointBalance
 import gg.rsmod.game.model.priv.Privilege
 import gg.rsmod.game.model.timer.TimerKey
-import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachPoints
 import gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Currency
 import gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Shop
 
@@ -24,7 +23,8 @@ on_command("points") {
 
 on_command("givepoints", Privilege.ADMIN_POWER) {
     val args = player.getCommandArgs()
-    val currencies = if (gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled) "donator|deadman|loyalty" else "donator|deadman|loyalty|breach"
+    // DMM-ARMAGEDDON (owner 20-11-2026): Deadman, Loyalty and Donator Points are the only points; Breach Points are gone.
+    val currencies = "donator|deadman|loyalty"
     if (args.size < 3) {
         player.message("Usage: givepoints <player> <$currencies> <amount>")
         return@on_command
@@ -32,21 +32,13 @@ on_command("givepoints", Privilege.ADMIN_POWER) {
     val amount = args[args.size - 1].toIntOrNull()
     val currencyName = args[args.size - 2]
     val currency = Currency.values().firstOrNull { it.name.equals(currencyName, ignoreCase = true) }
-    val breach = !gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled && currencyName.equals("breach", ignoreCase = true)
     val name = args.dropLast(2).joinToString(" ")
     val target = world.getPlayerForName(name)
-    if (amount == null || (currency == null && !breach) || target == null) {
+    if (amount == null || currency == null || target == null) {
         player.message("Usage: givepoints <player> <$currencies> <amount> (the player must be online).")
         return@on_command
     }
-    if (breach) {
-        BreachPoints.addBalance(target, amount)
-        val total = BreachPoints.balance(target)
-        target.message("You have received ${amount.format()} Breach Points. You now have ${total.format()}.")
-        player.message("${target.username} now has ${total.format()} Breach Points.")
-        return@on_command
-    }
-    val total = PointBalance.adjust(target.attr, currency!!.attr, amount.toLong())
+    val total = PointBalance.adjust(target.attr, currency.attr, amount.toLong())
     target.message("You have received ${amount.format()} ${currency.plural}. You now have ${total.format()}.")
     player.message("${target.username} now has ${total.format()} ${currency.plural}.")
     if (StoreUi.isOpen(target)) StoreUi.renderPreview(target)
@@ -61,9 +53,7 @@ on_command("maxpoints", Privilege.ADMIN_POWER) {
         return@on_command
     }
     Currency.values().forEach { PointBalance.set(target.attr, it.attr, PointBalance.MAX.toLong()) }
-    if (!gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled) PointBalance.set(target.attr, BreachPoints.BALANCE, PointBalance.MAX.toLong())
-    target.message(if (gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled) "Donator, Deadman and Loyalty Points set to ${Int.MAX_VALUE.format()}."
-        else "Donator, Deadman, Loyalty and Breach Points set to ${Int.MAX_VALUE.format()}.")
+    target.message("Donator, Deadman and Loyalty Points set to ${Int.MAX_VALUE.format()}.")
     if (target != player) player.message("${target.username} now has maximum points in every currency.")
     if (StoreUi.isOpen(target)) StoreUi.renderPreview(target)
 }

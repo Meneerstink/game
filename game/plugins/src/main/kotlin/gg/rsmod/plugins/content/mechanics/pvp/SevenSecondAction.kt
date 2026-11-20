@@ -12,7 +12,8 @@ import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.api.ext.setComponentText
 
 /**
- * Deadman 7-second timer interface (OSRS Wiki "Deadman Mode", owner instruction 2026-09-16):
+ * Deadman teleport/logout delay - 6 seconds since 20-11-2026 ([DURATION_CYCLES]); first built 2026-09-16 as the
+ * 7-second timer interface (OSRS Wiki "Deadman Mode", owner instruction 2026-09-16):
  * "attempting to log out, enter a portal (Player-owned house), or use most forms of non-teleport
  * transportation such as minecarts will bring up a 7 second timer interface that will begin
  * counting down in the chatbox. While this interface is active, the player must not perform any
@@ -29,8 +30,9 @@ import gg.rsmod.plugins.api.ext.setComponentText
  * dialogue, a shop, the bank, ...) cancel the countdown; the pending action is dropped.
  */
 object SevenSecondAction {
-    /** 7 seconds, rounded up to the nearest 0.6s cycle. */
-    const val DURATION_CYCLES = 12
+    /** DMM-ARMAGEDDON D1 (owner 20-11-2026, OSRS Wiki Deadman: Armageddon): "the Deadman teleport/logout delay" is 6 seconds
+     * (10 ticks), for teleports, logout and (owner 20-11) every transport/portal route as well. Was 7 s (12 cycles). */
+    const val DURATION_CYCLES = 10
 
     const val CHATBOX_INTERFACE = 210
     const val CHATBOX_TEXT_COMPONENT = 1
@@ -59,7 +61,7 @@ object SevenSecondAction {
 
     fun isActive(player: Player): Boolean = player.timers.exists(COUNTDOWN_TIMER)
 
-    /** Whole seconds for a cycle count (12 cycles = 7.2 s -> 7; 1 cycle = 0.6 s -> 1). */
+    /** Whole seconds for a cycle count (10 cycles = 6 s; 12 cycles = 7.2 s -> 7; 1 cycle = 0.6 s -> 1). */
     fun secondsFor(cycles: Int): Int = Math.round(cycles * 0.6).toInt().coerceAtLeast(1)
 
     fun secondsLeft(player: Player): Int = if (isActive(player)) secondsFor(player.timers[COUNTDOWN_TIMER]) else 0

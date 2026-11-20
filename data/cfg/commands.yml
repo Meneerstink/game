@@ -376,7 +376,7 @@
 - name: givepoints
   rank: admin
   category: players
-  usage: "::givepoints <player> <donator|deadman|loyalty|breach> <amount>"
+  usage: "::givepoints <player> <donator|deadman|loyalty> <amount>"
   description: "Give an online player points of one store currency."
   example: "::givepoints anudd loyalty 100"
 - name: guardinfo
@@ -573,6 +573,11 @@
   usage: "::questguide"
   description: "Open the 'Choose your path' quest guide window."
   example: "::questguide"
+- name: armageddonquests
+  rank: admin
+  usage: "::armageddonquests"
+  description: "Test server: your quests follow the Armageddon brackets of a new account (photo quests locked, storylines open)."
+  example: "::armageddonquests"
 - name: questreset
   rank: admin
   usage: "::questreset"
@@ -867,11 +872,6 @@
   usage: "::breachinfo"
   description: "Show the status of the Deadman breach."
   example: "::breachinfo"
-- name: breachpoints
-  rank: player
-  usage: "::breachpoints"
-  description: "Show your Breach Points and how many you earned from breach damage."
-  example: "::breachpoints"
 - name: bug
   rank: player
   usage: "::bug <what went wrong>"
@@ -1145,11 +1145,6 @@
   usage: "::pestcontrolveteran"
   description: "Board the veteran Pest Control lander (safe-zone rules apply)."
   example: "::pestcontrolveteran"
-- name: pkpoints
-  rank: player
-  usage: "::pkpoints"
-  description: "Show how many PK points you have."
-  example: "::pkpoints"
 - name: players
   rank: player
   category: players
@@ -1350,7 +1345,7 @@
 - name: botduel
   rank: moderator
   usage: "::botduel [1-5] | stop"
-  description: "Level-matched practice fight against a PK bot; nobody loses items and it never gives XP or PK points."
+  description: "Level-matched practice fight against a PK bot; nobody loses items and it never gives XP or points."
   example: "::botduel 3"
 - name: petheads
   rank: admin

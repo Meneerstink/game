@@ -61,13 +61,18 @@ import kotlin.test.assertTrue
  * skills and containers are real; the rest of the player is a relaxed mock.
  */
 class QuestStatusTests {
-    private class Account(isNew: Boolean) {
+    /**
+     * A new account here is one made before DMM-ARMAGEDDON (cohort "choice": the Quest Guide rules these tests cover); [cohort] null =
+     * an account made today (QuestChoices.cohort decides: the quest brackets).
+     */
+    private class Account(isNew: Boolean, cohort: String? = gg.rsmod.plugins.content.quests.foundation.QuestChoices.CHOICE) {
         val attributes = AttributeMap()
         val varps = VarpSet((0..MAX_VARP).toSet())
         val player = mockk<Player>(relaxed = true)
 
         init {
             if (isNew) attributes[NEW_ACCOUNT_ATTR] = true
+            if (isNew && cohort != null) attributes[gg.rsmod.plugins.content.quests.foundation.QuestChoices.COHORT] = cohort
             val world = mockk<World>(relaxed = true)
             every { world.definitions } returns DEFINITIONS
             every { player.world } returns world
@@ -182,6 +187,27 @@ class QuestStatusTests {
         assertEquals(349 - 28, QuestStatus.points(account.player))
         assertEquals(349 - 28, account.player.getVarp(Varps.QUEST_POINTS))
         assertEquals(349, account.player.getVarp(Varps.MAX_QUEST_POINTS))
+        assertFalse(QuestStatus.hasAllQuestPoints(account.player))
+    }
+
+    /** DMM-ARMAGEDDON D7 (owner 20-11-2026): an account made today sees the photo's quests not started until their bracket. */
+    @Test
+    fun `an account made today has the photo's later quests not started and the rest of the list completed`() {
+        val account = Account(isNew = true, cohort = null)
+        QuestStatus.login(account.player)
+        val brackets = gg.rsmod.plugins.content.quests.foundation.QuestBrackets
+        val firstBracket = brackets.STEPS.first().fixed.map { brackets.slot(it) }.toSet()
+        QuestList.ENTRIES.forEach { entry ->
+            val expected =
+                when {
+                    entry.slot == gg.rsmod.plugins.content.areas.wilderness.MageArenaII.SLOT -> State.NOT_STARTED
+                    QuestStatus.CHOICE_QUESTS.containsKey(entry.slot) -> State.NOT_STARTED
+                    entry.slot in brackets.PHOTO_SLOTS && entry.slot !in firstBracket -> State.NOT_STARTED
+                    else -> State.COMPLETED
+                }
+            assertEquals(expected, QuestStatus.state(account.player, entry.slot), entry.name)
+            if (expected == State.NOT_STARTED) assertEquals(0, entry.progress.read(account.player), "${entry.name}: the client shows it not started")
+        }
         assertFalse(QuestStatus.hasAllQuestPoints(account.player))
     }
 

@@ -15,7 +15,8 @@ import gg.rsmod.plugins.api.ext.setVarp
  * which part of the list the client will give the quest; [complete] writes the value that makes [read] return 2 and only
  * ever raises a value, never lowers one.
  */
-class QuestProgress(val read: (Player) -> Int, val complete: (Player) -> Unit)
+/** [reset]: back to not started (test tool ::armageddonquests only - never used on a real account's progress). */
+class QuestProgress(val read: (Player) -> Int, val complete: (Player) -> Unit, val reset: (Player) -> Unit = {})
 
 /** One row of the quest list: its slot (enum 2252 key), name, quest points and how the client reads its progress. */
 class QuestListEntry(val slot: Int, val name: String, val points: Int, val progress: QuestProgress)
@@ -31,12 +32,14 @@ private fun varp(id: Int, complete: Int, start: Int = 1, write: Int = complete) 
     QuestProgress(
         read = { range(it.getVarp(id), start, complete) },
         complete = { if (it.getVarp(id) < complete) it.setVarp(id, write) },
+        reset = { it.setVarp(id, 0) },
     )
 
 private fun varbit(id: Int, complete: Int, start: Int = 1) =
     QuestProgress(
         read = { range(it.getVarbit(id), start, complete) },
         complete = { if (it.getVarbit(id) < complete) it.setVarbit(id, complete) },
+        reset = { it.setVarbit(id, 0) },
     )
 
 /** Clientscript 2159 (slot 15): complete when either Shield of Arrav varp reached its end (7 or 4). */
@@ -55,6 +58,10 @@ private fun shieldOfArrav() =
             if (it.getVarp(Varps.SHIELD_OF_ARRAV_PROGRESS_1) < 7) it.setVarp(Varps.SHIELD_OF_ARRAV_PROGRESS_1, 7)
             if (it.getVarp(Varps.SHIELD_OF_ARRAV_PROGRESS_2) < 4) it.setVarp(Varps.SHIELD_OF_ARRAV_PROGRESS_2, 4)
         },
+        reset = {
+            it.setVarp(Varps.SHIELD_OF_ARRAV_PROGRESS_1, 0)
+            it.setVarp(Varps.SHIELD_OF_ARRAV_PROGRESS_2, 0)
+        },
     )
 
 /** Slot 26: varp 399 above 6 is complete; varp 399 or varbit 203 set is in progress. */
@@ -69,6 +76,10 @@ private fun creatureOfFenkenstrain() =
             }
         },
         complete = { if (it.getVarp(Varps.CREATURE_OF_FENKENSTRAIN_PROGRESS) <= 6) it.setVarp(Varps.CREATURE_OF_FENKENSTRAIN_PROGRESS, 7) },
+        reset = {
+            it.setVarp(Varps.CREATURE_OF_FENKENSTRAIN_PROGRESS, 0)
+            it.setVarbit(203, 0)
+        },
     )
 
 /** Slot 37: bit 20 of varp 299 is complete, bit 1 in progress. */
@@ -86,6 +97,7 @@ private fun elementalWorkshopI() =
             val flags = it.getVarp(Varps.ELEMENTAL_WORKSHOP_I_PROGRESS)
             if (flags and (1 shl 20) == 0) it.setVarp(Varps.ELEMENTAL_WORKSHOP_I_PROGRESS, flags or (1 shl 20))
         },
+        reset = { it.setVarp(Varps.ELEMENTAL_WORKSHOP_I_PROGRESS, it.getVarp(Varps.ELEMENTAL_WORKSHOP_I_PROGRESS) and ((1 shl 20) or (1 shl 1)).inv()) },
     )
 
 /** Slot 114: varp 161 at 10 is complete; bit 11 of varp 162 is in progress. */
@@ -99,6 +111,10 @@ private fun undergroundPass() =
             }
         },
         complete = { if (it.getVarp(Varps.UNDERGROUND_PASS_PROGRESS) != 10) it.setVarp(Varps.UNDERGROUND_PASS_PROGRESS, 10) },
+        reset = {
+            it.setVarp(Varps.UNDERGROUND_PASS_PROGRESS, 0)
+            it.setVarp(162, it.getVarp(162) and (1 shl 11).inv())
+        },
     )
 
 /**

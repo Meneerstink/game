@@ -11,9 +11,9 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
- * Owner 2026-09-23 breach audit: loot goes to the FIRST 16 damage dealers (order, not amount), Breach Points to the TOP 100 by
- * damage (1 per damage, 75,000 lifetime cap), the tier-5 emblem at 250+ damage, a relog keeps its slot, and loot rolls of one
- * player never depend on another's.
+ * DMM-ARMAGEDDON D3 (owner 20-11-2026, OSRS Wiki Deadman: Armageddon "Breach boss rewards"): the MvP (most damage) + the next 15
+ * BY DAMAGE get loot and Deadman Points (1 per damage, 42,000 lifetime cap); only the MvP rolls the unique table; everybody
+ * below the top 16 gets nothing. A relog keeps its slot, and loot rolls of one player never depend on another's.
  */
 class BreachRewardTests {
     private fun player(name: String = "tester"): Player {
@@ -24,33 +24,43 @@ class BreachRewardTests {
     }
 
     @Test
-    fun `loot eligibility is the first 16 damage dealers, not the 16 biggest`() {
+    fun `the rewarded group is the 16 biggest damage dealers, the MvP first`() {
         val ledger = BreachContribution()
-        ledger.add("first", 1) // one damage, but first on the monster
+        ledger.add("first", 1) // one damage, first on the monster: no longer enough
         (2..16).forEach { ledger.add("p$it", 10) }
-        ledger.add("seventeenth", 5000) // biggest hitter, but 17th to deal damage
-        val eligible = ledger.lootEligible()
-        assertEquals(16, eligible.size)
-        assertTrue("first" in eligible)
-        assertFalse("seventeenth" in eligible)
+        ledger.add("seventeenth", 5000) // biggest hitter, 17th to deal damage: the MvP
+        val ranking = ledger.ranking()
+        assertEquals(16, ranking.size)
+        assertEquals("seventeenth" to 5000, ranking.first())
+        assertEquals("seventeenth", ledger.mvp())
+        assertFalse(ranking.any { it.first == "first" }, "below the top 16 by damage: no loot, no points")
     }
 
     @Test
-    fun `exactly 16 attackers are all eligible and the 17th never is`() {
+    fun `ties keep first-damage order and the 17th never gets anything`() {
         val ledger = BreachContribution()
         (1..17).forEach { ledger.add("p$it", 100) }
-        assertEquals((1..16).map { "p$it" }, ledger.lootEligible())
+        assertEquals((1..16).map { "p$it" }, ledger.ranking().map { it.first })
+        assertEquals("p1", ledger.mvp())
     }
 
     @Test
-    fun `points go to the top 100 by damage, a different ranking from loot`() {
-        val ledger = BreachContribution()
-        (1..120).forEach { ledger.add("p$it", it) }
-        val earners = ledger.pointEarners()
-        assertEquals(100, earners.size)
-        assertEquals("p120" to 120, earners.first())
-        assertFalse(earners.any { it.first == "p1" }) // first on the monster, but not a top-100 damage dealer
-        assertTrue("p1" in ledger.lootEligible())
+    fun `nobody hit - no MvP`() {
+        assertEquals(null, BreachContribution().mvp())
+    }
+
+    @Test
+    fun `only the MvP rolls the unique table - a non-MvP never gets a rare drop`() {
+        val rare = BreachLoot.RARE.map { it.item }.toSet() + BreachLoot.MEGA_RARE
+        // Every random draw 0: the rare trigger (nextInt(9576) == 0 < 133) always fires for the MvP. The Deadman's chest extra
+        // (owner 20-11: the whole top 16) is kept out, its list shares items with the unique table.
+        val zero = object : Random() {
+            override fun nextInt(bound: Int): Int =
+                if (bound == gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestConfig.BREACH_EXTRA_CHANCE) bound - 1 else 0
+            override fun nextDouble(): Double = 0.0
+        }
+        assertTrue(BreachLoot.roll(zero, mvp = true).any { it.item in rare }, "the MvP's always-firing trigger gives a unique")
+        assertFalse(BreachLoot.roll(zero, mvp = false).any { it.item in rare }, "a non-MvP never rolls the unique table")
     }
 
     @Test
@@ -83,24 +93,18 @@ class BreachRewardTests {
     }
 
     @Test
-    fun `points are one per damage and stop at the 75,000 lifetime cap`() {
+    fun `breach damage pays Deadman Points one per damage up to the 42,000 lifetime cap`() {
         val p = player()
-        assertEquals(1234, BreachPoints.award(p, 1234))
-        assertEquals(1234, BreachPoints.balance(p))
-        p.attr[BreachPoints.EARNED] = BreachPoints.DAMAGE_CAP - 10
-        assertEquals(10, BreachPoints.award(p, 500))
-        assertEquals(0, BreachPoints.award(p, 500))
-        assertEquals(BreachPoints.DAMAGE_CAP, BreachPoints.earned(p))
-        assertEquals(1244, BreachPoints.balance(p))
-    }
-
-    @Test
-    fun `emblem trade-in points are spending money outside the damage cap`() {
-        val p = player()
-        p.attr[BreachPoints.EARNED] = BreachPoints.DAMAGE_CAP
-        BreachPoints.addBalance(p, BreachPoints.EMBLEM_TIER_5_VALUE)
-        assertEquals(BreachPoints.EMBLEM_TIER_5_VALUE, BreachPoints.balance(p))
-        assertEquals(BreachPoints.DAMAGE_CAP, BreachPoints.earned(p))
+        val dp = gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Currency.DEADMAN.attr
+        assertEquals(42_000, BreachPoints.DP_CAP)
+        assertEquals(1234, BreachPoints.awardDp(p, 1234))
+        assertEquals(1234, p.attr[dp])
+        p.attr[BreachPoints.DP_EARNED] = BreachPoints.DP_CAP - 10
+        assertEquals(10, BreachPoints.awardDp(p, 500))
+        assertEquals(0, BreachPoints.awardDp(p, 500), "the cap reached: loot still, no more points")
+        assertEquals(BreachPoints.DP_CAP, BreachPoints.dpEarned(p))
+        assertEquals(1244, p.attr[dp])
+        assertEquals(0, BreachPoints.awardDp(player(), 0))
     }
 
     @Test

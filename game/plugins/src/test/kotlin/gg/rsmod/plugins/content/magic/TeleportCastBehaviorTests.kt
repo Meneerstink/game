@@ -153,7 +153,7 @@ class TeleportCastBehaviorTests {
 
         assertFalse(player.canTeleport(TeleportType.MODERN))
         assertFalse(timers.exists(gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.COUNTDOWN_TIMER), "no countdown interface for an unskulled player")
-        assertEquals("You must be out of combat for another 7 seconds to teleport.", gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate.blockedMessage(player))
+        assertEquals("You must be out of combat for another 6 seconds to teleport.", gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate.blockedMessage(player))
     }
 
     @Test
@@ -165,13 +165,15 @@ class TeleportCastBehaviorTests {
         timers[gg.rsmod.game.model.timer.TELEPORT_COMBAT_TIMER] = 12
         every { player.timers } returns timers
         player.attr[LAST_HIT_BY_ATTR] = WeakReference(mockk<Npc>(relaxed = true))
+        // DMM-ARMAGEDDON D1: Combat.postAttack records the npc attack for the 2.4 s npc window.
+        gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate.markNpcHit(player)
 
         assertFalse(player.canTeleport(TeleportType.MODERN))
         assertFalse(timers.exists(gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.COUNTDOWN_TIMER), "no countdown interface for an unskulled player")
     }
 
     @Test
-    fun `a skulled player gets the 7-second countdown interface even out of combat`() {
+    fun `a skulled player gets the 6-second countdown interface even out of combat`() {
         val player = newPlayer(magicLevel = 99)
         every { player.lock } returns LockState.NONE
         every { player.tile } returns Tile(3040, 3576)
@@ -184,23 +186,24 @@ class TeleportCastBehaviorTests {
     }
 
     @Test
-    fun `an unskulled player fighting a boss teleports instantly - met uitzondering van alle bosses`() {
+    fun `an unskulled player just hit by a boss is refused like any npc hit - DMM-ARMAGEDDON, no boss exception`() {
         val player = newPlayer(magicLevel = 99)
         every { player.lock } returns LockState.NONE
         every { player.tile } returns Tile(3040, 3576)
         val timers = TimerMap()
-        timers[gg.rsmod.game.model.timer.TELEPORT_COMBAT_TIMER] = 12
+        timers[gg.rsmod.game.model.timer.TELEPORT_COMBAT_TIMER] = 10
         every { player.timers } returns timers
         val boss = mockk<Npc>(relaxed = true)
         every { boss.id } returns gg.rsmod.plugins.api.cfg.Npcs.KING_BLACK_DRAGON
         player.attr[LAST_HIT_BY_ATTR] = WeakReference(boss)
+        gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate.markNpcHit(player)
 
-        assertTrue(player.canTeleport(TeleportType.MODERN))
-        assertFalse(timers.exists(gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.COUNTDOWN_TIMER))
+        assertFalse(player.canTeleport(TeleportType.MODERN))
+        assertFalse(timers.exists(gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.COUNTDOWN_TIMER), "unskulled: refused, no countdown")
     }
 
     @Test
-    fun `teleporting is allowed again once the 7-second combat-recency timer has cleared`() {
+    fun `teleporting is allowed again once the 6-second combat-recency timer has cleared`() {
         val player = newPlayer(magicLevel = 99)
         every { player.lock } returns LockState.NONE
         every { player.tile } returns Tile(3040, 3576)
@@ -210,7 +213,7 @@ class TeleportCastBehaviorTests {
     }
 
     @Test
-    fun `a skulled player never gets an instant teleport, even out of combat - the 7-second countdown starts instead`() {
+    fun `a skulled player never gets an instant teleport, even out of combat - the 6-second countdown starts instead`() {
         val player = newPlayer(magicLevel = 99)
         every { player.lock } returns LockState.NONE
         every { player.tile } returns Tile(3040, 3576)
@@ -235,7 +238,7 @@ class TeleportCastBehaviorTests {
     }
 
     @Test
-    fun `the two-arg canTeleport overload defers onConfirmed for a skulled player until the 7-second countdown finishes`() {
+    fun `the two-arg canTeleport overload defers onConfirmed for a skulled player until the 6-second countdown finishes`() {
         val player = newPlayer(magicLevel = 99)
         every { player.lock } returns LockState.NONE
         every { player.tile } returns Tile(3040, 3576)
@@ -250,7 +253,7 @@ class TeleportCastBehaviorTests {
         assertFalse(ran, "onConfirmed must not run yet - it is deferred, not skipped")
         assertTrue(
             timers.exists(gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.COUNTDOWN_TIMER),
-            "the 7-second countdown must actually be armed",
+            "the 6-second countdown must actually be armed",
         )
 
         gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.complete(player)

@@ -214,6 +214,8 @@ object Combat {
         // window, and "being attacked" cancels an in-progress 7-second logout/teleport/portal/
         // transport countdown.
         target.timers[TELEPORT_COMBAT_TIMER] = gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.DURATION_CYCLES
+        // DMM-ARMAGEDDON D1: an npc (boss or not) blocks an unskulled teleport/logout for 2.4 s (DeadmanTimerGate).
+        if (pawn !is Player && target is Player) gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate.markNpcHit(target)
         // Audit X-10: being attacked by anything, bosses included, holds a disconnected body in the world until the attack's
         // pending hits have landed (a boss x-log used to escape an in-flight lethal hit). dealHit extends the hold again on impact.
         (target as? Player)?.let { holdLogout(it) }
@@ -613,7 +615,8 @@ object Combat {
                         return false
                     }
                     if (!AreaState.isWithinCombatLevelRange(pawn, target)) {
-                        pawn.message("The level difference between you and your opponent is too great.")
+                        // DMM-ARMAGEDDON D8: only players of your own combat bracket.
+                        pawn.message("You can only attack players in your own combat bracket (${gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.of(pawn).label}).")
                         return false
                     }
                 }

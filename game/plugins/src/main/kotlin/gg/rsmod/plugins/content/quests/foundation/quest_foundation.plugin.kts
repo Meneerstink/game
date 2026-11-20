@@ -103,6 +103,24 @@ on_command("questreset", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
     player.message("Quest reset: all eight short quests and the quest choices are open again.")
 }
 
+// DMM-ARMAGEDDON D7 test tool (test server only): this account follows the quest brackets of a new account (photo quests locked
+// until their bracket, storylines open again). Level the account (::setlevel) to walk through the brackets.
+on_command("armageddonquests", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
+    if (!gg.rsmod.util.io.SharedDataFiles.testServer()) return@on_command player.message("Only on the test server.")
+    if (player.getCommandArgs().getOrNull(0) == "status") {
+        val photo = gg.rsmod.plugins.content.quests.QuestList.ENTRIES.filter { it.slot in QuestBrackets.PHOTO_SLOTS }
+        val done = photo.filter { gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, it.name) }
+        player.message(
+            "brackettest cohort=${QuestChoices.cohort(player)} bracket=${gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.of(player).label} " +
+                "photo=${done.size}/${photo.size} rfd=${QuestBrackets.rfdSubquests(player)} open=${QuestBrackets.openChoices(player).joinToString(",") { it.bracket.label }}",
+        )
+        player.message("brackettest locked=${(photo - done.toSet()).joinToString(",") { it.name }.take(400)}")
+        return@on_command
+    }
+    QuestBrackets.resetForTest(player)
+    player.message("Quest brackets on: bracket ${gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.of(player).label}, photo quests locked until their bracket.")
+}
+
 // Admin test tools (2026-10-07): `talknpc <id> [option]` clicks the nearest such npc's option exactly as the client does
 // (the conformance bots' OpNpc packet, real handler and walk), `questguide` opens "Choose your path".
 on_command("talknpc", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
@@ -221,10 +239,12 @@ suspend fun QueueTask.questGuide() {
         val menu = mutableListOf<Pair<String, suspend QueueTask.() -> Unit>>()
         // The choice window also shows what was chosen, so it is always on offer (and on the npc's right-click).
         menu += (if (!QuestChoices.isLegacy(player) && ChoiceGroup.values().any { QuestChoices.chosen(player, it) == null }) "Make my quest choices." else "View my quest choices.") to { QuestGuideUi.open(player) }
+        // DMM-ARMAGEDDON D7: the storyline of every reached combat bracket, chosen whenever the player likes.
+        if (QuestBrackets.openChoices(player).isNotEmpty()) menu += "Unlock a bracket storyline." to { chooseStoryline() }
         if (player.attr[SummoningKit.CLAIMED] != true) menu += "Claim my Summoning start." to { claimSummoning() }
         menu += "Where do the quests start?" to { questDirections() }
         // Owner 2026-10-07: the new-player introduction can be watched again here.
-        menu += "Show me the introduction again." to { TutorIntro.start(player) }
+        if (menu.size < 4) menu += "Show me the introduction again." to { TutorIntro.start(player) }
         menu += "Goodbye." to { }
         val choice = options(*menu.take(5).map { it.first }.toTypedArray(), title = "Quest Tutor")
         val entry = menu.getOrNull(choice - 1) ?: return
@@ -237,6 +257,54 @@ suspend fun QueueTask.questGuide() {
         if (entry.first == "Where do the quests start?") return
         // The choice window replaces the dialogue.
         if (entry.first.endsWith("my quest choices.")) return
+        if (entry.first == "Unlock a bracket storyline.") return
+    }
+}
+
+/** Splits [text] into chat lines of at most [width] characters (at most 4 lines, the chatbox). */
+fun chatLines(text: String, width: Int = 52): Array<String> {
+    val lines = mutableListOf<String>()
+    var line = ""
+    for (word in text.split(' ')) {
+        if (line.isNotEmpty() && line.length + 1 + word.length > width) {
+            lines += line
+            line = word
+        } else {
+            line = if (line.isEmpty()) word else "$line $word"
+        }
+    }
+    if (line.isNotEmpty()) lines += line
+    return lines.take(4).toTypedArray()
+}
+
+/** DMM-ARMAGEDDON D7: Option 1 or Option 2 of a reached combat bracket (QuestBrackets.choose, once per bracket). */
+suspend fun QueueTask.chooseStoryline() {
+    val open = QuestBrackets.openChoices(player)
+    if (open.isEmpty()) {
+        chatNpc("You have chosen a storyline for every bracket you have reached.")
+        return
+    }
+    val step =
+        if (open.size == 1) {
+            open.first()
+        } else {
+            open.getOrNull(options(*(open.map { "Combat bracket ${it.bracket.label}" } + "Not now.").toTypedArray(), title = "Which bracket?") - 1) ?: return
+        }
+    val first = step.option1 ?: return
+    val second = step.option2 ?: return
+    val storyline =
+        when (options(first.label, second.label, "Not now.", title = "Bracket ${step.bracket.label}: unlock one storyline")) {
+            1 -> first
+            2 -> second
+            else -> return
+        }
+    chatNpc(*chatLines("${storyline.label}: ${storyline.quests.joinToString(", ")}."), facialExpression = FacialExpression.THINKING)
+    val confirm = options("Yes - ${storyline.label} (this choice is permanent).", "No, let me think it over.", title = "This choice is permanent")
+    if (confirm != 1) return
+    when (QuestBrackets.choose(player, step.bracket, if (storyline === first) 1 else 2)) {
+        QuestBrackets.Result.CHOSEN -> chatNpc("It is written. Those quests are yours.")
+        QuestBrackets.Result.ALREADY_CHOSEN -> chatNpc("You chose your storyline for that bracket already.")
+        else -> chatNpc("I cannot record that storyline for you.")
     }
 }
 
@@ -264,6 +332,7 @@ suspend fun QueueTask.chooseGroup() {
         QuestChoices.Result.ALREADY_COMPLETE -> chatNpc("You have finished ${pick.name} already.")
         QuestChoices.Result.LEGACY_ACCOUNT -> chatNpc("Your quests were all recorded long before these choices existed.")
         QuestChoices.Result.NOT_IN_GROUP -> Unit
+        QuestChoices.Result.VIA_BRACKET -> chatNpc("${pick.name} comes with your combat bracket - ask me about the brackets.")
     }
 }
 

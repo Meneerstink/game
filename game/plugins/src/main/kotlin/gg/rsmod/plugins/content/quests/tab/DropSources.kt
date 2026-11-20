@@ -502,7 +502,8 @@ object DropSources {
             val c = (1 - mega) * l.weight / BreachLoot.RARE_TOTAL
             rareKids += Line("rare/r$i", l.item, itemName(world, l.item), qty(l.min, l.max), rareY * c, rareN * c)
         }
-        lines += Line("rare", Items.VESTAS_LONGSWORD, "Rare table", "1", rareY, rareN, Tag.TABLE, sorted(world, merge(rareKids)))
+        // DMM-ARMAGEDDON D3 (owner 20-11-2026): only the MvP (most damage) rolls this table.
+        lines += Line("rare", Items.VESTAS_LONGSWORD, "Rare table", "1", rareY, rareN, Tag.TABLE, sorted(world, merge(rareKids)), sub = "Only the MvP (most damage)")
         // N98: 1 in 200 one of the two prayer scrolls (not boosted).
         PrayerScrolls.SCROLLS.forEachIndexed { i, item ->
             val c = 1.0 / PrayerScrolls.BREACH_CHANCE / PrayerScrolls.SCROLLS.size

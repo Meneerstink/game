@@ -17,17 +17,17 @@ class Dmm2CurrencyTests {
         f.define(money, true); (1501..1503).forEach { f.define(it) }
     }
     @Test fun `migration is disabled by default and one successful snapshot is idempotent`() {
-        f.attr[BreachPoints.BALANCE] = 1_500_001; f.attr[BreachPoints.EARNED] = 75_000; f.attr[dp] = 50
+        f.attr[BreachPoints.LEGACY_BALANCE] = 1_500_001; f.attr[BreachPoints.LEGACY_EARNED] = 75_000; f.attr[dp] = 50
         assertEquals(BreachRetirement.Result.DISABLED, BreachRetirement.migrate(f.player, false))
-        assertEquals(1_500_001, f.attr[BreachPoints.BALANCE]); assertNull(f.attr[BreachRetirement.MIGRATED])
+        assertEquals(1_500_001, f.attr[BreachPoints.LEGACY_BALANCE]); assertNull(f.attr[BreachRetirement.MIGRATED])
         assertEquals(BreachRetirement.Result.OK, BreachRetirement.migrate(f.player, true))
-        assertEquals(7551, f.attr[dp]); assertNull(f.attr[BreachPoints.BALANCE]); assertNull(f.attr[BreachPoints.EARNED])
+        assertEquals(7551, f.attr[dp]); assertNull(f.attr[BreachPoints.LEGACY_BALANCE]); assertNull(f.attr[BreachPoints.LEGACY_EARNED])
         assertEquals(1_500_001, f.attr[BreachRetirement.OLD_BALANCE]); assertEquals(75_000, f.attr[BreachRetirement.OLD_EARNED])
         assertEquals(BreachRetirement.Result.ALREADY_DONE, BreachRetirement.migrate(f.player, true)); assertEquals(7551, f.attr[dp])
         assertEquals(1, f.attr.toPersistentMap()["dmm2_breach_migrated"])
     }
     @Test fun `overflow never debits marks or loses lifetime state and succeeds when room is made`() {
-        f.attr[BreachPoints.BALANCE] = 201; f.attr[BreachPoints.EARNED] = 99; f.attr[dp] = Int.MAX_VALUE - 1
+        f.attr[BreachPoints.LEGACY_BALANCE] = 201; f.attr[BreachPoints.LEGACY_EARNED] = 99; f.attr[dp] = Int.MAX_VALUE - 1
         val before = f.attr.toPersistentMap()
         assertEquals(BreachRetirement.Result.OVERFLOW, BreachRetirement.migrate(f.player, true)); assertEquals(before, f.attr.toPersistentMap())
         f.attr[dp] = Int.MAX_VALUE - 2
@@ -45,7 +45,7 @@ class Dmm2CurrencyTests {
         try {
             for (crashDuringWrite in listOf(true, false)) {
                 f.attr.clear()
-                f.attr[BreachPoints.BALANCE] = 201; f.attr[BreachPoints.EARNED] = 999; f.attr[dp] = 50
+                f.attr[BreachPoints.LEGACY_BALANCE] = 201; f.attr[BreachPoints.LEGACY_EARNED] = 999; f.attr[dp] = 50
                 file.writeText(com.google.gson.Gson().toJson(f.attr.toPersistentMap()))
                 var fail = true
                 every { serializer.saveClientData(client) } answers {
@@ -73,8 +73,8 @@ class Dmm2CurrencyTests {
                 repeat(5) {
                     reconnect()
                     assertEquals(BreachRetirement.Result.ALREADY_DONE, BreachRetirement.migrate(client, true))
-                    assertEquals(52, f.attr[dp]); assertNull(f.attr[BreachPoints.BALANCE])
-                    assertNull(f.attr[BreachPoints.EARNED]); assertEquals(201, f.attr[BreachRetirement.OLD_BALANCE])
+                    assertEquals(52, f.attr[dp]); assertNull(f.attr[BreachPoints.LEGACY_BALANCE])
+                    assertNull(f.attr[BreachPoints.LEGACY_EARNED]); assertEquals(201, f.attr[BreachRetirement.OLD_BALANCE])
                     assertEquals(999, f.attr[BreachRetirement.OLD_EARNED]); assertEquals(1, f.attr[BreachRetirement.MIGRATED])
                 }
                 assertTrue(directory.listFiles()!!.none { it.extension == "tmp" })
@@ -88,7 +88,7 @@ class Dmm2CurrencyTests {
         assertEquals(1L, BreachRetirement.converted(200)); assertEquals(2L, BreachRetirement.converted(201))
         assertEquals(375L, BreachRetirement.converted(75_000)); assertEquals(7500L, BreachRetirement.converted(1_500_000))
         assertEquals(10_737_419L, BreachRetirement.converted(Int.MAX_VALUE)); assertEquals(10_737_419L, BreachRetirement.converted(-1))
-        f.attr[dp] = -1; f.attr[BreachPoints.BALANCE] = 1
+        f.attr[dp] = -1; f.attr[BreachPoints.LEGACY_BALANCE] = 1
         val before = f.attr.toPersistentMap()
         assertEquals(BreachRetirement.Result.OVERFLOW, BreachRetirement.migrate(f.player, true)); assertEquals(before, f.attr.toPersistentMap())
     }
@@ -148,18 +148,9 @@ class Dmm2CurrencyTests {
         assertEquals(BloodMoney.Result.OK, BloodMoney.deliverPending(f.player)); assertEquals(1L, f.count(money))
         assertEquals(BloodMoney.Result.OK, BloodMoney.deliverPending(f.player)); assertEquals(1L, f.count(money))
     }
-    @Test fun `released server cannot mint or spend legacy breach balances through public award and admin helpers`() {
-        val previous = System.getProperty("rsps.dmm2.release")
-        try {
-            System.setProperty("rsps.dmm2.release", "true")
-            f.attr[BreachPoints.BALANCE] = 201; f.attr[BreachPoints.EARNED] = 123
-            val before = f.attr.toPersistentMap()
-            assertEquals(0, BreachPoints.award(f.player, 200))
-            BreachPoints.addBalance(f.player, Int.MAX_VALUE)
-            BreachPoints.addBalance(f.player, -201)
-            assertEquals(before, f.attr.toPersistentMap())
-        } finally {
-            if (previous == null) System.clearProperty("rsps.dmm2.release") else System.setProperty("rsps.dmm2.release", previous)
-        }
+    @Test fun `breach damage pays Deadman Points and never touches the legacy breach keys`() {
+        f.attr[BreachPoints.LEGACY_BALANCE] = 201; f.attr[BreachPoints.LEGACY_EARNED] = 123
+        assertEquals(200, BreachPoints.awardDp(f.player, 200))
+        assertEquals(201, f.attr[BreachPoints.LEGACY_BALANCE]); assertEquals(123, f.attr[BreachPoints.LEGACY_EARNED])
     }
 }

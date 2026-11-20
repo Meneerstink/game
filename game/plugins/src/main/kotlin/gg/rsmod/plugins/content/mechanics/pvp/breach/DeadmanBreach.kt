@@ -931,7 +931,7 @@ object DeadmanBreach {
      *
      * The ledger is keyed by the lower-case account name, not the [Player] object: a player who relogs gets a new object, and
      * keying by object used to drop his first-damage slot (offline) while handing the new object a second slot. Insertion order
-     * is first-damage order ([BreachContribution.lootEligible]); the value is total damage ([BreachContribution.pointEarners]).
+     * is first-damage order (the tie-break of [BreachContribution.ranking]); the value is total damage.
      * Only real damage counts ("the first 16 players to deal damage"), so a 0 hitsplat claims nothing.
      */
     fun recordDamage(
@@ -973,12 +973,13 @@ object DeadmanBreach {
     // ---- loot -------------------------------------------------------------------------------------------------------
 
     /**
-     * Commits one breach monster's rewards exactly once: loot for the first [BreachLoot.ELIGIBLE] damage dealers (each with an
-     * independent roll, dropped under the monster and visible only to its owner), the Archaic emblem (tier 5) for eligible
-     * players with [BreachLoot.EMBLEM_DAMAGE]+ damage (Audit D-14: once per account per breach event, [claimArchaicEmblem]),
-     * and Breach Points for the top [BreachPoints.EARNERS]. The monster is
-     * marked rewarded first and its ledger cleared afterwards, so a second death callback, a late hit or a double click can
-     * never pay twice. Players who are offline when it dies receive nothing (their slot is not handed to anyone else).
+     * Commits one breach monster's rewards exactly once (DMM-ARMAGEDDON D3, owner 20-11-2026, OSRS Wiki Deadman: Armageddon):
+     * the rewarded group is the MvP + the next 15 by damage ([BreachContribution.ranking], [BreachLoot.ELIGIBLE] = 16). Each gets
+     * the regular loot (an independent roll, dropped under the monster and visible only to its owner); only the MvP also rolls the
+     * unique table ([BreachLoot.roll] mvp). Each also earns Deadman Points for his damage ([BreachPoints.awardDp], 1 per damage,
+     * at most [BreachPoints.DP_CAP] in total). Everybody below the top 16 gets no loot and no points. The monster is marked
+     * rewarded first and its ledger cleared afterwards, so a second death callback, a late hit or a double click can never pay
+     * twice. Players who are offline when it dies receive nothing (their slot is not handed to anyone else).
      */
     fun dropLoot(npc: Npc) {
         if (npc.attr[REWARDED_ATTR] == true) return
@@ -995,13 +996,17 @@ object DeadmanBreach {
         val online = HashMap<String, Player>()
         world.players.forEach { online[it.username.lowercase()] = it }
         var looted = 0
-        ledger.lootEligible().forEach { name ->
-            val player = online[name.lowercase()] ?: return@forEach
+        var paid = 0
+        val ranking = ledger.ranking()
+        ranking.forEachIndexed { rank, (name, damage) ->
+            val player = online[name.lowercase()] ?: return@forEachIndexed
             looted++
+            val mvp = rank == 0
+            if (mvp) player.message("<col=ef1020>You dealt the most damage to the ${npc.name} (MvP).</col>")
             // N104: what this player got from this kill, for the Collection Log (pets go through Pets.award with the same entry).
             val logged = ArrayList<Pair<Int, Int>>()
             val source = "breach:${npc.id}"
-            BreachLoot.roll(world.random, DropTableFactory.killRate(player, npcId = npc.id)).forEach drops@{ drop ->
+            BreachLoot.roll(world.random, DropTableFactory.killRate(player, npcId = npc.id), mvp = mvp).forEach drops@{ drop ->
                 val def = world.definitions.getNullable(ItemDef::class.java, drop.item) ?: return@drops
                 // N243 (owner 2026-10-23): a breach pet arrives like every pet (Pets.award: follower / backpack / bank, the OSRS message,
                 // the "Getting pet" sound); only one nobody has room for lands on the ground, like the Deadman's chest.
@@ -1021,14 +1026,6 @@ object DeadmanBreach {
                 }
                 logged += drop.item to drop.amount
             }
-            // Audit D-14: at most one Archaic emblem per account per breach event, however many monsters it helps kill.
-            if (!gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled && ledger.damageOf(name) >= BreachLoot.EMBLEM_DAMAGE && BreachIds.ARCHAIC_EMBLEM_TIER_5 > 0 &&
-                world.definitions.getNullable(ItemDef::class.java, BreachIds.ARCHAIC_EMBLEM_TIER_5) != null &&
-                claimArchaicEmblem(npc.attr[BREACH_EVENT_ATTR] ?: lastEventId, name)
-            ) {
-                world.spawn(GroundItem(BreachIds.ARCHAIC_EMBLEM_TIER_5, 1, tile, player))
-                logged += BreachIds.ARCHAIC_EMBLEM_TIER_5 to 1
-            }
             runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, source, logged) }
             val ruinous = gg.rsmod.plugins.content.mechanics.prayer.RuinousBookDrops
             ruinous.sourceOf(world, npc.id)?.let { kind ->
@@ -1039,16 +1036,12 @@ object DeadmanBreach {
             trinkets.sourceOf(world, npc.id)?.let { kind -> trinkets.roll(world.random, kind) }?.let { tier ->
                 trinkets.award(player, tier, tile, source, npc.name)
             }
-            runCatching { gg.rsmod.plugins.content.quests.tab.DeadmanTasks.onBreachLoot(player, ledger.damageOf(name)) }
-        }
-        var paid = 0
-        if (!gg.rsmod.plugins.content.mechanics.deadman.BreachRetirement.enabled) ledger.pointEarners().forEach { (name, damage) ->
-            val player = online[name.lowercase()] ?: return@forEach
-            if (BreachPoints.award(player, damage) > 0) paid++
+            runCatching { gg.rsmod.plugins.content.quests.tab.DeadmanTasks.onBreachLoot(player, damage) }
+            if (BreachPoints.awardDp(player, damage) > 0) paid++
         }
         gg.rsmod.game.Server.logger.info(
-            "Breach reward: npc {} at {} - {} contributors, loot to {}, points to {}.",
-            npc.id, tile, ledger.size, looted, paid,
+            "Breach reward: npc {} at {} - {} contributors, loot to {} (MvP {}), Deadman Points to {}.",
+            npc.id, tile, ledger.size, looted, ranking.firstOrNull()?.first, paid,
         )
         npc.attr.remove(CONTRIBUTION_ATTR)
     }

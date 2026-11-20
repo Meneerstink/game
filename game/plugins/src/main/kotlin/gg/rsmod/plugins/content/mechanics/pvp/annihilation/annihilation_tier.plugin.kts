@@ -16,4 +16,6 @@ on_login {
     // order of the login scripts irrelevant).
     player.calculateAndSetCombatLevel()
     AnnihilationTier.recordAtLogin(player)
+    // DMM-ARMAGEDDON D8: the Armageddon bracket (PvP + protection + quests), recorded silently at login.
+    gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.recordAtLogin(player)
 }

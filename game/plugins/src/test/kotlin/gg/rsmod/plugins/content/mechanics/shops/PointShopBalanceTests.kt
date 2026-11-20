@@ -24,12 +24,12 @@ class PointShopBalanceTests {
     @Test
     fun `the Breach Trader's window title and help line carry the balance, the chat line says it`() {
         val attr = AttributeMap()
-        attr[BreachPoints.BALANCE] = 12_345
+        attr[BreachPoints.LEGACY_BALANCE] = 12_345
         val sent = ArrayList<Message>()
         val player = mockk<Player>(relaxed = true)
         every { player.attr } returns attr
         every { player.write(*anyVararg<Message>()) } answers { sent += firstArg<Array<Message>>() }
-        val currency = PointCurrency("breach point", "breach points", BreachPoints.BALANCE)
+        val currency = PointCurrency("breach point", "breach points", BreachPoints.LEGACY_BALANCE)
         val shop = Shop("Breach Trader", StockType.NORMAL, PurchasePolicy.BUY_NONE, currency, arrayOfNulls(1), arrayOfNulls(1), false)
         currency.showBalance(player, shop)
         val texts = sent.filterIsInstance<IfSetTextMessage>().associate { it.child to it.text }

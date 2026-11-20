@@ -94,7 +94,7 @@ class HomeTeleportDeadmanGateTests {
         val troll = troll()
         hitBy(player, troll)
         stopFight(player, troll)
-        // The owner kept running: past the Deadman 7-second window (12 ticks) but inside the 2011 17-tick ACTIVE_COMBAT window.
+        // The owner kept running: past the Deadman windows (6 s player / 2.4 s npc) but inside the 2011 17-tick ACTIVE_COMBAT window.
         tick(DeadmanTimerGate.PVP_HIT_TELEPORT_BLOCK_CYCLES + 1)
         assertTrue("precondition: still inside the 2011 10-second window", player.timers.has(ACTIVE_COMBAT_TIMER))
         runAway(player)
@@ -278,7 +278,7 @@ class HomeTeleportDeadmanGateTests {
             }
         },
 
-        /** Skulled, hit 8 seconds ago, standing still: the 7-second countdown, which then teleports by itself. */
+        /** Skulled, hit 8 seconds ago, standing still: the 6-second countdown, which then teleports by itself. */
         SKULLED_STANDING(Outcome.TELEPORTED, npc = Npcs.MOUNTAIN_TROLL_1108, expectedMessage = "Any action or being attacked will cancel this.") {
             override fun prepare(t: HomeTeleportDeadmanGateTests, p: Client, troll: Npc?) {
                 t.hitBy(p, troll!!)
@@ -299,12 +299,21 @@ class HomeTeleportDeadmanGateTests {
             }
         },
 
-        /** Hit by a boss (Dharok) 2 ticks ago, unskulled: a boss hit never delays a teleport (owner 09-17) - instant. */
-        BOSS_HIT_TWO_TICKS_AGO(Outcome.TELEPORTED, npc = Npcs.DHAROK_THE_WRETCHED) {
+        /** Hit by a boss (Dharok) 2 ticks ago, unskulled: DMM-ARMAGEDDON D1 (owner 20-11) a boss hit counts like any npc - refused. */
+        BOSS_HIT_TWO_TICKS_AGO(Outcome.REFUSED, npc = Npcs.DHAROK_THE_WRETCHED, expectedMessage = "You must be out of combat for another ") {
             override fun prepare(t: HomeTeleportDeadmanGateTests, p: Client, troll: Npc?) {
                 t.hitBy(p, troll!!)
                 t.stopFight(p, troll)
                 t.tick(2)
+            }
+        },
+
+        /** Hit by a boss (Dharok), unskulled, the 2.4 s npc window over: instant (wiki "at least 2.4 seconds"). */
+        BOSS_HIT_WINDOW_OVER(Outcome.TELEPORTED, npc = Npcs.DHAROK_THE_WRETCHED) {
+            override fun prepare(t: HomeTeleportDeadmanGateTests, p: Client, troll: Npc?) {
+                t.hitBy(p, troll!!)
+                t.stopFight(p, troll)
+                t.tick(DeadmanTimerGate.NPC_HIT_TELEPORT_BLOCK_CYCLES)
             }
         },
 
@@ -376,6 +385,9 @@ class HomeTeleportDeadmanGateTests {
         name: String,
     ) {
         val spell = MagicSpells.metadataByName(name) ?: throw AssertionError("no spell button for '$name'")
+        // As IfButton1Handler does: the click's opcode (61 = the first option, Cast). Since DMM2 punt 2 the home teleports read it
+        // (64 = 'Animation'); without it the spell button threw a NullPointerException.
+        player.attr[gg.rsmod.game.model.attr.INTERACTING_OPCODE_ATTR] = 61
         assertTrue("'$name' (${spell.interfaceId}:${spell.component}) is bound", repo.executeButton(player, spell.interfaceId, spell.component))
     }
 

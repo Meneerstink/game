@@ -780,6 +780,8 @@ object Barrows {
         val count = (player.attr[CHEST_COUNT] ?: 0) + 1
         player.attr[CHEST_COUNT] = count
         player.message(chestCountMessage(count))
+        // DMM-ARMAGEDDON D4: Deadman Points per Barrows chest (first 10x, half after 100).
+        gg.rsmod.plugins.content.mechanics.deadman.BossDeadmanPoints.let { it.award(player, "Barrows", it.BARROWS, count) }
         // N104: the Collection Log (one route for every reward; it sends the OSRS "New item added" line), then the chest's own
         // record, which the log also reads.
         runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, "barrows", items.map { it.id to it.amount }) }

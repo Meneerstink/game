@@ -22,7 +22,7 @@ class NigelHouseRewards(
     enum class Kind { RUG, EXIT_PORTAL }
     data class Slot(val key: String, val kind: Kind, val room: String = key) {
         init { require(key.matches(Regex("[a-z0-9_]{1,48}")) && room.matches(Regex("[a-z0-9_]{1,48}"))) }
-        val attr = AttributeKey<Int>("dmm2_poh_${kind.name.lowercase()}_$key")
+        val builtKey = AttributeKey<Int>("dmm2_poh_${kind.name.lowercase()}_$key")
     }
     private val slots = slots.toSet().also { require(it.map { s -> s.key }.distinct().size == it.size) }
     private data class Build(val slot: Slot, val cycle: Int, val tile: Tile)
@@ -30,7 +30,7 @@ class NigelHouseRewards(
     enum class Result { OK, INVALID_HOTSPOT, NOT_OWNER, NOT_BUILD_MODE, OCCUPIED, EMPTY, LEVEL, MATERIALS,
         TOO_EARLY, NOT_STARTED, NO_SPACE, LAST_PORTAL, NOT_READY }
 
-    fun installed(player: Player, slot: Slot): Boolean = slot in slots && player.attr[slot.attr] == 1
+    fun installed(player: Player, slot: Slot): Boolean = slot in slots && player.attr[slot.builtKey] == 1
     private fun access(player: Player, slot: Slot): Result {
         if (slot !in slots || player.isDead() || !validHotspot(player, slot)) return Result.INVALID_HOTSPOT
         if (!PlayerHouse.ownsHouseAt(player)) return Result.NOT_OWNER
@@ -70,7 +70,7 @@ class NigelHouseRewards(
         if (!inventory.remove(Items.BOLT_OF_CLOTH, 4, assureFullRemoval = true).hasSucceeded() ||
             !inventory.remove(rug, assureFullRemoval = true).hasSucceeded()) return Result.MATERIALS
         DeadmanInventory.publish(inventory, player.inventory)
-        player.attr[build.slot.attr] = 1
+        player.attr[build.slot.builtKey] = 1
         player.addXp(Skills.CONSTRUCTION, 283.0)
         player.persistNow()
         return Result.OK
@@ -88,7 +88,7 @@ class NigelHouseRewards(
         if (!inventory.remove(Items.IRON_BAR, 10, assureFullRemoval = true).hasSucceeded() ||
             !inventory.remove(blueprint, assureFullRemoval = true).hasSucceeded()) return Result.MATERIALS
         DeadmanInventory.publish(inventory, player.inventory)
-        player.attr[slot.attr] = 1
+        player.attr[slot.builtKey] = 1
         player.persistNow()
         return Result.OK
     }
@@ -110,7 +110,7 @@ class NigelHouseRewards(
             if (!DeadmanInventory.add(inventory, Item(rug))) return Result.NO_SPACE
         }
         DeadmanInventory.publish(inventory, player.inventory)
-        player.attr.remove(slot.attr)
+        player.attr.remove(slot.builtKey)
         player.persistNow()
         return Result.OK
     }
@@ -125,7 +125,7 @@ class NigelHouseRewards(
         }
         val exits = affected.count { it.kind == Kind.EXIT_PORTAL && installed(player, it) }
         if (exits > 0 && exitCount(player) - exits < 1) return Result.LAST_PORTAL
-        affected.forEach { player.attr.remove(it.attr) }
+        affected.forEach { player.attr.remove(it.builtKey) }
         if (player.attr[pending]?.slot?.room == room) cancel(player)
         player.persistNow()
         return Result.OK

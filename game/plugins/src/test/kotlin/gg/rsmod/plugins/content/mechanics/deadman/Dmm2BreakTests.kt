@@ -83,7 +83,7 @@ class Dmm2BreakTests {
     }
 
     @Test fun `migration reload retry twice preserves exactly one credit and the complete audit`() {
-        f.attr[BreachPoints.BALANCE] = Int.MAX_VALUE; f.attr[BreachPoints.EARNED] = 75_000
+        f.attr[BreachPoints.LEGACY_BALANCE] = Int.MAX_VALUE; f.attr[BreachPoints.LEGACY_EARNED] = 75_000
         f.attr[dp] = Int.MAX_VALUE
         val before = f.attr.toPersistentMap()
         repeat(5) {
@@ -95,7 +95,7 @@ class Dmm2BreakTests {
         repeat(5) {
             reload(); assertEquals(BreachRetirement.Result.ALREADY_DONE, BreachRetirement.migrate(f.player, true))
             assertEquals(10_737_419, f.attr[dp]); assertEquals(Int.MAX_VALUE, f.attr[BreachRetirement.OLD_BALANCE])
-            assertEquals(75_000, f.attr[BreachRetirement.OLD_EARNED]); assertNull(f.attr[BreachPoints.BALANCE])
+            assertEquals(75_000, f.attr[BreachRetirement.OLD_EARNED]); assertNull(f.attr[BreachPoints.LEGACY_BALANCE])
         }
     }
 

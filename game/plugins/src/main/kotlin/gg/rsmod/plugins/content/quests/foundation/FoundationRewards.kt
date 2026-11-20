@@ -94,6 +94,27 @@ object FoundationRewards {
         return true
     }
 
+    /**
+     * DMM-ARMAGEDDON D7: a quest unlocked by the combat brackets ([QuestBrackets]) - completed with what it unlocks, but "No
+     * experience is received in the form of a quest reward for automatically completed quests" and "Items normally received as
+     * quest rewards will not be awarded" (OSRS Wiki Deadman: Armageddon). False when the account already had it.
+     */
+    fun unlockOnly(player: Player, quest: ShortQuest): Boolean {
+        if (isRewarded(player, quest)) {
+            if (quest.stage(player) < quest.completedValue) {
+                quest.setStage(player, quest.completedValue)
+                gg.rsmod.plugins.content.quests.QuestStatus.sync(player)
+            }
+            return false
+        }
+        player.attr[rewardedKey(quest)] = true
+        quest.setStage(player, quest.completedValue)
+        gg.rsmod.plugins.content.quests.QuestStatus.sync(player)
+        quest.reward.unlock(player)
+        player.message("<col=ef1020>Quest unlocked by your combat bracket: ${quest.name}.</col>")
+        return true
+    }
+
     fun pendingLamps(player: Player): List<QuestLamp> =
         player.attr[PENDING_LAMPS]?.split(';')?.filter { it.isNotBlank() }?.mapNotNull { QuestLamp.decode(it) } ?: emptyList()
 

@@ -13,8 +13,12 @@ import java.util.Random
  * The permanent world matches ("Each breach monster now drops 1 Chitin per kill. There's a 50% chance to receive a second regular
  * supply drop instead of a Chitin.", runescapeguides.com World 345 breaches).
  *
- * DMM2 (owner 2026-11-16) restores the five OSRS trinket entries in [RARE]. Owner 2026-09-23: the Archaic emblem (tier 5)
- * drops for eligible players with [EMBLEM_DAMAGE]+ damage and trades in for [BreachPoints] ([DeadmanBreach.dropLoot]). [ItemIds] holds the ids of the items imported for this table.
+ * DMM-ARMAGEDDON D3 (owner 20-11-2026, Deadman: Armageddon): the MvP + the next 15 by damage ([BreachContribution.ranking]) get
+ * this loot; only the MvP rolls the unique table ([RARE], 133/9576 = 1/72; its Trinket of advanced weaponry is the only source of
+ * the corrupted weapons). No chitin (owner 2026-09-29, kept 20-11).
+ *
+ * DMM2 (owner 2026-11-16) restores the five OSRS trinket entries in [RARE]. The Archaic emblem (tier 5) breach drop and its
+ * Breach Points trade-in are gone (DMM2 + DMM-ARMAGEDDON 20-11: no Breach Points). [ItemIds] holds the ids of the items imported for this table.
  */
 object BreachLoot {
     const val ELIGIBLE = 16
@@ -198,6 +202,7 @@ object BreachLoot {
         random: Random,
         rate: Double = 1.0,
         scrollRandom: Random = Random(),
+        mvp: Boolean = true,
     ): List<Drop> {
         val out = ArrayList<Drop>()
         // Owner 2026-10-17: breach monsters roll the Deadman's chest list ON TOP of their own table (rare, provisional chance).
@@ -205,7 +210,8 @@ object BreachLoot {
         if (random.nextInt(DeadmanChestConfig.BREACH_EXTRA_CHANCE) < rate) {
             (DeadmanChestLoot.roll(random, pets = emptyList()) as? DeadmanChestLoot.Reward.Item)?.let { out += Drop(it.item, it.amount) }
         }
-        if (random.nextInt(RARE_DENOMINATOR) < RARE_TRIGGER * rate) {
+        // DMM-ARMAGEDDON D3 (owner 20-11): only the MvP rolls the unique (rare) table; the other 15 get the regular loot.
+        if (mvp && random.nextInt(RARE_DENOMINATOR) < RARE_TRIGGER * rate) {
             // The mega-rare gate is rolled at 1x: the boosted trigger above already carries the factor, so the equipment (and every
             // other rare line) is rate x as likely per kill - not rate x rate.
             if (random.nextInt(MEGA_RARE_CHANCE) == 0) {

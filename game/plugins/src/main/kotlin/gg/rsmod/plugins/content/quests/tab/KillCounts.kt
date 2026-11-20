@@ -44,6 +44,9 @@ object KillCounts {
         val rewardId = OldWildernessBosses.rewardNpc(npcId) ?: return
         val source = DropSources.forNpc(player, rewardId) ?: return
         if (source.group != DropSources.Group.BOSSES) return
+        // DMM-ARMAGEDDON D4: Deadman Points per boss kill (first kill 10x, half after 100 kills).
+        runCatching { gg.rsmod.plugins.content.mechanics.deadman.BossDeadmanPoints.onBossKill(player, source.name, get(player, source.key)) }
+            .onFailure { gg.rsmod.game.model.Trace.crash("boss deadman points", it) }
         if (CollectionLogPages.pagesFor(player, source.key).isEmpty()) return
         player.message(bossMessage(source.name, get(player, source.key)))
     }

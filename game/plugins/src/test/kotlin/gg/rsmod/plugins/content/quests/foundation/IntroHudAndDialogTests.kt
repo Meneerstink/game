@@ -17,16 +17,16 @@ import kotlin.test.assertTrue
  */
 class IntroHudAndDialogTests {
     @Test
-    fun `the Deadman box shows the scene's 74-102 during the intro and the player's own bracket after it`() {
+    fun `the Deadman box shows the scene's bracket during the intro and the player's own bracket after it`() {
         val player = mockk<Player>(relaxed = true)
         val attrs = AttributeMap()
         every { player.attr } returns attrs
         every { player.combatLevel } returns 3
 
         attrs[TutorIntro.ACTIVE] = true
-        assertEquals("74-102", DeadmanHud.bracketText(DeadmanHud.hudCombatLevel(player)))
+        assertEquals("71-90", DeadmanHud.bracketText(DeadmanHud.hudCombatLevel(player)))
         attrs.remove(TutorIntro.ACTIVE)
-        assertEquals("3-17", DeadmanHud.bracketText(DeadmanHud.hudCombatLevel(player)))
+        assertEquals("3-50", DeadmanHud.bracketText(DeadmanHud.hudCombatLevel(player)))
     }
 
     @Test

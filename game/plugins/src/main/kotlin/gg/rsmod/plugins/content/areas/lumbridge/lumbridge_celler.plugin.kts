@@ -31,9 +31,23 @@ create_shop(
     items[18] = ShopItem(Items.BUCKET, 10)
 }
 
+// DMM-ARMAGEDDON D7: a new account gets the Recipe for Disaster subquests per combat bracket (QuestBrackets), and the gloves
+// follow the subquests as in OSRS (hardleather 0 ... dragon 8, barrows = the whole quest).
+val GLOVE_TIERS =
+    listOf(
+        Items.GLOVES_7453, Items.GLOVES_7454, Items.GLOVES_7455, Items.GLOVES_7456, Items.GLOVES_7457,
+        Items.GLOVES_7458, Items.GLOVES_7459, Items.GLOVES_7460, Items.GLOVES_7461, Items.GLOVES_7462,
+    )
+
 create_shop(
     "Culinaromancer's Chest ",
-    CoinCurrency(),
+    gg.rsmod.plugins.content.mechanics.shops.RequirementCoinCurrency(
+        GLOVE_TIERS.withIndex().associate { (tier, item) ->
+            item to gg.rsmod.plugins.content.mechanics.shops.PurchaseRule(
+                check = { p -> gg.rsmod.plugins.content.quests.foundation.QuestBrackets.gloveRefusal(p, tier) },
+            )
+        },
+    ),
     purchasePolicy = PurchasePolicy.BUY_STOCK,
     stockSize = 20,
     containsSamples = false,
@@ -69,7 +83,8 @@ on_obj_option(obj = Objs.CHEST_12309, option = "buy-food") {
 }
 
 on_obj_option(obj = Objs.CHEST_12309, option = "buy-items") {
-    if (!gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, "Recipe for Disaster")) {
+    // DMM-ARMAGEDDON D7: a new account opens the chest with its first bracket subquests (51-70); each glove checks its tier.
+    if (gg.rsmod.plugins.content.quests.foundation.QuestBrackets.rfdSubquests(player) < 0) {
         player.message("You must complete Recipe for Disaster before you can buy gloves here.")
         return@on_obj_option
     }

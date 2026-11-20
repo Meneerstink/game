@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.mechanics.pvp
 
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
+import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.attr.LAST_HIT_BY_ATTR
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
@@ -9,89 +10,113 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.TELEPORT_COMBAT_TIMER
 import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.content.areas.godwars.GodWars
-import gg.rsmod.plugins.content.combat.getCombatTarget
 import gg.rsmod.plugins.content.npcs.Constants
 
 /**
- * When the Deadman 7-second countdown ([SevenSecondAction]) applies to logging out and teleporting.
+ * When the Deadman teleport/logout delay ([SevenSecondAction], 6 seconds = 10 ticks) applies, and when an unskulled player
+ * may teleport at once.
  *
- * Owner "deadmanmode vervijning" (2026-09-17, OSRS Deadman Mode wiki wording):
- * - "Skulled players will not be able to teleport instantly even if they are out of combat, as they
- *   will receive the 7 second timer interface when they attempt to teleport."
- * - "Unskulled players will be able to teleport instantly as long as they have not been attacked by a
- *   player or NPC in the last 7 seconds. If a unskulled player has been attacked recently and attempts
- *   to teleport, they will instead receive the following game message: You must be out of combat for
- *   another X seconds to teleport." - no interface, the player keeps acting freely.
- * - "Players who are in a boss area ... can teleport instantly without a timer": inside a boss area
- *   ([BossAreas]) recent hits never delay a teleport; a hit by any boss npc never counts anywhere.
- * - Logout keeps the earlier rule: a countdown only when skulled or in (non-boss) combat.
+ * DMM-ARMAGEDDON D1 (owner 20-11-2026, "precies als de foto", OSRS Wiki Deadman: Armageddon "PJ timer"):
+ * - "If Player B is skulled and tries to teleport (or log out), they must wait 6 seconds (10 ticks) ... This is the Deadman
+ *   teleport/logout delay. If Player B is hit, or takes some other action like eating food or attacking back, this delay is
+ *   cancelled and the player must start it again" -> skulled = [Teleport.COUNTDOWN] for every teleport and every logout.
+ * - "If Player B is not skulled, they can teleport instantly, so long as they haven't been hit for 5.4 seconds (9 ticks). If
+ *   Player B is in combat with a boss/NPC, the boss/NPC must not have hit Player B for at least 2.4 seconds." The wiki table
+ *   shows the attack at 0 s and the instant teleport at 6.0 s (and the PJ at 10.2 s for "9.6 seconds (16 ticks)", see
+ *   [gg.rsmod.plugins.content.combat.Combat.PJ_TICKS] = 17): counted from the attack cycle the windows are therefore
+ *   [PVP_HIT_TELEPORT_BLOCK_CYCLES] = 10 and [NPC_HIT_TELEPORT_BLOCK_CYCLES] = 5 cycles.
+ * - Unskulled logout: "Player B can trigger logout delay, clicking Logout here will activate a 6 second (10 tick) timer" while
+ *   in combat (owner 20-11: the same 5.4 s player / 2.4 s npc windows decide "in combat"); out of combat the logout is instant.
+ * - Owner 20-11: the old boss-area exception (sept: boss hits never delayed a teleport) is GONE - a boss is an npc (2.4 s).
+ *   The minigame exception (owner 10-10, Pest Control) stays: there an npc hit never delays a teleport.
+ * - The Fortuity trinket keeps its countdown on every teleport (DMM2).
  *
- * "Attacked in the last 7 seconds" is [TELEPORT_COMBAT_TIMER], armed for [SevenSecondAction.DURATION_CYCLES]
- * by [gg.rsmod.plugins.content.combat.Combat.postAttack] on every landed hit.
- *
- * Audit D-11: a boss hit overwrites LAST_HIT_BY, so "the last attacker" alone let a player hit by a PKer at a boss take
- * one boss hit and then log out or teleport instantly. Both logout and the boss-area teleport exception now also look
- * at the last PLAYER hit ([PvpSkull.cyclesSincePvpHit], recorded by [PvpSkull.markAggression] and never overwritten by
- * an npc): within [PVP_HIT_TELEPORT_BLOCK_CYCLES] of it, logout counts down and teleporting is blocked, boss or not.
- * (Not [gg.rsmod.game.model.timer.DEADMAN_LOGOUT_TIMER]: combat now arms that X-log hold for boss hits too, so it cannot
- * tell a PvP hit from a boss hit.)
+ * Player hits are read from [PvpSkull.cyclesSincePvpHit] (never overwritten by an npc hit, audit D-11) and, as a fallback for
+ * routes that skip [PvpSkull.markAggression], from [TELEPORT_COMBAT_TIMER] with a player as the last attacker. Npc hits from
+ * [LAST_NPC_HIT_CYCLE_ATTR], recorded by [gg.rsmod.plugins.content.combat.Combat.postAttack] via [markNpcHit].
  */
 object DeadmanTimerGate {
     enum class Teleport {
         /** Teleport at once. */
         INSTANT,
 
-        /** Skulled: the 7-second countdown interface. */
+        /** Skulled: the 6-second (10-tick) countdown. */
         COUNTDOWN,
 
-        /** Unskulled but hit in the last 7 seconds: refuse with the remaining-seconds message. */
+        /** Unskulled but hit too recently: refuse with the remaining-seconds message. */
         BLOCKED_IN_COMBAT,
     }
 
-    /** Audit D-11: after a player hit, even a boss area gives no instant teleport for this long (7 seconds, as elsewhere). */
-    const val PVP_HIT_TELEPORT_BLOCK_CYCLES = SevenSecondAction.DURATION_CYCLES
+    /** Wiki: not hit by a player "for 5.4 seconds (9 ticks)"; table: instant at 6.0 s -> 10 cycles from the attack. */
+    const val PVP_HIT_TELEPORT_BLOCK_CYCLES = 10
+
+    /** Wiki: "the boss/NPC must not have hit Player B for at least 2.4 seconds" (4 ticks) -> 5 cycles from the attack. */
+    const val NPC_HIT_TELEPORT_BLOCK_CYCLES = 5
+
+    /** The world cycle an npc (boss or not) last attacked this player. Cleared by death. */
+    val LAST_NPC_HIT_CYCLE_ATTR = AttributeKey<Int>(resetOnDeath = true)
+
+    fun markNpcHit(player: Player) {
+        player.attr[LAST_NPC_HIT_CYCLE_ATTR] = player.world.currentCycle
+    }
 
     fun teleportDecision(player: Player): Teleport =
         when {
             PvpSkull.isSkulled(player) || gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets.fortuity(player) -> Teleport.COUNTDOWN
             recentlyHitByPlayer(player) -> Teleport.BLOCKED_IN_COMBAT
-            BossAreas.isBossArea(player.world, player.tile) -> Teleport.INSTANT
             inMinigame(player) -> Teleport.INSTANT
-            recentlyHitByNonBoss(player) -> Teleport.BLOCKED_IN_COMBAT
+            recentlyHitByNpc(player) -> Teleport.BLOCKED_IN_COMBAT
             else -> Teleport.INSTANT
         }
 
     /**
-     * Owner 2026-10-10 ("minigames such as pest control should be instant teleport"): inside a minigame a recent npc hit never
-     * delays a teleport, like a boss area. A skull or a recent player hit still apply (checked first in [teleportDecision]).
+     * Owner 2026-10-10 ("minigames such as pest control should be instant teleport", kept 20-11): inside a minigame a recent
+     * npc hit never delays a teleport. A skull or a recent player hit still apply (checked first in [teleportDecision]).
      */
     fun inMinigame(player: Player): Boolean =
         gg.rsmod.plugins.content.activity.pest_control.PestControlHandler.gameOf(player) != null ||
             gg.rsmod.plugins.content.activity.pest_control.PestControlHandler.lobbyOf(player) != null
 
     /**
-     * Owner exception: logout counts down only when skulled or in combat with a player / non-boss npc. Audit D-11: a
-     * player hit in the last 7 seconds counts too, even when a boss hit came after it.
+     * Logout: the 6-second countdown when skulled or in combat (hit by a player in the last [PVP_HIT_TELEPORT_BLOCK_CYCLES] or
+     * by any npc, bosses included, in the last [NPC_HIT_TELEPORT_BLOCK_CYCLES]); otherwise at once.
      *
-     * `Player.requestLogout(deadmanDelayHandled = true)` clearing the X-log hold needs no engine change for this: the
-     * logout button only reaches it when this returned false or after an uninterrupted 7-second countdown, and any hit
-     * on the player cancels that countdown, so no player hit can have landed in the 7 seconds before it completes.
+     * `Player.requestLogout(deadmanDelayHandled = true)` clearing the X-log hold needs no engine change for this: the logout
+     * button only reaches it when this returned false or after an uninterrupted countdown, and any hit on the player cancels
+     * that countdown.
      */
     fun needsCountdown(player: Player): Boolean =
-        PvpSkull.isSkulled(player) || recentlyHitByPlayer(player) || inNonBossCombat(player)
+        PvpSkull.isSkulled(player) || recentlyHitByPlayer(player) || recentlyHitByNpc(player)
 
-    /** Audit D-11: hit by another player within [PVP_HIT_TELEPORT_BLOCK_CYCLES]. */
-    fun recentlyHitByPlayer(player: Player): Boolean {
-        val since = PvpSkull.cyclesSincePvpHit(player) ?: return false
-        return since in 0 until PVP_HIT_TELEPORT_BLOCK_CYCLES
+    /** Hit by another player within [PVP_HIT_TELEPORT_BLOCK_CYCLES]. */
+    fun recentlyHitByPlayer(player: Player): Boolean = pvpCyclesLeft(player) > 0
+
+    /** Hit by any npc (boss or not) within [NPC_HIT_TELEPORT_BLOCK_CYCLES]. */
+    fun recentlyHitByNpc(player: Player): Boolean = npcCyclesLeft(player) > 0
+
+    private fun pvpCyclesLeft(player: Player): Int {
+        val since = PvpSkull.cyclesSincePvpHit(player)
+        val fromPvp = if (since != null && since >= 0) PVP_HIT_TELEPORT_BLOCK_CYCLES - since else 0
+        // Fallback: a player attack that did not pass markAggression still armed the combat timer with that player as last hitter.
+        val fromTimer =
+            if (player.timers.has(TELEPORT_COMBAT_TIMER) && player.attr[LAST_HIT_BY_ATTR]?.get() is Player) {
+                player.timers[TELEPORT_COMBAT_TIMER].coerceAtMost(PVP_HIT_TELEPORT_BLOCK_CYCLES)
+            } else {
+                0
+            }
+        return maxOf(fromPvp, fromTimer, 0)
+    }
+
+    private fun npcCyclesLeft(player: Player): Int {
+        val last = player.attr[LAST_NPC_HIT_CYCLE_ATTR] ?: return 0
+        val since = player.world.currentCycle - last
+        return if (since >= 0) (NPC_HIT_TELEPORT_BLOCK_CYCLES - since).coerceAtLeast(0) else 0
     }
 
     /**
-     * One entry point for non-magical escape routes (boats, minecarts, carpets, portals and
-     * similar transports). Permanent Deadman applies this countdown regardless of skull or
-     * combat status. The owner's narrower exception applies to logout/teleport only; it does not
-     * exempt non-teleport transport. Callers pass the complete action so it cannot continue
-     * outside the gate.
+     * One entry point for non-magical escape routes (boats, minecarts, carpets, portals and similar transports). Permanent
+     * Deadman applies this countdown regardless of skull or combat status (owner 20-11: 6 seconds like teleport and logout).
+     * Callers pass the complete action so it cannot continue outside the gate.
      */
     fun requestRoute(
         player: Player,
@@ -102,30 +127,14 @@ object DeadmanTimerGate {
         return false
     }
 
-    /** Whole seconds the player must still stay out of combat, for the owner's message. */
+    /** Whole seconds the player must still stay out of combat, for the refusal message. */
     fun combatSecondsLeft(player: Player): Int {
-        val combat = if (player.timers.has(TELEPORT_COMBAT_TIMER)) player.timers[TELEPORT_COMBAT_TIMER] else 0
-        // Audit D-11: the player-hit block can outlast a TELEPORT_COMBAT_TIMER that was never refreshed.
-        val pvp = PvpSkull.cyclesSincePvpHit(player)?.let { PVP_HIT_TELEPORT_BLOCK_CYCLES - it }?.takeIf { it > 0 } ?: 0
-        val cycles = maxOf(combat, pvp)
+        val npc = if (inMinigame(player)) 0 else npcCyclesLeft(player)
+        val cycles = maxOf(pvpCyclesLeft(player), npc)
         return if (cycles > 0) SevenSecondAction.secondsFor(cycles) else 0
     }
 
     fun blockedMessage(player: Player): String = "You must be out of combat for another ${combatSecondsLeft(player)} seconds to teleport."
-
-    /** Hit within the last 7 seconds by something that is not a boss. */
-    fun recentlyHitByNonBoss(player: Player): Boolean {
-        if (!player.timers.has(TELEPORT_COMBAT_TIMER)) return false
-        val attacker = player.attr[LAST_HIT_BY_ATTR]?.get()
-        return attacker == null || !BossNpcs.isBoss(attacker)
-    }
-
-    fun inNonBossCombat(player: Player): Boolean {
-        if (recentlyHitByNonBoss(player)) return true
-        val target = player.getCombatTarget()
-        if (target != null && !BossNpcs.isBoss(target)) return true
-        return false
-    }
 }
 
 /**

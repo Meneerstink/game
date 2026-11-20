@@ -55,6 +55,7 @@ import kotlin.test.assertTrue
  * Varps, varbits (real cache definitions) and containers are real; the rest of the player is a relaxed mock.
  */
 class QuestTabTests {
+    /** New = an account made before DMM-ARMAGEDDON (cohort "choice", the Quest Guide groups these tests cover). */
     private class Account(isNew: Boolean = true) {
         val attributes = AttributeMap()
         val inventory = ItemContainer(DEFINITIONS, INVENTORY_KEY)
@@ -64,6 +65,7 @@ class QuestTabTests {
 
         init {
             if (isNew) attributes[NEW_ACCOUNT_ATTR] = true
+            if (isNew) attributes[gg.rsmod.plugins.content.quests.foundation.QuestChoices.COHORT] = gg.rsmod.plugins.content.quests.foundation.QuestChoices.CHOICE
             every { world.definitions } returns DEFINITIONS
             every { player.world } returns world
             every { player.attr } returns attributes
@@ -379,12 +381,14 @@ class QuestTabTests {
         fun all(s: Subject) = QuestTabInfo.page(account.player, s).let { p -> p.facts.joinToString(" ") { "${it.label} ${it.value}" } + " " + p.text }
         assertTrue("30 minutes" in all(Subject.CHEST) && "100,000" in all(Subject.CHEST) && "60 s" in all(Subject.CHEST))
         assertTrue("60 minutes" in all(Subject.PROTECTION))
-        assertTrue("5 minutes" in all(Subject.SKULL) && "7 s" in all(Subject.SKULL))
+        assertTrue("5 minutes" in all(Subject.SKULL) && "6 s" in all(Subject.SKULL))
         val table = QuestTabInfo.page(account.player, Subject.BRACKETS).table!!
         assertEquals(listOf("Level", "Combat XP", "Skills XP", "Drops"), table.first())
         assertTrue(table.any { it[0].startsWith("96+") && it.drop(1) == listOf("20x", "10x", "5x") })
-        assertTrue("14 levels" in QuestTabInfo.page(account.player, Subject.BRACKETS).text)
-        assertTrue("7 s" in all(Subject.TELEPORTS))
+        // DMM-ARMAGEDDON: own combat bracket (D8), 6 s teleport/logout while skulled (D1).
+        assertTrue("own combat bracket" in QuestTabInfo.page(account.player, Subject.BRACKETS).text)
+        assertTrue("3 - 50" in QuestTabInfo.page(account.player, Subject.BRACKETS).bar, "the bar names the bracket")
+        assertTrue("6 s" in all(Subject.TELEPORTS))
         assertTrue("5 / 10 / 15 / 25" in all(Subject.DEADMAN), "the Deadman Tasks points per tier")
         assertEquals("<col=ffffff>Skull</col>", QuestTab.subjectLabel(Subject.SKULL, Subject.SKULL))
         assertEquals("Skull", QuestTab.subjectLabel(Subject.SKULL, Subject.LOYALTY))

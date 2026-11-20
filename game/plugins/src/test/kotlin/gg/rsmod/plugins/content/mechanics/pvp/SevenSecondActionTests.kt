@@ -27,7 +27,7 @@ class SevenSecondActionTests {
 
         assertTrue(SevenSecondAction.isActive(player))
         assertEquals(SevenSecondAction.DURATION_CYCLES, player.timers[SevenSecondAction.COUNTDOWN_TIMER])
-        assertEquals(7, SevenSecondAction.secondsLeft(player))
+        assertEquals(6, SevenSecondAction.secondsLeft(player))
         assertFalse(ran)
     }
 

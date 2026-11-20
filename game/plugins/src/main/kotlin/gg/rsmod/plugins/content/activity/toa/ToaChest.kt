@@ -102,6 +102,9 @@ object ToaChest {
         val count = (player.attr[key] ?: 0) + 1
         player.attr[key] = count
         player.message(ToaChallengeMessages.count(raid.settings.raidLevel, count))
+        // DMM-ARMAGEDDON D4: Deadman Points per completion; Entry / Normal / Expert count as separate bosses (wiki table).
+        val dp = gg.rsmod.plugins.content.mechanics.deadman.BossDeadmanPoints
+        dp.award(player, "Tombs of Amascut", dp.toa(raid.settings.raidLevel), count)
     }
 
     /** The Wardens died: roll the whole chest once and park every present member's share for the escrow. */
