@@ -6,7 +6,7 @@ revision: 667
 
 commandServer:
     tcpPort: 50017
-    token: "ce4fe3a2c06e28c01f5a9e349be60f61601d7b5d13f1718ae9ff97dfc52d4e70"
+    token: "SET-LOCALLY-NEVER-COMMIT"
 
 # The coordinates for the home location.
 # BATCH 1: home-z moved from 3640 to 3616 so the enclave's centre sits 24 tiles further south
@@ -72,7 +72,7 @@ services:
   # https://<vps-domain>/vote/<secret>/<site id>. http-bind 127.0.0.1 = behind the VPS's HTTPS reverse proxy.
   - class: gg.rsmod.game.service.vote.VoteService
     http-port: 50079
-    secret: "ucBHCDMcC0ERRyDcewGflzd2lEzlo8ua"
+    secret: "SET-LOCALLY-NEVER-COMMIT"
 
   - class: gg.rsmod.game.service.rsa.RsaService
 
