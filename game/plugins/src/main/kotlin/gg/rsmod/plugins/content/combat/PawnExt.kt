@@ -237,6 +237,9 @@ fun Pawn.dealHit(
     sourceSpellId: Int? = null,
 ): PawnHit {
     SinglesPlus.recordAttack(this, target)
+    // DMM-ARMAGEDDON D1 (owner 20-11): every npc attack that reaches dealHit - also a boss's special/mechanic attack outside
+    // Combat.postAttack - is an npc hit for the PJ timer (2.4 s no teleport), counted from the attack like postAttack does.
+    if (this is Npc && target is Player) gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate.markNpcHit(target)
     gg.rsmod.plugins.content.scrolls.ClueGuardianPvp.recordAttack(attr[DAMAGE_CREDIT_ATTR]?.get() ?: this, target)
     // Calculate the 1:1 real damage, applying a random factor.
     // Combat formulas and hitpoints use the same 1:1 real-damage unit. Keep the hitmark value

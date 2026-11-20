@@ -827,6 +827,8 @@ object CityGuards {
         // Wizguard's barrage never went through Combat, so a skulled intruder broke a teleport tab and left while it froze and
         // hit him (intro scene 2026-10-08: the pker teleported to Varrock from the Grand Exchange).
         SevenSecondAction.cancel(player, "You have been attacked!")
+        // DMM-ARMAGEDDON D1 (20-11): the barrage is an npc hit for the PJ timer too (2.4 s no teleport), like Combat.postAttack.
+        DeadmanTimerGate.markNpcHit(player)
         barrage.addAction { player.damageMap.add(wizguard, barrage.hitmarks.sumOf { it.damage }) }
         world.queue {
             wait(1)

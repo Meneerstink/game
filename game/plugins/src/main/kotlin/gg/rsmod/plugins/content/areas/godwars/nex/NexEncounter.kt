@@ -382,7 +382,7 @@ object NexEncounter {
         world.queue {
             wait(NexDarkanRules.WRATH_DELAY)
             players().filter { it.tile.isWithinRadius(centre, NexDarkanRules.WRATH_RADIUS) }.forEach { player ->
-                player.hit(world.random(NexDarkanRules.WRATH_DAMAGE.first..NexDarkanRules.WRATH_DAMAGE.last), HitType.REGULAR_HIT)
+                player.hit(world.random(NexDarkanRules.WRATH_DAMAGE.first..NexDarkanRules.WRATH_DAMAGE.last), HitType.REGULAR_HIT, source = boss)
             }
         }
         minions.forEachIndexed { i, m -> m?.let { if (it.isSpawned()) world.remove(it) }; minions[i] = null }
@@ -457,7 +457,7 @@ object NexEncounter {
                     if (world.collision.isClipped(tile)) continue
                     players().filter { it.tile == tile }.forEach { player ->
                         player.animate(1113)
-                        player.hit(world.random(NexDarkanRules.CONTAIN_DAMAGE.first..NexDarkanRules.CONTAIN_DAMAGE.last), HitType.REGULAR_HIT)
+                        player.hit(world.random(NexDarkanRules.CONTAIN_DAMAGE.first..NexDarkanRules.CONTAIN_DAMAGE.last), HitType.REGULAR_HIT, source = boss)
                         player.message("The icicle spikes you to the spot!")
                         player.message("You've been injured and can't use protection prayers!")
                         player.stopMovement()

@@ -167,7 +167,7 @@ object TormentedDemonCombatScript : CombatScript() {
             world.spawn(gg.rsmod.game.model.TileGraphic(tile, id = 1883, height = 0))
             if (target.isAlive() && (target !is Player || target.isOnline) && target.tile.height == tile.height && target.tile.isWithinRadius(tile, 1)) {
                 (target as? Player)?.message("The demon's magical attack splashes on you.")
-                target.hit(damage = SPLASH_DAMAGE, type = HitType.MAGIC, delay = 0)
+                target.hit(damage = SPLASH_DAMAGE, type = HitType.MAGIC, delay = 0, source = npc)
             }
         }
     }

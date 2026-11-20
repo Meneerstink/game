@@ -127,10 +127,10 @@ object StrykewyrmCombatScript : CombatScript() {
         npc.animate(ANIM_EMERGE)
         // ROOT_CAUSES #72 (2026-10-01): Novite StrykewyrmCombat hits 300 life points on the emerge (and the desert wyrm a second 300) in
         // the 667 x10 unit - 30 hitpoints here. The unconverted 300 killed any player outright since hitpoints became 1:1.
-        target.hit(Strykewyrms.BURROW_DAMAGE, HitType.REGULAR_HIT, 1)
+        target.hit(Strykewyrms.BURROW_DAMAGE, HitType.REGULAR_HIT, 1, source = npc)
         when (wyrm.wyrm) {
             Npcs.JUNGLE_STRYKEWYRM -> { target.graphic(GFX_JUNGLE_IMPACT); target.poison(6) }
-            Npcs.DESERT_STRYKEWYRM -> { target.graphic(GFX_DESERT_IMPACT); target.hit(Strykewyrms.BURROW_DAMAGE, HitType.REGULAR_HIT, 2) }
+            Npcs.DESERT_STRYKEWYRM -> { target.graphic(GFX_DESERT_IMPACT); target.hit(Strykewyrms.BURROW_DAMAGE, HitType.REGULAR_HIT, 2, source = npc) }
             else -> target.graphic(GFX_ICE_IMPACT)
         }
     }

@@ -382,7 +382,7 @@ object NexCombatScript : CombatScript() {
                     if (!player.isOnline || player.isDead() || !NexEncounter.inArena(player.tile)) continue
                     player.animate(10070)
                     val damage = world.random(NexDarkanRules.NO_ESCAPE_DAMAGE.first..NexDarkanRules.NO_ESCAPE_DAMAGE.last)
-                    player.hit(damage, HitType.REGULAR_HIT)
+                    player.hit(damage, HitType.REGULAR_HIT, source = npc)
                     soulSplit(npc, damage)
                     // C4: Darkan NoEscape.java:66-67 forceMove(player.getTile(), 10070, ...) - the victim is knocked back on his
                     // own tile, never moved (the earlier random tile around the centre could put him under Nex's body, where her
@@ -421,7 +421,7 @@ object NexCombatScript : CombatScript() {
         val infected = Tile(target.tile)
         NexEncounter.players().filter { NexDarkanRules.virusReaches(infected, it.tile) }.forEach { player ->
             player.forceChat("*Cough*")
-            player.hit(npc.world.random(NexDarkanRules.VIRUS_DAMAGE), HitType.REGULAR_HIT)
+            player.hit(npc.world.random(NexDarkanRules.VIRUS_DAMAGE), HitType.REGULAR_HIT, source = npc)
             for (stat in VIRUS_STATS) {
                 val drain = (player.skills.getCurrentLevel(stat) * NexDarkanRules.VIRUS_DRAIN).toInt()
                 if (drain > 0) player.skills.decrementCurrentLevel(stat, drain, capped = false)
@@ -459,7 +459,7 @@ object NexCombatScript : CombatScript() {
             tiles.forEach { tile ->
                 world.spawn(gg.rsmod.game.model.TileGraphic(tile, GFX_SHADOW_TRAP, 0))
                 NexEncounter.players().filter { it.tile == tile }.forEach { player ->
-                    player.hit(40 + world.random(40), HitType.REGULAR_HIT)
+                    player.hit(40 + world.random(40), HitType.REGULAR_HIT, source = npc)
                 }
             }
             wait(3)
@@ -522,7 +522,7 @@ object NexCombatScript : CombatScript() {
                 for (victim in NexEncounter.players()) {
                     world.spawn(npc.createProjectile(victim, PROJ_BLOOD, ProjectileType.MAGIC))
                     NexEncounter.heal(npc, victim.getCurrentLifepoints())
-                    victim.hit(NexDarkanRules.sacrificeDamage(victim.getCurrentLifepoints()), HitType.REGULAR_HIT, 1)
+                    victim.hit(NexDarkanRules.sacrificeDamage(victim.getCurrentLifepoints()), HitType.REGULAR_HIT, 1, source = npc)
                 }
             }
         }
@@ -573,7 +573,7 @@ object NexCombatScript : CombatScript() {
             if (player.tile == base) {
                 player.message("The centre of the ice prison freezes you to the bone!")
                 player.stopMovement()
-                player.hit(world.random(NexDarkanRules.ICE_PRISON_DAMAGE.first..NexDarkanRules.ICE_PRISON_DAMAGE.last), HitType.REGULAR_HIT)
+                player.hit(world.random(NexDarkanRules.ICE_PRISON_DAMAGE.first..NexDarkanRules.ICE_PRISON_DAMAGE.last), HitType.REGULAR_HIT, source = npc)
             }
             prison.forEach { world.remove(it) }
         }

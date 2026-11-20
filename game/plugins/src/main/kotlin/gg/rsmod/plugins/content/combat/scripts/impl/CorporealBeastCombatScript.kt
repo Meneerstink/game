@@ -536,7 +536,7 @@ object CorporealBeastCombatScript : CombatScript() {
                     if (inRange.isNotEmpty()) {
                         inRange.forEach { victim ->
                             val damage = world.random(CORE_DAMAGE_MIN..CORE_DAMAGE_MAX)
-                            victim.hit(damage = damage, type = HitType.REGULAR_HIT.id)
+                            victim.hit(damage = damage, type = HitType.REGULAR_HIT, source = core)
                             // Void donor message (the OSRS Wiki page quotes none).
                             victim.message("The dark core creature steals some life from you for its master.")
                             beast.setCurrentLifepoints(minOf(beast.getCurrentLifepoints() + coreHeal(damage), beast.getMaximumLifepoints()))

@@ -13,6 +13,7 @@ import gg.rsmod.game.model.timer.TELEPORT_COMBAT_TIMER
 import gg.rsmod.game.model.timer.TimerMap
 import gg.rsmod.plugins.api.SkullIcon
 import gg.rsmod.plugins.api.cfg.Npcs
+import gg.rsmod.plugins.api.ext.hit
 import io.mockk.every
 import io.mockk.mockk
 import java.lang.ref.WeakReference
@@ -94,6 +95,20 @@ class DeadmanTimerGateTests {
         every { player.world.currentCycle } returns 105
         assertEquals(DeadmanTimerGate.Teleport.INSTANT, DeadmanTimerGate.teleportDecision(player))
         assertFalse(DeadmanTimerGate.needsCountdown(player))
+    }
+
+    @Test
+    fun `a boss mechanic hit given with its npc as source is an npc hit - an unsourced hit (poison, traps) is not`() {
+        // DMM-ARMAGEDDON D1 (owner 20-11 'nu oplossen'): mechanics outside Combat.postAttack (Nex virus, Corp core, breach explosions)
+        // pass their npc as source to Pawn.hit, which marks the npc hit; environmental damage keeps no source and never blocks.
+        val player = newPlayer()
+        every { player.world.currentCycle } returns 200
+        player.hit(30)
+        assertEquals(DeadmanTimerGate.Teleport.INSTANT, DeadmanTimerGate.teleportDecision(player), "no source = not a hit by an npc")
+        player.hit(30, source = npc(Npcs.NEX, "Nex"))
+        assertEquals(DeadmanTimerGate.Teleport.BLOCKED_IN_COMBAT, DeadmanTimerGate.teleportDecision(player))
+        every { player.world.currentCycle } returns 205
+        assertEquals(DeadmanTimerGate.Teleport.INSTANT, DeadmanTimerGate.teleportDecision(player))
     }
 
     @Test

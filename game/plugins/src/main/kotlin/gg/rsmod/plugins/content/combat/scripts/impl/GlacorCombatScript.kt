@@ -141,7 +141,7 @@ object GlacorCombatScript : CombatScript() {
                 glacyte.graphic(GFX_EXPLODE)
                 world.players.forEach { player ->
                     if (player.tile.isWithinRadius(glacyte.tile, 1) && !player.isDead()) {
-                        player.hit(player.getCurrentLifepoints() / 3, HitType.REGULAR_HIT)
+                        player.hit(player.getCurrentLifepoints() / 3, HitType.REGULAR_HIT, source = glacyte)
                     }
                 }
                 glacyte.setCurrentLifepoints((glacyte.getCurrentLifepoints() * 0.1).toInt().coerceAtLeast(1))
@@ -159,7 +159,7 @@ object GlacorCombatScript : CombatScript() {
             if (glacyte.id == Npcs.UNSTABLE_GLACYTE) {
                 parent.graphic(GFX_EXPLODE)
                 parent.world.players.forEach { player ->
-                    if (player.tile.isWithinRadius(parent.tile, 2)) player.hit(player.getCurrentLifepoints() / 3, HitType.REGULAR_HIT)
+                    if (player.tile.isWithinRadius(parent.tile, 2)) player.hit(player.getCurrentLifepoints() / 3, HitType.REGULAR_HIT, source = glacyte)
                 }
             }
         }
@@ -218,7 +218,7 @@ object GlacorCombatScript : CombatScript() {
             world.spawn(TileGraphic(tile, GFX_ICICLE, 0))
             world.players.forEach { player ->
                 if (player.tile == tile && !player.isDead()) {
-                    player.hit(player.getCurrentLifepoints() / 2, HitType.RANGE)
+                    player.hit(player.getCurrentLifepoints() / 2, HitType.RANGE, source = npc)
                 }
             }
         }

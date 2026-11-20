@@ -56,7 +56,7 @@ object MimicCandies {
                 volley.impact(candy)
             }
             if(!current(s,volley.boss))return@forEach
-            if(volley.candies.any { it.tile==s.player.tile } && volley.damage>0) s.player.hit(volley.damage)
+            if(volley.candies.any { it.tile==s.player.tile } && volley.damage>0) s.player.hit(volley.damage, source = volley.boss)
             if(!current(s,volley.boss))return@forEach
             s.minions.removeAll { it.isDead() || !it.isSpawned() }
             for(candy in volley.candies) {

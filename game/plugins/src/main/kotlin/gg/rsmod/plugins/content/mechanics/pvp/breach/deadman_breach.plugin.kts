@@ -307,7 +307,7 @@ NpcAttacks.onAttack("breach_greater_abyssal_demon", "melee") { npc, target ->
             npc.animate(BreachMonsters.BY_ID.getValue(npc.id).attackAnim)
             // Protect from Melee, Deflect Melee or (N463) Dampen Melee: the overhead's protection.
             val protected = target.isProtectedFrom(gg.rsmod.game.model.combat.CombatClass.MELEE)
-            target.hit(if (protected) 0 else world.random(ABYSSAL_SPECIAL_MIN..ABYSSAL_SPECIAL_MAX), if (protected) HitType.BLOCK else HitType.MELEE, delay = 1)
+            target.hit(if (protected) 0 else world.random(ABYSSAL_SPECIAL_MIN..ABYSSAL_SPECIAL_MAX), if (protected) HitType.BLOCK else HitType.MELEE, delay = 1, source = npc)
         }
     }
 }
@@ -477,8 +477,8 @@ NpcAttacks.onSwing("breach_night_beast") { npc, target, attack ->
     }
 }
 
-NpcAttacks.onAttack("breach_night_beast", "fireball") { _, target ->
-    if (target is Player && DeadmanBreach.canFight(target)) target.hit(target.getCurrentLifepoints() / 3, delay = 2)
+NpcAttacks.onAttack("breach_night_beast", "fireball") { beast, target ->
+    if (target is Player && DeadmanBreach.canFight(target)) target.hit(target.getCurrentLifepoints() / 3, delay = 2, source = beast)
 }
 
 /*
@@ -512,7 +512,7 @@ on_npc_pre_death(14468) {
             listOfNotNull(npc.getCombatTarget() as? Player)
         }
     // PvP-protected players are never hurt by breach monsters, the explosion included.
-    victims.filter { DeadmanBreach.canFight(it) }.forEach { it.hit(world.random(SPLATTER_EXPLOSION_MAX)) }
+    victims.filter { DeadmanBreach.canFight(it) }.forEach { it.hit(world.random(SPLATTER_EXPLOSION_MAX), source = npc) }
 }
 
 /** Bee Swarm: "Stepping beneath the bee swarm will result in taking damage" (ADAPTED: 0 to its max hit 11, each tick). */
@@ -590,7 +590,7 @@ on_world_init {
                             if (t.x in npc.tile.x until npc.tile.x + npc.getSize() && t.z in npc.tile.z until npc.tile.z + npc.getSize() &&
                                 DeadmanBreach.canFight(p)
                             ) {
-                                p.hit(world.random(11))
+                                p.hit(world.random(11), source = npc)
                                 breachMessage(p, "You get stung while stood within the swarm of bees.")
                             }
                         }
@@ -606,7 +606,7 @@ on_world_init {
                                     // Deflect Missiles is the curse book's Protect from Missiles (the only kept non-OSRS extra).
                                     // N463: any book's ranged protection, Dampen Ranged included (the overhead decides).
                                     val protected = p.isProtectedFrom(gg.rsmod.game.model.combat.CombatClass.RANGED)
-                                    p.hit(if (protected) 0 else world.random(20), delay = 1)
+                                    p.hit(if (protected) 0 else world.random(20), delay = 1, source = npc)
                                     breachMessage(p, "Flies leave the body of the bloat and swarm you.")
                                 }
                             }

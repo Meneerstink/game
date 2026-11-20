@@ -405,7 +405,7 @@ on_npc_combat(npc = DAGONHAI_ELITE) {
                 wait(3)
                 if (victim is Player && victim.isOnline && !victim.isDead()) {
                     victim.graphic(GFX_CURSE_IMPACT)
-                    victim.hit(10 + world.random(15), HitType.MAGIC)
+                    victim.hit(10 + world.random(15), HitType.MAGIC, source = elite)
                 }
             }
             elite.postAttackLogic(target)

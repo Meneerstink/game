@@ -91,6 +91,9 @@ fun Pawn.hit(
         damageMap.add(source, damage)
         gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(this, source, damage)
     }
+    // DMM-ARMAGEDDON D1 (owner 20-11 'nu oplossen'): a boss mechanic's hit (fire rain, waves, explosions ... given with its npc as
+    // source) is an npc hit for the PJ timer like a normal attack - 2.4 s no teleport ([DeadmanTimerGate.NPC_HIT_TELEPORT_BLOCK_CYCLES]).
+    if (this is Player && source is gg.rsmod.game.model.entity.Npc) gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate.markNpcHit(this)
 
     addHit(hit)
     return hit

@@ -192,7 +192,7 @@ object MimicEncounter {
             if (session.won || boss.id != Npcs.THE_MIMIC_14402 || boss.isDead() || player.isDead()) continue
             val under = player.tile.height == boss.tile.height && player.tile.x in boss.tile.x until boss.tile.x + boss.getSize() &&
                 player.tile.z in boss.tile.z until boss.tile.z + boss.getSize()
-            if (under) player.hit(MimicChallenge.stompDamage(++session.stompTicks)) else session.stompTicks = 0
+            if (under) player.hit(MimicChallenge.stompDamage(++session.stompTicks), source = boss) else session.stompTicks = 0
             // The custom combat loop owns candy/forward choices; this independent tick owns standing-under damage.
         }
     }
