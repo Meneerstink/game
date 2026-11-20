@@ -155,7 +155,16 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
         if (beam.hitTarget) {
             weakenedUntil = tick + HetSeal.WEAKENED_TICKS
             nextBeam = -1
+            // Strategies (live 20-11-2026): "Any orbs present in the arena will automatically despawn" once the beam hits the shielded statue.
+            orbs.toList().forEach { (orb, _) -> if (orb.isSpawned()) raid.world.remove(orb) }
+            orbs.clear()
             seal?.let { s -> HetIds.npc(HetIds.SEAL_WEAKENED)?.let { s.setTransmogId(it) } }
+        }
+    }
+
+    private fun drainOrbHit(p: Player) {
+        listOf(Skills.ATTACK to 10, Skills.STRENGTH to 10, Skills.DEFENCE to 10, Skills.RANGED to 8, Skills.MAGIC to 8).forEach { (skill, amount) ->
+            p.skills.setCurrentLevel(skill, (p.skills.getCurrentLevel(skill) - amount).coerceAtLeast(0))
         }
     }
 
@@ -187,7 +196,10 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
             if (hit.isNotEmpty()) {
                 // N609 14-11 census: an orb of darkness hit shows graphics object 379 SHADOW_RUSH_IMPACT under the player (RuneLite
                 // toa-mistake-tracker HetPuzzleDetector ORB_OF_DARKNESS_GRAPHICS_ID, raid-recorder GO_HET_ORB_OF_DARKNESS).
-                hit.forEach { p -> p.hit(HetIds.ORB_DAMAGE); HetIds.spot(379)?.let { g -> raid.world.spawn(TileGraphic(gg.rsmod.game.model.Tile(p.tile), g, 0)) } }
+                hit.forEach { p -> p.hit(HetIds.ORB_DAMAGE); HetIds.spot(379)?.let { g -> raid.world.spawn(TileGraphic(gg.rsmod.game.model.Tile(p.tile), g, 0)) }
+                    // Strategies (live 20-11-2026): "These orbs will drain stats if struck by them"; Orb of Darkness wiki (same orb, Duke Sucellus
+                    // use): Attack, Strength and Defence by 10 levels, other stats by 8. Applied to the combat stats only (Prayer/Hitpoints untouched).
+                    drainOrbHit(p) }
                 iterator.remove(); raid.world.remove(orb); continue
             }
             // Strategies 1068: "In group encounters orbs may cause mirrors they collide with to become dirty".

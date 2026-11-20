@@ -505,7 +505,7 @@ object WardensCombat : CombatScript() {
             // Entry guide 2358.4-2360.0 s: out of the Warden, fanned over the floor, landed as siphons after ~1.6 s = 3 ticks.
             val from = npc.getCentreTile()
             tiles.forEach { ToaBossFx.tileProjectile(npc, from, it, 2226, SIPHON_FLIGHT) }
-            later(SIPHON_FLIGHT) { if (phase == Phase.SIPHONS) spawnSiphons(tiles, 20, npc.getMaximumLifepoints() / 20) { s, left ->
+            later(SIPHON_FLIGHT) { if (phase == Phase.SIPHONS) spawnSiphons(tiles, 20, (npc.getMaximumLifepoints() * 53L / 1000).toInt()) { s, left ->
                 // ONZEKER T20: base26 per untouched siphon; travelling ring preserves documented skull-skip opportunity.
                 repeat(12) { r -> s.later(r) { s.players().filter { kotlin.math.max(kotlin.math.abs(it.tile.x - centre.x), kotlin.math.abs(it.tile.z - centre.z)) == r }.forEach {
                     s.attack(it, ToaScale.damage(26 * left, context, path = false), null, accuracy = false)
