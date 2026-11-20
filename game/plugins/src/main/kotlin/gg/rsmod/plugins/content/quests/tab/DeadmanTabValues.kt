@@ -20,7 +20,7 @@ import java.util.Locale
 object DeadmanTabValues {
     enum class Row(val title: String) {
         LOYALTY("Loyalty Points"),
-        DONATOR("Donator Points"),
+        DONATOR("78 Tokens"),
         DEADMAN("Deadman Points"),
         EMBLEM("Deadman Emblem"),
         BREACH("Next Breach"),

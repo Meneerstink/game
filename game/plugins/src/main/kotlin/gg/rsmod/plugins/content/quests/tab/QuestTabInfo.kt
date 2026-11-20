@@ -36,7 +36,7 @@ import java.util.Locale
 object QuestTabInfo {
     enum class Subject(val title: String) {
         LOYALTY("Loyalty Points"),
-        DONATOR("Donator Points"),
+        DONATOR("78 Tokens"),
         DEADMAN("Deadman Points"),
         EMBLEM("Deadman Emblem"),
         BREACH("Breaches"),
@@ -117,7 +117,7 @@ object QuestTabInfo {
                         Fact("Spend them", "Donator Store"),
                     ),
                     text = "Talk to the npc called Donator Store, $STORES.",
-                    bar = balance(player, StoreCatalogue.Currency.DONATOR, "Donator Points"),
+                    bar = balance(player, StoreCatalogue.Currency.DONATOR, "78 Tokens"),
                 )
             Subject.DEADMAN ->
                 Page(

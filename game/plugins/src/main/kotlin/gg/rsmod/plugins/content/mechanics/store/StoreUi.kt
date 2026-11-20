@@ -609,7 +609,7 @@ object StoreUi : KLogging() {
         val balance = player.attr[currency.attr] ?: 0
         if (balance < entry.price) {
             player.notEnough("You need ${entry.price.format()} ${currency.plural} to buy that; you have ${balance.format()}.") // N89: + sound
-            if (currency == StoreCatalogue.Currency.DONATOR) player.message("Donator Points are available at 78legacy.com.")
+            if (currency == StoreCatalogue.Currency.DONATOR) player.message("78 Tokens are available at 78legacy.com.")
             return
         }
         val index = player.attr[SELECTED_ATTR] ?: 0

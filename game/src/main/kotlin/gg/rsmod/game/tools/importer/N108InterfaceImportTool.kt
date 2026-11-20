@@ -39,6 +39,9 @@ object N108InterfaceImportTool {
     const val LOG = 1183
     const val TASK_WINDOW = 1184
 
+    /** DMM-TAB: the Combat Brackets window (Bracket Info button). */
+    const val BRACKETS = 1240 // 1186-1239 already in the cache (ToA/CoX/DMM2/clue ports); 1240 = first free (census 20-11)
+
     /** First sprite id of this import (probe 2026-10-24: highest sprite group 8518 in both caches). */
     const val SPRITE_BASE = 8600
 
@@ -443,137 +446,121 @@ object N108InterfaceImportTool {
 
     // ================================================================== 1 Quests
 
+    /**
+     * DMM-TAB D3 (owner design 2026-11-20, dmm_tab_definitief.png panels 5-7): the OSRS Quest List - the wiki's list frame (background
+     * zz_ql_bg), one text row per bracket header / quest / storyline, "Other Quests" at the bottom, and under the frame
+     * "Your bracket / Unlocked / Storylines" beside the filter button.
+     */
     object QP {
-        const val LIST = P_FIRST // scroll layer
-        const val SCROLLBAR = P_FIRST + 1
-        const val NOTE = P_FIRST + 2
-        const val ROW_FIRST = P_FIRST + 3 // per row: icon, text, right, arrow, hit, star (the chosen quest)
-        const val ROW_STRIDE = 6
-        const val ROWS = 30
-        const val COUNT = ROW_FIRST + ROWS * ROW_STRIDE
-        const val LIST_X = 5
-        const val LIST_Y = 24
-        const val LIST_W = 162
-        const val LIST_H = 206
+        const val BG = 1
+        const val TITLE = 2
+        const val LIST = 3 // scroll layer
+        const val SCROLLBAR = 4
+        const val ROW_FIRST = 5 // per row: text, hit
+        const val ROW_STRIDE = 2
+        const val ROWS = 230
+        const val BOTTOM_FIRST = ROW_FIRST + ROWS * ROW_STRIDE // 3 lines
+        const val FILTER = BOTTOM_FIRST + 3
+        const val COUNT = FILTER + 1
+        const val LIST_X = 6
+        const val LIST_Y = 22
+        const val LIST_W = 155
+        const val LIST_H = 152
+        const val ROW_H = 16
 
         fun row(i: Int) = ROW_FIRST + i * ROW_STRIDE
     }
 
     fun quests(fonts: LootKeyInterfaceImportTool.Fonts): List<Comp> {
         val b = Builder(fonts)
-        b.panel("Quests")
+        b.add(Comp(0, TYPE_LAYER, 0, 0, 0, 0, -1, resizeX = 1, resizeY = 1))
+        b.g(QP.BG, 0, 0, 0, "zz_ql_bg")
+        b.t(QP.TITLE, 1, -1, 180, 16, 0, fonts.b12, ORANGE, "Quest List", alignX = 1, alignY = 0)
         b.layer(QP.LIST, QP.LIST_X, QP.LIST_Y, QP.LIST_W, QP.LIST_H, 0)
-        b.scrollbarFor(QP.SCROLLBAR, QP.LIST_X + QP.LIST_W, QP.LIST_Y, QP.LIST_H, 0, QUESTS, QP.LIST)
-        b.t(QP.NOTE, 0, 0, QP.LIST_W, 36, QP.LIST, fonts.p11, GREY, hidden = true, lineHeight = 12)
+        b.scrollbarFor(QP.SCROLLBAR, 162, QP.LIST_Y, QP.LIST_H, 0, QUESTS, QP.LIST)
         for (i in 0 until QP.ROWS) {
             val base = QP.row(i)
-            b.g(base, 1, 0, QP.LIST, "q_ck", hidden = true)
-            b.t(base + 1, 16, 0, 140, 14, QP.LIST, fonts.p11, TXT, hidden = true)
-            b.t(base + 2, 0, 0, 158, 15, QP.LIST, fonts.p11, GREY, alignX = 2, hidden = true)
-            b.g(base + 3, 152, 4, QP.LIST, "q_tw", hidden = true)
-            b.hit(base + 4, 0, 0, 160, 14, QP.LIST, "Toggle", hidden = true)
-            b.g(base + 5, 0, 0, QP.LIST, "q_star", hidden = true)
+            b.t(base, 4, 4 + i * QP.ROW_H, 150, 16, QP.LIST, fonts.p12, WHITE, alignY = 0, hidden = true)
+            b.hit(base + 1, 0, 2 + i * QP.ROW_H, QP.LIST_W, QP.ROW_H, QP.LIST, "View", hidden = true)
         }
+        for (k in 0 until 3) b.t(QP.BOTTOM_FIRST + k, 4, 184 + k * 14, 132, 16, 0, fonts.p12, ORANGE, alignY = 0)
+        b.hit(QP.FILTER, 136, 187, 48, 34, 0, "Filter")
         return b.done(QP.COUNT)
     }
 
     // ================================================================== 2 Deadman
 
+    /**
+     * DMM-TAB (owner design 2026-11-20 GOEDGEKEURD, screens/DMM-TAB/mock/dmm_tab_definitief.png): the OSRS Deadman tab of the owner's
+     * photo with the title "78 Deadman" - Deadman Points box, Points Info button, Combat Bracket box with the next-bracket bar, Bracket
+     * Info button; Points Info is a second state of the same panel (three balances with how you earn them, Back). The stone boxes and
+     * buttons are one background sprite per state (zz_dm_main / zz_dm_points, drawn from the photo at 1x); the game draws the text.
+     */
     object DP {
-        const val INFO = P_FIRST // button bg (op), text
-        const val INFO_TEXT = INFO + 1
-        const val BRK = INFO + 2
-        const val BADGE_TOP = INFO + 3
-        const val BADGE = INFO + 4
-        const val L1 = INFO + 5
-        const val L2 = INFO + 6
-        const val CELL_FIRST = INFO + 7 // 3 cells (protection while he has it, skull, kill grace): bg2, bg3, icon, value, label
-        const val CELL_STRIDE = 5
-        const val CELLS = 3
-        const val POINT_FIRST = CELL_FIRST + CELLS * CELL_STRIDE // 3 rows (Loyalty, Donator, Deadman): bg, icon, name, value, hit
-        const val POINT_STRIDE = 5
-        const val POINTS = 3
-        const val EMBLEM_BG = POINT_FIRST + POINTS * POINT_STRIDE
-        const val EMBLEM_ITEM = EMBLEM_BG + 1
-        const val EMBLEM_TEXT = EMBLEM_BG + 2
-        const val EMBLEM_VALUE = EMBLEM_BG + 3
-        const val EMBLEM_ARROW = EMBLEM_BG + 4
-        const val EMBLEM_HIT = EMBLEM_BG + 5
-        const val EVENT_FIRST = EMBLEM_BG + 6 // 2 events: bg, icon, a, b, time, map bg (op), map text
-        const val EVENT_STRIDE = 7
-        const val COUNT = EVENT_FIRST + 2 * EVENT_STRIDE
+        const val BG = 1
+        const val TITLE = 2
+        const val DP_LABEL = 3
+        const val DP_VALUE = 4
+        const val POINTS_TEXT = 5
+        const val POINTS_HIT = 6
+        const val BRK_LABEL = 7
+        const val BRK_VALUE = 8
+        const val FILL_CLIP = 9
+        const val FILL = 10
+        const val BAR_TEXT = 11
+        const val BRACKET_TEXT = 12
+        const val BRACKET_HIT = 13
+        const val INFO_FIRST = 14 // Points Info: 3 rows of label, value, how you earn them
+        const val INFO_STRIDE = 3
+        const val BACK_TEXT = INFO_FIRST + 3 * INFO_STRIDE
+        const val BACK_HIT = BACK_TEXT + 1
+        const val COUNT = BACK_HIT + 1
 
-        /** Design A3 rows (panel y): bracket box, the cells, the three point rows, the emblem row, the two events. */
-        const val BRK_Y = 24
-        const val CELL_Y = 61
-        const val POINT_Y = 96
-        const val EMBLEM_Y = 153
-        const val EVENT_Y = 175
-        const val EVENT_STEP = 29
-        val POINT_ICONS = listOf("zj_dm_ic_loyalty", "zj_dm_ic_donator", "zj_dm_ic_deadman")
-        val POINT_NAMES = listOf("Loyalty", "Donator", "Deadman")
+        /** The bar's inside (the mock's bar 129 x 15 at panel 27,161: fill 125 x 11). */
+        const val FILL_X = 29
+        const val FILL_Y = 163
+        const val FILL_W = 125
+        const val FILL_H = 11
+        const val BTN = 0xDFDFDF
+        const val SUB = 0xC8BEAA
+        const val BAR = 0x965500
 
-        fun cell(i: Int) = CELL_FIRST + i * CELL_STRIDE
+        /** The "main" state's components (hidden in Points Info) and the Points Info ones. */
+        val MAIN = listOf(DP_LABEL, DP_VALUE, POINTS_TEXT, POINTS_HIT, BRK_LABEL, BRK_VALUE, FILL_CLIP, BAR_TEXT, BRACKET_TEXT, BRACKET_HIT)
+        val INFO = (INFO_FIRST until BACK_HIT + 1).toList()
 
-        fun point(i: Int) = POINT_FIRST + i * POINT_STRIDE
-
-        fun event(i: Int) = EVENT_FIRST + i * EVENT_STRIDE
+        fun info(i: Int) = INFO_FIRST + i * INFO_STRIDE
     }
 
-    /** Labels a shade lighter than [GREY] (design A3, owner: readable on the dark cells). */
+    /** Labels a shade lighter than [GREY] (design A3, owner: readable on the dark cells; the Info window uses it). */
     const val LABEL = 0xB5A891
 
-    /**
-     * The Deadman tab, design A3 (owner 2026-10-24 GOEDGEKEURD, screens/team/INFO/dmtab-v3.png, N288): the bracket box with two lines
-     * (no Fights line), skull and kill grace, the three point balances as rows with the whole number and the 78 Store icons (no
-     * store opens from here, N280), the Archaic Emblem row with an arrow (Info on the emblem), breach and chest. Everything 3 px apart.
-     */
     fun deadman(fonts: LootKeyInterfaceImportTool.Fonts): List<Comp> {
         val b = Builder(fonts)
-        b.panel("Deadman")
-        // N274: a real button - the blue "i" and "Info" (design info-v1), right-aligned on the header's 179 px edge.
-        b.g(DP.INFO, 133, 2, 0, "zi_btn_info", ops = listOf("Info"))
-        b.t(DP.INFO_TEXT, 152, 2, 24, 18, 0, fonts.p11, ORANGE, "Info", alignX = 0)
-        b.g(DP.BRK, 5, DP.BRK_Y, 0, "zj_dm_brk")
-        b.t(DP.BADGE_TOP, 9, DP.BRK_Y + 5, 46, 11, 0, fonts.p11, 0xC9A24A, "Bracket", alignX = 1)
-        b.t(DP.BADGE, 9, DP.BRK_Y + 15, 46, 16, 0, fonts.b12, WHITE, alignX = 1)
-        b.t(DP.L1, 62, DP.BRK_Y + 1, 114, 16, 0, fonts.p12, 0xFFE9A8)
-        b.t(DP.L2, 62, DP.BRK_Y + 16, 114, 16, 0, fonts.p12, 0xFFE9A8)
-        for (i in 0 until DP.CELLS) {
-            val base = DP.cell(i)
-            b.g(base, 5, DP.CELL_Y, 0, "dm_cell2", hidden = true)
-            b.g(base + 1, 5, DP.CELL_Y, 0, "dm_cell3", hidden = true)
-            b.g(base + 2, 5, DP.CELL_Y + 1, 0, "dm_skull", hidden = true)
-            b.t(base + 3, 5, DP.CELL_Y + 2, 60, 16, 0, fonts.p11, WHITE, hidden = true)
-            b.t(base + 4, 5, DP.CELL_Y + 16, 56, 15, 0, fonts.p12, LABEL, alignX = 1, hidden = true)
+        b.add(Comp(0, TYPE_LAYER, 0, 0, 0, 0, -1, resizeX = 1, resizeY = 1))
+        b.g(DP.BG, 0, 0, 0, "zz_dm_main")
+        // Mock positions (photo 232 x 337) minus the panel's place in it (23, 62); text tops as the mock draws them.
+        b.t(DP.TITLE, 1, -1, 180, 16, 0, fonts.b12, ORANGE, "78 Deadman", alignX = 1, alignY = 0)
+        b.t(DP.DP_LABEL, 17, 40, 149, 16, 0, fonts.p12, ORANGE, "Deadman Points", alignX = 1, alignY = 0)
+        b.t(DP.DP_VALUE, 17, 61, 149, 16, 0, fonts.b12, WHITE, alignX = 1, alignY = 0)
+        b.t(DP.POINTS_TEXT, 28, 99, 125, 14, 0, fonts.p11, DP.BTN, "Points Info", alignX = 1, alignY = 0)
+        b.hit(DP.POINTS_HIT, 29, 91, 125, 29, 0, "Points Info")
+        b.t(DP.BRK_LABEL, 17, 130, 149, 16, 0, fonts.p12, ORANGE, "Combat Bracket", alignX = 1, alignY = 0)
+        b.t(DP.BRK_VALUE, 17, 144, 149, 16, 0, fonts.b12, WHITE, alignX = 1, alignY = 0)
+        b.layer(DP.FILL_CLIP, DP.FILL_X, DP.FILL_Y, DP.FILL_W, DP.FILL_H, 0)
+        b.rect(DP.FILL, -DP.FILL_W, 0, DP.FILL_W, DP.FILL_H, DP.FILL_CLIP, DP.BAR, filled = true)
+        b.t(DP.BAR_TEXT, 27, 162, 129, 14, 0, fonts.p11, ORANGE, alignX = 1, alignY = 0)
+        b.t(DP.BRACKET_TEXT, 28, 193, 125, 14, 0, fonts.p11, DP.BTN, "Bracket Info", alignX = 1, alignY = 0)
+        b.hit(DP.BRACKET_HIT, 29, 185, 125, 29, 0, "Bracket Info")
+        for (i in 0 until 3) {
+            val base = DP.info(i)
+            val top = 24 + i * 56
+            b.t(base, 17, top + 5, 149, 16, 0, fonts.p12, ORANGE, alignX = 1, alignY = 0, hidden = true)
+            b.t(base + 1, 17, top + 20, 149, 16, 0, fonts.b12, WHITE, alignX = 1, alignY = 0, hidden = true)
+            b.t(base + 2, 17, top + 36, 149, 14, 0, fonts.p11, DP.SUB, alignX = 1, alignY = 0, hidden = true)
         }
-        for (i in 0 until DP.POINTS) {
-            val base = DP.point(i)
-            val y = DP.POINT_Y + i * 18
-            b.g(base, 5, y, 0, if (i == 1) "zj_dm_row_alt" else "zj_dm_row")
-            b.g(base + 1, 9, y + 1, 0, DP.POINT_ICONS[i])
-            b.t(base + 2, 28, y, 80, 18, 0, fonts.p12, TXT, DP.POINT_NAMES[i])
-            b.t(base + 3, 60, y, 114, 18, 0, fonts.p12, WHITE, alignX = 2)
-            // Owner 2026-10-24 (advice taken): a click on a balance opens the Info window on those points - never the store (N280).
-            b.hit(base + 4, 5, y, 174, 18, 0, "Info")
-        }
-        b.g(DP.EMBLEM_BG, 5, DP.EMBLEM_Y, 0, "zj_dm_row")
-        b.obj(DP.EMBLEM_ITEM, 8, DP.EMBLEM_Y + 1, 16, 16, 0)
-        b.t(DP.EMBLEM_TEXT, 28, DP.EMBLEM_Y, 100, 18, 0, fonts.p12, TXT, "Deadman Emblem")
-        b.t(DP.EMBLEM_VALUE, 100, DP.EMBLEM_Y, 62, 18, 0, fonts.p12, WHITE, alignX = 2)
-        b.g(DP.EMBLEM_ARROW, 168, DP.EMBLEM_Y + 5, 0, "tk_chev")
-        b.hit(DP.EMBLEM_HIT, 5, DP.EMBLEM_Y, 174, 18, 0, "Info")
-        for (i in 0 until 2) {
-            val base = DP.event(i)
-            val y = DP.EVENT_Y + i * DP.EVENT_STEP
-            b.g(base, 5, y, 0, "dm_ev4")
-            b.g(base + 1, 8, y + 5, 0, if (i == 0) "dm_clock" else "dm_chest")
-            b.t(base + 2, 28, y - 1, 120, 14, 0, fonts.p11, TXT)
-            b.t(base + 3, 28, y + 11, 110, 14, 0, fonts.p11, LABEL)
-            b.t(base + 4, 120, y - 1, 53, 14, 0, fonts.p11, WHITE, alignX = 2)
-            b.g(base + 5, 141, y + 1, 0, "dm_mp", hidden = true, ops = listOf("Show on map"))
-            b.t(base + 6, 141, y, 34, 13, 0, fonts.p11, ORANGE, "Map", alignX = 1, hidden = true)
-        }
+        b.t(DP.BACK_TEXT, 28, 202, 125, 14, 0, fonts.p11, DP.BTN, "Back", alignX = 1, alignY = 0, hidden = true)
+        b.hit(DP.BACK_HIT, 29, 194, 125, 29, 0, "Back", hidden = true)
         return b.done(DP.COUNT)
     }
 
@@ -904,6 +891,99 @@ object N108InterfaceImportTool {
         return b.done(I.COUNT)
     }
 
+    // ================================================================== Combat Brackets window (DMM-TAB D4, owner design 2026-11-20)
+
+    /**
+     * The OSRS Adventure Paths frame (500 x 334, background zz_cb_bg drawn from the wiki picture at 1x): five bracket bars with the
+     * eye (the bracket shown on the right), the next-bracket bar and three lines of explanation on the left; on the right a card with
+     * the bracket, its unlocked quests and the two storyline buttons. Positions = the approved mock (make_mock_v8.py tutor6/tutor7).
+     */
+    object CB {
+        const val WINDOW = 1
+        const val BG = 2
+        const val CLOSE = 3
+        const val TITLE = 4
+        const val YOUR = 5
+        const val ROW_FIRST = 6 // per bracket: fill clip, green fill, orange fill, name, right, open eye, hit
+        const val ROW_STRIDE = 7
+        const val ROWS = 5
+        const val NEXT_CLIP = ROW_FIRST + ROWS * ROW_STRIDE
+        const val NEXT_FILL = NEXT_CLIP + 1
+        const val NEXT_TEXT = NEXT_CLIP + 2
+        const val HELP_FIRST = NEXT_CLIP + 3 // 3 lines
+        const val CARD_TITLE = HELP_FIRST + 3
+        const val CARD_SUB = CARD_TITLE + 1
+        const val UNLOCKED = CARD_TITLE + 2
+        const val QUEST_FIRST = CARD_TITLE + 3 // 14 quest lines
+        const val QUESTS = 14
+        const val DIV_DARK = QUEST_FIRST + QUESTS
+        const val DIV_LIGHT = DIV_DARK + 1
+        const val STORY = DIV_DARK + 2
+        const val STORY_STATUS = DIV_DARK + 3
+        const val BTN_FIRST = DIV_DARK + 4 // 2 buttons: sprite, name, line under it, hit
+        const val BTN_STRIDE = 4
+        const val COUNT = BTN_FIRST + 2 * BTN_STRIDE
+
+        const val BAR_X = 13
+        const val BAR_Y = 66
+        const val BAR_STEP = 33
+        const val FILL_W = 189
+        const val NEXT_W = 218
+        const val GREEN = 0x009600
+        const val ORANGE_FILL = 0x965500
+        const val CARD_X = 242
+        const val CARD_W = 230
+        const val BTN_Y = 205
+        const val BTN_STEP = 58
+
+        fun row(i: Int) = ROW_FIRST + i * ROW_STRIDE
+
+        fun btn(i: Int) = BTN_FIRST + i * BTN_STRIDE
+    }
+
+    fun brackets(fonts: LootKeyInterfaceImportTool.Fonts): List<Comp> {
+        val b = Builder(fonts)
+        b.add(Comp(0, TYPE_LAYER, 0, 0, 0, 0, -1, resizeX = 1, resizeY = 1))
+        b.add(Comp(CB.WINDOW, TYPE_LAYER, 0, 0, 500, 334, 0, reposX = 1, reposY = 1))
+        b.g(CB.BG, 0, 0, CB.WINDOW, "zz_cb_bg")
+        b.hit(CB.CLOSE, 470, 4, 26, 24, CB.WINDOW, "Close")
+        b.t(CB.TITLE, 0, 10, 500, 16, CB.WINDOW, fonts.b12, ORANGE, "Combat Brackets", alignX = 1, alignY = 0)
+        b.t(CB.YOUR, 13, 46, 220, 16, CB.WINDOW, fonts.p12, ORANGE, alignY = 0)
+        for (i in 0 until CB.ROWS) {
+            val base = CB.row(i)
+            val y = CB.BAR_Y + i * CB.BAR_STEP
+            b.layer(base, CB.BAR_X + 2, y + 2, CB.FILL_W, 25, CB.WINDOW)
+            b.rect(base + 1, -CB.FILL_W, 0, CB.FILL_W, 25, base, CB.GREEN, filled = true)
+            b.rect(base + 2, -CB.FILL_W, 0, CB.FILL_W, 25, base, CB.ORANGE_FILL, filled = true)
+            b.t(base + 3, CB.BAR_X + 10, y + 6, 100, 16, CB.WINDOW, fonts.b12, ORANGE, alignY = 0)
+            b.t(base + 4, CB.BAR_X + 90, y + 6, 93, 16, CB.WINDOW, fonts.b12, ORANGE, alignX = 2, alignY = 0)
+            b.g(base + 5, 207, y, CB.WINDOW, "zz_cb_eye", hidden = true)
+            b.hit(base + 6, CB.BAR_X, y, 223, 29, CB.WINDOW, "View")
+        }
+        b.layer(CB.NEXT_CLIP, CB.BAR_X + 2, 241, CB.NEXT_W, 18, CB.WINDOW)
+        b.rect(CB.NEXT_FILL, -CB.NEXT_W, 0, CB.NEXT_W, 18, CB.NEXT_CLIP, CB.ORANGE_FILL, filled = true)
+        b.t(CB.NEXT_TEXT, CB.BAR_X, 244, 222, 14, CB.WINDOW, fonts.p11, ORANGE, alignX = 1, alignY = 0)
+        val help = listOf("Quests unlock automatically" to WHITE, "(no quest XP or item rewards)." to WHITE, "From 51 - 70: pick 1 storyline." to 0xFFFF00)
+        help.forEachIndexed { k, (line, col) -> b.t(CB.HELP_FIRST + k, CB.BAR_X, intArrayOf(274, 287, 304)[k], 222, 14, CB.WINDOW, fonts.p11, col, line, alignX = 1, alignY = 0) }
+        b.t(CB.CARD_TITLE, CB.CARD_X, 46, CB.CARD_W, 16, CB.WINDOW, fonts.b12, ORANGE, alignX = 1, alignY = 0)
+        b.t(CB.CARD_SUB, CB.CARD_X, 63, CB.CARD_W, 14, CB.WINDOW, fonts.p11, WHITE, alignX = 1, alignY = 0)
+        b.t(CB.UNLOCKED, CB.CARD_X + 12, 85, 200, 16, CB.WINDOW, fonts.p12, ORANGE, "Unlocked quests", alignY = 0)
+        for (k in 0 until CB.QUESTS) b.t(CB.QUEST_FIRST + k, CB.CARD_X + 12, 101 + k * 15, 206, 16, CB.WINDOW, fonts.p12, 0x0DC10D, alignY = 0, hidden = true)
+        b.rect(CB.DIV_DARK, CB.CARD_X + 8, 179, CB.CARD_W - 16, 1, CB.WINDOW, 0x0E0E0C, filled = true)
+        b.rect(CB.DIV_LIGHT, CB.CARD_X + 8, 180, CB.CARD_W - 16, 1, CB.WINDOW, 0x474745, filled = true)
+        b.t(CB.STORY, CB.CARD_X + 12, 185, 100, 16, CB.WINDOW, fonts.p12, ORANGE, "Storyline", alignY = 0)
+        b.t(CB.STORY_STATUS, CB.CARD_X + 100, 187, CB.CARD_W - 112, 14, CB.WINDOW, fonts.p11, 0xFFFF00, alignX = 2, alignY = 0)
+        for (k in 0 until 2) {
+            val base = CB.btn(k)
+            val y = CB.BTN_Y + k * CB.BTN_STEP
+            b.g(base, CB.CARD_X + 8, y, CB.WINDOW, "zz_cb_btn")
+            b.t(base + 1, CB.CARD_X + 8, y + 7, 214, 16, CB.WINDOW, fonts.p12, ORANGE, alignX = 1, alignY = 0)
+            b.t(base + 2, CB.CARD_X, y + 35, CB.CARD_W, 14, CB.WINDOW, fonts.p11, 0xC8BEAA, alignX = 1, alignY = 0)
+            b.hit(base + 3, CB.CARD_X + 8, y, 214, 30, CB.WINDOW, "Choose")
+        }
+        return b.done(CB.COUNT)
+    }
+
     // ================================================================== import
 
     @JvmStatic
@@ -915,13 +995,14 @@ object N108InterfaceImportTool {
         val fonts: LootKeyInterfaceImportTool.Fonts
         val current = HashMap<Int, Map<Int, String>>()
         val currentSprites = HashMap<Int, String>()
-        val ids = listOf(CONTAINER, DEADMAN, QUESTS, TASKS, INFO, VIEWER, DROPS_LOG, LOG, TASK_WINDOW)
+        val ids = listOf(CONTAINER, DEADMAN, QUESTS, TASKS, INFO, VIEWER, DROPS_LOG, LOG, TASK_WINDOW, BRACKETS)
         try {
             fonts = LootKeyInterfaceImportTool.fonts(library)
             ids.forEach { id ->
                 val files = library.index(index).archive(id)?.fileIds()?.toList() ?: emptyList()
                 current[id] = files.associateWith { f -> CacheItemProbeTool.sha1(library.data(index, id, f)!!) }
             }
+            println("BRACKETS $BRACKETS before: ${current.getValue(BRACKETS).size} files")
             SPRITES.indices.forEach { i ->
                 library.data(spritesIndex, SPRITE_BASE + i, 0)?.let { currentSprites[SPRITE_BASE + i] = CacheItemProbeTool.sha1(it) }
             }
@@ -945,6 +1026,7 @@ object N108InterfaceImportTool {
                 DROPS_LOG to dropsLog(fonts),
                 LOG to log(fonts),
                 TASK_WINDOW to taskWindow(fonts),
+                BRACKETS to brackets(fonts),
             )
         screens.forEach { (id, comps) ->
             val have = current.getValue(id)

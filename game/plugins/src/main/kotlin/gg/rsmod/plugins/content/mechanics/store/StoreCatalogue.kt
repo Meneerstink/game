@@ -39,7 +39,7 @@ object StoreCatalogue {
         val plural: String,
         val attr: AttributeKey<Int>,
     ) {
-        DONATOR("Donator Point", "Donator Points", AttributeKey(persistenceKey = "donator_points")),
+        DONATOR("78 Token", "78 Tokens", AttributeKey(persistenceKey = "donator_points")),
         DEADMAN("Deadman Point", "Deadman Points", AttributeKey(persistenceKey = "deadman_points")),
         LOYALTY("Loyalty Point", "Loyalty Points", LOYALTY_POINTS),
     }

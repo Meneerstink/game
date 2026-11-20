@@ -166,58 +166,55 @@ class QuestTabTests {
         assertEquals(State.LOCKED, option(view, DesertTreasureII).state)
         // Prayer and Gear are still open, so the note stays.
         assertTrue(view.showNote)
-        // The Quests tab (night job 2026-10-24) shows the same state: chosen = tick, the other two locked.
-        val rows = QuestTab.questRows(account.player)
-        assertTrue(rows.any { it.text.startsWith("Desert Treasure") && it.icon == "q_ck" })
-        assertTrue(rows.any { it.text.contains("Desert Treasure II") && it.icon == "q_lock" })
     }
 
     @Test
-    fun `a point row opens Info on those points and never a store, the emblem row Info on the emblem`() {
-        assertEquals(QuestTab.POINT_CURRENCIES.size, QuestTab.POINT_SUBJECTS.size)
-        assertEquals(listOf("Loyalty Points", "Donator Points", "Deadman Points"), QuestTab.POINT_SUBJECTS.map { it.title })
-        val deadman = gg.rsmod.game.tools.importer.N108InterfaceImportTool.deadman(gg.rsmod.game.tools.importer.LootKeyInterfaceImportTool.Fonts(0, 0, 0, 0))
+    fun `DMM-TAB - the Deadman panel buttons link through and Points Info names 78 Tokens`() {
+        val tool = gg.rsmod.game.tools.importer.N108InterfaceImportTool
         val dp = gg.rsmod.game.tools.importer.N108InterfaceImportTool.DP
-        for (r in 0 until dp.POINTS) {
-            val hit = deadman.single { it.id == dp.point(r) + 4 }
-            assertEquals(listOf("Info"), hit.ops)
-            assertEquals(dp.POINT_Y + r * 18, hit.y)
-        }
+        val comps = tool.deadman(gg.rsmod.game.tools.importer.LootKeyInterfaceImportTool.Fonts(0, 0, 0, 0))
+        assertEquals(listOf("Points Info"), comps.single { it.id == dp.POINTS_HIT }.ops)
+        assertEquals(listOf("Bracket Info"), comps.single { it.id == dp.BRACKET_HIT }.ops)
+        assertEquals(listOf("Back"), comps.single { it.id == dp.BACK_HIT }.ops)
+        // The bar's fill lies inside the Combat Bracket box of the photo (box 149 x 55 at panel 17,126).
+        assertTrue(dp.FILL_X >= 17 && dp.FILL_X + dp.FILL_W <= 17 + 149 && dp.FILL_Y >= 126 && dp.FILL_Y + dp.FILL_H <= 126 + 55)
+        assertEquals(listOf("Deadman Points", "78 Tokens", "Loyalty Points"), QuestTab.POINTS_INFO.map { it.second })
         val source = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/quests/tab/QuestTab.kt").readText()
         assertTrue("StoreUi" !in source, "the tab opens no store (N280)")
+    }
+
+    @Test
+    fun `DMM-TAB - Combat Brackets lists the photo's quests per bracket, storylines with their quest count`() {
+        val b = gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.Bracket.values()
+        assertEquals(listOf(14, 7, 5, 3, 7), b.map { CombatBracketsUi.bracketQuests(it).size })
+        assertEquals(
+            listOf("RFD: King Awowogei", "Tree Gnome Village", "The Grand Tree", "Monkey Madness", "Troll Stronghold"),
+            CombatBracketsUi.bracketQuests(b[2]),
+        )
+        val step = gg.rsmod.plugins.content.quests.foundation.QuestBrackets.step(b[2])
+        assertEquals(listOf("Gnome storyline (4 quests)", "Mahjarrat storyline (6 quests)"), step.options.map { CombatBracketsUi.storylineName(it) })
+    }
+
+    @Test
+    fun `DMM-TAB - the Quest List shows every bracket, its storylines and Other Quests at the bottom`() {
+        val rows = QuestTab.questRows(Account(isNew = false).player)
+        assertEquals(
+            listOf("Combat 3 - 50", "Combat 51 - 70", "Combat 71 - 90", "Combat 91 - 110", "Combat 111 - 138", "Other Quests"),
+            rows.filter { it.kind == QuestTab.ROW_HEAD || it.kind == QuestTab.ROW_OTHER_HEAD }.map { it.text.replace(Regex("<[^>]*>"), "") },
+        )
+        // An account from before the brackets has every storyline: all green.
+        assertTrue(rows.filter { it.kind == QuestTab.ROW_STORY }.all { it.text.startsWith("<col=0dc10d>") })
+        assertTrue(rows.size <= gg.rsmod.game.tools.importer.N108InterfaceImportTool.QP.ROWS)
+        // A bracket quest is not repeated under Other Quests, and every row under it is a quest.
+        val other = rows.dropWhile { it.kind != QuestTab.ROW_OTHER_HEAD }.drop(1)
+        assertTrue(other.isNotEmpty() && other.all { it.kind == QuestTab.ROW_QUEST })
+        assertFalse(other.any { it.key == "Ernest the Chicken" })
     }
 
     @Test
     fun `accounts from before the choices get no note`() {
         val view = DeadmanGroupsView.view(Account(isNew = false).player)
         assertFalse(view.showNote)
-    }
-
-    @Test
-    fun `N289 - a group whose quests are all yours reads a green Unlocked, a chosen group Chosen, an open group Pick 1`() {
-        // An account from before the choices has every quest: every group Unlocked (it said "All yours").
-        val legacy = QuestTab.questRows(Account(isNew = false).player).filter { it.icon == null && it.right != null }
-        assertEquals(listOf("<col=0dc10d>Unlocked</col>"), legacy.map { it.right }.distinct())
-        val account = Account(isNew = true)
-        assertEquals(QuestChoices.Result.CHOSEN, QuestChoices.choose(account.player, ChoiceGroup.MAGIC, DesertTreasure))
-        val rows = QuestTab.questRows(account.player).filter { it.icon == null && it.right != null }.associate { it.key to it.right }
-        assertEquals("<col=ffcf4a>Chosen</col>", rows["MAGIC"])
-        assertEquals("<col=9a9083>Pick 1</col>", rows["PRAYER"])
-        assertTrue(QuestTab.questRows(account.player).none { "All yours" in (it.right ?: "") })
-    }
-
-    @Test
-    fun `groups use the existing choice data and the Quests tab lists every group, quest and requirement`() {
-        assertEquals(ChoiceGroup.values().toList(), QuestGuideUi.ROWS)
-        val account = Account()
-        val rows = QuestTab.questRows(account.player)
-        assertEquals(listOf("MAGIC", "PRAYER", "GEAR"), rows.filter { it.icon == null && it.right != null }.map { it.key })
-        QuestGuideUi.ROWS.flatMap { it.quests }.forEach { q -> assertTrue(rows.any { it.key == (QuestGuideUi.NAMES[q] ?: q.name) }, q.name) }
-        QuestGuideUi.ROWS.flatMap { it.quests }.forEach { q -> assertTrue(QuestTab.REQUIREMENTS.containsKey(QuestGuideUi.NAMES[q] ?: q.name), "requirements of ${q.name}") }
-        // N103: only the Quest Tutor quests; folding the longest one open still fits the rows.
-        assertEquals(3 + 8 + 2, rows.size)
-        assertEquals(listOf("Mage Arena I", "Mage Arena II"), rows.takeLast(2).map { it.key })
-        assertTrue(rows.size + 7 <= gg.rsmod.game.tools.importer.N108InterfaceImportTool.QP.ROWS)
     }
 
     // ------------------------------------------------------------------ tab choice and layout
@@ -255,7 +252,7 @@ class QuestTabTests {
         assertEquals(Row.values().size, L.ROWS)
         assertTrue((L.ROWS - 1) * L.ROW_PITCH + L.rowHeight(L.ROWS - 1) + 4 <= L.CONTENT_HEIGHT)
         assertEquals(
-            listOf("Loyalty Points", "Donator Points", "Deadman Points", "Deadman Emblem", "Next Breach", "Deadman's Chest"),
+            listOf("Loyalty Points", "78 Tokens", "Deadman Points", "Deadman Emblem", "Next Breach", "Deadman's Chest"),
             Row.values().map { it.title },
         )
     }

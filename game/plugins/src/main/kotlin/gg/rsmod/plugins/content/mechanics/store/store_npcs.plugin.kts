@@ -10,7 +10,7 @@ import gg.rsmod.plugins.content.mechanics.pvp.emblem.EmblemDialogue.cashOut
 
 on_npc_option(npc = StoreNpcs.DONATOR_STORE, option = "talk-to") {
     player.queue {
-        chatNpc("Welcome to the Donator Store. Gear, kits and prestige items, all paid with Donator Points.", wrap = true)
+        chatNpc("Welcome to the Donator Store. Gear, kits and prestige items, all paid with 78 Tokens.", wrap = true)
         when (options("Show me the Donator Store.", "Never mind.")) {
             FIRST_OPTION -> StoreUi.open(player, StoreCatalogue.Shop.DONATOR)
         }

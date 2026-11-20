@@ -24,19 +24,22 @@ QuestTab.Tab.values().forEach { tab ->
 
 // ---- 1 Quests
 for (r in 0 until N.QP.ROWS) {
-    on_button(interfaceId = N.QUESTS, component = N.QP.row(r) + 4) { QuestTab.questClick(player, r) }
-    on_button(interfaceId = N.QUESTS, component = N.QP.row(r) + 3) { QuestTab.questClick(player, r, toggle = true) }
+    on_button(interfaceId = N.QUESTS, component = N.QP.row(r) + 1) { QuestTab.questClick(player, r) }
 }
+on_button(interfaceId = N.QUESTS, component = N.QP.FILTER) { QuestTab.questFilter(player) }
 
 // ---- 2 Deadman
-on_button(interfaceId = N.DEADMAN, component = N.DP.INFO) { QuestTab.openInfo(player) }
-// N280: the point rows open no store any more (only the npc in a safe zone does); the emblem row opens Info on the emblem.
-on_button(interfaceId = N.DEADMAN, component = N.DP.EMBLEM_HIT) { QuestTab.emblemClick(player) }
-for (r in 0 until N.DP.POINTS) {
-    on_button(interfaceId = N.DEADMAN, component = N.DP.point(r) + 4) { QuestTab.pointClick(player, r) }
+// DMM-TAB (owner design 2026-11-20): every button links through.
+on_button(interfaceId = N.DEADMAN, component = N.DP.POINTS_HIT) { QuestTab.pointsInfo(player, show = true) }
+on_button(interfaceId = N.DEADMAN, component = N.DP.BACK_HIT) { QuestTab.pointsInfo(player, show = false) }
+on_button(interfaceId = N.DEADMAN, component = N.DP.BRACKET_HIT) { QuestTab.bracketInfo(player) }
+// DMM-TAB D4: the Combat Brackets window.
+on_button(interfaceId = N.BRACKETS, component = N.CB.CLOSE) { CombatBracketsUi.close(player) }
+for (r in 0 until N.CB.ROWS) {
+    on_button(interfaceId = N.BRACKETS, component = N.CB.row(r) + 6) { CombatBracketsUi.view(player, r) }
 }
-for (e in 0 until 2) {
-    on_button(interfaceId = N.DEADMAN, component = N.DP.event(e) + 5) { QuestTab.eventMap(player, e) }
+for (k in 0 until 2) {
+    on_button(interfaceId = N.BRACKETS, component = N.CB.btn(k) + 3) { CombatBracketsUi.choose(player, k + 1) }
 }
 Subject.values().forEachIndexed { i, subject ->
     on_button(interfaceId = QuestTab.INFO, component = N.I.subject(i) + 3) { QuestTab.showSubject(player, subject) }

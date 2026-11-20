@@ -3,7 +3,6 @@ package gg.rsmod.plugins.content.quests.tab
 import gg.rsmod.game.message.impl.IfCloseSubMessage
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
-import gg.rsmod.game.model.timer.NEW_PLAYER_PROTECTION_TIMER
 import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.game.tools.importer.N108InterfaceImportTool
 import gg.rsmod.game.tools.importer.N108InterfaceImportTool.DP
@@ -15,22 +14,18 @@ import gg.rsmod.game.tools.importer.N108InterfaceImportTool.TP
 import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.setInterfaceEvents
-import gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection
-import gg.rsmod.plugins.content.mechanics.pvp.KillGrace
-import gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationTier
+import gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets
 import gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach
-import gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestIds
 import gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestWorld
-import gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem
 import gg.rsmod.plugins.content.mechanics.store.StoreCatalogue
 import gg.rsmod.plugins.content.quests.foundation.ChoiceGroup
+import gg.rsmod.plugins.content.quests.foundation.QuestBrackets
 import gg.rsmod.plugins.content.quests.foundation.QuestChoices
+import gg.rsmod.plugins.content.quests.QuestStatus
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.content.quests.foundation.QuestGuideUi
 import gg.rsmod.plugins.content.quests.foundation.ShortQuest
 import gg.rsmod.plugins.content.quests.tab.QuestTabInfo.Subject
-import java.time.Duration
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
 
 /**
  * The quest tab with four tabs (owner design 2026-10-24 GOEDGEKEURD 05, spec section C): 1 Quests (N103: only the Magic / Prayer /
@@ -57,9 +52,7 @@ object QuestTab {
 
     /** The classic quest list (190) is showing in the Quests tab instead of the groups. */
     private val CLASSIC = AttributeKey<Boolean>()
-    private val OPEN_QUESTS = AttributeKey<MutableSet<String>>()
     private val QUEST_ROWS = AttributeKey<List<QuestRow>>()
-    private val QUEST_PAGE = AttributeKey<Int>()
     private val QUEST_EVENTS = AttributeKey<List<Pair<Boolean, Boolean>>>()
 
     val REFRESH_TIMER = TimerKey()
@@ -80,6 +73,7 @@ object QuestTab {
         // A second click on Quests while the classic list shows goes back to the groups.
         if (tab == Tab.QUESTS && selected(player) == Tab.QUESTS) player.attr.remove(CLASSIC)
         player.attr[SELECTED] = tab.name
+        player.attr.remove(POINTS_VIEW)
         if (isMounted(player)) mount(player)
     }
 
@@ -101,13 +95,11 @@ object QuestTab {
         } else {
             player.openInterface(CONTAINER, Q.BOX, tab.panel, type = 1)
             when (tab) {
-                Tab.QUESTS -> player.setInterfaceEvents(tab.panel, 0, -1..-1, 0)
-                Tab.DEADMAN -> {
-                    player.setInterfaceEvents(tab.panel, DP.INFO, -1..-1, EVENTS_OP1)
-                    player.setInterfaceEvents(tab.panel, DP.EMBLEM_HIT, -1..-1, EVENTS_OP1)
-                    for (r in 0 until DP.POINTS) player.setInterfaceEvents(tab.panel, DP.point(r) + 4, -1..-1, EVENTS_OP1)
-                    for (e in 0 until 2) player.setInterfaceEvents(tab.panel, DP.event(e) + 5, -1..-1, EVENTS_OP1)
+                Tab.QUESTS -> {
+                    for (r in 0 until QP.ROWS) player.setInterfaceEvents(tab.panel, QP.row(r) + 1, -1..-1, EVENTS_OP1)
+                    player.setInterfaceEvents(tab.panel, QP.FILTER, -1..-1, EVENTS_OP1)
                 }
+                Tab.DEADMAN -> listOf(DP.POINTS_HIT, DP.BRACKET_HIT, DP.BACK_HIT).forEach { player.setInterfaceEvents(tab.panel, it, -1..-1, EVENTS_OP1) }
                 Tab.TASKS -> for (t in 0 until 4) player.setInterfaceEvents(tab.panel, TP.tier(t) + 7, -1..-1, EVENTS_OP1)
                 Tab.DROPS -> {
                     player.setInterfaceEvents(tab.panel, LP.VIEWER_HIT, -1..-1, EVENTS_OP1)
@@ -165,153 +157,156 @@ object QuestTab {
             "Monkey Madness II" to listOf("Monkey Madness I", "Enlightened Journey", "The Eyes of Glouphrie", "Recipe for Disaster", "Troll Stronghold", "Watchtower"),
         )
 
-    class QuestRow(val kind: Int, val key: String, val icon: String?, val text: String, val right: String?, val arrow: String?, val star: Boolean = false)
+    /**
+     * DMM-TAB D3 (owner design 2026-11-20): one Quest List row. [kind] says what a click opens: a bracket header or storyline row
+     * the Combat Brackets window on that bracket, a quest its overview; gaps and the "Other Quests" header do nothing.
+     */
+    class QuestRow(val kind: Int, val key: String, val text: String, val bracket: Int = -1)
 
-    private const val KIND_GROUP = 0
-    private const val KIND_QUEST = 1
-    private const val KIND_SUB = 2
-    private const val KIND_LINK = 3
-    private const val PREVIOUS_PAGE = "previous-page"
-    private const val NEXT_PAGE = "next-page"
+    const val ROW_GAP = 0
+    const val ROW_HEAD = 1
+    const val ROW_QUEST = 2
+    const val ROW_STORY = 3
+    const val ROW_OTHER_HEAD = 4
 
-    fun questRows(player: Player): List<QuestRow> {
-        val open = player.attr[OPEN_QUESTS] ?: HashSet<String>().also { player.attr[OPEN_QUESTS] = it }
-        val legacy = QuestChoices.isLegacy(player)
-        val out = ArrayList<QuestRow>()
-        for (group in QuestGuideUi.ROWS) {
-            val chosen = QuestChoices.chosen(player, group)
-            // N289 (owner 2026-10-24, option A): a group whose quests are all yours reads a green "Unlocked" (it said "All yours").
-            val all = group.quests.all { legacy || it == chosen || DeadmanGroupsView.questFinished(player, it) }
-            val right = when {
-                all -> "<col=0dc10d>Unlocked</col>"
-                chosen != null -> "<col=ffcf4a>Chosen</col>"
-                else -> "<col=9a9083>Pick 1</col>"
-            }
-            out += QuestRow(KIND_GROUP, group.name, null, "<col=ffcf4a>${group.label}</col>", right, null)
-            for (quest in group.quests) {
-                val name = QuestGuideUi.NAMES[quest] ?: quest.name
-                val done = legacy || quest == chosen || DeadmanGroupsView.questFinished(player, quest)
-                val locked = !legacy && chosen != null && quest != chosen && !done
-                val (icon, text) =
-                    when {
-                        quest == chosen -> "q_ck" to name
-                        done -> "q_ck" to name
-                        locked -> "q_lock" to "<col=8a8070>$name</col>"
-                        else -> "q_dot" to name
-                    }
-                val reqs = REQUIREMENTS[name].orEmpty()
-                val isOpen = name in open
-                out += QuestRow(KIND_QUEST, name, icon, text, null, if (reqs.isEmpty()) null else if (isOpen) "q_two" else "q_tw", star = quest == chosen)
-                if (isOpen) reqs.forEach { r -> out += QuestRow(KIND_SUB, r, if (done) "q_ck7" else "q_dot5", "<col=b3a78f>$r</col>", null, null) }
-            }
+    private const val C_GREEN = "0dc10d"
+    private const val C_YELLOW = "ffff00"
+    private const val C_RED = "ff0000"
+    private const val C_LATER = "968c78"
+    private const val C_ORANGE = "ff981f"
+
+    /** The gear button: hide the completed "Other Quests" (OSRS quest list filter). */
+    private val HIDE_DONE = AttributeKey<Boolean>(persistenceKey = "quest_list_hide_done")
+
+    /** OSRS quest colours from the real quest state; a quest of a bracket not reached yet reads grey. */
+    private fun questColour(player: Player, name: String, open: Boolean): String {
+        val entry = gg.rsmod.plugins.content.quests.QuestList.ENTRIES.firstOrNull { it.name == name } ?: return if (open) C_GREEN else C_LATER
+        return when (QuestStatus.state(player, entry.slot)) {
+            QuestStatus.State.COMPLETED -> C_GREEN
+            QuestStatus.State.IN_PROGRESS -> C_YELLOW
+            QuestStatus.State.NOT_STARTED -> if (open) C_RED else C_LATER
         }
-        val ma2 = gg.rsmod.plugins.content.areas.wilderness.MageArenaII
-        out += QuestRow(KIND_QUEST, "Mage Arena I", if (gg.rsmod.plugins.content.areas.wilderness.MageArena.completed(player)) "q_ck" else "q_dot", "Mage Arena I", null, null)
-        out += QuestRow(KIND_QUEST, "Mage Arena II", if (ma2.completed(player)) "q_ck" else "q_dot", "Mage Arena II", null, null)
-        return out
     }
 
-    /** Existing cache has 30 static rows. Page overflow instead of silently losing the last groups/quests. */
-    internal fun visibleQuestRows(player: Player): List<QuestRow> {
-        val all = questRows(player)
-        val pageSize = QP.ROWS - 2
-        val pages = if (all.size <= QP.ROWS) 1 else (all.size + pageSize - 1) / pageSize
-        val page = (player.attr[QUEST_PAGE] ?: 0).coerceIn(0, pages - 1)
-        player.attr[QUEST_PAGE] = page
-        if (pages == 1) return all
-        return buildList {
-            if (page > 0) add(QuestRow(KIND_LINK, PREVIOUS_PAGE, null, "Previous page", null, null))
-            addAll(all.drop(page * pageSize).take(pageSize))
-            if (page < pages - 1) add(QuestRow(KIND_LINK, NEXT_PAGE, null, "Next page", null, null))
+    /** The photo's names ("Monkey Madness I", "Dragon Slayer I") for the list entries named without the numeral. */
+    fun display(name: String) =
+        when (name) {
+            "Monkey Madness" -> "Monkey Madness I"
+            "Dragon Slayer" -> "Dragon Slayer I"
+            else -> name
         }
+
+    fun questRows(player: Player): List<QuestRow> {
+        val legacy = !QuestBrackets.applies(player)
+        val out = ArrayList<QuestRow>()
+        val inBrackets = HashSet<String>()
+        DeadmanBrackets.Bracket.values().forEach { bracket ->
+            val step = QuestBrackets.step(bracket)
+            val open = legacy || CombatBracketsUi.reached(player, bracket)
+            if (out.isNotEmpty()) out += QuestRow(ROW_GAP, "", "")
+            out += QuestRow(ROW_HEAD, bracket.name, "<col=$C_ORANGE>Combat ${bracket.levels.first} - ${bracket.levels.last}</col>", bracket.ordinal)
+            CombatBracketsUi.bracketQuests(bracket).forEach { q ->
+                inBrackets += q
+                val rfd = q.startsWith("RFD: ")
+                val col = if (rfd) (if (open) C_GREEN else C_LATER) else questColour(player, q, open)
+                out += QuestRow(ROW_QUEST, if (rfd) "Recipe for Disaster" else q, "<col=$col>${display(q)}</col>", bracket.ordinal)
+            }
+            val chosen = QuestBrackets.chosenOption(player, bracket)
+            step.options.forEachIndexed { k, story ->
+                inBrackets += story.quests
+                val col =
+                    when {
+                        legacy -> C_GREEN
+                        !open -> C_LATER
+                        chosen == null -> C_YELLOW
+                        chosen == k + 1 -> C_GREEN
+                        else -> C_RED
+                    }
+                out += QuestRow(ROW_STORY, story.label, "<col=$col>Story: ${story.label.substringBefore(" storyline")}</col>", bracket.ordinal)
+            }
+        }
+        out += QuestRow(ROW_GAP, "", "")
+        out += QuestRow(ROW_OTHER_HEAD, "", "<col=$C_ORANGE>Other Quests</col>")
+        val hide = player.attr[HIDE_DONE] == true
+        gg.rsmod.plugins.content.quests.QuestList.ENTRIES
+            .filter { it.name !in inBrackets }
+            .sortedBy { it.name.removePrefix("The ") }
+            .forEach { e ->
+                val state = QuestStatus.state(player, e.slot)
+                if (hide && state == QuestStatus.State.COMPLETED) return@forEach
+                val col =
+                    when (state) {
+                        QuestStatus.State.COMPLETED -> C_GREEN
+                        QuestStatus.State.IN_PROGRESS -> C_YELLOW
+                        QuestStatus.State.NOT_STARTED -> C_RED
+                    }
+                out += QuestRow(ROW_QUEST, e.name, "<col=$col>${e.name}</col>")
+            }
+        return out.take(QP.ROWS)
+    }
+
+    /** Bottom lines (owner design): what a DMM player wants to see first. */
+    fun questSummary(player: Player): List<String> {
+        val legacy = !QuestBrackets.applies(player)
+        var have = 0
+        var total = 0
+        var stories = 0
+        var storyTotal = 0
+        DeadmanBrackets.Bracket.values().forEach { b ->
+            val n = CombatBracketsUi.bracketQuests(b).size
+            total += n
+            if (legacy || CombatBracketsUi.reached(player, b)) have += n
+            if (QuestBrackets.step(b).options.isNotEmpty()) {
+                storyTotal++
+                if (legacy || QuestBrackets.chosenOption(player, b) != null) stories++
+            }
+        }
+        return listOf(
+            "Your bracket: <col=ffffff>${bracketLabel(player)}</col>",
+            "Unlocked: <col=ffffff>$have/$total</col>",
+            "Storylines: <col=ffffff>$stories/$storyTotal</col>",
+        )
     }
 
     private fun drawQuests(player: Player) {
-        val p = QuestTab.Tab.QUESTS.panel
-        val rows = visibleQuestRows(player)
-        val previousRows = player.attr[QUEST_ROWS]
+        val p = Tab.QUESTS.panel
+        val rows = questRows(player)
         player.attr[QUEST_ROWS] = rows
-        val chosen = QuestGuideUi.ROWS.count { QuestChoices.chosen(player, it) != null }
-        N108Ui.text(player, p, N108InterfaceImportTool.P_RIGHT, if (QuestChoices.isLegacy(player)) "" else "<col=9a9083>Groups</col> $chosen/${QuestGuideUi.ROWS.size}")
-        val previousEvents = player.attr[QUEST_EVENTS]
-        val events = (0 until QP.ROWS).map { r -> rows.getOrNull(r).let { (it != null && it.kind != KIND_GROUP) to (it?.arrow != null) } }
-        player.attr[QUEST_EVENTS] = events
-        var y = 0
+        val world = player.world
         val fonts = ArrayList<Pair<Int, String>>()
         for (r in 0 until QP.ROWS) {
             val base = QP.row(r)
             val row = rows.getOrNull(r)
-            val clickable = row != null && row.kind != KIND_GROUP
-            if (previousEvents?.getOrNull(r) != events[r]) {
-                player.setInterfaceEvents(p, base + 4, -1..-1, if (clickable) EVENTS_OP1 else 0)
-                player.setInterfaceEvents(p, base + 3, -1..-1, if (row?.arrow != null) EVENTS_OP1 else 0)
+            val text = row?.text.orEmpty()
+            N108Ui.hidden(player, p, base, text.isEmpty())
+            if (row != null && text.isNotEmpty()) {
+                val head = row.kind == ROW_HEAD || row.kind == ROW_OTHER_HEAD
+                val font = if (head) "b12_full" else "p12_full"
+                fonts += base to font
+                N108Ui.text(player, p, base, N108Ui.fit(world, font, text, 150))
             }
-            if (row == null) {
-                for (c in 0 until QP.ROW_STRIDE) N108Ui.hidden(player, p, base + c, true)
-                continue
-            }
-            val h = if (row.kind == KIND_GROUP) 15 else 14
-            val textX = when (row.kind) {
-                KIND_GROUP -> 0
-                KIND_SUB -> 28
-                KIND_LINK -> 2
-                else -> 16
-            }
-            if (row.icon != null) {
-                N108Ui.sprite(player, p, base, row.icon)
-                val iconX = if (row.kind == KIND_SUB) 17 else 2
-                val iconY = y + (h - N108Ui.width(row.icon).coerceAtMost(11)) / 2 - if (row.icon == "q_lock") 2 else 0
-                N108Ui.pos(player, p, base, iconX, iconY)
-            }
-            N108Ui.hidden(player, p, base, row.icon == null)
-            N108Ui.pos(player, p, base + 1, textX, y)
-            fonts += (base + 1) to if (row.kind == KIND_GROUP) "b12_full" else "p11_full"
-            N108Ui.text(player, p, base + 1, row.text)
-            N108Ui.hidden(player, p, base + 1, false)
-            N108Ui.hidden(player, p, base + 2, row.right == null)
-            if (row.right != null) {
-                N108Ui.pos(player, p, base + 2, 0, y)
-                N108Ui.text(player, p, base + 2, row.right)
-            }
-            N108Ui.hidden(player, p, base + 3, row.arrow == null)
-            if (row.arrow != null) {
-                N108Ui.sprite(player, p, base + 3, row.arrow)
-                if (previousEvents == null || previousRows?.getOrNull(r)?.arrow == null) N108Ui.op(player, p, base + 3, "Toggle requirements")
-                N108Ui.pos(player, p, base + 3, if (row.arrow == "q_two") 151 else 152, y + if (row.arrow == "q_two") 5 else 4)
-            }
-            N108Ui.pos(player, p, base + 4, 0, y)
-            N108Ui.size(player, p, base + 4, if (row.arrow != null) 145 else 160, h)
-            if (previousEvents == null || previousRows?.getOrNull(r)?.kind != row.kind) {
-                N108Ui.op(player, p, base + 4, if (row.kind == KIND_LINK) "View page" else "View quest overview")
-            }
-            N108Ui.hidden(player, p, base + 4, !clickable)
-            // The chosen quest: the gold star right after its name (design 05).
-            N108Ui.hidden(player, p, base + 5, !row.star)
-            if (row.star) N108Ui.pos(player, p, base + 5, textX + N108Ui.p11(player.world, row.text) + 3, y - 2)
-            y += h
+            N108Ui.hidden(player, p, base + 1, row == null || row.kind == ROW_GAP || row.kind == ROW_OTHER_HEAD)
         }
         N108Ui.fonts(player, p, fonts)
-        N108Ui.scroll(player, p, QP.LIST, QP.SCROLLBAR, maxOf(y + 2, QP.LIST_H))
+        questSummary(player).forEachIndexed { k, line -> N108Ui.text(player, p, QP.BOTTOM_FIRST + k, line) }
+        N108Ui.scroll(player, p, QP.LIST, QP.SCROLLBAR, maxOf(8 + rows.size * QP.ROW_H, QP.LIST_H))
     }
 
-    fun questClick(player: Player, row: Int, toggle: Boolean = false) {
+    fun questClick(player: Player, row: Int) {
         if (selected(player) != Tab.QUESTS || !player.interfaces.isVisible(Tab.QUESTS.panel)) return
-        if (row !in 0 until QP.ROWS) return
         val clicked = player.attr[QUEST_ROWS]?.getOrNull(row) ?: return
-        if (clicked.kind == KIND_GROUP) return
-        if (clicked.kind == KIND_LINK) {
-            val delta = if (clicked.key == NEXT_PAGE) 1 else -1
-            player.attr[QUEST_PAGE] = (player.attr[QUEST_PAGE] ?: 0) + delta
-            N108Ui.scrollTop(player, Tab.QUESTS.panel, QP.LIST, QP.SCROLLBAR, QP.LIST_H)
-            drawQuests(player)
-        } else if (toggle) {
-            if (clicked.kind != KIND_QUEST || clicked.arrow == null) return
-            val open = player.attr[OPEN_QUESTS] ?: HashSet<String>().also { player.attr[OPEN_QUESTS] = it }
-            if (!open.remove(clicked.key)) open += clicked.key
-            drawQuests(player)
-        } else {
-            QuestTabDetails.open(player, clicked.key)
+        when (clicked.kind) {
+            ROW_HEAD, ROW_STORY -> CombatBracketsUi.open(player, clicked.bracket)
+            ROW_QUEST -> QuestTabDetails.open(player, clicked.key)
         }
+    }
+
+    /** The gear button: hide / show the completed Other Quests. */
+    fun questFilter(player: Player) {
+        if (selected(player) != Tab.QUESTS || !player.interfaces.isVisible(Tab.QUESTS.panel)) return
+        if (player.attr[HIDE_DONE] == true) player.attr.remove(HIDE_DONE) else player.attr[HIDE_DONE] = true
+        player.message(if (player.attr[HIDE_DONE] == true) "Completed quests are now hidden." else "Completed quests are now shown.")
+        drawQuests(player)
     }
 
     // ================================================================== 2 Deadman
@@ -330,74 +325,62 @@ object QuestTab {
      * (the skull time exactly the DMM HUD's, N286), the three balances as rows with the whole number (N287) - no store opens from
      * here (N280) -, the Archaic Emblem row (a click = Info on the emblem), breach and chest.
      */
+    /** DMM-TAB: the Deadman panel shows Points Info instead of the main state (owner design 2026-11-20). */
+    private val POINTS_VIEW = AttributeKey<Boolean>()
+
+    /** Points Info rows (owner design 2026-11-20): the balance, its name ("Donator Points" reads "78 Tokens") and how you earn it. */
+    val POINTS_INFO =
+        listOf(
+            Triple(StoreCatalogue.Currency.DEADMAN, "Deadman Points", "PvP, bosses and tasks"),
+            Triple(StoreCatalogue.Currency.DONATOR, "78 Tokens", "From the 78legacy.com store"),
+            Triple(StoreCatalogue.Currency.LOYALTY, "Loyalty Points", "Daily login and objectives"),
+        )
+
+    /** "Next bracket: 84 / 91" and the bar's fill (0..[DP.FILL_W]); the last bracket reads "Max bracket", full. */
+    fun nextBracket(player: Player): Pair<String, Int> {
+        val bracket = DeadmanBrackets.of(player)
+        val next = DeadmanBrackets.Bracket.values().getOrNull(bracket.ordinal + 1) ?: return "Max bracket" to DP.FILL_W
+        val lo = bracket.levels.first
+        val hi = next.levels.first
+        val level = player.combatLevel.coerceIn(lo, hi)
+        return "Next bracket: $level / $hi" to DP.FILL_W * (level - lo) / (hi - lo)
+    }
+
+    fun bracketLabel(player: Player): String = DeadmanBrackets.of(player).levels.let { "${it.first} - ${it.last}" }
+
     private fun drawDeadman(player: Player) {
         val p = Tab.DEADMAN.panel
-        val world = player.world
-        val tier = AnnihilationTier.of(player)
-        N108Ui.text(player, p, DP.BADGE, tier.label)
-        fun x(v: Double) = if (v % 1.0 == 0.0) v.toInt().toString() else v.toString()
-        N108Ui.text(player, p, DP.L1, "Combat XP <col=ffffff>${x(tier.combatXp)}x</col>")
-        N108Ui.text(player, p, DP.L2, "Rare drops <col=ffffff>${x(tier.dropRate)}x</col>")
-        // The cells: protection (only while he has it), skull, kill grace.
-        class Cell(val icon: String, val value: String, val label: String)
-        val cells = ArrayList<Cell>()
-        if (BeginnerProtection.isProtected(player)) cells += Cell("dm_shield", "<col=56e156>${clock(player.timers[NEW_PLAYER_PROTECTION_TIMER])}</col>", "Protection")
-        val skull = skullTime(player)
-        cells += Cell("dm_skull", if (skull != null) "<col=ff5252>$skull</col>" else "<col=b5a891>-</col>", "Skull")
-        val grace = player.timers.has(KillGrace.GRACE_TIMER)
-        cells += Cell("dm_clock", if (grace) "<col=ffffff>${clock(player.timers[KillGrace.GRACE_TIMER])}</col>" else "<col=b5a891>-</col>", "Kill grace")
-        val w = if (cells.size == 3) 56 else 85
-        val gap = 3
-        val y = DP.CELL_Y
-        cells.forEachIndexed { k, cell ->
-            val base = DP.cell(k)
-            val cx = 5 + k * (w + gap) + if (cells.size == 2 && k == 1) 1 else 0
-            N108Ui.hidden(player, p, base, cells.size != 2)
-            N108Ui.hidden(player, p, base + 1, cells.size != 3)
-            N108Ui.pos(player, p, base, cx, y)
-            N108Ui.pos(player, p, base + 1, cx, y)
-            val iconW = N108Ui.width(cell.icon)
-            val valueW = N108Ui.p11(world, cell.value)
-            val start = cx + (w - iconW - 3 - valueW) / 2
-            N108Ui.sprite(player, p, base + 2, cell.icon)
-            N108Ui.pos(player, p, base + 2, start, y + 3)
-            N108Ui.hidden(player, p, base + 2, false)
-            N108Ui.pos(player, p, base + 3, start + iconW + 3, y + 2)
-            N108Ui.text(player, p, base + 3, cell.value)
-            N108Ui.hidden(player, p, base + 3, false)
-            // The label box is as wide as its cell, so the label is centred under its value.
-            N108Ui.pos(player, p, base + 4, cx, y + 16)
-            N108Ui.size(player, p, base + 4, w, 15)
-            N108Ui.text(player, p, base + 4, cell.label)
-            N108Ui.hidden(player, p, base + 4, false)
+        val info = player.attr[POINTS_VIEW] == true
+        N108Ui.sprite(player, p, DP.BG, if (info) "zz_dm_points" else "zz_dm_main")
+        N108Ui.text(player, p, DP.TITLE, if (info) "Points Info" else "78 Deadman")
+        DP.MAIN.forEach { N108Ui.hidden(player, p, it, info) }
+        DP.INFO.forEach { N108Ui.hidden(player, p, it, !info) }
+        if (info) {
+            POINTS_INFO.forEachIndexed { i, (currency, name, how) ->
+                N108Ui.text(player, p, DP.info(i), name)
+                N108Ui.text(player, p, DP.info(i) + 1, DeadmanTabValues.number(DeadmanTabValues.balance(player, currency)))
+                N108Ui.text(player, p, DP.info(i) + 2, how)
+            }
+            return
         }
-        for (k in cells.size until DP.CELLS) for (c in 0 until DP.CELL_STRIDE) N108Ui.hidden(player, p, DP.cell(k) + c, true)
-        // The balances, whole (up to 2,147,483,647 they fit beside the name).
-        POINT_CURRENCIES.forEachIndexed { i, currency -> N108Ui.text(player, p, DP.point(i) + 3, DeadmanTabValues.number(DeadmanTabValues.balance(player, currency))) }
-        // Emblem.
-        val emblemTier = runCatching { DeadmanEmblem.ownedTier(player) }.getOrDefault(0)
-        N108Ui.item(player, p, DP.EMBLEM_ITEM, DeadmanEmblem.FIRST_EMBLEM + (emblemTier - 1).coerceAtLeast(0))
-        N108Ui.hidden(player, p, DP.EMBLEM_ITEM, false)
-        // Owner 2026-10-24 (A): the row is named like the item, "Deadman Emblem" (the cache text said "Archaic Emblem").
-        N108Ui.text(player, p, DP.EMBLEM_TEXT, DeadmanTabValues.Row.EMBLEM.title)
-        N108Ui.text(player, p, DP.EMBLEM_VALUE, if (emblemTier > 0) "Tier $emblemTier" else "<col=b5a891>None</col>")
-        // Breach.
-        val active = DeadmanBreach.active
-        if (active != null) {
-            val left = active.openedAtCycle + DeadmanBreach.SPAWN_WINDOW_TICKS - world.currentCycle
-            drawEvent(player, 0, "Breach <col=ff5252>active</col>", active.sites.joinToString(", ") { it.name }, if (left > 0) clock(left) else "", map = true)
-        } else {
-            val seconds = Duration.between(ZonedDateTime.now(ZoneOffset.UTC), DeadmanBreach.nextOpening).seconds
-            drawEvent(player, 0, "Next breach", "Random location", clock((seconds * 10 / 6).toInt().coerceAtLeast(0)), map = false)
-        }
-        // Deadman's Chest: while one stands, the Map button shows where (and the world map's blue arrow, N273).
-        val chest = DeadmanChestWorld.activeTimed()
-        when {
-            DeadmanChestIds.closedLoc <= 0 -> drawEvent(player, 1, "Deadman's Chest", "Unavailable", "", map = false)
-            chest != null -> drawEvent(player, 1, "Deadman's Chest", chest.name.replaceFirstChar { it.titlecase() }, "", map = true)
-            DeadmanChestWorld.ticksUntilTimed >= 0 -> drawEvent(player, 1, "Deadman's Chest", "Random spot", clock(DeadmanChestWorld.ticksUntilTimed), map = false)
-            else -> drawEvent(player, 1, "Deadman's Chest", "Unavailable", "", map = false)
-        }
+        N108Ui.text(player, p, DP.DP_VALUE, DeadmanTabValues.number(DeadmanTabValues.balance(player, StoreCatalogue.Currency.DEADMAN)))
+        N108Ui.text(player, p, DP.BRK_VALUE, bracketLabel(player))
+        val (bar, fill) = nextBracket(player)
+        N108Ui.text(player, p, DP.BAR_TEXT, bar)
+        N108Ui.pos(player, p, DP.FILL, fill - DP.FILL_W, 0)
+    }
+
+    /** The Points Info button / Back (owner: every button links through). */
+    fun pointsInfo(player: Player, show: Boolean) {
+        if (selected(player) != Tab.DEADMAN || !player.interfaces.isVisible(Tab.DEADMAN.panel)) return
+        if (show) player.attr[POINTS_VIEW] = true else player.attr.remove(POINTS_VIEW)
+        drawDeadman(player)
+    }
+
+    /** The Bracket Info button: the Combat Brackets window. */
+    fun bracketInfo(player: Player) {
+        if (selected(player) != Tab.DEADMAN || !player.interfaces.isVisible(Tab.DEADMAN.panel)) return
+        CombatBracketsUi.open(player)
     }
 
     /** The point rows' currencies, top to bottom (design A3). */
@@ -405,41 +388,6 @@ object QuestTab {
 
     /** N286: the skull time exactly as the DMM HUD shows it ([DeadmanHud.skullText]), null without a skull timer. */
     fun skullTime(player: Player): String? = gg.rsmod.plugins.content.mechanics.pvp.DeadmanHud.skullText(player)
-
-    /** Panel x where an event's text starts, its right edge, and the Map button's x. */
-    private const val EVENT_TEXT_X = 28
-    private const val EVENT_RIGHT = 173
-    private const val EVENT_MAP_X = 141
-
-    /**
-     * One event row (N278): the title on the first line; with a place to show, the Map button next to it and the place on the second
-     * line with the whole width (a long place reads as its short form, else is cut with "..."; the button's tooltip has it in
-     * full) and the time at its right; without one, the time at the right of the first line.
-     */
-    private fun drawEvent(player: Player, event: Int, title: String, place: String, time: String, map: Boolean) {
-        val p = Tab.DEADMAN.panel
-        val world = player.world
-        val base = DP.event(event)
-        val y = DP.EVENT_Y + event * DP.EVENT_STEP
-        N108Ui.text(player, p, base + 2, title)
-        // N518 class: measured with every digit as the widest one, so the place line keeps its size while the clock ticks (it was
-        // re-sized - a size hook to the client - nearly every second).
-        val timeW = if (time.isEmpty()) 0 else N108Ui.p11(world, time.replace(Regex("[0-9]"), "8"))
-        if (map) {
-            N108Ui.pos(player, p, base + 4, EVENT_RIGHT - 53, y + 11)
-            N108Ui.pos(player, p, base + 5, EVENT_MAP_X, y + 1)
-            N108Ui.pos(player, p, base + 6, EVENT_MAP_X, y)
-        } else {
-            N108Ui.pos(player, p, base + 4, EVENT_RIGHT - 53, y - 1)
-        }
-        val room = EVENT_RIGHT - EVENT_TEXT_X - if (map && timeW > 0) timeW + 6 else 0
-        N108Ui.size(player, p, base + 3, room, 14)
-        N108Ui.text(player, p, base + 3, placeLabel(world, place, room))
-        N108Ui.text(player, p, base + 4, time)
-        N108Ui.hidden(player, p, base + 5, !map)
-        N108Ui.hidden(player, p, base + 6, !map)
-        if (map) N108Ui.tooltips(player, listOf(N108Ui.hash(p, base + 5) to "Show on map: $place"))
-    }
 
     private val DIRECTIONS = mapOf("north" to "N", "south" to "S", "east" to "E", "west" to "W", "north-east" to "NE", "north-west" to "NW", "south-east" to "SE", "south-west" to "SW")
     private val DIRECTION_PLACE = Regex("(?i)^(north-east|north-west|south-east|south-west|north|south|east|west) of (the )?(.+)$")
