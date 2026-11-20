@@ -20,6 +20,12 @@ object KephriCombat : CombatScript() {
     override val ids: IntArray get() = listOfNotNull(ToaBossNpcs.local(ToaBossNpcs.KEPHRI)).toIntArray()
     /** Cache2686 seq9519 toa_dung_drop (spotanim 2145) = 90 client cycles = 3 ticks before the pile lies on the floor. */
     const val DUNG_DROP_TICKS = 3
+    /** B2 20-11: the row starts at the edge of Kephri's platform (just outside her 5x5 body), the ray stops at the wall (max 24 tiles),
+     *  the piles fall DUNG_FALL_START ticks after the throw (+0..DUNG_FALL_SPREAD from the platform to the wall). */
+    const val DUNG_ROW_START = 3
+    const val DUNG_RAY_MAX = 24
+    const val DUNG_FALL_START = 3
+    const val DUNG_FALL_SPREAD = 1
     /** OSRS VFX_SCARAB_EXPLOSION01..04: the Kephri bomb hit (RuneLite ToA Mistake Tracker KEPHRI_BOMB_GRAPHICS_ID). */
     val BOMB_EXPLOSIONS = intArrayOf(2156, 2157, 2158, 2159)
     /** Final phase hp (OSRS 80), shortened with the other bosses (ToaDuration). */
@@ -117,25 +123,32 @@ object KephriCombat : CombatScript() {
                     else -> if (rz > 0) gg.rsmod.game.model.Direction.NORTH else gg.rsmod.game.model.Direction.SOUTH
                 }
             }
+            // NACHTRUN 20-11 B2 (eigenaar 'dung niet tot aan de muur / juiste timing / sluit een speler in afhankelijk van de tile'; DUNG-ONDERZOEK.txt
+            // B3-B8, hoofdbron video 4AqB1Tf1LhQ met tick-timer): Kephri slingert de speler langs de as weg van haar TOT TEGEN DE MUUR
+            // (wiki 'sends them flying to the back of the arena'), daarna VALLEN de stapels op ELKE tegel van de lijn vanaf de rand van haar
+            // platform TOT AAN DE MUUR (inclusief de landingstegel). De speler (2 s stun) kiest zelf links/rechts; blijft hij op de lijn staan:
+            // lichte schade + geduwd naar een loopbare tegel binnen 10 (geen? snelle schade). Zelfde lijn als een oude rij = stapelt.
             dungStrike(victims, 3, 4, destination = { p ->
-                val start = marked.getValue(p)
+                val start = Tile(p.tile)
                 val direction = outward(start)
-                var end = Tile(p.tile)
-                repeat(10) {
-                    if (npc.world.collision.canStep(end, direction)) end = end.transform(direction.getDeltaX(), direction.getDeltaZ())
+                var end = start
+                var steps = 0
+                // Furthest walkable tile along the outward ray (wall / existing pile stops the flight).
+                while (steps < DUNG_RAY_MAX && npc.world.collision.canStep(end, direction)) {
+                    val next = end.transform(direction.getDeltaX(), direction.getDeltaZ())
+                    if (next in dung) break
+                    end = next; steps++
                 }
-                // ONZEKER T14: prefer the furthest reachable tile along the outward ray, then nearest free landing within10.
-                if (!sameTile(end, p.tile) && end !in dung) end else
-                    (-10..10).flatMap { x -> (-10..10).map { z -> start.transform(x, z) } }
-                        .filter { it !in dung && !npc.world.collision.isClipped(it) && !sameTile(it, start) }
-                        .minByOrNull { it.getDistance(start) }
-            }, tiles = { p, from, end ->
-                // Strategies: dung follows the outward strike direction. A nearby fallback landing (not on the ray) adds no
-                // piles, so a blocked repeat strike cannot rotate the line into a different part of the arena.
-                val direction = outward(marked.getValue(p))
-                val path = (0..10).map { from.transform(direction.getDeltaX() * it, direction.getDeltaZ() * it) }
-                val landing = path.indexOfFirst { sameTile(it, end) }
-                if (landing <= 0) emptyList() else path.take(landing)
+                end
+            }, tiles = { _, from, end ->
+                val direction = outward(from)
+                val horizontal = direction == gg.rsmod.game.model.Direction.EAST || direction == gg.rsmod.game.model.Direction.WEST
+                val sign = if (direction == gg.rsmod.game.model.Direction.EAST || direction == gg.rsmod.game.model.Direction.NORTH) 1 else -1
+                val last = if (horizontal) (end.x - centre.x) * sign else (end.z - centre.z) * sign
+                // Row starts at the edge of Kephri's platform (distance 3 = just outside her 5x5 body) and runs to the landing tile.
+                (DUNG_ROW_START..last).map { k ->
+                    if (horizontal) Tile(centre.x + sign * k, from.z, from.height) else Tile(from.x, centre.z + sign * k, from.height)
+                }.filter { !npc.world.collision.isClipped(it) }
             }, place = { t -> placeObject(45504, t) }) // Cache2686 KEPHRI_DUNG: blocks walking, not projectiles (18/27); 45149 is static decor.
         }
         private fun defaultRecharge() {
@@ -333,20 +346,45 @@ object KephriCombat : CombatScript() {
                         attack(p, 5, null, accuracy = false, minHit = 5); later(1) { trapped() }
                         return@later
                     }
-                    require(p.tile.isWithinRadius(end, 10))
+                    require(p.tile.isWithinRadius(end, DUNG_RAY_MAX + 2))
                     val from = Tile(p.tile)
                     p.message("Kephri throws you back!"); p.stopMovement()
                     p.timers[gg.rsmod.game.model.timer.FROZEN_TIMER] = stunTicks; p.teleportTo(end)
-                    // Testclient 08-11: a short knockback (wall) made the dung row cover the landing tile; the player then stood inside a
-                    // blocked pile and could not path or attack at all ('I can't reach that!'). Dung never lands on a player's tile.
-                    // N606: each pile FALLS first (cache spotanim 2145 KEPHRI_DUNG_DROP, seq9519 toa_dung_drop = 90 cycles = 3 ticks) and the
-                    // blocking pile appears where it lands; the tile is reserved at once so later strikes respect the row.
-                    tiles(p, from, end).filter { tile -> players().none { sameTile(it.tile, tile) } }
-                        .forEach { tile -> if (dung.add(tile)) { gfx(2145, tile); later(DUNG_DROP_TICKS, acrossPhase = true) {
-                            if (tile in dung && players().none { sameTile(it.tile, tile) }) cleanupDung += place(tile) else dung.remove(tile)
-                        } } }
+                    // NACHTRUN 20-11 B2 (owner video 4AqB1Tf1LhQ, timer 0:36.1 throw -> 0:38.9 first piles -> 0:39.8 row complete = ~6 ticks):
+                    // the piles FALL from the platform edge towards the wall (first at DUNG_FALL_START, the wall end DUNG_FALL_SPREAD ticks
+                    // later), each pile takes DUNG_DROP_TICKS (spotanim 2145 / seq 9519 = 90 cycles) and then blocks the tile. The stun
+                    // (4 ticks) ends before the first pile lands, so the player can still click one tile left/right = pick the side.
+                    // A pile CAN land on a player (08-11 'I can't reach that' is solved by the B6 push below, wiki Strategies 954-956).
+                    val row = tiles(p, from, end)
+                    row.forEachIndexed { i, tile ->
+                        if (!dung.add(tile)) return@forEachIndexed // an older pile is already there = stacks
+                        val offset = DUNG_FALL_START + if (row.size > 1) i * DUNG_FALL_SPREAD / (row.size - 1) else 0
+                        later(offset, acrossPhase = true) { gfx(2145, tile) }
+                        later(offset + DUNG_DROP_TICKS, acrossPhase = true) {
+                            if (tile !in dung) return@later
+                            cleanupDung += place(tile)
+                            players().filter { sameTile(it.tile, tile) }.forEach { crushed(it) }
+                        }
+                    }
                 }
             }
+        }
+        /** B6 (wiki Strategies 954-956): a pile lands on the player = light damage + shoved to a walkable tile within ten tiles;
+         *  no such tile = rapid damage until free or dead. */
+        private fun crushed(p: Player) {
+            if (!eligible(p)) return
+            attack(p, ToaScale.damage(4, context), null, accuracy = false, minHit = 1)
+            fun free(): Tile? = (1..10).firstNotNullOfOrNull { r ->
+                (-r..r).flatMap { dx -> (-r..r).map { dz -> p.tile.transform(dx, dz) } }
+                    .filter { maxOf(kotlin.math.abs(it.x - p.tile.x), kotlin.math.abs(it.z - p.tile.z)) == r }
+                    .filter { it !in dung && !npc.world.collision.isClipped(it) }
+                    .minByOrNull { it.getDistance(p.tile) }
+            }
+            val target = free()
+            if (target != null) { p.stopMovement(); p.teleportTo(target); return }
+            fun rapid() { if (!eligible(p) || free() != null) return
+                attack(p, 5, null, accuracy = false, minHit = 5); later(1) { rapid() } }
+            rapid()
         }
         fun incubation(placements: Map<Tile, Boolean>, hatchDelay: Int, explosionMax: Int, agileLimit: Int) {
             require(hatchDelay >= 0 && agileLimit >= 0)

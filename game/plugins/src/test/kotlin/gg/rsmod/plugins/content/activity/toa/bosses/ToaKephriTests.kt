@@ -7,14 +7,18 @@ import io.mockk.mockk
 import kotlin.test.*
 
 class ToaKephriTests {
-    @Test fun `five blocked repeat dung strikes preserve their original line instead of spreading behind the player`() {
-        for ((dx, dz) in listOf(1 to 0, -1 to 0, 0 to 1, 0 to -1, 1 to 1, 1 to -1, -1 to 1, -1 to -1)) {
+    // NACHTRUN 20-11 B2 (dossier DUNG-ONDERZOEK.txt, owner video 4AqB1Tf1LhQ): the strike throws the player to the wall and the piles fall on EVERY
+    // tile of the line from the platform edge (distance 3 from Kephri's centre) to the wall, landing tile included; repeat strikes on the same
+    // line stack (no new piles); a pile that lands on the player pushes them to a free tile.
+    @Test fun `dung strike fills the whole line from the platform edge to the wall and later strikes on the same line stack`() {
+        val centre = Tile(3202, 3202)
+        for ((dx, dz) in listOf(1 to 0, -1 to 0, 0 to 1, 0 to -1)) {
             val f = ToaTestFixture()
             val p = mockk<Player>(relaxed = true)
             every { p.attr } returns gg.rsmod.game.model.attr.AttributeMap()
             every { p.isOnline } returns true
             every { p.isDead() } returns false
-            val start = Tile(3202 + dx * 4, 3202 + dz * 4)
+            val start = Tile(centre.x + dx * 4, centre.z + dz * 4)
             var playerTile = start
             every { p.tile } answers { playerTile }
             every { p.teleportTo(any<Tile>()) } answers { playerTile = firstArg() }
@@ -29,16 +33,15 @@ class ToaKephriTests {
                 val direction = secondArg<gg.rsmod.game.model.Direction>()
                 tile.transform(direction.getDeltaX(), direction.getDeltaZ()) !in s.dung
             }
-            s.dungDirector(s, listOf(p)); repeat(8) { s.cycle() } // N606: strike 3 + pile drop 3
+            s.dungDirector(s, listOf(p)); repeat(14) { s.cycle() } // strike 3 + fall start 3 + spread 1 + pile drop 3
             val firstLine = s.dung.toSet()
-            assertTrue(firstLine.isNotEmpty())
+            val expected = (3..(4 + KephriCombat.DUNG_RAY_MAX)).map { k -> Tile(centre.x + dx * k, centre.z + dz * k) }.toSet()
+            assertEquals(expected, firstLine, "$dx,$dz: dung covers every tile from the platform edge to the wall")
             assertEquals(setOf(45504), placedSources.toSet(), "OSRS KEPHRI_DUNG must replace the projectile-blocking static decor")
-            repeat(5) {
-                playerTile = start
-                s.dungDirector(s, listOf(p)); repeat(8) { s.cycle() } // N606: strike 3 + pile drop 3
-                assertEquals(firstLine, s.dung, "a blocked $dx,$dz landing must not rotate the original line")
-                assertTrue(playerTile !in s.dung, "fallback must still leave a walkable landing")
-            }
+            assertTrue(playerTile !in s.dung, "a pile that lands on the player pushes them onto a free tile")
+            playerTile = start
+            s.dungDirector(s, listOf(p)); repeat(14) { s.cycle() }
+            assertEquals(firstLine, s.dung, "a second strike on the same line stacks instead of adding or rotating piles")
             s.newPhase()
             assertEquals(firstLine, s.dung, "changing phase does not expire dung")
             s.close(); s.close()
