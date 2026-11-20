@@ -2204,6 +2204,9 @@ class PluginRepository(
     fun hasItemOnObjectHandler(obj: Int): Boolean =
         anyItemOnObjectPlugins.containsKey(obj) || itemOnObjectPlugins.values.any { it.containsKey(obj) }
 
+    /** Whether a generic any-item handler is bound to [obj] (a second one would be a duplicate binding). */
+    fun hasAnyItemOnObjectHandler(obj: Int): Boolean = anyItemOnObjectPlugins.containsKey(obj)
+
     fun bindItemOnNpc(
         npc: Int,
         item: Int,

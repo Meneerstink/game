@@ -85,7 +85,7 @@ object PointBalance {
     // ------------------------------------------------------------------------------------------ one-time login repair
 
     /**
-     * Persistence keys of every point balance (the keys of the 78 Store currencies, Slayer, PK, Breach, Pest Control, Penguin).
+     * Persistence keys of every point balance (the keys of the 78 Store currencies, Slayer, the old Breach balance (migration), Pest Control, Penguin).
      * The save loader repairs by key name, before any login hook runs; PointBalanceEdgeTests checks that every balance key used in
      * the sources is listed here.
      */
@@ -95,7 +95,6 @@ object PointBalance {
             "deadman_points",
             "loyalty_points",
             "slayer_points",
-            "pk_points",
             "breach_points",
             "pest_points",
             "penguin_points",
