@@ -14,7 +14,10 @@ fun slashWeb(
         player.attr[WEB_FATIGUE] = 0
     }
     val successThreshold = 1.0 - (0.3333 * player.attr[WEB_FATIGUE]!!)
-    if (player.inventory.contains(Items.KNIFE) ||
+    // PROJECT48 DMM-ITEMS: the Wilderness swords always slash a web successfully (OSRS Wiki).
+    val wildernessSword = player.getEquipment(EquipmentType.WEAPON)?.id in 25480..25483
+    if (wildernessSword ||
+        player.inventory.contains(Items.KNIFE) ||
         player.hasAnyWeaponType(
             WeaponType.AXE,
             WeaponType.LONG_SWORD,
@@ -24,7 +27,7 @@ fun slashWeb(
             WeaponType.SCYTHE,
         )
     ) {
-        if ((0..3).random() < successThreshold * 4) {
+        if (wildernessSword || (0..3).random() < successThreshold * 4) {
             val newObj = DynamicObject(Objs.SLASHED_WEB, obj.type, obj.rot, obj.tile)
             world.spawnTemporaryObject(newObj, 100, obj)
             player.animate(Anims.ATTACK_SLASH)

@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.deadman.items
 
 import gg.rsmod.game.fs.def.ItemDef
+import gg.rsmod.plugins.api.cfg.Items
 
 /*
  * PROJECT48 DMM-ITEMS group A: the item options of the nut items (cache options of the imported items).
@@ -66,3 +67,9 @@ RingOfEndurance.POTIONS.forEach { potion ->
 }
 on_item_option(DmmItems.RING_OF_ENDURANCE, "check") { RingOfEndurance.check(player, player.inventory[player.getInteractingItemSlot()]) }
 on_item_option(DmmItems.RING_OF_ENDURANCE, "uncharge") { RingOfEndurance.uncharge(player, player.getInteractingItemSlot()) }
+
+/* Ash sanctifier (I-A09). */
+on_item_on_item(item1 = Items.DEATH_RUNE, item2 = DmmItems.ASH_SANCTIFIER) { AshSanctifier.charge(player) }
+on_item_option(DmmItems.ASH_SANCTIFIER, "check") { AshSanctifier.check(player, player.inventory[player.getInteractingItemSlot()]) }
+on_item_option(DmmItems.ASH_SANCTIFIER, "activity") { AshSanctifier.toggle(player) }
+on_item_option(DmmItems.ASH_SANCTIFIER, "uncharge") { AshSanctifier.uncharge(player, player.getInteractingItemSlot()) }

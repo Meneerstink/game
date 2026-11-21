@@ -27,6 +27,7 @@ object DmmItems {
     const val RING_OF_ENDURANCE = 25469
     const val RING_OF_ENDURANCE_UNCHARGED = 25470
     const val AMULET_OF_ETERNAL_GLORY = 25471
+    const val ASH_SANCTIFIER = 25476
     const val IMBUED_HEART = 25477
     const val SATURATED_HEART = 25478
     const val BOOK_OF_THE_DEAD = 25479
