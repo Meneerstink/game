@@ -130,7 +130,7 @@ object ShiloVillage : ShortQuest(
                 done = listOf("I defeated Nazastarool and took Rashiliyia's corpse."),
                 place = "the tomb of Rashiliyia",
                 location = NAZA_FIGHT,
-                tip = "Nazastarool rises three times: zombie, skeleton, ghost. All can be safespotted.",
+                tip = "Nazastarool rises three times. Bring food.",
                 gives = listOf(Items.RASHILIYIA_CORPSE to 1),
                 fight =
                     QuestFight(

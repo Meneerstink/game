@@ -54,8 +54,10 @@ object QuestChoices {
         )
 
     fun cohort(player: Player): String {
-        player.attr[COHORT]?.let { return it }
-        val cohort = if (player.attr[NEW_ACCOUNT_ATTR] == true) ARMAGEDDON else LEGACY
+        val saved: Any? = player.attr[COHORT]
+        if (saved is String) return saved
+        val fresh: Any? = player.attr[NEW_ACCOUNT_ATTR]
+        val cohort = if (fresh == true) ARMAGEDDON else LEGACY
         player.attr[COHORT] = cohort
         return cohort
     }

@@ -109,7 +109,7 @@ object FightArena : ShortQuest(
                 done = listOf("I won the arena fights and Justin Servil was freed."),
                 place = "General Khazard's arena",
                 location = ARENA,
-                tip = "The three foes come one after the other. The Bouncer hits hard - bring food. All can be safespotted in OSRS.",
+                tip = "Three foes, one by one. Bring food.",
                 fight = QuestFight(
                     Npcs.KHAZARD_OGRE, "Khazard ogre", 63, ARENA, "Grrr! Fresh meat!",
                     chain = listOf(Npcs.KHAZARD_SCORPION to "Skkrrt!", Npcs.BOUNCER to "ROAR!"),

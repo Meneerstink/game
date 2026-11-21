@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.mechanics.deadman.sigils
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.fs.def.ObjectDef
 import gg.rsmod.game.model.collision.ObjectType
+import gg.rsmod.plugins.content.objs.bank_locs.BankObjects
 import gg.rsmod.plugins.content.objs.bank_locs.NotedFoodOnBank
 
 /*
@@ -14,6 +15,7 @@ fun nearBank(player: Player): Boolean {
     for (dx in -2..2) {
         for (dz in -2..2) {
             val obj = world.getObject(player.tile.transform(dx, dz), ObjectType.INTERACTABLE) ?: continue
+            if (obj.id in BankObjects.ALL) return true
             val def = world.definitions.getNullable(ObjectDef::class.java, obj.id) ?: continue
             if (NotedFoodOnBank.isBank(def)) return true
         }

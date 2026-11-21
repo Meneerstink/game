@@ -120,7 +120,7 @@ object MonkeyMadness : ShortQuest(
                 place = "the tunnels below Ape Atoll",
                 location = ZOOKNOCK_POST,
                 gives = listOf(Items.MONKEYSPEAK_AMULET to 1, Items.MONKEY_GREEGREE to 1),
-                tip = "Wield the monkey greegree and wear the monkeyspeak amulet before you speak to King Awowogei.",
+                tip = "Wield the greegree and wear the amulet before you speak.",
                 talk = {
                     chatNpc("Take this amulet - it lets you understand the monkeys - and", "a greegree, so you can pass as one of them.", facialExpression = FacialExpression.HAPPY)
                     FoundationRewards.grant(player, Items.MONKEYSPEAK_AMULET, 1)
@@ -134,7 +134,7 @@ object MonkeyMadness : ShortQuest(
                 done = listOf("King Awowogei agreed to an alliance."),
                 place = "King Awowogei's palace",
                 location = AWOWOGEI_POST,
-                tip = "Wield the monkey greegree: the king speaks only to other monkeys.",
+                tip = "Wield the greegree: the king only speaks to monkeys.",
                 talk = {
                     if (!player.hasEquipped(EquipmentType.WEAPON, Items.MONKEY_GREEGREE)) {
                         chatNpc("Ook! Ook! (A human! Guards - no, wait... only a monkey", "may speak to the king!)", facialExpression = FacialExpression.ANGRY)
@@ -164,7 +164,7 @@ object MonkeyMadness : ShortQuest(
                 done = listOf("I defeated the Jungle demon."),
                 place = "the Jungle demon arena",
                 location = DEMON_FIGHT,
-                tip = "The Jungle demon hits with all three combat styles. Bring good food and prayer potions.",
+                tip = "The Jungle demon uses all three styles. Bring prayer.",
                 fight = QuestFight(Npcs.JUNGLE_DEMON, "Jungle demon", 195, DEMON_FIGHT, "You cannot stop what has begun!"),
                 talk = {
                     chatNpc("The demon waits in the arena. Use the sigil and finish it!", facialExpression = FacialExpression.TOUGH)

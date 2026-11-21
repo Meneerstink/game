@@ -225,7 +225,7 @@ object Contact : ShortQuest(
                 done = listOf("I defeated the Giant scarab."),
                 place = "the dungeon below Sophanem",
                 location = SCARAB_FIGHT,
-                tip = "The Giant scarab is level 191: it summons locust riders and scarab mages. Bring food and prayer.",
+                tip = "The Giant scarab is level 191. Bring food.",
                 fight = QuestFight(Npcs.GIANT_SCARAB, "Giant scarab", 191, SCARAB_FIGHT, "SKREEEE!"),
                 talk = {
                     chatNpc("The Giant scarab waits in the dungeon.", facialExpression = FacialExpression.WORRIED)

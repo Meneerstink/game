@@ -95,7 +95,7 @@ object TrollStronghold : ShortQuest(
                 done = listOf("I defeated the Troll General and took the prison key."),
                 place = "the Troll Stronghold",
                 location = GENERAL_FIGHT,
-                tip = "The Troll General can be safespotted in OSRS. Bring food.",
+                tip = "The Troll General hits hard. Bring food.",
                 gives = listOf(Items.PRISON_KEY to 1),
                 fight = QuestFight(Npcs.TROLL_GENERAL, "Troll General", 113, GENERAL_FIGHT, "Puny human! Stronghold is mine!"),
                 talk = {

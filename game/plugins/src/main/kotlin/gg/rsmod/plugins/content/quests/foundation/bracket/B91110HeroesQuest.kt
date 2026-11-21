@@ -104,7 +104,7 @@ object HeroesQuest : ShortQuest(
                 done = listOf("I took a fire feather from the firebird."),
                 place = "Entrana",
                 location = FIREBIRD_FIGHT,
-                tip = "Wear the ice gloves: without them the fire feather burns you.",
+                tip = "Wear the ice gloves: the fire feather burns you.",
                 gives = listOf(Items.FIRE_FEATHER to 1),
                 fight = QuestFight(Npcs.ENTRANA_FIREBIRD, "Entrana firebird", 2, FIREBIRD_FIGHT, "Squawk!"),
                 talk = {

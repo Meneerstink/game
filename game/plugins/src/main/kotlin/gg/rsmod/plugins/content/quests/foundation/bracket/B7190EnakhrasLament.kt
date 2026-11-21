@@ -99,7 +99,7 @@ object EnakhrasLament : ShortQuest(
                 done = listOf("The Boneguard was impressed and asked for my help."),
                 place = "Enakhra's Temple",
                 location = BONEGUARD_POST,
-                tip = "Turn on Protect from Melee before you speak to the Boneguard.",
+                tip = "Protect from Melee before you speak to the Boneguard.",
                 talk = {
                     if (!Prayers.isActive(player, Prayer.PROTECT_FROM_MELEE)) {
                         chatNpc("The Boneguard lashes out at you! You should have been protected from melee.", facialExpression = FacialExpression.ANGRY)

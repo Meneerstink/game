@@ -124,7 +124,7 @@ object ErnestTheChicken : ShortQuest(
                 place = "Draynor Manor's ground floor",
                 location = MANOR_GROUND,
                 gives = listOf(Items.RUBBER_TUBE to 1),
-                tip = "Look around the manor floor: the skeletons guard it - keep moving.",
+                tip = "The skeletons guard the manor floor - keep moving.",
                 search = QuestSearch(MANOR_GROUND, "You search the table and find a rubber tube.", 3, gives = listOf(Items.RUBBER_TUBE to 1)),
                 talk = {
                     chatNpc("It is in the room below. Do hurry!", facialExpression = FacialExpression.CALM_TALK)
@@ -594,7 +594,7 @@ object HolyGrail : ShortQuest(
                 place = "the Fisher Realm",
                 location = TITAN_BRIDGE,
                 gives = listOf(Items.HOLY_GRAIL to 1),
-                tip = "Melee only: the Titan's magic and ranged defence is huge. Bring plenty of food.",
+                tip = "Use melee only: the Titan resists magic and ranged.",
                 fight = QuestFight(Npcs.BLACK_KNIGHT_TITAN, "Black Knight Titan", 120, TITAN_BRIDGE, "Who dares enter the Fisher Realm?"),
                 talk = {
                     chatNpc("The Titan guards the Grail on the bridge beyond.", "Fight him with melee, and bring food.", facialExpression = FacialExpression.WORRIED)
@@ -711,7 +711,7 @@ object NatureSpirit : ShortQuest(
                 done = listOf("I drove off the ghasts of Mort Myre."),
                 place = "Mort Myre swamp",
                 location = GHAST_SWAMP,
-                tip = "Ghasts rot your food; they are only hurt by a blessed hand. Bring spare food.",
+                tip = "Ghasts rot your food. Use the blessed hand.",
                 fight =
                     QuestFight(
                         Npcs.GHAST, "ghast", 30, GHAST_SWAMP, "Grrrr...",

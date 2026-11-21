@@ -101,7 +101,7 @@ object TheEyesOfGlouphrie : ShortQuest(
                 done = listOf("I hunted down the evil creatures."),
                 place = "the Tree Gnome Stronghold",
                 location = STRONGHOLD_HUNT,
-                tip = "The evil creatures have 1 hitpoint each: walk to the marked spot in the Stronghold to deal with them.",
+                tip = "The evil creatures have 1 hitpoint each.",
                 search = QuestSearch(STRONGHOLD_HUNT, "You hunt down the evil creatures one by one - each falls with a single blow.", 3),
                 talk = {
                     chatNpc("The creatures are somewhere in the Stronghold. Find", "and crush them!", facialExpression = FacialExpression.CALM_TALK)

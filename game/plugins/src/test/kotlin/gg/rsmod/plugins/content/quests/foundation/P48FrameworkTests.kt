@@ -92,11 +92,11 @@ class P48FrameworkTests {
     @Test
     fun `a missing requirement is named exactly`() {
         val account = Account(QuestChoices.ARMAGEDDON)
-        val needs = QuestRequirements(skills = listOf(Skills.FARMING to 49), quests = listOf("Desert Treasure II"), questPoints = 10)
+        val needs = QuestRequirements(skills = listOf(Skills.FARMING to 49), quests = listOf("Desert Treasure II"), questPoints = 300)
         val missing = needs.missing(account.player)
         assertTrue("You need level 49 Farming." in missing, missing.toString())
         assertTrue("You need to complete Desert Treasure II." in missing, missing.toString())
-        assertTrue("You need 10 Quest points." in missing, missing.toString())
+        assertTrue("You need 300 Quest points." in missing, missing.toString())
         assertFalse(needs.met(account.player))
         account.player.skills.setBaseLevel(Skills.FARMING, 49)
         assertFalse("You need level 49 Farming." in needs.missing(account.player))

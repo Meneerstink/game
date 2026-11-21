@@ -1,0 +1,87 @@
+kind	id	transform	name	opt	option	type	rot	x	z	height	count
+item-on-npc	22407	22407	item	-1	target=14394 tile=Tile{x=3158, z=3495, height=0}	0	0	0	0	0	1
+item	6707	6707	item	3	slot=1	0	0	0	0	0	1
+player	2	2	player	4	tile=Tile{x=2929, z=5203, height=0} missing-option	0	0	0	0	0	4
+player	1	1	player	4	tile=Tile{x=2929, z=5204, height=0} missing-option	0	0	0	0	0	2
+player	2	2	player	4	tile=Tile{x=2927, z=5203, height=0} missing-option	0	0	0	0	0	2
+player	1	1	player	4	tile=Tile{x=2927, z=5204, height=0} missing-option	0	0	0	0	0	2
+player	1	1	player	4	tile=Tile{x=2929, z=5202, height=0} missing-option	0	0	0	0	0	2
+player	1	1	player	4	tile=Tile{x=2926, z=5203, height=0} missing-option	0	0	0	0	0	1
+player	2	2	player	4	tile=Tile{x=2926, z=5204, height=0} missing-option	0	0	0	0	0	1
+npc	1	1	Man	1	tile=Tile{x=2928, z=5203, height=0}	0	0	0	0	0	16
+npc	1	1	Man	1	tile=Tile{x=2929, z=5203, height=0}	0	0	0	0	0	2
+npc	1	1	Man	1	tile=Tile{x=2927, z=5204, height=0}	0	0	0	0	0	1
+npc	1	1	Man	1	tile=Tile{x=2933, z=5204, height=0}	0	0	0	0	0	1
+npc	1	1	Man	1	tile=Tile{x=2928, z=5204, height=0}	0	0	0	0	0	1
+npc	1	1	Man	1	tile=Tile{x=2931, z=5204, height=0}	0	0	0	0	0	1
+npc	49	49	Hellhound	1	tile=Tile{x=2928, z=5203, height=0}	0	0	0	0	0	10
+npc	49	49	Hellhound	1	tile=Tile{x=2926, z=5203, height=0}	0	0	0	0	0	1
+npc	49	49	Hellhound	1	tile=Tile{x=2932, z=5203, height=0}	0	0	0	0	0	1
+npc	49	49	Hellhound	1	tile=Tile{x=2927, z=5203, height=0}	0	0	0	0	0	1
+player	1	1	player	4	tile=Tile{x=3261, z=3077, height=0} missing-option	0	0	0	0	0	12
+player	2	2	player	4	tile=Tile{x=3261, z=3076, height=0} missing-option	0	0	0	0	0	4
+player	2	2	player	4	tile=Tile{x=3260, z=3077, height=0} missing-option	0	0	0	0	0	2
+player	1	1	player	4	tile=Tile{x=3259, z=3077, height=0} missing-option	0	0	0	0	0	6
+player	2	2	player	4	tile=Tile{x=3259, z=3076, height=0} missing-option	0	0	0	0	0	2
+player	1	1	player	4	tile=Tile{x=3261, z=3075, height=0} missing-option	0	0	0	0	0	6
+player	1	1	player	4	tile=Tile{x=3262, z=3077, height=0} missing-option	0	0	0	0	0	12
+player	2	2	player	4	tile=Tile{x=3263, z=3077, height=0} missing-option	0	0	0	0	0	5
+player	1	1	player	4	tile=Tile{x=3258, z=3078, height=0} missing-option	0	0	0	0	0	6
+player	2	2	player	4	tile=Tile{x=3258, z=3077, height=0} missing-option	0	0	0	0	0	6
+player	2	2	player	4	tile=Tile{x=3262, z=3077, height=0} missing-option	0	0	0	0	0	6
+player	1	1	player	4	tile=Tile{x=3263, z=3077, height=0} missing-option	0	0	0	0	0	2
+npc	1	1	Man	1	tile=Tile{x=3260, z=3076, height=0}	0	0	0	0	0	79
+npc	1	1	Man	1	tile=Tile{x=3260, z=3077, height=0}	0	0	0	0	0	9
+npc	1	1	Man	1	tile=Tile{x=3261, z=3076, height=0}	0	0	0	0	0	4
+npc	1	1	Man	1	tile=Tile{x=3261, z=3077, height=0}	0	0	0	0	0	9
+npc	1	1	Man	1	tile=Tile{x=3259, z=3077, height=0}	0	0	0	0	0	5
+npc	1	1	Man	1	tile=Tile{x=3260, z=3080, height=0}	0	0	0	0	0	2
+npc	1	1	Man	1	tile=Tile{x=3260, z=3078, height=0}	0	0	0	0	0	4
+npc	49	49	Hellhound	1	tile=Tile{x=3260, z=3076, height=0}	0	0	0	0	0	79
+npc	49	49	Hellhound	1	tile=Tile{x=3260, z=3077, height=0}	0	0	0	0	0	9
+npc	49	49	Hellhound	1	tile=Tile{x=3261, z=3076, height=0}	0	0	0	0	0	4
+npc	49	49	Hellhound	1	tile=Tile{x=3261, z=3077, height=0}	0	0	0	0	0	9
+npc	49	49	Hellhound	1	tile=Tile{x=3259, z=3077, height=0}	0	0	0	0	0	5
+npc	49	49	Hellhound	1	tile=Tile{x=3260, z=3080, height=0}	0	0	0	0	0	2
+npc	49	49	Hellhound	1	tile=Tile{x=3260, z=3078, height=0}	0	0	0	0	0	3
+player	1	1	player	4	tile=Tile{x=3261, z=3076, height=0} missing-option	0	0	0	0	0	24
+player	2	2	player	4	tile=Tile{x=3261, z=3077, height=0} missing-option	0	0	0	0	0	14
+player	1	1	player	4	tile=Tile{x=3259, z=3076, height=0} missing-option	0	0	0	0	0	12
+player	2	2	player	4	tile=Tile{x=3259, z=3077, height=0} missing-option	0	0	0	0	0	6
+player	2	2	player	4	tile=Tile{x=3261, z=3075, height=0} missing-option	0	0	0	0	0	4
+player	2	2	player	4	tile=Tile{x=3259, z=3075, height=0} missing-option	0	0	0	0	0	7
+player	2	2	player	4	tile=Tile{x=3261, z=3078, height=0} missing-option	0	0	0	0	0	4
+player	2	2	player	4	tile=Tile{x=3262, z=3075, height=0} missing-option	0	0	0	0	0	4
+player	2	2	player	4	tile=Tile{x=3262, z=3078, height=0} missing-option	0	0	0	0	0	8
+player	2	2	player	4	tile=Tile{x=3262, z=3076, height=0} missing-option	0	0	0	0	0	2
+player	2	2	player	4	tile=Tile{x=3257, z=3078, height=0} missing-option	0	0	0	0	0	4
+player	1	1	player	4	tile=Tile{x=3263, z=3078, height=0} missing-option	0	0	0	0	0	3
+player	2	2	player	4	tile=Tile{x=3263, z=3079, height=0} missing-option	0	0	0	0	0	3
+player	1	1	player	4	tile=Tile{x=3258, z=3075, height=0} missing-option	0	0	0	0	0	2
+player	2	2	player	4	tile=Tile{x=3258, z=3074, height=0} missing-option	0	0	0	0	0	2
+player	2	2	player	4	tile=Tile{x=3263, z=3076, height=0} missing-option	0	0	0	0	0	2
+player	1	1	player	4	tile=Tile{x=3262, z=3076, height=0} missing-option	0	0	0	0	0	2
+player	2	2	player	4	tile=Tile{x=3264, z=3080, height=0} missing-option	0	0	0	0	0	2
+player	1	1	player	4	tile=Tile{x=3264, z=3079, height=0} missing-option	0	0	0	0	0	2
+npc	1	1	Man	1	tile=Tile{x=3259, z=3076, height=0}	0	0	0	0	0	2
+npc	49	49	Hellhound	1	tile=Tile{x=3259, z=3076, height=0}	0	0	0	0	0	2
+player	1	1	player	4	tile=Tile{x=3260, z=3077, height=0} missing-option	0	0	0	0	0	7
+player	2	2	player	4	tile=Tile{x=3260, z=3076, height=0} missing-option	0	0	0	0	0	19
+player	1	1	player	4	tile=Tile{x=3260, z=3075, height=0} missing-option	0	0	0	0	0	5
+player	1	1	player	4	tile=Tile{x=3261, z=3078, height=0} missing-option	0	0	0	0	0	3
+player	1	1	player	4	tile=Tile{x=3259, z=3074, height=0} missing-option	0	0	0	0	0	1
+player	1	1	player	4	tile=Tile{x=3258, z=3077, height=0} missing-option	0	0	0	0	0	2
+player	1	1	player	4	tile=Tile{x=3263, z=3080, height=0} missing-option	0	0	0	0	0	1
+player	1	1	player	4	tile=Tile{x=3262, z=3079, height=0} missing-option	0	0	0	0	0	1
+npc	1	1	Man	1	tile=Tile{x=3260, z=3075, height=0}	0	0	0	0	0	1
+npc	1	1	Man	1	tile=Tile{x=3260, z=3081, height=0}	0	0	0	0	0	1
+npc	49	49	Hellhound	1	tile=Tile{x=3260, z=3075, height=0}	0	0	0	0	0	1
+npc	49	49	Hellhound	1	tile=Tile{x=3260, z=3081, height=0}	0	0	0	0	0	1
+npc	1	1	Man	1	tile=Tile{x=3259, z=3075, height=0}	0	0	0	0	0	1
+npc	1	1	Man	1	tile=Tile{x=3262, z=3077, height=0}	0	0	0	0	0	1
+npc	1	1	Man	1	tile=Tile{x=3263, z=3079, height=0}	0	0	0	0	0	1
+npc	1	1	Man	1	tile=Tile{x=3262, z=3078, height=0}	0	0	0	0	0	1
+npc	49	49	Hellhound	1	tile=Tile{x=3259, z=3075, height=0}	0	0	0	0	0	1
+npc	49	49	Hellhound	1	tile=Tile{x=3262, z=3077, height=0}	0	0	0	0	0	1
+npc	49	49	Hellhound	1	tile=Tile{x=3263, z=3079, height=0}	0	0	0	0	0	1
+npc	49	49	Hellhound	1	tile=Tile{x=3262, z=3078, height=0}	0	0	0	0	0	1

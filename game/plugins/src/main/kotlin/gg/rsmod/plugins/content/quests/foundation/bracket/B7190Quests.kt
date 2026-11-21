@@ -136,7 +136,7 @@ object TreeGnomeVillage : ShortQuest(
                 done = listOf("I defeated the Khazard warlord and took the orbs."),
                 place = "outside the Khazard fort",
                 location = WARLORD_FIGHT,
-                tip = "The Khazard warlord can be safespotted in OSRS. Bring good food.",
+                tip = "The Khazard warlord hits hard. Bring good food.",
                 gives = listOf(Items.ORBS_OF_PROTECTION to 1),
                 fight = QuestFight(Npcs.KHAZARD_WARLORD, "Khazard warlord", 112, WARLORD_FIGHT, "You shall not leave with those orbs!"),
                 talk = {

@@ -333,7 +333,7 @@ object RecipeForDisaster : ShortQuest(
                 done = listOf("I freed Sir Amik Varze: the brulee supreme did it."),
                 place = "the black dragons beneath Taverley",
                 location = DRAGON_FIGHT,
-                tip = "A level 227 black dragon: bring an anti-dragon shield and a lot of food.",
+                tip = "Level 227 black dragon: bring an anti-dragon shield.",
                 fight = QuestFight(Npcs.BLACK_DRAGON, "Black dragon", 227, DRAGON_FIGHT, "RAAAWRRR!"),
                 talk = {
                     chatNpc("The black dragon waits beneath Taverley.", facialExpression = FacialExpression.WORRIED)
@@ -380,7 +380,7 @@ object RecipeForDisaster : ShortQuest(
                 done = listOf("I defeated the Culinaromancer: the feast was saved."),
                 place = "Lumbridge Castle",
                 location = FINAL_FIGHT,
-                tip = "Six foes, one after the other, without Prayer. Ice gloves help against Flambeed; restores against Karamel.",
+                tip = "Six foes in a row, no Prayer. Bring ice gloves.",
                 fight =
                     QuestFight(
                         Npcs.AGRITHNANA, "Agrith-Na-Na", 146, FINAL_FIGHT, "Who dares enter the Culinaromancer's lair?",

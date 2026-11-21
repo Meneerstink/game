@@ -115,7 +115,7 @@ object FairyTaleI : ShortQuest(
                 done = listOf("I cut down Tanglefoot with the Magic secateurs."),
                 place = "Zanaris",
                 location = TANGLEFOOT_LAIR,
-                tip = "In OSRS only the Magic secateurs hurt Tanglefoot. Bring food.",
+                tip = "Magic secateurs hurt Tanglefoot. Bring food.",
                 fight = QuestFight(Npcs.TANGLEFOOT, "Tanglefoot", 111, TANGLEFOOT_LAIR, "Grrraaarrr!"),
                 talk = {
                     chatNpc("Tanglefoot lurks in the thorns. Use the magic secateurs.", facialExpression = FacialExpression.WORRIED)

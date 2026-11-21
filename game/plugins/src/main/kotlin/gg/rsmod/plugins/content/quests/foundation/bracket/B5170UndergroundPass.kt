@@ -25,8 +25,8 @@ import gg.rsmod.plugins.content.quests.red
 private val LATHAS_UP = Tile(2575, 3297, 1)
 private val KOFTIK_POST = Tile(2438, 3313, 0)
 private val PALADIN_HALL = Tile(2415, 9688, 0)
-private val DEMON_CAVE = Tile(2346, 9700, 0)
-private val KALRAG_LAIR = Tile(2356, 9668, 0)
+private val DEMON_CAVE = Tile(2389, 9677, 0)
+private val KALRAG_LAIR = Tile(2392, 9684, 0)
 private val IBAN_WELL = Tile(2322, 9807, 0)
 
 object UndergroundPass : ShortQuest(
@@ -133,7 +133,7 @@ object UndergroundPass : ShortQuest(
                 place = "the Underground Pass",
                 location = KALRAG_LAIR,
                 gives = listOf(Items.DOLL_OF_IBAN to 1),
-                tip = "Kalrag is a giant spider: his poison is nasty. Bring an antipoison.",
+                tip = "Kalrag is a giant spider. Bring an antipoison.",
                 fight = QuestFight(Npcs.KALRAG, "Kalrag", 89, KALRAG_LAIR, "Hsssss!"),
                 talk = {
                     chatNpc("Kalrag lurks in the last cave before Iban's temple.", facialExpression = FacialExpression.WORRIED)

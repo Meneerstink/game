@@ -134,7 +134,7 @@ object InSearchOfTheMyreque : ShortQuest(
                 done = listOf("I defeated the Skeleton Hellhound."),
                 place = "the tunnel below the hideout",
                 location = HELLHOUND_FIGHT,
-                tip = "The Skeleton Hellhound is level 97 and can be safespotted.",
+                tip = "The Skeleton Hellhound is level 97.",
                 fight = QuestFight(Npcs.SKELETON_HELLHOUND, "Skeleton Hellhound", 97, HELLHOUND_FIGHT, "GRRRR!"),
                 talk = {
                     chatNpc("The hellhound guards the tunnel.", facialExpression = FacialExpression.WORRIED)
@@ -365,7 +365,7 @@ object DarknessOfHallowvale : ShortQuest(
                 done = listOf("I drew Castle Drakan; Vanstrom struck at me five times and I escaped."),
                 place = "the lookout near Castle Drakan",
                 location = LOOKOUT,
-                tip = "Vanstrom Klause attacks five times in the real quest: here the sketch is made when you arrive.",
+                tip = "Vanstrom Klause waits: the sketch is made on arrival.",
                 search = QuestSearch(LOOKOUT, "You draw Castle Drakan. Vanstrom Klause appears and strikes - five times - but you slip away.", 3),
                 talk = {
                     chatNpc("Go to the lookout near Castle Drakan.", facialExpression = FacialExpression.CALM_TALK)

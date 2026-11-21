@@ -106,7 +106,7 @@ object Regicide : ShortQuest(
                 done = listOf("I fought through the Tyras guards."),
                 place = "the path to Tyras Camp",
                 location = TYRAS_PATH,
-                tip = "Tyras guards hit hard. In OSRS you can lure them to a safespot.",
+                tip = "Tyras guards hit hard. Bring food.",
                 fight = QuestFight(Npcs.TYRAS_GUARD, "Tyras guard", 110, TYRAS_PATH, "Halt, intruder!"),
                 talk = {
                     chatNpc("The path to Tyras Camp is watched by his guards.", facialExpression = FacialExpression.WORRIED)

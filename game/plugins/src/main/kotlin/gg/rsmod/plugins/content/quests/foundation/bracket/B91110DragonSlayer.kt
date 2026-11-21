@@ -86,7 +86,7 @@ object DragonSlayer : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.MELZAR_THE_MAD,
+                npc = Npcs.OZIACH,
                 journal = listOf("I must defeat ${red("Melzar the Mad")} (level 43) in Melzar's Maze for a map piece."),
                 done = listOf("I defeated Melzar the Mad and took his map piece."),
                 place = "Melzar's Maze",
@@ -165,7 +165,7 @@ object DragonSlayer : ShortQuest(
                 done = listOf("I slew Elvarg of Crandor!"),
                 place = "Elvarg's lair on Crandor",
                 location = ELVARG_LAIR,
-                tip = "Wear the anti-dragon shield: Elvarg's dragonfire can hit up to 70 damage.",
+                tip = "Wear the anti-dragon shield: Elvarg breathes fire.",
                 fight = QuestFight(Npcs.ELVARG, "Elvarg", 83, ELVARG_LAIR, "ROAR!"),
                 talk = {
                     chatNpc("Elvarg is in her lair on Crandor. Wear the shield!", facialExpression = FacialExpression.WORRIED)

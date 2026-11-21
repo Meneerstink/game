@@ -144,7 +144,7 @@ object TheGrandTree : ShortQuest(
                 done = listOf("I defeated the Black demon under the Grand Tree."),
                 place = "the tunnels under the Grand Tree",
                 location = DEMON_FIGHT,
-                tip = "The Black demon can be safespotted in OSRS. Bring good food and protect from melee.",
+                tip = "The Black demon hits hard. Protect from melee.",
                 fight = QuestFight(Npcs.BLACK_DEMON_677, "Black demon", 172, DEMON_FIGHT, "Glough sends his regards!"),
                 talk = {
                     chatNpc("Glough's trapdoor leads to the tunnels. Be careful -", "he has left a guard.", facialExpression = FacialExpression.WORRIED)

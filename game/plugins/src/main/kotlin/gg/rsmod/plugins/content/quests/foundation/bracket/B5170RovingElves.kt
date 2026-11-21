@@ -90,7 +90,7 @@ object RovingElves : ShortQuest(
                 place = "Glarial's tomb",
                 location = GLARIAL_TOMB,
                 gives = listOf(Items.CONSECRATION_SEED to 1),
-                tip = "In OSRS you take no weapons or armour into the tomb. Bring food.",
+                tip = "Bring food: the tomb guardians hit hard.",
                 fight = QuestFight(Npcs.MOSS_GIANT_1681, "moss guardian", 84, GLARIAL_TOMB, "The tomb is mine!"),
                 talk = {
                     chatNpc("The tomb is guarded by a moss guardian.", facialExpression = FacialExpression.WORRIED)

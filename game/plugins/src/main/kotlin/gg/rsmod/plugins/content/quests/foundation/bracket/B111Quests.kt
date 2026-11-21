@@ -243,7 +243,7 @@ object MurderMystery : ShortQuest(
 // Snake weed and the rogue's purse are search steps. Estimated tiles. ONTGR: none (the Shilo Village gates ask Shilo Village).
 private val TRUFITUS_POST = Tile(2808, 3086, 0)
 private val SNAKE_WEED_TILE = Tile(2790, 3093, 0)
-private val PURSE_TILE = Tile(2832, 9435, 0)
+private val PURSE_TILE = Tile(2835, 9395, 0)
 
 object JunglePotion : ShortQuest(
     name = "Jungle Potion",

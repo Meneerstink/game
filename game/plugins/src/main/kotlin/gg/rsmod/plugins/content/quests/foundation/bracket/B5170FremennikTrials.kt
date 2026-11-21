@@ -106,7 +106,7 @@ object FremennikTrials : ShortQuest(
                 done = listOf("I defeated Koschei the Deathless."),
                 place = "the cellar below the longhall",
                 location = KOSCHEI_ARENA,
-                tip = "In OSRS you fight Koschei without weapons or armour. Four forms follow one another.",
+                tip = "Koschei has four forms, one after another.",
                 fight =
                     QuestFight(
                         Npcs.KOSCHEI_THE_DEATHLESS, "Koschei the Deathless", 0, KOSCHEI_ARENA, "You cannot kill me!",

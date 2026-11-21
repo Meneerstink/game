@@ -34,7 +34,7 @@ object TempleOfIkov : ShortQuest(
     pointReward = 1,
     questId = Varps.TEMPLE_OF_IKOV_PROGRESS,
     slot = 106,
-    completedValue = 5, // internal: steps.size + 1 (ownSteps)
+    completedValue = 6, // internal: steps.size + 1 (ownSteps)
     usesVarbits = false,
     startNpc = Npcs.LUCIEN,
     startNpcName = "Lucien",
@@ -94,7 +94,7 @@ object TempleOfIkov : ShortQuest(
                 done = listOf("I defeated the Fire Warrior of Lesarkus."),
                 place = "the Temple of Ikov",
                 location = FIRE_WARRIOR_FIGHT,
-                tip = "Only ice arrows hurt the Fire Warrior in OSRS: fire them with a bow.",
+                tip = "Ice arrows hurt the Fire Warrior: fire them with a bow.",
                 fight = QuestFight(Npcs.FIRE_WARRIOR_OF_LESARKUS, "Fire Warrior of Lesarkus", 84, FIRE_WARRIOR_FIGHT, "Fool! You cannot pass!"),
                 talk = {
                     chatNpc("The Fire Warrior of Lesarkus guards the stair. Use the", "ice arrows!", facialExpression = FacialExpression.WORRIED)
@@ -124,6 +124,17 @@ object TempleOfIkov : ShortQuest(
                 fight = QuestFight(Npcs.LUCIEN, "Lucien", 14, LUCIEN_FIGHT, "You will not stop me!"),
                 talk = {
                     chatNpc("Lucien lied to you. Face him at the Flying Horse Inn!", facialExpression = FacialExpression.ANGRY)
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.GUARDIAN_OF_ARMADYL,
+                journal = listOf("I should tell a ${red("Guardian of Armadyl")} that Lucien is dead."),
+                done = listOf("The Guardian of Armadyl thanked me for stopping Lucien."),
+                place = "the Temple of Ikov sanctuary",
+                location = GUARDIAN_POST,
+                talk = {
+                    chatNpc("Lucien is dead? Armadyl's guardians are in your debt.", "The Staff of Armadyl is safe again.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),
