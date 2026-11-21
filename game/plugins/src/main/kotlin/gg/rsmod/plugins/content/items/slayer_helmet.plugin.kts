@@ -106,6 +106,8 @@ val SLAYER_HELMET_VARIANTS =
         Items.SLAYER_HELMET to SLAYER_HELMET_PARTS,
         Items.SLAYER_HELMET_E to SLAYER_HELMET_PARTS,
         Items.SLAYER_HELMET_CHARGED to SLAYER_HELMET_PARTS,
+        // PROJECT48 DMM-ITEMS: Slayer helmet (i) (25484, cache menu Wear/Check/Disassemble); disassembling loses the imbue like the (e) enchantment.
+        25484 to SLAYER_HELMET_PARTS,
         Items.FULL_SLAYER_HELMET to FULL_SLAYER_HELMET_PARTS,
         Items.FULL_SLAYER_HELMET_E to FULL_SLAYER_HELMET_PARTS,
         Items.FULL_SLAYER_HELMET_CHARGED to FULL_SLAYER_HELMET_PARTS,
