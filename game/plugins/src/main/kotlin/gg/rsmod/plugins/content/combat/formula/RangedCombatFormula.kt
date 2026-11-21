@@ -253,11 +253,11 @@ object RangedCombatFormula : CombatFormula {
         // A shot from Dizana's quiver's second slot uses the stored ammo's ranged attack instead of the unused slot ammo's.
         val quiverAmmo =
             if (pawn is Player) gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.quiverBonusCorrection(pawn, BonusSlot.ATTACK_RANGED) else 0
-        return (pawn.getBonus(BonusSlot.ATTACK_RANGED) + sunfire + quiverAmmo).toDouble()
+        return (pawn.getBonus(BonusSlot.ATTACK_RANGED) + sunfire + quiverAmmo + gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.attackBonus(pawn, BonusSlot.ATTACK_RANGED)).toDouble()
     }
 
     private fun getEquipmentDefenceBonus(target: Pawn): Double {
-        return target.getBonus(BonusSlot.DEFENCE_RANGED).toDouble()
+        return (target.getBonus(BonusSlot.DEFENCE_RANGED) + gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.defenceBonus(target, BonusSlot.DEFENCE_RANGED)).toDouble()
     }
 
     private fun getEffectiveRangedLevel(player: Player): Double {

@@ -384,7 +384,7 @@ object MagicCombatFormula : CombatFormula {
     }
 
     private fun getEquipmentAttackBonus(pawn: Pawn): Double {
-        return pawn.getBonus(BonusSlot.ATTACK_MAGIC).toDouble()
+        return (pawn.getBonus(BonusSlot.ATTACK_MAGIC) + gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.attackBonus(pawn, BonusSlot.ATTACK_MAGIC)).toDouble()
     }
 
     private fun getEquipmentDefenceBonus(target: Pawn): Double {

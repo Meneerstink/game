@@ -296,7 +296,7 @@ object MeleeCombatFormula : CombatFormula {
                 StyleType.MAGIC_MELEE -> BonusSlot.ATTACK_STAB
                 else -> throw IllegalStateException("Invalid combat style. $combatStyle")
             }
-        return pawn.getBonus(bonus).toDouble()
+        return (pawn.getBonus(bonus) + gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.attackBonus(pawn, bonus)).toDouble()
     }
 
     private fun getEquipmentDefenceBonus(
@@ -311,7 +311,7 @@ object MeleeCombatFormula : CombatFormula {
                 StyleType.CRUSH -> BonusSlot.DEFENCE_CRUSH
                 else -> throw IllegalStateException("Invalid combat style. $combatStyle")
             }
-        return target.getBonus(bonus).toDouble()
+        return (target.getBonus(bonus) + gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.defenceBonus(target, bonus)).toDouble()
     }
 
     private fun getEffectiveStrengthLevel(player: Player, opponent: Pawn? = null): Double {
