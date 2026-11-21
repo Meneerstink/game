@@ -105,6 +105,26 @@ object OsrsItemImportTool {
                 Spec(13108), Spec(13109), Spec(13110), Spec(13111),
                 Spec(11865), Spec(12017), Spec(12018), Spec(12785), Spec(20786), Spec(20787), Spec(20788), Spec(20789), Spec(20790),
             ),
+            // PROJECT48 SIGILS S-K1 (SIGILS.tsv): alle 65 sigils, volgorde = tabel, per sigil attuned dan unattuned (21-11).
+            "p48-sigils" to listOf(
+                Spec(25993), Spec(25994), Spec(26011), Spec(26012), Spec(26017), Spec(26018), Spec(26056), Spec(26057),
+                Spec(26053), Spec(26054), Spec(25990), Spec(25991), Spec(28489), Spec(28490), Spec(28477), Spec(28478),
+                Spec(28498), Spec(28499), Spec(26038), Spec(26039), Spec(28483), Spec(28484), Spec(26047), Spec(26048),
+                Spec(28495), Spec(28496), Spec(26101), Spec(26102), Spec(26002), Spec(26003), Spec(26044), Spec(26045),
+                Spec(25999), Spec(26000), Spec(26050), Spec(26051), Spec(29678), Spec(29679), Spec(26008), Spec(26009),
+                Spec(26098), Spec(26099), Spec(28519), Spec(28520), Spec(26005), Spec(26006), Spec(28513), Spec(28514),
+                Spec(26122), Spec(26123), Spec(26080), Spec(26081), Spec(29669), Spec(29670), Spec(29651), Spec(29652),
+                Spec(29663), Spec(29664), Spec(29675), Spec(29676), Spec(28486), Spec(28487), Spec(28501), Spec(28502),
+                Spec(28504), Spec(28505), Spec(28507), Spec(28508), Spec(29672), Spec(29673), Spec(26131), Spec(26132),
+                Spec(29648), Spec(29649), Spec(26128), Spec(26129), Spec(28522), Spec(28523), Spec(29654), Spec(29655),
+                Spec(29657), Spec(29658), Spec(29660), Spec(29661), Spec(26020), Spec(26021), Spec(26065), Spec(26066),
+                Spec(26143), Spec(26144), Spec(29666), Spec(29667), Spec(26059), Spec(26060), Spec(26113), Spec(26114),
+                Spec(28516), Spec(28517), Spec(28510), Spec(28511), Spec(25996), Spec(25997), Spec(26077), Spec(26078),
+                Spec(26062), Spec(26063), Spec(26071), Spec(26072), Spec(26116), Spec(26117), Spec(26125), Spec(26126),
+                Spec(26134), Spec(26135), Spec(26140), Spec(26141), Spec(28528), Spec(28529), Spec(28492), Spec(28493),
+                Spec(28480), Spec(28481), Spec(26095), Spec(26096), Spec(26107), Spec(26108), Spec(26110), Spec(26111),
+                Spec(26146), Spec(26147),
+            ),
             // PROJECT48 DMM-ITEMS groep C (magic damage / ranged strength); ids die niet in cache 2686 staan worden WACHT.
             "p48-items-c" to listOf(
                 Spec(30759), Spec(30634), Spec(30064), Spec(30066), Spec(30073), Spec(30076), Spec(30079), Spec(30082),
