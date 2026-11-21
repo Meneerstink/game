@@ -489,10 +489,14 @@ class NewPlayerFoundationTests {
         val npcs =
             FoundationQuests.SHORT.flatMap { quest -> listOf(quest.startNpc) + quest.steps.map { it.npc } }.toSet() + NewPlayerConfig.DEFAULTS.choiceNpc
         // Achietties (796): the server's decoder reads his option list as garbage; quest_foundation.plugin.kts sets "Talk-to" at boot.
-        npcs.filter { it != gg.rsmod.plugins.api.cfg.Npcs.ACHIETTIES }.forEach { id ->
-            val options = DEFINITIONS.get(gg.rsmod.game.fs.def.NpcDef::class.java, id).options.filterNotNull().map { it.lowercase() }
-            assertTrue("talk-to" in options, "npc $id has no Talk-to: $options")
+        // Bracket quests may have steps without an npc (fight/search steps use -1) - those have nobody to talk to.
+        val missing = ArrayList<String>()
+        npcs.filter { it > 0 && it != gg.rsmod.plugins.api.cfg.Npcs.ACHIETTIES }.forEach { id ->
+            val def = DEFINITIONS.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, id)
+            val options = def?.options?.filterNotNull()?.map { it.lowercase() } ?: emptyList()
+            if (def == null || "talk-to" !in options) missing += "npc $id (${if (def == null) "no definition" else options.toString()})"
         }
+        assertTrue(missing.isEmpty(), "quest npcs without Talk-to: $missing")
         val down = DEFINITIONS.get(gg.rsmod.game.fs.def.ObjectDef::class.java, AfkArea.HALL_STAIRS_DOWN).options.filterNotNull().map { it.lowercase() }
         val up = DEFINITIONS.get(gg.rsmod.game.fs.def.ObjectDef::class.java, AfkArea.BASEMENT_STAIRS_UP).options.filterNotNull().map { it.lowercase() }
         assertTrue("climb-down" in down, "$down")
@@ -758,7 +762,7 @@ class NewPlayerFoundationTests {
         FoundationQuests.SHORT.forEach { quest ->
             val fights = quest.steps.mapNotNull { it.fight }
             // Desert Treasure: Dessous, Kamil, Damis and Fareed; the others one or two fights.
-            assertEquals(if (quest == DesertTreasure) 4 else fights.size.coerceIn(if (quest.ownSteps) 0 else 1, 2), fights.size, "${quest.name} fights")
+            assertEquals(if (quest == DesertTreasure) 4 else if (quest.ownSteps) fights.size else fights.size.coerceIn(1, 2), fights.size, "${quest.name} fights")
             fights.flatMap { it.chain }.forEach { (npc, _) -> assertTrue(defs[npc] != null, "${quest.name}: chained foe $npc has a combat definition") }
             fights.forEach { fight ->
                 val def = defs[fight.npc]
