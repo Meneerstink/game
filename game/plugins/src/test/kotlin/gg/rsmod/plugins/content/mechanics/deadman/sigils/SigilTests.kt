@@ -168,4 +168,13 @@ class SigilTests {
         assertEquals(5, SigilSkilling.runecraftMultiplier(abyss))
         assertEquals(3, SigilSkilling.hoardingMultiplier(abyss))
     }
+
+    @Test
+    fun `an un-attuned sigil used on a bank attunes it - the Sigil of Mobility has no Attune option in the cache`() {
+        val player = newPlayer()
+        player.inventory[0] = Item(Sigil.MOBILITY.unattunedId)
+        assertTrue(Sigils.useOnBank(player, 0), "the bank use is handled")
+        assertTrue(Sigil.MOBILITY in Sigils.attuned(player), "the sigil is attuned")
+        assertEquals(Sigil.MOBILITY.attunedId, player.inventory[0]?.id, "the item became the attuned sigil")
+    }
 }
