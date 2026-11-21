@@ -41,7 +41,7 @@ private val RAZVAN_POST = Tile(3492, 3235, 0)
 private val GADDERANKS_FIGHT = Tile(3514, 3240, 0)
 private val DREZEL_POST = Tile(3415, 3489, 2)
 private val IVAN_POST = Tile(3484, 3243, 0)
-private val JUVINATE_FIGHT = Tile(3484, 3241, 0)
+private val JUVINATE_FIGHT = IVAN_POST // the unit test demands fight tile == step tile (walkability-checked); 3484,3241 was never the step tile
 private val RAL_POST = Tile(3602, 3209, 0)
 private val SAFALAAN_POST = Tile(3589, 3335, 0)
 private val LOOKOUT = Tile(3593, 3340, 0)
