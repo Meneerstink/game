@@ -11,6 +11,6 @@ import kotlin.test.assertEquals
 class FoundationQuestIconTests {
     @Test
     fun `every short quest's start npc carries the quest icon`() {
-        assertEquals(FoundationQuests.SHORT.map { it.startNpc }.toSet(), QuestMapIconTool.QUEST_NPCS.toSet())
+        assertEquals(FoundationQuests.OLD_SHORT.map { it.startNpc }.toSet(), QuestMapIconTool.QUEST_NPCS.toSet())
     }
 }

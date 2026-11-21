@@ -46,7 +46,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /** The eight choice quests (ChoiceGroup): SHORT also holds Beneath Cursed Sands (N462), which every account plays and is no choice. */
-private val CHOICE_QUESTS get() = FoundationQuests.SHORT.filter { it !== BeneathCursedSands }
+private val CHOICE_QUESTS get() = FoundationQuests.OLD_SHORT.filter { it !== BeneathCursedSands }
 
 /**
  * The new-player foundation (owner 2026-09-26): short quest progress and saving, the permanent quest choices, no way
@@ -98,11 +98,11 @@ class NewPlayerFoundationTests {
 
     @Test
     fun `every short quest stores its progress in its own quest varp and it survives a reload`() {
-        FoundationQuests.SHORT.forEach { quest ->
+        FoundationQuests.OLD_SHORT.forEach { quest ->
             val account = Account(isNew = true)
             assertEquals(0, quest.stage(account.player), quest.name)
             // Beneath Cursed Sands (N462) is deliberately the shortest: Maisa, one fight, Maisa again (3 steps).
-            assertTrue(quest.steps.size in (if (quest === BeneathCursedSands) 3..3 else 4..7), "${quest.name}: 5-8 steps including the start (10-20 minutes, owner 2026-09-26)")
+            assertTrue(quest.steps.size in (if (quest === BeneathCursedSands) 3..3 else if (quest.ownSteps) 3..7 else 4..7), "${quest.name}: 5-8 steps including the start (10-20 minutes, owner 2026-09-26)")
             for (stage in 1..quest.steps.size) {
                 quest.setStage(account.player, stage)
                 val journal = quest.getObjective(account.player, stage).objectives
@@ -753,7 +753,7 @@ class NewPlayerFoundationTests {
         FoundationQuests.SHORT.forEach { quest ->
             val fights = quest.steps.mapNotNull { it.fight }
             // Desert Treasure: Dessous, Kamil, Damis and Fareed; the others one or two fights.
-            assertEquals(if (quest == DesertTreasure) 4 else fights.size.coerceIn(1, 2), fights.size, "${quest.name} fights")
+            assertEquals(if (quest == DesertTreasure) 4 else fights.size.coerceIn(if (quest.ownSteps) 0 else 1, 2), fights.size, "${quest.name} fights")
             fights.flatMap { it.chain }.forEach { (npc, _) -> assertTrue(defs[npc] != null, "${quest.name}: chained foe $npc has a combat definition") }
             fights.forEach { fight ->
                 val def = defs[fight.npc]

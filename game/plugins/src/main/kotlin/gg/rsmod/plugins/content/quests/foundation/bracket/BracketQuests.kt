@@ -35,7 +35,10 @@ object BracketQuests {
      */
     val TEST_OPEN = gg.rsmod.game.model.attr.AttributeKey<MutableSet<Int>>()
 
-    fun testOpen(player: gg.rsmod.game.model.entity.Player, slot: Int): Boolean = player.attr[TEST_OPEN]?.contains(slot) == true
+    fun testOpen(player: gg.rsmod.game.model.entity.Player, slot: Int): Boolean {
+        val set: Any? = player.attr[TEST_OPEN]
+        return (set as? Set<*>)?.contains(slot) == true
+    }
 
     fun setTestOpen(player: gg.rsmod.game.model.entity.Player, slot: Int, open: Boolean) {
         val set = player.attr[TEST_OPEN] ?: mutableSetOf<Int>().also { player.attr[TEST_OPEN] = it }

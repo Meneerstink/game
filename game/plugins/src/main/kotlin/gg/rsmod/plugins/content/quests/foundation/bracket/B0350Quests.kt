@@ -13,6 +13,7 @@ import gg.rsmod.plugins.content.quests.foundation.FoundationRewards
 import gg.rsmod.plugins.content.quests.foundation.QuestFight
 import gg.rsmod.plugins.content.quests.foundation.QuestLamp
 import gg.rsmod.plugins.content.quests.foundation.QuestReward
+import gg.rsmod.plugins.content.quests.foundation.QuestSearch
 import gg.rsmod.plugins.content.quests.foundation.QuestRequirements
 import gg.rsmod.plugins.content.quests.foundation.QuestStep
 import gg.rsmod.plugins.content.quests.foundation.Recommendation
@@ -54,7 +55,7 @@ object B0350Quests {
 
 private val VERONICA_POST = Tile(3110, 3330, 0)
 private val ODDENSTEIN_POST = Tile(3111, 3367, 2)
-private val MANOR_GROUND = Tile(3112, 3368, 0)
+private val MANOR_GROUND = Tile(3111, 3367, 0)
 
 // ------------------------------------------------------------------------------------------ Q01 Ernest the Chicken
 
@@ -119,13 +120,13 @@ object ErnestTheChicken : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.PROFESSOR_ODDENSTEIN,
-                journal = listOf("I must defeat the ${red("skeleton")} (level 22) on the ground", "floor of Draynor Manor and take back the rubber tube."),
-                done = listOf("I beat the skeleton and took the rubber tube."),
+                journal = listOf("I must search the ${red("ground floor")} of Draynor Manor for the", "rubber tube Oddenstein lost."),
+                done = listOf("I found the rubber tube in the manor."),
                 place = "Draynor Manor's ground floor",
                 location = MANOR_GROUND,
                 gives = listOf(Items.RUBBER_TUBE to 1),
-                tip = "A level 22 skeleton: bring food and fight it in the open.",
-                fight = QuestFight(Npcs.SKELETON, "skeleton", 22, MANOR_GROUND, "Rattle... rattle..."),
+                tip = "Look around the manor floor: the skeletons guard it - keep moving.",
+                search = QuestSearch(MANOR_GROUND, "You search the table and find a rubber tube.", 3, gives = listOf(Items.RUBBER_TUBE to 1)),
                 talk = {
                     chatNpc("It is in the room below. Do hurry!", facialExpression = FacialExpression.CALM_TALK)
                     true
