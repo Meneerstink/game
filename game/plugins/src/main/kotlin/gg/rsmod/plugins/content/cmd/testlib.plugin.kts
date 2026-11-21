@@ -184,6 +184,8 @@ CommandServerCommands.handlers["opfoe"] = { w, a ->
             }
         } else {
             opfoeIdleSince.remove(p.username)
+            // ::god does not work for bots (not a team account): keep the bot alive in long boss chains by topping up its hitpoints.
+            if (p.getCurrentLifepoints() < 60) p.setCurrentLifepoints(p.getMaximumLifepoints())
             if (p.gameSystem.inject(gg.rsmod.game.message.impl.OpNpc2Message(foe.index, 0))) "attacking foe ${foe.id}#${foe.index}" else "no handler"
         }
     }
