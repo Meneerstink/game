@@ -105,7 +105,7 @@ object FightArena : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.JEREMY_SERVIL,
-                journal = listOf("I must win the three fights in ${red("General Khazard's arena")}: a Khazard", "ogre (63), a Khazard scorpion (44) and the Bouncer (137)."),
+                journal = listOf("I must win the three fights in ${red("General Khazard's arena")}: a Khazard", "ogre (level 63), a Khazard scorpion (44) and the Bouncer (137)."),
                 done = listOf("I won the arena fights and Justin Servil was freed."),
                 place = "General Khazard's arena",
                 location = ARENA,

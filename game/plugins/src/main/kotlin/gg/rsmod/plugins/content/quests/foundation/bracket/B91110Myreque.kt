@@ -269,7 +269,7 @@ object InAidOfTheMyreque : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.IVAN_STROM,
-                journal = listOf("I should lead ${red("Ivan Strom")} to safety: speak to him in Burgh de Rott and", "defeat the vampyre that stops him."),
+                journal = listOf("I should lead ${red("Ivan Strom")} to safety: speak to him in Burgh de Rott and", "defeat the vampyre (level 75) that stops him."),
                 done = listOf("Ivan Strom reached safety."),
                 place = "Burgh de Rott",
                 location = IVAN_POST,

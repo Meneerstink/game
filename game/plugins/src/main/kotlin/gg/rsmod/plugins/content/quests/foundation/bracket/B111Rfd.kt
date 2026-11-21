@@ -256,7 +256,7 @@ object RecipeForDisaster : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.RANTZ,
-                journal = listOf("I must defeat the ${red("jubbly bird")}."),
+                journal = listOf("I must defeat the ${red("jubbly bird")} (level 9)."),
                 done = listOf("I freed Skrach Uglogwee: the cooked jubbly did it."),
                 place = "the Feldip Hills",
                 location = JUBBLY_FIGHT,
@@ -376,7 +376,7 @@ object RecipeForDisaster : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.GYPSY,
-                journal = listOf("I must defeat ${red("Agrith-Na-Na")}, ${red("Flambeed")}, ${red("Karamel")}, ${red("Dessourt")}, the ${red("Gelatinnoth Mother")} and the ${red("Culinaromancer")}."),
+                journal = listOf("I must defeat ${red("Agrith-Na-Na")}, ${red("Flambeed")}, ${red("Karamel")}, ${red("Dessourt")}, the ${red("Gelatinnoth Mother")} and the ${red("Culinaromancer")}", "(the first is level 146)."),
                 done = listOf("I defeated the Culinaromancer: the feast was saved."),
                 place = "Lumbridge Castle",
                 location = FINAL_FIGHT,

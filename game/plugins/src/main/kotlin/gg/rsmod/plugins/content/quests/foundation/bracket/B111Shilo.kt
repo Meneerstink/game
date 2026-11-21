@@ -126,7 +126,7 @@ object ShiloVillage : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.TRUFITUS,
-                journal = listOf("I must defeat ${red("Nazastarool")} in his three forms (levels 91, 68 and 93)."),
+                journal = listOf("I must defeat ${red("Nazastarool")} in his three forms (level 91, then 68 and 93)."),
                 done = listOf("I defeated Nazastarool and took Rashiliyia's corpse."),
                 place = "the tomb of Rashiliyia",
                 location = NAZA_FIGHT,
@@ -251,7 +251,7 @@ object OneSmallFavour : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.DWARF_GANG_MEMBER,
-                journal = listOf("I must defeat the ${red("dwarf gang members")} (levels 44, 48 and 49) near", "Hammerspike Stoutbeard in the Dwarven Mine."),
+                journal = listOf("I must defeat the ${red("dwarf gang members")} (level 44, 48 and 49) near", "Hammerspike Stoutbeard in the Dwarven Mine."),
                 done = listOf("I defeated the dwarf gang."),
                 place = "the Dwarven Mine",
                 location = GANG_FIGHT,
