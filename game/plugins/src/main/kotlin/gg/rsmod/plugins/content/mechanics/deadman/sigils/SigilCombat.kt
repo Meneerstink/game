@@ -368,6 +368,9 @@ object SigilCombat {
     ): Int {
         if (!Sigils.effective(attacker, Sigil.RAMPAGE)) return 0
         val now = attacker.world.currentCycle
+        // One attack may ask its hit chance more than once (a two-hit special, a second target of a multi-target attack): the same
+        // style in the same tick is the same attack and leaves the count as it is.
+        if (attacker.attr[RAMPAGE_CYCLE] == now && attacker.attr[RAMPAGE_STYLE] == style) return attacker.attr[RAMPAGE_COUNT] ?: 0
         val last = attacker.attr[RAMPAGE_STYLE]
         val idle = now - (attacker.attr[RAMPAGE_CYCLE] ?: Int.MIN_VALUE / 2) > RAMPAGE_RESET_TICKS
         var count = if (idle) 0 else attacker.attr[RAMPAGE_COUNT] ?: 0

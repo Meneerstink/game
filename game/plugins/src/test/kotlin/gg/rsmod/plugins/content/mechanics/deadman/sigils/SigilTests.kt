@@ -257,6 +257,64 @@ class SigilTests {
     }
 
     @Test
+    fun `accuracy sigils scale the hit chance against monsters - deft 20, precision 50, meticulousness 75 percent, the strongest counts`() {
+        val melee = gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
+        val npc = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
+        val other = mockk<Player>(relaxed = true)
+        val plain = newPlayer()
+        assertEquals(0.20, SigilCombat.accuracy(plain, npc, 0.20, melee), 1e-9, "no sigil, no change")
+        val deft = newPlayer()
+        attune(deft, Sigil.DEFT_STRIKES)
+        assertEquals(0.24, SigilCombat.accuracy(deft, npc, 0.20, melee), 1e-9)
+        assertEquals(0.20, SigilCombat.accuracy(deft, other, 0.20, melee), 1e-9, "not against players")
+        val precise = newPlayer()
+        attune(precise, Sigil.PRECISION)
+        assertEquals(0.30, SigilCombat.accuracy(precise, npc, 0.20, melee), 1e-9)
+        val all = newPlayer()
+        attune(all, Sigil.DEFT_STRIKES)
+        attune(all, Sigil.PRECISION)
+        attune(all, Sigil.METICULOUSNESS)
+        assertEquals(0.35, SigilCombat.accuracy(all, npc, 0.20, melee), 1e-9, "they do not stack: +75% only")
+    }
+
+    @Test
+    fun `every combat formula applies the sigil accuracy itself - the strategies roll with getAccuracy, not through a wrapper`() {
+        // Found in the game (21-11 run 2): a bot with Meticulousness hit Evelot as often as one without - the factor sat in a
+        // PawnExt.dealHit overload that no player attack used.
+        val dir = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/combat")
+        listOf("Melee", "Ranged", "Magic").forEach { style ->
+            val source = java.io.File(dir, "formula/${style}CombatFormula.kt").readText()
+            assertTrue(source.contains("SigilCombat.accuracy(pawn, target, accuracy, ${style}CombatFormula)"), "$style formula")
+        }
+        assertFalse(java.io.File(dir, "PawnExt.kt").readText().contains("SigilCombat.accuracy("), "never twice")
+    }
+
+    @Test
+    fun `rampage - a second accuracy roll of the same attack leaves the count, a changed style raises it to 3 at most`() {
+        val npc = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
+        val world = mockk<gg.rsmod.game.model.World>(relaxed = true)
+        var tick = 100
+        every { world.currentCycle } answers { tick }
+        val player = newPlayer()
+        every { player.world } returns world
+        attune(player, Sigil.RAMPAGE)
+        val melee = gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
+        val magic = gg.rsmod.plugins.content.combat.formula.MagicCombatFormula
+        assertEquals(0.20, SigilCombat.accuracy(player, npc, 0.20, melee), 1e-9, "first attack: count 0")
+        tick += 4
+        assertEquals(0.206, SigilCombat.accuracy(player, npc, 0.20, magic), 1e-9, "changed style: count 1")
+        assertEquals(0.206, SigilCombat.accuracy(player, npc, 0.20, magic), 1e-9, "the second roll of the same attack keeps count 1")
+        tick += 4
+        assertEquals(0.212, SigilCombat.accuracy(player, npc, 0.20, melee), 1e-9, "count 2")
+        tick += 4
+        assertEquals(0.218, SigilCombat.accuracy(player, npc, 0.20, magic), 1e-9, "count 3")
+        tick += 4
+        assertEquals(0.218, SigilCombat.accuracy(player, npc, 0.20, melee), 1e-9, "never above 3")
+        tick += 4
+        assertEquals(0.20, SigilCombat.accuracy(player, npc, 0.20, melee), 1e-9, "the same style twice resets the count")
+    }
+
+    @Test
     fun `rampage stays attuned and effective beside aggression - only its damage bonus does not stack`() {
         val player = newPlayer()
         attune(player, Sigil.RAMPAGE)

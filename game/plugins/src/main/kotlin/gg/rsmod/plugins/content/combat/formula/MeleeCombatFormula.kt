@@ -114,7 +114,10 @@ object MeleeCombatFormula : CombatFormula {
             } else {
                 attack / (2.0 * (defence + 1))
             }
-        return accuracy
+        // PROJECT48: the attuned sigils of a player (Deft Strikes, Precision, Meticulousness, Barrows, Adroit, Rampage, Finality,
+        // Binding) scale the hit chance HERE, so every attack that asks this formula gets them - the strategies and the special
+        // attacks roll with getAccuracy themselves and never went through the old wrapper in PawnExt.dealHit.
+        return gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.accuracy(pawn, target, accuracy, MeleeCombatFormula)
     }
 
     override fun getMaxHit(

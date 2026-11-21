@@ -187,7 +187,7 @@ fun Pawn.dealHit(
     onHit: (PawnHit) -> Unit = {
     },
 ): PawnHit {
-    val accuracy = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.accuracy(this, target, formula.getAccuracy(this, target), formula)
+    val accuracy = formula.getAccuracy(this, target) // the sigils of the attacker are inside the formula (PROJECT48)
     // K07: a Castle wars bracelet charged this game adds 20% against a flag carrier.
     val maxHit = gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsHandler.braceMaxHit(this, target, gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.maxHit(this, target, formula.getMaxHit(this, target), formula))
     val landHit = accuracy >= world.randomDouble()
@@ -206,7 +206,7 @@ fun Pawn.dealHit(
     type: HitType,
     onHit: (PawnHit) -> Unit = {},
 ): PawnHit {
-    val accuracy = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.accuracy(this, target, formula.getAccuracy(this, target), formula)
+    val accuracy = formula.getAccuracy(this, target) // the sigils of the attacker are inside the formula (PROJECT48)
     // K07: a Castle wars bracelet charged this game adds 20% against a flag carrier.
     val maxHit = gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsHandler.braceMaxHit(this, target, gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.maxHit(this, target, formula.getMaxHit(this, target), formula))
     val landHit = accuracy >= world.randomDouble()
