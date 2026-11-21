@@ -598,6 +598,20 @@ gg.rsmod.game.CommandServerCommands.handlers["opnpcitem"] = { w, a ->
 }
 // `opheld <name> <option 1-5> <item id>`: an inventory item option (Dig with a spade, Rub, Eat...) through the real handler path.
 // `itemops <item id>` (PROJECT48): the inventory options of an item as the cache has them (option number = index + 1), for opheld scenarios.
+// `itemonitem <name> <item id A> <item id B>`: uses item A on item B in the inventory through the real OpHeldU handler (PROJECT48 21-11).
+gg.rsmod.game.CommandServerCommands.handlers["itemonitem"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
+    val ia = a.getOrNull(1)?.toIntOrNull()
+    val ib = a.getOrNull(2)?.toIntOrNull()
+    val sa = if (p != null && ia != null) p.inventory.rawItems.indexOfFirst { it?.id == ia } else -1
+    val sb = if (p != null && ib != null) p.inventory.rawItems.indexOfFirst { it?.id == ib && !(ia == ib && p.inventory.rawItems.indexOf(it) == sa) } else -1
+    if (p == null || ia == null || ib == null || sa < 0 || sb < 0) {
+        "usage: itemonitem <name> <item id A> <item id B> (both in the inventory)"
+    } else {
+        val msg = gg.rsmod.game.message.impl.OpHeldUMessage((679 shl 16), sa, ia, (679 shl 16), sb, ib)
+        if (p.gameSystem.inject(msg)) "used item $ia on $ib for ${p.username}" else "no handler"
+    }
+}
 gg.rsmod.game.CommandServerCommands.handlers["itemops"] = { w, a ->
     val id = a.getOrNull(0)?.toIntOrNull()
     if (id == null) {
