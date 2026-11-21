@@ -48,6 +48,8 @@ on_command("p48", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
         }
         "reset" -> {
             player.attr.remove(FoundationRewards.rewardedKey(quest))
+            // Open for play even when the bracket / legacy account would have it completed (this session only).
+            BracketQuests.setTestOpen(player, slot, true)
             quest.setStage(player, 0)
             QuestStatus.sync(player)
             player.message("p48 ${quest.name}: reset (state=${QuestStatus.state(player, quest)}).")

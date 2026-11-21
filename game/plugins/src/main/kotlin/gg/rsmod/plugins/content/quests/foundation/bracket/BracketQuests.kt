@@ -27,6 +27,19 @@ object BracketQuests {
     private val bySlotMap: Map<Int, ShortQuest> by lazy { ALL.associateBy { it.slot } }
 
     fun bySlot(slot: Int): ShortQuest? = bySlotMap[slot]
+
+    /**
+     * TEST ONLY (::p48 reset on the test server, never saved): the slots whose bracket/legacy completion is ignored, so a scenario can
+     * play a quest that its bracket gave for free. Without the attribute nothing differs from the normal rules.
+     */
+    val TEST_OPEN = gg.rsmod.game.model.attr.AttributeKey<MutableSet<Int>>()
+
+    fun testOpen(player: gg.rsmod.game.model.entity.Player, slot: Int): Boolean = player.attr[TEST_OPEN]?.contains(slot) == true
+
+    fun setTestOpen(player: gg.rsmod.game.model.entity.Player, slot: Int, open: Boolean) {
+        val set = player.attr[TEST_OPEN] ?: mutableSetOf<Int>().also { player.attr[TEST_OPEN] = it }
+        if (open) set += slot else set -= slot
+    }
 }
 
 /**

@@ -49,8 +49,10 @@ object QuestStatus {
         if (choice == null) {
             // DMM-ARMAGEDDON D7: for new accounts the quests of the Armageddon photo wait for their combat bracket / storyline,
             // unless they were really played (the list entry's own progress).
-            if (!QuestBrackets.gates(player, slot)) return State.COMPLETED
-            if (QuestBrackets.isUnlocked(player, slot)) return State.COMPLETED
+            // PROJECT48 (test server tool ::p48 reset): a bracket mini-quest forced open, so scenarios can play it although its bracket gave it.
+            val forcedOpen = BracketQuests.testOpen(player, slot)
+            if (!forcedOpen && !QuestBrackets.gates(player, slot)) return State.COMPLETED
+            if (!forcedOpen && QuestBrackets.isUnlocked(player, slot)) return State.COMPLETED
             return when (QuestList.ENTRIES.firstOrNull { it.slot == slot }?.progress?.read?.invoke(player) ?: 0) {
                 COMPLETE -> State.COMPLETED
                 1 -> State.IN_PROGRESS
