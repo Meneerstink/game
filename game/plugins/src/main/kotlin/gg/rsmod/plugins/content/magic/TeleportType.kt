@@ -182,6 +182,20 @@ enum class TeleportType(
         endAnimation = Anims.SPIRIT_TREE_TELEPORT_END,
         endGraphic = Graphic(Gfx.GFX_1229, 0),
         wildLvlRestriction = 30),
+
+    /**
+     * PROJECT48 Sigil of Last Recall (SIGIL-GELUID): the sigil's own OSRS teleport. Leaving = player sequence 9147 (local 17782, 120
+     * client cycles = 4 ticks) with spotanim 1990 (local 3498; its sequence 9148 carries the sounds DMM_LAST_RECALL_TELE_DISAPPEAR_
+     * OPEN / _SUSTAIN), arriving = sequence 9149 (17783) with spotanim 1991 (3499; sound DMM_LAST_RECALL_TELE_REAPPEAR). Import batch
+     * `OsrsFxImportTool sigil-fx`. The rules are the modern teleport's (canTeleport, Wilderness 20); the sounds sit in the animations.
+     */
+    SIGIL_LAST_RECALL(
+        teleportDelay = 4,
+        animation = 17782,
+        graphic = Graphic(3498, 0),
+        endAnimation = 17783,
+        endGraphic = Graphic(3499, 0),
+    ),
     ;
 
     /**

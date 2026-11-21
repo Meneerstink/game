@@ -165,6 +165,8 @@ object LootKeyInterfaceImportTool {
         val zoom: Int = 0,
         val aspectX: Int = 0,
         val aspectY: Int = 0,
+        /** Baked op events (bit n = op n, 0x2 = op 1): the op works without an IF_SETEVENTS from the server (387:39 does the same). */
+        val events: Int = 0,
     )
 
     private class Out {
@@ -261,7 +263,7 @@ object LootKeyInterfaceImportTool {
             }
             else -> error("unsupported type ${c.type}")
         }
-        o.p3(0) // events: the server enables ops with IF_SETEVENTS
+        o.p3(c.events) // events: 0 = the server enables ops with IF_SETEVENTS
         o.p1(0) // no op keys
         o.pjstr(c.opBase)
         o.p1(c.ops.size) // op count, no cursors

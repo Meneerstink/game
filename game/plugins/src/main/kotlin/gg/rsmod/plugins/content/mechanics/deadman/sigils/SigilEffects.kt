@@ -27,16 +27,15 @@ object SigilEffects {
         }
     }
 
-    /** Where the player's most recent teleport started (S45 Last Recall); set from Pawn.teleport. */
+    /** Where the player's most recent teleport started (S45 Last Recall); set from the teleport gate (canTeleport) and Pawn.teleport. */
     private val LAST_TELEPORT_FROM = gg.rsmod.game.model.attr.AttributeKey<gg.rsmod.game.model.Tile>()
-    private val SKIP_RECORD = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
 
-    /** Called by Pawn.teleport when a teleport starts: remembers the tile it started on (not for Last Recall's own teleport). */
-    fun recordTeleport(player: Player) {
-        if (player.attr[SKIP_RECORD] == true) {
-            player.attr.remove(SKIP_RECORD)
-            return
-        }
+    /** A [type] teleport starts on the player's tile: remember it (Last Recall's own teleport is not a place to recall to). */
+    fun recordTeleport(
+        player: Player,
+        type: gg.rsmod.plugins.content.magic.TeleportType,
+    ) {
+        if (type == gg.rsmod.plugins.content.magic.TeleportType.SIGIL_LAST_RECALL) return
         player.attr[LAST_TELEPORT_FROM] = player.tile
     }
 
@@ -53,18 +52,38 @@ object SigilEffects {
         }
     }
 
-    /** S45: "teleport back to the location from which your most recent teleport occurred". */
-    private fun recall(player: Player) {
+    /**
+     * S45: "teleport back to the location from which your most recent teleport occurred" - with the sigil's own OSRS teleport
+     * (TeleportType.SIGIL_LAST_RECALL). The sigil is only activated (5-minute cooldown, activation sound) once the teleport really
+     * starts: with nowhere to recall to, or a teleport that is refused (Tele Block, deep Wilderness, the Deadman countdown that is
+     * interrupted), the cooldown is not spent. The item option calls this instead of the generic activation.
+     */
+    fun activateLastRecall(player: Player) {
+        val sigil = Sigil.LAST_RECALL
+        if (!Sigils.effective(player, sigil)) {
+            player.message("This sigil is not attuned.")
+            return
+        }
+        val left = Sigils.cooldownLeft(player, sigil)
+        if (left > 0) {
+            player.message("The ${sigil.label} will be ready in $left seconds.")
+            return
+        }
         val from = player.attr[LAST_TELEPORT_FROM]
         if (from == null) {
             player.message("You have not teleported yet, so there is nowhere to recall to.")
             return
         }
-        player.canTeleport(gg.rsmod.plugins.content.magic.TeleportType.MODERN) {
-            player.attr[SKIP_RECORD] = true
-            player.teleport(from, gg.rsmod.plugins.content.magic.TeleportType.MODERN)
+        val type = gg.rsmod.plugins.content.magic.TeleportType.SIGIL_LAST_RECALL
+        player.canTeleport(type) {
+            if (!Sigils.activate(player, sigil)) return@canTeleport
+            SigilFx.activated(player, sigil)
+            // exact: the player stood on that very tile when the earlier teleport started (no Landing correction to a tile nearby).
+            player.teleport(from, type, exact = true)
         }
     }
+
+    private fun recall(player: Player) = activateLastRecall(player)
 
     /** S48: "instantly swap your Spellbook to any unlocked Spellbook while outside of combat". */
     private fun versatility(player: Player) {

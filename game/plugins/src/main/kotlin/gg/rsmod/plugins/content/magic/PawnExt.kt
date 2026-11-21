@@ -55,6 +55,7 @@ fun Player.canTeleport(
                 SevenSecondAction.start(this, SevenSecondAction.Kind.TELEPORT) {
                     if (validateTeleportRestrictions(type)) {
                         gg.rsmod.plugins.content.mechanics.pvp.KillGrace.endEarly(this)
+                        gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilEffects.recordTeleport(this, type)
                         onConfirmed()
                     }
                 }
@@ -70,6 +71,9 @@ fun Player.canTeleport(
 
     // N511 (D6): a teleport that goes ahead ends the post-kill grace - every route passes this gate.
     gg.rsmod.plugins.content.mechanics.pvp.KillGrace.endEarly(this)
+    // PROJECT48 S45 Sigil of Last Recall: every teleport route passes this gate (tablets, home teleport, levers, spells, jewellery),
+    // so this is where "the location from which your most recent teleport occurred" is remembered.
+    gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilEffects.recordTeleport(this, type)
     onConfirmed()
     return true
 }
@@ -139,8 +143,8 @@ fun Pawn.teleport(
     lock = LockState.FULL_WITH_DAMAGE_IMMUNITY
 
     queue(TaskPriority.STRONG) {
-        // PROJECT48 S45 Sigil of Last Recall: remember where this teleport started.
-        (this@teleport as? gg.rsmod.game.model.entity.Player)?.let { gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilEffects.recordTeleport(it) }
+        // PROJECT48 S45 Sigil of Last Recall: remember where this teleport started (routes that teleport without the canTeleport gate).
+        (this@teleport as? gg.rsmod.game.model.entity.Player)?.let { gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilEffects.recordTeleport(it, type) }
         prepareForTeleport()
 
         if (startSound) type.startSound?.let { (this@teleport as? Player)?.playSound(it) }

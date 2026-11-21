@@ -265,13 +265,17 @@ val BONUSES_QUIVER_SLOT_COMPONENT = 14
 // re-mounted Equipment tab showed the cache's default until the next equipment change.
 gg.rsmod.plugins.api.ext.PaneMountHooks.register(387) { p ->
     val cape = p.equipment[EquipmentType.CAPE.id]
-    p.setComponentHidden(interfaceId = 387, component = QUIVER_SLOT_COMPONENT, hidden = !(cape != null && cape.id in DizanasQuiver.AMMO_HOLDERS))
+    val holder = cape != null && cape.id in DizanasQuiver.AMMO_HOLDERS
+    p.setComponentHidden(interfaceId = 387, component = QUIVER_SLOT_COMPONENT, hidden = !holder)
+    // SIGIL-WORN-ICOON: the sigil slot of the same tab (one mount hook per interface) - its icon, and its place beside the quiver slot.
+    gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilWornSlot.mount(p, quiverSlotShown = holder)
 }
 
 gg.rsmod.game.model.entity.Player.equipmentDisplay = { p, items ->
     val cape = items.getOrNull(EquipmentType.CAPE.id)
     val holder = cape != null && cape.id in DizanasQuiver.AMMO_HOLDERS
     p.setComponentHidden(interfaceId = 387, component = QUIVER_SLOT_COMPONENT, hidden = !holder)
+    gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilWornSlot.place(p, quiverSlotShown = holder)
     if (p.isInterfaceVisible(667)) {
         p.setComponentHidden(interfaceId = 667, component = BONUSES_QUIVER_SLOT_COMPONENT, hidden = !holder)
     }

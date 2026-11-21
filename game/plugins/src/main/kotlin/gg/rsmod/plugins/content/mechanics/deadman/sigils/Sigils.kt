@@ -138,6 +138,7 @@ object Sigils {
         store(player, on + sigil)
         onChanged(player, sigil, attuned = true)
         SigilFx.attuned(player, sigil)
+        SigilWornSlot.refresh(player)
         player.persistNow()
         return Result.OK
     }
@@ -188,6 +189,7 @@ object Sigils {
         store(player, on - sigil)
         onChanged(player, sigil, attuned = false)
         SigilFx.unattuned(player)
+        SigilWornSlot.refresh(player)
         player.persistNow()
         return Result.OK
     }
@@ -226,6 +228,7 @@ object Sigils {
         if (lost.isEmpty()) return emptyList()
         store(player, on - lost.toSet())
         lost.forEach { onChanged(player, it, attuned = false) }
+        SigilWornSlot.refresh(player)
         return lost
     }
 

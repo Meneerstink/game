@@ -69,6 +69,11 @@ Sigil.values().forEach { sigil ->
     }
     if (hasInvOption(sigil.attunedId, "activate")) {
         on_item_option(sigil.attunedId, "activate") {
+            // Last Recall spends its cooldown only when its teleport really starts (SigilEffects.activateLastRecall).
+            if (sigil == Sigil.LAST_RECALL) {
+                SigilEffects.activateLastRecall(player)
+                return@on_item_option
+            }
             if (Sigils.activate(player, sigil)) {
                 SigilFx.activated(player, sigil)
                 SigilEffects.activated(player, sigil)
@@ -137,6 +142,9 @@ on_command("sigils") {
     Sigils.overview(player).forEach { player.message(it) }
     AttunedSigilsUi.open(player)
 }
+
+// SIGIL-WORN-ICOON: the sigil slot of the Worn Items tab opens the Attuned Sigils window.
+on_button(interfaceId = SigilWornSlot.INTERFACE_ID, component = SigilWornSlot.ICON) { SigilWornSlot.click(player) }
 
 // SIGIL-INFO-UI: the "Attuned Sigils" window (owner design 21-11). Unattune per slot = the item option's rules (bank, no skull).
 on_button(interfaceId = AttunedSigilsUi.INTERFACE_ID, component = gg.rsmod.game.tools.importer.AttunedSigilsInterfaceImportTool.AS.CLOSE) {
