@@ -40,11 +40,16 @@ class CreateFinishedPotionAction {
             val success =
                 secondaryUsed != null &&
                     inventory.remove(potion.primary, assureFullRemoval = true).hasSucceeded() &&
-                    inventory
-                        .remove(
-                            secondaryUsed,
-                            assureFullRemoval = true,
-                        ).hasSucceeded()
+                    // PROJECT48 S08 Sigil of Sustenance: a 50% chance not to consume the secondary ingredient.
+                    (
+                        (gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.SUSTENANCE) &&
+                            player.world.randomDouble() < 0.50) ||
+                            inventory
+                                .remove(
+                                    secondaryUsed,
+                                    assureFullRemoval = true,
+                                ).hasSucceeded()
+                    )
             if (success) {
                 player.addXp(Skills.HERBLORE, potion.experience)
                 val made = player.inventory.add(potion.product)
