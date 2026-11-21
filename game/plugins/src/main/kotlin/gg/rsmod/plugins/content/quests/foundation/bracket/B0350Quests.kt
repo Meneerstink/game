@@ -21,7 +21,7 @@ import gg.rsmod.plugins.content.quests.red
 
 /** PROJECT48: the mini-quests of combat bracket 3-50 (Q01-Q09), in the order of VOORTGANG.tsv. */
 object B0350Quests {
-    val ALL: List<ShortQuest> = listOf(ErnestTheChicken, GoblinDiplomacy, ShieldOfArrav, MerlinsCrystal, HolyGrail, NatureSpirit, AnimalMagnetism)
+    val ALL: List<ShortQuest> = listOf(ErnestTheChicken, GoblinDiplomacy, ShieldOfArrav, MerlinsCrystal, HolyGrail, NatureSpirit, AnimalMagnetism, FairyTaleI, FairyTaleII)
 
     /** Veronica and Professor Oddenstein stand in the world already (spawns_12340) but have no Talk-to plugin: only bound here. */
     val NPCS: List<BracketNpc> =
@@ -42,6 +42,12 @@ object B0350Quests {
             BracketNpc(Npcs.ALICES_HUSBAND, Tile(3626, 3524, 0), gg.rsmod.game.model.Direction.EAST, listOf("Woo... the chickens are restless today.")),
             BracketNpc(Npcs.WITCH_5200, null, gg.rsmod.game.model.Direction.NORTH, listOf("Hee hee hee.")),
             BracketNpc(Npcs.TURAEL, null, gg.rsmod.game.model.Direction.WEST, listOf("Hello. The Slayer masters give out tasks.")),
+            BracketNpc(Npcs.FAIRY_GODFATHER, Tile(2450, 4471, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("The queen sleeps, and Zanaris waits.")),
+            BracketNpc(Npcs.FAIRY_NUFF, Tile(2453, 4469, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("Fairy Nuff at your service.")),
+            BracketNpc(Npcs.MALIGNIUS_MORTIFER, null, gg.rsmod.game.model.Direction.NORTH, listOf("Enchantments are my trade.")),
+            BracketNpc(Npcs.FAIRY_VERY_WISE, Tile(2412, 4434, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("Hush - the Fairy Queen needs rest.")),
+            BracketNpc(Npcs.FAIRY_QUEEN, Tile(2414, 4435, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("Zanaris is quiet, thanks to you.")),
+            BracketNpc(Npcs.COSMIC_BEING, Tile(2162, 4833, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("The cosmos hums, mortal.")),
             BracketNpc(Npcs.GENERAL_WARTFACE_4494, null, gg.rsmod.game.model.Direction.EAST, listOf("Bentnoze is wrong about everything. Everything!")),
         )
 }

@@ -123,6 +123,14 @@ object FairyRings {
 
     val SOURCE = AttributeKey<Source>()
 
+    /**
+     * PROJECT48 ONTGR (Fairy Tale II - Cure a Queen): the ring network opens from step 2 of the quest (the Fairy Godfather's permission),
+     * or once the quest is complete (played, given by the bracket, or a legacy account). The Trinket of fairies keeps its own rule.
+     */
+    fun ringsUnlocked(player: Player): Boolean =
+        gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, "Fairy Tale II - Cure a Queen") ||
+            gg.rsmod.plugins.content.quests.foundation.bracket.FairyTaleII.stage(player) >= 2
+
     fun wieldsFairyMagic(player: Player): Boolean =
         player.getEquipment(EquipmentType.WEAPON)?.id in setOf(Items.DRAMEN_STAFF, Items.LUNAR_STAFF)
 
@@ -212,6 +220,10 @@ object FairyRings {
         player: Player,
         source: Source,
     ): Boolean {
+        if (source == Source.RING && !ringsUnlocked(player)) {
+            player.message("The fairies have not yet told you how to use the rings. Finish Fairy Tale II - Cure a Queen first.")
+            return false
+        }
         if (source == Source.RING && !wieldsFairyMagic(player)) {
             player.message("The fairy ring only works for those who wield fairy magic.")
             return false
@@ -237,6 +249,10 @@ object FairyRings {
         code: String,
         source: Source,
     ) {
+        if (source == Source.RING && !ringsUnlocked(player)) {
+            player.message("The fairies have not yet told you how to use the rings. Finish Fairy Tale II - Cure a Queen first.")
+            return
+        }
         if (source == Source.RING && !wieldsFairyMagic(player)) {
             player.message("The fairy ring only works for those who wield fairy magic.")
             return

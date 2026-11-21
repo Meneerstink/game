@@ -5,6 +5,7 @@ import gg.rsmod.plugins.content.quests.impl.VampyreSlayer
 
 on_npc_option(Npcs.MARTIN_THE_MASTER_GARDENER, "Talk-to") {
     player.queue {
+        if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.MARTIN_THE_MASTER_GARDENER)) return@queue
         when(options(
             "Skillcape of Farming.",
             "General Chat."
