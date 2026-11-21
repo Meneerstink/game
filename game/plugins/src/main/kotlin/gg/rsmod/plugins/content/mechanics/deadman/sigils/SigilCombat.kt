@@ -53,6 +53,25 @@ object SigilCombat {
         accuracy: Double,
         formula: CombatFormula,
     ): Double {
+        val result = withSigils(attacker, target, accuracy, formula)
+        // Debug toolkit (owner 21-11): the hit chance of every player attack roll, so a sigil is measured by reading this line
+        // instead of counting hits for minutes. Only written while the combat trace is on.
+        if (attacker is Player) {
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) {
+                val to = (target as? Player)?.username ?: (target as? Npc)?.let { "npc ${it.id}#${it.index}" } ?: target.toString()
+                "chance ${attacker.username} -> $to style=${styleOf(formula)} " +
+                    "base=${String.format(java.util.Locale.ROOT, "%.4f", accuracy)} final=${String.format(java.util.Locale.ROOT, "%.4f", result)}"
+            }
+        }
+        return result
+    }
+
+    private fun withSigils(
+        attacker: Pawn,
+        target: Pawn,
+        accuracy: Double,
+        formula: CombatFormula,
+    ): Double {
         if (attacker !is Player || !any(attacker)) return accuracy
         var factor = 1.0
         // S02 Deft Strikes (+20% vs non-player enemies), S24 Precision (+50% vs all monsters), S37 Meticulousness (+75% vs NPCs, the
