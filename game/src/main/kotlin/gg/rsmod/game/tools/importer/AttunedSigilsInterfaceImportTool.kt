@@ -10,14 +10,15 @@ import javax.imageio.ImageIO
 /**
  * SIGIL-INFO-UI (owner design 2026-11-21, screens/SIGILS/mock/sigil_venster_v3.png, team/dossiers/GOEDGEKEURDE-ONTWERPEN.txt): the
  * "Attuned Sigils" window - the OSRS Adventure Paths frame (500 x 334) with three columns Slot 1 / 2 / 3. A filled slot shows the
- * sigil's skull (tier x kind, OSRS sprites 3503-3511) with its icon (OSRS sprites 3407-3453), name, type, tier, the wiki effect text
- * and an Unattune button; an empty slot shows the red cross and the wiki's "Look out for sigils" line.
+ * sigil's picture (its skull by tier x kind with its own icon, as the OSRS window draws it), name, type, tier, the wiki effect
+ * text and an Unattune button; an empty slot shows the red cross and the wiki's "Look out for sigils" line.
  *
  * Its own interface and its own sprite range: the N108 art takes its sprite ids from the SORTED manifest (8600..8767) and the ids
  * right after it belong to other imports (census 2026-11-21: sprites 8600..9110 and interfaces ..1240 are in the cache), so these
  * sprites start at [SPRITE_BASE] in the fixed order of [SPRITES] - append only, never reorder.
  *
- * Art: data/art/sigils (made by screens/SIGILS/mock/make_sigil_art.py at 1x). Dry run by default; `--apply` writes through a
+ * Art: data/art/sigils at 1x - frame, columns, button and cross by screens/SIGILS/mock/make_sigil_art.py; the 65 sigil pictures by
+ * make_sigil_slots.py (skull = OSRS cache sprites 3503-3511 by OUR tier and kind, icon = the OSRS Wiki's "Sigil of X icon"). Dry run by default; `--apply` writes through a
  * [CacheTransaction] (stop the test server and the file server first). `--art <dir>` reads the pictures from another checkout.
  */
 object AttunedSigilsInterfaceImportTool {
@@ -27,15 +28,13 @@ object AttunedSigilsInterfaceImportTool {
     /** First free sprite (census 2026-11-21: 9110 is the last one). */
     const val SPRITE_BASE = 9111
 
-    val KINDS = listOf("skilling", "combat", "utility")
-    const val ICON_FIRST = 3407
-    const val ICON_LAST = 3453
+    /** The sigils S01..S65 (Sigil.number); a new sigil gets the next sprite. */
+    const val SIGILS = 65
 
     /** Sprite names in id order. APPEND ONLY. */
     val SPRITES: List<String> =
         listOf("bg", "col_combat", "col_utility", "col_skilling", "col_empty", "btn", "cross") +
-            KINDS.flatMap { kind -> (1..3).map { tier -> "skull_${kind}_t$tier" } } +
-            (ICON_FIRST..ICON_LAST).map { "icon_$it" }
+            (1..SIGILS).map { "sigil_%02d".format(it) }
 
     fun spriteId(name: String): Int {
         val i = SPRITES.indexOf(name)
@@ -43,17 +42,11 @@ object AttunedSigilsInterfaceImportTool {
         return SPRITE_BASE + i
     }
 
-    /** The skull of a sigil: [kind] = combat / utility / skilling, [tier] 1-3. */
-    fun skull(
-        kind: String,
-        tier: Int,
-    ): Int = spriteId("skull_${kind.lowercase()}_t${tier.coerceIn(1, 3)}")
+    /** The picture of sigil [number] (1..[SIGILS]): its skull with its icon. */
+    fun sigil(number: Int): Int = spriteId("sigil_%02d".format(number))
 
     /** The column fill of a kind, or the grey one of an empty slot. */
     fun column(kind: String?): Int = spriteId("col_${kind?.lowercase() ?: "empty"}")
-
-    /** The icon drawn on the skull ([osrsSprite] 3407..3453), or -1. */
-    fun icon(osrsSprite: Int): Int = if (osrsSprite in ICON_FIRST..ICON_LAST) spriteId("icon_$osrsSprite") else -1
 
     /** Component ids and window pixels (the approved mock, make_sigil_art.py). */
     object AS {
@@ -65,23 +58,22 @@ object AttunedSigilsInterfaceImportTool {
         const val SCROLL = 5
         const val SCROLLBAR = 6
         const val SLOT_FIRST = 7
-        const val SLOT_STRIDE = 12
+        const val SLOT_STRIDE = 11
         const val SLOTS = 3
         const val COUNT = SLOT_FIRST + SLOTS * SLOT_STRIDE
 
         // per slot
         const val S_COLUMN = 0
         const val S_HEAD = 1
-        const val S_SKULL = 2 // the skull, or the red cross of an empty slot
-        const val S_ICON = 3
-        const val S_NAME = 4
-        const val S_TYPE = 5
-        const val S_TIER = 6
-        const val S_EFFECT = 7
-        const val S_BUTTON = 8
-        const val S_BUTTON_TEXT = 9
-        const val S_BUTTON_HIT = 10
-        const val S_HINT = 11 // "Use Attune on a sigil at a bank." in an empty slot
+        const val S_SKULL = 2 // the sigil's picture, or the red cross of an empty slot
+        const val S_NAME = 3
+        const val S_TYPE = 4
+        const val S_TIER = 5
+        const val S_EFFECT = 6
+        const val S_BUTTON = 7
+        const val S_BUTTON_TEXT = 8
+        const val S_BUTTON_HIT = 9
+        const val S_HINT = 10 // "Use Attune on a sigil at a bank." in an empty slot
 
         const val X0 = 10
         const val Y0 = 38
@@ -91,7 +83,6 @@ object AttunedSigilsInterfaceImportTool {
         const val SKULL_W = 76
         const val SKULL_H = 81
         const val SKULL_Y = 27
-        const val ICON = 38
         const val CROSS = 72
         const val NAME_Y = 112
         const val NAME_W = COL_W - 8
@@ -155,7 +146,6 @@ object AttunedSigilsInterfaceImportTool {
             b.g(base + AS.S_COLUMN, x, y, AS.COL_W, AS.Y1 - AS.Y0 + 1, "col_empty")
             b.text(base + AS.S_HEAD, x, y + 8, AS.COL_W, 16, AS.WINDOW, fonts.b12, "Slot ${i + 1}", colour = ORANGE, alignX = 1, alignY = 0)
             b.g(base + AS.S_SKULL, ix + (AS.COL_W - AS.CROSS) / 2, AS.IN_CROSS_Y, AS.CROSS, AS.CROSS, "cross", parent = AS.SCROLL)
-            b.g(base + AS.S_ICON, ix + (AS.COL_W - AS.ICON) / 2, AS.IN_SKULL_Y + 5, AS.ICON, AS.ICON, "icon_$ICON_FIRST", hidden = true, parent = AS.SCROLL)
             b.text(base + AS.S_NAME, ix + 4, AS.IN_NAME_Y, AS.NAME_W, 2 * AS.LINE_P12 + 2, AS.SCROLL, fonts.p12, "", colour = ORANGE, alignX = 1, alignY = 0, lineHeight = AS.LINE_P12)
             b.text(base + AS.S_TYPE, ix, AS.IN_NAME_Y + 19, AS.COL_W, 14, AS.SCROLL, fonts.p11, "", colour = ORANGE, alignX = 1, alignY = 0, hidden = true)
             b.text(base + AS.S_TIER, ix, AS.IN_NAME_Y + 32, AS.COL_W, 14, AS.SCROLL, fonts.p11, "", colour = ORANGE, alignX = 1, alignY = 0, hidden = true)

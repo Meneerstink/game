@@ -12,7 +12,7 @@ import gg.rsmod.plugins.content.quests.tab.N108Ui
 
 /**
  * SIGIL-INFO-UI (owner design 2026-11-21, screens/SIGILS/mock/sigil_venster_v3.png): the "Attuned Sigils" window. Three columns, one
- * per attuned sigil in the order they were attuned: skull (tier x kind), name, type, tier, the wiki effect text ([SigilTexts]) and an
+ * per attuned sigil in the order they were attuned: its picture (skull + icon), name, type, tier, the wiki effect text ([SigilTexts]) and an
  * Unattune button with the rules of the item option (at a bank, not skulled); an empty slot shows the red cross and the wiki line.
  * Attuning stays on the item (owner 21-11). Layout and sprites: [AttunedSigilsInterfaceImportTool].
  */
@@ -24,13 +24,6 @@ object AttunedSigilsUi {
     private const val P11 = "p11_full"
     private const val P12 = "p12_full"
     const val EMPTY_TEXT = "Look out for sigils as you explore the world. You can attune 3 of them to give you various advantages."
-
-    /**
-     * The icon drawn on a sigil's skull: sigil number -> OSRS sprite 3407..3453. The cache does not link the icons to the sigils, so a
-     * sigil gets one only once the owner has confirmed the picture (contact sheet screens/SIGILS/osrs-sprites); until then the skull
-     * alone shows its tier and kind.
-     */
-    val ICONS: Map<Int, Int> = emptyMap()
 
     fun isOpen(player: Player) = player.interfaces.isVisible(INTERFACE_ID)
 
@@ -95,18 +88,14 @@ object AttunedSigilsUi {
                 player.setComponentSprite(p, base + AS.S_SKULL, AttunedSigilsInterfaceImportTool.spriteId("cross"))
                 N108Ui.size(player, p, base + AS.S_SKULL, AS.CROSS, AS.CROSS)
                 N108Ui.pos(player, p, base + AS.S_SKULL, x + (AS.COL_W - AS.CROSS) / 2, AS.IN_CROSS_Y)
-                N108Ui.hidden(player, p, base + AS.S_ICON, true)
                 N108Ui.pos(player, p, base + AS.S_NAME, x + 4, AS.IN_EMPTY_NAME_Y)
                 N108Ui.text(player, p, base + AS.S_NAME, "<col=$GREY>Empty slot</col>")
                 textY = AS.IN_EMPTY_TEXT_Y
                 text = "<col=$GREY>$EMPTY_TEXT</col>"
             } else {
-                player.setComponentSprite(p, base + AS.S_SKULL, AttunedSigilsInterfaceImportTool.skull(sigil.kind.name, sigil.tier))
+                player.setComponentSprite(p, base + AS.S_SKULL, AttunedSigilsInterfaceImportTool.sigil(sigil.number))
                 N108Ui.size(player, p, base + AS.S_SKULL, AS.SKULL_W, AS.SKULL_H)
                 N108Ui.pos(player, p, base + AS.S_SKULL, x + (AS.COL_W - AS.SKULL_W) / 2, AS.IN_SKULL_Y)
-                val icon = AttunedSigilsInterfaceImportTool.icon(ICONS[sigil.number] ?: -1)
-                N108Ui.hidden(player, p, base + AS.S_ICON, icon < 0)
-                if (icon >= 0) player.setComponentSprite(p, base + AS.S_ICON, icon)
                 val nameLines = N108Ui.lines(world, P12, sigil.label, AS.NAME_W).coerceIn(1, 2)
                 N108Ui.pos(player, p, base + AS.S_NAME, x + 4, AS.IN_NAME_Y)
                 N108Ui.text(player, p, base + AS.S_NAME, sigil.label)
