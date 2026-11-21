@@ -137,7 +137,7 @@ object Woodcutting {
                         player.world.spawn(projectile)
                         player.addXp(Skills.FIREMAKING, tree.xp)
                     } else {
-                        player.inventory.add(tree.log)
+                        gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilSkilling.give(player, tree.log)
                     }
                     gg.rsmod.plugins.content.skills.summoning.SkillingPets.woodcutting(player, tree)
                 }

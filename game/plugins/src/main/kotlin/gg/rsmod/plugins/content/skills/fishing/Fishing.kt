@@ -118,7 +118,7 @@ object Fishing {
         val firstBaitIdInInventory = tool.baitId?.firstOrNull { baitId -> player.inventory.contains(baitId) }
 
         firstBaitIdInInventory?.let { player.inventory.remove(it) }
-        val caught = player.inventory.add(fish.id)
+        val caught = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilSkilling.give(player, fish.id)
         if (caught.hasSucceeded() && fish.id == gg.rsmod.plugins.api.cfg.Items.RAW_SHARK) ClueTasks.succeeded(player, ClueTasks.Action.SHARK)
         gg.rsmod.plugins.content.skills.summoning.SkillingPets.fishing(player, fish)
         gg.rsmod.plugins.content.scrolls.ClueSkilling.fishing(player, fish)

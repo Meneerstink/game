@@ -200,7 +200,7 @@ object Mining {
             }
             player.playSound(Sfx.MINE_ORE)
         }
-        val mined = player.inventory.add(reward)
+        val mined = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilSkilling.give(player, reward)
         if (mined.hasSucceeded() && rock == RockType.MITHRIL) ClueTasks.succeeded(player, ClueTasks.Action.MITHRIL_ORE)
         player.addXp(Skills.MINING, product?.experience ?: rock.experience, checkBrawlingGloves = true)
         gg.rsmod.plugins.content.skills.summoning.SkillingPets.mining(player, rock)
