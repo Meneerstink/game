@@ -131,7 +131,9 @@ object RunecraftAction {
         val essAmount = inventory.getItemCount(essence)
         val transaction = inventory.remove(item = essence, amount = essAmount)
 
-        val count = rune.getAmount(player.skills.getCurrentLevel(Skills.RUNECRAFTING), player, transaction.items.size)
+        // PROJECT48 S10 Sigil of the Abyss: 5x as many runes as usual.
+        val count = rune.getAmount(player.skills.getCurrentLevel(Skills.RUNECRAFTING), player, transaction.items.size) *
+            gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilSkilling.runecraftMultiplier(player)
 
         if (transaction.hasSucceeded()) {
             val made = player.inventory.add(rune.id, count)

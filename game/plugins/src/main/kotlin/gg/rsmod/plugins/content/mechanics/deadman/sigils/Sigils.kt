@@ -17,6 +17,10 @@ import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 object Sigils {
     const val MAX_ATTUNED = 3
 
+    /** S04 Sigil of Exaggeration: the non-combat skills (Cooking .. Construction) and the boost they hold. */
+    val EXAGGERATED_SKILLS: IntRange = 7..22
+    const val EXAGGERATION_BOOST = 5
+
     /** The attuned sigils of a player: sigil numbers, comma separated (persisted). */
     val ATTUNED = AttributeKey<String>(persistenceKey = "p48_sigils_attuned")
 
@@ -103,6 +107,7 @@ object Sigils {
         if (EXCLUSIVE_GROUPS.any { sigil in it && on.any { other -> other in it } }) return Result.EXCLUSIVE
         player.inventory[slot] = Item(sigil.attunedId)
         store(player, on + sigil)
+        onChanged(player, sigil, attuned = true)
         player.persistNow()
         return Result.OK
     }
@@ -121,8 +126,26 @@ object Sigils {
         val on = attuned(player)
         player.inventory[slot] = Item(sigil.unattunedId)
         store(player, on - sigil)
+        onChanged(player, sigil, attuned = false)
         player.persistNow()
         return Result.OK
+    }
+
+    /** The immediate effect of attuning or unattuning (the rest is read by the hooks): Exaggeration lifts / drops the +5 boost at once. */
+    private fun onChanged(
+        player: Player,
+        sigil: Sigil,
+        attuned: Boolean,
+    ) {
+        if (sigil != Sigil.EXAGGERATION) return
+        for (skill in EXAGGERATED_SKILLS) {
+            val max = player.skills.getMaxLevel(skill)
+            if (attuned) {
+                player.skills.alterCurrentLevel(skill, EXAGGERATION_BOOST, EXAGGERATION_BOOST)
+            } else if (player.skills.getCurrentLevel(skill) > max) {
+                player.skills.setCurrentLevel(skill, max)
+            }
+        }
     }
 
     /** Seconds left of the cooldown of an activatable [sigil] (0 = ready). */

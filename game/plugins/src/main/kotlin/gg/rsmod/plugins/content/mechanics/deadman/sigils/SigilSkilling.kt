@@ -18,6 +18,9 @@ object SigilSkilling {
             else -> 1
         }
 
+    /** S10 Sigil of the Abyss: 5x as many runes when Runecrafting. */
+    fun runecraftMultiplier(player: Player): Int = if (Sigils.effective(player, Sigil.THE_ABYSS)) 5 else 1
+
     /** Whether this gathered resource goes to the bank (S58 always, S43 in 90% of the cases). */
     fun toBank(player: Player): Boolean =
         Sigils.effective(player, Sigil.REMOTE_STORAGE) ||

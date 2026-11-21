@@ -25,6 +25,11 @@ on_timer(key = STAT_RESTORE) {
     val actualLevels = Array(SkillSet.DEFAULT_SKILL_COUNT) { player.skills.getMaxLevel(it) }
 
     actualLevels.forEachIndexed { index, actualLevel ->
+        // PROJECT48 S04 Sigil of Exaggeration: all non-combat skills are permanently boosted by 5 (they do not drain below it).
+        if (index in gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.EXAGGERATED_SKILLS && gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.EXAGGERATION)) {
+            if (tempLevels[index] < actualLevel + gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.EXAGGERATION_BOOST) player.skills.alterCurrentLevel(index, 1, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.EXAGGERATION_BOOST)
+            return@forEachIndexed
+        }
         val difference = actualLevel - tempLevels[index]
         val boost = sign(difference.toDouble()).toInt()
         // A lowered stat climbs back at the Rapid Restore rate; a boosted one decays at the normal rate.
