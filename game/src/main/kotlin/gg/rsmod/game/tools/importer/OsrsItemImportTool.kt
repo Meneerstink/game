@@ -98,6 +98,17 @@ object OsrsItemImportTool {
                 Spec(33041, noted = true), Spec(33050, noted = true), Spec(33063, noted = true), Spec(33122, noted = true),
                 Spec(34422, noted = true), Spec(34425, noted = true), Spec(13658, noted = true),
             ),
+            // PROJECT48 DMM-ITEMS (ITEMS.tsv groep A+B, 21-11): nut-items en imbues. Upstream-ids nagekeken tegen de OSRS Wiki.
+            "p48-items" to listOf(
+                Spec(19564), Spec(22517), Spec(25104), Spec(23946), Spec(24736), Spec(24844), Spec(19707), Spec(13226), Spec(24478),
+                Spec(13639), Spec(24482), Spec(25781), Spec(20724), Spec(27641), Spec(25818),
+                Spec(13108), Spec(13109), Spec(13110), Spec(13111),
+                Spec(11865), Spec(12017), Spec(12018), Spec(12785), Spec(20786), Spec(20787), Spec(20788), Spec(20789), Spec(20790),
+            ),
+            // PROJECT48 DMM-ITEMS groep C (magic damage / ranged strength); ids die niet in cache 2686 staan worden WACHT.
+            "p48-items-c" to listOf(
+                Spec(30759), Spec(30634), Spec(30064), Spec(30066), Spec(30073), Spec(30076), Spec(30079), Spec(30082),
+            ),
             // N415: OSRS Wiki + cache 2686 MA2 remains/symbol. Local ids come from the importer, never the upstream ids.
             // Ancient fabric/capes are absent in 2686 and intentionally require an isolated newer-source batch.
             "mage-arena" to listOf(Spec(21797), Spec(21798), Spec(21799), Spec(21800)),
