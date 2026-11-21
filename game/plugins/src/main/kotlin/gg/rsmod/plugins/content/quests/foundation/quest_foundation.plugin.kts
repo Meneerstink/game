@@ -535,7 +535,11 @@ FoundationQuests.NPC_POSTS.forEach { post ->
 }
 
 // PROJECT48 F3: the npcs of the bracket mini-quests (spawned when they have a post, always bound to the quest talk).
-gg.rsmod.plugins.content.quests.foundation.bracket.BracketQuests.NPCS.forEach { post ->
+// Npcs that another binding of this file already owns (one Talk-to plugin per npc): their quest talk runs through that binding.
+val alreadyBound =
+    FoundationQuests.NPC_POSTS.map { it.npc }.toSet() +
+        setOf(Npcs.BRUNDT_THE_CHIEFTAIN, Npcs.GARKOR, Npcs.ANITA, Npcs.EDMOND, Npcs.KING_ARTHUR, Npcs.SIR_LANCELOT, BeneathCursedSands.startNpc)
+gg.rsmod.plugins.content.quests.foundation.bracket.BracketQuests.NPCS.filter { it.npc !in alreadyBound }.forEach { post ->
     post.tile?.let { spawn_npc(npc = post.npc, x = it.x, z = it.z, height = it.height, walkRadius = 0, direction = post.facing) }
     on_npc_option(npc = post.npc, option = "talk-to") {
         player.queue {
