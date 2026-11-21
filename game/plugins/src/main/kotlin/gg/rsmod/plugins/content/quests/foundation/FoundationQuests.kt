@@ -1570,12 +1570,11 @@ object FoundationQuests {
     /** PROJECT48 O1-O6: the quests the Quest Helper can follow: [SHORT] plus the read-only route mirrors of the six old quests. */
     val HELPERS: List<ShortQuest> by lazy { SHORT + HelperRoutes.ALL }
 
-    /** OSRS Wiki quest points: Sins of the Father 2, Children of the Sun 1, Secrets of the North 2, Bone Voyage 1; Mage Arena II is a miniquest (0). Beneath Cursed Sands (2) is a short quest since N462. */
+    /** OSRS Wiki quest points: Sins of the Father 2, Children of the Sun 1, Secrets of the North 2, Bone Voyage 1; Mage Arena II is a miniquest (0). Secrets of the North is a bracket mini-quest since PROJECT48 Q41 (bracket.SecretsOfTheNorth). Beneath Cursed Sands (2) is a short quest since N462. */
     val COMPLETED: List<CompletedOsrsQuest> =
         listOf(
             CompletedOsrsQuest("Sins of the Father", 2, OsrsQuestVarps.SINS_OF_THE_FATHER, OsrsQuestSlots.SINS_OF_THE_FATHER, "Vanstrom Klause was defeated and Darkmeyer freed."),
             CompletedOsrsQuest("Children of the Sun", 1, OsrsQuestVarps.CHILDREN_OF_THE_SUN, OsrsQuestSlots.CHILDREN_OF_THE_SUN, "The plot in Varrock was uncovered."),
-            CompletedOsrsQuest("Secrets of the North", 2, OsrsQuestVarps.SECRETS_OF_THE_NORTH, OsrsQuestSlots.SECRETS_OF_THE_NORTH, "The secrets of the Weiss mountains were revealed."),
             CompletedOsrsQuest("Bone Voyage", 1, OsrsQuestVarps.BONE_VOYAGE, OsrsQuestSlots.BONE_VOYAGE, "The Varrock Museum's barge reached Fossil Island."),
         )
 

@@ -73,6 +73,10 @@ object OsrsNpcImportTool {
             // Owner answer Q10: The Mimic encounter (RuneLite gameval NpcID TRAIL_MIMIC_NONCOMBAT 7979, TRAIL_MIMIC_COMBAT 8633,
             // TRAIL_MIMIC_SPAWN_MELEE / RANGER / MAGE 8635-8637) and Watson (TRAIL_WATSON_PRE_TALK 7303, OSRS Wiki infobox 7303,7304).
             "mimic" to listOf(7979, 8633, 8635, 8636, 8637, 7303),
+            // PROJECT48 Q41 Secrets of the North (owner 21-11: "JA, NPC's importeren"; OSRS Wiki infobox ids): Evelot 12047 (the
+            // attackable one, level 148), Assassin 12062 (level 262), Big Fish 12053 (Hazeel at Weiss). The Carnillean guard is the
+            // rev-667 npc 887 already at the mansion door. The Strange Creature 12073 is skeletal: OsrsPetImportTool skeletal-npc sotn.
+            "sotn" to listOf(12047, 12062, 12053),
             // CLUE: individually pinned Wiki NPCs, verified against cache 2686
             // by ClueStepAssetProbe (docs/CLUE/cache/step-assets.json). Existing
             // Uri, hard agents and god wizards are reused, never duplicated.
@@ -219,6 +223,8 @@ object OsrsNpcImportTool {
                 // DEMON_ATTACK 64, DEMON_BLOCK 65, DEMON_DEATH 67; HUMAN_CASTING 811 and HUMAN_DEATH 836 (human form).
                 132, 129, 131, 5322, 5320, 5321, 812, 843, 424, 64, 65, 67, 811, 836),
             "mimic" to listOf(8308, 8309, 8310),
+            // PROJECT48 Q41: RuneLite gameval AnimationID M_ASSASSIN_ATTACK 1413 (the assassin's bow-sword).
+            "sotn" to listOf(1413),
             // deadman-guard: the gnome guards' combat on the OSRS gnome skeleton (base of GNOME_READY 2331): GNOME_ATTACKBOW 12043,
             // GNOME_ATTACKSWORD 12045, GNOME_BLOCK 12046, GNOME_DEATH 12048 (RuneLite gameval AnimationID, 2026-09-24).
             // The Sophanem / Rellekka guards stand with the imported HUMAN_STAFFREADY 813 (OSRS human skeleton), so their combat uses

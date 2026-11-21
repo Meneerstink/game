@@ -350,6 +350,10 @@ object OsrsPetImportTool {
         mapOf(
             // DMM2: Lil Wisp, rig2138, movement10230/10233 from cache2686; real sidecar required after import.
             "dmm2-wisp" to listOf(15571 to emptyList()),
+            // PROJECT48 Q41 Secrets of the North: Strange Creature (OSRS Wiki id 12073, level 368, the ranged form; model 47157).
+            // NPC_MUSPAH_IDLE_01 9913 / WALK 9914 / 9916 from the definition, plus RuneLite gameval AnimationID NPC_MUSPAH_ATTACK_MAGIC_01
+            // 9918, ATTACK_RANGED_01 9922, SPAWN_01 9938, DEATH_01 9939.
+            "sotn" to listOf(12073 to listOf(9918, 9922, 9938, 9939)),
             // Artio (NpcID CALLISTO_SINGLES 11992, the Callisto rig): NPC_CALLISTO_IDLE01 10011 / WALK01 10009 from the definition, plus
             // ATTACK_MELEE01 10012, ATTACK_RANGED01 10013, ATTACK_MAGIC01 10014, ENRAGED01 10015, SPAWN01 10016, DEATH01 10017.
             "artio" to listOf(11992 to listOf(10012, 10013, 10014, 10015, 10016, 10017)),

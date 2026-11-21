@@ -40,6 +40,10 @@ object OsrsFxImportTool {
             // 1982, _RAMPAGE 1983 + _BUFF_01..05 1984-1988, _SUPREME_STAMINA 1989, _THE_LAST_RECALL_DISAPPEAR 1990 / _REAPPEAR 1991,
             // _THE_GUARDIAN_ANGEL 1992, _SPECIALISED_STRIKES 1993, _THE_ETERNAL_JEWELLER 2560.
             "sigil-fx" to (1970..1993).toList() + listOf(2560),
+            // PROJECT48 Q41 Secrets of the North, Strange Creature (RuneLite gameval SpotanimID): MUSPAH_RANGE_IMPACT 2293,
+            // VFX_MUSPAH_DEATH_01 2318, VFX_MUSPAH_ATTACK_MAGIC_01 2319, PROJECTILE_MUSPAH_ATTACK_MAGIC_01 2327,
+            // IMPACT_MUSPAH_ATTACK_MAGIC_01 2328, PROJECTILE_MUSPAH_ATTACK_RANGED_01 2329.
+            "sotn" to listOf(2293, 2318, 2319, 2327, 2328, 2329),
             // DMM2: cache 2686 source IDs, same order as the phase-3 bundle plan.
             "dmm2-spots" to listOf(3030, 3031, 3032, 3033, 3565, 3566, 3567, 3568, 3569, 3570, 3571, 4020),
             "dmm2-fire-av" to listOf(116), // ENCHANT_AMULET_LVL3, wiki creating-fire visual (rev15329402).

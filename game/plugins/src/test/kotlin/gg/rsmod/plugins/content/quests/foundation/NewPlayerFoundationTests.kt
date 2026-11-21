@@ -418,12 +418,14 @@ class NewPlayerFoundationTests {
         assertEquals(mapOf(0 to 0, 1 to 1), QuestListCacheTool.PROGRESS_ORDER, "Not completed, Completed (quest list part 2)")
         // N415: Mage Arena II is a list entry too (a full earned miniquest, 2 stages).
         val listed = FoundationQuests.COMPLETED + gg.rsmod.plugins.content.areas.wilderness.MageArenaIIQuest
-        val slots = (FoundationQuests.OLD_SHORT.filter { !it.usesVarbits } + listed).map { it.slot }.toSet()
+        // PROJECT48 Q41: Secrets of the North is a bracket mini-quest now; it keeps its list slot and varp, its steps are its own.
+        val played = gg.rsmod.plugins.content.quests.foundation.bracket.SecretsOfTheNorth
+        val slots = (FoundationQuests.OLD_SHORT.filter { !it.usesVarbits } + listed).map { it.slot }.toSet() + played.slot
         assertEquals(QuestListCacheTool.QUESTS.map { it.slot }.toSet(), slots)
         QuestListCacheTool.QUESTS.forEach { entry ->
-            val quest = (FoundationQuests.OLD_SHORT + listed).first { it.slot == entry.slot }
+            val quest = (FoundationQuests.OLD_SHORT + listed + played).first { it.slot == entry.slot }
             assertEquals(entry.varp, quest.questId, entry.name)
-            assertEquals(entry.complete, quest.stages, entry.name)
+            if (quest !== played) assertEquals(entry.complete, quest.stages, entry.name)
         }
         val account = Account(isNew = true)
         FoundationQuests.applyQuestListOrder(account.player)

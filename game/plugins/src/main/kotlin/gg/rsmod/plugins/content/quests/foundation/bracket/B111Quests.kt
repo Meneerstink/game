@@ -23,11 +23,17 @@ import gg.rsmod.plugins.content.quests.red
  * Npcs that already have a Talk-to plugin or a QuestNpcPost are NOT listed here (their handler calls FoundationQuests.talk first).
  */
 object B111Quests {
-    val ALL: List<ShortQuest> = listOf(BlackKnightsFortress, MurderMystery, JunglePotion, ShiloVillage, OneSmallFavour, ATailOfTwoCats, DeviousMinds, RecipeForDisaster)
+    val ALL: List<ShortQuest> = listOf(BlackKnightsFortress, MurderMystery, JunglePotion, ShiloVillage, OneSmallFavour, ATailOfTwoCats, DeviousMinds, SecretsOfTheNorth, RecipeForDisaster)
 
     val NPCS: List<BracketNpc> =
         B111Rfd.NPCS + listOf(
             BracketNpc(Npcs.MURPHY, null, Direction.SOUTH, listOf("Fine sailing weather.")),
+            // Q41 Secrets of the North: the guard and the barman stand in the world already; Hazeel, Claus and Big Fish get a post.
+            BracketNpc(Npcs.GUARD_887, null, Direction.SOUTH, listOf("Move along. Nothing to see at the mansion.")),
+            BracketNpc(Npcs.ANGOR, null, Direction.NORTH, listOf("What can I get you?")),
+            BracketNpc(Npcs.HAZEEL, Tile(2607, 9673, 0), Direction.SOUTH, listOf("The north remembers its masters.")),
+            BracketNpc(Npcs.CLAUS_THE_CHEF, Tile(2570, 9668, 0), Direction.SOUTH, listOf("Mind the pots, they are hot.")),
+            BracketNpc(SotnNpcs.BIG_FISH, Tile(2868, 3938, 0), Direction.SOUTH, listOf("Blub.")),
             BracketNpc(Npcs.TRAIBORN, null, Direction.SOUTH, listOf("Thurgo... no, wait.")),
             BracketNpc(Npcs.DORIS, null, Direction.SOUTH, listOf("My son lives in the basement.")),
             BracketNpc(Npcs.SIR_AMIK_VARZE, null, Direction.SOUTH, listOf("The White Knights are ever vigilant.")),
