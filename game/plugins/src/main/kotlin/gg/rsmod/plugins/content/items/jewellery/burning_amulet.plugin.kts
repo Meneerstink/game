@@ -87,7 +87,7 @@ fun Player.teleportWithAmulet(
     val used = getInteractingItemId()
     canTeleport(TeleportType.JEWELRY) {
         // Start/land sounds come from TeleportType.JEWELRY in the shared teleport (one rule, no second copy here).
-        val replacement = amuletReplacement(used)
+        val replacement = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilJeweller.keep(this, used, amuletReplacement(used))
         if (isEquipped) {
             equipment[EquipmentType.AMULET.id] = if (replacement > -1) Item(replacement) else null
         } else {

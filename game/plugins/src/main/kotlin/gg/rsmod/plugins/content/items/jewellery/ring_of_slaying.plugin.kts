@@ -85,7 +85,7 @@ fun Player.teleportWithRing(
         // Start/land sounds come from TeleportType.JEWELRY in the shared teleport (one rule, no second copy here).
 
         // Get the replacement ring with updated charges
-        val replacement = ringReplacement(getInteractingItemId())
+        val replacement = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilJeweller.keep(this, getInteractingItemId(), ringReplacement(getInteractingItemId()))
 
         if (isEquipped) {
             // Update the equipped ring, or remove it if there are no charges left

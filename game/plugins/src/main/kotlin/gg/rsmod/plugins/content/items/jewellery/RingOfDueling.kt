@@ -28,7 +28,7 @@ object RingOfDueling {
         if (used.id !in ITEMS) return false
         val container = if (equipped) player.equipment else player.inventory
         if (container[slot] !== used) return false
-        container[slot] = replacement(used.id)?.let { Item(it) }
+        container[slot] = if (gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilJeweller.keep(player, used.id, -1) == used.id) used else replacement(used.id)?.let { Item(it) }
         return true
     }
 

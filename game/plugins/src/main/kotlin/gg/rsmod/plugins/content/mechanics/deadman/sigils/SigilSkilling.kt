@@ -50,3 +50,12 @@ object SigilSkilling {
 
     private fun Player.attuned() = Sigils.attuned(this)
 }
+
+/** S12 Sigil of the Eternal Jeweller: teleporting with charged jewellery never uses a charge (the used item is kept as it is). */
+object SigilJeweller {
+    fun keep(
+        player: Player,
+        usedId: Int,
+        replacement: Int,
+    ): Int = if (Sigils.effective(player, Sigil.THE_ETERNAL_JEWELLER)) usedId else replacement
+}
