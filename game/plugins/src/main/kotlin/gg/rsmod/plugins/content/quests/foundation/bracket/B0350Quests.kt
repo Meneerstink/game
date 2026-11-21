@@ -714,7 +714,7 @@ object NatureSpirit : ShortQuest(
                 tip = "Ghasts rot your food. Use the blessed hand.",
                 fight =
                     QuestFight(
-                        Npcs.GHAST, "ghast", 30, GHAST_SWAMP, "Grrrr...",
+                        Npcs.GHAST_1053, "ghast", 30, GHAST_SWAMP, "Grrrr...",
                         chain = listOf(Npcs.GHAST_1053 to "Another one rises from the mud!"),
                     ),
                 talk = {

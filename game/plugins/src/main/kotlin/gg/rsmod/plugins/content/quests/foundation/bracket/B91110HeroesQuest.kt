@@ -85,7 +85,7 @@ object HeroesQuest : ShortQuest(
     override val steps =
         listOf(
             QuestStep(
-                npc = Npcs.ICE_QUEEN,
+                npc = Npcs.ACHIETTIES,
                 journal = listOf("I must defeat the ${red("Ice Queen")} (level 111) below White Wolf Mountain", "for her ice gloves."),
                 done = listOf("I defeated the Ice Queen and took the ice gloves."),
                 place = "the Ice Queen's lair",
@@ -99,7 +99,7 @@ object HeroesQuest : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.ICE_QUEEN,
+                npc = Npcs.ACHIETTIES,
                 journal = listOf("I must defeat the ${red("Entrana firebird")} (level 2) wearing the ${red("ice gloves")} for a", "fire feather."),
                 done = listOf("I took a fire feather from the firebird."),
                 place = "Entrana",

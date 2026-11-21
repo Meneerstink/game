@@ -178,6 +178,8 @@ object MagicCombatFormula : CombatFormula {
             hit += Math.floor(baseMax * ElementalWeakness.percent(target, spell) / 100.0)
             // Charged tomes: "stacking multiplicatively with Magic damage bonuses" (Tomes).
             hit = Math.floor(hit * gg.rsmod.plugins.content.items.osrs.Tomes.damageMultiplier(pawn, target, spell))
+            // Twinflame staff: +10 % damage for standard spells (TwinflameStaff).
+            if (pawn is Player) hit = Math.floor(hit * gg.rsmod.plugins.content.items.osrs.TwinflameStaff.boost(pawn, spell))
             // Dragon hunter wand: max hit x7/5 against draconic targets (wiki DPS calculator trackFactor [7, 5]).
             if (pawn.hasEquipped(EquipmentType.WEAPON, Items.DRAGON_HUNTER_WAND) && Draconic.isDraconic(target)) {
                 hit = Math.floor(hit * 7 / 5)
@@ -305,6 +307,7 @@ object MagicCombatFormula : CombatFormula {
         if (gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.avariceBoost(player, target)) smoke = Math.floor(smoke * 6 / 5)
         if (gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.surgeBoost(player, target)) smoke = Math.floor(smoke * 23 / 20)
         var roll = Math.floor(smoke * gg.rsmod.plugins.content.items.osrs.Tomes.accuracyMultiplier(player, target, castingSpell(player)))
+        roll = Math.floor(roll * gg.rsmod.plugins.content.items.osrs.TwinflameStaff.boost(player, castingSpell(player)))
         // Ice ancient sceptre: +10 % for ice spells on freezable, not frozen targets (AncientSceptres).
         roll = Math.floor(roll * gg.rsmod.plugins.content.items.osrs.AncientSceptres.iceAccuracyMultiplier(player, target, castingSpell(player)))
         // Audit I-08: Zuriel's staff, ice spells +10 % accuracy.

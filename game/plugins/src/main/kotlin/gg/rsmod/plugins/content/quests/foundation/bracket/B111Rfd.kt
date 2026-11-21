@@ -51,7 +51,7 @@ object RecipeForDisaster : ShortQuest(
     pointReward = 10,
     questId = Varbits.RECIPE_FOR_DISASTER_PROGRESS,
     slot = 87,
-    completedValue = 16, // internal: steps.size + 1 (ownSteps)
+    completedValue = 17, // internal: steps.size + 1 (ownSteps)
     usesVarbits = true,
     startNpc = Npcs.COOK,
     startNpcName = "Cook",
@@ -72,7 +72,7 @@ object RecipeForDisaster : ShortQuest(
         )
 
     /** The step numbers (1-based) that finish part 0..9 of the wiki order. */
-    val PART_LAST_STEP = listOf(1, 2, 3, 5, 6, 7, 9, 11, 13, 15)
+    val PART_LAST_STEP = listOf(1, 2, 3, 5, 6, 7, 9, 11, 13, 16)
 
     /** Parts finished by [player] while the quest is open (0 before the first, the quest finished = all 10). */
     fun partsDone(player: Player): Int {
@@ -260,7 +260,7 @@ object RecipeForDisaster : ShortQuest(
                 done = listOf("I freed Skrach Uglogwee: the cooked jubbly did it."),
                 place = "the Feldip Hills",
                 location = JUBBLY_FIGHT,
-                fight = QuestFight(Npcs.JUBBLY_BIRD, "Jubbly bird", 11, JUBBLY_FIGHT, "Squawk!"),
+                fight = QuestFight(Npcs.JUBBLY_BIRD, "Jubbly bird", 9, JUBBLY_FIGHT, "Squawk!"),
                 talk = {
                     chatNpc("Jubbly bird is right there!", facialExpression = FacialExpression.CALM_TALK)
                     true
@@ -396,6 +396,18 @@ object RecipeForDisaster : ShortQuest(
                     ),
                 talk = {
                     chatNpc("The portal is open. Go and end this!", facialExpression = FacialExpression.ANGRY)
+                    true
+                },
+            ),
+            // Part 9 ends here: the Cook serves the saved feast.
+            QuestStep(
+                npc = Npcs.COOK,
+                journal = listOf("I should tell the ${red("Cook")} in Lumbridge Castle that the Culinaromancer is dead."),
+                done = listOf("The Cook served the feast: the council was saved."),
+                place = "Lumbridge Castle",
+                location = COOK_POST,
+                talk = {
+                    chatNpc("The Culinaromancer is gone? The feast can begin! You", "have saved the council - and my kitchen.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),

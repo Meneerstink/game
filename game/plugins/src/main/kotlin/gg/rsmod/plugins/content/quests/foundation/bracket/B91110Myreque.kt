@@ -129,7 +129,7 @@ object InSearchOfTheMyreque : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.SKELETON_HELLHOUND,
+                npc = Npcs.VELIAF_HURTZ,
                 journal = listOf("I must defeat the ${red("Skeleton Hellhound")} (level 97) in the tunnel."),
                 done = listOf("I defeated the Skeleton Hellhound."),
                 place = "the tunnel below the hideout",
@@ -162,7 +162,7 @@ object InAidOfTheMyreque : ShortQuest(
     pointReward = 2,
     questId = Varbits.IN_AID_OF_THE_MYREQUE_PROGRESS,
     slot = 64,
-    completedValue = 7, // internal: steps.size + 1 (ownSteps)
+    completedValue = 8, // internal: steps.size + 1 (ownSteps)
     usesVarbits = true,
     startNpc = Npcs.VELIAF_HURTZ,
     startNpcName = "Veliaf Hurtz",
@@ -282,6 +282,17 @@ object InAidOfTheMyreque : ShortQuest(
                     ),
                 talk = {
                     chatNpc("Vampyres stand between me and the way out. Help me!", facialExpression = FacialExpression.WORRIED)
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.VELIAF_HURTZ,
+                journal = listOf("I should tell ${red("Veliaf Hurtz")} that Ivan Strom is safe."),
+                done = listOf("Veliaf Hurtz thanked me: the Myreque can use the way out."),
+                place = "the Burgh de Rott inn cellar",
+                location = BURGH_VELIAF,
+                talk = {
+                    chatNpc("Ivan is safe? Then the Myreque have a way out of Burgh", "de Rott. We are in your debt.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),

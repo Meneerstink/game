@@ -125,7 +125,7 @@ object ShiloVillage : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.NAZASTAROOL,
+                npc = Npcs.TRUFITUS,
                 journal = listOf("I must defeat ${red("Nazastarool")} in his three forms (levels 91, 68 and 93)."),
                 done = listOf("I defeated Nazastarool and took Rashiliyia's corpse."),
                 place = "the tomb of Rashiliyia",
@@ -279,7 +279,7 @@ object OneSmallFavour : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.SLAGILITH,
+                npc = Npcs.SANFEW,
                 journal = listOf("I must defeat ${red("Slagilith")} (level 92) in the cave."),
                 done = listOf("I defeated Slagilith: Petra Fyiad is free."),
                 place = "the Goblin Cave",

@@ -43,6 +43,7 @@ object MagicSpells {
     ): Boolean {
         // A charged Tome of Fire / Water is an infinite source of its rune while worn (Tomes).
         if (gg.rsmod.plugins.content.items.osrs.Tomes.suppliesRune(p, rune)) return true
+        if (gg.rsmod.plugins.content.items.osrs.TwinflameStaff.suppliesRune(p, rune)) return true
         val weapon: Item = p.equipment[3] ?: return false
         val staff: MagicStaves = MagicStaves.values().firstOrNull { rune == it.runeId } ?: return false
         staff.staves.forEach {

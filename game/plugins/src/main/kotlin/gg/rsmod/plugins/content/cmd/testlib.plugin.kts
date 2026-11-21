@@ -162,6 +162,48 @@ CommandServerCommands.handlers["dropview"] = { _, a ->
     }
 }
 
+/**
+ * PROJECT48 scenario aid: `tpnpc <name> <npc id> <x> <z> [height]` puts the bot on a free tile NEXT to the npc of that id nearest to
+ * (x, z) from which the npc can be walked to (a post inside a building or behind a wall made every "talk to" step fail with
+ * "I can't reach that!" when the script's own tile was on the wrong side of a wall).
+ */
+CommandServerCommands.handlers["tpnpc"] = { w, a ->
+    val p = findPlayer(a)
+    val id = a.getOrNull(1)?.toIntOrNull()
+    val x = a.getOrNull(2)?.toIntOrNull()
+    val z = a.getOrNull(3)?.toIntOrNull()
+    val h = a.getOrNull(4)?.toIntOrNull() ?: 0
+    when {
+        System.getProperty("rsps.testServer") != "true" -> "tpnpc: testserver only"
+        p == null || id == null || x == null || z == null -> "usage: tpnpc <name> <npc id> <x> <z> [height]"
+        else -> {
+            val centre = Tile(x, z, h)
+            val npc = w.npcs.entries.filterNotNull().filter { it.id == id && it.tile.height == h && it.tile.getDistance(centre) <= 40 }.minByOrNull { it.tile.getDistance(centre) }
+            if (npc == null) {
+                "tpnpc: no npc $id within 40 tiles of $x,$z,$h"
+            } else {
+                val dirs =
+                    listOf(
+                        Triple(0, 1, gg.rsmod.game.model.Direction.SOUTH),
+                        Triple(0, -1, gg.rsmod.game.model.Direction.NORTH),
+                        Triple(1, 0, gg.rsmod.game.model.Direction.WEST),
+                        Triple(-1, 0, gg.rsmod.game.model.Direction.EAST),
+                    )
+                val spot =
+                    dirs.map { (dx, dz, toward) -> npc.tile.transform(dx, dz) to toward }
+                        .firstOrNull { (t, toward) -> TestLib.standable(w, t) && w.collision.canTraverse(tile = t, direction = toward, projectile = false, water = false) }
+                if (spot == null) {
+                    "tpnpc: no tile next to npc $id at ${npc.tile.x},${npc.tile.z} can walk to it"
+                } else {
+                    p.moveTo(spot.first)
+                    TestLib.add(p, "tpnpc ${spot.first.x},${spot.first.z},${spot.first.height}")
+                    "tpnpc ${p.username} -> ${spot.first.x},${spot.first.z},${spot.first.height} (npc $id at ${npc.tile.x},${npc.tile.z})"
+                }
+            }
+        }
+    }
+}
+
 CommandServerCommands.handlers["tp"] = { w, a ->
     val p = findPlayer(a)
     val n = a.drop(1).filter { it != "force" }.map { it.toIntOrNull() }

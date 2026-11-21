@@ -113,7 +113,7 @@ object IcthlarinsLittleHelper : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.POSSESSED_PRIEST,
+                npc = Npcs.EMBALMER,
                 journal = listOf("I must defeat the ${red("Possessed Priest")} (level 91) beneath the temple."),
                 done = listOf("I defeated the Possessed Priest."),
                 place = "the temple of Icthlarin",
@@ -220,7 +220,7 @@ object Contact : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.GIANT_SCARAB,
+                npc = Npcs.OSMAN,
                 journal = listOf("I must defeat the ${red("Giant scarab")} (level 191) in the dungeon."),
                 done = listOf("I defeated the Giant scarab."),
                 place = "the dungeon below Sophanem",

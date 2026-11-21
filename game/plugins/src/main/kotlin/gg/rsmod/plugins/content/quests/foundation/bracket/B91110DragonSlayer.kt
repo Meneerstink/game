@@ -160,7 +160,7 @@ object DragonSlayer : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.ELVARG,
+                npc = Npcs.NED,
                 journal = listOf("I must slay ${red("Elvarg")} (level 83) in her lair on Crandor."),
                 done = listOf("I slew Elvarg of Crandor!"),
                 place = "Elvarg's lair on Crandor",

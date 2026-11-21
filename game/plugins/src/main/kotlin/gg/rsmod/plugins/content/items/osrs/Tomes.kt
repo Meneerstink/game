@@ -31,9 +31,13 @@ object Tomes {
     const val CHARGES_PER_PAGE = 20
     const val MAX_PAGES = 1_000
     const val MAX_CHARGES = CHARGES_PER_PAGE * MAX_PAGES
+    const val TOME_OF_EARTH = 25495
+    const val TOME_OF_EARTH_EMPTY = 25496
+    const val SOILED_PAGE = 25631
 
     val FIRE_SPELLS = setOf(CombatSpell.FIRE_STRIKE, CombatSpell.FIRE_BOLT, CombatSpell.FIRE_BLAST, CombatSpell.FIRE_WAVE, CombatSpell.FIRE_SURGE)
     val WATER_SPELLS = setOf(CombatSpell.WATER_STRIKE, CombatSpell.WATER_BOLT, CombatSpell.WATER_BLAST, CombatSpell.WATER_WAVE, CombatSpell.WATER_SURGE)
+    val EARTH_SPELLS = setOf(CombatSpell.EARTH_STRIKE, CombatSpell.EARTH_BOLT, CombatSpell.EARTH_BLAST, CombatSpell.EARTH_WAVE, CombatSpell.EARTH_SURGE)
     val STAT_DRAIN_CURSES = setOf(CombatSpell.CONFUSE, CombatSpell.WEAKEN, CombatSpell.CURSE, CombatSpell.VULNERABILITY, CombatSpell.ENFEEBLE, CombatSpell.STUN)
     val CURSE_SPELLS = STAT_DRAIN_CURSES + setOf(CombatSpell.BIND, CombatSpell.SNARE, CombatSpell.ENTANGLE)
 
@@ -45,6 +49,8 @@ object Tomes {
     ) {
         FIRE(Items.TOME_OF_FIRE, Items.TOME_OF_FIRE_EMPTY, Items.TOME_BURNT_PAGE, Items.FIRE_RUNE),
         WATER(Items.TOME_OF_WATER, Items.TOME_OF_WATER_EMPTY, Items.TOME_SOAKED_PAGE, Items.WATER_RUNE),
+        // PROJECT48 DMM-ITEMS C3 (OSRS Wiki 'Tome of earth'): earth spells +10 % against NPCs, one charge per cast, infinite earth runes.
+        EARTH(TOME_OF_EARTH, TOME_OF_EARTH_EMPTY, SOILED_PAGE, Items.EARTH_RUNE),
     }
 
     fun tomeFor(itemId: Int?): Tome? = Tome.values().firstOrNull { itemId == it.charged || itemId == it.empty }
@@ -89,6 +95,7 @@ object Tomes {
             spell == null -> 1.0
             chargedWorn(player) == Tome.FIRE && spell in FIRE_SPELLS -> if (target is Player) 1.5 else 1.1
             chargedWorn(player) == Tome.WATER && spell in WATER_SPELLS -> if (target is Player) 1.2 else 1.1
+            chargedWorn(player) == Tome.EARTH && spell in EARTH_SPELLS -> if (target is Player) 1.0 else 1.1
             else -> 1.0
         }
 
@@ -118,6 +125,7 @@ object Tomes {
         when (tome) {
             Tome.FIRE -> spell in FIRE_SPELLS
             Tome.WATER -> spell in WATER_SPELLS || spell in CURSE_SPELLS
+            Tome.EARTH -> spell in EARTH_SPELLS
         }
 
     /** One charge per qualifying cast; the tome becomes empty at 0. */

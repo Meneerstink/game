@@ -438,6 +438,13 @@ object MagicCombatStrategy : CombatStrategy {
                 sourceSpellId = spell.uniqueId,
             )
         val damage = pawnHit.hit.hitmarks.sumOf { it.damage }
+        // Twinflame staff: elemental bolts, blasts and waves fire a second spell one tick later for 40 % of the first hit (TwinflameStaff).
+        if (pawn is Player && primary && landHit && gg.rsmod.plugins.content.items.osrs.TwinflameStaff.doubleHit(pawn, spell)) {
+            pawnHit.hit.addAction {
+                val second = gg.rsmod.plugins.content.items.osrs.TwinflameStaff.secondDamage(pawnHit.hit.hitmarks.sumOf { it.damage })
+                if (second > 0 && !target.isDead()) target.hit(damage = second, type = HitType.MAGIC, delay = 1, source = pawn)
+            }
+        }
         // N570 Slayer's staff (e): one charge per Magic Dart that hits a task monster (after the max hit above used it).
         if (pawn is Player && primary) gg.rsmod.plugins.content.skills.slayer.SlayersStaffE.afterCast(pawn, target, spell, landHit)
         // Revenant sceptre worn while casting: "1 ether per attack" (once per cast, not per barrage target).

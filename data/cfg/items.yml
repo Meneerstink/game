@@ -302902,7 +302902,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: -1
+    weapon_type: 5
     attack_speed: 4
     attack_stab: 6
     attack_slash: 4
@@ -302919,7 +302919,7 @@
     prayer: 0
     ranged_strength: 0
     magic_damage: 0.0
-    attack_audio: -1
+    attack_audio: 2500
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -302935,7 +302935,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: -1
+    weapon_type: 5
     attack_speed: 4
     attack_stab: 11
     attack_slash: 8
@@ -302952,7 +302952,7 @@
     prayer: 0
     ranged_strength: 0
     magic_damage: 0.0
-    attack_audio: -1
+    attack_audio: 2500
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -302968,7 +302968,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: -1
+    weapon_type: 5
     attack_speed: 4
     attack_stab: 16
     attack_slash: 11
@@ -302985,7 +302985,7 @@
     prayer: 0
     ranged_strength: 0
     magic_damage: 0.0
-    attack_audio: -1
+    attack_audio: 2500
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -303001,7 +303001,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: -1
+    weapon_type: 5
     attack_speed: 4
     attack_stab: 23
     attack_slash: 18
@@ -303018,7 +303018,7 @@
     prayer: 0
     ranged_strength: 0
     magic_damage: 0.0
-    attack_audio: -1
+    attack_audio: 2500
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -303332,7 +303332,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: -1
+    weapon_type: 8
     attack_speed: 5
     attack_stab: 2
     attack_slash: 0
@@ -303350,6 +303350,7 @@
     ranged_strength: 0
     magic_damage: 1.0
     attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 80}]
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
@@ -303365,7 +303366,7 @@
     remove_head: false
     remove_beard: false
     remove_arms: false
-    weapon_type: -1
+    weapon_type: 1
     attack_speed: 6
     attack_stab: 7
     attack_slash: -1
@@ -303390,7 +303391,7 @@
 - id: 25495
   name: "Tome of Earth"
   examine: "An ancient tome containing the secrets of earth magic."
-  tradeable: true
+  tradeable: false
   weight: 1.0
   equipment:
     equip_slot: 5
