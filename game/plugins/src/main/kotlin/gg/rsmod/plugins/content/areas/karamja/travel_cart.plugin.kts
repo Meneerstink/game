@@ -36,6 +36,11 @@ CARTS.forEach { cart ->
 
 suspend fun board(task: QueueTask, cart: Cart, offer: Boolean) {
     val player = task.player
+    // PROJECT48 ONTGR (Shilo Village): the cart to Shilo Village runs only for a player who completed the quest (OSRS Wiki).
+    if (cart.destinationName == "Shilo Village" && !gg.rsmod.plugins.content.quests.foundation.bracket.ShiloVillage.isFinished(player)) {
+        task.chatNpc("Sorry, Bwana, the way to Shilo Village is not safe for you yet: finish what Mosol Rei asks first.", npc = cart.driver, facialExpression = FacialExpression.CALM_TALK)
+        return
+    }
     if (offer) {
         task.chatNpc(
             "I am offering a cart ride to ${cart.destinationName}, if you're interested. It will cost $CART_FARE coins. Is that okay?",

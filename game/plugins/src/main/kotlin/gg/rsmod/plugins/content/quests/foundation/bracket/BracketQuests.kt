@@ -20,12 +20,13 @@ object BracketQuests {
             Bracket.B51_70 to B5170Quests.ALL,
             Bracket.B71_90 to B7190Quests.ALL,
             Bracket.B91_110 to B91110Quests.ALL,
+            Bracket.B111_PLUS to B111Quests.ALL,
         )
     }
 
     val ALL: List<ShortQuest> by lazy { BY_BRACKET.values.flatten() }
 
-    val NPCS: List<BracketNpc> by lazy { B0350Quests.NPCS + B5170Quests.NPCS + B7190Quests.NPCS + B91110Quests.NPCS }
+    val NPCS: List<BracketNpc> by lazy { B0350Quests.NPCS + B5170Quests.NPCS + B7190Quests.NPCS + B91110Quests.NPCS + B111Quests.NPCS }
 
     private val bySlotMap: Map<Int, ShortQuest> by lazy { ALL.associateBy { it.slot } }
 

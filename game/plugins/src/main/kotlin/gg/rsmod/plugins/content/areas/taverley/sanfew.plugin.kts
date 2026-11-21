@@ -6,6 +6,7 @@ import gg.rsmod.plugins.content.quests.impl.DruidicRitual
 
 on_npc_option(Npcs.SANFEW, option = "talk-to") { // handles the talk to option when clicking on npc
     player.queue {
+        if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.SANFEW)) return@queue
         when (player.getCurrentStage(DruidicRitual)) { // gets current quest stage
             1 -> duringDruidicRitual(this) // sends player to dialogue based on quest stage
             2 -> ingredientsDialogue(this)

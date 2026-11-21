@@ -21,7 +21,10 @@ on_npc_option(Npcs.BRIAN, option = "trade") {
 }
 
 on_npc_option(Npcs.BRIAN, option = "talk-to") {
-    player.queue { chat(this) }
+    player.queue {
+        if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.BRIAN)) return@queue
+        chat(this)
+    }
 }
 
 fun sendShop(player: Player) {

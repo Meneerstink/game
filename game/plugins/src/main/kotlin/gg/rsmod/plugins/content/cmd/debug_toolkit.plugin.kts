@@ -922,7 +922,7 @@ gg.rsmod.game.CommandServerCommands.handlers["ma2state"] = { w, a ->
 gg.rsmod.game.CommandServerCommands.handlers["dlg"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
     // PROJECT48 test helper: "dlg <name> auto" = option 1 when an options box is open, else continue (so a scenario need not know the order).
-    val option = if (a.getOrNull(1) == "auto") (if (p?.interfaces?.optionsOpen == true) 1 else null) else a.getOrNull(1)?.toIntOrNull()
+    val option = if (a.getOrNull(1)?.startsWith("auto") == true) (if (p?.interfaces?.optionsOpen == true) (a[1].substringAfter(":", "1").toIntOrNull() ?: 1) else null) else a.getOrNull(1)?.toIntOrNull()
     if (p == null || (option != null && option !in 1..5)) "usage: dlg <name> [option 1-5|auto]"
     else if (p.gameSystem.inject(gg.rsmod.game.message.impl.ResumePauseButtonMessage(0, 0, (option ?: 0) + 1)))
         "dlg ${option ?: "continue"} for ${p.username}"
