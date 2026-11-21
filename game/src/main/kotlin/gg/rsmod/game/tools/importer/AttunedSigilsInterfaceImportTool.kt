@@ -55,25 +55,27 @@ object AttunedSigilsInterfaceImportTool {
         const val CLOSE = 3
         const val TITLE = 4
         /** The scrolling part of the three columns (skull .. effect text); the Slot headings and the buttons stay put. */
-        const val SCROLL = 5
-        const val SCROLLBAR = 6
-        const val SLOT_FIRST = 7
-        const val SLOT_STRIDE = 11
+        // The three column backgrounds come BEFORE the scroll layer: the client draws components in id order, so a column with a
+        // higher id than the layer was painted over the layer's content (test client 21-11: picture, name and text invisible).
+        const val COLUMN_FIRST = 5
+        const val SCROLL = 8
+        const val SCROLLBAR = 9
+        const val SLOT_FIRST = 10
+        const val SLOT_STRIDE = 10
         const val SLOTS = 3
         const val COUNT = SLOT_FIRST + SLOTS * SLOT_STRIDE
 
         // per slot
-        const val S_COLUMN = 0
-        const val S_HEAD = 1
-        const val S_SKULL = 2 // the sigil's picture, or the red cross of an empty slot
-        const val S_NAME = 3
-        const val S_TYPE = 4
-        const val S_TIER = 5
-        const val S_EFFECT = 6
-        const val S_BUTTON = 7
-        const val S_BUTTON_TEXT = 8
-        const val S_BUTTON_HIT = 9
-        const val S_HINT = 10 // "Use Attune on a sigil at a bank." in an empty slot
+        const val S_HEAD = 0
+        const val S_SKULL = 1 // the sigil's picture, or the red cross of an empty slot
+        const val S_NAME = 2
+        const val S_TYPE = 3
+        const val S_TIER = 4
+        const val S_EFFECT = 5
+        const val S_BUTTON = 6
+        const val S_BUTTON_TEXT = 7
+        const val S_BUTTON_HIT = 8
+        const val S_HINT = 9 // "Use Attune on a sigil at a bank." in an empty slot
 
         const val X0 = 10
         const val Y0 = 38
@@ -143,7 +145,7 @@ object AttunedSigilsInterfaceImportTool {
             val x = AS.x(i)
             val ix = AS.inX(i)
             val y = AS.Y0
-            b.g(base + AS.S_COLUMN, x, y, AS.COL_W, AS.Y1 - AS.Y0 + 1, "col_empty")
+            b.g(AS.COLUMN_FIRST + i, x, y, AS.COL_W, AS.Y1 - AS.Y0 + 1, "col_empty")
             b.text(base + AS.S_HEAD, x, y + 8, AS.COL_W, 16, AS.WINDOW, fonts.b12, "Slot ${i + 1}", colour = ORANGE, alignX = 1, alignY = 0)
             b.g(base + AS.S_SKULL, ix + (AS.COL_W - AS.CROSS) / 2, AS.IN_CROSS_Y, AS.CROSS, AS.CROSS, "cross", parent = AS.SCROLL)
             b.text(base + AS.S_NAME, ix + 4, AS.IN_NAME_Y, AS.NAME_W, 2 * AS.LINE_P12 + 2, AS.SCROLL, fonts.p12, "", colour = ORANGE, alignX = 1, alignY = 0, lineHeight = AS.LINE_P12)

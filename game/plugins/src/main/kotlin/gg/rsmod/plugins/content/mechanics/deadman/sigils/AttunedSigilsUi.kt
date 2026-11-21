@@ -75,7 +75,7 @@ object AttunedSigilsUi {
             val x = AS.inX(i)
             val sigil = sigilAt(player, i)
             val filled = sigil != null
-            player.setComponentSprite(p, base + AS.S_COLUMN, AttunedSigilsInterfaceImportTool.column(sigil?.kind?.name))
+            player.setComponentSprite(p, AS.COLUMN_FIRST + i, AttunedSigilsInterfaceImportTool.column(sigil?.kind?.name))
             N108Ui.hidden(player, p, base + AS.S_TYPE, !filled)
             N108Ui.hidden(player, p, base + AS.S_TIER, !filled)
             N108Ui.hidden(player, p, base + AS.S_BUTTON, !filled)
