@@ -125,7 +125,8 @@ object FairyRings {
 
     /**
      * PROJECT48 ONTGR (Fairy Tale II - Cure a Queen): the ring network opens from step 2 of the quest (the Fairy Godfather's permission),
-     * or once the quest is complete (played, given by the bracket, or a legacy account). The Trinket of fairies keeps its own rule.
+     * or once the quest is complete (played, given by the bracket, or a legacy account). The Trinket of fairies uses the same gate
+ * (owner 21-11: it uses the same fairy-ring network); the house ring is exempt (the house offers every teleport).
      */
     fun ringsUnlocked(player: Player): Boolean =
         gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, "Fairy Tale II - Cure a Queen") ||
@@ -220,7 +221,7 @@ object FairyRings {
         player: Player,
         source: Source,
     ): Boolean {
-        if (source == Source.RING && !ringsUnlocked(player)) {
+        if (source != Source.HOUSE && !ringsUnlocked(player)) {
             player.message("The fairies have not yet told you how to use the rings. Finish Fairy Tale II - Cure a Queen first.")
             return false
         }
@@ -249,7 +250,7 @@ object FairyRings {
         code: String,
         source: Source,
     ) {
-        if (source == Source.RING && !ringsUnlocked(player)) {
+        if (source != Source.HOUSE && !ringsUnlocked(player)) {
             player.message("The fairies have not yet told you how to use the rings. Finish Fairy Tale II - Cure a Queen first.")
             return
         }
