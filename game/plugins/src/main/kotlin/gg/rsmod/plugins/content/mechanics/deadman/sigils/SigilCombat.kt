@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.deadman.sigils
 
 import gg.rsmod.plugins.api.BonusSlot
+import gg.rsmod.plugins.api.ext.heal
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
@@ -181,25 +182,38 @@ object SigilCombat {
     fun afterHit(
         attacker: Pawn,
         target: Pawn,
-        hit: Any,
+        hit: gg.rsmod.game.model.Hit,
         type: HitType,
         landed: Boolean,
     ) {
-        if (attacker is Player && any(attacker)) attackerAfterHit(attacker, target, type, landed)
-        if (target is Player && any(target)) targetAfterHit(target, attacker, type, landed)
+        if (attacker is Player && any(attacker)) attackerAfterHit(attacker, target, hit, type, landed)
+        if (target is Player && any(target)) targetAfterHit(target, attacker, hit, type, landed)
     }
 
     private fun attackerAfterHit(
         attacker: Player,
         target: Pawn,
+        hit: gg.rsmod.game.model.Hit,
         type: HitType,
         landed: Boolean,
     ) {
+        if (!landed) return
+        // S27 Restoration: on a successful hit restore 10% of the damage dealt (rounded up) to hitpoints - players and NPCs, not special
+        // attacks (multi-target attacks are not told apart from single hits here: see the dossier).
+        if (Sigils.effective(attacker, Sigil.RESTORATION) &&
+            attacker.attr[gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.SPECIAL_ATTACK_IN_PROGRESS] != true
+        ) {
+            hit.addAction {
+                val dealt = hitmarks.sumOf { it.damage }
+                if (dealt > 0) attacker.heal(Math.ceil(dealt / 10.0).toInt())
+            }
+        }
     }
 
     private fun targetAfterHit(
         target: Player,
         attacker: Pawn,
+        hit: gg.rsmod.game.model.Hit,
         type: HitType,
         landed: Boolean,
     ) {
