@@ -97,7 +97,9 @@ object RevenantWeapons {
         target: Pawn,
     ): Boolean {
         // The ornate wilderness combat dummy counts as a Wilderness npc (OSRS Wiki "Ornate undead combat dummy").
-        val wilderness = player.tile.getWildernessLevel() > 0 || gg.rsmod.plugins.content.areas.poh.PlayerHouse.isWildernessDummy(target)
+        // PROJECT48 S28 Sigil of Revoked Limitation: the buff applies to NPCs anywhere, not only in the Wilderness.
+        val wilderness = player.tile.getWildernessLevel() > 0 || gg.rsmod.plugins.content.areas.poh.PlayerHouse.isWildernessDummy(target) ||
+            gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.REVOKED_LIMITATION)
         if (target !is Npc || !wilderness) return false
         val weapon = player.getEquipment(EquipmentType.WEAPON) ?: return false
         return isCharged(weapon.id) && ether(weapon) > 0

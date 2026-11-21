@@ -111,7 +111,10 @@ object Hunter {
                 player.filterableMessage("Your inventory is too full to collect this.")
                 return
             }
-            player.inventory.add(trap.creature.catchItem, trap.creature.catchAmount)
+            // PROJECT48 S31 Sigil of the Hunter: three chinchompas per successful chinchompa capture.
+            val chins = trap.creature.catchItem == gg.rsmod.plugins.api.cfg.Items.CHINCHOMPA || trap.creature.catchItem == gg.rsmod.plugins.api.cfg.Items.RED_CHINCHOMPA
+            val catchAmount = if (chins && gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.THE_HUNTER)) 3 else trap.creature.catchAmount
+            player.inventory.add(trap.creature.catchItem, catchAmount)
             player.addXp(Skills.HUNTER, trap.creature.xp, checkBrawlingGloves = true)
             when (trap.creature.catchItem) {
                 gg.rsmod.plugins.api.cfg.Items.CHINCHOMPA -> gg.rsmod.plugins.content.skills.summoning.SkillingPets.chinchompa(player, red = false)

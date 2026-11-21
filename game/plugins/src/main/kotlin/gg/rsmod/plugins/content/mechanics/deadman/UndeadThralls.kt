@@ -59,7 +59,8 @@ object UndeadThralls {
                     if (age % ATTACK_TICKS == ATTACK_TICKS - 1 && target != null && look.reach(actor, target, choice)) {
                         val delay = look.attack(actor, target, choice)
                         require(delay >= 0)
-                        val damage = player.world.random.nextInt(4)
+                        // PROJECT48 S49 Sigil of the Augmented Thrall: the max hit of thralls is multiplied by 5 (3 -> 15).
+                        val damage = player.world.random.nextInt(if (gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.THE_AUGMENTED_THRALL)) 16 else 4)
                         actor.dealHit(target = target, minHit = damage - 0.1, maxHit = damage.toDouble(), landHit = true, delay = delay, hitType = choice.hit)
                     }
                 }
