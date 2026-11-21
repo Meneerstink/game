@@ -19,6 +19,30 @@ object SigilSkilling {
             else -> 1
         }
 
+    /** S59 Woodcraft: the planks of a chopped log (price per plank in coins), or the log itself without the sigil / the coins / with an infernal axe. */
+    private val PLANKS: Map<Int, Pair<Int, Int>> =
+        mapOf(
+            gg.rsmod.plugins.api.cfg.Items.LOGS to (gg.rsmod.plugins.api.cfg.Items.PLANK to 50),
+            gg.rsmod.plugins.api.cfg.Items.OAK_LOGS to (gg.rsmod.plugins.api.cfg.Items.OAK_PLANK to 125),
+            gg.rsmod.plugins.api.cfg.Items.TEAK_LOGS to (gg.rsmod.plugins.api.cfg.Items.TEAK_PLANK to 250),
+            gg.rsmod.plugins.api.cfg.Items.MAHOGANY_LOGS to (gg.rsmod.plugins.api.cfg.Items.MAHOGANY_PLANK to 700),
+        )
+
+    private fun woodcraft(
+        player: Player,
+        log: Int,
+    ): Int {
+        val plank = PLANKS[log] ?: return log
+        if (!Sigils.effective(player, Sigil.WOODCRAFT)) return log
+        val weapon = player.getEquipment(gg.rsmod.plugins.api.EquipmentType.WEAPON)?.id
+        if (weapon != null && player.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, weapon).name.lowercase().contains("infernal axe")) return log
+        if (!player.inventory.remove(gg.rsmod.plugins.api.cfg.Items.COINS_995, plank.second).hasSucceeded()) {
+            player.filterableMessage("You need ${plank.second} coins in your inventory for your sigil to turn the log into a plank.")
+            return log
+        }
+        return plank.first
+    }
+
     /** S10 Sigil of the Abyss: 5x as many runes when Runecrafting. */
     fun runecraftMultiplier(player: Player): Int = if (Sigils.effective(player, Sigil.THE_ABYSS)) 5 else 1
 
@@ -34,10 +58,11 @@ object SigilSkilling {
      */
     fun give(
         player: Player,
-        itemId: Int,
+        gathered: Int,
         amount: Int = 1,
     ): ItemTransaction {
-        if (player.attuned().isEmpty()) return player.inventory.add(itemId, amount)
+        if (player.attuned().isEmpty()) return player.inventory.add(gathered, amount)
+        val itemId = woodcraft(player, gathered)
         val total = amount * multiplier(player)
         if (toBank(player)) {
             val banked = player.bank.add(itemId, total)
