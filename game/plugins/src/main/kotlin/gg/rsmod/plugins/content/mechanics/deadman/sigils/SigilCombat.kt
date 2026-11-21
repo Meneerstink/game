@@ -217,6 +217,8 @@ object SigilCombat {
         landed: Boolean,
     ) {
         if (!landed) return
+        // S54 Ruthless Ranger / S52 Menacing Mage: damage over time.
+        SigilDots.onLanded(attacker, target, type)
         // S27 Restoration: on a successful hit restore 10% of the damage dealt (rounded up) to hitpoints - players and NPCs, not special
         // attacks (multi-target attacks are not told apart from single hits here: see the dossier).
         if (Sigils.effective(attacker, Sigil.RESTORATION) &&
