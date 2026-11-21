@@ -304370,3 +304370,9 @@
   tradeable: true
   weight: 0.1
   equipment: null
+- id: 25631
+  name: "Soiled page"
+  examine: "It's a bit dirty."
+  tradeable: true
+  weight: 0.005
+  equipment: null
