@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.mechanics.deadman.sigils
 import gg.rsmod.plugins.api.BonusSlot
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.ext.heal
+import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.api.ext.isProtectedFrom
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.game.model.entity.Npc
@@ -58,6 +59,17 @@ object SigilCombat {
             if (Sigils.effective(attacker, Sigil.PRECISION)) factor = maxOf(factor, 1.50)
             if (Sigils.effective(attacker, Sigil.METICULOUSNESS)) factor = maxOf(factor, 1.75)
         }
+        val style = styleOf(formula)
+        val special = attacker.attr[gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.SPECIAL_ATTACK_IN_PROGRESS] == true
+        // S56 Finality: the next special attack inside the window cannot miss.
+        if (special && Sigils.windowOpen(attacker, Sigil.FINALITY)) return 1.0
+        // S44 Binding: +75% magic accuracy on the next binding spell inside the window.
+        if (style == Style.MAGIC && Sigils.windowOpen(attacker, Sigil.BINDING) && castingBindingSpell(attacker)) {
+            factor *= 1.75
+            Sigils.consumeWindow(attacker, Sigil.BINDING)
+        }
+        // S57 Rampage: alternating combat styles build a count (max 3); each count is +3% accuracy and damage.
+        factor *= 1.0 + 0.03 * rampageCount(attacker, style)
         // S20 Barrows: +40% accuracy with Barrows weaponry against players and NPCs.
         if (Sigils.effective(attacker, Sigil.BARROWS) && wieldsBarrowsWeapon(attacker)) factor *= 1.40
         // S29 Adroit: +1% accuracy for each hitpoint the player is missing (players and NPCs).
@@ -156,6 +168,8 @@ object SigilCombat {
         var result = damage
         // S01 Consistency: every attack does +1 damage to the target.
         if (Sigils.effective(attacker, Sigil.CONSISTENCY)) result += 1.0
+        // S57 Rampage: +3% damage per count (does not stack with Aggression, which then wins).
+        if (Sigils.effective(attacker, Sigil.RAMPAGE)) result = Math.round(result * (1.0 + 0.03 * (attacker.attr[RAMPAGE_COUNT] ?: 0))).toDouble()
         // S36 Aggression: all attacks deal 10% more damage (a Rampage bonus does not stack with it).
         if (Sigils.effective(attacker, Sigil.AGGRESSION)) result = Math.round(result * 1.10).toDouble()
         return result
@@ -216,6 +230,8 @@ object SigilCombat {
         type: HitType,
         landed: Boolean,
     ) {
+        // S56 Finality: the special that just fired used up the window.
+        if (attacker.attr[gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.SPECIAL_ATTACK_IN_PROGRESS] == true) Sigils.consumeWindow(attacker, Sigil.FINALITY)
         if (!landed) return
         // S54 Ruthless Ranger / S52 Menacing Mage: damage over time.
         SigilDots.onLanded(attacker, target, type)
@@ -238,6 +254,51 @@ object SigilCombat {
         type: HitType,
         landed: Boolean,
     ) {
+        // S53 Porcupine: while the window is open every hit taken recoils 4 damage (2 on the 3-50 / 51-70 worlds, not modelled) to the attacker.
+        if (landed && Sigils.windowOpen(target, Sigil.THE_PORCUPINE) && attacker !== target && attacker.isAlive()) {
+            attacker.hit(4, HitType.REFLECTED, source = target)
+        }
+    }
+
+    private val RAMPAGE_COUNT = gg.rsmod.game.model.attr.AttributeKey<Int>()
+    private val RAMPAGE_STYLE = gg.rsmod.game.model.attr.AttributeKey<Style>()
+    private val RAMPAGE_CYCLE = gg.rsmod.game.model.attr.AttributeKey<Int>()
+    private const val RAMPAGE_RESET_TICKS = 10
+
+    /** Updates and returns the rampage count for an attack of [style] (S57): +1 on a changed style (max 3), reset on the same style or after 6 s idle. */
+    private fun rampageCount(
+        attacker: Player,
+        style: Style,
+    ): Int {
+        if (!Sigils.effective(attacker, Sigil.RAMPAGE)) return 0
+        val now = attacker.world.currentCycle
+        val last = attacker.attr[RAMPAGE_STYLE]
+        val idle = now - (attacker.attr[RAMPAGE_CYCLE] ?: Int.MIN_VALUE / 2) > RAMPAGE_RESET_TICKS
+        var count = if (idle) 0 else attacker.attr[RAMPAGE_COUNT] ?: 0
+        count = if (last != null && last != style && !idle) minOf(3, count + 1) else if (last == style) 0 else count
+        attacker.attr[RAMPAGE_STYLE] = style
+        attacker.attr[RAMPAGE_COUNT] = count
+        attacker.attr[RAMPAGE_CYCLE] = now
+        return count
+    }
+
+    private fun castingBindingSpell(player: Player): Boolean {
+        val spell = ((player.attr[gg.rsmod.plugins.content.combat.Combat.CASTING_SPELL] as Any?)
+            ?: (player.attr[gg.rsmod.plugins.content.combat.Combat.SPELL_OF_THIS_ATTACK] as Any?)) as? gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
+        return spell == gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.BIND ||
+            spell == gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.SNARE ||
+            spell == gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.ENTANGLE
+    }
+
+    /** S47: the energy a special costs; 10 less (when it costs more than 10) while the Specialised Strikes window is open. */
+    fun specialCost(
+        player: Player,
+        cost: Int,
+    ): Int = if (cost > 10 && Sigils.windowOpen(player, Sigil.SPECIALISED_STRIKES)) cost - 10 else cost
+
+    /** The window of a one-shot sigil was used up by the special attack that just fired. */
+    fun windowUsed(player: Player) {
+        Sigils.consumeWindow(player, Sigil.SPECIALISED_STRIKES)
     }
 
     private val BARROWS_WEAPONS = listOf("dharok's greataxe", "verac's flail", "torag's hammers", "guthan's warspear", "karil's crossbow", "ahrim's staff")

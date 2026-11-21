@@ -61,7 +61,7 @@ object SpecialAttacks {
         val reach = if (gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.VOLATILE.matches(weaponId)) SpecialReach(6, false) { true }
             else reaches[weaponId] ?: reaches[gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.specialBase(weaponId)] ?: return null
         val special = attacks[weaponId] ?: attacks[gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.specialBase(weaponId)] ?: return null
-        if (!AttackTab.canAffordSpecial(player, special.energyRequired) || !reach.requirement(player)) return null
+        if (!AttackTab.canAffordSpecial(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.specialCost(player, special.energyRequired)) || !reach.requirement(player)) return null
         return reach
     }
 
@@ -94,7 +94,7 @@ object SpecialAttacks {
     fun executeInstant(player: Player): Boolean {
         val weaponItem = player.getEquipment(EquipmentType.WEAPON) ?: return false
         val special = instantAttacks[weaponItem.id] ?: return false
-        if (!AttackTab.canAffordSpecial(player, special.energyRequired)) {
+        if (!AttackTab.canAffordSpecial(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.specialCost(player, special.energyRequired))) {
             player.message("You don't have enough power left.")
             return true
         }
@@ -134,7 +134,7 @@ object SpecialAttacks {
         val weaponItem = player.getEquipment(EquipmentType.WEAPON) ?: return Outcome.NOT_USED
         val special = attacks[weaponItem.id] ?: attacks[gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.specialBase(weaponItem.id)] ?: return Outcome.NOT_USED
 
-        if (!AttackTab.canAffordSpecial(player, special.energyRequired)) {
+        if (!AttackTab.canAffordSpecial(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.specialCost(player, special.energyRequired))) {
             player.message("You don't have enough power left.")
             return Outcome.NOT_USED
         }
@@ -146,7 +146,10 @@ object SpecialAttacks {
             return Outcome.NOT_USED
         }
 
-        AttackTab.spendSpecial(player, special.energyRequired)
+        // PROJECT48 S47 Specialised Strikes: the cost of a special above 10 energy is 10 less inside the window (used up by this special).
+        val energyCost = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.specialCost(player, special.energyRequired)
+        if (energyCost != special.energyRequired) gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.windowUsed(player)
+        AttackTab.spendSpecial(player, energyCost)
 
         val combatContext = CombatContext(world, player)
         target?.let { combatContext.target = it }
@@ -163,7 +166,7 @@ object SpecialAttacks {
         if (combatContext.failed) {
             // Audit C-15: the energy is only really spent on success. It is drained before the attack (specials read the
             // remaining energy) and returned here when the special could not be performed.
-            AttackTab.refundSpecial(player, special.energyRequired)
+            AttackTab.refundSpecial(player, energyCost)
             return Outcome.FAILED
         }
         return Outcome.PERFORMED
