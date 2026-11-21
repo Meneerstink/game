@@ -20,8 +20,8 @@ import gg.rsmod.plugins.content.quests.red
 // PROJECT48 Q08: Fairy Tale I - Growing Pains (bracket 3-50). OSRS Wiki: Lost City + Nature Spirit (+ their quests), beat a level 111 Tanglefoot.
 
 private val MARTIN_POST = Tile(3077, 3257, 0)
-private val GODFATHER_POST = Tile(2450, 4471, 0)
-private val NUFF_POST = Tile(2453, 4469, 0)
+private val GODFATHER_POST = Tile(2449, 4430, 0)
+private val NUFF_POST = Tile(2445, 4430, 0)
 private val MALIGNIUS_POST = Tile(3001, 3267, 0)
 private val TANGLEFOOT_LAIR = Tile(2456, 4474, 0)
 

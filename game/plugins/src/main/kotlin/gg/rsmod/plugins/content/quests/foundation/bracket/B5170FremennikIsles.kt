@@ -104,7 +104,7 @@ object FremennikIsles : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.MAWNIS_BUROWGAR_5503,
-                journal = listOf("I must defeat the ${red("ice trolls")} (levels 74-82) in the troll cave."),
+                journal = listOf("I must defeat the ${red("ice trolls")} (levels 74-102) in the troll cave."),
                 done = listOf("I drove the ice trolls out of their cave."),
                 place = "the troll cave north of Neitiznot",
                 location = TROLL_CAVE,

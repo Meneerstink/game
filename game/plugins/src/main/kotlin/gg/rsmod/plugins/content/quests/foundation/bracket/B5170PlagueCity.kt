@@ -20,7 +20,7 @@ import gg.rsmod.plugins.content.quests.red
 private val EDMOND_POST = Tile(2571, 3333, 0)
 private val ALRENA_POST = Tile(2573, 3333, 0)
 private val BRAVEK_POST = Tile(2536, 3314, 1)
-private val PLAGUE_HOUSE = Tile(2532, 3274, 0)
+private val PLAGUE_HOUSE = Tile(2541, 9672, 0)
 
 object PlagueCity : ShortQuest(
     name = "Plague City",

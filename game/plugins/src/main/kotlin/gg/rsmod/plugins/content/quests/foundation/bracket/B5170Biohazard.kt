@@ -80,12 +80,12 @@ object Biohazard : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.OMART,
-                journal = listOf("I must defeat a ${red("Mourner")} (level 13) at the Mourner headquarters", "and take the distillator."),
+                journal = listOf("I must defeat a ${red("Mourner")} (level 11) at the Mourner headquarters", "and take the distillator."),
                 done = listOf("I defeated a Mourner and took his distillator."),
                 place = "the Mourner headquarters",
                 location = MOURNER_HQ,
                 gives = listOf(Items.DISTILLATOR to 1),
-                fight = QuestFight(Npcs.MOURNER, "Mourner", 13, MOURNER_HQ, "You should not be here!"),
+                fight = QuestFight(Npcs.MOURNER, "Mourner", 11, MOURNER_HQ, "You should not be here!"),
                 talk = {
                     chatNpc("The Mourners' headquarters is to the east of here.", facialExpression = FacialExpression.CALM_TALK)
                     true

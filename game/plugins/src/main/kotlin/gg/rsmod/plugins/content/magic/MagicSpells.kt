@@ -29,6 +29,9 @@ object MagicSpells {
 
     private val metadata = Int2ObjectOpenHashMap<SpellMetadata>()
 
+    /** PROJECT48 ONTGR: spell unique id -> the quest that unlocks it (OSRS Wiki). 53 = Iban Blast (Underground Pass). */
+    val QUEST_SPELLS: Map<Int, String> = mapOf(53 to "Underground Pass")
+
     fun getMetadata(spellId: Int): SpellMetadata? = metadata[spellId]
 
     fun getCombatSpells(): Map<Int, SpellMetadata> =
@@ -94,6 +97,10 @@ object MagicSpells {
         val book = getMetadata(spellId)?.let { spellbookOf(it.interfaceId) }
         if (book != null && !p.hasSpellbook(book)) {
             return WRONG_SPELLBOOK
+        }
+        // PROJECT48 ONTGR: a spell that OSRS unlocks with a quest (see PROJECT48-notities, ONTGR of the quest rows).
+        QUEST_SPELLS[spellId]?.let { quest ->
+            if (!gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(p, quest)) return "You need to complete $quest to cast this spell."
         }
         if (p.skills.getCurrentLevel(Skills.MAGIC) < lvl) {
             return "Your Magic level is not high enough for this spell."

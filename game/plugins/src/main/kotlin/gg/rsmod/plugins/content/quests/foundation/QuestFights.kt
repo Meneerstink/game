@@ -51,7 +51,7 @@ object QuestFights {
         if (!world.spawn(foe)) return false
         player.attr[ACTIVE_FOE] = WeakReference(foe)
         foe.forceChat(fight.shout)
-        player.message("<col=ef1020>${fight.subject} (level ${fight.level}) attacks! Dying here follows the normal death rules of this area.")
+        player.message("<col=ef1020>${fight.subject} ${if (fight.level > 0) "(level ${fight.level}) " else ""}attacks! Dying here follows the normal death rules of this area.")
         foe.attack(player)
         leash(player, quest, stage, foe, fight)
         return true

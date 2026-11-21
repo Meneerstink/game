@@ -22,8 +22,8 @@ import gg.rsmod.plugins.content.quests.red
 // Farming 49 and Herblore 57 (boostable). ONTGR: the fairy rings open from step 2 (FairyRings.ringsUnlocked).
 
 private val MARTIN_POST2 = Tile(3077, 3257, 0)
-private val GODFATHER_POST2 = Tile(2450, 4471, 0)
-private val VERY_WISE_POST = Tile(2412, 4434, 0)
+private val GODFATHER_POST2 = Tile(2449, 4430, 0)
+private val VERY_WISE_POST = Tile(2451, 4425, 0)
 private val GORAK_PLANE = Tile(3036, 5346, 0)
 private val COSMIC_PLANE = Tile(2162, 4833, 0)
 
@@ -153,7 +153,7 @@ object FairyTaleII : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.FAIRY_QUEEN,
+                npc = Npcs.FAIRY_QUEEN_4437,
                 journal = listOf("I should give the cure to the ${red("Fairy Queen")}."),
                 done = listOf("The Fairy Queen woke - cured."),
                 place = "the fairy hideout",

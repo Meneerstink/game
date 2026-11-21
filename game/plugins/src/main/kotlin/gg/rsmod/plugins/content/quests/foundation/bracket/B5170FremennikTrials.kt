@@ -109,7 +109,7 @@ object FremennikTrials : ShortQuest(
                 tip = "In OSRS you fight Koschei without weapons or armour. Four forms follow one another.",
                 fight =
                     QuestFight(
-                        Npcs.KOSCHEI_THE_DEATHLESS, "Koschei the Deathless", 40, KOSCHEI_ARENA, "You cannot kill me!",
+                        Npcs.KOSCHEI_THE_DEATHLESS, "Koschei the Deathless", 0, KOSCHEI_ARENA, "You cannot kill me!",
                         chain =
                             listOf(
                                 Npcs.KOSCHEI_THE_DEATHLESS_1291 to "I am still here!",

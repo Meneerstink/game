@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.quests.foundation.bracket
 
 import gg.rsmod.game.model.Direction
+import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.cfg.FacialExpression
 import gg.rsmod.plugins.api.cfg.Items
@@ -11,7 +12,7 @@ import gg.rsmod.plugins.content.quests.foundation.ShortQuest
 
 /** PROJECT48: the mini-quests of combat bracket 51-70 (Q10-Q16), in the order of VOORTGANG.tsv. */
 object B5170Quests {
-    val ALL: List<ShortQuest> = listOf(FremennikTrials, FremennikIsles, PlagueCity, Biohazard)
+    val ALL: List<ShortQuest> = listOf(FremennikTrials, FremennikIsles, PlagueCity, Biohazard, UndergroundPass)
 
     val NPCS: List<BracketNpc> =
         listOf(
@@ -21,10 +22,11 @@ object B5170Quests {
             BracketNpc(Npcs.EDMOND, null, Direction.SOUTH, listOf("Please find my daughter.")),
             BracketNpc(Npcs.ALRENA, null, Direction.SOUTH, listOf("I worry about Elena every day.")),
             BracketNpc(Npcs.BRAVEK, null, Direction.SOUTH, listOf("Leave me be - I have a headache.")),
-            BracketNpc(Npcs.ELENA_715, gg.rsmod.game.model.Tile(2532, 3274, 0), Direction.SOUTH, listOf("It is a dreadful sickness.")),
+            BracketNpc(Npcs.ELENA_715, gg.rsmod.game.model.Tile(2541, 9672, 0), Direction.SOUTH, listOf("It is a dreadful sickness.")),
             BracketNpc(Npcs.OMART, null, Direction.SOUTH, listOf("Keep your head down in this city.")),
             BracketNpc(Npcs.GUIDOR, null, Direction.SOUTH, listOf("My poor wife is ill.")),
             BracketNpc(Npcs.KING_LATHAS, null, Direction.SOUTH, listOf("Ardougne is in good hands.")),
+            BracketNpc(Npcs.KOFTIK, Tile(2437, 3314, 0), Direction.SOUTH, listOf("The pass is no place for the weak.")),
             BracketNpc(Npcs.MORD_GUNNARS, null, Direction.SOUTH, listOf("The sea is calm today.")),
             BracketNpc(Npcs.KING_GJUKI_SORVOTT_IV, null, Direction.SOUTH, listOf("Jatizso stands proud.")),
             BracketNpc(
