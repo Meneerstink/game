@@ -146,4 +146,31 @@ object DmmItems {
         player.timers[HEART_COOLDOWN] = if (saturated) SATURATED_COOLDOWN_TICKS else IMBUED_COOLDOWN_TICKS
         player.message("You feel your magical power surge.")
     }
+    /** Ring of wealth (i): 25487 uncharged, 25488 (i5) .. 25492 (i1); each teleport uses a charge (same destinations as the plain ring). */
+    const val RING_OF_WEALTH_I = 25487
+    val RING_OF_WEALTH_I_CHARGED = intArrayOf(25488, 25489, 25490, 25491, 25492)
+
+    fun wealthTeleport(
+        player: Player,
+        ringId: Int,
+        to: Tile,
+        equipped: Boolean,
+    ) {
+        player.canTeleport(TeleportType.JEWELRY) {
+            val next = if (ringId == 25492) RING_OF_WEALTH_I else ringId + 1
+            if (equipped) {
+                if (player.getEquipment(EquipmentType.RING)?.id != ringId) return@canTeleport
+                player.equipment[EquipmentType.RING.id] = gg.rsmod.game.model.item.Item(
+                    gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilJeweller.keep(player, ringId, next),
+                )
+            } else {
+                val slot = player.inventory.getItemIndex(ringId, skipAttrItems = false)
+                if (slot == -1 || !player.inventory.remove(ringId, beginSlot = slot).hasSucceeded()) return@canTeleport
+                player.inventory.add(gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilJeweller.keep(player, ringId, next), 1)
+            }
+            val left = 25493 - next
+            player.message(if (next == RING_OF_WEALTH_I) "You use your ring of wealth's last charge." else "Your ring of wealth has $left charges left.")
+            player.teleport(to, TeleportType.JEWELRY)
+        }
+    }
 }

@@ -35,11 +35,14 @@ object StaminaPotions {
         restore: Double,
         ticks: Int,
     ) {
-        RunEnergy.renew(p, restore)
-        if (ticks > 0) p.timers[STAMINA_TIMER] = ticks
+        // PROJECT48 Ring of endurance: a worn charged ring doubles the stamina effect and its duration.
+        val factor = if (ticks > 0) gg.rsmod.plugins.content.mechanics.deadman.items.RingOfEndurance.doubling(p, extended = restore >= EXTENDED_RESTORE) else 1
+        RunEnergy.renew(p, restore * factor)
+        if (ticks > 0) p.timers[STAMINA_TIMER] = ticks * factor
     }
 
-    fun drainMultiplier(p: Player): Double = if (p.timers.has(STAMINA_TIMER)) DEPLETION_MULTIPLIER else 1.0
+    fun drainMultiplier(p: Player): Double =
+        if (p.timers.has(STAMINA_TIMER)) DEPLETION_MULTIPLIER else gg.rsmod.plugins.content.mechanics.deadman.items.RingOfEndurance.passiveDrain(p)
 
     fun drinkMix(p: Player) {
         drink(p, STAMINA_RESTORE, STAMINA_TICKS)

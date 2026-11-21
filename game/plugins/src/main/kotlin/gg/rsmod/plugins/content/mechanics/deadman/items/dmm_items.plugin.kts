@@ -38,3 +38,31 @@ run {
 
 on_item_option(DmmItems.IMBUED_HEART, "invigorate") { DmmItems.invigorate(player, saturated = false) }
 on_item_option(DmmItems.SATURATED_HEART, "invigorate") { DmmItems.invigorate(player, saturated = true) }
+
+/* Ring of wealth (i): rub from the inventory / the worn options, one charge per teleport. */
+DmmItems.RING_OF_WEALTH_I_CHARGED.forEach { ring ->
+    on_item_option(ring, "rub") {
+        player.queue {
+            val names = gg.rsmod.plugins.content.magic.teleports.JewelleryDestinations.RING_OF_WEALTH.keys.toList()
+            val choice = options(*names.map { "$it." }.toTypedArray(), "Nowhere.")
+            if (choice in 1..names.size) {
+                DmmItems.wealthTeleport(player, ring, gg.rsmod.plugins.content.magic.teleports.JewelleryDestinations.RING_OF_WEALTH.getValue(names[choice - 1]), equipped = false)
+            }
+        }
+    }
+    val ringDef = world.definitions.get(ItemDef::class.java, ring)
+    gg.rsmod.plugins.content.magic.teleports.JewelleryDestinations.RING_OF_WEALTH.forEach { (name, tile) ->
+        if (ringDef.equipmentMenu.any { it.equals(name, true) }) {
+            on_equipment_option(ring, option = name) { DmmItems.wealthTeleport(player, ring, tile, equipped = true) }
+        }
+    }
+}
+on_item_option(DmmItems.RING_OF_WEALTH_I, "rub") { player.message("The ring has lost its charge. It will need to be recharged before you can use it again.") }
+
+/* Ring of endurance (I-A05): charge with stamina potions, check, uncharge. */
+RingOfEndurance.POTIONS.forEach { potion ->
+    on_item_on_item(item1 = potion, item2 = DmmItems.RING_OF_ENDURANCE) { RingOfEndurance.charge(player, potion) }
+    on_item_on_item(item1 = potion, item2 = DmmItems.RING_OF_ENDURANCE_UNCHARGED) { RingOfEndurance.charge(player, potion) }
+}
+on_item_option(DmmItems.RING_OF_ENDURANCE, "check") { RingOfEndurance.check(player, player.inventory[player.getInteractingItemSlot()]) }
+on_item_option(DmmItems.RING_OF_ENDURANCE, "uncharge") { RingOfEndurance.uncharge(player, player.getInteractingItemSlot()) }

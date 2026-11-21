@@ -12,8 +12,8 @@ object MegaRare {
         DropTableFactory.build {
             main {
 
-                // TODO: check all 4 rings
-                val hasRingOfWealth = player.equipment.hasAt(EquipmentType.RING.id, Items.RING_OF_WEALTH)
+                // every ring of wealth (charged ones and the imbued (i) rings too), not only the uncharged id
+                val hasRingOfWealth = gg.rsmod.plugins.content.areas.wilderness.npcs.WildernessNpcDrops.wealth(player)
 
                 total(1024)
                 if (!hasRingOfWealth) nothing(904)
