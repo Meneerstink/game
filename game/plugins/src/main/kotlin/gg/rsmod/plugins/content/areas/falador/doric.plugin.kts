@@ -12,6 +12,7 @@ val doricsQuest = DoricsQuest
 
 on_npc_option(npc = Npcs.DORIC, option = "talk-to") {
     player.queue {
+        if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.DORIC)) return@queue
         when (player.getCurrentStage(doricsQuest)) {
             0 -> preQuestDialogue(this)
             1 -> questDialogue(this)

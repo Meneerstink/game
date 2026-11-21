@@ -23,7 +23,7 @@ import gg.rsmod.plugins.content.quests.red
  * Npcs that already have a Talk-to plugin or a QuestNpcPost are NOT listed here (their handler calls FoundationQuests.talk first).
  */
 object B111Quests {
-    val ALL: List<ShortQuest> = listOf(BlackKnightsFortress, MurderMystery, JunglePotion, ShiloVillage, OneSmallFavour)
+    val ALL: List<ShortQuest> = listOf(BlackKnightsFortress, MurderMystery, JunglePotion, ShiloVillage, OneSmallFavour, ATailOfTwoCats, DeviousMinds)
 
     val NPCS: List<BracketNpc> =
         listOf(
@@ -32,6 +32,13 @@ object B111Quests {
             BracketNpc(Npcs.MOSOL_REI, null, Direction.SOUTH, listOf("Shilo Village is a sad place, bwana.")),
             BracketNpc(Npcs.YANNI_SALIKA, null, Direction.SOUTH, listOf("Antiques from the jungle, bwana?")),
             BracketNpc(Npcs.JUNGLE_FORESTER, null, Direction.SOUTH, listOf("The jungle is full of things that bite.")),
+            BracketNpc(Npcs.UNFERTH, Tile(2920, 3559, 0), Direction.SOUTH, listOf("Bob has not been the same.")),
+            BracketNpc(Npcs.HILD, null, Direction.SOUTH, listOf("Burthorpe is a fine place to live.")),
+            BracketNpc(Npcs.BOB_2635, Tile(2918, 3562, 0), Direction.SOUTH, listOf("Meow.")),
+            BracketNpc(Npcs.APOTHECARY, null, Direction.SOUTH, listOf("I am the Apothecary. I brew potions.")),
+            BracketNpc(Npcs.MONK_803, Tile(3424, 3487, 0), Direction.SOUTH, listOf("Peace be with you.")),
+            BracketNpc(Npcs.HIGH_PRIEST, null, Direction.SOUTH, listOf("Welcome to the church of Entrana.")),
+            BracketNpc(Npcs.SIR_TIFFY_CASHIEN, null, Direction.SOUTH, listOf("Good day. Falador's park is lovely.")),
             BracketNpc(Npcs.TRUFITUS, null, Direction.SOUTH, listOf("The spirits of the jungle are restless.")),
         )
 }
