@@ -106,3 +106,8 @@ on_global_item_pickup {
     val ground = player.getInteractingGroundItem()
     Sacks.afterPickup(player, ground.item, ground.amount)
 }
+
+/* Wilderness sword 3 and 4: Teleport to the Fountain of Rune (sword 4 unlimited, sword 3 once a day). */
+for (sword in intArrayOf(DmmItems.WILDERNESS_SWORD_3, DmmItems.WILDERNESS_SWORD_4)) {
+    on_item_option(sword, "teleport") { DmmItems.wildernessSwordTeleport(player, sword) }
+}

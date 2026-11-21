@@ -32,7 +32,29 @@ object DmmItems {
     const val SATURATED_HEART = 25478
     const val BOOK_OF_THE_DEAD = 25479
     const val WILDERNESS_SWORD_1 = 25480
+    const val WILDERNESS_SWORD_3 = 25482
     const val WILDERNESS_SWORD_4 = 25483
+
+    /** Wilderness sword 3 + 4 (wiki): teleport to the Fountain of Rune; sword 4 without limit, sword 3 once per (real-world) day. */
+    private val FOUNTAIN_OF_RUNE = Tile(3375, 3894, 0)
+    private val SWORD_DAY = AttributeKey<Int>(persistenceKey = "wild_sword_day")
+
+    fun wildernessSwordTeleport(
+        player: Player,
+        sword: Int,
+    ) {
+        player.canTeleport(TeleportType.JEWELRY) {
+            if (sword == WILDERNESS_SWORD_3) {
+                val today = java.time.LocalDate.now().toEpochDay().toInt()
+                if (player.attr[SWORD_DAY] == today) {
+                    player.message("You have already used the sword's teleport today. It recharges at midnight.")
+                    return@canTeleport
+                }
+                player.attr[SWORD_DAY] = today
+            }
+            player.teleport(FOUNTAIN_OF_RUNE, TeleportType.JEWELRY)
+        }
+    }
 
     private val GRAND_TREE = Tile(2465, 3497, 0)
 
