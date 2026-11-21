@@ -390,7 +390,8 @@ suspend fun QueueTask.claimLamps() {
 }
 
 suspend fun QueueTask.questDirections() {
-    val open = FoundationQuests.SHORT.filterNot { it.isFinished(player) }
+    // The bracket mini-quests have their own Quest Guide choice 'Bracket quests' (PROJECT48 F5); this list stays the eight old ones.
+    val open = FoundationQuests.OLD_SHORT.filterNot { it.isFinished(player) }
     if (open.isEmpty()) {
         chatNpc("Every quest in my records carries your name already.", facialExpression = FacialExpression.HAPPY)
         return
@@ -452,6 +453,16 @@ suspend fun QueueTask.travel(place: String, destination: Tile, npc: Int? = null)
 
 FoundationQuests.NPC_POSTS.forEach { post ->
     spawn_npc(npc = post.npc, x = post.tile.x, z = post.tile.z, height = post.tile.height, walkRadius = 0, direction = post.facing)
+    on_npc_option(npc = post.npc, option = "talk-to") {
+        player.queue {
+            if (!FoundationQuests.talk(this, post.npc)) chatNpc(*post.idle.toTypedArray(), facialExpression = FacialExpression.CALM_TALK)
+        }
+    }
+}
+
+// PROJECT48 F3: the npcs of the bracket mini-quests (spawned when they have a post, always bound to the quest talk).
+gg.rsmod.plugins.content.quests.foundation.bracket.BracketQuests.NPCS.forEach { post ->
+    post.tile?.let { spawn_npc(npc = post.npc, x = it.x, z = it.z, height = it.height, walkRadius = 0, direction = post.facing) }
     on_npc_option(npc = post.npc, option = "talk-to") {
         player.queue {
             if (!FoundationQuests.talk(this, post.npc)) chatNpc(*post.idle.toTypedArray(), facialExpression = FacialExpression.CALM_TALK)

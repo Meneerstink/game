@@ -202,6 +202,8 @@ abstract class ShortQuest(
                 gg.rsmod.plugins.content.quests.QuestList.ENTRIES.firstOrNull { it.slot == slot }?.progress?.complete?.invoke(player)
                 player.attr.remove(stepKey)
             } else if (value <= 0) {
+                // Back to not started (::questreset / ::p48 reset): the list entry too, so the quest list shows it as open.
+                gg.rsmod.plugins.content.quests.QuestList.ENTRIES.firstOrNull { it.slot == slot }?.progress?.reset?.invoke(player)
                 player.attr.remove(stepKey)
             } else {
                 player.attr[stepKey] = value

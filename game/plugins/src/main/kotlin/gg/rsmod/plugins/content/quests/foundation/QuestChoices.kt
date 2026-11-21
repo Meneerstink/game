@@ -99,6 +99,9 @@ object QuestChoices {
      */
     fun applyLegacy(player: Player) {
         FoundationQuests.SHORT.forEach { quest ->
+            // PROJECT48 F3: a bracket mini-quest of a legacy account is simply completed by QuestStatus (no bracket gates it, no unlock
+            // to hand out: its doors read QuestStatus), so nothing is written here.
+            if (quest.ownSteps) return@forEach
             if (!quest.isFinished(player)) {
                 if (quest.usesVarbits) player.setVarbit(quest.questId, quest.completedValue) else player.setVarp(quest.questId, quest.completedValue)
             }

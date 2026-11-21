@@ -2271,7 +2271,10 @@ on_command("completequests", Privilege.MOD_POWER) {
     }
     var count = 0
     gg.rsmod.plugins.content.quests.Quest.quests.forEach { quest ->
-        if (quest.usesVarbits) {
+        if (quest is gg.rsmod.plugins.content.quests.foundation.ShortQuest && quest.ownSteps) {
+            // PROJECT48: a bracket mini-quest keeps its step apart from the cache variable; setStage completes the list entry.
+            quest.setStage(player, quest.completedValue)
+        } else if (quest.usesVarbits) {
             player.setVarbit(quest.questId, quest.stages)
         } else {
             player.setVarp(quest.questId, quest.stages)

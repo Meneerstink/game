@@ -1561,8 +1561,11 @@ object FoundationQuests {
         )
 
 
-    val SHORT: List<ShortQuest> =
+    /** The eight old short quests + Beneath Cursed Sands, then (PROJECT48 F3) the bracket mini-quests ([bracket.BracketQuests]). Lazy: no init cycle. */
+    val OLD_SHORT: List<ShortQuest> =
         listOf(DesertTreasure, LunarDiplomacy, TempleAtSenntisten, KingsRansom, DesertTreasureII, DragonSlayerII, SongOfTheElves, MonkeyMadnessII, BeneathCursedSands)
+
+    val SHORT: List<ShortQuest> by lazy { OLD_SHORT + gg.rsmod.plugins.content.quests.foundation.bracket.BracketQuests.ALL }
 
     /** OSRS Wiki quest points: Sins of the Father 2, Children of the Sun 1, Secrets of the North 2, Bone Voyage 1; Mage Arena II is a miniquest (0). Beneath Cursed Sands (2) is a short quest since N462. */
     val COMPLETED: List<CompletedOsrsQuest> =

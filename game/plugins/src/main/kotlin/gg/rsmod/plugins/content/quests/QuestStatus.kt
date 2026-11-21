@@ -11,6 +11,7 @@ import gg.rsmod.plugins.content.quests.foundation.FoundationQuests
 import gg.rsmod.plugins.content.quests.foundation.QuestBrackets
 import gg.rsmod.plugins.content.quests.foundation.QuestChoices
 import gg.rsmod.plugins.content.quests.foundation.ShortQuest
+import gg.rsmod.plugins.content.quests.foundation.bracket.BracketQuests
 
 /**
  * The one quest status of the server (owner 2026-09-27, quest list part 2). Everything that asks whether a quest is done
@@ -53,7 +54,8 @@ object QuestStatus {
             return when (QuestList.ENTRIES.firstOrNull { it.slot == slot }?.progress?.read?.invoke(player) ?: 0) {
                 COMPLETE -> State.COMPLETED
                 1 -> State.IN_PROGRESS
-                else -> State.NOT_STARTED
+                // PROJECT48 F3: a bracket mini-quest in progress keeps its step in its own attribute (the cache variable stays 0).
+                else -> if (BracketQuests.bySlot(slot)?.let { (it.stage(player)) >= 1 } == true) State.IN_PROGRESS else State.NOT_STARTED
             }
         }
         val stage = choice.stage(player)
