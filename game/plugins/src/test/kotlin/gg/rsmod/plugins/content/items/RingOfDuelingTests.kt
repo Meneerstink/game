@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.items
 
+import gg.rsmod.game.model.attr.AttributeMap
 import gg.rsmod.game.model.container.ContainerStackType
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.entity.Player
@@ -16,6 +17,8 @@ class RingOfDuelingTests {
     private fun player(): Player = mockk<Player>(relaxed = true).also {
         every { it.inventory } returns ItemContainer(mockk(relaxed = true), 28, ContainerStackType.NORMAL)
         every { it.equipment } returns ItemContainer(mockk(relaxed = true), 15, ContainerStackType.NORMAL)
+        // PROJECT48: RingOfDueling.spend asks the Sigil of the Eternal Jeweller (player attributes) whether the charge is kept.
+        every { it.attr } returns AttributeMap()
     }
 
     @Test fun `all eight charge variants spend one and final charge disappears in either container`() {

@@ -169,6 +169,9 @@ object SpecialAttacks {
             AttackTab.refundSpecial(player, energyCost)
             return Outcome.FAILED
         }
+        // PROJECT48 S56 Finality (wiki: '100% accuracy on your next special attack'): the window covers EVERY hit of that special
+        // (dragon dagger, dragon claws, dark bow ...) and is used up once the special is performed, not at its first hit.
+        gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.consumeWindow(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.FINALITY)
         return Outcome.PERFORMED
     }
 

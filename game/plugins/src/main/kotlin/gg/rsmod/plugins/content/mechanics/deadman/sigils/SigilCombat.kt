@@ -328,8 +328,7 @@ object SigilCombat {
         type: HitType,
         landed: Boolean,
     ) {
-        // S56 Finality: the special that just fired used up the window.
-        if (attacker.attr[gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.SPECIAL_ATTACK_IN_PROGRESS] == true) Sigils.consumeWindow(attacker, Sigil.FINALITY)
+        // S56 Finality: the window is used up by SpecialAttacks.execute once the whole special is performed (all its hits guaranteed).
         if (!landed) return
         // S54 Ruthless Ranger / S52 Menacing Mage: damage over time.
         SigilDots.onLanded(attacker, target, type)

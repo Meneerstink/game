@@ -278,6 +278,28 @@ class SigilTests {
     }
 
     @Test
+    fun `finality guarantees every hit of the next special and is used up only when that special is performed`() {
+        // Found in the game (21-11 run 2): with a dragon dagger only the first of the two special hits was guaranteed - the first
+        // landed hit closed the window. Wiki: "guarantee 100% accuracy on your next special attack within the next 12 seconds".
+        val melee = gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
+        val npc = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
+        val player = newPlayer()
+        attune(player, Sigil.FINALITY)
+        assertTrue(Sigils.activate(player, Sigil.FINALITY))
+        val special = gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.SPECIAL_ATTACK_IN_PROGRESS
+        assertEquals(0.20, SigilCombat.accuracy(player, npc, 0.20, melee), 1e-9, "a normal attack is not guaranteed")
+        player.attr[special] = true
+        assertEquals(1.0, SigilCombat.accuracy(player, npc, 0.20, melee), 1e-9, "first hit of the special")
+        assertEquals(1.0, SigilCombat.accuracy(player, npc, 0.20, melee), 1e-9, "second hit of the same special")
+        player.attr.remove(special)
+        val source = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/SpecialAttacks.kt").readText()
+        assertTrue(source.contains("Sigils.consumeWindow(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.FINALITY)"))
+        Sigils.consumeWindow(player, Sigil.FINALITY)
+        player.attr[special] = true
+        assertEquals(0.20, SigilCombat.accuracy(player, npc, 0.20, melee), 1e-9, "the special after that rolls normally")
+    }
+
+    @Test
     fun `every combat formula applies the sigil accuracy itself - the strategies roll with getAccuracy, not through a wrapper`() {
         // Found in the game (21-11 run 2): a bot with Meticulousness hit Evelot as often as one without - the factor sat in a
         // PawnExt.dealHit overload that no player attack used.

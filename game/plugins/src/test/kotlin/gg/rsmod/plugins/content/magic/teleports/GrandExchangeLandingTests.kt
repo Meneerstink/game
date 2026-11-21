@@ -28,6 +28,8 @@ class GrandExchangeLandingTests {
     @Test
     fun `real worn ring handler replaces charges with a full inventory after skull approval`() {
         BacklogBundleWorld.bind("gg.rsmod.plugins.content.items.jewellery.Ring_of_wealth_plugin")
+        // PROJECT48 DMM-ITEMS: the imbued Ring of wealth (i5..i1) carries the same "Grand Exchange" worn option; its handler lives in dmm_items.
+        BacklogBundleWorld.bind("gg.rsmod.plugins.content.mechanics.deadman.items.Dmm_items_plugin")
         val rings = world.definitions.getAll(gg.rsmod.game.fs.def.ItemDef::class.java).values
             .filterIsInstance<gg.rsmod.game.fs.def.ItemDef>()
             .filter { it.name.startsWith("Ring of wealth (") && it.equipmentMenu.any { option -> option == "Grand Exchange" } }

@@ -188,7 +188,7 @@ object SecretsOfTheNorth : ShortQuest(
                 done = listOf("The scroll's symbol is half of the crest that seals the prison of", "Ghorrock. Somebody is trying to open it."),
                 place = "the frozen shore of Weiss",
                 location = WEISS_SHORE,
-                tip = "Be ready to fight before you travel north: food, prayer potions and antipoison.",
+                tip = "Before you travel north: bring food, prayer potions and antipoison.",
                 talk = {
                     chatNpc(
                         "Do not stare. It is I, Hazeel. This symbol is half of the",
@@ -218,7 +218,7 @@ object SecretsOfTheNorth : ShortQuest(
                 done = listOf("The Strange Creature was Jhallan, a Mahjarrat. The assassin took him", "away before he could speak."),
                 place = "the frozen shore of Weiss",
                 location = CREATURE_FIGHT,
-                tip = "The Strange Creature attacks from a distance with ranged and magic (up to 33). Bring your best gear, food and prayer potions.",
+                tip = "It uses ranged and magic (up to 33). Bring food and prayer potions.",
                 fight = QuestFight(SotnNpcs.STRANGE_CREATURE, "The Strange Creature", 368, CREATURE_FIGHT, ""),
                 talk = {
                     chatNpc("That... thing is no beast of the ice. Destroy it!", facialExpression = FacialExpression.WORRIED)

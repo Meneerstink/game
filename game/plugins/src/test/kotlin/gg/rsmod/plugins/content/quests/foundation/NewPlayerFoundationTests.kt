@@ -766,10 +766,13 @@ class NewPlayerFoundationTests {
             // Desert Treasure: Dessous, Kamil, Damis and Fareed; the others one or two fights.
             assertEquals(if (quest == DesertTreasure) 4 else if (quest.ownSteps) fights.size else fights.size.coerceIn(1, 2), fights.size, "${quest.name} fights")
             fights.flatMap { it.chain }.forEach { (npc, _) -> assertTrue(defs[npc] != null, "${quest.name}: chained foe $npc has a combat definition") }
+            // PROJECT48 Q41: the imported OSRS foes of Secrets of the North get their combat definition from
+            // secrets_of_the_north.plugin.kts (set_combat_def, wiki stats), not from combat-defs.json; the OSRS level is in the cache.
+            val ownDefs = gg.rsmod.plugins.content.quests.foundation.bracket.SotnFoes.ids.toSet()
             fights.forEach { fight ->
                 val def = defs[fight.npc]
-                assertTrue(def != null, "${quest.name}: npc ${fight.npc} has a combat definition")
-                assertEquals(fight.level, def!!.get("combat_level").asInt, "${quest.name}: journal level matches the npc")
+                assertTrue(def != null || fight.npc in ownDefs, "${quest.name}: npc ${fight.npc} has a combat definition")
+                if (def != null) assertEquals(fight.level, def.get("combat_level").asInt, "${quest.name}: journal level matches the npc")
                 fight.secondForm?.let { assertTrue(defs[it] != null, "${quest.name}: second form $it has a combat definition") }
                 val step = quest.steps.first { it.fight == fight }
                 assertEquals(fight.tile, step.location, "${quest.name}: the fight tile is the step's travel tile (walkability-checked)")
