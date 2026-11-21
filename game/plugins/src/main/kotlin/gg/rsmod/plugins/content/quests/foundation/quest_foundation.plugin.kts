@@ -389,7 +389,81 @@ suspend fun QueueTask.claimLamps() {
     }
 }
 
+/**
+ * PROJECT48 F5: the Quest Guide's list of the bracket mini-quests, bracket by bracket (a menu, no new window): status + what it
+ * needs in one line, and the trip to the start npc. Quests of a bracket are listed from low to high, three a page.
+ */
+suspend fun QueueTask.bracketDirections() {
+    val brackets = gg.rsmod.plugins.content.quests.foundation.bracket.BracketQuests.BY_BRACKET.filterValues { it.isNotEmpty() }.keys.toList()
+    if (brackets.isEmpty()) {
+        chatNpc("There are no bracket quests in my records yet.", facialExpression = FacialExpression.CALM_TALK)
+        return
+    }
+    val bracket =
+        run {
+            val labels = brackets.map { "Combat ${it.label}" } + "Never mind."
+            val pick = options(*labels.toTypedArray(), title = "Which bracket?")
+            brackets.getOrNull(pick - 1) ?: return
+        }
+    val quests = gg.rsmod.plugins.content.quests.foundation.bracket.BracketQuests.BY_BRACKET.getValue(bracket)
+    var page = 0
+    var quest: ShortQuest? = null
+    while (quest == null) {
+        val shown = quests.drop(page * 3).take(3)
+        val more = (page + 1) * 3 < quests.size
+        val labels =
+            shown.map {
+                val state = gg.rsmod.plugins.content.quests.QuestStatus.state(player, it)
+                it.name + when (state) {
+                    gg.rsmod.plugins.content.quests.QuestStatus.State.COMPLETED -> " (done)"
+                    gg.rsmod.plugins.content.quests.QuestStatus.State.IN_PROGRESS -> " (started)"
+                    else -> ""
+                }
+            } + (if (more) listOf("More quests") else emptyList()) + "Never mind."
+        val choice = options(*labels.toTypedArray(), title = "Bracket ${bracket.label}")
+        when {
+            choice in 1..shown.size -> quest = shown[choice - 1]
+            more && choice == shown.size + 1 -> page++
+            else -> return
+        }
+    }
+    val chosen = quest ?: return
+    if (chosen.isFinished(player)) {
+        chatNpc("${chosen.name} carries your name already.", facialExpression = FacialExpression.HAPPY)
+        return
+    }
+    if (QuestHelper.enabled(player) && QuestHelper.tracked(player) != chosen &&
+        options("Start the Quest Helper for this quest.", "No thanks.", title = chosen.name) == 1
+    ) {
+        QuestHelper.track(player, chosen)
+    }
+    val needs = chosen.needs
+    if (!needs.isEmpty) {
+        val missing = needs.missing(player)
+        val line = if (missing.isEmpty()) "You meet all of its requirements." else missing.joinToString(" ")
+        chatNpc("${chosen.name} needs: ${needs.summary(player.world)}.", *chatLines(line, 50).take(3).toTypedArray(), facialExpression = FacialExpression.CALM_TALK)
+    }
+    val stage = chosen.stage(player)
+    if (stage <= 0) {
+        chatNpc("${chosen.name} begins with ${chosen.startNpcName}, at ${chosen.startPlace}.", facialExpression = FacialExpression.CALM_TALK)
+        chosen.startLocation?.let { travel(chosen.startPlace, it, chosen.startNpc) }
+    } else {
+        val step = chosen.steps[stage - 1]
+        chatNpc(*step.journal.map { it.replace(Regex("<[^>]+>"), "") }.toTypedArray(), facialExpression = FacialExpression.CALM_TALK)
+        val place = step.place
+        val location = step.location
+        if (location != null && place != null) travel(place, location, step.npc.takeIf { step.fight == null && step.npc >= 0 })
+    }
+}
+
 suspend fun QueueTask.questDirections() {
+    // PROJECT48 F5: once bracket quests exist, 'Where do the quests start?' first asks which kind.
+    if (gg.rsmod.plugins.content.quests.foundation.bracket.BracketQuests.ALL.isNotEmpty()) {
+        when (options("The eight quest choices.", "Bracket quests.", "Never mind.", title = "Quests")) {
+            2 -> return bracketDirections()
+            3 -> return
+        }
+    }
     // The bracket mini-quests have their own Quest Guide choice 'Bracket quests' (PROJECT48 F5); this list stays the eight old ones.
     val open = FoundationQuests.OLD_SHORT.filterNot { it.isFinished(player) }
     if (open.isEmpty()) {

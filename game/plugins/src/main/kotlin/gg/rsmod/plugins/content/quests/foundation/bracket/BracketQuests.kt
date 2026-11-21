@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.quests.foundation.bracket
 
 import gg.rsmod.game.model.Direction
 import gg.rsmod.game.model.Tile
+import gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.Bracket
 import gg.rsmod.plugins.content.quests.foundation.ShortQuest
 
 /**
@@ -12,7 +13,14 @@ import gg.rsmod.plugins.content.quests.foundation.ShortQuest
  * binds a Talk-to for. An npc that already has a Talk-to plugin does NOT go in [NPCS]: its handler calls FoundationQuests.talk first.
  */
 object BracketQuests {
-    val ALL: List<ShortQuest> by lazy { B0350Quests.ALL }
+    /** The quests per combat bracket, in play order (the order of VOORTGANG.tsv). */
+    val BY_BRACKET: Map<Bracket, List<ShortQuest>> by lazy {
+        mapOf(
+            Bracket.B3_50 to B0350Quests.ALL,
+        )
+    }
+
+    val ALL: List<ShortQuest> by lazy { BY_BRACKET.values.flatten() }
 
     val NPCS: List<BracketNpc> by lazy { B0350Quests.NPCS }
 
