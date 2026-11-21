@@ -19,6 +19,7 @@ import java.lang.ref.WeakReference
 object QuestFights {
     private val FOE_QUEST = AttributeKey<Int>()
     private val FOE_STAGE = AttributeKey<Int>()
+    private val FOE_POS = AttributeKey<Int>()
     private val ACTIVE_FOE = AttributeKey<WeakReference<Npc>>()
 
     /** How close the player has to be to the fight tile for the foe to appear. */
@@ -84,7 +85,8 @@ object QuestFights {
         if (quest.stage(killer) != stage) return
         val fight = quest.steps[stage - 1].fight ?: return
         // A foe with a second form (Damis) or waves (Knight Waves): the next one comes, only the last kill counts.
-        val next = fight.next(npc.id)
+        val pos = npc.attr[FOE_POS] ?: 0
+        val next = fight.chain.getOrNull(pos) // by position: a chain may repeat an npc id (the five mudskippers 3422/3423)
         if (next != null) {
             val (second, shout) = next
             val world = killer.world
@@ -92,6 +94,7 @@ object QuestFights {
             foe.respawnOverride = false
             foe.attr[FOE_QUEST] = slot
             foe.attr[FOE_STAGE] = stage
+            foe.attr[FOE_POS] = pos + 1
             if (world.spawn(foe)) {
                 killer.attr[ACTIVE_FOE] = WeakReference(foe)
                 if (shout.isNotEmpty()) foe.forceChat(shout)
