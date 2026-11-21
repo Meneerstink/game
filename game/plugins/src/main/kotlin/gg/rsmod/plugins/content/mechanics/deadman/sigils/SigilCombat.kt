@@ -262,6 +262,12 @@ object SigilCombat {
         speed: Int,
     ): Int = if (pawn is Player && speed > 4 && Sigils.effective(pawn, Sigil.ARCANE_SWIFTNESS)) speed - 1 else speed
 
+    /** S34 Lightbearer sigil: ticks between two 10% special-energy restores (25 = 15 s, 17 = 10 s with the ring), or null without the sigil. */
+    fun specRegenTicks(
+        player: Player,
+        wearingRing: Boolean,
+    ): Int? = if (Sigils.effective(player, Sigil.THE_LIGHTBEARER)) (if (wearingRing) 17 else 25) else null
+
     /** True when [pawn] is an npc (sigils such as Deft Strikes only work against non-player enemies). */
     fun isNpc(pawn: Pawn): Boolean = pawn is Npc
 }

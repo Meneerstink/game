@@ -22,6 +22,8 @@ on_timer(SPECIAL_ATTACK_TIMER) {
     val spec = AttackTab.getEnergy(player)
     val newSpec = SpecialEnergyRegen.onTimer(player.timers, spec, SpecialEnergyRegen.wearingLightbearer(player))
     AttackTab.setEnergy(player, newSpec)
+    // PROJECT48 S34 Sigil of the Lightbearer: 15 seconds per 10% (10 seconds with a Lightbearer ring as well).
+    gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.specRegenTicks(player, SpecialEnergyRegen.wearingLightbearer(player))?.let { player.timers[SPECIAL_ATTACK_TIMER] = it }
 }
 
 on_item_equip(item = Items.LIGHTBEARER) {
