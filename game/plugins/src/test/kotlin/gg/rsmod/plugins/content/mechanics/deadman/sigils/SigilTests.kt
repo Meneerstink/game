@@ -122,4 +122,32 @@ class SigilTests {
         assertNull(SigilDrops.rollGlobalTable(newPlayer(), 1), "the Deadman-only table has chance 0 until the owner names the rates")
         assertNotNull(Sigil.values().firstOrNull())
     }
+
+    @Test
+    fun `consistency adds one damage to a landed hit and aggression gives 10 percent more and 5 percent less protection`() {
+        val npc = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
+        val attacker = newPlayer()
+        attune(attacker, Sigil.CONSISTENCY)
+        assertEquals(6.0, SigilCombat.modifyDamage(attacker, npc, 5.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, true))
+        assertEquals(0.0, SigilCombat.modifyDamage(attacker, npc, 0.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, false), "a missed hit stays 0")
+        val fighter = newPlayer()
+        attune(fighter, Sigil.AGGRESSION)
+        assertEquals(22.0, SigilCombat.modifyDamage(fighter, npc, 20.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, true))
+        val victim = newPlayer()
+        attune(victim, Sigil.AGGRESSION)
+        assertEquals(21.0, SigilCombat.modifyDamage(npc, victim, 20.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, true), "5% more damage taken")
+    }
+
+    @Test
+    fun `titanium takes 60 percent and resistance 25 percent off monster hits only`() {
+        val npc = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
+        val titan = newPlayer()
+        attune(titan, Sigil.TITANIUM)
+        assertEquals(40.0, SigilCombat.modifyDamage(npc, titan, 100.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, true))
+        val resist = newPlayer()
+        attune(resist, Sigil.RESISTANCE)
+        assertEquals(75.0, SigilCombat.modifyDamage(npc, resist, 100.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, true))
+        val other = newPlayer()
+        assertEquals(100.0, SigilCombat.modifyDamage(other, resist, 100.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, true), "a player's hit is not reduced")
+    }
 }
