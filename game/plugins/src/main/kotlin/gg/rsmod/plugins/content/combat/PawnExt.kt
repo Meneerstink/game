@@ -187,9 +187,9 @@ fun Pawn.dealHit(
     onHit: (PawnHit) -> Unit = {
     },
 ): PawnHit {
-    val accuracy = formula.getAccuracy(this, target)
+    val accuracy = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.accuracy(this, target, formula.getAccuracy(this, target), formula)
     // K07: a Castle wars bracelet charged this game adds 20% against a flag carrier.
-    val maxHit = gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsHandler.braceMaxHit(this, target, formula.getMaxHit(this, target))
+    val maxHit = gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsHandler.braceMaxHit(this, target, gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.maxHit(this, target, formula.getMaxHit(this, target), formula))
     val landHit = accuracy >= world.randomDouble()
     return dealHit(target, minHit, maxHit, landHit, delay, onHit, HitType.REGULAR_HIT)
 }
@@ -206,9 +206,9 @@ fun Pawn.dealHit(
     type: HitType,
     onHit: (PawnHit) -> Unit = {},
 ): PawnHit {
-    val accuracy = formula.getAccuracy(this, target)
+    val accuracy = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.accuracy(this, target, formula.getAccuracy(this, target), formula)
     // K07: a Castle wars bracelet charged this game adds 20% against a flag carrier.
-    val maxHit = gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsHandler.braceMaxHit(this, target, formula.getMaxHit(this, target))
+    val maxHit = gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsHandler.braceMaxHit(this, target, gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.maxHit(this, target, formula.getMaxHit(this, target), formula))
     val landHit = accuracy >= world.randomDouble()
     return dealHit(target, minHit, maxHit, landHit, delay, onHit, type)
 }
@@ -267,6 +267,8 @@ fun Pawn.dealHit(
             landHit -> (rollDamage(minHit, maxHit) + bonusDamage).toDouble()
             else -> 0.0
         }
+    // PROJECT48 SIGILS: the attuned sigils of the attacker (more damage) and of the target (less damage taken) - one hook.
+    damage = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.modifyDamage(this, target, damage, hitType, landHit)
     // Power of Death (staff of the dead, toxic staff, staff of light): halves melee damage taken; ends on damage without the staff.
     if (target is Player) {
         damage = gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.modifyIncomingDamage(target, hitType, damage.toInt()).toDouble()
@@ -358,6 +360,7 @@ fun Pawn.dealHit(
     hit.sourceCombatClass = curseHitStyle
     hit.sourceSpellId = if (curseHitStyle == CombatClass.MAGIC) sourceSpellId else null
     hit.sourceMaxHit = kotlin.math.floor(maxHit + 1e-9).toInt() + bonusDamage
+    gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.afterHit(this, target, hit, hitType, executeHit)
 
     if (this is Player && target is Npc && executeHit) {
         val owner = this
