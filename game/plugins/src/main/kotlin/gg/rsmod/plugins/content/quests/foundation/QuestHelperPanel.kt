@@ -86,7 +86,9 @@ object QuestHelperPanel {
         if (!force && player.attr[SIGNATURE] == signature) return
         player.attr[SIGNATURE] = signature
         val tracked = QuestHelper.tracked(player)
-        FoundationQuests.SHORT.forEach { q ->
+        // PROJECT48 F7: the list keeps the old quests and shows a bracket mini-quest only while it is started, tracked or open in the
+        // overview (the 41+ others are listed in the Quest Guide); so the list never grows past a dozen rows.
+        FoundationQuests.SHORT.filter { q -> !q.ownSteps || q == tracked || q == shown || (!q.isFinished(player) && q.stage(player) > 0) }.forEach { q ->
             ClientHud.send(player, "qhq|${q.slot}|${state(player, q)}|${if (q == tracked) 1 else 0}|${clean(q.name)}")
         }
         ClientHud.send(player, "qhqe")
@@ -121,7 +123,12 @@ object QuestHelperPanel {
         ClientHud.send(player, "qhb|${quest.slot}|${state(player, quest)}|$stage|${if (tracked) 1 else 0}|${quest.steps.size}|${if (travel) 1 else 0}|${clean(quest.name)}")
         line(player, "start", 0, "Speak to ${quest.startNpcName} at ${quest.startPlace}.")
         // The short quests ask nothing of a player: no levels, items or earlier quests (owner 2026-09-26, Quest Tutor).
-        line(player, "req", 0, "None - every player can do this quest.")
+        // PROJECT48 F2/F7: a bracket mini-quest lists its real requirements, each marked done / needed.
+        if (quest.needs.isEmpty) {
+            line(player, "req", 0, "None - every player can do this quest.")
+        } else {
+            quest.needs.lines(player).forEach { line(player, "req", 0, it.text + if (!it.blocking) "" else if (it.met) " - done" else " - needed") }
+        }
         // Owner 2026-10-10: the wiki's recommended level - advice, not a requirement.
         quest.recommendedLine()?.let { line(player, "req", 0, it) }
         quest.steps.forEachIndexed { i, step ->
