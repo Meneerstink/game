@@ -458,7 +458,8 @@ object RangedCombatStrategy : CombatStrategy {
         // primary target is hit, each with its own damage roll (Chinchompas).
         if (chinchompa) {
             val weaponId = (pawn as Player).getEquipment(EquipmentType.WEAPON)?.id
-            val cap = Chinchompas.maxTargets(weaponId, pvp = target is Player) - 1
+            // PROJECT48 S46 Sigil of Onslaught: two more targets for Chinchompas.
+            val cap = Chinchompas.maxTargets(weaponId, pvp = target is Player) - 1 + (if (gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(pawn as Player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.ONSLAUGHT)) 2 else 0)
             gg.rsmod.plugins.content.combat.specialattack.SpecialAttackSupport.adjacentTargets(pawn as Player, target).take(cap).forEach { other ->
                 val splash = pawn.dealHit(target = other, maxHit = formula.getMaxHit(pawn, other), landHit = landHit, delay = hitDelay, hitType = HitType.RANGE)
                 val splashDamage = splash.hit.hitmarks.sumOf { it.damage }

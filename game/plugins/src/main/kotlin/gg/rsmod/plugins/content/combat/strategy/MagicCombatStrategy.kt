@@ -333,7 +333,8 @@ object MagicCombatStrategy : CombatStrategy {
                 }
             }
         }
-        return result.take(9)
+        // PROJECT48 S46 Sigil of Onslaught: Ancient Magicks hit 11 instead of 9 targets.
+        return result.take(if (pawn is Player && gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(pawn, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.ONSLAUGHT)) 11 else 9)
     }
 
     private fun castOn(
