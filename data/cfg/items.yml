@@ -257898,7 +257898,7 @@
     attack_slash: 0
     attack_crush: 0
     attack_magic: 0
-    attack_ranged: 15
+    attack_ranged: 16
     defence_stab: 0
     defence_slash: 0
     defence_crush: 0
@@ -257909,7 +257909,7 @@
     absorb_magic: 0
     absorb_ranged: 0
     melee_strength: 0
-    ranged_strength: 12
+    ranged_strength: 14
     prayer: 0
     magic_damage: 0
     appearance_id: 5813
@@ -302664,4 +302664,1708 @@
   examine: Swap this note at any bank for the equivalent item.
   tradeable: true
   weight: 0.0
+  equipment: null
+- id: 25465
+  name: "Royal seed pod"
+  examine: "King Narnode's personal seed pod, for travelling to the Grand Tree."
+  tradeable: false
+  weight: 0.005
+  equipment: null
+- id: 25466
+  name: "Escape crystal"
+  examine: "A magical crystal that can transport you out of certain dangerous areas."
+  tradeable: false
+  weight: 0.0
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 7021
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25467
+  name: "Crystal of Echoes"
+  examine: "A strong enough memory can take you back to a familiar place."
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 25468
+  name: "Eternal teleport crystal"
+  examine: "A powerful teleportation crystal."
+  tradeable: false
+  weight: 0.001
+  equipment: null
+- id: 25469
+  name: "Ring of endurance"
+  examine: "I wonder if this ring helps with..."
+  tradeable: true
+  weight: 0.006
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 7021
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25470
+  name: "Ring of endurance (uncharged)"
+  examine: "I wonder if this ring helps with..."
+  tradeable: true
+  weight: 0.006
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 7021
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25471
+  name: "Amulet of eternal glory"
+  examine: "A dragonstone amulet with an unlimited supply of magic charges."
+  tradeable: true
+  weight: 0.01
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 7021
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 10
+    attack_slash: 10
+    attack_crush: 10
+    attack_magic: 10
+    attack_ranged: 10
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 3
+    defence_ranged: 3
+    summoning: 0
+    melee_strength: 6
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25472
+  name: "Herb sack"
+  examine: "A sack for storing grimy herbs."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 25473
+  name: "Open herb sack"
+  examine: "A sack for storing grimy herbs."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 25474
+  name: "Seed box"
+  examine: "A handy box for carrying some seeds."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 25475
+  name: "Open seed box"
+  examine: "A handy box for carrying some seeds."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 25476
+  name: "Ash sanctifier"
+  examine: "Scatters ashes."
+  tradeable: false
+  weight: 0.025
+  equipment: null
+- id: 25477
+  name: "Imbued heart"
+  examine: "This heart holds a magical power within."
+  tradeable: true
+  weight: 0.35
+  equipment: null
+- id: 25478
+  name: "Saturated heart"
+  examine: "This heart holds an ancient magical power within."
+  tradeable: true
+  weight: 0.45
+  equipment: null
+- id: 25479
+  name: "Book of the Dead"
+  examine: "A book that grants its holder the powers of resurrection."
+  tradeable: false
+  weight: 0.2
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 7022
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 6
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25480
+  name: "Wilderness sword 1"
+  examine: "A razor sharp sword."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 7023
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 6
+    attack_slash: 4
+    attack_crush: -2
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 2
+    defence_crush: 1
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 7
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25481
+  name: "Wilderness sword 2"
+  examine: "A razor sharp sword."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 7024
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 11
+    attack_slash: 8
+    attack_crush: -2
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 2
+    defence_crush: 1
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 12
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25482
+  name: "Wilderness sword 3"
+  examine: "A razor sharp sword."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 7025
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 16
+    attack_slash: 11
+    attack_crush: -2
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 2
+    defence_crush: 1
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 17
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25483
+  name: "Wilderness sword 4"
+  examine: "A razor sharp sword."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 7026
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 23
+    attack_slash: 18
+    attack_crush: -2
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 2
+    defence_crush: 1
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 24
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25484
+  name: "Slayer helmet (i)"
+  examine: "You really don't want to wear it inside-out."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 7027
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 3
+    attack_ranged: 3
+    defence_stab: 30
+    defence_slash: 32
+    defence_crush: 27
+    defence_magic: 10
+    defence_ranged: 30
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 10}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25485
+  name: "Salve amulet(i)"
+  examine: "Increases melee, ranged and magic damage & accuracy by 15% against the undead."
+  tradeable: true
+  weight: 0.007
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 7028
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25486
+  name: "Salve amulet(ei)"
+  examine: "Increases melee, ranged and magic damage & accuracy by 20% against the undead."
+  tradeable: true
+  weight: 0.007
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 7029
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25487
+  name: "Ring of wealth (i)"
+  examine: "A mysteriously imbued lucky ring."
+  tradeable: true
+  weight: 0.006
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 7030
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25488
+  name: "Ring of wealth (i5)"
+  examine: "An enchanted ring with five teleport charges."
+  tradeable: true
+  weight: 0.006
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 7030
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25489
+  name: "Ring of wealth (i4)"
+  examine: "An enchanted ring with four teleport charges."
+  tradeable: true
+  weight: 0.006
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 7030
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25490
+  name: "Ring of wealth (i3)"
+  examine: "An enchanted ring with three teleport charges."
+  tradeable: true
+  weight: 0.006
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 7030
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25491
+  name: "Ring of wealth (i2)"
+  examine: "An enchanted ring with two teleport charges."
+  tradeable: true
+  weight: 0.006
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 7030
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25492
+  name: "Ring of wealth (i1)"
+  examine: "An enchanted ring with one teleport charge."
+  tradeable: true
+  weight: 0.006
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 7030
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25493
+  name: "Soulflame horn"
+  examine: "A horn sculpted in the depths of the earth. Its violent reverbrations fan the flames of the soul."
+  tradeable: true
+  weight: 0.375
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 7030
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 5
+    attack_stab: 2
+    attack_slash: 0
+    attack_crush: 21
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 7
+    defence_crush: 3
+    defence_magic: 11
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 23
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 1.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25494
+  name: "Twinflame staff"
+  examine: "A magical staff imbued with the power of ice and fire."
+  tradeable: true
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 7031
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 6
+    attack_stab: 7
+    attack_slash: -1
+    attack_crush: 28
+    attack_magic: 12
+    attack_ranged: 0
+    defence_stab: 2
+    defence_slash: 3
+    defence_crush: 1
+    defence_magic: 12
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 22
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25495
+  name: "Tome of Earth"
+  examine: "An ancient tome containing the secrets of earth magic."
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 7032
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 8
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 8
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 50}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25496
+  name: "Tome of Earth (empty)"
+  examine: "An ancient tome containing the secrets of earth magic."
+  tradeable: true
+  weight: 1.0
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 7033
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 8
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 8
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25497
+  name: "Hueycoatl hide coif"
+  examine: "Made from real Huey hide!"
+  tradeable: true
+  weight: 0.9
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 7034
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -1
+    attack_ranged: 7
+    defence_stab: 4
+    defence_slash: 7
+    defence_crush: 10
+    defence_magic: 5
+    defence_ranged: 8
+    summoning: 0
+    melee_strength: 0
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25498
+  name: "Hueycoatl hide body"
+  examine: "Made from real Huey hide!"
+  tradeable: true
+  weight: 6.803
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 7035
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -15
+    attack_ranged: 30
+    defence_stab: 55
+    defence_slash: 47
+    defence_crush: 60
+    defence_magic: 56
+    defence_ranged: 55
+    summoning: 0
+    melee_strength: 0
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 70}, {'skill': 1, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25499
+  name: "Hueycoatl hide chaps"
+  examine: "Made from real Huey hide!"
+  tradeable: true
+  weight: 5.443
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 7036
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 17
+    defence_stab: 31
+    defence_slash: 25
+    defence_crush: 33
+    defence_magic: 30
+    defence_ranged: 31
+    summoning: 0
+    melee_strength: 0
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 70}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25500
+  name: "Hueycoatl hide vambraces"
+  examine: "Made from real Huey hide!"
+  tradeable: true
+  weight: 0.283
+  equipment:
+    equip_slot: 9
+    equip_type: -1
+    appearance_id: 7037
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 0
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -10
+    attack_ranged: 11
+    defence_stab: 6
+    defence_slash: 5
+    defence_crush: 7
+    defence_magic: 8
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 70}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25501
+  name: "Sigil of consistency"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25502
+  name: "Sigil of consistency"
+  examine: "Every attack does +1 damage to the target."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25503
+  name: "Sigil of deft strikes"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25504
+  name: "Sigil of deft strikes"
+  examine: "You gain 30% more accuracy in all styles against all monsters."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25505
+  name: "Sigil of enhanced harvest"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25506
+  name: "Sigil of enhanced harvest"
+  examine: "You always gain triple resources from Mining, Fishing, Woodcutting or Farming. Does not work at Tithe Farm."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25507
+  name: "Sigil of exaggeration"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25508
+  name: "Sigil of exaggeration"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25509
+  name: "Sigil of mobility"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25510
+  name: "Sigil of mobility"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25511
+  name: "Sigil of resilience"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25512
+  name: "Sigil of resilience"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25513
+  name: "Sigil of resistance"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25514
+  name: "Sigil of resistance"
+  examine: "All attacks from monsters do 25% less damage. The damage reduction effect does not stack with the Sigil of Titanium."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25515
+  name: "Sigil of sustenance"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25516
+  name: "Sigil of sustenance"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25517
+  name: "Sigil of the well fed"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25518
+  name: "Sigil of the well fed"
+  examine: "You have a 5% chance to gain twice the number of Hitpoints from any food or potions consumed."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25519
+  name: "Sigil of the abyss"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25520
+  name: "Sigil of the abyss"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25521
+  name: "Sigil of the alchemaniac"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25522
+  name: "Sigil of the alchemaniac"
+  examine: "When casting high or low alchemy on a stack of items, the spell will automatically recast over time, until the stack is depleted or moved."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25523
+  name: "Sigil of the eternal jeweller"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25524
+  name: "Sigil of the eternal jeweller"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25525
+  name: "Sigil of the food master"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25526
+  name: "Sigil of the food master"
+  examine: "You have a 5% chance not to consume food when used. This effect has a 6 second cooldown."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25527
+  name: "Sigil of the forager"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25528
+  name: "Sigil of the forager"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25529
+  name: "Sigil of the meticulous mage"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25530
+  name: "Sigil of the meticulous mage"
+  examine: "Your magic accuracy is increased by +40 and you have a 50% chance to save runes or staff charges when casting spells."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25531
+  name: "Sigil of the potion master"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25532
+  name: "Sigil of the potion master"
+  examine: "You have a 5% chance not to consume potions when using them. Once the effect activates, it cannot be triggered again within 6 seconds."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25533
+  name: "Sigil of the rigorous ranger"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25534
+  name: "Sigil of the rigorous ranger"
+  examine: "Your ranged accuracy is increased by +20, and you have a 50% chance to save ammunition when using ranged weapons, except when throwing chinchompas."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25535
+  name: "Sigil of the treasure hunter"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25536
+  name: "Sigil of the treasure hunter"
+  examine: "Clue scrolls drop 3x more often. You have a 75% chance for a clue scroll to return the reward casket after you complete a clue step for any tier. You can hold an unlimited amount of Scroll boxes."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25537
+  name: "Sigil of arcane swiftness"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25538
+  name: "Sigil of arcane swiftness"
+  examine: "All magic weapons with a base attack speed above 4 will have it reduced by 1. Cannot be used in conjunction with the Sigil of the Swashbuckler or the Sigil of the Gunslinger."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25539
+  name: "Sigil of barrows"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25540
+  name: "Sigil of barrows"
+  examine: "Barrows weapons get 40% more accuracy. Barrows gear never degrades, except upon death or after dropping the item. Barrows gear gains the effects of the amulet of the damned."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25541
+  name: "Sigil of devotion"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25542
+  name: "Sigil of devotion"
+  examine: "Dropped bones are automatically buried. Ashes are automatically scattered. Prayer XP gained from these activities is increased by 200%."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25543
+  name: "Sigil of faith"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25544
+  name: "Sigil of faith"
+  examine: "You always gain twice the number of Prayer Points when consuming Prayer-restoring potions."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25545
+  name: "Sigil of fortification"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25546
+  name: "Sigil of fortification"
+  examine: "Your defence is increased by +50 for stab, slash, crush and ranged."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25547
+  name: "Sigil of precision"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25548
+  name: "Sigil of precision"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25549
+  name: "Sigil of preservation"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25550
+  name: "Sigil of preservation"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25551
+  name: "Sigil of prosperity"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25552
+  name: "Sigil of prosperity"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25553
+  name: "Sigil of restoration"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25554
+  name: "Sigil of restoration"
+  examine: "Upon a successful hit, your Hitpoints are restored by 10% of the damage dealt, rounded up. Excludes attacks on multiple targets and special attacks."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25555
+  name: "Sigil of revoked limitation"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25556
+  name: "Sigil of revoked limitation"
+  examine: "Revenant weapon damage and accuracy bonuses are no longer restricted to the Wilderness when this sigil is attuned."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25557
+  name: "Sigil of the adroit"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25558
+  name: "Sigil of the adroit"
+  examine: "Accuracy is increased by 1% for each Hitpoint missing. This increases to 2% accuracy per Hitpoint if the player is at or below 20 Hitpoints."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25559
+  name: "Sigil of the gunslinger"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25560
+  name: "Sigil of the gunslinger"
+  examine: "All ranged weapons with a base attack speed above 4 will have it reduced by 1. Cannot be used in conjunction with the Sigil of the Swashbuckler or the Sigil of Arcane Swiftness."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25561
+  name: "Sigil of the hunter"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25562
+  name: "Sigil of the hunter"
+  examine: "You gain three chinchompas per successful chinchompa capture. Box traps catch chinchompas faster. Hunter catching will rarely fail."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25563
+  name: "Sigil of the infernal chef"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25564
+  name: "Sigil of the infernal chef"
+  examine: "You have a 50% chance to instantly cook fish that are caught while Fishing, granting Cooking XP regardless of level requirements."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25565
+  name: "Sigil of the infernal smith"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25566
+  name: "Sigil of the infernal smith"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25567
+  name: "Sigil of the lightbearer"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25568
+  name: "Sigil of the lightbearer"
+  examine: "Special attack regeneration will become 15 seconds per 10%. If a lightbearer ring is also equipped, special attack regeneration will become 10 seconds per 10%."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25569
+  name: "Sigil of the swashbuckler"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25570
+  name: "Sigil of the swashbuckler"
+  examine: "All melee weapons with a base attack speed above 4 will have it reduced by 1. Cannot be used in conjunction with the Sigil of the Gunslinger or the Sigil of Arcane Swiftness."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25571
+  name: "Sigil of aggression"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25572
+  name: "Sigil of aggression"
+  examine: "All attacks deal 10% more damage. This sigil does not stack with the Sigil of Rampage."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25573
+  name: "Sigil of meticulousness"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25574
+  name: "Sigil of meticulousness"
+  examine: "You gain 75% more accuracy in all styles against all monsters."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25575
+  name: "Sigil of pious protection"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25576
+  name: "Sigil of pious protection"
+  examine: "Decrease the amount of damage you take from attacks of a given combat style by 35% when using the correct protection prayer for that style. Increase the damage you take by protecting against the wrong combat style by 5%."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25577
+  name: "Sigil of titanium"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25578
+  name: "Sigil of titanium"
+  examine: "All attacks from monsters do 60% less damage. The damage reduction effect does not stack with the Sigil of Resistance."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25579
+  name: "Sigil of the rampart"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25580
+  name: "Sigil of the rampart"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25581
+  name: "Sigil of deception"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25582
+  name: "Sigil of deception"
+  examine: "Automatically re-pickpocket an NPC until you can no longer do so. Drastically improves pickpocketing success rates at early levels. Note: Guards will not let you pickpocket in safezones!"
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25583
+  name: "Sigil of litheness"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25584
+  name: "Sigil of litheness"
+  examine: "Receive Agility XP whilst running, roughly every 6 seconds. Bypass the Agility level requirement for any Agility shortcut. Other requirements for a shortcut will still be needed."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25585
+  name: "Sigil of storage"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25586
+  name: "Sigil of storage"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25587
+  name: "Sigil of binding"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25588
+  name: "Sigil of binding"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25589
+  name: "Sigil of last recall"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25590
+  name: "Sigil of last recall"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25591
+  name: "Sigil of onslaught"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25592
+  name: "Sigil of onslaught"
+  examine: "Increases the maximum number of targets chinchompas and multi-target ancient spells can hit by 2. Black chinchompa max targets is only increased by 1."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25593
+  name: "Sigil of specialised strikes"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25594
+  name: "Sigil of specialised strikes"
+  examine: "Activate the sigil to reduce the cost of your next special attack by 10 (the attack must cost more than 10 energy). This effect lasts for 12 seconds and has a 10 second cooldown."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25595
+  name: "Sigil of versatility"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25596
+  name: "Sigil of versatility"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25597
+  name: "Sigil of the augmented thrall"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25598
+  name: "Sigil of the augmented thrall"
+  examine: "The max hits of thralls is increased by 5x. Thralls last for twice their duration."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25599
+  name: "Sigil of the bloodhound"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25600
+  name: "Sigil of the bloodhound"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25601
+  name: "Sigil of the formidable fighter"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25602
+  name: "Sigil of the formidable fighter"
+  examine: "Your melee accuracy is increased by +30 in stab, slash and crush. Additionally, upon a successful hit, you have a 30% chance for your next successful hit to deal +10 damage. There is a 10 second cooldown before this can reoccur. Does not work for special attacks."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25603
+  name: "Sigil of the menacing mage"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25604
+  name: "Sigil of the menacing mage"
+  examine: "Upon dealing magic damage, you have a 15% chance to curse the target. The curse deals 18 damage (33% less damage in 3-60 worlds) over the next 6 seconds and also heals you for the same amount. A target can only be under the effect of one curse at a time."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25605
+  name: "Sigil of the porcupine"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25606
+  name: "Sigil of the porcupine"
+  examine: "On level 81-95 and 96+ Worlds: Activate the sigil to recoil 4 damage to your attacker for every hit you take. On level 3-60 and 61-80 worlds: Activate the sigil to recoil 2 damage to your attacker for every hit you take. The effect lasts for 25 seconds and has a 1 minute cooldown."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25607
+  name: "Sigil of the ruthless ranger"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25608
+  name: "Sigil of the ruthless ranger"
+  examine: "Upon dealing ranged damage, you have a 15% chance to cripple the target's movement. The effect deals 15 damage (33% less damage in 3-60 worlds) over the next 6 seconds and also drains a total of 15 run energy in that time. The damage is doubled against targets with less than 10% run energy. A target can only suffer from one crippling effect at a time."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25609
+  name: "Sigil of the serpent"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25610
+  name: "Sigil of the serpent"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25611
+  name: "Sigil of finality"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25612
+  name: "Sigil of finality"
+  examine: "Activate the sigil to guarantee 100% accuracy on your next special attack within the next 12 seconds. Once activated, the sigil has a 10 second cooldown."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25613
+  name: "Sigil of rampage"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25614
+  name: "Sigil of rampage"
+  examine: "Alternating combat styles will increase your rampage count, up to a maximum of 2. Consecutive attacks with the same style will reset the counter. Each rampage count increases your damage and accuracy by 7%. Your rampage count will reset after not attacking for 6 seconds. This sigil does not stack with the Sigil of Aggression."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25615
+  name: "Sigil of remote storage"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25616
+  name: "Sigil of remote storage"
+  examine: "Resources gathered from Mining, Fishing, Woodcutting and Farming will be automatically noted and placed in your inventory."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25617
+  name: "Sigil of woodcraft"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25618
+  name: "Sigil of woodcraft"
+  examine: "Instead of receiving logs when chopping specific trees, you will receive the appropriate planks. Requires 50 coins per regular plank, 125 coins per oak plank, 250 coins per teak plank, and 700 coins per mahogany plank. Does not work in guarded areas or with the infernal axe."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25619
+  name: "Sigil of agile fortune"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25620
+  name: "Sigil of agile fortune"
+  examine: "When a Mark of Grace appears while training on a Rooftop Agility Course, 10,000 coins will appear alongside it. When handing in a pyramid top to Simon Templeton, receive 30,000 coins instead of 10,000 coins."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25621
+  name: "Sigil of hoarding"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25622
+  name: "Sigil of hoarding"
+  examine: "Receive 5x the amount of reward points from most minigames and activities that reward points, such as Barbarian Assault, Tempoross, Mastering Mixology, Mage Training Arena and many more."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25623
+  name: "Sigil of nature"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25624
+  name: "Sigil of nature"
+  examine: "Choose your own Farming Contracts. Farming patches will grow instantly and never catch diseases. Does not work at Tithe Farm."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25625
+  name: "Sigil of slaughter"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25626
+  name: "Sigil of slaughter"
+  examine: "Pay 45 Slayer Points to choose your own non-boss specific Slayer Task. Double the chance of a superior slayer monster appearing. Toggled on, you have a 25% chance for a Slayer Task kill to not count towards the task while still gaining you Slayer XP. Toggled off, 25% chance for a kill to count as 2. This Sigil does not stack with any bracelet effects."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25627
+  name: "Sigil of the fortune farmer"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25628
+  name: "Sigil of the fortune farmer"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
+  equipment: null
+- id: 25629
+  name: "Sigil of the guardian angel"
+  examine: "A sigil attuned to you with great power."
+  tradeable: true
+  weight: 0.1
+  equipment: null
+- id: 25630
+  name: "Sigil of the guardian angel"
+  examine: "A power enhancing sigil not yet attuned to you."
+  tradeable: false
+  weight: 0.1
   equipment: null
