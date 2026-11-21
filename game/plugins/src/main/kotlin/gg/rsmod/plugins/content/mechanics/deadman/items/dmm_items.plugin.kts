@@ -2,6 +2,8 @@ package gg.rsmod.plugins.content.mechanics.deadman.items
 
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.inputInt
+import gg.rsmod.plugins.content.items.osrs.SoulflameHorn
 
 /*
  * PROJECT48 DMM-ITEMS group A: the item options of the nut items (cache options of the imported items).
@@ -11,7 +13,36 @@ on_item_option(DmmItems.ROYAL_SEED_POD, "commune") { DmmItems.royalSeedPod(playe
 on_item_option(DmmItems.ROYAL_SEED_POD, "destroy") { player.message("You can get another one from King Narnode Shareen for 2 coins.") }
 
 on_item_option(DmmItems.ESCAPE_CRYSTAL, "teleport") { DmmItems.escapeCrystal(player) }
-on_item_option(DmmItems.ESCAPE_CRYSTAL, "configure") { player.message("Auto-teleport settings are not available on this server yet.") }
+val escapeAutoTimer = TimerKey()
+on_login { if (DmmItems.autoTeleEnabled(player)) player.timers[escapeAutoTimer] = 1 }
+on_timer(escapeAutoTimer) {
+    DmmItems.autoTeleTick(player)
+    if (DmmItems.autoTeleEnabled(player)) player.timers[escapeAutoTimer] = 1
+}
+on_item_option(DmmItems.ESCAPE_CRYSTAL, "auto-afk") {
+    DmmItems.autoTeleToggle(player)
+    if (DmmItems.autoTeleEnabled(player)) player.timers[escapeAutoTimer] = 1
+}
+on_item_option(DmmItems.ESCAPE_CRYSTAL, "configure") {
+    player.queue { DmmItems.autoTeleSet(player, inputInt("Seconds of inactivity (2-300):")) }
+}
+
+/* Salve amulet (i)/(ei) 'Uncharge' (cache option; the OSRS Wiki lists it but not its effect): the imbue is permanent here. */
+for (salve in intArrayOf(25485, 25486)) on_item_option(salve, "uncharge") { player.message("This amulet is permanently imbued; there is nothing to uncharge.") }
+
+/* Ring of wealth (i) 'Features': OSRS opens the boss kill log + coin collection, which this server does not have. */
+for (ring in DmmItems.RING_OF_WEALTH_I_CHARGED + DmmItems.RING_OF_WEALTH_I) {
+    on_item_option(ring, "features") {
+        player.message("Imbued: doubles the clue scroll chance from Wilderness monster kills and skilling. Rub to teleport (one charge each).")
+    }
+}
+
+/* Soulflame horn Configure (OSRS Wiki "Soulflame horn"): the Entice radius (0-3 tiles) and the number of other players it affects (1-20). */
+on_item_option(SoulflameHorn.ID, "configure") { player.queue { SoulflameHorn.configure(this, player) } }
+run {
+    val hornDef = world.definitions.get(ItemDef::class.java, SoulflameHorn.ID)
+    if (hornDef.equipmentMenu.any { it.equals("configure", true) }) on_equipment_option(SoulflameHorn.ID, option = "configure") { player.queue { SoulflameHorn.configure(this, player) } }
+}
 
 on_item_option(DmmItems.CRYSTAL_OF_ECHOES, "teleport-back") { DmmItems.teleportBack(player) }
 on_item_option(DmmItems.CRYSTAL_OF_ECHOES, "save-memory") { DmmItems.saveMemory(player) }

@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.mechanics.deadman.items
 
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.model.attr.LAST_ACTIVE_CYCLE_ATTR
 import gg.rsmod.game.model.attr.RESPAWN_TILE_ATTR
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.TimerKey
@@ -83,6 +84,49 @@ object DmmItems {
             player.message("The escape crystal shatters and teleports you away.")
             player.teleport(to, TeleportType.JEWELRY)
         }
+    }
+
+    /**
+     * Escape crystal auto-teleport (OSRS Wiki "Escape crystal", read 21-11): Enable/Disable (cache option 'Auto-afk') and Configure (inactivity 2-300 s).
+     * With it on, the crystal in the inventory fires when the player takes damage after that much inactivity (no click, key or camera input -
+     * GameSystem keeps LAST_ACTIVE_CYCLE_ATTR) - the same teleport as the Teleport option (it is consumed). A hit of 0 is not seen here (hp-only).
+     */
+    val AUTOTELE_ON = AttributeKey<Int>(persistenceKey = "escape_autotele")
+    val AUTOTELE_SECS = AttributeKey<Int>(persistenceKey = "escape_autotele_secs")
+    private val AUTOTELE_HP = AttributeKey<Int>()
+    const val AUTOTELE_DEFAULT_SECS = 10
+
+    fun autoTeleEnabled(player: Player): Boolean = (player.attr[AUTOTELE_ON] ?: 0) == 1
+
+    fun autoTeleToggle(player: Player) {
+        val on = !autoTeleEnabled(player)
+        player.attr[AUTOTELE_ON] = if (on) 1 else 0
+        player.attr[AUTOTELE_HP] = player.getCurrentLifepoints()
+        player.message(
+            if (on) "Auto-teleport enabled: the crystal teleports you when you take damage after ${player.attr[AUTOTELE_SECS] ?: AUTOTELE_DEFAULT_SECS} seconds of inactivity."
+            else "Auto-teleport disabled.",
+        )
+    }
+
+    fun autoTeleSet(player: Player, seconds: Int) {
+        val value = seconds.coerceIn(2, 300)
+        player.attr[AUTOTELE_SECS] = value
+        player.message("The crystal will now teleport you after $value seconds of inactivity (when you take damage).")
+    }
+
+    /** One tick of the auto-teleport check (driven by the escape crystal timer in dmm_items.plugin.kts). */
+    fun autoTeleTick(player: Player) {
+        if (!autoTeleEnabled(player)) return
+        val hp = player.getCurrentLifepoints()
+        val last = player.attr[AUTOTELE_HP] ?: hp
+        player.attr[AUTOTELE_HP] = hp
+        if (hp >= last) return
+        if (player.inventory.getItemIndex(ESCAPE_CRYSTAL, skipAttrItems = false) == -1) return
+        val now = player.world.currentCycle
+        val idleTicks = now - (player.attr[LAST_ACTIVE_CYCLE_ATTR] ?: now)
+        val secs = player.attr[AUTOTELE_SECS] ?: AUTOTELE_DEFAULT_SECS
+        if (idleTicks * 0.6 < secs) return
+        escapeCrystal(player)
     }
 
     /** Crystal of Echoes (wiki, Grid Master): stores one tile + hitpoints, prayer and special attack energy; no cooldown; ignores Wilderness limits. */
