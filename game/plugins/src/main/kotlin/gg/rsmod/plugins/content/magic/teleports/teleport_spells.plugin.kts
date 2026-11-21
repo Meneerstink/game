@@ -50,7 +50,9 @@ fun Player.teleport(
     data: SpellMetadata,
 ) {
     // N72 (owner 2026-10-31 18:4x "alle teleports moeten nu gewoon runes kosten"): the spell's own runes and ingredients.
-    val itemRequirements = data.runes
+    // PROJECT48 S05 Sigil of Mobility: teleports do not consume runes and do not grant any XP.
+    val mobility = gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(this, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.MOBILITY)
+    val itemRequirements = if (mobility) emptyList() else data.runes
  if (!MagicSpells.canCast(this, data.lvl, itemRequirements)) {
         return
     }
@@ -80,7 +82,7 @@ fun Player.teleport(
         }
         MagicSpells.removeRunes(this, itemRequirements, data.sprite)
         teleport(endTile, type, startSound = false)
-        addXp(Skills.MAGIC, xp, checkBrawlingGloves = true)
+        if (!mobility) addXp(Skills.MAGIC, xp, checkBrawlingGloves = true)
         world.spawn(AreaSound(tile, SOUNDAREA_ID, SOUNDAREA_RADIUS, SOUNDAREA_VOLUME))
     }
 }

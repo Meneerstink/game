@@ -34,6 +34,8 @@ object RestorationRates {
     // cape carries it too) - the same doubling as Rapid Heal, not on top of it.
     fun lifePointRate(player: Player): Int =
         when {
+            // PROJECT48 S06 Sigil of Resilience: "your hitpoints restore 15x faster than normal".
+            gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.RESILIENCE) -> 15
             Prayers.isActive(player, Prayer.RAPID_RENEWAL) -> 5
             // N463 Rejuvenation: "Hitpoints regenerate 3x faster."
             gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.rejuvenation(player) -> 3

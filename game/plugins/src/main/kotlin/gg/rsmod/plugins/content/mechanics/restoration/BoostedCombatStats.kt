@@ -26,6 +26,8 @@ object BoostedCombatStats {
     fun ticksUntilDecay(player: Player): Int = maxOf(1, interval(player) - (player.attr[ELAPSED] ?: 0))
 
     fun tick(player: Player) {
+        // PROJECT48 S25 Sigil of Preservation: boosted stats do not drain.
+        if (gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.PRESERVATION)) return
         val elapsed = (player.attr[ELAPSED] ?: 0) + 1
         val interval = interval(player)
         if (elapsed < interval) {

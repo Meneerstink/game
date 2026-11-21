@@ -49,7 +49,9 @@ on_timer(key = STAT_RESTORE) {
                 }
                 else -> {
                     // Divine potions: a boosted level "will not drain below the maximum boost" for five minutes (DivinePotions).
-                    if (!(boost < 0 && gg.rsmod.plugins.content.items.potion.DivinePotions.protects(player, index))) {
+                    // PROJECT48 S25 Sigil of Preservation: stats boosted above your base level do not drain over time.
+                    if (!(boost < 0 && gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.PRESERVATION)) &&
+                        !(boost < 0 && gg.rsmod.plugins.content.items.potion.DivinePotions.protects(player, index))) {
                         repeat(minOf(steps, kotlin.math.abs(difference))) {
                             player.skills.alterCurrentLevel(skill = index, value = boost, capValue = cap)
                         }
