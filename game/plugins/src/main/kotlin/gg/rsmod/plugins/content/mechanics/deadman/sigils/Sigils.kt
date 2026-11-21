@@ -88,6 +88,9 @@ object Sigils {
 
     fun isAttunedItem(itemId: Int): Boolean = Sigil.ofAttuned(itemId) != null
 
+    /** Any sigil item, attuned or not: wiki "they cannot be traded directly from player to player" (the Grand Exchange is the only market). */
+    fun isSigilItem(itemId: Int): Boolean = Sigil.ofAttuned(itemId) != null || Sigil.ofUnattuned(itemId) != null
+
     fun isUnattunedItem(itemId: Int): Boolean = Sigil.ofUnattuned(itemId) != null
 
     /** Attunes the unattuned sigil in inventory [slot]. [atBank] = the player stands at / is using a bank (the caller decides). */

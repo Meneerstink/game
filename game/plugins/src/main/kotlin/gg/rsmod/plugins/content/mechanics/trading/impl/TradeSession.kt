@@ -241,7 +241,8 @@ class TradeSession(
         val unnoted = Item(item).toUnnoted(player.world.definitions)
         val count = Math.min(amount, inventory.getItemCount(item.id))
 
-        if (!player.world.definitions
+        // PROJECT48 SIGILS: sigils cannot be traded from player to player (only through the Grand Exchange).
+        if (gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.isSigilItem(unnoted.id) || !player.world.definitions
                 .get(ItemDef::class.java, unnoted.id)
                 .tradeable
         ) {

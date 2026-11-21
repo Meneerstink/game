@@ -246,7 +246,7 @@ object DuelArenaInterfaces {
     fun addStake(match: DuelArenaMatch, player: Player, slot: Int, requested: Int): Boolean {
         if (match.stage != DuelStage.CONFIGURING || match.confirming || match.friendly || requested <= 0) return false
         val item = player.inventory[slot] ?: return false
-        if (!player.world.definitions.get(ItemDef::class.java, item.id).tradeable) {
+        if (gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.isSigilItem(item.id) || !player.world.definitions.get(ItemDef::class.java, item.id).tradeable) {
             player.message("That item cannot be staked!")
             return false
         }
