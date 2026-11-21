@@ -127,7 +127,30 @@ abstract class ShortQuest(
 
     val completedValue: Int get() = stages
 
-    fun stage(player: Player): Int = player.getCurrentStage(this)
+    /**
+     * PROJECT48 F1: a bracket mini-quest keeps its step in its own persistent attribute ([stepKey]) instead of the cache varp/varbit
+     * (many 667 quest variables have too few values for the steps, and in-between values can change the world). The quest list reads
+     * the cache variable of its slot, so that stays 0 until the quest is finished ([setStage] then completes the list entry).
+     * For such a quest [completedValue] is the internal steps.size + 1. The old short quests keep false: nothing changes for them.
+     */
+    open val ownSteps: Boolean get() = false
+
+    private var stepKeyCache: gg.rsmod.game.model.attr.AttributeKey<Int>? = null
+
+    /** The persistent step attribute of this quest (ownSteps quests only). */
+    val stepKey: gg.rsmod.game.model.attr.AttributeKey<Int>
+        get() = stepKeyCache ?: gg.rsmod.game.model.attr.AttributeKey<Int>(persistenceKey = "sq_step_$slot").also { stepKeyCache = it }
+
+    private fun listEntryRead(player: Player): Int =
+        gg.rsmod.plugins.content.quests.QuestList.ENTRIES.firstOrNull { it.slot == slot }?.progress?.read?.invoke(player) ?: 0
+
+    fun stage(player: Player): Int {
+        if (!ownSteps) return player.getCurrentStage(this)
+        // Finished = the quest list entry of this slot is complete (a played quest, a bracket unlock, a legacy account). Never ask
+        // QuestStatus here: it asks this function for the choice quests, and getCurrentStage asks this one again.
+        if (listEntryRead(player) == gg.rsmod.plugins.content.quests.QuestStatus.COMPLETE) return completedValue
+        return (player.attr[stepKey] ?: 0).coerceIn(0, completedValue - 1)
+    }
 
     /** Completed in the server's one quest status (QuestStatus reads this quest's stage against [completedValue]). */
     fun isFinished(player: Player): Boolean = gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, this)
@@ -161,6 +184,19 @@ abstract class ShortQuest(
 
     /** Writes [value] and pokes the quest list so the client re-evaluates its colours. */
     fun setStage(player: Player, value: Int) {
+        if (ownSteps) {
+            if (value >= completedValue) {
+                // Complete the list entry (also the special Shield of Arrav / Underground Pass rules) and drop the step attribute.
+                gg.rsmod.plugins.content.quests.QuestList.ENTRIES.firstOrNull { it.slot == slot }?.progress?.complete?.invoke(player)
+                player.attr.remove(stepKey)
+            } else if (value <= 0) {
+                player.attr.remove(stepKey)
+            } else {
+                player.attr[stepKey] = value
+            }
+            FoundationQuests.refreshQuestList(player)
+            return
+        }
         if (usesVarbits) player.setVarbit(questId, value) else player.setVarp(questId, value)
         FoundationQuests.refreshQuestList(player)
     }

@@ -20,6 +20,8 @@ import gg.rsmod.plugins.api.ext.*
  * @return The current stage of the quest for the player.
  */
 fun Player.getCurrentStage(quest: Quest): Int {
+    // PROJECT48 F1: a bracket mini-quest keeps its own step attribute (ShortQuest.stage reads it without calling back here).
+    if (quest is gg.rsmod.plugins.content.quests.foundation.ShortQuest && quest.ownSteps) return quest.stage(this)
     return if (quest.usesVarbits) getVarbit(quest.questId) else getVarp(quest.questId)
 }
 
