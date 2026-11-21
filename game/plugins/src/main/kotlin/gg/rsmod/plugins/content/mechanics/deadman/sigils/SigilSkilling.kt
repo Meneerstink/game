@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.mechanics.deadman.sigils
 
 import gg.rsmod.game.model.container.ItemTransaction
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.plugins.api.ext.addXp
 import gg.rsmod.plugins.api.ext.filterableMessage
 
 /**
@@ -46,6 +47,18 @@ object SigilSkilling {
             }
         }
         return player.inventory.add(itemId, total)
+    }
+
+    /** S42 Litheness: every 10 ticks of running, 2x the Agility level as Agility XP; none inside a safe zone. */
+    val LITHENESS_TIMER = gg.rsmod.game.model.timer.TimerKey()
+    const val LITHENESS_TICKS = 10
+
+    fun lithenessTick(player: Player) {
+        player.timers[LITHENESS_TIMER] = LITHENESS_TICKS
+        if (!Sigils.effective(player, Sigil.LITHENESS)) return
+        val moving = player.world.currentCycle - player.lastStepCycle <= 2
+        if (!moving || !player.isRunning() || gg.rsmod.plugins.content.mechanics.death.SafeDeath.isSafe(player)) return
+        player.addXp(gg.rsmod.plugins.api.Skills.AGILITY, 2.0 * player.skills.getMaxLevel(gg.rsmod.plugins.api.Skills.AGILITY))
     }
 
     private fun Player.attuned() = Sigils.attuned(this)

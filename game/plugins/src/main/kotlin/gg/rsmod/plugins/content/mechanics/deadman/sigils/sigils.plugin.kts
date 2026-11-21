@@ -59,6 +59,9 @@ Sigil.values().forEach { sigil ->
     }
 }
 
+on_login { player.timers[SigilSkilling.LITHENESS_TIMER] = SigilSkilling.LITHENESS_TICKS }
+on_timer(SigilSkilling.LITHENESS_TIMER) { SigilSkilling.lithenessTick(player) }
+
 on_command("sigils") {
     Sigils.overview(player).forEach { player.message(it) }
 }
