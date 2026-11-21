@@ -306,4 +306,16 @@ class SigilTests {
         assertTrue(Sigil.MOBILITY in Sigils.attuned(player), "the sigil is attuned")
         assertEquals(Sigil.MOBILITY.attunedId, player.inventory[0]?.id, "the item became the attuned sigil")
     }
+
+    @Test
+    fun `every sigil has its wiki effect text and Inspect cuts it into chat lines that fit`() {
+        assertEquals(Sigil.values().size, SigilTexts.size, "one text per sigil")
+        for (sigil in Sigil.values()) {
+            assertTrue(SigilTexts.of(sigil).length > 20, "${sigil.label} has an effect text")
+            val lines = SigilTexts.lines(sigil)
+            assertTrue(lines.all { it.length <= 76 }, "${sigil.label}: every chat line fits")
+            assertEquals(SigilTexts.of(sigil), lines.joinToString(" "), "${sigil.label}: no word is lost")
+        }
+        assertEquals("Every attack does +1 damage to the target.", SigilTexts.of(Sigil.CONSISTENCY))
+    }
 }

@@ -79,6 +79,8 @@ Sigil.values().forEach { sigil ->
     listOf(sigil.attunedId, sigil.unattunedId).filter { hasInvOption(it, "inspect") }.forEach { id ->
         on_item_option(id, "inspect") {
             player.message("${sigil.label} (tier ${sigil.tier}, ${sigil.kind.name.lowercase()}).")
+            // The wiki effect text (SigilTexts), cut into chat lines.
+            SigilTexts.lines(sigil).forEach { player.message(it) }
         }
     }
 }
