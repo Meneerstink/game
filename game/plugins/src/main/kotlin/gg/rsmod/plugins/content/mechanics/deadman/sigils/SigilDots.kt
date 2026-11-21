@@ -17,8 +17,8 @@ object SigilDots {
     private val CRIPPLED = AttributeKey<Boolean>()
     private val CURSED = AttributeKey<Boolean>()
     private const val CHANCE = 0.10
-    private const val STEPS = 3
-    private const val STEP_TICKS = 4
+    private const val STEPS = 5
+    private const val STEP_TICKS = 2
 
     /** Called for a landed hit with a ranged / magic damage type. */
     fun onLanded(
@@ -58,7 +58,7 @@ object SigilDots {
         run(attacker, target, 18, CURSED, heal = true)
     }
 
-    /** Deals [total] damage in [STEPS] equal hits, one every [STEP_TICKS] ticks (6 seconds in all), then clears [flag]. */
+    /** Deals [total] damage in [STEPS] hits (the remainder spread over the steps), one every [STEP_TICKS] ticks (10 ticks = 6 seconds in all), then clears [flag]. */
     private fun run(
         attacker: Player,
         target: Pawn,
@@ -66,10 +66,10 @@ object SigilDots {
         flag: AttributeKey<Boolean>,
         heal: Boolean,
     ) {
-        val per = total / STEPS
         attacker.world.queue {
             try {
-                repeat(STEPS) {
+                repeat(STEPS) { i ->
+                    val per = total * (i + 1) / STEPS - total * i / STEPS
                     wait(STEP_TICKS)
                     if (target.isDead() || (target is Player && !target.isOnline)) return@queue
                     target.hit(per, HitType.REGULAR_HIT, source = attacker)
