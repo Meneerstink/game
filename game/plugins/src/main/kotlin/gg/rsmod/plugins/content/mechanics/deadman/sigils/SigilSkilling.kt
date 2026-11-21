@@ -70,6 +70,20 @@ object SigilSkilling {
         return item
     }
 
+    /** S60 Agile Fortune: a lap of an agility course has a 1 in 3 chance of 10,000 coins. */
+    fun agileFortune(player: Player) {
+        if (!Sigils.effective(player, Sigil.AGILE_FORTUNE) || player.world.random(2) != 0) return
+        if (player.inventory.add(gg.rsmod.plugins.api.cfg.Items.COINS_995, 10_000).hasSucceeded()) {
+            player.filterableMessage("Your sigil drops 10,000 coins into your pack.")
+        } else {
+            player.bank.add(gg.rsmod.plugins.api.cfg.Items.COINS_995, 10_000)
+            player.filterableMessage("Your sigil sends 10,000 coins to your bank.")
+        }
+    }
+
+    /** S61 Hoarding: 3x the reward points of a minigame win. */
+    fun hoardingMultiplier(player: Player): Int = if (Sigils.effective(player, Sigil.HOARDING)) 3 else 1
+
     /** S10 Sigil of the Abyss: 5x as many runes when Runecrafting. */
     fun runecraftMultiplier(player: Player): Int = if (Sigils.effective(player, Sigil.THE_ABYSS)) 5 else 1
 

@@ -170,7 +170,11 @@ object SkillingPets {
 
     fun stall(player: Player, target: StallTarget) = roll(player, "Rocky", Skills.THIEVING, STALLS[target])
 
-    fun agilityLap(player: Player, base: Int) = roll(player, "Giant Squirrel", Skills.AGILITY, base)
+    fun agilityLap(player: Player, base: Int) {
+        // PROJECT48 S60 Sigil of Agile Fortune (proposal: we have no Marks of Grace): a completed lap has a 1 in 3 chance of 10,000 coins.
+        gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilSkilling.agileFortune(player)
+        roll(player, "Giant Squirrel", Skills.AGILITY, base)
+    }
 
     fun runecraft(player: Player, rune: Rune?, essence: Int) =
         rollTimes(player, PetMorphs.RIFT_GUARDIAN, Skills.RUNECRAFTING, RUNECRAFT, essence, rune?.let { PetMorphs.riftGuardianFor(it) })
