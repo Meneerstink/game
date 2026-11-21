@@ -578,6 +578,11 @@
   usage: "::armageddonquests"
   description: "Test server: your quests follow the Armageddon brackets of a new account (photo quests locked, storylines open)."
   example: "::armageddonquests"
+- name: p48
+  rank: admin
+  usage: "::p48 status|step|reset|cohort|req|list <slot> [n]"
+  description: "Test server only (PROJECT48): status, step, reset, cohort and requirements of the bracket mini-quests."
+  example: "::p48 status 5"
 - name: questreset
   rank: admin
   usage: "::questreset"
