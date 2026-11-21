@@ -50,6 +50,16 @@ object SigilFx {
     val SOUND_UNATTUNE = synth(5066) // DMM_SIGIL_DEATTUNE
     val SOUND_ACTIVATE = synth(5069) // DMM_SIGIL_ACTIVATE
     val SOUND_RAMPAGE = listOf(5086, 5068, 5080, 5070, 5091).map { synth(it) } // DMM_RAMPAGE_POWER_UP_01..05
+    val SOUND_ENDED = synth(5090) // DMM_SIGIL_NO_LONGER_ACTIVE
+    val SOUND_READY = synth(5092) // DMM_SIGIL_COOLDOWN_FINISH
+
+    /** One timer per activatable sigil for "cooldown finished" and one per sigil with a window for "no longer active". */
+    val COOLDOWN_TIMER: Map<Sigil, gg.rsmod.game.model.timer.TimerKey> =
+        Sigil.values().filter { it.cooldownSeconds > 0 }.associateWith { gg.rsmod.game.model.timer.TimerKey() }
+    val WINDOW_TIMER: Map<Sigil, gg.rsmod.game.model.timer.TimerKey> =
+        Sigil.values().filter { it.activatable && it.windowSeconds > 0 }.associateWith { gg.rsmod.game.model.timer.TimerKey() }
+
+    private fun ticks(seconds: Int) = (seconds * 1000 + 599) / 600
 
     fun attuned(
         player: Player,
@@ -80,7 +90,20 @@ object SigilFx {
     ) {
         if (sigil.kind == Sigil.Kind.COMBAT) player.animate(ANIM_ACTIVATE) else player.playSound(SOUND_ACTIVATE)
         ICON[sigil]?.let { player.graphic(it) }
+        COOLDOWN_TIMER[sigil]?.let { player.timers[it] = ticks(sigil.cooldownSeconds) }
+        WINDOW_TIMER[sigil]?.let { player.timers[it] = ticks(sigil.windowSeconds) }
     }
+
+    /** The window of [sigil] closed - by time (its timer) or because the one-shot effect was used (Sigils.consumeWindow). */
+    fun windowEnded(
+        player: Player,
+        sigil: Sigil,
+    ) {
+        WINDOW_TIMER[sigil]?.let { player.timers.remove(it) }
+        player.playSound(SOUND_ENDED)
+    }
+
+    fun cooldownFinished(player: Player) = player.playSound(SOUND_READY)
 
     /** A passive sigil went off (Formidable Fighter's +10 is armed, a Menacing Mage / Ruthless Ranger effect starts, ...): its icon. */
     fun proc(

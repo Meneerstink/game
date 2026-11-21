@@ -146,5 +146,10 @@ object SigilJeweller {
         player: Player,
         usedId: Int,
         replacement: Int,
-    ): Int = if (Sigils.effective(player, Sigil.THE_ETERNAL_JEWELLER)) usedId else replacement
+    ): Int {
+        if (!Sigils.effective(player, Sigil.THE_ETERNAL_JEWELLER)) return replacement
+        // The charge is kept: the sigil's own icon (SigilFx).
+        if (usedId != replacement) SigilFx.proc(player, Sigil.THE_ETERNAL_JEWELLER)
+        return usedId
+    }
 }

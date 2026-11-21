@@ -90,6 +90,10 @@ Sigil.values().forEach { sigil ->
 
 on_login { player.timers[SigilSkilling.LITHENESS_TIMER] = SigilSkilling.LITHENESS_TICKS }
 
+// SigilFx: the OSRS sounds "no longer active" (a window ran out) and "cooldown finished" of an activated sigil.
+SigilFx.WINDOW_TIMER.forEach { (sigil, key) -> on_timer(key) { if (Sigils.effective(player, sigil)) SigilFx.windowEnded(player, sigil) } }
+SigilFx.COOLDOWN_TIMER.forEach { (sigil, key) -> on_timer(key) { if (Sigils.effective(player, sigil)) SigilFx.cooldownFinished(player) } }
+
 // An attuned sigil whose item is nowhere (inventory, bank) can never be unattuned: free its slot and say so (Sigils.reconcile).
 on_login {
     Sigils.reconcile(player).forEach { player.message("Your attunement to the ${it.label} has faded: its sigil is no longer with you.") }

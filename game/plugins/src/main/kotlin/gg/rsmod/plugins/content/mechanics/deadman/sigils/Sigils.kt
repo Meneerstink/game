@@ -258,6 +258,7 @@ object Sigils {
         player: Player,
         sigil: Sigil,
     ) {
+        if (windowLeft(player, sigil) > 0) SigilFx.windowEnded(player, sigil)
         ACTIVE_UNTIL[sigil]?.let { player.attr.remove(it) }
     }
 
