@@ -31,6 +31,11 @@ fun Player.teleport(
         message("You need to complete Monkey Madness to use this teleport.")
         return
     }
+    // PROJECT48 ONTGR (Plague City): the Ardougne Teleport spell is unlocked by the quest (OSRS Wiki "Ardougne Teleport").
+    if (spell == TeleportSpell.ARDOUGNE && !gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(this, "Plague City")) {
+        message("You need to complete Plague City to use this teleport.")
+        return
+    }
     val endTile = findValidTile(spell)
     teleport(spell.type, endTile, spell.xp, data)
 }
