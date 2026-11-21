@@ -51,7 +51,7 @@ fun stateLine(p: Player): String {
         }
     val internals = Probe.internals(p)
     val inv = p.inventory.rawItems.filterNotNull()
-    val invText = inv.groupBy { it.id }.entries.take(8).joinToString(",") { (id, items) -> "$id x${items.sumOf { it.amount }}" }
+    val invText = inv.groupBy { it.id }.entries.take(30).joinToString(",") { (id, items) -> "$id x${items.sumOf { it.amount }}" }
     val worn = p.equipment.rawItems.mapIndexedNotNull { i, it -> it?.let { "$i:${it.id}" } }.joinToString(",")
     val near =
         ArrayList<Npc>().also { l -> w.npcs.forEach { l += it } }

@@ -33,7 +33,11 @@ on_npc_option(Npcs.GERRANT, option = "trade") {
 }
 
 on_npc_option(Npcs.GERRANT, option = "talk-to") {
-    player.queue { chat(this) }
+    // PROJECT48: Gerrant hands out the lava eel in Heroes' Quest (the bracket quest step).
+    player.queue {
+        if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.GERRANT)) return@queue
+        chat(this)
+    }
 }
 
 on_global_item_pickup {
