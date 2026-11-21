@@ -73,6 +73,15 @@ object FarmTicker {
             }
         }
 
+    /** The seed types that would grow [ahead] farming ticks from now (PROJECT48 S62 Sigil of Nature: crops grow 5x quicker). */
+    fun futureSeedTypes(
+        world: World,
+        ahead: Int,
+    ): SeedTypesForTick {
+        val tick = world.attr[Constants.worldFarmTick]!! + ahead
+        return SeedTypesForTick(seedTypes(tick), replenishProduceSeedTypes(tick))
+    }
+
     /**
      * Move to the next global farming tick
      */

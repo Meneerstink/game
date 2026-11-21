@@ -57,7 +57,8 @@ class HarvestingHandler(
                         rollFinalHarvest()
                         state.clear()
                     } else {
-                        player.inventory.add(state.seed!!.produce)
+                        // PROJECT48 S03 / S14 / S43 / S58: the harvest sigils (3x / 2x, to the bank).
+                        gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilSkilling.give(player, state.seed!!.produce.id, state.seed!!.produce.amount)
                         if (rollRemoveLive()) {
                             state.removeLife()
                             if (state.livesLeft == 0 &&

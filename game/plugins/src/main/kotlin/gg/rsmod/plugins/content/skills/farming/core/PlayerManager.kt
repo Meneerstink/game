@@ -14,6 +14,10 @@ object PlayerManager {
      */
     fun onFarmingTick(player: Player) {
         grow(player, FarmTicker.seedTypesForTick)
+        // PROJECT48 S62 Sigil of Nature: a farming cycle every minute instead of every five = four extra growth steps per world tick.
+        if (gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.NATURE)) {
+            for (ahead in 1..4) grow(player, FarmTicker.futureSeedTypes(player.world, ahead))
+        }
 
         player.timers[Constants.playerFarmingTimer] = Constants.playerFarmingTickLength
         player.attr[LAST_WORLD_FARMING_TICK] = player.world.attr[Constants.worldFarmTick]!!
