@@ -91,6 +91,13 @@ shortcut(2068, "Squeeze-through") {
 listOf(3944, 3945).forEach { gate ->
     shortcut(gate, "Enter") {
         obstacle { _ ->
+            // PROJECT48 ONTGR (Regicide, OSRS Wiki Huge Gate above): the gate lets a player through once Regicide is under way or done
+            // (a player in the middle of the mini-quest is never locked in or out). Completed for every account without bracket quests.
+            val regicide = gg.rsmod.plugins.content.quests.foundation.bracket.Regicide
+            if (!regicide.isFinished(player) && regicide.stage(player) < 1) {
+                player.message("The gate will not open for you. You need to have started Regicide.")
+                return@obstacle
+            }
             val x = player.tile.x.coerceIn(2384, 2387)
             val north = player.tile.z <= 3334
             walkToTile(player, Tile(x, if (north) 3333 else 3335, 0))

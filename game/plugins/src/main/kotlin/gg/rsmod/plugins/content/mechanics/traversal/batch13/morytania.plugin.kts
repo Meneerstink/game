@@ -20,6 +20,13 @@ val ANIM_LOW_FENCE_JUMP_13 = 11574
 for (gate in intArrayOf(17757, 17760)) {
     shortcut(gate, "Jump") {
         obstacle { target ->
+            // PROJECT48 ONTGR (In Aid of the Myreque, RS3 Wiki "Gate (Burgh de Rott)" above): "the In Aid of the Myreque quest must be
+            // started". Completed for every account that does not unlock quests by bracket (QuestStatus).
+            val myreque = gg.rsmod.plugins.content.quests.foundation.bracket.InAidOfTheMyreque
+            if (!myreque.isFinished(player) && myreque.stage(player) < 1) {
+                player.message("You must have started In Aid of the Myreque to enter Burgh de Rott.")
+                return@obstacle
+            }
             val near = DoorCrossing.nearSide(player.tile, target)
             val far = near?.let { DoorCrossing.destination(it, target) }
             if (near == null || far == null) {
