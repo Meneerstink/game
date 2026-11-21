@@ -183,6 +183,8 @@ object CombatConfigs {
             // Without a weapon the class can only be magic through a spell (castSpell); nothing else needs the class then.
             val combatClass = if (weapon != null) getCombatClass(pawn) else null
             val magic = castSpell != null || combatClass == CombatClass.MAGIC
+            // PROJECT48 S35 Swashbuckler / S30 Gunslinger: melee and ranged weapons with a base attack speed above 4 attack one tick faster.
+            if (!magic) speed = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.baseSpeed(pawn, weapon?.id, speed, combatClass)
             if (!magic && combatClass == CombatClass.RANGED && getAttackStyle(pawn) == WeaponStyle.RAPID) {
                 speed -= 1
             }
@@ -194,6 +196,8 @@ object CombatConfigs {
                     weapon?.id, castSpell, autocast = pawn.attr[gg.rsmod.plugins.content.combat.magic.Autocast.AUTO_CAST] == true,
                 )
             }
+            // PROJECT48 S19 Arcane Swiftness: magic weapons with a base attack speed above 4 attack one tick faster.
+            if (magic) speed = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.magicSpeed(pawn, speed)
             // Wiki Starter_staff: "Attack speed 4 ticks (2.4s)" for its built-in Fire Strike (cache param 14 = 5 is the staff itself,
             // testclient 17-11 measured 5 ticks between casts).
             if (gg.rsmod.plugins.content.starter.StarterWeaponCombat.builtInStaff(pawn)) speed = 4

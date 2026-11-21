@@ -205,6 +205,38 @@ object SigilCombat {
     ) {
     }
 
+    /** Weapons that the Gunslinger does not speed up (wiki: the Crystal bow, Bow of Faerdhinen and Morrigan's throwing axe). */
+    private fun gunslingerExcluded(
+        pawn: Player,
+        weaponId: Int?,
+    ): Boolean {
+        if (weaponId == null) return false
+        val name = pawn.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, weaponId).name.lowercase()
+        return name.contains("crystal bow") || name.contains("faerdhinen") || name.contains("morrigan")
+    }
+
+    /** S35 Swashbuckler (melee) and S30 Gunslinger (ranged): one tick faster for a base attack speed above 4. */
+    fun baseSpeed(
+        pawn: Pawn,
+        weaponId: Int?,
+        speed: Int,
+        combatClass: gg.rsmod.game.model.combat.CombatClass?,
+    ): Int {
+        if (pawn !is Player || speed <= 4 || !any(pawn)) return speed
+        return when (combatClass) {
+            gg.rsmod.game.model.combat.CombatClass.MELEE -> if (Sigils.effective(pawn, Sigil.THE_SWASHBUCKLER)) speed - 1 else speed
+            gg.rsmod.game.model.combat.CombatClass.RANGED ->
+                if (Sigils.effective(pawn, Sigil.THE_GUNSLINGER) && !gunslingerExcluded(pawn, weaponId)) speed - 1 else speed
+            else -> speed
+        }
+    }
+
+    /** S19 Arcane Swiftness: one tick faster for a magic weapon with a base attack speed above 4. */
+    fun magicSpeed(
+        pawn: Pawn,
+        speed: Int,
+    ): Int = if (pawn is Player && speed > 4 && Sigils.effective(pawn, Sigil.ARCANE_SWIFTNESS)) speed - 1 else speed
+
     /** True when [pawn] is an npc (sigils such as Deft Strikes only work against non-player enemies). */
     fun isNpc(pawn: Pawn): Boolean = pawn is Npc
 }
