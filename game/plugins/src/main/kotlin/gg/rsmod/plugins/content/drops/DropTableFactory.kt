@@ -139,6 +139,11 @@ object DropTableFactory {
             }
         }
         if (type == DropTableType.KILL) {
+            // PROJECT48 SIGILS S-K5: the Deadman-only drop table (chance 0 until the owner names the rates).
+            gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops.rollGlobalTable(player, npcId)?.let {
+                createDrop(world, it, tile, player)
+                received.getOrPut(player) { mutableListOf() } += it
+            }
             if (received.isEmpty()) received[player] = mutableListOf()
             received.forEach { (owner, loot) -> gg.rsmod.plugins.content.mechanics.hud.LootTracker.npcKill(owner, npcId, loot) }
             // N104: the Collection Log, with the kill count of the Drop Viewer entry this npc belongs to.

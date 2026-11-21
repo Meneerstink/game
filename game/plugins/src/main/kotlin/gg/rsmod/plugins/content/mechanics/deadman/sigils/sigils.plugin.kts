@@ -62,6 +62,27 @@ Sigil.values().forEach { sigil ->
 on_login { player.timers[SigilSkilling.LITHENESS_TIMER] = SigilSkilling.LITHENESS_TICKS }
 on_timer(SigilSkilling.LITHENESS_TIMER) { SigilSkilling.lithenessTick(player) }
 
+/*
+ * S-K5 a: the starting sigil. A player who has not chosen one yet picks 1 of the 3 Tier 2 starting sigils a few ticks after login
+ * (team test accounts and bots skip it so their scripts are not interrupted).
+ */
+on_login {
+    if (player.attr[Sigils.START_CHOSEN] == true || player.username.lowercase().startsWith("teamtest")) return@on_login
+    player.queue {
+        wait(8)
+        if (player.attr[Sigils.START_CHOSEN] == true) return@queue
+        val labels = Sigils.START_CHOICES.map { it.label.removePrefix("Sigil of ").removePrefix("the ").replaceFirstChar { c -> c.uppercase() } }
+        val choice = options(*labels.toTypedArray(), title = "Choose your starting sigil")
+        if (choice in 1..labels.size) {
+            val sigil = Sigils.START_CHOICES[choice - 1]
+            if (player.inventory.add(sigil.unattunedId, 1).hasSucceeded() || player.bank.add(sigil.unattunedId, 1).hasSucceeded()) {
+                player.attr[Sigils.START_CHOSEN] = true
+                player.message("You receive the ${sigil.label}. Attune it at a bank (Attune).")
+            }
+        }
+    }
+}
+
 on_command("sigils") {
     Sigils.overview(player).forEach { player.message(it) }
 }

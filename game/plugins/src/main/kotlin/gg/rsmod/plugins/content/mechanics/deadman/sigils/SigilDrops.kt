@@ -27,4 +27,25 @@ object SigilDrops {
         player.filterableMessage(if (BoneData.boneDefinitions.containsKey(item.id)) "Your sigil buries the bones." else "Your sigil scatters the ashes.")
         return true
     }
+
+    /**
+     * The Deadman-only drop table (S-K5 b): the chance of a sigil per kill, by tier. The wiki gives NO number for it (checked pages
+     * "Deadman: Armageddon", "Deadman: Armageddon/Sigils": "obtained as drops ... as part of the Deadman-only drop table"), so the chances
+     * stay 0 until the owner gives them (STAND.txt VRAGEN) - nothing is invented. Sigil of Prosperity raises the chance by 20%.
+     */
+    val GLOBAL_TABLE_CHANCE: Map<Int, Double> = mapOf(1 to 0.0, 2 to 0.0, 3 to 0.0)
+
+    /** Rolls the Deadman-only table for one kill of [npcId]; returns the sigil item to drop, or null. */
+    fun rollGlobalTable(
+        player: Player,
+        npcId: Int,
+    ): Item? {
+        val tier = 1 + player.world.random(2)
+        val base = GLOBAL_TABLE_CHANCE[tier] ?: return null
+        if (base <= 0.0) return null
+        val chance = if (Sigils.effective(player, Sigil.PROSPERITY)) base * 1.2 else base
+        if (player.world.randomDouble() >= chance) return null
+        val sigil = Sigil.values().filter { it.tier == tier }.random()
+        return Item(sigil.unattunedId)
+    }
 }

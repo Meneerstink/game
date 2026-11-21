@@ -17,6 +17,12 @@ import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 object Sigils {
     const val MAX_ATTUNED = 3
 
+    /** Set once the player took the starting sigil (S-K5 a). */
+    val START_CHOSEN = AttributeKey<Boolean>(persistenceKey = "sigil_start_chosen")
+
+    /** The three Tier 2 starting sigils of Deadman: Armageddon (wiki Sigils, 'Starting sigils'). */
+    val START_CHOICES: List<Sigil> = listOf(Sigil.THE_RUTHLESS_RANGER, Sigil.THE_FORMIDABLE_FIGHTER, Sigil.THE_MENACING_MAGE)
+
     /** S04 Sigil of Exaggeration: the non-combat skills (Cooking .. Construction) and the boost they hold. */
     val EXAGGERATED_SKILLS: IntRange = 7..22
     const val EXAGGERATION_BOOST = 5
