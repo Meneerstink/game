@@ -39,9 +39,10 @@ object SigilCombat {
 
     fun styleOf(type: HitType): Style =
         when (type) {
-            HitType.MELEE -> Style.MELEE
-            HitType.RANGE -> Style.RANGED
-            HitType.MAGIC -> Style.MAGIC
+            // The CRIT_ types are the same styles (boss scripts - ToA, the old Wilderness bosses - send them for their big hits).
+            HitType.MELEE, HitType.CRIT_MELEE -> Style.MELEE
+            HitType.RANGE, HitType.CRIT_RANGE -> Style.RANGED
+            HitType.MAGIC, HitType.CRIT_MAGIC -> Style.MAGIC
             else -> Style.OTHER
         }
 

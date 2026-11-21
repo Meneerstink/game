@@ -75,8 +75,12 @@ object AshSanctifier {
     ) {
         val item = player.inventory[slot] ?: return
         val runes = charges(item) / CHARGES_PER_RUNE
+        // The runes must fit before the charges go: with a full inventory the charges were removed and the runes lost.
+        if (runes > 0 && !player.inventory.add(Items.DEATH_RUNE, runes).hasSucceeded()) {
+            player.message("You have no room in your inventory for the death runes.")
+            return
+        }
         item.attr.remove(ItemAttribute.CHARGES)
-        if (runes > 0) player.inventory.add(Items.DEATH_RUNE, runes)
         player.message("You remove the charges and get $runes death runes back.")
     }
 }

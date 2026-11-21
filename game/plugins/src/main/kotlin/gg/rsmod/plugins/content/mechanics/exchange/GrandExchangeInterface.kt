@@ -577,7 +577,8 @@ object GrandExchangeInterface {
         val selection = player.attr[SELECTION_ATTR] ?: return false
         val def = player.world.definitions.getNullable(ItemDef::class.java, itemId) ?: return false
         val real = player.world.definitions.getNullable(ItemDef::class.java, unnoted(def)) ?: return false
-        if (!exchangeable(real)) {
+        // PROJECT48 SIGILS: an attuned sigil is untradeable whatever its cache definition says (its effect would stay behind).
+        if (!exchangeable(real) || gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.isAttunedItem(real.id)) {
             player.playSound(GrandExchangeSounds.TRADE_ERROR)
             player.message(MSG_NOT_TRADEABLE)
             return false

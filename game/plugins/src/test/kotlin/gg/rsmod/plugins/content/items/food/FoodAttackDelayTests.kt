@@ -24,6 +24,8 @@ class FoodAttackDelayTests {
         every { world.definitions.get(ItemDef::class.java, any<Int>()) } returns mockk<ItemDef>(relaxed = true)
         every { player.world } returns world
         every { player.timers } returns TimerMap()
+        // PROJECT48: Foods.eat asks the sigils (Well Fed) for the heal, which reads a real attribute; a relaxed mock map cannot be cast.
+        every { player.attr } returns gg.rsmod.game.model.attr.AttributeMap()
         return player
     }
 

@@ -79,7 +79,9 @@ class DeathItemAuditTests {
                     pvm = if (UntradeableDeathProtection.lockable(itemId)) "kept" else "gravestone"
                     coins = "${l.killerCoins} / ${h.killerCoins}"
                     val keptAnyway = itemId in UntradeableDeathProtection.ALWAYS_KEPT_PVP || gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(itemId) ||
-                        gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.isTrinket(itemId) // N423: never lost (design v6)
+                        gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.isTrinket(itemId) || // N423: never lost (design v6)
+                        // PROJECT48 SIGILS (wiki Deadman: Armageddon, Death): an attuned sigil is always kept.
+                        gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.isAttunedItem(itemId)
                     if (!keptAnyway && !UntradeableDeathProtection.lockable(itemId) && (l.fate != UntradeableFate.LOST_FOR_COINS || h.fate != UntradeableFate.LOST_FOR_COINS)) {
                         problems += "$itemId $name: a non-lockable untradeable must always be lost ($low / $high)"
                     }
