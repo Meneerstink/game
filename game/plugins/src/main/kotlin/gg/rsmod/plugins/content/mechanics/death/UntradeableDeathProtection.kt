@@ -145,6 +145,8 @@ object UntradeableDeathProtection {
     ): UntradeableOutcomeFate {
         gg.rsmod.plugins.content.mechanics.deadman.NigelRewardStore.active?.baseItem(item)?.let { return fateOf(definitions, it, deepWilderness) }
         if (item.id in ALWAYS_KEPT_PVP) return UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
+        // PROJECT48 SIGILS: an attuned sigil is never lost.
+        if (gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.isAttunedItem(item.id)) return UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
         // A pet stays with its owner (owner confirmed 2026-10-04: "pet kept" on a PvP death; OSRS 2026: pets respawn with you).
         if (gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(item.id)) return UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
         // N423: a beast of burden trinket is never lost (design v6: kept on every death).

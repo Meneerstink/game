@@ -101,7 +101,9 @@ object DeathResolver {
                 valueProvider = valueProvider,
                 // N593 owner 2026-11-05: only actually locked (l) states are extra keeps on PvM death.
                 alwaysProtected = {
-                    alwaysProtected(it) ||
+                    // PROJECT48 SIGILS: "attuned sigils are always kept" (wiki Deadman: Armageddon, Death), on every death route.
+                    gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.isAttunedItem(it) ||
+                        alwaysProtected(it) ||
                         // The existing PvP-specific exceptions remain separate from N593's locked-only extra PvM keeps.
                         (if (context == DeathContext.PVM_SAFE) gg.rsmod.plugins.content.mechanics.trouver.TrouverRegistry.isLockedAnyState(it)
                         else it in UntradeableDeathProtection.ALWAYS_KEPT_PVP)
