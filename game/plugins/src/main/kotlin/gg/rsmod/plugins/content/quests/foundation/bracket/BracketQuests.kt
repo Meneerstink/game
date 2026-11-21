@@ -17,12 +17,13 @@ object BracketQuests {
     val BY_BRACKET: Map<Bracket, List<ShortQuest>> by lazy {
         mapOf(
             Bracket.B3_50 to B0350Quests.ALL,
+            Bracket.B51_70 to B5170Quests.ALL,
         )
     }
 
     val ALL: List<ShortQuest> by lazy { BY_BRACKET.values.flatten() }
 
-    val NPCS: List<BracketNpc> by lazy { B0350Quests.NPCS }
+    val NPCS: List<BracketNpc> by lazy { B0350Quests.NPCS + B5170Quests.NPCS }
 
     private val bySlotMap: Map<Int, ShortQuest> by lazy { ALL.associateBy { it.slot } }
 

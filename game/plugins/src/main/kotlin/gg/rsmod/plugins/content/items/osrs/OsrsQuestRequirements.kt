@@ -26,6 +26,11 @@ object OsrsQuestRequirements {
             Items.VENATOR_RING to DesertTreasureII,
             Items.HEAVY_BALLISTA to MonkeyMadnessII,
             Items.HEAVY_BALLISTA_OR to MonkeyMadnessII,
+            // PROJECT48 ONTGR (The Fremennik Trials): the four Fremennik helms are worn only by a Fremennik.
+            Items.BERSERKER_HELM to gg.rsmod.plugins.content.quests.foundation.bracket.FremennikTrials,
+            Items.WARRIOR_HELM to gg.rsmod.plugins.content.quests.foundation.bracket.FremennikTrials,
+            Items.ARCHER_HELM to gg.rsmod.plugins.content.quests.foundation.bracket.FremennikTrials,
+            Items.FARSEER_HELM to gg.rsmod.plugins.content.quests.foundation.bracket.FremennikTrials,
         )
 
     /** Null when [player] may wear [item], else the refusal message. */
