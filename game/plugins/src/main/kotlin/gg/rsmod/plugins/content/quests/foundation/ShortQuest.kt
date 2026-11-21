@@ -119,6 +119,18 @@ abstract class ShortQuest(
     ) {
     abstract val steps: List<QuestStep>
 
+    /**
+     * PROJECT48 F2: what a player needs to PLAY this quest (skills, quests, quest points). Checked by [FoundationQuests] before the
+     * start conversation; the combat bracket unlocks the quest without any of it. The old short quests keep [QuestRequirements.NONE].
+     */
+    open val needs: QuestRequirements get() = QuestRequirements.NONE
+
+    /** The reply of the start npc when something in [needs] is missing, one box per three lines. */
+    suspend fun QueueTask.refuseStart(missing: List<String>) {
+        chatNpc("I could do with your help, but you are not ready for this yet.", facialExpression = gg.rsmod.plugins.api.cfg.FacialExpression.THINKING)
+        missing.chunked(3).forEach { chatNpc(*it.toTypedArray(), facialExpression = gg.rsmod.plugins.api.cfg.FacialExpression.THINKING) }
+    }
+
     /** What finishing the quest gives (FoundationRewards.complete); the same for the played quest and the choice. */
     abstract val reward: QuestReward
 
@@ -206,6 +218,12 @@ abstract class ShortQuest(
         if (stage <= 0) {
             lines += "I can start this quest by speaking to ${red(startNpcName)}"
             lines += "at $startPlace."
+            val needLines = needs.lines(player).filter { it.blocking }
+            if (needLines.isNotEmpty()) {
+                lines += ""
+                lines += "Requirements:"
+                needLines.forEach { lines += if (it.met) striked(it.text) else red(it.text) }
+            }
             return QuestStage(lines)
         }
         val finished = stage >= completedValue

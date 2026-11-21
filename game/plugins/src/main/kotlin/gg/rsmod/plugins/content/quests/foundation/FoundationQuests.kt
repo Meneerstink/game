@@ -1647,6 +1647,12 @@ object FoundationQuests {
     }
 
     private suspend fun runStart(task: QueueTask, quest: ShortQuest) {
+        // PROJECT48 F2: the requirements are hard - the start npc says exactly what is missing and the quest does not start.
+        val missing = quest.needs.missing(task.player)
+        if (missing.isNotEmpty()) {
+            with(quest) { task.refuseStart(missing) }
+            return
+        }
         val accepted = with(quest) { task.intro() }
         if (!accepted || quest.stage(task.player) != 0) return
         quest.setStage(task.player, 1)

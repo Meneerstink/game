@@ -96,7 +96,11 @@ fun Player.canStartQuest(quest: Quest): Boolean {
 fun Player.buildQuestOverview(quest: Quest) {
     setComponentText(interfaceId = 178, component = 14, text = quest.name)
     setComponentText(interfaceId = 178, component = 52, text = quest.startPoint)
-    if (quest.requirements.isEmpty()) {
+    val bracketNeeds = (quest as? gg.rsmod.plugins.content.quests.foundation.ShortQuest)?.needs?.takeUnless { it.isEmpty }
+    if (bracketNeeds != null) {
+        // PROJECT48 F2: a bracket mini-quest lists its real requirements (a met one struck through).
+        setComponentText(interfaceId = 178, component = 55, text = bracketNeeds.overview(this))
+    } else if (quest.requirements.isEmpty()) {
         setComponentText(interfaceId = 178, component = 55, text = "None.")
     } else {
         setComponentText(interfaceId = 178, component = 55, text = getRequirements(this, quest))
