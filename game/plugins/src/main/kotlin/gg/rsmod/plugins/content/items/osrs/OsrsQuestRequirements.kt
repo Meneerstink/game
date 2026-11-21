@@ -36,6 +36,15 @@ object OsrsQuestRequirements {
             // PROJECT48 ONTGR (Monkey Madness): the Dragon scimitar is wielded only after the quest (OSRS Wiki).
             Items.DRAGON_SCIMITAR to gg.rsmod.plugins.content.quests.foundation.bracket.MonkeyMadness,
             Items.DRAGON_SCIMITAR_OR to gg.rsmod.plugins.content.quests.foundation.bracket.MonkeyMadness,
+            // PROJECT48 ONTGR (Dragon Slayer): the rune platebody (and its gold/trimmed forms), green d'hide body and dragon platebody (OSRS Wiki).
+            Items.RUNE_PLATEBODY to gg.rsmod.plugins.content.quests.foundation.bracket.DragonSlayer,
+            Items.RUNE_PLATEBODY_G to gg.rsmod.plugins.content.quests.foundation.bracket.DragonSlayer,
+            Items.RUNE_PLATEBODY_T to gg.rsmod.plugins.content.quests.foundation.bracket.DragonSlayer,
+            Items.GREEN_DHIDE_BODY to gg.rsmod.plugins.content.quests.foundation.bracket.DragonSlayer,
+            Items.DRAGON_PLATEBODY to gg.rsmod.plugins.content.quests.foundation.bracket.DragonSlayer,
+            // PROJECT48 ONTGR (Heroes' Quest): the Dragon battleaxe and Dragon mace (OSRS Wiki).
+            Items.DRAGON_BATTLEAXE to gg.rsmod.plugins.content.quests.foundation.bracket.HeroesQuest,
+            Items.DRAGON_MACE to gg.rsmod.plugins.content.quests.foundation.bracket.HeroesQuest,
         ) + (4212..4235).filter { it !in setOf(4213, 4235) }.associateWith { gg.rsmod.plugins.content.quests.foundation.bracket.RovingElves }
 
     /** Null when [player] may wear [item], else the refusal message. */

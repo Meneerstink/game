@@ -23,6 +23,11 @@ create_shop(
 }
 
 on_npc_option(npc = Npcs.HELEMOS, option = "trade") {
+    // PROJECT48 ONTGR (Heroes' Quest): the Heroes' Guild shop is for heroes only.
+    if (!gg.rsmod.plugins.content.quests.foundation.bracket.HeroesQuest.isFinished(player)) {
+        player.message("Helemos only trades with members of the Heroes' Guild.")
+        return@on_npc_option
+    }
     player.openShop("Happy Heroes' H'emporium")
 }
 

@@ -37,10 +37,10 @@ on_obj_option(Objs.OPEN_CHEST_24204, "Shut") {
 }
 
 on_obj_option(Objs.DOOR_1805, "Open") {
-    if (!player.completedAllQuests()) {
-        // TODO: Change once there are at least 33 quest points to the correct message
+    if (gg.rsmod.plugins.content.quests.QuestStatus.points(player) < 32) {
+        // PROJECT48 ONTGR (Dragon Slayer): OSRS asks 32 quest points, not all quests.
         player.queue {
-            messageBox("You must complete all quests before you can enter the Champions Guild.")
+            messageBox("You need 32 quest points to enter the Champions' Guild.")
         }
         return@on_obj_option
     }

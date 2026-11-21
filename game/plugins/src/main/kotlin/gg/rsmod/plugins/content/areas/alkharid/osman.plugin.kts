@@ -12,6 +12,7 @@ val osmanPrinceAliRescue = PrinceAliRescue
 
 on_npc_option(npc = Npcs.OSMAN, option = "talk-to") {
     player.queue {
+        if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.OSMAN)) return@queue
         when (player.getCurrentStage(osmanPrinceAliRescue)) {
             0 -> {
                 chatNpc("Hello. I am Osman. What can I assist you with?")

@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.areas.varrock
 
 on_npc_option(Npcs.GUILDMASTER, "Talk-to") {
     player.queue {
+        if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.GUILDMASTER)) return@queue
         chatNpc("Greetings!",
             facialExpression = FacialExpression.HAPPY_TALKING,
             wrap = true)

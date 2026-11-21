@@ -14,6 +14,11 @@ val GloryOrROW =
 for (jewelryId in GloryOrROW) {
     // Define an action when an item from the array is used on the specified object
     on_item_on_obj(Objs.FOUNTAIN_OF_HEROES, jewelryId) {
+        // PROJECT48 ONTGR (Heroes' Quest): only a member of the Heroes' Guild may use its fountain.
+        if (!gg.rsmod.plugins.content.quests.foundation.bracket.HeroesQuest.isFinished(player)) {
+            player.message("You must be a member of the Heroes' Guild to use the fountain.")
+            return@on_item_on_obj
+        }
 
         player.queue(TaskPriority.STRONG) {
             val inventory = player.inventory

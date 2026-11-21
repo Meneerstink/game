@@ -7,6 +7,15 @@ create_shop("Oziach's Armour", CoinCurrency(), containsSamples = false, purchase
     items[1] = ShopItem(Items.GREEN_DHIDE_BODY, 10)
 }
 
+// PROJECT48 ONTGR (Dragon Slayer): Oziach sells his armour only to a dragon slayer (OSRS Wiki).
+fun openOziachShop(player: gg.rsmod.game.model.entity.Player) {
+    if (!gg.rsmod.plugins.content.quests.foundation.bracket.DragonSlayer.isFinished(player)) {
+        player.message("Oziach will not sell his armour to someone who has not slain Elvarg.")
+        return
+    }
+    player.openShop("Oziach's Armour")
+}
+
 on_npc_option(npc = Npcs.OZIACH, option = "talk-to") {
     player.queue {
         if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.OZIACH)) return@queue
@@ -19,7 +28,7 @@ on_npc_option(npc = Npcs.OZIACH, option = "talk-to") {
 }
 
 on_npc_option(npc = Npcs.OZIACH, option = "trade") {
-    player.openShop("Oziach's Armour")
+    openOziachShop(player)
 }
 
 /**
@@ -50,7 +59,7 @@ suspend fun afterDragonSlayerDialogue(it: QueueTask) {
     ) {
         FIRST_OPTION -> {
             it.chatPlayer("Can I buy a rune platebody now please?")
-            it.player.openShop("Oziach's Armour")
+            openOziachShop(it.player)
         }
         SECOND_OPTION -> {
             it.chatPlayer("I'm not your friend.")
@@ -87,7 +96,7 @@ suspend fun carryingDraconicVisageDialogue(it: QueueTask) {
     ) {
         FIRST_OPTION -> {
             it.chatPlayer("Can I buy a rune platebody now please?")
-            it.player.openShop("Oziach's Armour")
+            openOziachShop(it.player)
         }
         SECOND_OPTION -> {
             it.chatPlayer("I'm not your friend.")

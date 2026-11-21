@@ -8,6 +8,7 @@ val runeMysteries = RuneMysteries
 
 on_npc_option(Npcs.DUKE_HORACIO, option = "talk-to") {
     player.queue {
+        if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.DUKE_HORACIO)) return@queue
         chatNpc("Greetings. Welcome to my castle.")
         if (player.completedAllQuests()) {
             dragonSlayerQuest(this)
