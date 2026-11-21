@@ -157,6 +157,9 @@ abstract class ShortQuest(
 
     val completedValue: Int get() = stages
 
+    /** PROJECT48: called by [FoundationQuests.completeStep] when step [stage] is done (before the next stage is written). */
+    open fun onStepDone(player: Player, stage: Int) {}
+
     /**
      * PROJECT48 F1: a bracket mini-quest keeps its step in its own persistent attribute ([stepKey]) instead of the cache varp/varbit
      * (many 667 quest variables have too few values for the steps, and in-between values can change the world). The quest list reads

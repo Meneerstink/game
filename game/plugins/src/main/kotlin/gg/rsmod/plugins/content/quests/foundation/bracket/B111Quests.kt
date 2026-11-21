@@ -23,10 +23,13 @@ import gg.rsmod.plugins.content.quests.red
  * Npcs that already have a Talk-to plugin or a QuestNpcPost are NOT listed here (their handler calls FoundationQuests.talk first).
  */
 object B111Quests {
-    val ALL: List<ShortQuest> = listOf(BlackKnightsFortress, MurderMystery, JunglePotion, ShiloVillage, OneSmallFavour, ATailOfTwoCats, DeviousMinds)
+    val ALL: List<ShortQuest> = listOf(BlackKnightsFortress, MurderMystery, JunglePotion, ShiloVillage, OneSmallFavour, ATailOfTwoCats, DeviousMinds, RecipeForDisaster)
 
     val NPCS: List<BracketNpc> =
-        listOf(
+        B111Rfd.NPCS + listOf(
+            BracketNpc(Npcs.MURPHY, null, Direction.SOUTH, listOf("Fine sailing weather.")),
+            BracketNpc(Npcs.TRAIBORN, null, Direction.SOUTH, listOf("Thurgo... no, wait.")),
+            BracketNpc(Npcs.DORIS, null, Direction.SOUTH, listOf("My son lives in the basement.")),
             BracketNpc(Npcs.SIR_AMIK_VARZE, null, Direction.SOUTH, listOf("The White Knights are ever vigilant.")),
             BracketNpc(Npcs.POISON_SALESMAN, null, Direction.SOUTH, listOf("Poisons for every occasion, friend.")),
             BracketNpc(Npcs.MOSOL_REI, null, Direction.SOUTH, listOf("Shilo Village is a sad place, bwana.")),

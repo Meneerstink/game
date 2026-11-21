@@ -32,6 +32,7 @@ on_global_item_pickup {
 }
 on_npc_option(npc = Npcs.COOK, option = "Talk-to") {
     player.queue {
+        if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.COOK)) return@queue
         if (!player.startedQuest(cooksAssistant) && player.canStartQuest(cooksAssistant)) {
             preQuest(this)
         } else {

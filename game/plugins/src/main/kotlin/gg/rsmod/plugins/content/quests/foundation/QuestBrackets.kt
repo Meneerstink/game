@@ -216,7 +216,9 @@ object QuestBrackets {
     fun rfdSubquests(player: Player): Int {
         if (QuestStatus.isCompleted(player, "Recipe for Disaster")) return RFD_COMPLETE
         if (!applies(player)) return RFD_COMPLETE
-        return reached(player).maxOf { it.rfdSubquests }
+        // PROJECT48 Q42: parts played in the quest count like bracket parts (n parts done = subquest index n - 1).
+        val played = gg.rsmod.plugins.content.quests.foundation.bracket.RecipeForDisaster.partsDone(player) - 1
+        return maxOf(reached(player).maxOf { it.rfdSubquests }, played)
     }
 
     /** Culinaromancer's gloves in shop order: hardleather (0) ... dragon (8), barrows (9) - OSRS Wiki Culinaromancer's Chest. */

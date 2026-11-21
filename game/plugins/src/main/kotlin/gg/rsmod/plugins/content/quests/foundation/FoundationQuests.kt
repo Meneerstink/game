@@ -1732,6 +1732,7 @@ object FoundationQuests {
      */
     fun completeStep(player: Player, quest: ShortQuest, stage: Int) {
         val step = quest.steps[stage - 1]
+        quest.onStepDone(player, stage)
         step.fight?.let {
             step.gives.forEach { (item, amount) -> FoundationRewards.grant(player, item, amount) }
         }

@@ -61,6 +61,13 @@ on_command("p48", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
             QuestStatus.sync(player)
             player.message("p48 ${quest.name}: requirements given (met=${quest.needs.met(player)}).")
         }
+        "maxreq" -> {
+            // Q42 tests: every other quest done and every skill 99, so the part-by-part gates of Recipe for Disaster pass.
+            QuestList.ENTRIES.filter { it.slot != slot }.forEach { it.progress.complete(player) }
+            (0 until player.skills.maxSkills).forEach { player.skills.setBaseLevel(it, 99) }
+            QuestStatus.sync(player)
+            player.message("p48 ${quest.name}: all other quests done, skills 99 (qp=${QuestStatus.points(player)}).")
+        }
         else -> player.message("p48 status|step|reset|cohort|req|list ...")
     }
 }
