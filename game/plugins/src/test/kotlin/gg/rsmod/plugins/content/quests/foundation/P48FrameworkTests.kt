@@ -65,6 +65,21 @@ class P48FrameworkTests {
     private val ernest = ErnestTheChicken
 
     @Test
+    fun `recipe for disaster - every freed council member pays the wiki experience of its part at the step that finishes it`() {
+        val rfd = gg.rsmod.plugins.content.quests.foundation.bracket.RecipeForDisaster
+        assertEquals(rfd.PART_LAST_STEP.size, rfd.PART_XP.size, "one experience row per part")
+        assertEquals(rfd.steps.size, rfd.PART_LAST_STEP.last(), "the last part ends at the last step")
+        rfd.PART_XP.forEachIndexed { part, xp ->
+            val done = rfd.steps[rfd.PART_LAST_STEP[part] - 1].done.first()
+            if (xp.isNotEmpty()) assertTrue(done.startsWith("I freed"), "part $part pays at the step that frees the member, not '$done'")
+        }
+        // OSRS Wiki subquest pages: 28,000 Cooking over the eight members; Awowogei 10,000 Agility; Sir Amik 4,000 Hitpoints.
+        assertEquals(28_000.0, rfd.PART_XP.flatten().filter { it.first == Skills.COOKING }.sumOf { it.second })
+        assertEquals(listOf(Skills.COOKING to 10_000.0, Skills.AGILITY to 10_000.0), rfd.PART_XP[7])
+        assertEquals(listOf(Skills.COOKING to 4_000.0, Skills.CONSTITUTION to 4_000.0), rfd.PART_XP[8])
+    }
+
+    @Test
     fun `a legacy account has every bracket quest completed`() {
         val account = Account(null)
         QuestStatus.login(account.player)

@@ -11,7 +11,7 @@ import gg.rsmod.plugins.api.ext.hit
  * PROJECT48 SIGILS - the damage-over-time sigils (OSRS Wiki Deadman: Armageddon/Sigils): S54 the Ruthless Ranger ("a 10% chance to cripple the
  * target's movement: 15 damage over 6 seconds, drains 15 run energy, doubled against targets with no run energy") and S52 the Menacing Mage
  * ("a 10% chance to curse the target: 18 damage over 6 seconds, heals you for the same amount"). A target can only suffer one crippling effect
- * and one curse at a time. The 3-50 bracket values (10 / 12) are not modelled: the bracket of the world is not known here (dossier SIGILS).
+ * and one curse at a time. The 3-50 bracket values (10 / 12) follow the attacker's own bracket (SigilCombat.crippleDamage / curseDamage).
  */
 object SigilDots {
     private val CRIPPLED = AttributeKey<Boolean>()
@@ -44,7 +44,8 @@ object SigilDots {
         if (target.attr[CRIPPLED] == true) return
         target.attr[CRIPPLED] = true
         val noEnergy = target is Player && target.runEnergy <= 0.0
-        val total = if (noEnergy) 30 else 15
+        val base = SigilCombat.crippleDamage(attacker)
+        val total = if (noEnergy) base * 2 else base
         if (target is Player) target.runEnergy = Math.max(0.0, target.runEnergy - 15.0)
         run(attacker, target, total, CRIPPLED, heal = false)
     }
@@ -55,7 +56,7 @@ object SigilDots {
     ) {
         if (target.attr[CURSED] == true) return
         target.attr[CURSED] = true
-        run(attacker, target, 18, CURSED, heal = true)
+        run(attacker, target, SigilCombat.curseDamage(attacker), CURSED, heal = true)
     }
 
     /** Deals [total] damage in [STEPS] hits (the remainder spread over the steps), one every [STEP_TICKS] ticks (10 ticks = 6 seconds in all), then clears [flag]. */

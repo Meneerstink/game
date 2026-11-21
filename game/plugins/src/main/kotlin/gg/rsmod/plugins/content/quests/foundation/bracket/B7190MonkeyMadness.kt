@@ -181,16 +181,16 @@ object MonkeyMadness : ShortQuest(
                     chatNpc("The 10th squad is free and the monkeys are at peace. The", "gnomes are in your debt. Daero offers you his training.", facialExpression = FacialExpression.HAPPY)
                     when (options("Attack and Defence (35,000 XP each).", "Strength and Hitpoints (35,000 XP each).", title = "Daero's training")) {
                         1 -> {
-                            player.addXp(Skills.ATTACK, 35_000.0)
-                            player.addXp(Skills.DEFENCE, 35_000.0)
-                            player.addXp(Skills.STRENGTH, 20_000.0)
-                            player.addXp(Skills.CONSTITUTION, 20_000.0)
+                            player.addXp(Skills.ATTACK, 35_000.0, modifiers = false)
+                            player.addXp(Skills.DEFENCE, 35_000.0, modifiers = false)
+                            player.addXp(Skills.STRENGTH, 20_000.0, modifiers = false)
+                            player.addXp(Skills.CONSTITUTION, 20_000.0, modifiers = false)
                         }
                         else -> {
-                            player.addXp(Skills.STRENGTH, 35_000.0)
-                            player.addXp(Skills.CONSTITUTION, 35_000.0)
-                            player.addXp(Skills.ATTACK, 20_000.0)
-                            player.addXp(Skills.DEFENCE, 20_000.0)
+                            player.addXp(Skills.STRENGTH, 35_000.0, modifiers = false)
+                            player.addXp(Skills.CONSTITUTION, 35_000.0, modifiers = false)
+                            player.addXp(Skills.ATTACK, 20_000.0, modifiers = false)
+                            player.addXp(Skills.DEFENCE, 20_000.0, modifiers = false)
                         }
                     }
                     true

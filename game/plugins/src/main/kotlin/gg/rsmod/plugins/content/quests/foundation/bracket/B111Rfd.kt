@@ -81,8 +81,31 @@ object RecipeForDisaster : ShortQuest(
         return PART_LAST_STEP.count { it < stage }
     }
 
-    /** After a step: the Culinaromancer's Chest stands in the cellar as soon as the first part is done (QuestBrackets.RFD_CHEST_STAGE). */
+    /**
+     * The experience of each PLAYED part (OSRS Wiki, the "Rewards" of the ten subquest pages; part 0 and the final fight give none - the
+     * final fight's lamp is the quest reward). Exact amounts, not the server rate (owner N184, as every quest reward). A part given by
+     * the combat bracket pays nothing (wiki "No experience is received"): only [onStepDone] of a played step pays.
+     */
+    val PART_XP: List<List<Pair<Int, Double>>> =
+        listOf(
+            emptyList(),
+            listOf(Skills.COOKING to 1_000.0, Skills.SLAYER to 1_000.0), // Mountain Dwarf
+            listOf(Skills.COOKING to 1_000.0, Skills.FARMING to 1_000.0, Skills.CRAFTING to 1_000.0), // Goblin generals
+            listOf(Skills.COOKING to 1_000.0, Skills.CRAFTING to 1_000.0, Skills.FISHING to 1_000.0, Skills.SMITHING to 1_000.0), // Pirate Pete
+            listOf(Skills.COOKING to 2_500.0, Skills.MAGIC to 2_500.0), // Lumbridge Guide
+            listOf(Skills.COOKING to 7_000.0), // Evil Dave
+            listOf(Skills.WOODCUTTING to 1_500.0, Skills.COOKING to 1_500.0, Skills.CRAFTING to 1_500.0, Skills.RANGED to 1_500.0), // Skrach Uglogwee
+            listOf(Skills.COOKING to 10_000.0, Skills.AGILITY to 10_000.0), // King Awowogei
+            listOf(Skills.COOKING to 4_000.0, Skills.CONSTITUTION to 4_000.0), // Sir Amik Varze
+            emptyList(),
+        )
+
+    /**
+     * After a step: the experience of the part it finishes, and the Culinaromancer's Chest stands in the cellar as soon as the first
+     * part is done (QuestBrackets.RFD_CHEST_STAGE).
+     */
     override fun onStepDone(player: Player, stage: Int) {
+        PART_XP.getOrNull(PART_LAST_STEP.indexOf(stage))?.forEach { (skill, amount) -> player.addXp(skill, amount, modifiers = false) }
         if (PART_LAST_STEP.contains(stage) && player.getVarbit(Varbits.RECIPE_FOR_DISASTER_PROGRESS) in 0 until 3) {
             player.setVarbit(Varbits.RECIPE_FOR_DISASTER_PROGRESS, 3)
         }

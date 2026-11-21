@@ -20,7 +20,10 @@ object SigilSkilling {
             else -> 1
         }
 
-    /** S59 Woodcraft: the planks of a chopped log (price per plank in coins), or the log itself without the sigil / the coins / with an infernal axe. */
+    /**
+     * S59 Woodcraft: the planks of a chopped log (price per plank in coins), or the log itself without the sigil / the coins / with an
+     * infernal axe / in a guarded area ("Does not work in guarded areas or with the infernal axe").
+     */
     private val PLANKS: Map<Int, Pair<Int, Int>> =
         mapOf(
             gg.rsmod.plugins.api.cfg.Items.LOGS to (gg.rsmod.plugins.api.cfg.Items.PLANK to 50),
@@ -32,13 +35,19 @@ object SigilSkilling {
     private fun woodcraft(
         player: Player,
         log: Int,
+        amount: Int,
     ): Int {
         val plank = PLANKS[log] ?: return log
         if (!Sigils.effective(player, Sigil.WOODCRAFT)) return log
+        if (!gg.rsmod.plugins.content.mechanics.pvp.AreaState.isDangerous(player.tile)) return log
         val weapon = player.getEquipment(gg.rsmod.plugins.api.EquipmentType.WEAPON)?.id
         if (weapon != null && player.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, weapon).name.lowercase().contains("infernal axe")) return log
-        if (!player.inventory.remove(gg.rsmod.plugins.api.cfg.Items.COINS_995, plank.second).hasSucceeded()) {
-            player.filterableMessage("You need ${plank.second} coins in your inventory for your sigil to turn the log into a plank.")
+        // "Requires 50 gp per regular plank ...": the price is paid for EVERY plank of this chop (a harvest sigil gives 2 or 3).
+        val price = plank.second * amount.coerceAtLeast(1)
+        if (player.inventory.getItemCount(gg.rsmod.plugins.api.cfg.Items.COINS_995) < price ||
+            !player.inventory.remove(gg.rsmod.plugins.api.cfg.Items.COINS_995, price).hasSucceeded()
+        ) {
+            player.filterableMessage("You need $price coins in your inventory for your sigil to turn the log into a plank.")
             return log
         }
         return plank.first
@@ -104,8 +113,8 @@ object SigilSkilling {
         amount: Int = 1,
     ): ItemTransaction {
         if (player.attuned().isEmpty()) return gg.rsmod.plugins.content.mechanics.deadman.items.Sacks.add(player, gathered, amount)
-        val itemId = infernal(player, woodcraft(player, gathered))
         val total = amount * multiplier(player)
+        val itemId = infernal(player, woodcraft(player, gathered, total))
         if (toBank(player)) {
             val banked = player.bank.add(itemId, total)
             if (banked.hasSucceeded()) {

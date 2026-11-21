@@ -240,6 +240,47 @@ class SigilTests {
     }
 
     @Test
+    fun `formidable fighter - a successful melee hit arms plus 10 for the next melee hit, other styles are untouched`() {
+        // The mocked world rolls 0.0, so the 30% chance always arms the next hit.
+        val npc = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
+        val melee = gg.rsmod.plugins.api.HitType.MELEE
+        val fighter = newPlayer()
+        attune(fighter, Sigil.THE_FORMIDABLE_FIGHTER)
+        assertEquals(20.0, SigilCombat.modifyDamage(fighter, npc, 20.0, melee, true), "the first hit only arms the bonus")
+        assertEquals(20.0, SigilCombat.modifyDamage(fighter, npc, 20.0, gg.rsmod.plugins.api.HitType.RANGE, true), "a ranged hit does not spend it")
+        assertEquals(0.0, SigilCombat.modifyDamage(fighter, npc, 0.0, melee, false), "a miss does not spend it")
+        assertEquals(30.0, SigilCombat.modifyDamage(fighter, npc, 20.0, melee, true), "the next successful melee hit deals +10")
+        val plain = newPlayer()
+        attune(plain, Sigil.CONSISTENCY)
+        assertEquals(21.0, SigilCombat.modifyDamage(plain, npc, 20.0, melee, true), "without the sigil there is no +10")
+        assertEquals(21.0, SigilCombat.modifyDamage(plain, npc, 20.0, melee, true))
+    }
+
+    @Test
+    fun `rampage stays attuned and effective beside aggression - only its damage bonus does not stack`() {
+        val player = newPlayer()
+        attune(player, Sigil.RAMPAGE)
+        attune(player, Sigil.AGGRESSION)
+        assertTrue(Sigils.effective(player, Sigil.RAMPAGE), "Rampage keeps its count and accuracy")
+        assertTrue(Sigils.effective(player, Sigil.AGGRESSION))
+        val npc = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
+        assertEquals(22.0, SigilCombat.modifyDamage(player, npc, 20.0, gg.rsmod.plugins.api.HitType.MELEE, true), "only Aggression's 10%")
+    }
+
+    @Test
+    fun `bracket values - porcupine 2 below 71-90, curse 12 and cripple 10 in 3-50`() {
+        fun at(level: Int) = newPlayer().also { every { it.combatLevel } returns level }
+        assertEquals(2, SigilCombat.porcupineRecoil(at(40)))
+        assertEquals(2, SigilCombat.porcupineRecoil(at(70)))
+        assertEquals(4, SigilCombat.porcupineRecoil(at(71)))
+        assertEquals(4, SigilCombat.porcupineRecoil(at(126)))
+        assertEquals(12, SigilCombat.curseDamage(at(50)))
+        assertEquals(18, SigilCombat.curseDamage(at(51)))
+        assertEquals(10, SigilCombat.crippleDamage(at(50)))
+        assertEquals(15, SigilCombat.crippleDamage(at(51)))
+    }
+
+    @Test
     fun `gathering multipliers - harvest 3x, forager 2x, hoarding 3x and the abyss 5x`() {
         val none = newPlayer()
         assertEquals(1, SigilSkilling.multiplier(none))

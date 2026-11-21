@@ -170,11 +170,40 @@ object SigilCombat {
         var result = damage
         // S01 Consistency: every attack does +1 damage to the target.
         if (Sigils.effective(attacker, Sigil.CONSISTENCY)) result += 1.0
-        // S57 Rampage: +3% damage per count (does not stack with Aggression, which then wins).
-        if (Sigils.effective(attacker, Sigil.RAMPAGE)) result = Math.round(result * (1.0 + 0.03 * (attacker.attr[RAMPAGE_COUNT] ?: 0))).toDouble()
+        // S51 Formidable Fighter: "Upon a successful hit, you have a 30% chance for your next hit to deal +10 damage" (see [formidable]).
+        result += formidable(attacker, type, result)
+        // S57 Rampage: +3% damage per count. "The damage bonus effect does not stack with the Sigil of Aggression": with Aggression
+        // attuned only Aggression's 10% counts (Rampage keeps its accuracy).
+        if (Sigils.effective(attacker, Sigil.RAMPAGE) && !Sigils.effective(attacker, Sigil.AGGRESSION)) {
+            result = Math.round(result * (1.0 + 0.03 * (attacker.attr[RAMPAGE_COUNT] ?: 0))).toDouble()
+        }
         // S36 Aggression: all attacks deal 10% more damage (a Rampage bonus does not stack with it).
         if (Sigils.effective(attacker, Sigil.AGGRESSION)) result = Math.round(result * 1.10).toDouble()
         return result
+    }
+
+    private val FORMIDABLE_NEXT_HIT = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
+    const val FORMIDABLE_BONUS = 10.0
+    private const val FORMIDABLE_CHANCE = 0.30
+
+    /**
+     * S51 Formidable Fighter (wiki): "Upon a successful hit, you have a 30% chance for your next hit to deal +10 damage. The chance to
+     * deal +10 damage on your next hit does not apply to special attacks." Returns the bonus of THIS landed hit (10 when the previous
+     * successful hit armed it) and rolls the chance for the next one. A successful hit = a landed hit that deals damage. The sigil is a
+     * melee sigil (its other half is melee accuracy), so only melee hits arm and spend it; a special attack never rolls the chance,
+     * and it leaves an armed bonus waiting for the next normal hit.
+     */
+    private fun formidable(
+        attacker: Player,
+        type: HitType,
+        damage: Double,
+    ): Double {
+        if (styleOf(type) != Style.MELEE || !Sigils.effective(attacker, Sigil.THE_FORMIDABLE_FIGHTER)) return 0.0
+        if (attacker.attr[gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.SPECIAL_ATTACK_IN_PROGRESS] == true) return 0.0
+        if (damage <= 0.0) return 0.0
+        val bonus = if (attacker.attr[FORMIDABLE_NEXT_HIT] == true) FORMIDABLE_BONUS else 0.0
+        attacker.attr[FORMIDABLE_NEXT_HIT] = attacker.world.randomDouble() < FORMIDABLE_CHANCE
+        return bonus
     }
 
     private fun taken(
@@ -302,11 +331,27 @@ object SigilCombat {
         type: HitType,
         landed: Boolean,
     ) {
-        // S53 Porcupine: while the window is open every hit taken recoils 4 damage (2 on the 3-50 / 51-70 worlds, not modelled) to the attacker.
+        // S53 Porcupine: while the window is open every hit taken recoils 4 damage to the attacker - 2 in the 3-50 and 51-70 brackets.
         if (landed && Sigils.windowOpen(target, Sigil.THE_PORCUPINE) && attacker !== target && attacker.isAlive()) {
-            attacker.hit(4, HitType.REFLECTED, source = target)
+            attacker.hit(porcupineRecoil(target), HitType.REFLECTED, source = target)
         }
     }
+
+    /**
+     * The wiki's values "on level 3-50 / 51-70 worlds": OSRS runs one world per bracket; here the bracket is the player's own
+     * ([gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.of]: by combat level, never below the highest bracket he reached).
+     */
+    private fun bracketOf(player: Player) = gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.of(player)
+
+    /** S53 Porcupine: "recoil 4 damage ... On level 3-50 and 51-70 worlds: ... recoil 2 damage". */
+    fun porcupineRecoil(player: Player): Int =
+        if (bracketOf(player).ordinal < gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.Bracket.B71_90.ordinal) 2 else 4
+
+    /** S52 Menacing Mage: "The curse deals 18 damage (12 damage in the level 3-50 combat bracket)". */
+    fun curseDamage(player: Player): Int = if (bracketOf(player) == gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.Bracket.B3_50) 12 else 18
+
+    /** S54 Ruthless Ranger: "The effect deals 15 damage (10 damage in the level 3-50 combat bracket)". */
+    fun crippleDamage(player: Player): Int = if (bracketOf(player) == gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.Bracket.B3_50) 10 else 15
 
     private val RAMPAGE_COUNT = gg.rsmod.game.model.attr.AttributeKey<Int>()
     private val RAMPAGE_STYLE = gg.rsmod.game.model.attr.AttributeKey<Style>()

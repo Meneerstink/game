@@ -66,7 +66,8 @@ object Sigils {
             Sigil.ENHANCED_HARVEST to Sigil.THE_FORAGER,
             Sigil.TITANIUM to Sigil.RESISTANCE,
             Sigil.THE_RAMPART to Sigil.FORTIFICATION,
-            Sigil.AGGRESSION to Sigil.RAMPAGE,
+            // Aggression / Rampage are NOT here: "The damage bonus effect does not stack with the Sigil of Aggression" - only the damage
+            // bonus; Rampage keeps its count and its accuracy (SigilCombat.dealt leaves Rampage's damage out when Aggression is attuned).
         )
 
     enum class Result {
