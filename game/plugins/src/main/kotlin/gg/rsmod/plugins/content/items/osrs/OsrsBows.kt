@@ -82,7 +82,10 @@ object RevenantBows {
         target: Pawn,
     ): Boolean =
         target is Npc && player.getEquipment(EquipmentType.WEAPON)?.id in UNCHARGED_FOR &&
-            (player.tile.getWildernessLevel() > 0 || gg.rsmod.plugins.content.areas.poh.PlayerHouse.isWildernessDummy(target))
+            // PROJECT48 S28 Sigil of Revoked Limitation: the buff applies to NPCs anywhere (same rule as RevenantWeapons.wildernessBuff -
+            // measured in the game 21-11: Craw's bow kept max hit 21 outside the Wilderness with the sigil attuned).
+            (player.tile.getWildernessLevel() > 0 || gg.rsmod.plugins.content.areas.poh.PlayerHouse.isWildernessDummy(target) ||
+                gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.REVOKED_LIMITATION))
 
     /** One ether per attack, hit or miss; an empty bow stays charged (activated). */
     fun afterShot(player: Player) {
