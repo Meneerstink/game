@@ -99,7 +99,7 @@ object QuestTab {
                     for (r in 0 until QP.ROWS) player.setInterfaceEvents(tab.panel, QP.row(r) + 1, -1..-1, EVENTS_OP1)
                     player.setInterfaceEvents(tab.panel, QP.FILTER, -1..-1, EVENTS_OP1)
                 }
-                Tab.DEADMAN -> listOf(DP.POINTS_HIT, DP.BRACKET_HIT, DP.BACK_HIT).forEach { player.setInterfaceEvents(tab.panel, it, -1..-1, EVENTS_OP1) }
+                Tab.DEADMAN -> listOf(DP.POINTS_HIT, DP.BRACKET_HIT, DP.BACK_HIT, DP.SIGILS_HIT).forEach { player.setInterfaceEvents(tab.panel, it, -1..-1, EVENTS_OP1) }
                 Tab.TASKS -> for (t in 0 until 4) player.setInterfaceEvents(tab.panel, TP.tier(t) + 7, -1..-1, EVENTS_OP1)
                 Tab.DROPS -> {
                     player.setInterfaceEvents(tab.panel, LP.VIEWER_HIT, -1..-1, EVENTS_OP1)
@@ -381,6 +381,12 @@ object QuestTab {
     fun bracketInfo(player: Player) {
         if (selected(player) != Tab.DEADMAN || !player.interfaces.isVisible(Tab.DEADMAN.panel)) return
         CombatBracketsUi.open(player)
+    }
+
+    /** The Sigils Info button: the Attuned Sigils window (SIGIL-INFO-UI, owner design 21-11). */
+    fun sigilsInfo(player: Player) {
+        if (selected(player) != Tab.DEADMAN || !player.interfaces.isVisible(Tab.DEADMAN.panel)) return
+        gg.rsmod.plugins.content.mechanics.deadman.sigils.AttunedSigilsUi.open(player)
     }
 
     /** The point rows' currencies, top to bottom (design A3). */

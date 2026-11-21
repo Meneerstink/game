@@ -33,6 +33,7 @@ on_button(interfaceId = N.QUESTS, component = N.QP.FILTER) { QuestTab.questFilte
 on_button(interfaceId = N.DEADMAN, component = N.DP.POINTS_HIT) { QuestTab.pointsInfo(player, show = true) }
 on_button(interfaceId = N.DEADMAN, component = N.DP.BACK_HIT) { QuestTab.pointsInfo(player, show = false) }
 on_button(interfaceId = N.DEADMAN, component = N.DP.BRACKET_HIT) { QuestTab.bracketInfo(player) }
+on_button(interfaceId = N.DEADMAN, component = N.DP.SIGILS_HIT) { QuestTab.sigilsInfo(player) }
 // DMM-TAB D4: the Combat Brackets window.
 on_button(interfaceId = N.BRACKETS, component = N.CB.CLOSE) { CombatBracketsUi.close(player) }
 for (r in 0 until N.CB.ROWS) {

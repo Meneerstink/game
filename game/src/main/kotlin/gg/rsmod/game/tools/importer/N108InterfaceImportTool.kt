@@ -514,11 +514,14 @@ object N108InterfaceImportTool {
         const val INFO_STRIDE = 3
         const val BACK_TEXT = INFO_FIRST + 3 * INFO_STRIDE
         const val BACK_HIT = BACK_TEXT + 1
-        const val COUNT = BACK_HIT + 1
+        /** SIGIL-INFO-UI (owner design 21-11, sigil_venster_v3.png panel 4): the Sigils Info button under Bracket Info. */
+        const val SIGILS_TEXT = BACK_HIT + 1
+        const val SIGILS_HIT = SIGILS_TEXT + 1
+        const val COUNT = SIGILS_HIT + 1
 
-        /** The bar's inside (the mock's bar 129 x 15 at panel 27,161: fill 125 x 11). */
+        /** The bar's inside (bar 129 x 15 at panel 27,139 since the Sigils Info button moved the block up 22: fill 125 x 11). */
         const val FILL_X = 29
-        const val FILL_Y = 163
+        const val FILL_Y = 141
         const val FILL_W = 125
         const val FILL_H = 11
         const val BTN = 0xDFDFDF
@@ -526,7 +529,7 @@ object N108InterfaceImportTool {
         const val BAR = 0x965500
 
         /** The "main" state's components (hidden in Points Info) and the Points Info ones. */
-        val MAIN = listOf(DP_LABEL, DP_VALUE, POINTS_TEXT, POINTS_HIT, BRK_LABEL, BRK_VALUE, FILL_CLIP, BAR_TEXT, BRACKET_TEXT, BRACKET_HIT)
+        val MAIN = listOf(DP_LABEL, DP_VALUE, POINTS_TEXT, POINTS_HIT, BRK_LABEL, BRK_VALUE, FILL_CLIP, BAR_TEXT, BRACKET_TEXT, BRACKET_HIT, SIGILS_TEXT, SIGILS_HIT)
         val INFO = (INFO_FIRST until BACK_HIT + 1).toList()
 
         fun info(i: Int) = INFO_FIRST + i * INFO_STRIDE
@@ -539,19 +542,20 @@ object N108InterfaceImportTool {
         val b = Builder(fonts)
         b.add(Comp(0, TYPE_LAYER, 0, 0, 0, 0, -1, resizeX = 1, resizeY = 1))
         b.g(DP.BG, 0, 0, 0, "zz_dm_main")
-        // Mock positions (photo 232 x 337) minus the panel's place in it (23, 62); text tops as the mock draws them.
+        // Mock positions (photo 232 x 337) minus the panel's place in it (23, 62); text tops as the mock draws them. Since the
+        // Sigils Info button (21-11): the Deadman Points box is 12 rows lower and starts 10 rows higher, the rest moved up 22.
         b.t(DP.TITLE, 1, -1, 180, 16, 0, fonts.b12, ORANGE, "78 Deadman", alignX = 1, alignY = 0)
-        b.t(DP.DP_LABEL, 17, 40, 149, 16, 0, fonts.p12, ORANGE, "Deadman Points", alignX = 1, alignY = 0)
-        b.t(DP.DP_VALUE, 17, 61, 149, 16, 0, fonts.b12, WHITE, alignX = 1, alignY = 0)
-        b.t(DP.POINTS_TEXT, 28, 99, 125, 14, 0, fonts.p11, DP.BTN, "Points Info", alignX = 1, alignY = 0)
-        b.hit(DP.POINTS_HIT, 29, 91, 125, 29, 0, "Points Info")
-        b.t(DP.BRK_LABEL, 17, 130, 149, 16, 0, fonts.p12, ORANGE, "Combat Bracket", alignX = 1, alignY = 0)
-        b.t(DP.BRK_VALUE, 17, 144, 149, 16, 0, fonts.b12, WHITE, alignX = 1, alignY = 0)
+        b.t(DP.DP_LABEL, 17, 24, 149, 16, 0, fonts.p12, ORANGE, "Deadman Points", alignX = 1, alignY = 0)
+        b.t(DP.DP_VALUE, 17, 45, 149, 16, 0, fonts.b12, WHITE, alignX = 1, alignY = 0)
+        b.t(DP.POINTS_TEXT, 28, 77, 125, 14, 0, fonts.p11, DP.BTN, "Points Info", alignX = 1, alignY = 0)
+        b.hit(DP.POINTS_HIT, 29, 69, 125, 29, 0, "Points Info")
+        b.t(DP.BRK_LABEL, 17, 108, 149, 16, 0, fonts.p12, ORANGE, "Combat Bracket", alignX = 1, alignY = 0)
+        b.t(DP.BRK_VALUE, 17, 122, 149, 16, 0, fonts.b12, WHITE, alignX = 1, alignY = 0)
         b.layer(DP.FILL_CLIP, DP.FILL_X, DP.FILL_Y, DP.FILL_W, DP.FILL_H, 0)
         b.rect(DP.FILL, -DP.FILL_W, 0, DP.FILL_W, DP.FILL_H, DP.FILL_CLIP, DP.BAR, filled = true)
-        b.t(DP.BAR_TEXT, 27, 162, 129, 14, 0, fonts.p11, ORANGE, alignX = 1, alignY = 0)
-        b.t(DP.BRACKET_TEXT, 28, 193, 125, 14, 0, fonts.p11, DP.BTN, "Bracket Info", alignX = 1, alignY = 0)
-        b.hit(DP.BRACKET_HIT, 29, 185, 125, 29, 0, "Bracket Info")
+        b.t(DP.BAR_TEXT, 27, 140, 129, 14, 0, fonts.p11, ORANGE, alignX = 1, alignY = 0)
+        b.t(DP.BRACKET_TEXT, 28, 171, 125, 14, 0, fonts.p11, DP.BTN, "Bracket Info", alignX = 1, alignY = 0)
+        b.hit(DP.BRACKET_HIT, 29, 163, 125, 29, 0, "Bracket Info")
         for (i in 0 until 3) {
             val base = DP.info(i)
             val top = 24 + i * 56
@@ -561,6 +565,8 @@ object N108InterfaceImportTool {
         }
         b.t(DP.BACK_TEXT, 28, 202, 125, 14, 0, fonts.p11, DP.BTN, "Back", alignX = 1, alignY = 0, hidden = true)
         b.hit(DP.BACK_HIT, 29, 194, 125, 29, 0, "Back", hidden = true)
+        b.t(DP.SIGILS_TEXT, 28, 205, 125, 14, 0, fonts.p11, DP.BTN, "Sigils Info", alignX = 1, alignY = 0)
+        b.hit(DP.SIGILS_HIT, 29, 197, 125, 29, 0, "Sigils Info")
         return b.done(DP.COUNT)
     }
 

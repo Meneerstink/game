@@ -176,8 +176,12 @@ class QuestTabTests {
         assertEquals(listOf("Points Info"), comps.single { it.id == dp.POINTS_HIT }.ops)
         assertEquals(listOf("Bracket Info"), comps.single { it.id == dp.BRACKET_HIT }.ops)
         assertEquals(listOf("Back"), comps.single { it.id == dp.BACK_HIT }.ops)
-        // The bar's fill lies inside the Combat Bracket box of the photo (box 149 x 55 at panel 17,126).
-        assertTrue(dp.FILL_X >= 17 && dp.FILL_X + dp.FILL_W <= 17 + 149 && dp.FILL_Y >= 126 && dp.FILL_Y + dp.FILL_H <= 126 + 55)
+        // SIGIL-INFO-UI (owner design 21-11): the Sigils Info button under Bracket Info, part of the main state.
+        assertEquals(listOf("Sigils Info"), comps.single { it.id == dp.SIGILS_HIT }.ops)
+        assertTrue(dp.SIGILS_HIT in dp.MAIN && dp.SIGILS_TEXT in dp.MAIN)
+        assertEquals(comps.single { it.id == dp.BRACKET_HIT }.y + 34, comps.single { it.id == dp.SIGILS_HIT }.y)
+        // The bar's fill lies inside the Combat Bracket box (box 149 x 55 at panel 17,104 since the block moved up 22 for that button).
+        assertTrue(dp.FILL_X >= 17 && dp.FILL_X + dp.FILL_W <= 17 + 149 && dp.FILL_Y >= 104 && dp.FILL_Y + dp.FILL_H <= 104 + 55)
         assertEquals(listOf("Deadman Points", "78 Tokens", "Loyalty Points"), QuestTab.POINTS_INFO.map { it.second })
         val source = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/quests/tab/QuestTab.kt").readText()
         assertTrue("StoreUi" !in source, "the tab opens no store (N280)")
