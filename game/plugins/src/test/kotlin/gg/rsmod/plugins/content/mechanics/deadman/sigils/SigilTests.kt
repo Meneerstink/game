@@ -89,7 +89,9 @@ class SigilTests {
         assertEquals(Sigils.Result.OK, Sigils.unattune(player, 0, atBank = true))
         assertEquals(Sigil.CONSISTENCY.unattunedId, player.inventory[0]!!.id)
         assertFalse(Sigils.has(player, Sigil.CONSISTENCY))
-        assertEquals(Sigils.Result.NOT_AT_BANK, Sigils.unattune(player, 0, atBank = false).let { if (it == Sigils.Result.NOT_A_SIGIL) Sigils.Result.NOT_AT_BANK else it })
+        attune(player, Sigil.CONSISTENCY)
+        assertEquals(Sigils.Result.NOT_AT_BANK, Sigils.unattune(player, 0, atBank = false))
+        assertTrue(Sigils.has(player, Sigil.CONSISTENCY), "still attuned after the refused unattune")
     }
 
     @Test
