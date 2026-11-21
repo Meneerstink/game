@@ -21,6 +21,24 @@ object Sigils {
     /** Set once the player took the starting sigil (S-K5 a). */
     val START_CHOSEN = AttributeKey<Boolean>(persistenceKey = "sigil_start_chosen")
 
+    /** The login timer that opens the starting-sigil choice at the first quiet moment ([quietForStartChoice]). */
+    val START_PROMPT_TIMER = gg.rsmod.game.model.timer.TimerKey()
+    const val START_PROMPT_FIRST_TICKS = 8
+    const val START_PROMPT_RETRY_TICKS = 10
+
+    /**
+     * Whether the starting-sigil choice may open now. It is a chat choice that takes the player's attention, so it never opens over
+     * the new-player introduction (its camera tour is a dialogue of its own), while the player is locked, dead, in a fight, has a
+     * window open, or stands in a dangerous (PvP-enabled) area - a player who logs in there is asked once he is in a guarded zone.
+     */
+    fun quietForStartChoice(player: Player): Boolean =
+        !gg.rsmod.plugins.content.quests.foundation.TutorIntro.isActive(player) &&
+            !player.isLocked() &&
+            !player.isDead() &&
+            !gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.inCombat(player) &&
+            player.interfaces.getModal() == -1 &&
+            !gg.rsmod.plugins.content.mechanics.pvp.AreaState.isDangerous(player.tile)
+
     /** The three Tier 2 starting sigils of Deadman: Armageddon (wiki Sigils, 'Starting sigils'). */
     val START_CHOICES: List<Sigil> = listOf(Sigil.THE_RUTHLESS_RANGER, Sigil.THE_FORMIDABLE_FIGHTER, Sigil.THE_MENACING_MAGE)
 
@@ -186,6 +204,26 @@ object Sigils {
                 player.skills.setCurrentLevel(skill, max)
             }
         }
+    }
+
+    /** OSRS Wiki, infobox of every attuned sigil item: the answer to its Destroy option. */
+    const val DESTROY_ATTUNED_MESSAGE = "You must unattune the Sigil before you can destroy it."
+
+    /**
+     * Repairs a player whose attuned list names a sigil whose attuned item is gone from both the inventory and the bank. Without the
+     * item that sigil can never be unattuned again, so its effect would stay forever and its slot would never come free. The list
+     * follows the item: the lost sigils are dropped from it. Returns them (the caller tells the player).
+     * An attuned item cannot normally be lost (untradeable, always kept on death, its Destroy option refuses), so this only fires for
+     * an account that was already broken or an item removed by staff.
+     */
+    fun reconcile(player: Player): List<Sigil> {
+        val on = attuned(player)
+        if (on.isEmpty()) return emptyList()
+        val lost = on.filter { !player.inventory.contains(it.attunedId) && !player.bank.contains(it.attunedId) }
+        if (lost.isEmpty()) return emptyList()
+        store(player, on - lost.toSet())
+        lost.forEach { onChanged(player, it, attuned = false) }
+        return lost
     }
 
     /** Seconds left of the cooldown of an activatable [sigil] (0 = ready). */

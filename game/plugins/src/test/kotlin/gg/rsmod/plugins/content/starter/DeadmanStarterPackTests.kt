@@ -18,6 +18,42 @@ class DeadmanStarterPackTests {
         listOf(pack, Items.DRAMEN_STAFF, Items.DEADMANS_SKULL, 900).forEach { f.define(it) }
         f.define(Items.COINS_995, true); f.define(Items.TELEPORT_TO_HOUSE, true)
         DeadmanStarterPack.install(ids)
+        // PROJECT48 SIGILS: a starter pack can hold a random sigil (one per 24 hours).
+        gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.values().forEach { f.define(it.unattunedId) }
+    }
+
+    private fun sigilsHeld(): Int =
+        f.inventory.filterNotNull().count { gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.isUnattunedItem(it.id) }
+
+    @Test fun `a starter pack holds one random sigil per 24 hours and never one without effect`() {
+        val drops = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops
+        f.inventory[0] = Item(pack)
+        assertEquals(DeadmanStarterPack.Result.OK, DeadmanStarterPack.open(f.player))
+        assertEquals(1, sigilsHeld(), "the first pack holds a sigil")
+        assertNotNull(f.attr[drops.STARTER_SIGIL_AT], "the 24 hours start with the sigil")
+        f.inventory.rawItems.indices.forEach { f.inventory[it] = null }
+        f.inventory[0] = Item(pack)
+        assertEquals(DeadmanStarterPack.Result.OK, DeadmanStarterPack.open(f.player))
+        assertEquals(0, sigilsHeld(), "a second pack within 24 hours holds none")
+        val given = f.attr[drops.STARTER_SIGIL_AT]!!
+        assertFalse(drops.starterSigilReady(f.player, given + drops.STARTER_SIGIL_SECONDS - 1))
+        assertTrue(drops.starterSigilReady(f.player, given + drops.STARTER_SIGIL_SECONDS))
+        assertTrue(drops.WITHOUT_EFFECT.none { it == drops.rollStarterSigil(f.player, given + drops.STARTER_SIGIL_SECONDS) })
+    }
+
+    @Test fun `a full inventory keeps the starter sigil for the next pack`() {
+        val drops = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops
+        f.inventory[0] = Item(pack)
+        assertEquals(DeadmanStarterPack.Result.OK, DeadmanStarterPack.open(f.player))
+        val used = f.inventory.rawItems.count { it != null } - sigilsHeld()
+        // Refill exactly so that the pack's own items fit and nothing else does.
+        f.inventory.rawItems.indices.forEach { f.inventory[it] = null }
+        f.attr.remove(drops.STARTER_SIGIL_AT)
+        f.inventory[0] = Item(pack)
+        (1..(28 - used)).forEach { f.inventory[it] = Item(900) }
+        assertEquals(DeadmanStarterPack.Result.OK, DeadmanStarterPack.open(f.player))
+        assertEquals(0, sigilsHeld(), "no room: no sigil")
+        assertNull(f.attr[drops.STARTER_SIGIL_AT], "and no 24-hour mark, so the next pack holds it")
     }
 
     @Test fun `introduction and repeated opening never farm money or tabs`() {

@@ -129,7 +129,10 @@ object PoweredStaffCombatStrategy : CombatStrategy {
         val damage = pawnHit.hit.hitmarks.sumOf { it.damage }
         // "One charge is consumed each time you cast the built-in spell" - after the hit rolled, so a revenant sceptre's last
         // ether still carries its Wilderness passive (RevenantWeapons: "1 ether per attack").
-        player.equipment[EquipmentType.WEAPON.id] = PoweredStaves.withCharges(weapon, PoweredStaves.charges(weapon) - 1)
+        // PROJECT48 S15 Meticulous Mage: "a 50% chance of saving runes or staff charges when using Magic".
+        if (!gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.savesRunes(player)) {
+            player.equipment[EquipmentType.WEAPON.id] = PoweredStaves.withCharges(weapon, PoweredStaves.charges(weapon) - 1)
+        }
         if (leech) {
             pawnHit.hit.addAction {
                 look.healGfx?.let { player.graphic(it) }

@@ -7,6 +7,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.item.ItemAttribute
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.persistNow
 import gg.rsmod.plugins.content.mechanics.deadman.DeadmanInventory
 import gg.rsmod.plugins.content.newplayer.NewPlayerConfig
@@ -96,7 +97,18 @@ object DeadmanStarterPack {
         if (staged.freeSlotCount < 11) return Result.NO_SPACE
         if (!staged.remove(pack, assureFullRemoval = true).hasSucceeded()) return Result.NO_PACK
         if (!contract.contents().all { DeadmanInventory.add(staged, it) }) return Result.NO_SPACE
+        // PROJECT48 SIGILS: "A random sigil can also be claimed every 24 hours as part of a starter pack" (wiki Deadman: Armageddon).
+        // Added to the same staged inventory, so the sigil and its 24-hour mark are given together or not at all.
+        val rolled = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops.rollStarterSigil(player)
+        val sigil = rolled?.takeIf { DeadmanInventory.add(staged, Item(it.unattunedId)) }
         DeadmanInventory.publish(staged, player.inventory)
+        if (sigil != null) {
+            gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops.markStarterSigil(player)
+            player.message("Your starter pack also holds the ${sigil.label}. Attune it at a bank.")
+        } else if (rolled != null) {
+            // No room left beside the pack's own items: nothing is marked, so the next starter pack holds a sigil.
+            player.message("You had no room for the sigil of this starter pack. Your next starter pack will hold one.")
+        }
         // Chronicle rev 15366319: charges survive destruction/replacement; account-owned, capped at 1,000.
         player.attr[CHRONICLE_CHARGES] = ((player.attr[CHRONICLE_CHARGES] ?: 0).coerceIn(0, 1000) + 10).coerceAtMost(1000)
         player.persistNow()

@@ -582,6 +582,12 @@ object GrandExchangeInterface {
             player.message(MSG_NOT_TRADEABLE)
             return false
         }
+        // PROJECT48 SIGILS: the three starting sigils are not traded on the Grand Exchange below the 71-90 bracket (wiki).
+        if (gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops.startSigilLockedOnExchange(player, real.id)) {
+            player.playSound(GrandExchangeSounds.TRADE_ERROR)
+            player.message(gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops.START_SIGIL_EXCHANGE_MESSAGE)
+            return false
+        }
         if (selection.type == OfferType.SELL && ownedCount(player, real.id) <= 0) {
             player.playSound(GrandExchangeSounds.TRADE_ERROR)
             player.message(MSG_HOLDS_STATE)

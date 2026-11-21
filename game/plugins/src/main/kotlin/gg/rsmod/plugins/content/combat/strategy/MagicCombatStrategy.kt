@@ -442,7 +442,11 @@ object MagicCombatStrategy : CombatStrategy {
         if (pawn is Player && primary && landHit && gg.rsmod.plugins.content.items.osrs.TwinflameStaff.doubleHit(pawn, spell)) {
             pawnHit.hit.addAction {
                 val second = gg.rsmod.plugins.content.items.osrs.TwinflameStaff.secondDamage(pawnHit.hit.hitmarks.sumOf { it.damage })
-                if (second > 0 && !target.isDead()) target.hit(damage = second, type = HitType.MAGIC, delay = 1, source = pawn)
+                if (second > 0 && !target.isDead()) {
+                    gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.shareOfDealtHit {
+                        target.hit(damage = second, type = HitType.MAGIC, delay = 1, source = pawn)
+                    }
+                }
             }
         }
         // N570 Slayer's staff (e): one charge per Magic Dart that hits a task monster (after the max hit above used it).

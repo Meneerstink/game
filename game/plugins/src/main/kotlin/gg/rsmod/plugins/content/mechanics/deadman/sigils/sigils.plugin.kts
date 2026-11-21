@@ -72,6 +72,10 @@ Sigil.values().forEach { sigil ->
             if (Sigils.activate(player, sigil)) SigilEffects.activated(player, sigil)
         }
     }
+    // Destroy on an ATTUNED sigil (wiki infobox: "You must unattune the Sigil before you can destroy it."). The inventory sends Drop /
+    // Destroy as option 10 (IfButton1Handler), so it is bound by number; bound here, the generic Destroy dialogue (destroy_item) skips it.
+    // Without this the item was destroyed while the sigil stayed attuned: its effect for ever and a slot that never came free.
+    on_item_option(sigil.attunedId, 10) { player.message(Sigils.DESTROY_ATTUNED_MESSAGE) }
     listOf(sigil.attunedId, sigil.unattunedId).filter { hasInvOption(it, "inspect") }.forEach { id ->
         on_item_option(id, "inspect") {
             player.message("${sigil.label} (tier ${sigil.tier}, ${sigil.kind.name.lowercase()}).")
@@ -80,6 +84,11 @@ Sigil.values().forEach { sigil ->
 }
 
 on_login { player.timers[SigilSkilling.LITHENESS_TIMER] = SigilSkilling.LITHENESS_TICKS }
+
+// An attuned sigil whose item is nowhere (inventory, bank) can never be unattuned: free its slot and say so (Sigils.reconcile).
+on_login {
+    Sigils.reconcile(player).forEach { player.message("Your attunement to the ${it.label} has faded: its sigil is no longer with you.") }
+}
 on_timer(SigilSkilling.LITHENESS_TIMER) { SigilSkilling.lithenessTick(player) }
 
 /*
@@ -88,8 +97,18 @@ on_timer(SigilSkilling.LITHENESS_TIMER) { SigilSkilling.lithenessTick(player) }
  */
 on_login {
     if (player.attr[Sigils.START_CHOSEN] == true || player.username.lowercase().startsWith("teamtest")) return@on_login
+    player.timers[Sigils.START_PROMPT_TIMER] = Sigils.START_PROMPT_FIRST_TICKS
+}
+
+// The choice opens only at a quiet moment (Sigils.quietForStartChoice): never over the new-player introduction, in a fight, in a
+// dangerous area or over an open window. Until then the timer looks again every few seconds; it is asked once per login.
+on_timer(Sigils.START_PROMPT_TIMER) {
+    if (player.attr[Sigils.START_CHOSEN] == true) return@on_timer
+    if (!Sigils.quietForStartChoice(player)) {
+        player.timers[Sigils.START_PROMPT_TIMER] = Sigils.START_PROMPT_RETRY_TICKS
+        return@on_timer
+    }
     player.queue {
-        wait(8)
         if (player.attr[Sigils.START_CHOSEN] == true) return@queue
         val labels = Sigils.START_CHOICES.map { it.label.removePrefix("Sigil of ").removePrefix("the ").replaceFirstChar { c -> c.uppercase() } }
         val choice = options(*labels.toTypedArray(), title = "Choose your starting sigil")
@@ -98,6 +117,8 @@ on_login {
             if (player.inventory.add(sigil.unattunedId, 1).hasSucceeded() || player.bank.add(sigil.unattunedId, 1).hasSucceeded()) {
                 player.attr[Sigils.START_CHOSEN] = true
                 player.message("You receive the ${sigil.label}. Attune it at a bank (Attune).")
+            } else {
+                player.message("You have no room for your starting sigil. Make room and log in again to choose it.")
             }
         }
     }

@@ -5,6 +5,7 @@ import gg.rsmod.plugins.api.BonusSlot
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.ext.heal
 import gg.rsmod.plugins.api.ext.hit
+import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.api.ext.isProtectedFrom
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.game.model.entity.Npc
@@ -184,14 +185,7 @@ object SigilCombat {
     ): Double {
         if (damage <= 0.0) return damage
         var result = damage
-        // S39 Titanium (-60%) and S07 Resistance (-25%): all attacks from monsters; they do not stack (Titanium wins).
-        if (attacker is Npc) {
-            if (Sigils.effective(target, Sigil.TITANIUM)) {
-                result = Math.floor(result * 0.40)
-            } else if (Sigils.effective(target, Sigil.RESISTANCE)) {
-                result = Math.floor(result * 0.75)
-            }
-        }
+        if (attacker is Npc) result = fromMonster(target, result)
         // S38 Pious Protection: 35% less damage of a style while the matching protection prayer is on, 5% more while a protection prayer
         // of another style is on (on top of what the prayer itself does).
         if (Sigils.effective(target, Sigil.PIOUS_PROTECTION)) {
@@ -210,6 +204,58 @@ object SigilCombat {
         // S36 Aggression: you take 5% more damage from all sources.
         if (Sigils.effective(target, Sigil.AGGRESSION)) result = Math.round(result * 1.05).toDouble()
         return result
+    }
+
+    /** S39 Titanium (-60%) and S07 Resistance (-25%): "all attacks from monsters"; they do not stack (Titanium wins). */
+    private fun fromMonster(
+        target: Player,
+        damage: Double,
+    ): Double =
+        when {
+            Sigils.effective(target, Sigil.TITANIUM) -> Math.floor(damage * 0.40)
+            Sigils.effective(target, Sigil.RESISTANCE) -> Math.floor(damage * 0.75)
+            else -> damage
+        }
+
+    /** The hit types that are an attack (not poison, venom, disease, burn, reflected damage or a heal). */
+    private val ATTACK_TYPES =
+        setOf(HitType.REGULAR_HIT, HitType.MELEE, HitType.RANGE, HitType.MAGIC, HitType.CRIT_MELEE, HitType.CRIT_RANGE, HitType.CRIT_MAGIC)
+
+    /**
+     * The damage of a hit that does NOT come through `Pawn.dealHit`: a boss mechanic (fire rain, waves, explosions, a share of the
+     * hitpoints ...) dealt with `Pawn.hit(damage, type, source = npc)`. Without this the monster sigils only worked on standard attacks.
+     * Titanium / Resistance: "all attacks from monsters" ([source] is an Npc). Aggression: "you take 5% more damage from all sources"
+     * ([source] is any pawn). `dealHit` uses the other `hit` overload (no source), so nothing is counted twice.
+     */
+    fun directHit(
+        target: Pawn,
+        source: Pawn?,
+        damage: Int,
+        type: HitType,
+    ): Int {
+        if (damage <= 0 || source == null || source === target || target !is Player || type !in ATTACK_TYPES || !any(target)) return damage
+        if (SHARE_OF_DEALT_HIT.get()) return damage
+        var result = damage.toDouble()
+        if (source is Npc) result = fromMonster(target, result)
+        if (Sigils.effective(target, Sigil.AGGRESSION)) result = Math.round(result * 1.05).toDouble()
+        return result.toInt()
+    }
+
+    private val SHARE_OF_DEALT_HIT: ThreadLocal<Boolean> = ThreadLocal.withInitial { false }
+
+    /**
+     * Deals a hit whose damage is a SHARE of a hit that already went through `dealHit` (Karil's second hit = half of the first, the
+     * Twinflame staff's second spell = 40% of the first). The sigils are already inside that first hit, so [directHit] leaves this one
+     * alone - otherwise Aggression's 5% would be counted on top of itself.
+     */
+    fun <T> shareOfDealtHit(block: () -> T): T {
+        val before = SHARE_OF_DEALT_HIT.get()
+        SHARE_OF_DEALT_HIT.set(true)
+        try {
+            return block()
+        } finally {
+            SHARE_OF_DEALT_HIT.set(before)
+        }
     }
 
     /** After the hit is created: heals, curses and recoil of the attacker's and the target's sigils. */
@@ -239,7 +285,8 @@ object SigilCombat {
         // S27 Restoration: on a successful hit restore 10% of the damage dealt (rounded up) to hitpoints - players and NPCs, not special
         // attacks (multi-target attacks are not told apart from single hits here: see the dossier).
         if (Sigils.effective(attacker, Sigil.RESTORATION) &&
-            attacker.attr[gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.SPECIAL_ATTACK_IN_PROGRESS] != true
+            attacker.attr[gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.SPECIAL_ATTACK_IN_PROGRESS] != true &&
+            !multiTargetAttack(attacker, target, type)
         ) {
             hit.addAction {
                 val dealt = hitmarks.sumOf { it.damage }
@@ -283,9 +330,43 @@ object SigilCombat {
         return count
     }
 
-    private fun castingBindingSpell(player: Player): Boolean {
-        val spell = ((player.attr[gg.rsmod.plugins.content.combat.Combat.CASTING_SPELL] as Any?)
+    /** The combat spell of the attack that is being dealt now, if it is a spell. */
+    private fun currentSpell(player: Player): gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell? =
+        ((player.attr[gg.rsmod.plugins.content.combat.Combat.CASTING_SPELL] as Any?)
             ?: (player.attr[gg.rsmod.plugins.content.combat.Combat.SPELL_OF_THIS_ATTACK] as Any?)) as? gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
+
+    /**
+     * S27 Restoration "excludes attacks on multiple targets": the two attacks of this server that hit more than one target are a
+     * Burst / Barrage spell and a thrown chinchompa, both only where they really spread - attacker and target in a multi-way area
+     * (the same rule as MagicCombatStrategy.collectTargets and the chinchompa splash).
+     */
+    private fun multiTargetAttack(
+        attacker: Player,
+        target: Pawn,
+        type: HitType,
+    ): Boolean {
+        val spreads =
+            when (styleOf(type)) {
+                Style.MAGIC -> currentSpell(attacker)?.multiTarget == true
+                Style.RANGED ->
+                    gg.rsmod.plugins.content.combat.strategy.ranged.Chinchompas.isChinchompa(attacker.getEquipment(EquipmentType.WEAPON)?.id)
+                else -> false
+            }
+        return spreads && attacker.tile.isMulti(attacker.world) && target.tile.isMulti(attacker.world)
+    }
+
+    /** S17 Rigorous Ranger: "a 50% chance of saving ammunition when using Ranged weapons, except when throwing Chinchompas". */
+    fun savesAmmo(player: Player): Boolean {
+        if (!Sigils.effective(player, Sigil.THE_RIGOROUS_RANGER)) return false
+        if (gg.rsmod.plugins.content.combat.strategy.ranged.Chinchompas.isChinchompa(player.getEquipment(EquipmentType.WEAPON)?.id)) return false
+        return player.world.randomDouble() < 0.50
+    }
+
+    /** S15 Meticulous Mage: "a 50% chance of saving runes or staff charges when using Magic". */
+    fun savesRunes(player: Player): Boolean = Sigils.effective(player, Sigil.THE_METICULOUS_MAGE) && player.world.randomDouble() < 0.50
+
+    private fun castingBindingSpell(player: Player): Boolean {
+        val spell = currentSpell(player)
         return spell == gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.BIND ||
             spell == gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.SNARE ||
             spell == gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.ENTANGLE

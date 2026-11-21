@@ -104,6 +104,10 @@ class GrandExchangeService(
     fun houseQuote(itemId: Int): GeHouseQuote? {
         // Owner 2026-10-24 (N367, N368): these are in the house like every item (its normal price, buy and sell) - for them this
         // replaces the chest-list rule below (2026-10-17) and the store-item rule (N115).
+        // PROJECT48 SIGILS: sigils are traded between players only ("can be traded via the Grand Exchange", obtained from drops, gathering
+        // and the starter pack). The house must never deal in them: its "every item at the guide price" rule would otherwise sell any
+        // sigil that has a cache value to anyone, for that value.
+        if (gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.isSigilItem(itemId)) return null
         val always = itemId in HOUSE_ALWAYS
         // Owner 2026-10-17 (N101): the Deadman's chest list "komt alleen nog uit de chest en breaches" - the house neither sells nor buys it.
         if (!always && itemId in gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.FIXED_IDS) return null

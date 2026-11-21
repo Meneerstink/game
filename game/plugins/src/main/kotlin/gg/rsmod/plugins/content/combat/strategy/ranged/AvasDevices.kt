@@ -90,6 +90,9 @@ object AvasDevices {
     ): AmmoOutcome {
         // OSRS Wiki "Combat dummy": "Any ammunition fired at it will always be lost."
         if (target != null && gg.rsmod.plugins.content.areas.poh.PlayerHouse.isCombatDummy(target)) return AmmoOutcome.BROKEN
+        // PROJECT48 S17 Rigorous Ranger: "a 50% chance of saving ammunition when using Ranged weapons, except when throwing Chinchompas"
+        // - rolled before the break / drop roll, on every route that spends ammunition (normal shot, second arrow, special attack).
+        if (gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.savesAmmo(player)) return AmmoOutcome.RECOVERED
         if (chance in 0..19) return AmmoOutcome.BROKEN
         val quiver = gg.rsmod.plugins.content.items.osrs.DizanasQuiver.wornAvaEffect(player)
         val cape = player.getEquipment(EquipmentType.CAPE)?.id

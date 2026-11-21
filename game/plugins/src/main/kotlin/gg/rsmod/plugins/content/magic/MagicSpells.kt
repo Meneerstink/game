@@ -143,10 +143,14 @@ object MagicSpells {
             val savedByStaff =
                 getMetadata(spellId)?.spellType == SpellType.COMBAT_SPELL_TYPE &&
                     (gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.savesRunes(p) || gg.rsmod.plugins.content.items.osrs.KodaiWand.savesRunes(p))
+            // PROJECT48 S15 Meticulous Mage: "a 50% chance of saving runes or staff charges when using Magic". Only the RUNES (and the
+            // Blighted sack that stands in for them) are saved: the other things a spell uses up (an orb, bones, the item to enchant ...)
+            // are still taken below, or the spell would make its product from nothing.
+            val savedBySigil = !savedByStaff && gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.savesRunes(p)
             // A usable Blighted sack is used up instead of the runes ("It is consumed upon cast").
-            if (!savedByStaff && !gg.rsmod.plugins.content.items.osrs.BlightedSacks.consume(p, spellId)) {
+            if (!savedByStaff && (savedBySigil || !gg.rsmod.plugins.content.items.osrs.BlightedSacks.consume(p, spellId))) {
                 // Runes: staves/tomes, then combination runes, then the rest, from the inventory and then the rune pouch (RunePayment).
-                runePlan(p, items)?.forEach { (rune, amount) ->
+                (if (savedBySigil) null else runePlan(p, items))?.forEach { (rune, amount) ->
                     val fromInventory = minOf(amount, p.inventory.getItemCount(rune))
                     if (fromInventory > 0) p.inventory.remove(rune, fromInventory)
                     if (amount > fromInventory) RunePouch.take(p, rune, amount - fromInventory)

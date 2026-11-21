@@ -506,7 +506,11 @@ object RangedCombatStrategy : CombatStrategy {
         if (pawn is Player && gg.rsmod.plugins.content.items.osrs.AmuletOfTheDamned.karilDoubleHit(pawn)) {
             pawnHit.hit.addAction {
                 val second = pawnHit.hit.hitmarks.sumOf { it.damage } / 2
-                if (second > 0 && !target.isDead()) target.hit(damage = second, type = HitType.RANGE, source = pawn)
+                if (second > 0 && !target.isDead()) {
+                    gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.shareOfDealtHit {
+                        target.hit(damage = second, type = HitType.RANGE, source = pawn)
+                    }
+                }
             }
         }
         // Tonalztics of Ralos (charged): a second hit with its own accuracy and damage rolls.

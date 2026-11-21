@@ -78,6 +78,10 @@ fun Pawn.hit(
     /** Who dealt it, when a pawn did (OSRS hitsplats: the source sees its own hit lit, not tinted). */
     source: Pawn? = null,
 ): Hit {
+    // PROJECT48 SIGILS: a boss mechanic's hit (given with its npc as source) is "an attack from a monster" for Titanium / Resistance,
+    // and any sourced hit counts for Aggression's "5% more damage from all sources" - the one spot outside dealHit (SigilCombat.directHit).
+    @Suppress("NAME_SHADOWING")
+    val damage = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.directHit(this, source, damage, type)
     val hit =
         Hit
             .Builder()
