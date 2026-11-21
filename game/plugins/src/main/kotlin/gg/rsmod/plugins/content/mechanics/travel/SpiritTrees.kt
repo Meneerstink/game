@@ -6,6 +6,7 @@ import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.getVarp
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.runClientScript
 import gg.rsmod.plugins.api.ext.setInterfaceEvents

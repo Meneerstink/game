@@ -561,6 +561,13 @@ on_world_init {
     // ---- Tree Gnome Stronghold rocks ----
     shortcut(9316, "Climb") {
         if (!player.hasAgility(37, "You need an Agility level of 37 to negotiate these rocks.")) return@shortcut
+        // PROJECT48 Q18 ONTGR: The Grand Tree and Tree Gnome Village are needed for these rocks (OSRS Wiki).
+        if (!gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, "The Grand Tree") ||
+            !gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, "Tree Gnome Village")
+        ) {
+            player.message("You must complete The Grand Tree and Tree Gnome Village to use these rocks.")
+            return@shortcut
+        }
         obstacle {
             walkToTile(player, Tile(2486, 3515))
             walkToTile(player, Tile(2487, 3515))
@@ -573,6 +580,13 @@ on_world_init {
     }
     shortcut(9317, "Climb") {
         if (!player.hasAgility(37, "You need an Agility level of 37 to negotiate these rocks.")) return@shortcut
+        // PROJECT48 Q18 ONTGR: The Grand Tree and Tree Gnome Village are needed for these rocks (OSRS Wiki).
+        if (!gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, "The Grand Tree") ||
+            !gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, "Tree Gnome Village")
+        ) {
+            player.message("You must complete The Grand Tree and Tree Gnome Village to use these rocks.")
+            return@shortcut
+        }
         obstacle {
             walkOverTile(player, Tile(2489, 3521), Render.NONE)
             face(player, Direction.SOUTH)

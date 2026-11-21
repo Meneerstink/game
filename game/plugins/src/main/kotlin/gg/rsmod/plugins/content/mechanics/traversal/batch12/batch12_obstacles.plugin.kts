@@ -180,6 +180,11 @@ on_world_init {
 
     shortcut(Objs.ROCKS_35391, "Climb") {
         if (!player.hasAgility(15)) return@shortcut
+        // PROJECT48 Q20 ONTGR: Troll Stronghold is needed for the Trollheim rocks (Darkan's gate, OSRS Wiki).
+        if (!gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, "Troll Stronghold")) {
+            player.message("You must complete Troll Stronghold to climb these rocks.")
+            return@shortcut
+        }
         if (player.equipment[EquipmentType.BOOTS.id]?.id !in B12_CLIMBING_BOOTS) {
             player.message("You need climbing boots to negotiate these rocks.")
             return@shortcut

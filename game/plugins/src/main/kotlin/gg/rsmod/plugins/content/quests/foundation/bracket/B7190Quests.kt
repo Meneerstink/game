@@ -20,12 +20,38 @@ import gg.rsmod.plugins.content.quests.red
 
 /** PROJECT48: the mini-quests of combat bracket 71-90 (Q17-Q26), in the order of VOORTGANG.tsv. */
 object B7190Quests {
-    val ALL: List<ShortQuest> = listOf(TreeGnomeVillage)
+    val ALL: List<ShortQuest> = listOf(TreeGnomeVillage, TheGrandTree, MonkeyMadness, TrollStronghold, TheEyesOfGlouphrie, TheDigSite, HazeelCult, FightArena, EnakhrasLament, TempleOfIkov)
 
     val NPCS: List<BracketNpc> =
         listOf(
             BracketNpc(Npcs.KING_BOLREN, null, Direction.SOUTH, listOf("The gnomes thank you for your help, friend.")),
             BracketNpc(Npcs.COMMANDER_MONTAI, null, Direction.SOUTH, listOf("The battle against the Khazard troops is far from over.")),
+            BracketNpc(Npcs.HAZELMERE, null, Direction.SOUTH, listOf("The island is quiet, and I like it that way.")),
+            BracketNpc(Npcs.CHARLIE, Tile(2464, 3495, 3), Direction.SOUTH, listOf("Let me out of here, will you?")),
+            BracketNpc(Npcs.FOREMAN, null, Direction.SOUTH, listOf("The shipyard is busy today.")),
+            BracketNpc(Npcs.DENULTH, null, Direction.SOUTH, listOf("Burthorpe is well guarded, thanks to the Imperial Guard.")),
+            BracketNpc(Npcs.GODRIC, null, Direction.SOUTH, listOf("I never want to see a troll again.")),
+            BracketNpc(Npcs.DUNSTAN, null, Direction.SOUTH, listOf("Anvil work is honest work."), extra = { lawTalismanReclaim() }),
+            BracketNpc(Npcs.ZOOKNOCK, null, Direction.SOUTH, listOf("Monkeys are fascinating creatures.")),
+            BracketNpc(Npcs.AWOWOGEI, Tile(2793, 2765, 0), Direction.SOUTH, listOf("Ook ook.")),
+            BracketNpc(Npcs.BRIMSTAIL, null, Direction.SOUTH, listOf("The rune essence mine is a short hop away."), extra = { crystalSawReclaim() }),
+            BracketNpc(Npcs.EXAMINER, Tile(3364, 3342, 0), Direction.SOUTH, listOf("Examinations are held by appointment.")),
+            BracketNpc(Npcs.ARCHAEOLOGICAL_EXPERT, Tile(3355, 3333, 0), Direction.SOUTH, listOf("The Digsite holds many secrets.")),
+            BracketNpc(Npcs.DOUG_DEEPING, Tile(3351, 9756, 0), Direction.SOUTH, listOf("Mind the dust down here.")),
+            BracketNpc(Npcs.CURATOR_HAIG_HALEN, null, Direction.SOUTH, listOf("Welcome to the Varrock Museum.")),
+            BracketNpc(Npcs.CERIL_CARNILLEAN, null, Direction.SOUTH, listOf("The family armour was our pride.")),
+            BracketNpc(Npcs.CLIVET, Tile(2567, 9683, 0), Direction.SOUTH, listOf("Leave me alone.")),
+            BracketNpc(Npcs.LADY_SERVIL, Tile(2575, 3205, 0), Direction.SOUTH, listOf("Please bring my family home.")),
+            BracketNpc(Npcs.KHAZARD_GUARD_254, null, Direction.SOUTH, listOf("Move along.")),
+            BracketNpc(Npcs.JEREMY_SERVIL, Tile(2617, 3169, 0), Direction.SOUTH, listOf("I just want to go home.")),
+            BracketNpc(Npcs.LAZIM, Tile(3191, 2926, 0), Direction.SOUTH, listOf("The desert is harsh, but it has its beauty.")),
+            BracketNpc(Npcs.LAZIM, Tile(3127, 9325, 0), Direction.SOUTH, listOf("The temple is quiet at last.")),
+            BracketNpc(Npcs.BONEGUARD_3140, Tile(3105, 9299, 1), Direction.SOUTH, listOf("...")),
+            BracketNpc(Npcs.AKTHANAKOS, Tile(3105, 9297, 1), Direction.SOUTH, listOf("My brother and I are free.")),
+            BracketNpc(Npcs.ENAKHRA, Tile(3102, 9311, 1), Direction.SOUTH, listOf("Leave me.")),
+            BracketNpc(Npcs.LUCIEN, Tile(2573, 3321, 0), Direction.SOUTH, listOf("Keep your voice down.")),
+            BracketNpc(Npcs.WINELDA, null, Direction.SOUTH, listOf("Hee hee hee.")),
+            BracketNpc(Npcs.GUARDIAN_OF_ARMADYL, null, Direction.SOUTH, listOf("Armadyl watches over this temple.")),
             BracketNpc(Npcs.TRACKER_GNOME_1, null, Direction.SOUTH, listOf("Shh - the Khazard guards are not far from here.")),
         )
 }

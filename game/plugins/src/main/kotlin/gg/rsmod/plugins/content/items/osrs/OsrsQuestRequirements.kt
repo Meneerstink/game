@@ -33,6 +33,9 @@ object OsrsQuestRequirements {
             Items.FARSEER_HELM to gg.rsmod.plugins.content.quests.foundation.bracket.FremennikTrials,
             Items.HELM_OF_NEITIZNOT to gg.rsmod.plugins.content.quests.foundation.bracket.FremennikIsles,
             Items.DRAGON_HALBERD to gg.rsmod.plugins.content.quests.foundation.bracket.Regicide,
+            // PROJECT48 ONTGR (Monkey Madness): the Dragon scimitar is wielded only after the quest (OSRS Wiki).
+            Items.DRAGON_SCIMITAR to gg.rsmod.plugins.content.quests.foundation.bracket.MonkeyMadness,
+            Items.DRAGON_SCIMITAR_OR to gg.rsmod.plugins.content.quests.foundation.bracket.MonkeyMadness,
         ) + (4212..4235).filter { it !in setOf(4213, 4235) }.associateWith { gg.rsmod.plugins.content.quests.foundation.bracket.RovingElves }
 
     /** Null when [player] may wear [item], else the refusal message. */

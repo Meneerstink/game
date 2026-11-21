@@ -44,6 +44,11 @@ STATIONS.forEach { origin ->
     on_npc_option(origin.npc, "Glider") {
         val destinations = STATIONS.filter { it.npc != origin.npc }
         player.queue {
+            // PROJECT48 Q18 ONTGR: the gnome gliders open with The Grand Tree (OSRS Wiki).
+            if (!gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, "The Grand Tree")) {
+                player.message("You must complete The Grand Tree before the gnome gliders will take you.")
+                return@queue
+            }
             val choice = options(*destinations.map { it.label }.toTypedArray(), title = "Fly to...")
             if (choice < 1 || choice > destinations.size) {
                 return@queue

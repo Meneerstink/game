@@ -539,8 +539,10 @@ FoundationQuests.NPC_POSTS.forEach { post ->
 val alreadyBound =
     FoundationQuests.NPC_POSTS.map { it.npc }.toSet() +
         setOf(Npcs.BRUNDT_THE_CHIEFTAIN, Npcs.GARKOR, Npcs.ANITA, Npcs.EDMOND, Npcs.KING_ARTHUR, Npcs.SIR_LANCELOT, BeneathCursedSands.startNpc)
-gg.rsmod.plugins.content.quests.foundation.bracket.BracketQuests.NPCS.filter { it.npc !in alreadyBound }.forEach { post ->
-    post.tile?.let { spawn_npc(npc = post.npc, x = it.x, z = it.z, height = it.height, walkRadius = 0, direction = post.facing) }
+val bracketNpcs = gg.rsmod.plugins.content.quests.foundation.bracket.BracketQuests.NPCS.filter { it.npc !in alreadyBound }
+// One npc can stand on several posts (Lazim): every post is spawned, the Talk-to is bound once.
+bracketNpcs.forEach { post -> post.tile?.let { spawn_npc(npc = post.npc, x = it.x, z = it.z, height = it.height, walkRadius = 0, direction = post.facing) } }
+bracketNpcs.groupBy { it.npc }.values.map { group -> group.firstOrNull { it.extra != null } ?: group.first() }.forEach { post ->
     on_npc_option(npc = post.npc, option = "talk-to") {
         player.queue {
             if (FoundationQuests.talk(this, post.npc)) return@queue

@@ -1662,28 +1662,39 @@ object FoundationQuests {
         task.player.message("You've started a new quest: <col=5861e9>${quest.name}")
         QuestHelper.onStarted(task.player, quest)
         val first = quest.steps.first()
-        if (first.location != null && first.place != null) with(quest) { task.offerTravel(first.place, first.location, first.npc.takeIf { first.fight == null && first.npc >= 0 }) }
+        val firstPlace = first.place
+        val firstLocation = first.location
+        if (firstLocation != null && firstPlace != null) with(quest) { task.offerTravel(firstPlace, firstLocation, first.npc.takeIf { first.fight == null && first.npc >= 0 }) }
     }
 
     private suspend fun runStep(task: QueueTask, quest: ShortQuest, stage: Int) {
         val player = task.player
         val step = quest.steps[stage - 1]
-        if (step.fight != null) {
+        val stepFight = step.fight
+        if (stepFight != null) {
             // A fight step: the npc sends the player in; the kill completes it (QuestFights.onKilled).
             if (QuestFights.active(player) != null) {
                 task.chatNpc("Go on, it's right there! Finish the fight.", facialExpression = FacialExpression.ANGRY)
                 return
             }
             if (!step.talk(task) || quest.stage(player) != stage) return
-            val fight = step.fight
+            val fight = stepFight
+            val trigger = fight.trigger
             QuestFights.handTriggerItem(player, fight)
-            if (fight.trigger != null && player.tile.height == fight.tile.height && player.tile.isWithinRadius(fight.tile, QuestFights.REACH)) {
-                player.message(fight.trigger.hint)
-            } else if (fight.trigger == null && player.tile.height == fight.tile.height && player.tile.isWithinRadius(fight.tile, QuestFights.REACH)) {
+            val stepPlace = step.place
+            val stepLocation = step.location
+            if (trigger != null && player.tile.height == fight.tile.height && player.tile.isWithinRadius(fight.tile, QuestFights.REACH)) {
+                player.message(trigger.hint)
+            } else if (trigger == null && player.tile.height == fight.tile.height && player.tile.isWithinRadius(fight.tile, QuestFights.REACH)) {
                 QuestFights.start(player, quest, stage)
-            } else if (step.location != null && step.place != null) {
-                with(quest) { task.offerTravel(step.place, step.location) }
+            } else if (stepLocation != null && stepPlace != null) {
+                with(quest) { task.offerTravel(stepPlace, stepLocation) }
             }
+            return
+        }
+        // PROJECT48 F4: a search step (Z) is done by arriving at its tile (trySearch), never by talking - the npc only gives the hint.
+        if (step.search != null) {
+            step.talk(task)
             return
         }
         if (!step.talk(task)) return
@@ -1733,9 +1744,10 @@ object FoundationQuests {
         QuestHelper.start(player)
         val next = quest.steps[stage]
         // N211: the next step's summoning item is in the inventory before any trip to it.
-        next.fight?.let { QuestFights.handTriggerItem(player, it) }
-        if (next.fight != null && next.fight.trigger == null && next.npc == step.npc && player.tile.height == next.fight.tile.height &&
-            player.tile.isWithinRadius(next.fight.tile, QuestFights.REACH)
+        val nextFight = next.fight
+        nextFight?.let { QuestFights.handTriggerItem(player, it) }
+        if (nextFight != null && nextFight.trigger == null && next.npc == step.npc && player.tile.height == nextFight.tile.height &&
+            player.tile.isWithinRadius(nextFight.tile, QuestFights.REACH)
         ) {
             QuestFights.start(player, quest, stage + 1)
         }
@@ -1800,7 +1812,9 @@ object FoundationQuests {
             lost.forEach { (item, amount) -> FoundationRewards.grant(player, item, amount) }
         }
         task.chatPlayer(*step.journal.map { it.replace(Regex("<[^>]+>"), "") }.toTypedArray(), facialExpression = FacialExpression.THINKING)
-        if (step.location != null && step.place != null) with(quest) { task.offerTravel(step.place, step.location, step.npc.takeIf { step.fight == null && step.npc >= 0 }) }
+        val remindPlace = step.place
+        val remindLocation = step.location
+        if (remindLocation != null && remindPlace != null) with(quest) { task.offerTravel(remindPlace, remindLocation, step.npc.takeIf { step.fight == null && step.npc >= 0 }) }
     }
 
     /**
