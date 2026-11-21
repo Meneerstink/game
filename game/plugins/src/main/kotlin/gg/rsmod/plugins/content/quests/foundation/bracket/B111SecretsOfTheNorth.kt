@@ -104,7 +104,7 @@ object SecretsOfTheNorth : ShortQuest(
         chatPlayer("I'll look into it.", facialExpression = FacialExpression.CALM_TALK)
         chatNpc(
             "The amulet has a name on the back: 'Evelot'. I cannot",
-            "question Khazard's people. Try the bar at the Fight Arena.",
+            "question Khazard's people. Try Angor, at the Fight Arena bar.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         return true
@@ -114,7 +114,7 @@ object SecretsOfTheNorth : ShortQuest(
         listOf(
             QuestStep(
                 npc = Npcs.ANGOR,
-                journal = listOf("I should ask the ${red("Khazard barman")} at the Fight Arena about 'Evelot'.", "He will want ${red("$BRIBE coins")}."),
+                journal = listOf("I should ask ${red("Angor")}, the Khazard barman at the Fight Arena, about", "'Evelot'. He will want ${red("$BRIBE coins")}."),
                 done = listOf("The barman sent me after Evelot, round the arena to the shore."),
                 place = "the Fight Arena bar",
                 location = BAR,
