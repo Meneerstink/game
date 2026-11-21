@@ -127,6 +127,32 @@ object Sacks {
         player.message(if (moved > 0) "You put $moved seeds in your seed box." else "You have no seeds the box can take.")
     }
 
+    /**
+     * OSRS Wiki "Seed box" (fetched 2026-11-21): "Using the box on a patch will automatically attempt to plant the first seed suitable for
+     * that patch." Takes the seeds for ONE planting out of the box into the inventory and returns that seed, or null (with a message)
+     * when the box holds no seed that fits [patch] at the player's Farming level or the inventory has no room.
+     */
+    fun takeSeedForPatch(player: Player, patch: gg.rsmod.plugins.content.skills.farming.data.Patch): Seed? {
+        val map = read(player, SEED_CONTENTS)
+        val farming = player.skills.getCurrentLevel(gg.rsmod.plugins.api.Skills.FARMING)
+        val seed =
+            map.entries.firstNotNullOfOrNull { (id, have) ->
+                Seed.fromId(id)?.takeIf { it.seedType in patch.seedTypes && it.plant.level <= farming && have >= it.amountToPlant() }
+            }
+        if (seed == null) {
+            player.message("Your seed box has no seeds that you can plant in this patch.")
+            return null
+        }
+        val n = seed.amountToPlant()
+        if (!player.inventory.add(seed.seedId, n).hasSucceeded()) {
+            player.message("You have no room in your inventory.")
+            return null
+        }
+        map[seed.seedId] = (map[seed.seedId] ?: n) - n
+        write(player, SEED_CONTENTS, map)
+        return seed
+    }
+
     fun emptySeeds(player: Player) {
         val map = read(player, SEED_CONTENTS)
         if (map.isEmpty()) return player.message("The seed box is empty.")

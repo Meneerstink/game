@@ -59,6 +59,9 @@ class FarmingManager(
             in CompostState.itemIds -> CompostState.fromId(item)?.let { addCompost(patch, it) }
             in WaterHandler.wateringCans -> water(patch, item)
             in Seed.seedIds -> plant(patch, Seed.fromId(item)!!)
+            gg.rsmod.plugins.content.mechanics.deadman.items.Sacks.SEED_BOX,
+            gg.rsmod.plugins.content.mechanics.deadman.items.Sacks.SEED_BOX_OPEN,
+            -> plantFromSeedBox(patch)
             else -> player.message("Nothing interesting happens.")
         }
     }
@@ -72,6 +75,14 @@ class FarmingManager(
         seed: Seed,
     ) {
         patches[patch]!!.plant(seed)
+    }
+
+    /** PROJECT48 Seed box used on a patch: plant the first suitable seed of the box (only into an empty, weeded patch, so nothing is taken for nothing). */
+    private fun plantFromSeedBox(patch: Patch) {
+        val state = patches[patch]!!.state
+        if (state.isWeedy) return player.message("This patch needs weeding first.")
+        if (!state.isEmpty) return player.message("You can only plant seeds in an empty patch.")
+        gg.rsmod.plugins.content.mechanics.deadman.items.Sacks.takeSeedForPatch(player, patch)?.let { plant(patch, it) }
     }
 
     fun harvest(patch: Patch) {
