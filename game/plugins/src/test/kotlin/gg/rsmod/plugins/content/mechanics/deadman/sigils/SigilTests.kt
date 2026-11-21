@@ -150,4 +150,22 @@ class SigilTests {
         val other = newPlayer()
         assertEquals(100.0, SigilCombat.modifyDamage(other, resist, 100.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, true), "a player's hit is not reduced")
     }
+
+    @Test
+    fun `gathering multipliers - harvest 3x, forager 2x, hoarding 3x and the abyss 5x`() {
+        val none = newPlayer()
+        assertEquals(1, SigilSkilling.multiplier(none))
+        assertEquals(1, SigilSkilling.hoardingMultiplier(none))
+        assertEquals(1, SigilSkilling.runecraftMultiplier(none))
+        val forager = newPlayer()
+        attune(forager, Sigil.THE_FORAGER)
+        assertEquals(2, SigilSkilling.multiplier(forager))
+        attune(forager, Sigil.ENHANCED_HARVEST)
+        assertEquals(3, SigilSkilling.multiplier(forager), "Enhanced Harvest wins over the Forager")
+        val abyss = newPlayer()
+        attune(abyss, Sigil.THE_ABYSS)
+        attune(abyss, Sigil.HOARDING)
+        assertEquals(5, SigilSkilling.runecraftMultiplier(abyss))
+        assertEquals(3, SigilSkilling.hoardingMultiplier(abyss))
+    }
 }
