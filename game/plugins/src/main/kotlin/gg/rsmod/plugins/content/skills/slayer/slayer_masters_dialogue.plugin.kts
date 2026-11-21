@@ -35,6 +35,8 @@ fun hasOption(npcId: Int, option: String): Boolean =
 
         on_npc_option(npc = npcId, option = "talk-to") {
             player.queue {
+                // PROJECT48 (Animal Magnetism): Turael takes part in a bracket mini-quest; the quest talk comes first when a step is open.
+                if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, npcId)) return@queue
                 chatNpc("'Ello, and what are you after then?")
                 val firstOption =
                     when (player.attr.has(STARTED_SLAYER)) {

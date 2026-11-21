@@ -74,6 +74,11 @@ object SpiritTrees {
         type: TeleportType = TeleportType.SPIRIT_TREE,
         atTree: Boolean = true,
     ) {
+        // PROJECT48 Q17 ONTGR: the spirit trees (and the Trinket of fairies' tree route) open with Tree Gnome Village (OSRS Wiki).
+        if (!gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, "Tree Gnome Village")) {
+            player.message("You must complete Tree Gnome Village before you can use the spirit trees.")
+            return
+        }
         val origin = if (atTree) STATIONS.minByOrNull { it.tile.getDistance(player.tile) }?.takeIf { it.tile.getDistance(player.tile) <= NEAREST_STATION_RADIUS } else null
         player.attr[TYPE] = type
         player.attr[ORIGIN] = origin?.let { STATIONS.indexOf(it) } ?: -1

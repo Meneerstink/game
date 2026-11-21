@@ -42,7 +42,6 @@ object B0350Quests {
             BracketNpc(Npcs.FILLIMAN_TARLOCK, gg.rsmod.game.model.Tile(3440, 3336, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("Wooo... woo... the swamp is cold.")),
             BracketNpc(Npcs.ALICES_HUSBAND, Tile(3626, 3524, 0), gg.rsmod.game.model.Direction.EAST, listOf("Woo... the chickens are restless today.")),
             BracketNpc(Npcs.WITCH_5200, null, gg.rsmod.game.model.Direction.NORTH, listOf("Hee hee hee.")),
-            BracketNpc(Npcs.TURAEL, null, gg.rsmod.game.model.Direction.WEST, listOf("Hello. The Slayer masters give out tasks.")),
             BracketNpc(Npcs.FAIRY_GODFATHER_11328, Tile(2449, 4430, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("The queen sleeps, and Zanaris waits.")),
             BracketNpc(Npcs.FAIRY_4443, Tile(2445, 4430, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("Fairy Nuff at your service.")),
             BracketNpc(Npcs.MALIGNIUS_MORTIFER, null, gg.rsmod.game.model.Direction.NORTH, listOf("Enchantments are my trade.")),
