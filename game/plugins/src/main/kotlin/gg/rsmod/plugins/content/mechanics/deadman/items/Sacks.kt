@@ -143,6 +143,11 @@ object Sacks {
             player.message("Your seed box has no seeds that you can plant in this patch.")
             return null
         }
+        val tool = seed.seedType.plant.plantingTool
+        if (!player.inventory.contains(tool.id)) {
+            player.message(tool.messageWhenMissing)
+            return null
+        }
         val n = seed.amountToPlant()
         if (!player.inventory.add(seed.seedId, n).hasSucceeded()) {
             player.message("You have no room in your inventory.")
