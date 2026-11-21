@@ -31,6 +31,12 @@ on_command("p48", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
         return@on_command player.message("p48 quests: " + BracketQuests.ALL.joinToString(", ") { "${it.slot}=${it.name}" }.take(480))
     }
     val slot = args.getOrNull(1)?.toIntOrNull() ?: return@on_command player.message("p48 $sub <slot>")
+    if (sub == "open") {
+        // Old full quests (Druidic Ritual ...): a max-level bot would get them from its bracket as 'completed'; open = play it for real (this session).
+        BracketQuests.setTestOpen(player, slot, true)
+        QuestStatus.sync(player)
+        return@on_command player.message("p48: slot $slot opened for play (state=${QuestStatus.state(player, slot)}).")
+    }
     val quest = BracketQuests.bySlot(slot) ?: return@on_command player.message("p48: slot $slot is not a bracket quest (p48 list).")
     when (sub) {
         "status" -> {

@@ -597,6 +597,16 @@ gg.rsmod.game.CommandServerCommands.handlers["opnpcitem"] = { w, a ->
     }
 }
 // `opheld <name> <option 1-5> <item id>`: an inventory item option (Dig with a spade, Rub, Eat...) through the real handler path.
+// `itemops <item id>` (PROJECT48): the inventory options of an item as the cache has them (option number = index + 1), for opheld scenarios.
+gg.rsmod.game.CommandServerCommands.handlers["itemops"] = { w, a ->
+    val id = a.getOrNull(0)?.toIntOrNull()
+    if (id == null) {
+        "usage: itemops <item id>"
+    } else {
+        val def = w.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, id)
+        if (def == null) "no item $id" else "item $id '${def.name}' options: " + def.inventoryMenu.mapIndexed { i, o -> "${i + 1}=${o ?: "-"}" }.joinToString(" ")
+    }
+}
 gg.rsmod.game.CommandServerCommands.handlers["opheld"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
     val option = a.getOrNull(1)?.toIntOrNull()
