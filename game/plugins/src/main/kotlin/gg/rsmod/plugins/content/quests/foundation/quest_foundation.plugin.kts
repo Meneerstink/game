@@ -48,7 +48,7 @@ on_login {
 // The Quest Helper side panel (QuestHelperPanel, client RspsQuestHelper): its buttons send these.
 on_command("questpanel") {
     val args = player.getCommandArgs()
-    val quest = args.getOrNull(1)?.toIntOrNull()?.let { slot -> FoundationQuests.SHORT.firstOrNull { it.slot == slot } }
+    val quest = args.getOrNull(1)?.toIntOrNull()?.let { slot -> FoundationQuests.HELPERS.firstOrNull { it.slot == slot } }
     when (args.getOrNull(0)) {
         "list" -> player.attr.remove(QuestHelperPanel.VIEW)
         "view" -> if (quest != null) player.attr[QuestHelperPanel.VIEW] = quest.slot
@@ -79,7 +79,7 @@ on_timer(QuestHelper.TIMER) {
 }
 
 on_command("questhelper") {
-    val quest = QuestHelper.tracked(player) ?: FoundationQuests.SHORT.firstOrNull { FoundationQuests.inProgress(player, it) }
+    val quest = QuestHelper.tracked(player) ?: FoundationQuests.HELPERS.firstOrNull { FoundationQuests.inProgress(player, it) }
     if (quest == null) {
         player.message("You have no quest in progress to track.")
     } else {
@@ -542,7 +542,14 @@ val alreadyBound =
 val bracketNpcs = gg.rsmod.plugins.content.quests.foundation.bracket.BracketQuests.NPCS.filter { it.npc !in alreadyBound }
 // One npc can stand on several posts (Lazim): every post is spawned, the Talk-to is bound once.
 bracketNpcs.forEach { post -> post.tile?.let { spawn_npc(npc = post.npc, x = it.x, z = it.z, height = it.height, walkRadius = 0, direction = post.facing) } }
-bracketNpcs.groupBy { it.npc }.values.map { group -> group.firstOrNull { it.extra != null } ?: group.first() }.forEach { post ->
+// An npc whose cache definition has no Talk-to cannot be bound (boot error 21-11, Achietties 796): skipped with a warning (dossier BRACKET-QUESTS).
+// Achietties (796, Heroes' Quest start): the server's decoder reads his option list as ["w?"] (the client cache has "Talk-to") - set it.
+world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, Npcs.ACHIETTIES)?.let { def ->
+    if (def.options.none { it.equals("talk-to", ignoreCase = true) }) def.options = arrayOf("Talk-to", null, null, null, null)
+}
+val talkable = { id: Int -> world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, id)?.options?.any { it.equals("talk-to", ignoreCase = true) } == true }
+bracketNpcs.map { it.npc }.distinct().filterNot(talkable).forEach { println("[P48] WARNING: npc $it has no Talk-to option in the cache: its bracket quest cannot be talked to") }
+bracketNpcs.filter { talkable(it.npc) }.groupBy { it.npc }.values.map { group -> group.firstOrNull { it.extra != null } ?: group.first() }.forEach { post ->
     on_npc_option(npc = post.npc, option = "talk-to") {
         player.queue {
             if (FoundationQuests.talk(this, post.npc)) return@queue

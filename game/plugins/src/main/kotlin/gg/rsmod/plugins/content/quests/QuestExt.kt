@@ -53,6 +53,8 @@ fun Player.advanceToNextStage(
     } else {
         setVarp(quest.questId, getVarp(quest.questId).plus(amount))
     }
+    // PROJECT48 O1-O6: the Quest Helper panel follows the stage of the six old quests.
+    if (gg.rsmod.plugins.content.quests.foundation.HelperRoutes.forSlot(quest.slot) != null) gg.rsmod.plugins.content.quests.foundation.QuestHelper.start(this)
 }
 
 /**
@@ -65,6 +67,8 @@ fun Player.advanceToNextStage(
 fun Player.startQuest(quest: Quest) {
     message("You've started a new quest: <col=5861e9>${quest.name}")
     advanceToNextStage(quest)
+    // PROJECT48 O1-O6: the Quest Helper follows the six old quests too (HelperRoutes).
+    gg.rsmod.plugins.content.quests.foundation.HelperRoutes.forSlot(quest.slot)?.let { gg.rsmod.plugins.content.quests.foundation.QuestHelper.onStarted(this, it) }
 }
 
 /**

@@ -23,7 +23,7 @@ private val MARTIN_POST = Tile(3077, 3257, 0)
 private val GODFATHER_POST = Tile(2449, 4430, 0)
 private val NUFF_POST = Tile(2445, 4430, 0)
 private val MALIGNIUS_POST = Tile(3001, 3267, 0)
-private val TANGLEFOOT_LAIR = Tile(2456, 4474, 0)
+private val TANGLEFOOT_LAIR = Tile(2454, 4472, 0)
 
 object FairyTaleI : ShortQuest(
     name = "Fairy Tale I - Growing Pains",

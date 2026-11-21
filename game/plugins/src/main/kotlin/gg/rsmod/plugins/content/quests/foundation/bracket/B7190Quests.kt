@@ -27,7 +27,7 @@ object B7190Quests {
             BracketNpc(Npcs.KING_BOLREN, null, Direction.SOUTH, listOf("The gnomes thank you for your help, friend.")),
             BracketNpc(Npcs.COMMANDER_MONTAI, null, Direction.SOUTH, listOf("The battle against the Khazard troops is far from over.")),
             BracketNpc(Npcs.HAZELMERE, null, Direction.SOUTH, listOf("The island is quiet, and I like it that way.")),
-            BracketNpc(Npcs.CHARLIE, Tile(2464, 3495, 3), Direction.SOUTH, listOf("Let me out of here, will you?")),
+            BracketNpc(Npcs.CHARLIE, Tile(2464, 3494, 3), Direction.SOUTH, listOf("Let me out of here, will you?")),
             BracketNpc(Npcs.FOREMAN, null, Direction.SOUTH, listOf("The shipyard is busy today.")),
             BracketNpc(Npcs.DENULTH, null, Direction.SOUTH, listOf("Burthorpe is well guarded, thanks to the Imperial Guard.")),
             BracketNpc(Npcs.GODRIC, null, Direction.SOUTH, listOf("I never want to see a troll again.")),

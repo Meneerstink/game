@@ -24,7 +24,7 @@ import gg.rsmod.plugins.content.quests.red
 
 private val BRIMSTAIL_POST = Tile(2410, 9819, 0)
 private val HAZELMERE_POST = Tile(2677, 3088, 1)
-private val STRONGHOLD_HUNT = Tile(2462, 3446, 0)
+private val STRONGHOLD_HUNT = Tile(2460, 3444, 0)
 
 object TheEyesOfGlouphrie : ShortQuest(
     name = "The Eyes of Glouphrie",

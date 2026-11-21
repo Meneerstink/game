@@ -23,7 +23,7 @@ import gg.rsmod.plugins.content.quests.red
 
 private val LUCIEN_POST = Tile(2573, 3321, 0)
 private val WINELDA_POST = Tile(2656, 9875, 0)
-private val FIRE_WARRIOR_FIGHT = Tile(2650, 9880, 0)
+private val FIRE_WARRIOR_FIGHT = Tile(2650, 9879, 0)
 private val GUARDIAN_POST = Tile(2648, 9904, 0)
 private val LUCIEN_FIGHT = Tile(2575, 3323, 0)
 

@@ -23,8 +23,8 @@ import gg.rsmod.plugins.content.quests.red
 // The tiles below are estimated from the OSRS map; the real floor check is the P48ContentTests tile test + the KIJKLIJST.
 
 private val LATHAS_UP = Tile(2575, 3297, 1)
-private val KOFTIK_POST = Tile(2437, 3314, 0)
-private val PALADIN_HALL = Tile(2411, 9690, 0)
+private val KOFTIK_POST = Tile(2438, 3313, 0)
+private val PALADIN_HALL = Tile(2415, 9688, 0)
 private val DEMON_CAVE = Tile(2346, 9700, 0)
 private val KALRAG_LAIR = Tile(2356, 9668, 0)
 private val IBAN_WELL = Tile(2322, 9807, 0)

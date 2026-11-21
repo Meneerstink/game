@@ -22,7 +22,7 @@ import gg.rsmod.plugins.content.quests.red
 private val ELENA_HOUSE = Tile(2592, 3336, 0)
 private val OMART_POST = Tile(2559, 3266, 0)
 private val MOURNER_HQ = Tile(2543, 3328, 0)
-private val GUIDOR_POST = Tile(3284, 3382, 0)
+private val GUIDOR_POST = Tile(3283, 3381, 0)
 private val LATHAS_POST = Tile(2575, 3297, 1)
 
 object Biohazard : ShortQuest(

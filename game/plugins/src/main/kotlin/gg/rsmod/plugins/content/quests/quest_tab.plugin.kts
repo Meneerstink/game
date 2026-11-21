@@ -49,7 +49,7 @@ on_button(interfaceId = 190, 18) {
         64 -> if (started) player.buildQuestOverview(quest) else player.buildQuestStages(quest)
         // op3 "Toggle Map Hint": the Quest Helper's arrow for a short quest (quests/foundation/QuestHelper).
         4 -> {
-            val short = quest as? gg.rsmod.plugins.content.quests.foundation.ShortQuest
+            val short = (quest as? gg.rsmod.plugins.content.quests.foundation.ShortQuest) ?: gg.rsmod.plugins.content.quests.foundation.HelperRoutes.forSlot(quest.slot)
             if (short == null || short.isFinished(player)) {
                 player.message("There is no map hint for that quest.")
             } else {

@@ -29,9 +29,9 @@ import gg.rsmod.plugins.content.quests.red
 
 private val MOSOL_POST = Tile(2883, 2951, 0)
 private val TRUFITUS_POST = Tile(2808, 3086, 0)
-private val TEMPLE_TILE = Tile(2860, 2972, 0)
-private val NAZA_FIGHT = Tile(2866, 2940, 0)
-private val TOMB_TILE = Tile(2870, 2946, 0)
+private val TEMPLE_TILE = Tile(2859, 2971, 0)
+private val NAZA_FIGHT = Tile(2865, 2939, 0)
+private val TOMB_TILE = Tile(2870, 2947, 0)
 
 object ShiloVillage : ShortQuest(
     name = "Shilo Village",
@@ -167,7 +167,7 @@ private val BRIAN_POST = Tile(3026, 3252, 0)
 private val AGGIE_POST = Tile(3086, 3261, 0)
 private val GANG_FIGHT = Tile(2967, 9811, 0)
 private val SANFEW_POST = Tile(2899, 3430, 1)
-private val SLAGILITH_FIGHT = Tile(2588, 9830, 0)
+private val SLAGILITH_FIGHT = Tile(2587, 9830, 0)
 
 object OneSmallFavour : ShortQuest(
     name = "One Small Favour",

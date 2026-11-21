@@ -26,7 +26,7 @@ object B5170Quests {
             BracketNpc(Npcs.OMART, null, Direction.SOUTH, listOf("Keep your head down in this city.")),
             BracketNpc(Npcs.GUIDOR, null, Direction.SOUTH, listOf("My poor wife is ill.")),
             BracketNpc(Npcs.KING_LATHAS, null, Direction.SOUTH, listOf("Ardougne is in good hands.")),
-            BracketNpc(Npcs.KOFTIK, Tile(2437, 3314, 0), Direction.SOUTH, listOf("The pass is no place for the weak.")),
+            BracketNpc(Npcs.KOFTIK, Tile(2438, 3313, 0), Direction.SOUTH, listOf("The pass is no place for the weak.")),
             BracketNpc(Npcs.ELF_TRACKER, null, Direction.SOUTH, listOf("The forest watches us all.")),
             BracketNpc(Npcs.LORD_IORWERTH, Tile(2195, 3254, 0), Direction.SOUTH, listOf("Our people hold the line.")),
             BracketNpc(Npcs.GENERAL_HINING, null, Direction.SOUTH, listOf("Stay clear of the catapult.")),

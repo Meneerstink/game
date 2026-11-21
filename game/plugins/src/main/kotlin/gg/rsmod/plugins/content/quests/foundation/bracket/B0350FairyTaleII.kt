@@ -23,7 +23,7 @@ import gg.rsmod.plugins.content.quests.red
 
 private val MARTIN_POST2 = Tile(3077, 3257, 0)
 private val GODFATHER_POST2 = Tile(2449, 4430, 0)
-private val VERY_WISE_POST = Tile(2451, 4425, 0)
+private val VERY_WISE_POST = Tile(2451, 4424, 0)
 private val GORAK_PLANE = Tile(3036, 5346, 0)
 private val COSMIC_PLANE = Tile(2162, 4833, 0)
 

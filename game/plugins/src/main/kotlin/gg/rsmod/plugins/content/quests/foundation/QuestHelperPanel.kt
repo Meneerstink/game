@@ -39,7 +39,7 @@ object QuestHelperPanel {
 
     /** The quest the overview shows: the one the player opened, else the tracked one, else none (the list). */
     fun shown(player: Player): ShortQuest? {
-        val view = player.attr[VIEW]?.let { slot -> FoundationQuests.SHORT.firstOrNull { it.slot == slot } }
+        val view = player.attr[VIEW]?.let { slot -> FoundationQuests.HELPERS.firstOrNull { it.slot == slot } }
         return view ?: QuestHelper.tracked(player)
     }
 
@@ -81,14 +81,14 @@ object QuestHelperPanel {
         if (!QuestHelper.enabled(player)) return
         val shown = shown(player)
         val signature =
-            FoundationQuests.SHORT.joinToString(",") { "${it.slot}:${it.stage(player)}" } +
+            FoundationQuests.HELPERS.joinToString(",") { "${it.slot}:${it.stage(player)}" } +
                 "|t${QuestHelper.tracked(player)?.slot}|v${shown?.slot}|h${shown?.let { travelTarget(player, it) != null && inHall(player) }}"
         if (!force && player.attr[SIGNATURE] == signature) return
         player.attr[SIGNATURE] = signature
         val tracked = QuestHelper.tracked(player)
         // PROJECT48 F7: the list keeps the old quests and shows a bracket mini-quest only while it is started, tracked or open in the
         // overview (the 41+ others are listed in the Quest Guide); so the list never grows past a dozen rows.
-        FoundationQuests.SHORT.filter { q -> !q.ownSteps || q == tracked || q == shown || (!q.isFinished(player) && q.stage(player) > 0) }.forEach { q ->
+        FoundationQuests.HELPERS.filter { q -> !q.ownSteps || q == tracked || q == shown || (!q.isFinished(player) && q.stage(player) > 0) }.forEach { q ->
             ClientHud.send(player, "qhq|${q.slot}|${state(player, q)}|${if (q == tracked) 1 else 0}|${clean(q.name)}")
         }
         ClientHud.send(player, "qhqe")

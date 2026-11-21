@@ -24,8 +24,8 @@ import gg.rsmod.plugins.content.quests.red
 private val MORD_POST = Tile(2644, 3709, 0)
 private val GJUKI_POST = Tile(2407, 3802, 0)
 private val MAWNIS_POST = Tile(2335, 3799, 0)
-private val TROLL_CAVE = Tile(2362, 3846, 0)
-private val TROLL_KING_LAIR = Tile(2366, 3856, 0)
+private val TROLL_CAVE = Tile(2358, 3849, 0)
+private val TROLL_KING_LAIR = Tile(2371, 3851, 0)
 
 object FremennikIsles : ShortQuest(
     name = "The Fremennik Isles",

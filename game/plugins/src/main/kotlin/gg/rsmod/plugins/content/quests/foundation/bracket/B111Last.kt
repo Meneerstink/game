@@ -27,8 +27,8 @@ import gg.rsmod.plugins.content.quests.red
 //    the church. All tiles that are not a donor spawn are estimates (dossier BRACKET-QUESTS).
 
 private val UNFERTH_POST = Tile(2920, 3559, 0)
-private val HILD_POST = Tile(2932, 3568, 0)
-private val BOB_POST = Tile(2918, 3562, 0)
+private val HILD_POST = Tile(2931, 3567, 0)
+private val BOB_POST = Tile(2917, 3561, 0)
 private val SPHINX_POST = Tile(3298, 2787, 0)
 private val APOTHECARY_POST = Tile(3195, 3404, 0)
 
@@ -132,11 +132,11 @@ object ATailOfTwoCats : ShortQuest(
         )
 }
 
-private val MONK_POST = Tile(3424, 3487, 0)
+private val MONK_POST = Tile(3425, 3485, 0)
 private val DORIC_POST = Tile(2953, 3450, 0)
 private val ENTRANA_ALTAR = Tile(2852, 3352, 0)
 private val PRIEST_POST = Tile(2851, 3349, 0)
-private val TIFFY_POST = Tile(2997, 3373, 0)
+private val TIFFY_POST = Tile(2996, 3372, 0)
 
 object DeviousMinds : ShortQuest(
     name = "Devious Minds",

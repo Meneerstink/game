@@ -23,7 +23,7 @@ import gg.rsmod.plugins.content.quests.red
 
 private val ISLWYN_POST = Tile(2290, 3143, 0)
 private val ELUNED_POST = Tile(2292, 3141, 0)
-private val GLARIAL_TOMB = Tile(2556, 9844, 0)
+private val GLARIAL_TOMB = Tile(2555, 9843, 0)
 
 object RovingElves : ShortQuest(
     name = "Roving Elves",

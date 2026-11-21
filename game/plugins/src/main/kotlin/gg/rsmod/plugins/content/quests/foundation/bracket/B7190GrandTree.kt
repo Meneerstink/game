@@ -24,7 +24,7 @@ import gg.rsmod.plugins.content.quests.red
 
 private val NARNODE_POST = Tile(2466, 3497, 0)
 private val HAZELMERE_POST = Tile(2677, 3088, 1)
-private val CHARLIE_POST = Tile(2464, 3495, 3)
+private val CHARLIE_POST = Tile(2464, 3494, 3)
 private val FOREMAN_POST = Tile(2999, 3043, 0)
 private val DEMON_FIGHT = Tile(2485, 9864, 0)
 

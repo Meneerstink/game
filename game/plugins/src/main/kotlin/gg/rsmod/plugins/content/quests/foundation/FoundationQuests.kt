@@ -1567,6 +1567,9 @@ object FoundationQuests {
 
     val SHORT: List<ShortQuest> by lazy { OLD_SHORT + gg.rsmod.plugins.content.quests.foundation.bracket.BracketQuests.ALL }
 
+    /** PROJECT48 O1-O6: the quests the Quest Helper can follow: [SHORT] plus the read-only route mirrors of the six old quests. */
+    val HELPERS: List<ShortQuest> by lazy { SHORT + HelperRoutes.ALL }
+
     /** OSRS Wiki quest points: Sins of the Father 2, Children of the Sun 1, Secrets of the North 2, Bone Voyage 1; Mage Arena II is a miniquest (0). Beneath Cursed Sands (2) is a short quest since N462. */
     val COMPLETED: List<CompletedOsrsQuest> =
         listOf(

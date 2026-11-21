@@ -19,7 +19,7 @@ import gg.rsmod.plugins.content.quests.red
 
 private val AVA_POST = Tile(3099, 3355, 0)
 private val WITCH_POST = Tile(3099, 3369, 0)
-private val CHICKEN_FARM = Tile(3626, 3524, 0)
+private val CHICKEN_FARM = Tile(3625, 3523, 0)
 private val TURAEL_POST = Tile(2931, 3536, 0)
 
 object AnimalMagnetism : ShortQuest(

@@ -68,7 +68,7 @@ object QuestHelper {
     }
 
     fun tracked(player: Player): ShortQuest? =
-        player.attr[TRACKED]?.let { slot -> FoundationQuests.SHORT.firstOrNull { it.slot == slot } }
+        player.attr[TRACKED]?.let { slot -> FoundationQuests.HELPERS.firstOrNull { it.slot == slot } }
 
     fun track(player: Player, quest: ShortQuest) {
         player.attr[TRACKED] = quest.slot
@@ -111,7 +111,7 @@ object QuestHelper {
     }
 
     fun needsTimer(player: Player): Boolean =
-        tracked(player) != null || FoundationQuests.SHORT.any { FoundationQuests.inProgress(player, it) }
+        tracked(player) != null || FoundationQuests.HELPERS.any { FoundationQuests.inProgress(player, it) }
 
     fun clearArrow(player: Player) {
         player.write(HintArrowMessage(slot = SLOT, type = HintArrowMessage.TYPE_CLEAR))
