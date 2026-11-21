@@ -1,0 +1,198 @@
+package gg.rsmod.plugins.content.mechanics.deadman.sigils
+
+import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.item.Item
+import gg.rsmod.plugins.api.ext.persistNow
+import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
+
+/**
+ * PROJECT48 SIGILS - the state and the rules (OSRS Wiki Deadman: Armageddon/Sigils):
+ *  - at most [MAX_ATTUNED] sigils are attuned (= active) at any one time;
+ *  - a sigil is attuned and unattuned only at a bank, never while skulled; attuning swaps the unattuned item for the attuned item in
+ *    the same inventory slot, unattuning swaps it back;
+ *  - an attuned sigil is untradeable and always kept on death ([isAttunedItem]); an unattuned sigil is tradeable on the Grand Exchange.
+ * Every effect asks [has] (or [effective], which also applies the "does not stack" rules): one cheap check per hook.
+ */
+object Sigils {
+    const val MAX_ATTUNED = 3
+
+    /** The attuned sigils of a player: sigil numbers, comma separated (persisted). */
+    val ATTUNED = AttributeKey<String>(persistenceKey = "p48_sigils_attuned")
+
+    /** Epoch second until which an activatable sigil is cooling down (Int seconds: the player save reads numbers back as Int). */
+    val COOLDOWN_UNTIL: Map<Sigil, AttributeKey<Int>> =
+        Sigil.values().filter { it.activatable }.associateWith { AttributeKey<Int>(persistenceKey = "p48_sigil_cd_${it.number}") }
+
+    /** Epoch second until which an activated sigil's window lasts. */
+    val ACTIVE_UNTIL: Map<Sigil, AttributeKey<Int>> =
+        Sigil.values().filter { it.activatable }.associateWith { AttributeKey<Int>(persistenceKey = "p48_sigil_on_${it.number}") }
+
+    /** Sigils that cannot be attuned together ("cannot be used in conjunction with ..."). */
+    private val EXCLUSIVE_GROUPS: List<Set<Sigil>> = listOf(setOf(Sigil.ARCANE_SWIFTNESS, Sigil.THE_GUNSLINGER, Sigil.THE_SWASHBUCKLER))
+
+    /** "Does not stack": when both are attuned only the first one (the stronger) works. */
+    private val OVERRIDES: List<Pair<Sigil, Sigil>> =
+        listOf(
+            Sigil.ENHANCED_HARVEST to Sigil.THE_FORAGER,
+            Sigil.TITANIUM to Sigil.RESISTANCE,
+            Sigil.THE_RAMPART to Sigil.FORTIFICATION,
+            Sigil.AGGRESSION to Sigil.RAMPAGE,
+        )
+
+    enum class Result {
+        OK,
+        NOT_A_SIGIL,
+        NOT_AT_BANK,
+        SKULLED,
+        FULL,
+        EXCLUSIVE,
+        ALREADY,
+        NOT_ATTUNED,
+        ITEM_CHANGED,
+    }
+
+    private fun nowSeconds(): Int = (System.currentTimeMillis() / 1000L).toInt()
+
+    fun attuned(player: Player): List<Sigil> {
+        val numbers = player.attr[ATTUNED]?.split(',')?.mapNotNull { it.toIntOrNull() } ?: return emptyList()
+        return Sigil.values().filter { it.number in numbers }
+    }
+
+    private fun store(
+        player: Player,
+        list: List<Sigil>,
+    ) {
+        player.attr[ATTUNED] = list.joinToString(",") { it.number.toString() }
+    }
+
+    /** Whether [sigil] is attuned (the plain check; see [effective] for the stacking rules). */
+    fun has(
+        player: Player,
+        sigil: Sigil,
+    ): Boolean = attuned(player).contains(sigil)
+
+    /** Whether [sigil] works now: attuned and not overridden by a stronger sigil that does not stack with it. */
+    fun effective(
+        player: Player,
+        sigil: Sigil,
+    ): Boolean {
+        val on = attuned(player)
+        if (sigil !in on) return false
+        return OVERRIDES.none { (strong, weak) -> weak == sigil && strong in on }
+    }
+
+    fun isAttunedItem(itemId: Int): Boolean = Sigil.ofAttuned(itemId) != null
+
+    fun isUnattunedItem(itemId: Int): Boolean = Sigil.ofUnattuned(itemId) != null
+
+    /** Attunes the unattuned sigil in inventory [slot]. [atBank] = the player stands at / is using a bank (the caller decides). */
+    fun attune(
+        player: Player,
+        slot: Int,
+        atBank: Boolean,
+    ): Result {
+        if (slot !in 0 until player.inventory.capacity) return Result.ITEM_CHANGED
+        val item = player.inventory[slot] ?: return Result.ITEM_CHANGED
+        val sigil = Sigil.ofUnattuned(item.id) ?: return Result.NOT_A_SIGIL
+        if (!atBank) return Result.NOT_AT_BANK
+        if (PvpSkull.hasSkullTimer(player)) return Result.SKULLED
+        val on = attuned(player)
+        if (sigil in on) return Result.ALREADY
+        if (on.size >= MAX_ATTUNED) return Result.FULL
+        if (EXCLUSIVE_GROUPS.any { sigil in it && on.any { other -> other in it } }) return Result.EXCLUSIVE
+        player.inventory[slot] = Item(sigil.attunedId)
+        store(player, on + sigil)
+        player.persistNow()
+        return Result.OK
+    }
+
+    /** Unattunes the attuned sigil in inventory [slot]. */
+    fun unattune(
+        player: Player,
+        slot: Int,
+        atBank: Boolean,
+    ): Result {
+        if (slot !in 0 until player.inventory.capacity) return Result.ITEM_CHANGED
+        val item = player.inventory[slot] ?: return Result.ITEM_CHANGED
+        val sigil = Sigil.ofAttuned(item.id) ?: return Result.NOT_A_SIGIL
+        if (!atBank) return Result.NOT_AT_BANK
+        if (PvpSkull.hasSkullTimer(player)) return Result.SKULLED
+        val on = attuned(player)
+        player.inventory[slot] = Item(sigil.unattunedId)
+        store(player, on - sigil)
+        player.persistNow()
+        return Result.OK
+    }
+
+    /** Seconds left of the cooldown of an activatable [sigil] (0 = ready). */
+    fun cooldownLeft(
+        player: Player,
+        sigil: Sigil,
+    ): Int {
+        val key = COOLDOWN_UNTIL[sigil] ?: return 0
+        return ((player.attr[key] ?: 0) - nowSeconds()).coerceAtLeast(0)
+    }
+
+    /** Seconds left of an activation window of [sigil] (0 = not active). */
+    fun windowLeft(
+        player: Player,
+        sigil: Sigil,
+    ): Int {
+        val key = ACTIVE_UNTIL[sigil] ?: return 0
+        return ((player.attr[key] ?: 0) - nowSeconds()).coerceAtLeast(0)
+    }
+
+    /** Whether the activation window of [sigil] is open (the sigil is attuned and was activated within its window). */
+    fun windowOpen(
+        player: Player,
+        sigil: Sigil,
+    ): Boolean = effective(player, sigil) && windowLeft(player, sigil) > 0
+
+    /** Closes the window of [sigil] early (a one-shot effect that was used up). */
+    fun consumeWindow(
+        player: Player,
+        sigil: Sigil,
+    ) {
+        ACTIVE_UNTIL[sigil]?.let { player.attr.remove(it) }
+    }
+
+    /**
+     * Activates [sigil]: checks that it is attuned and ready, starts the cooldown and the window. Returns false (with a message)
+     * when it cannot be activated; the caller then runs the instant effect of sigils with window 0.
+     */
+    fun activate(
+        player: Player,
+        sigil: Sigil,
+    ): Boolean {
+        if (!sigil.activatable) return false
+        if (!effective(player, sigil)) {
+            player.message("This sigil is not attuned.")
+            return false
+        }
+        val left = cooldownLeft(player, sigil)
+        if (left > 0) {
+            player.message("The ${sigil.label} will be ready in $left seconds.")
+            return false
+        }
+        val now = nowSeconds()
+        player.attr[COOLDOWN_UNTIL.getValue(sigil)] = now + sigil.cooldownSeconds
+        if (sigil.windowSeconds > 0) player.attr[ACTIVE_UNTIL.getValue(sigil)] = now + sigil.windowSeconds
+        return true
+    }
+
+    /** The chat lines of the overview (item option Check, command ::sigils). */
+    fun overview(player: Player): List<String> {
+        val on = attuned(player)
+        if (on.isEmpty()) return listOf("You have no attuned sigils (max $MAX_ATTUNED). Attune a sigil at a bank.")
+        return on.map { sigil ->
+            val state =
+                when {
+                    !sigil.activatable -> "active"
+                    cooldownLeft(player, sigil) > 0 -> "ready in ${cooldownLeft(player, sigil)} s"
+                    else -> "ready"
+                }
+            "${sigil.label}: $state"
+        }
+    }
+}
