@@ -9,25 +9,14 @@ import gg.rsmod.plugins.content.quests.impl.PriestInPeril
 
 // Drezel In Prison Cell
 on_npc_option(npc = Npcs.DREZEL_1049, option = "talk-to", lineOfSightDistance = 3) {
-    if (player.getCurrentStage(quest = PriestInPeril) == 4) {
-        player.queue {
-            findingDrezelDialogue(this, player)
-        }
-    }
-    if (player.getCurrentStage(quest = PriestInPeril) == 5) {
-        player.queue {
-            cellKeyDialogue(this, player)
-        }
-    }
-    if (player.getCurrentStage(quest = PriestInPeril) == 6) {
-        player.queue {
-            vampireDialogue(this, player)
-        }
-    }
-    if (player.getCurrentStage(quest = PriestInPeril) >= 7 && player.tile.regionId == 13622) {
-        player.queue {
-            killedVampireDialogue(this)
-        }
+    player.queue {
+        // PROJECT48: the bracket quests (Myreque: the Rod of Ivandis) get the first word, like every other npc with its own talk.
+        if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.DREZEL_1049)) return@queue
+        val stage = player.getCurrentStage(quest = PriestInPeril)
+        if (stage == 4) findingDrezelDialogue(this, player)
+        if (stage == 5) cellKeyDialogue(this, player)
+        if (stage == 6) vampireDialogue(this, player)
+        if (stage >= 7 && player.tile.regionId == 13622) killedVampireDialogue(this)
     }
 }
 

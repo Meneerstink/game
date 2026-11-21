@@ -42519,49 +42519,241 @@
   examine: "A magical talisman in the shape of a Karamjan monkey head."
   tradeable: false
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: -1
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 4025
   name: "Ninja monkey greegree"
   examine: "A magical talisman in the shape of a Karamjan monkey head."
   tradeable: false
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: -1
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 4026
   name: "Gorilla greegree"
   examine: "A magical talisman in the shape of a Karamjan monkey head."
   tradeable: false
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: -1
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 4027
   name: "Gorilla greegree"
   examine: "A magical talisman in the shape of a Karamjan monkey head."
   tradeable: false
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: -1
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 4028
   name: "Gorilla greegree"
   examine: "A magical talisman in the shape of a Karamjan monkey head."
   tradeable: false
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: -1
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 4029
   name: "Zombie monkey greegree"
   examine: "A magical talisman in the shape of a Karamjan monkey head."
   tradeable: false
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: -1
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 4030
   name: "Zombie monkey greegree"
   examine: "A magical talisman in the shape of a Karamjan monkey head."
   tradeable: false
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: -1
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 4031
   name: "Monkey greegree"
   examine: "A magical talisman in the shape of a Karamjan monkey head."
   tradeable: false
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: -1
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 4032
   name: "Dummy"
   examine: "I can train on this"
