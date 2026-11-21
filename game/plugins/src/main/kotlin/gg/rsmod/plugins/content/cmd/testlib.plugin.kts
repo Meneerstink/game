@@ -162,6 +162,33 @@ CommandServerCommands.handlers["dropview"] = { _, a ->
     }
 }
 
+/**
+ * PROJECT48 scenario aid: `opfoe <name>` attacks the quest foe that was spawned FOR this player (QuestFights.active) through the real npc
+ * attack handler. Answers "foe done" once no foe has been active for 6 ticks (the next foe of a chain appears at once, a dying one is skipped), so a
+ * ZOLANG loop `reply:foe done` kills a whole chain, even when ambient npcs of the same id stand nearby.
+ */
+val opfoeIdleSince = HashMap<String, Int>()
+CommandServerCommands.handlers["opfoe"] = { w, a ->
+    val p = findPlayer(a) as? gg.rsmod.game.model.entity.Client
+    if (p == null) {
+        "usage: opfoe <name> (a bot made with botlogin)"
+    } else {
+        val foe = gg.rsmod.plugins.content.quests.foundation.QuestFights.active(p)
+        if (foe == null) {
+            val since = opfoeIdleSince.getOrPut(p.username) { w.currentCycle }
+            if (w.currentCycle - since >= 6) {
+                opfoeIdleSince.remove(p.username)
+                "foe done"
+            } else {
+                "waiting for the next foe"
+            }
+        } else {
+            opfoeIdleSince.remove(p.username)
+            if (p.gameSystem.inject(gg.rsmod.game.message.impl.OpNpc2Message(foe.index, 0))) "attacking foe ${foe.id}#${foe.index}" else "no handler"
+        }
+    }
+}
+
 /** PROJECT48 test aid: `tomecharge <name> <tome item id> <charges>` puts a tome with that many charges into the worn shield slot. */
 CommandServerCommands.handlers["tomecharge"] = { w, a ->
     val p = findPlayer(a)
