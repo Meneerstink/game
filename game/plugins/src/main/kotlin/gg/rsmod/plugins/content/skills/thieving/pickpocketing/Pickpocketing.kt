@@ -84,6 +84,12 @@ object Pickpocketing {
         player.animate(Anims.PICKPOCKET)
         if (rollForSuccess(targetInfo, player)) {
             onSuccess(task, player, target, targetInfo)
+            // PROJECT48 S41 Sigil of Deception: automatically re-pickpocket until it is no longer possible (a failure still stuns).
+            if (gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.DECEPTION) &&
+                !target.isDead() && target.tile.isWithinRadius(player.tile, 1)
+            ) {
+                pickpocket(task, target, targetInfo)
+            }
         } else {
             onFailure(player, target, targetInfo)
         }
