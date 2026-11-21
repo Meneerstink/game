@@ -13,12 +13,14 @@ val monkeyGreegrees = intArrayOf(Items.MONKEY_GREEGREE, Items.NINJA_MONKEY_GREEG
 val atollMonkeys =
     intArrayOf(Npcs.MONKEY_GUARD, Npcs.MONKEY_ARCHER, Npcs.MONKEY_ARCHER_1457, Npcs.MONKEY_ARCHER_1458, Npcs.MONKEY_GUARD_1459, Npcs.MONKEY_GUARD_1460)
 
-on_npc_spawn(*atollMonkeys) {
-    npc.queue {
-        wait(1)
-        val base = npc.aggroCheck
-        npc.aggroCheck = { n, p ->
-            monkeyGreegrees.none { g -> p.equipment.contains(g) } && (base == null || base(n, p))
+atollMonkeys.forEach { monkeyId ->
+    on_npc_spawn(monkeyId) {
+        npc.queue {
+            wait(1)
+            val base = npc.aggroCheck
+            npc.aggroCheck = { n, p ->
+                monkeyGreegrees.none { g -> p.equipment.contains(g) } && (base == null || base(n, p))
+            }
         }
     }
 }
