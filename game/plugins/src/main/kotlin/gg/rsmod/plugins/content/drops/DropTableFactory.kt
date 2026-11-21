@@ -426,6 +426,8 @@ object DropTableFactory {
         owner: Pawn,
     ) {
         val def = world.definitions.get(ItemDef::class.java, item.id)
+        // PROJECT48 S21 Sigil of Devotion: dropped bones are buried, ashes scattered at once.
+        if (owner is Player && gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops.devotion(owner, item)) return
         if (owner is Player && gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets.collectDrop(owner, item, gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets.valueOfDrop(owner, item))) return
         if (def.stackable) {
             val ground = GroundItem(item.id, item.amount, tile, owner as Player)
