@@ -34,6 +34,12 @@ object OsrsFxImportTool {
      */
     val BATCHES: Map<String, List<Int>> =
         mapOf(
+            // PROJECT48 SIGILS (owner 21-11: sounds + animations of the sigils): gameval SpotanimID SIGIL_ATTUNE_COMBAT 1970 / _UTILITY
+            // 1971 / _SKILLING 1972, SIGIL_UNATTUNE 1973, SIGIL_OF_THE_FORMIDABLE_FIGHTER 1974, _FREEDOM 1975, _BINDING 1976,
+            // _THE_MENACING_MAGE 1977, _ESCAPING 1978, _PORCUPINE 1979, _THE_FERAL_FIGHTER 1980, _THE_RUTHLESS_RANGER 1981, _FINALITY
+            // 1982, _RAMPAGE 1983 + _BUFF_01..05 1984-1988, _SUPREME_STAMINA 1989, _THE_LAST_RECALL_DISAPPEAR 1990 / _REAPPEAR 1991,
+            // _THE_GUARDIAN_ANGEL 1992, _SPECIALISED_STRIKES 1993, _THE_ETERNAL_JEWELLER 2560.
+            "sigil-fx" to (1970..1993).toList() + listOf(2560),
             // DMM2: cache 2686 source IDs, same order as the phase-3 bundle plan.
             "dmm2-spots" to listOf(3030, 3031, 3032, 3033, 3565, 3566, 3567, 3568, 3569, 3570, 3571, 4020),
             "dmm2-fire-av" to listOf(116), // ENCHANT_AMULET_LVL3, wiki creating-fire visual (rev15329402).
@@ -261,6 +267,9 @@ object OsrsFxImportTool {
      */
     val SEQ_BATCHES: Map<String, List<Int>> =
         mapOf(
+            // PROJECT48 SIGILS: the player halves - gameval AnimationID DMM_LAST_RECALL_TELEPORT_DISAPPEAR 9147 / _REAPPEAR 9149 and
+            // HUMAN_SPELLCAST_DMM_NOHELD 10655 (the spotanim halves 9148 / 9150 / FX_SPELLCAST_DMM 9151.. come with the spotanims).
+            "sigil-fx" to listOf(9147, 9149, 10655),
             // DMM2: cache 2686 source IDs, same order as the phase-3 bundle plan.
             // Cache2686 loc49564 DEADMAN_BLIGHTED_WEAPONS_LOOT_CYCLE references this classic five-tick object animation.
             // This is the object half only; the player's opening pose is still unproven (PHASE7-SOURCES).
@@ -450,6 +459,9 @@ object OsrsFxImportTool {
     /** OSRS synth sounds by Jagex config name (OSRS Wiki "List of sound IDs", read 2026-09-17). */
     val SYNTH_BATCHES: Map<String, List<Int>> =
         mapOf(
+            // PROJECT48 SIGILS: gameval SoundEffectID DMM_LAST_RECALL_TELE_REAPPEAR 5064 .. DMM_GUARDIAN_WING_RETREAT 5094 (attune 5078,
+            // deattune 5066, activate 5069, combat activation 5074, no longer active 5090, cooldown finish 5092, Rampage, Guardian).
+            "sigil-fx" to (5064..5094).toList(),
             "weaponseq1" to
                 listOf(
                     7917, 7930, // varlamore_pm_macuahuitl_special_01 / crush_01

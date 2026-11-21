@@ -137,6 +137,7 @@ object Sigils {
         player.inventory[slot] = Item(sigil.attunedId)
         store(player, on + sigil)
         onChanged(player, sigil, attuned = true)
+        SigilFx.attuned(player, sigil)
         player.persistNow()
         return Result.OK
     }
@@ -186,6 +187,7 @@ object Sigils {
         player.inventory[slot] = Item(sigil.unattunedId)
         store(player, on - sigil)
         onChanged(player, sigil, attuned = false)
+        SigilFx.unattuned(player)
         player.persistNow()
         return Result.OK
     }

@@ -28,9 +28,15 @@ object SigilDots {
     ) {
         when (SigilCombat.styleOf(type)) {
             SigilCombat.Style.RANGED ->
-                if (Sigils.effective(attacker, Sigil.THE_RUTHLESS_RANGER) && roll(attacker)) cripple(attacker, target)
+                if (Sigils.effective(attacker, Sigil.THE_RUTHLESS_RANGER) && roll(attacker)) {
+                    SigilFx.proc(attacker, Sigil.THE_RUTHLESS_RANGER)
+                    cripple(attacker, target)
+                }
             SigilCombat.Style.MAGIC ->
-                if (Sigils.effective(attacker, Sigil.THE_MENACING_MAGE) && roll(attacker)) curse(attacker, target)
+                if (Sigils.effective(attacker, Sigil.THE_MENACING_MAGE) && roll(attacker)) {
+                    SigilFx.proc(attacker, Sigil.THE_MENACING_MAGE)
+                    curse(attacker, target)
+                }
             else -> {}
         }
     }

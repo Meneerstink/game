@@ -203,7 +203,9 @@ object SigilCombat {
         if (attacker.attr[gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.SPECIAL_ATTACK_IN_PROGRESS] == true) return 0.0
         if (damage <= 0.0) return 0.0
         val bonus = if (attacker.attr[FORMIDABLE_NEXT_HIT] == true) FORMIDABLE_BONUS else 0.0
-        attacker.attr[FORMIDABLE_NEXT_HIT] = attacker.world.randomDouble() < FORMIDABLE_CHANCE
+        val armed = attacker.world.randomDouble() < FORMIDABLE_CHANCE
+        attacker.attr[FORMIDABLE_NEXT_HIT] = armed
+        if (armed) SigilFx.proc(attacker, Sigil.THE_FORMIDABLE_FIGHTER)
         return bonus
     }
 
@@ -370,6 +372,7 @@ object SigilCombat {
         val idle = now - (attacker.attr[RAMPAGE_CYCLE] ?: Int.MIN_VALUE / 2) > RAMPAGE_RESET_TICKS
         var count = if (idle) 0 else attacker.attr[RAMPAGE_COUNT] ?: 0
         count = if (last != null && last != style && !idle) minOf(3, count + 1) else if (last == style) 0 else count
+        if (count > (attacker.attr[RAMPAGE_COUNT] ?: 0)) SigilFx.rampage(attacker, count)
         attacker.attr[RAMPAGE_STYLE] = style
         attacker.attr[RAMPAGE_COUNT] = count
         attacker.attr[RAMPAGE_CYCLE] = now

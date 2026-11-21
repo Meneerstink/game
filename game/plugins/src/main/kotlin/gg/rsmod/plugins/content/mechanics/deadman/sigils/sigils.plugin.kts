@@ -69,7 +69,10 @@ Sigil.values().forEach { sigil ->
     }
     if (hasInvOption(sigil.attunedId, "activate")) {
         on_item_option(sigil.attunedId, "activate") {
-            if (Sigils.activate(player, sigil)) SigilEffects.activated(player, sigil)
+            if (Sigils.activate(player, sigil)) {
+                SigilFx.activated(player, sigil)
+                SigilEffects.activated(player, sigil)
+            }
         }
     }
     // Destroy on an ATTUNED sigil (wiki infobox: "You must unattune the Sigil before you can destroy it."). The inventory sends Drop /
