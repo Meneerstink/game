@@ -43,6 +43,33 @@ object SigilSkilling {
         return plank.first
     }
 
+    /**
+     * S32 Infernal Chef (a caught fish is cooked at once: Cooking XP, no level needed, never burnt) and S33 Infernal Smith (a mined ore that
+     * needs no second ore becomes its bar at once: Smithing XP) - each a 20% chance.
+     */
+    private fun infernal(
+        player: Player,
+        item: Int,
+    ): Int {
+        if (Sigils.effective(player, Sigil.THE_INFERNAL_CHEF)) {
+            val fish = gg.rsmod.plugins.content.skills.cooking.CookingData.values.firstOrNull { it.raw == item }
+            if (fish != null && player.world.randomDouble() < 0.20) {
+                player.addXp(gg.rsmod.plugins.api.Skills.COOKING, fish.experience)
+                return fish.cooked
+            }
+        }
+        if (Sigils.effective(player, Sigil.THE_INFERNAL_SMITH)) {
+            val bar =
+                gg.rsmod.plugins.content.skills.smithing.data.SmeltingData.values
+                    .firstOrNull { it.primaryOre == item && it.secondaryCount == 0 }
+            if (bar != null && player.world.randomDouble() < 0.20) {
+                player.addXp(gg.rsmod.plugins.api.Skills.SMITHING, bar.experience)
+                return bar.product
+            }
+        }
+        return item
+    }
+
     /** S10 Sigil of the Abyss: 5x as many runes when Runecrafting. */
     fun runecraftMultiplier(player: Player): Int = if (Sigils.effective(player, Sigil.THE_ABYSS)) 5 else 1
 
@@ -62,7 +89,7 @@ object SigilSkilling {
         amount: Int = 1,
     ): ItemTransaction {
         if (player.attuned().isEmpty()) return player.inventory.add(gathered, amount)
-        val itemId = woodcraft(player, gathered)
+        val itemId = infernal(player, woodcraft(player, gathered))
         val total = amount * multiplier(player)
         if (toBank(player)) {
             val banked = player.bank.add(itemId, total)
