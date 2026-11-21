@@ -172,6 +172,8 @@ class EquipmentDegradation(
         if (!spend) return
         for (slot in 0 until player.equipment.capacity) {
             val item = player.equipment[slot] ?: continue
+            // PROJECT48 S20 Sigil of Barrows: Barrows armour does not degrade.
+            if (BarrowsPiece.forId(item.id) != null && gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.BARROWS)) continue
             val spent = CombatPoints.spend(item) ?: continue
             val next = spent.item
             val def = player.world.definitions.get(ItemDef::class.java, item.id)

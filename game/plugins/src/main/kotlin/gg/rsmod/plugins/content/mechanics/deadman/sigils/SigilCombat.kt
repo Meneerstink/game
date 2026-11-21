@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.deadman.sigils
 
 import gg.rsmod.plugins.api.BonusSlot
+import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.ext.heal
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.game.model.entity.Npc
@@ -56,6 +57,8 @@ object SigilCombat {
             if (Sigils.effective(attacker, Sigil.PRECISION)) factor = maxOf(factor, 1.50)
             if (Sigils.effective(attacker, Sigil.METICULOUSNESS)) factor = maxOf(factor, 1.75)
         }
+        // S20 Barrows: +40% accuracy with Barrows weaponry against players and NPCs.
+        if (Sigils.effective(attacker, Sigil.BARROWS) && wieldsBarrowsWeapon(attacker)) factor *= 1.40
         // S29 Adroit: +1% accuracy for each hitpoint the player is missing (players and NPCs).
         if (Sigils.effective(attacker, Sigil.THE_ADROIT)) {
             val missing = (attacker.getMaximumLifepoints() - attacker.getCurrentLifepoints()).coerceAtLeast(0)
@@ -217,6 +220,14 @@ object SigilCombat {
         type: HitType,
         landed: Boolean,
     ) {
+    }
+
+    private val BARROWS_WEAPONS = listOf("dharok's greataxe", "verac's flail", "torag's hammers", "guthan's warspear", "karil's crossbow", "ahrim's staff")
+
+    private fun wieldsBarrowsWeapon(player: Player): Boolean {
+        val id = player.getEquipment(EquipmentType.WEAPON)?.id ?: return false
+        val name = player.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, id).name.lowercase()
+        return BARROWS_WEAPONS.any { name.startsWith(it) }
     }
 
     /** Weapons that the Gunslinger does not speed up (wiki: the Crystal bow, Bow of Faerdhinen and Morrigan's throwing axe). */
