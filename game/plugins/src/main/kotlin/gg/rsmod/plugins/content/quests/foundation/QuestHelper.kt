@@ -184,6 +184,11 @@ object QuestHelper {
         FoundationQuests.SHORT.forEach { quest ->
             val stage = quest.stage(player)
             val step = quest.steps.getOrNull(stage - 1) ?: return@forEach
+            // PROJECT48 F4: a search step (Z) is done by arriving at its tile.
+            if (step.search != null) {
+                FoundationQuests.trySearch(player, quest, stage)
+                return@forEach
+            }
             val fight = step.fight ?: return@forEach
             // N211: a triggered foe (Dessous) waits for its item-on-object, never for the player's arrival.
             if (fight.trigger == null && QuestFights.active(player) == null && player.tile.height == fight.tile.height && player.tile.isWithinRadius(fight.tile, QuestFights.REACH)) {
@@ -223,7 +228,7 @@ object QuestHelper {
             val step = quest.steps.getOrNull(stage - 1) ?: return
             lines = step.journal.map { it.replace(Regex("<[^>]+>"), "") }
             npcId = step.npc
-            place = step.location
+            place = step.location ?: step.search?.tile
             step.fight?.let { fight ->
                 npcId = fight.npc
                 place = fight.tile

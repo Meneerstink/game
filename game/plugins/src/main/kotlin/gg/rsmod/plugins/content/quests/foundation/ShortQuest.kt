@@ -33,7 +33,25 @@ class QuestStep(
     val fight: QuestFight? = null,
     /** The Quest Helper's tip for this step: what to bring, or the boss's mechanic. */
     val tip: String? = null,
-    val talk: suspend QueueTask.() -> Boolean,
+    /**
+     * PROJECT48 F4 (step kind Z): a search step has no npc ([npc] = -1) - the step is done when the player stands within
+     * [QuestSearch.radius] of [QuestSearch.tile] (give [location] the same tile so the trip offer and the Quest Helper point there).
+     */
+    val search: QuestSearch? = null,
+    val talk: suspend QueueTask.() -> Boolean = { true },
+)
+
+/**
+ * The search of a Z step: arriving at [tile] (within [radius], same floor, not in a quest fight, carrying [needs]) finds [text]
+ * and hands out [gives]. [missing] is the hint when [needs] are not carried yet.
+ */
+class QuestSearch(
+    val tile: Tile,
+    val text: String,
+    val radius: Int = 3,
+    val gives: List<Pair<Int, Int>> = emptyList(),
+    val needs: List<Pair<Int, Int>> = emptyList(),
+    val missing: String = "You search the area, but you do not have what you need yet.",
 )
 
 /**

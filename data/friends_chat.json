@@ -1,0 +1,28 @@
+{
+  "anudd": {
+    "enterRank": 2,
+    "talkRank": 2,
+    "kickRank": 6,
+    "lootShareRank": 2,
+    "coinShare": false,
+    "friends": [
+      "anudd2",
+      "sous",
+      "hakim"
+    ],
+    "ranks": {
+      "anudd2": 3
+    }
+  },
+  "anuddd": {
+    "enterRank": -1,
+    "talkRank": -1,
+    "kickRank": 7,
+    "lootShareRank": 0,
+    "coinShare": false,
+    "friends": [
+      "anus"
+    ],
+    "ranks": {}
+  }
+}

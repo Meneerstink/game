@@ -1662,7 +1662,7 @@ object FoundationQuests {
         task.player.message("You've started a new quest: <col=5861e9>${quest.name}")
         QuestHelper.onStarted(task.player, quest)
         val first = quest.steps.first()
-        if (first.location != null && first.place != null) with(quest) { task.offerTravel(first.place, first.location, first.npc.takeIf { first.fight == null }) }
+        if (first.location != null && first.place != null) with(quest) { task.offerTravel(first.place, first.location, first.npc.takeIf { first.fight == null && first.npc >= 0 }) }
     }
 
     private suspend fun runStep(task: QueueTask, quest: ShortQuest, stage: Int) {
@@ -1708,9 +1708,9 @@ object FoundationQuests {
         if (step.fight != null && QuestFights.active(player) != null) return
         with(quest) {
             if (afterKill) {
-                task.offerTravel(place, location, step.npc.takeIf { step.fight == null }, gg.rsmod.plugins.content.magic.TeleportType.QUEST_RETURN, ask = "Take me to $place.")
+                task.offerTravel(place, location, step.npc.takeIf { step.fight == null && step.npc >= 0 }, gg.rsmod.plugins.content.magic.TeleportType.QUEST_RETURN, ask = "Take me to $place.")
             } else {
-                task.offerTravel(place, location, step.npc.takeIf { step.fight == null })
+                task.offerTravel(place, location, step.npc.takeIf { step.fight == null && step.npc >= 0 })
             }
         }
     }
@@ -1744,6 +1744,36 @@ object FoundationQuests {
         if (step.fight != null) player.queue { offerNextStep(this, quest, afterKill = true) }
     }
 
+    private val SEARCH_HINTED = gg.rsmod.game.model.attr.AttributeKey<String>()
+
+    /**
+     * PROJECT48 F4: a search step (Z) completes itself when the player stands at its tile (called by the Quest Helper tick). Returns
+     * true when the step was done now. Without the needed items the hint is told once per step, until the player leaves the spot.
+     */
+    fun trySearch(player: Player, quest: ShortQuest, stage: Int): Boolean {
+        val search = quest.steps.getOrNull(stage - 1)?.search ?: return false
+        val key = "${quest.slot}:$stage"
+        if (player.tile.height != search.tile.height || !player.tile.isWithinRadius(search.tile, search.radius)) {
+            if (player.attr[SEARCH_HINTED] == key) player.attr.remove(SEARCH_HINTED)
+            return false
+        }
+        if (QuestFights.active(player) != null) return false
+        if (!search.needs.all { (item, amount) -> player.inventory.getItemCount(item) >= amount }) {
+            if (player.attr[SEARCH_HINTED] != key) {
+                player.attr[SEARCH_HINTED] = key
+                player.message(search.missing)
+            }
+            return false
+        }
+        player.attr.remove(SEARCH_HINTED)
+        search.needs.forEach { (item, amount) -> player.inventory.remove(item, amount) }
+        player.message(search.text)
+        search.gives.forEach { (item, amount) -> FoundationRewards.grant(player, item, amount) }
+        completeStep(player, quest, stage)
+        player.queue { offerNextStep(this, quest, afterKill = false) }
+        return true
+    }
+
     /** Names of the quest npcs, for messages that point the player back to one. */
     val NPC_NAMES: Map<Int, String> =
         mapOf(
@@ -1770,7 +1800,7 @@ object FoundationQuests {
             lost.forEach { (item, amount) -> FoundationRewards.grant(player, item, amount) }
         }
         task.chatPlayer(*step.journal.map { it.replace(Regex("<[^>]+>"), "") }.toTypedArray(), facialExpression = FacialExpression.THINKING)
-        if (step.location != null && step.place != null) with(quest) { task.offerTravel(step.place, step.location, step.npc.takeIf { step.fight == null }) }
+        if (step.location != null && step.place != null) with(quest) { task.offerTravel(step.place, step.location, step.npc.takeIf { step.fight == null && step.npc >= 0 }) }
     }
 
     /**

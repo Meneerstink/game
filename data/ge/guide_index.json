@@ -1,0 +1,197 @@
+{
+  "11694": {
+    "price": 7931656,
+    "anchorPrice": 7931656,
+    "anchorMs": 1790358678681,
+    "samples": [
+      {
+        "price": 7931656,
+        "atMs": 0
+      }
+    ]
+  },
+  "22717": {
+    "price": 44,
+    "anchorPrice": 44,
+    "anchorMs": 1790358678682,
+    "samples": [
+      {
+        "price": 44,
+        "atMs": 0
+      },
+      {
+        "price": 44,
+        "atMs": 0
+      }
+    ]
+  },
+  "23128": {
+    "price": 664125,
+    "anchorPrice": 664125,
+    "anchorMs": 1790358678682,
+    "samples": [
+      {
+        "price": 664125,
+        "atMs": 0
+      }
+    ]
+  },
+  "23826": {
+    "price": 1730,
+    "anchorPrice": 1730,
+    "anchorMs": 1790358678682,
+    "samples": [
+      {
+        "price": 1730,
+        "atMs": 0
+      }
+    ]
+  },
+  "22743": {
+    "price": 5295412,
+    "anchorPrice": 5574117,
+    "anchorMs": 1790358678682,
+    "samples": [
+      {
+        "price": 5295412,
+        "atMs": 0
+      }
+    ]
+  },
+  "22374": {
+    "price": 43352191,
+    "anchorPrice": 43352191,
+    "anchorMs": 1790358678682,
+    "samples": [
+      {
+        "price": 43352191,
+        "atMs": 0
+      }
+    ]
+  },
+  "22376": {
+    "price": 29281812,
+    "anchorPrice": 29281812,
+    "anchorMs": 1790358678682,
+    "samples": [
+      {
+        "price": 29281812,
+        "atMs": 0
+      }
+    ]
+  },
+  "22880": {
+    "price": 68791652,
+    "anchorPrice": 68791652,
+    "anchorMs": 1790358678682,
+    "samples": [
+      {
+        "price": 68791652,
+        "atMs": 0
+      }
+    ]
+  },
+  "23743": {
+    "price": 345,
+    "anchorPrice": 345,
+    "anchorMs": 1790358678682,
+    "samples": [
+      {
+        "price": 345,
+        "atMs": 0
+      }
+    ]
+  },
+  "22718": {
+    "price": 80,
+    "anchorPrice": 80,
+    "anchorMs": 1790358678682,
+    "samples": [
+      {
+        "price": 80,
+        "atMs": 0
+      }
+    ]
+  },
+  "4697": {
+    "price": 67,
+    "anchorPrice": 67,
+    "anchorMs": 1790358678682,
+    "samples": [
+      {
+        "price": 67,
+        "atMs": 0
+      }
+    ]
+  },
+  "22761": {
+    "price": 7775207,
+    "anchorPrice": 7775207,
+    "anchorMs": 1790358678682,
+    "samples": [
+      {
+        "price": 7775207,
+        "atMs": 0
+      }
+    ]
+  },
+  "22632": {
+    "price": 153,
+    "anchorPrice": 153,
+    "anchorMs": 1790358678682,
+    "samples": [
+      {
+        "price": 153,
+        "atMs": 0
+      },
+      {
+        "price": 153,
+        "atMs": 0
+      }
+    ]
+  },
+  "299": {
+    "price": 749,
+    "anchorPrice": 749,
+    "anchorMs": 1790358678682,
+    "samples": [
+      {
+        "price": 749,
+        "atMs": 0
+      }
+    ]
+  },
+  "22731": {
+    "price": 1968862,
+    "anchorPrice": 1968862,
+    "anchorMs": 1790358678682,
+    "samples": [
+      {
+        "price": 1968862,
+        "atMs": 0
+      }
+    ]
+  },
+  "22415": {
+    "price": 559945,
+    "anchorPrice": 559945,
+    "anchorMs": 1790358678682,
+    "samples": [
+      {
+        "price": 559945,
+        "atMs": 0
+      }
+    ]
+  },
+  "22326": {
+    "price": 1395278305,
+    "anchorPrice": 1395278305,
+    "anchorMs": 1790358678682,
+    "samples": [
+      {
+        "price": 1395278305,
+        "atMs": 0
+      }
+    ]
+  }
+}
