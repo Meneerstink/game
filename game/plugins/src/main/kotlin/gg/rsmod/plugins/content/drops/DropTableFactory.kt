@@ -434,6 +434,14 @@ object DropTableFactory {
         // PROJECT48 S21 Sigil of Devotion: dropped bones are buried, ashes scattered at once.
         if (owner is Player && gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops.devotion(owner, item)) return
         if (owner is Player && gg.rsmod.plugins.content.mechanics.deadman.items.AshSanctifier.purify(owner, item)) return
+        // PROJECT48 I-A07 / I-A08: an open herb sack / seed box takes the grimy herbs / seeds that drop (what does not fit drops as usual).
+        if (owner is Player) {
+            val stored = gg.rsmod.plugins.content.mechanics.deadman.items.Sacks.autoStore(owner, item.id, item.amount)
+            if (stored > 0) {
+                if (stored < item.amount) createDrop(world, Item(item.id, item.amount - stored), tile, owner)
+                return
+            }
+        }
         if (owner is Player && gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets.collectDrop(owner, item, gg.rsmod.plugins.content.mechanics.deadman.DeadmanTrinkets.valueOfDrop(owner, item))) return
         if (def.stackable) {
             val ground = GroundItem(item.id, item.amount, tile, owner as Player)

@@ -73,3 +73,36 @@ on_item_on_item(item1 = Items.DEATH_RUNE, item2 = DmmItems.ASH_SANCTIFIER) { Ash
 on_item_option(DmmItems.ASH_SANCTIFIER, "check") { AshSanctifier.check(player, player.inventory[player.getInteractingItemSlot()]) }
 on_item_option(DmmItems.ASH_SANCTIFIER, "activity") { AshSanctifier.toggle(player) }
 on_item_option(DmmItems.ASH_SANCTIFIER, "uncharge") { AshSanctifier.uncharge(player, player.getInteractingItemSlot()) }
+
+/* Herb sack + Seed box (I-A07 / I-A08): Sacks.kt. Open/closed forms are separate items; the contents live on the player. */
+for (id in intArrayOf(Sacks.HERB_SACK, Sacks.HERB_SACK_OPEN)) {
+    on_item_option(id, "fill") { Sacks.fillHerbs(player) }
+    on_item_option(id, "empty") { Sacks.emptyHerbs(player) }
+    on_item_option(id, "check") { Sacks.checkHerbs(player) }
+}
+for (id in intArrayOf(Sacks.SEED_BOX, Sacks.SEED_BOX_OPEN)) {
+    on_item_option(id, "fill") { Sacks.fillSeeds(player) }
+    on_item_option(id, "empty") { Sacks.emptySeeds(player) }
+    on_item_option(id, "check") { Sacks.checkSeeds(player) }
+}
+for (id in intArrayOf(Sacks.HERB_SACK, Sacks.SEED_BOX)) on_item_option(id, "open") { Sacks.toggle(player, player.getInteractingItemSlot(), open = true) }
+for (id in intArrayOf(Sacks.HERB_SACK_OPEN, Sacks.SEED_BOX_OPEN)) on_item_option(id, "close") { Sacks.toggle(player, player.getInteractingItemSlot(), open = false) }
+for (id in intArrayOf(Sacks.HERB_SACK, Sacks.HERB_SACK_OPEN, Sacks.SEED_BOX, Sacks.SEED_BOX_OPEN)) {
+    on_item_option(id, "destroy") {
+        val slot = player.getInteractingItemSlot()
+        player.queue(TaskPriority.WEAK) {
+            if (confirmItemAction(id, "Are you sure you want to destroy this item?", "Everything inside it is lost too.")) {
+                if (player.inventory.remove(id, beginSlot = slot).hasSucceeded()) {
+                    Sacks.destroyed(player, id)
+                    player.message("You destroy it; whatever was inside is lost.")
+                }
+            }
+        }
+    }
+}
+
+/* An open sack / box takes what the player picks up from the floor. */
+on_global_item_pickup {
+    val ground = player.getInteractingGroundItem()
+    Sacks.afterPickup(player, ground.item, ground.amount)
+}

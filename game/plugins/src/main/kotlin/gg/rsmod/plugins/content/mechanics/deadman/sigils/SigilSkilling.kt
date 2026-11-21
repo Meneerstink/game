@@ -103,7 +103,7 @@ object SigilSkilling {
         gathered: Int,
         amount: Int = 1,
     ): ItemTransaction {
-        if (player.attuned().isEmpty()) return player.inventory.add(gathered, amount)
+        if (player.attuned().isEmpty()) return gg.rsmod.plugins.content.mechanics.deadman.items.Sacks.add(player, gathered, amount)
         val itemId = infernal(player, woodcraft(player, gathered))
         val total = amount * multiplier(player)
         if (toBank(player)) {
@@ -113,7 +113,7 @@ object SigilSkilling {
                 return ItemTransaction(total, total, emptyList())
             }
         }
-        return player.inventory.add(itemId, total)
+        return gg.rsmod.plugins.content.mechanics.deadman.items.Sacks.add(player, itemId, total)
     }
 
     /** S42 Litheness: every 10 ticks of running, 2x the Agility level as Agility XP; none inside a safe zone. */
