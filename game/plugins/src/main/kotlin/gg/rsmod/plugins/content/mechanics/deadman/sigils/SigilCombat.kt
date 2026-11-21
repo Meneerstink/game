@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.mechanics.deadman.sigils
 import gg.rsmod.plugins.api.BonusSlot
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.ext.heal
+import gg.rsmod.plugins.api.ext.isProtectedFrom
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
@@ -174,6 +175,21 @@ object SigilCombat {
                 result = Math.floor(result * 0.40)
             } else if (Sigils.effective(target, Sigil.RESISTANCE)) {
                 result = Math.floor(result * 0.75)
+            }
+        }
+        // S38 Pious Protection: 35% less damage of a style while the matching protection prayer is on, 5% more while a protection prayer
+        // of another style is on (on top of what the prayer itself does).
+        if (Sigils.effective(target, Sigil.PIOUS_PROTECTION)) {
+            val cls = when (styleOf(type)) {
+                Style.MELEE -> gg.rsmod.game.model.combat.CombatClass.MELEE
+                Style.RANGED -> gg.rsmod.game.model.combat.CombatClass.RANGED
+                Style.MAGIC -> gg.rsmod.game.model.combat.CombatClass.MAGIC
+                else -> null
+            }
+            if (cls != null) {
+                val right = target.isProtectedFrom(cls)
+                val wrong = !right && gg.rsmod.game.model.combat.CombatClass.values().any { it != cls && target.isProtectedFrom(it) }
+                if (right) result = Math.floor(result * 0.65) else if (wrong) result = Math.floor(result * 1.05)
             }
         }
         // S36 Aggression: you take 5% more damage from all sources.
