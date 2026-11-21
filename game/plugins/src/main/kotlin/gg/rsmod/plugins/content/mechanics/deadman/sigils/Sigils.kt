@@ -123,6 +123,24 @@ object Sigils {
     }
 
     /** Unattunes the attuned sigil in inventory [slot]. */
+    /**
+     * An attuned sigil used on a bank: the cache items of many sigils have no "Unattune" option (only "Destroy"), so this is the way to
+     * un-attune them. Returns true when [item] was an attuned sigil (the answer is already told to the player).
+     */
+    fun useOnBank(
+        player: Player,
+        slot: Int,
+    ): Boolean {
+        val item = player.inventory[slot] ?: return false
+        if (Sigil.ofAttuned(item.id) == null) return false
+        when (unattune(player, slot, atBank = true)) {
+            Result.OK -> player.message("The sigil's attunement fades.")
+            Result.SKULLED -> player.message("You cannot unattune a sigil while skulled.")
+            else -> player.message("Nothing interesting happens.")
+        }
+        return true
+    }
+
     fun unattune(
         player: Player,
         slot: Int,

@@ -14,6 +14,8 @@ val bankLocs =
 
 bankLocs.filterNot { world.plugins.hasAnyItemOnObjectHandler(it) }.forEach { obj ->
     on_any_item_on_obj(obj) {
+        // PROJECT48 SIGILS: an attuned sigil used on a bank is un-attuned (many cache sigils have no Unattune option).
+        if (gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.useOnBank(player, player.getInteractingItemSlot())) return@on_any_item_on_obj
         NotedFoodOnBank.use(player, player.getInteractingItem())
     }
 }

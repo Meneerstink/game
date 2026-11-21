@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.mechanics.deadman.sigils
 
+import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.fs.def.ObjectDef
 import gg.rsmod.game.model.collision.ObjectType
 import gg.rsmod.plugins.content.objs.bank_locs.NotedFoodOnBank
@@ -36,26 +37,43 @@ fun sigilMessage(
     }
 }
 
+/*
+ * The cache items come from OSRS (build 2686) and differ per sigil: the un-attuned item has "Attune" or "Unlock", the attuned one has
+ * "Unattune" (some also "Activate" / "Check") or ONLY "Destroy". Every option the item really has is hooked; an attuned sigil without
+ * "Unattune" is un-attuned by using it on a bank (NotedFoodOnBank's any-item-on-bank hook calls [Sigils.useOnBank]).
+ */
+fun hasInvOption(
+    id: Int,
+    name: String,
+): Boolean = world.definitions.get(ItemDef::class.java, id).inventoryMenu.any { it.equals(name, true) }
+
 Sigil.values().forEach { sigil ->
-    on_item_option(sigil.unattunedId, "attune") {
-        val slot = player.getInteractingItemSlot()
-        sigilMessage(player, Sigils.attune(player, slot, nearBank(player)), attuning = true)
+    listOf("attune", "unlock").filter { hasInvOption(sigil.unattunedId, it) }.forEach { option ->
+        on_item_option(sigil.unattunedId, option) {
+            val slot = player.getInteractingItemSlot()
+            sigilMessage(player, Sigils.attune(player, slot, nearBank(player)), attuning = true)
+        }
     }
-    on_item_option(sigil.attunedId, "unattune") {
-        val slot = player.getInteractingItemSlot()
-        sigilMessage(player, Sigils.unattune(player, slot, nearBank(player)), attuning = false)
+    if (hasInvOption(sigil.attunedId, "unattune")) {
+        on_item_option(sigil.attunedId, "unattune") {
+            val slot = player.getInteractingItemSlot()
+            sigilMessage(player, Sigils.unattune(player, slot, nearBank(player)), attuning = false)
+        }
     }
-    on_item_option(sigil.attunedId, "check") {
-        Sigils.overview(player).forEach { player.message(it) }
+    if (hasInvOption(sigil.attunedId, "check")) {
+        on_item_option(sigil.attunedId, "check") {
+            Sigils.overview(player).forEach { player.message(it) }
+        }
     }
-    on_item_option(sigil.attunedId, "activate") {
-        if (Sigils.activate(player, sigil)) SigilEffects.activated(player, sigil)
+    if (hasInvOption(sigil.attunedId, "activate")) {
+        on_item_option(sigil.attunedId, "activate") {
+            if (Sigils.activate(player, sigil)) SigilEffects.activated(player, sigil)
+        }
     }
-    on_item_option(sigil.attunedId, "inspect") {
-        player.message("${sigil.label} (tier ${sigil.tier}, ${sigil.kind.name.lowercase()}).")
-    }
-    on_item_option(sigil.unattunedId, "inspect") {
-        player.message("${sigil.label} (tier ${sigil.tier}, ${sigil.kind.name.lowercase()}).")
+    listOf(sigil.attunedId, sigil.unattunedId).filter { hasInvOption(it, "inspect") }.forEach { id ->
+        on_item_option(id, "inspect") {
+            player.message("${sigil.label} (tier ${sigil.tier}, ${sigil.kind.name.lowercase()}).")
+        }
     }
 }
 
