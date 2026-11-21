@@ -76,7 +76,7 @@ object FairyTaleII : ShortQuest(
     override val steps =
         listOf(
             QuestStep(
-                npc = Npcs.FAIRY_GODFATHER,
+                npc = Npcs.FAIRY_GODFATHER_11328,
                 journal = listOf("I should speak to the ${red("Fairy Godfather")} in Zanaris."),
                 done = listOf("The Fairy Godfather opened the fairy rings for me."),
                 place = "Zanaris",
@@ -92,7 +92,7 @@ object FairyTaleII : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.FAIRY_VERY_WISE,
+                npc = Npcs.FAIRY_4444,
                 journal = listOf("I should speak to the ${red("Fairy Very Wise")} in the fairy resistance", "hideout about the queen's poison."),
                 done = listOf("The Fairy Very Wise needs a Gorak claw and a star flower."),
                 place = "the fairy hideout",
@@ -108,7 +108,7 @@ object FairyTaleII : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.FAIRY_VERY_WISE,
+                npc = Npcs.FAIRY_4444,
                 journal = listOf("I must defeat ${red("Gorak")} (level 145) on the Gorak Plane and take", "his claw."),
                 done = listOf("I took a Gorak claw from Gorak."),
                 place = "the Gorak Plane",
@@ -135,7 +135,7 @@ object FairyTaleII : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.FAIRY_VERY_WISE,
+                npc = Npcs.FAIRY_4444,
                 journal = listOf("I should bring the Gorak claw and the star flower to the", "${red("Fairy Very Wise")}."),
                 done = listOf("The Fairy Very Wise brewed the cure."),
                 place = "the fairy hideout",
@@ -153,7 +153,7 @@ object FairyTaleII : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.FAIRY_QUEEN_4437,
+                npc = Npcs.FAIRY_4446,
                 journal = listOf("I should give the cure to the ${red("Fairy Queen")}."),
                 done = listOf("The Fairy Queen woke - cured."),
                 place = "the fairy hideout",

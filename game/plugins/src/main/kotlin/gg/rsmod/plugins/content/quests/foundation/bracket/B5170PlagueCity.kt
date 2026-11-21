@@ -87,7 +87,7 @@ object PlagueCity : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.ELENA_715,
+                npc = Npcs.ELENA_3215,
                 journal = listOf("I should show the ${red("warrant")} to the mourners and free ${red("Elena")}", "in the plague house."),
                 done = listOf("I freed Elena from the plague house."),
                 place = "the plague house in West Ardougne",

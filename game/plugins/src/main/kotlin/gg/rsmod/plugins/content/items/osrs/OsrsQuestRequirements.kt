@@ -32,6 +32,7 @@ object OsrsQuestRequirements {
             Items.ARCHER_HELM to gg.rsmod.plugins.content.quests.foundation.bracket.FremennikTrials,
             Items.FARSEER_HELM to gg.rsmod.plugins.content.quests.foundation.bracket.FremennikTrials,
             Items.HELM_OF_NEITIZNOT to gg.rsmod.plugins.content.quests.foundation.bracket.FremennikIsles,
+            Items.DRAGON_HALBERD to gg.rsmod.plugins.content.quests.foundation.bracket.Regicide,
         )
 
     /** Null when [player] may wear [item], else the refusal message. */

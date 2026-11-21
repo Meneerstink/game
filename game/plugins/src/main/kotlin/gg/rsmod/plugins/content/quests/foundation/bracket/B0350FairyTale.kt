@@ -69,7 +69,7 @@ object FairyTaleI : ShortQuest(
     override val steps =
         listOf(
             QuestStep(
-                npc = Npcs.FAIRY_GODFATHER,
+                npc = Npcs.FAIRY_GODFATHER_11328,
                 journal = listOf("I should speak to the ${red("Fairy Godfather")} in Zanaris."),
                 done = listOf("The Fairy Godfather sent me to Fairy Nuff."),
                 place = "Zanaris",
@@ -80,7 +80,7 @@ object FairyTaleI : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.FAIRY_NUFF,
+                npc = Npcs.FAIRY_4443,
                 journal = listOf("I should speak to ${red("Fairy Nuff")} in Zanaris."),
                 done = listOf("Fairy Nuff says the queen needs Magic secateurs;", "Malignius Mortifer can make them."),
                 place = "Zanaris",
@@ -110,7 +110,7 @@ object FairyTaleI : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.FAIRY_NUFF,
+                npc = Npcs.FAIRY_4443,
                 journal = listOf("I must defeat ${red("Tanglefoot")} (level 111) in his lair in Zanaris", "with the Magic secateurs."),
                 done = listOf("I cut down Tanglefoot with the Magic secateurs."),
                 place = "Zanaris",
@@ -123,7 +123,7 @@ object FairyTaleI : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.FAIRY_GODFATHER,
+                npc = Npcs.FAIRY_GODFATHER_11328,
                 journal = listOf("I should tell the ${red("Fairy Godfather")} that Tanglefoot is gone."),
                 done = listOf("The Fairy Godfather thanked me."),
                 place = "Zanaris",
