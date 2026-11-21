@@ -139,6 +139,8 @@ fun Pawn.teleport(
     lock = LockState.FULL_WITH_DAMAGE_IMMUNITY
 
     queue(TaskPriority.STRONG) {
+        // PROJECT48 S45 Sigil of Last Recall: remember where this teleport started.
+        (this@teleport as? gg.rsmod.game.model.entity.Player)?.let { gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilEffects.recordTeleport(it) }
         prepareForTeleport()
 
         if (startSound) type.startSound?.let { (this@teleport as? Player)?.playSound(it) }
