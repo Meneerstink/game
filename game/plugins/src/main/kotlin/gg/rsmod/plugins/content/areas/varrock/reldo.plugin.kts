@@ -12,6 +12,7 @@ val knightsSword = TheKnightsSword
  */
 on_npc_option(npc = Npcs.RELDO, option = "talk-to") {
     player.queue {
+        if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.RELDO)) return@queue
         chatNpc("Hello stranger.")
         /**
          * TODO Add support for when Shield of Arrav is added.

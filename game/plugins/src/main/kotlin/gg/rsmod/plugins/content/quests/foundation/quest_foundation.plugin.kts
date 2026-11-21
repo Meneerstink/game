@@ -539,7 +539,10 @@ gg.rsmod.plugins.content.quests.foundation.bracket.BracketQuests.NPCS.forEach { 
     post.tile?.let { spawn_npc(npc = post.npc, x = it.x, z = it.z, height = it.height, walkRadius = 0, direction = post.facing) }
     on_npc_option(npc = post.npc, option = "talk-to") {
         player.queue {
-            if (!FoundationQuests.talk(this, post.npc)) chatNpc(*post.idle.toTypedArray(), facialExpression = FacialExpression.CALM_TALK)
+            if (FoundationQuests.talk(this, post.npc)) return@queue
+            // No quest business: an unlock hand-out of this npc (ONTGR) first, else its idle lines.
+            if (post.extra?.invoke(this) == true) return@queue
+            chatNpc(*post.idle.toTypedArray(), facialExpression = FacialExpression.CALM_TALK)
         }
     }
 }

@@ -8,6 +8,7 @@ import gg.rsmod.plugins.content.quests.startedQuest
 
 on_npc_option(Npcs.AGGIE, "Talk-to") {
     player.queue {
+        if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.AGGIE)) return@queue
         chatNpc("What can I help you with?")
         mainOptions(this)
     }

@@ -46,4 +46,11 @@ object BracketQuests {
  * A quest npc of a bracket quest. [tile] = where the plugin spawns it (null: the npc stands in the world already, only its Talk-to
  * is bound); [idle] is what it says when it has no quest business with the player.
  */
-class BracketNpc(val npc: Int, val tile: Tile?, val facing: Direction, val idle: List<String>)
+class BracketNpc(
+    val npc: Int,
+    val tile: Tile?,
+    val facing: Direction,
+    val idle: List<String>,
+    /** What the npc does when it has no quest business with the player (an unlock hand-out, ONTGR), instead of the idle lines. */
+    val extra: (suspend gg.rsmod.game.model.queue.QueueTask.() -> Boolean)? = null,
+)
