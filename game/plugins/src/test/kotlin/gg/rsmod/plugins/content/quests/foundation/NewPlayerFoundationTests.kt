@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.quests.foundation
 
+import gg.rsmod.plugins.content.quests.foundation.bracket.BracketQuests
+
 import com.displee.cache.CacheLibrary
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
@@ -504,6 +506,8 @@ class NewPlayerFoundationTests {
         val tiles =
             FoundationQuests.NPC_POSTS.map { "npc ${it.npc}" to it.tile } +
                 FoundationQuests.SHORT.flatMap { q -> q.steps.mapNotNull { s -> s.location?.let { "${q.name} travel to ${s.place}" to it } } } +
+                BracketQuests.NPCS.mapNotNull { n -> n.tile?.let { "bracket npc ${n.npc}" to it } } +
+                FoundationQuests.SHORT.filter { it.ownSteps }.flatMap { q -> q.steps.flatMap { s -> listOfNotNull(s.fight?.tile?.let { "${q.name} fight" to it }, s.search?.tile?.let { "${q.name} search" to it }) } } +
                 listOf("basement arrival" to AfkArea.BASEMENT_ARRIVAL)
         fun blockReason(tile: gg.rsmod.game.model.Tile): String? {
             val sx = tile.x shr 6

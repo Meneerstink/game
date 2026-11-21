@@ -33,7 +33,7 @@ object OsrsQuestRequirements {
             Items.FARSEER_HELM to gg.rsmod.plugins.content.quests.foundation.bracket.FremennikTrials,
             Items.HELM_OF_NEITIZNOT to gg.rsmod.plugins.content.quests.foundation.bracket.FremennikIsles,
             Items.DRAGON_HALBERD to gg.rsmod.plugins.content.quests.foundation.bracket.Regicide,
-        )
+        ) + (4212..4235).filter { it !in setOf(4213, 4235) }.associateWith { gg.rsmod.plugins.content.quests.foundation.bracket.RovingElves }
 
     /** Null when [player] may wear [item], else the refusal message. */
     fun wearRefusal(player: Player, item: Int): String? {

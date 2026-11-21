@@ -12,7 +12,7 @@ import gg.rsmod.plugins.content.quests.foundation.ShortQuest
 
 /** PROJECT48: the mini-quests of combat bracket 51-70 (Q10-Q16), in the order of VOORTGANG.tsv. */
 object B5170Quests {
-    val ALL: List<ShortQuest> = listOf(FremennikTrials, FremennikIsles, PlagueCity, Biohazard, UndergroundPass, Regicide)
+    val ALL: List<ShortQuest> = listOf(FremennikTrials, FremennikIsles, PlagueCity, Biohazard, UndergroundPass, Regicide, RovingElves)
 
     val NPCS: List<BracketNpc> =
         listOf(
@@ -30,6 +30,8 @@ object B5170Quests {
             BracketNpc(Npcs.ELF_TRACKER, null, Direction.SOUTH, listOf("The forest watches us all.")),
             BracketNpc(Npcs.LORD_IORWERTH, Tile(2195, 3254, 0), Direction.SOUTH, listOf("Our people hold the line.")),
             BracketNpc(Npcs.GENERAL_HINING, null, Direction.SOUTH, listOf("Stay clear of the catapult.")),
+            BracketNpc(Npcs.ISLWYN, null, Direction.SOUTH, listOf("The forest remembers.")),
+            BracketNpc(Npcs.ELUNED_2376, Tile(2292, 3141, 0), Direction.SOUTH, listOf("Peace be with you.")),
             BracketNpc(Npcs.MORD_GUNNARS, null, Direction.SOUTH, listOf("The sea is calm today.")),
             BracketNpc(Npcs.KING_GJUKI_SORVOTT_IV, null, Direction.SOUTH, listOf("Jatizso stands proud.")),
             BracketNpc(
