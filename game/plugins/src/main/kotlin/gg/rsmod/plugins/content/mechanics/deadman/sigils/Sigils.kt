@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.mechanics.deadman.sigils
 
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item

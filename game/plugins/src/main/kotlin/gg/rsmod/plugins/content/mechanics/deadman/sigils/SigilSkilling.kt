@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.mechanics.deadman.sigils
 
+import gg.rsmod.plugins.api.ext.getEquipment
 import gg.rsmod.game.model.container.ItemTransaction
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.addXp

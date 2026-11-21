@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.mechanics.deadman.sigils
 
+import gg.rsmod.plugins.api.ext.getEquipment
 import gg.rsmod.plugins.api.BonusSlot
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.ext.heal

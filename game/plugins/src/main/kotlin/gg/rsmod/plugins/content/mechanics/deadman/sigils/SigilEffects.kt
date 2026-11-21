@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.mechanics.deadman.sigils
 
+import gg.rsmod.plugins.content.combat.getCombatTarget
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.getSpellbook
 import gg.rsmod.plugins.api.ext.message
