@@ -2,7 +2,6 @@ package gg.rsmod.plugins.content.mechanics.deadman.sigils
 
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.setComponentItem
-import gg.rsmod.plugins.api.ext.setComponentPosition
 
 /**
  * SIGIL-WORN-ICOON (owner 21-11, approved design screens/SIGILS/mock/sigil_venster_v3.png panel 2): the sigil slot in the Worn Items
@@ -27,31 +26,12 @@ object SigilWornSlot {
         player.setComponentItem(INTERFACE_ID, ICON, iconItem(player), 1)
     }
 
-    /** `SigilWornSlotInterfaceTool.LAYER`: the slot's layer. */
-    const val LAYER = 51
-
     /**
-     * Where the slot stands, in pixels from the tab's left edge (the tab is 190 wide; an IF_SETPOSITION is absolute). The cache has it
-     * at the OSRS place, left of the head slot in the weapon column ([X_OSRS], centre offset -56). While the Dizana's quiver slot
-     * (387:48, centre offset -41) is shown the two would overlap, so the sigil slot steps aside to the tab's left edge ([X_BESIDE_QUIVER]).
+     * After the Worn Items tab is mounted (the one mount hook of 387 lives in dizanas_quiver.plugin.kts). The slot's place is the
+     * cache's (OSRS: left of the head slot, in the weapon column); the Dizana's quiver slot 387:48 stands right of the head slot, so
+     * the two never meet (seen in the test client 21-11, screens/SIGILS/run2/worn_quiver2.png).
      */
-    const val X_OSRS = 95 - 56 - 18
-    const val X_BESIDE_QUIVER = 0
-    const val Y = 4
-
-    fun place(
-        player: Player,
-        quiverSlotShown: Boolean,
-    ) {
-        player.setComponentPosition(INTERFACE_ID, LAYER, if (quiverSlotShown) X_BESIDE_QUIVER else X_OSRS, Y)
-    }
-
-    /** After the Worn Items tab is mounted (the one mount hook of 387 lives in dizanas_quiver.plugin.kts). */
-    fun mount(
-        player: Player,
-        quiverSlotShown: Boolean,
-    ) {
-        place(player, quiverSlotShown)
+    fun mount(player: Player) {
         refresh(player)
     }
 

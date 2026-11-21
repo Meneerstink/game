@@ -14,8 +14,8 @@ import gg.rsmod.game.tools.importer.LootKeyInterfaceImportTool.Component
  *  - [BACKGROUND] sprite 170 (the same slot background);
  *  - [ICON] a 32x32 graphic the server fills with a sigil item (IF_SETOBJECT) - op "View", its event baked (like 387:39).
  * Place = OSRS: left of the head slot, in the weapon column (centre offset -56, y 4; measured on the owner's OSRS picture). The
- * Dizana's quiver slot of this client (387:48 at -41,4, shown only while a quiver is worn) would overlap it: the server then moves
- * the sigil slot to the tab's left edge (SigilWornSlot.place). Another place: `--x=<n> --y=<n>` (re-running moves it).
+ * Dizana's quiver slot of this client (387:48) stands right of the head slot: the two never meet. Another place:
+ * `--x=<n> --y=<n>` (re-running moves it).
  *
  * Server: plugins `mechanics/deadman/sigils/SigilWornSlot.kt`.
  *

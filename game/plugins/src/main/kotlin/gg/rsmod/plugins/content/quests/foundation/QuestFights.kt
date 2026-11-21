@@ -21,6 +21,7 @@ object QuestFights {
     private val FOE_STAGE = AttributeKey<Int>()
     private val FOE_POS = AttributeKey<Int>()
     private val ACTIVE_FOE = AttributeKey<WeakReference<Npc>>()
+    private val NOT_ARRIVED = AttributeKey<Long>()
 
     /** How close the player has to be to the fight tile for the foe to appear. */
     const val REACH = 15
@@ -30,6 +31,12 @@ object QuestFights {
 
     /** How many walkable tiles round the player a foe may appear on (a radius of about 12 on open ground). */
     const val NEAR_WALK = 600
+
+    /**
+     * How many steps on foot the foe's tile may be from the player for the fight to start: [REACH] tiles diagonally over open
+     * ground are 30 steps north/east/south/west, plus a little for a corner.
+     */
+    const val NEAR_STEPS = 36
 
     fun active(player: Player): Npc? = player.attr[ACTIVE_FOE]?.get()?.takeIf { it.isSpawned() && it.isAlive() }
 
@@ -45,7 +52,10 @@ object QuestFights {
         // starts the fight once the player is free (conform quests 2026-10-07, Song of the Elves armed Mourner).
         if (player.isLocked()) return false
         val world = player.world
-        val foe = Npc(player, fight.npc, spawnTile(player, fight.npc, fight.tile), world)
+        val at = spawnTile(player, fight.npc, fight.tile)
+        // Not there yet on foot (Q14-DEMON-ONBEREIKBAAR): the foe comes when the player has walked round.
+        if (!arrivedOnFoot(player, fight, at)) return false
+        val foe = Npc(player, fight.npc, at, world)
         foe.respawnOverride = false
         foe.attr[FOE_QUEST] = quest.slot
         foe.attr[FOE_STAGE] = stage
@@ -74,6 +84,46 @@ object QuestFights {
                 }
             }
         }
+    }
+
+    /**
+     * Q14-DEMON-ONBEREIKBAAR (bot replay 21-11): [REACH] is a straight distance, so a fight started through a cave wall - after
+     * Underground Pass' third demon the next step's Kalrag appeared in the cave behind the wall, 7 tiles away but 56 steps on foot;
+     * it could not walk to the player ("no route") and stood there. A foe now appears only when the tile it would appear on is at
+     * most [NEAR_STEPS] steps on foot from the player. A foe no tile fits (spawnTile's last resort, the fight tile itself) is not
+     * held back. The answer for a tile the player stands on is remembered, so the helper tick does not search every tick.
+     */
+    private fun arrivedOnFoot(
+        player: Player,
+        fight: QuestFight,
+        at: Tile,
+    ): Boolean {
+        val key = (fight.npc.toLong() shl 40) or (player.tile.x.toLong() shl 20) or (player.tile.z.toLong() shl 4) or player.tile.height.toLong()
+        if (player.attr[NOT_ARRIVED] == key) return false
+        val arrived = at in walkSteps(player, NEAR_STEPS) || (at == fight.tile && at !in Landing.pocket(player.world.collision, player.tile, NEAR_WALK))
+        if (arrived) player.attr.remove(NOT_ARRIVED) else player.attr[NOT_ARRIVED] = key
+        return arrived
+    }
+
+    /** The tiles within [limit] steps on foot (north/east/south/west) of [player]. */
+    private fun walkSteps(
+        player: Player,
+        limit: Int,
+    ): Set<Tile> {
+        val collision = player.world.collision
+        val seen = hashSetOf(player.tile)
+        var ring = listOf(player.tile)
+        repeat(limit) {
+            val next = ArrayList<Tile>()
+            for (tile in ring) for (dir in gg.rsmod.game.model.Direction.NESW) {
+                if (!collision.canStep(tile, dir)) continue
+                val to = tile.step(dir)
+                if (seen.add(to)) next += to
+            }
+            if (next.isEmpty()) return seen
+            ring = next
+        }
+        return seen
     }
 
     /** A kill of a quest foe by its owner completes the step: its items, then the next stage (or the quest). */
