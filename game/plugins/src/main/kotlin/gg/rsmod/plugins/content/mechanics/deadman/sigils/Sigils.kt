@@ -132,6 +132,18 @@ object Sigils {
         slot: Int,
     ): Boolean {
         val item = player.inventory[slot] ?: return false
+        // The cache item of the Sigil of Mobility has no "Attune" option at all, so an un-attuned sigil used on a bank attunes it.
+        if (Sigil.ofUnattuned(item.id) != null) {
+            when (attune(player, slot, atBank = true)) {
+                Result.OK -> player.message("The sigil hums as it attunes to you.")
+                Result.SKULLED -> player.message("You cannot attune a sigil while skulled.")
+                Result.FULL -> player.message("You can only have $MAX_ATTUNED sigils attuned at a time.")
+                Result.EXCLUSIVE -> player.message("This sigil cannot be used in conjunction with the sigil you already have attuned.")
+                Result.ALREADY -> player.message("You already have this sigil attuned.")
+                else -> player.message("Nothing interesting happens.")
+            }
+            return true
+        }
         if (Sigil.ofAttuned(item.id) == null) return false
         when (unattune(player, slot, atBank = true)) {
             Result.OK -> player.message("The sigil's attunement fades.")
