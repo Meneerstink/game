@@ -58,7 +58,9 @@ fun consume(player: Player, food: Consumable, name: String) {
     player.filterableMessage(food.message.ifEmpty { ConsumableTable.defaultMessage(food.drink, name) })
     val wasInjured = player.getCurrentLifepoints() < player.skills.getMaxLevel(Skills.CONSTITUTION)
     val heal = (if (food.healMax > food.healMin) world.random(food.healMin..food.healMax) else food.healMin) / Food.LEDGER_UNITS_PER_HITPOINT
-    if (heal > 0) player.heal(heal)
+    if (heal > 0) player.heal(gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilConsumables.wellFed(player, heal))
+    // PROJECT48 S13 Food Master: a saved food stays in its slot.
+    if (!food.drink && food.leftover == -1 && gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilConsumables.keepsFood(player)) player.inventory.add(food.id, 1, beginSlot = slot)
     if (!GeDrinks.apply(player, food.id, wasInjured)) effect(player, name)
 }
 

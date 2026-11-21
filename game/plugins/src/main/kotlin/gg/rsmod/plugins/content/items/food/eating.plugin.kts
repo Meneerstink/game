@@ -20,6 +20,8 @@ Food.values.forEach { food ->
             if (food.replacement != -1) {
                 player.inventory.add(item = food.replacement, beginSlot = inventorySlot)
             }
+            // PROJECT48 S13 Food Master: a saved food stays in its slot.
+            else if (gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilConsumables.keepsFood(player)) player.inventory.add(item = food.item, beginSlot = inventorySlot)
         }
     }
 }

@@ -540,8 +540,8 @@ enum class PotionType(
             // Saradomin brew is a sourced over-maximum heal (Novite `heal(15% + 20, 15%)` on x10); every
             // other drink heals up to the maximum - capValue is an allowance ABOVE the maximum.
             when (i) {
-                Skills.CONSTITUTION -> p.heal(boost, if (alterStrategy[index] == "brewHealth") cap else 0)
-                Skills.PRAYER -> p.restorePrayer(boost + holyWrenchBonus(p, alterStrategy[index]), cap)
+                Skills.CONSTITUTION -> p.heal(gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilConsumables.wellFed(p, boost), if (alterStrategy[index] == "brewHealth") cap else 0)
+                Skills.PRAYER -> p.restorePrayer(gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilConsumables.faith(p, boost + holyWrenchBonus(p, alterStrategy[index])), cap)
                 else -> p.skills.alterCurrentLevel(i, boost, cap)
             }
         }

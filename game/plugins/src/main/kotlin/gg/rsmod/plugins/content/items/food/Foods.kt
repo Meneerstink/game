@@ -84,7 +84,7 @@ object Foods {
         p.animate(anim)
         p.playSound(Sfx.EAT)
         if (heal > 0) {
-            p.heal(heal, if (food.overheal) overHeal else 0)
+            p.heal(gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilConsumables.wellFed(p, heal), if (food.overheal) overHeal else 0)
         }
 
         p.timers[delay] = food.tickDelay

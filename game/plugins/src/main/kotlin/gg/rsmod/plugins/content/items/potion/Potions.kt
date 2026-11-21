@@ -46,7 +46,10 @@ object Potions {
             return
         }
         if (player.inventory.remove(item = potion.item, beginSlot = slot).hasSucceeded()) {
-            if (potion.replacement != -1) {
+            // PROJECT48 S16 Potion Master: a saved dose stays in the vial.
+            if (gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilConsumables.keepsPotionDose(player)) {
+                player.inventory.add(item = potion.item, beginSlot = slot)
+            } else if (potion.replacement != -1) {
                 player.inventory.add(item = potion.replacement, beginSlot = slot)
             }
             val anim =
