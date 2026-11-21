@@ -128,4 +128,20 @@ on_timer(Sigils.START_PROMPT_TIMER) {
 
 on_command("sigils") {
     Sigils.overview(player).forEach { player.message(it) }
+    AttunedSigilsUi.open(player)
+}
+
+// SIGIL-INFO-UI: the "Attuned Sigils" window (owner design 21-11). Unattune per slot = the item option's rules (bank, no skull).
+on_button(interfaceId = AttunedSigilsUi.INTERFACE_ID, component = gg.rsmod.game.tools.importer.AttunedSigilsInterfaceImportTool.AS.CLOSE) {
+    AttunedSigilsUi.close(player)
+}
+for (slot in 0 until gg.rsmod.game.tools.importer.AttunedSigilsInterfaceImportTool.AS.SLOTS) {
+    val hit = gg.rsmod.game.tools.importer.AttunedSigilsInterfaceImportTool.AS.slot(slot) + gg.rsmod.game.tools.importer.AttunedSigilsInterfaceImportTool.AS.S_BUTTON_HIT
+    on_button(interfaceId = AttunedSigilsUi.INTERFACE_ID, component = hit) {
+        when (val result = AttunedSigilsUi.unattune(player, slot, nearBank(player))) {
+            null -> Unit
+            Sigils.Result.ITEM_CHANGED -> player.message("You need that sigil in your inventory to unattune it.")
+            else -> sigilMessage(player, result, attuning = false)
+        }
+    }
 }
