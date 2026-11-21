@@ -162,6 +162,23 @@ CommandServerCommands.handlers["dropview"] = { _, a ->
     }
 }
 
+/** PROJECT48 test aid: `tomecharge <name> <tome item id> <charges>` puts a tome with that many charges into the worn shield slot. */
+CommandServerCommands.handlers["tomecharge"] = { w, a ->
+    val p = findPlayer(a)
+    val id = a.getOrNull(1)?.toIntOrNull()
+    val charges = a.getOrNull(2)?.toIntOrNull()
+    when {
+        System.getProperty("rsps.testServer") != "true" -> "tomecharge: testserver only"
+        p == null || id == null || charges == null -> "usage: tomecharge <name> <tome id> <charges>"
+        gg.rsmod.plugins.content.items.osrs.Tomes.tomeFor(id) == null -> "tomecharge: item $id is not a tome"
+        else -> {
+            val tome = gg.rsmod.plugins.content.items.osrs.Tomes.withCharges(gg.rsmod.game.model.item.Item(id), charges)
+            p.equipment[gg.rsmod.plugins.api.EquipmentType.SHIELD.id] = tome
+            "tomecharge ${p.username}: tome ${tome.id} with ${gg.rsmod.plugins.content.items.osrs.Tomes.charges(tome)} charges worn"
+        }
+    }
+}
+
 /**
  * PROJECT48 scenario aid: `tpnpc <name> <npc id> <x> <z> [height]` puts the bot on a free tile NEXT to the npc of that id nearest to
  * (x, z) from which the npc can be walked to (a post inside a building or behind a wall made every "talk to" step fail with
