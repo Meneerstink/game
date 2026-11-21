@@ -44,6 +44,9 @@ object TwinflameStaff {
         spell: CombatSpell,
     ): Boolean = spell in DOUBLE_HIT_SPELLS && worn(player)
 
-    /** The second spell's damage: 40 % of the first, rounded down (lifepoints are x10, so the rounding is on the shown hit). */
-    fun secondDamage(first: Int): Int = (first / 10 * 4 / 10) * 10
+    /**
+     * The second spell's damage: 40 % of the first, rounded down. Hit damage is 1:1 with the shown hitsplat and the lifepoints
+     * (Pawn.processHits subtracts hitmark.damage from lifepoints; Player.getMaximumLifepoints = the Hitpoints level), so no x10 here.
+     */
+    fun secondDamage(first: Int): Int = first * 4 / 10
 }

@@ -30,10 +30,10 @@ class DmmCItemsTests {
 
     @Test
     fun `the twinflame staff second spell is 40 percent of the first rounded down on the shown hit`() {
-        assertEquals(0, TwinflameStaff.secondDamage(10)) // shown 1 -> 0
-        assertEquals(20, TwinflameStaff.secondDamage(70)) // shown 7 -> 2
-        assertEquals(40, TwinflameStaff.secondDamage(100)) // shown 10 -> 4
-        assertEquals(120, TwinflameStaff.secondDamage(300)) // shown 30 -> 12
+        assertEquals(0, TwinflameStaff.secondDamage(1)) // 1 -> 0
+        assertEquals(2, TwinflameStaff.secondDamage(7)) // 7 -> 2
+        assertEquals(4, TwinflameStaff.secondDamage(10)) // 10 -> 4
+        assertEquals(12, TwinflameStaff.secondDamage(30)) // 30 -> 12
         // bolts, blasts and waves of the four elements; never strikes or surges
         assertEquals(12, TwinflameStaff.DOUBLE_HIT_SPELLS.size)
         assertFalse(CombatSpell.FIRE_STRIKE in TwinflameStaff.DOUBLE_HIT_SPELLS)
