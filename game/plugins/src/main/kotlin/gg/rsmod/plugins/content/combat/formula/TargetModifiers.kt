@@ -45,6 +45,11 @@ object TargetModifiers {
      *'re built from in real OSRS, so they're added to the same check here rather than given a
      * separate, parallel code path.
      */
+    /** PROJECT48 DMM-ITEMS: the imported OSRS Slayer helmet (i) and Salve amulet (i)/(ei) (ids from the p48-items import). */
+    private const val SLAYER_HELMET_I = 25484
+    private const val SALVE_I = 25485
+    private const val SALVE_EI = 25486
+
     private val SLAYER_HELMETS =
         intArrayOf(
             Items.SLAYER_HELMET,
@@ -53,6 +58,7 @@ object TargetModifiers {
             Items.FULL_SLAYER_HELMET,
             Items.FULL_SLAYER_HELMET_E,
             Items.FULL_SLAYER_HELMET_CHARGED,
+            SLAYER_HELMET_I,
         )
 
     /**
@@ -75,6 +81,7 @@ object TargetModifiers {
             Items.FULL_SLAYER_HELMET,
             Items.FULL_SLAYER_HELMET_E,
             Items.FULL_SLAYER_HELMET_CHARGED,
+            SLAYER_HELMET_I,
         )
 
     const val IMBUED_SLAYER_HELMET_BOOST = 1.15
@@ -82,6 +89,22 @@ object TargetModifiers {
     /** True while [player] wears an imbued Slayer helmet AND [target] matches their current Slayer task. */
     fun hasImbuedSlayerHelmetTaskBoost(player: Player, target: Pawn): Boolean =
         isCurrentSlayerTask(player, target) && player.hasEquipped(EquipmentType.HEAD, *IMBUED_SLAYER_HELMETS)
+
+    /**
+     * PROJECT48 DMM-ITEMS (OSRS Wiki Salve amulet(i)/(ei), Slayer helmet (i)): the imbued bonus of Ranged and Magic. Salve (i) = 16.67% ranged and
+     * 15% magic against undead, Salve (ei) = 20% for both; they do not stack with the on-task Slayer helmet (i) bonus (15%).
+     */
+    fun imbuedBoost(
+        player: Player,
+        target: Pawn,
+        magic: Boolean,
+    ): Double =
+        when {
+            isUndead(target) && player.hasEquipped(EquipmentType.AMULET, SALVE_EI) -> 1.2
+            isUndead(target) && player.hasEquipped(EquipmentType.AMULET, SALVE_I) -> if (magic) 1.15 else 7.0 / 6.0
+            hasImbuedSlayerHelmetTaskBoost(player, target) -> IMBUED_SLAYER_HELMET_BOOST
+            else -> 1.0
+        }
 
     fun isUndead(target: Pawn): Boolean = target is Npc && target.isSpecies(NpcSpecies.UNDEAD)
 
@@ -116,8 +139,8 @@ object TargetModifiers {
         target: Pawn,
     ): Double =
         when {
-            isUndead(target) && player.hasEquipped(EquipmentType.AMULET, Items.SALVE_AMULET) -> 7.0 / 6.0
-            isUndead(target) && player.hasEquipped(EquipmentType.AMULET, Items.SALVE_AMULET_E) -> 1.2
+            isUndead(target) && player.hasEquipped(EquipmentType.AMULET, Items.SALVE_AMULET, SALVE_I) -> 7.0 / 6.0
+            isUndead(target) && player.hasEquipped(EquipmentType.AMULET, Items.SALVE_AMULET_E, SALVE_EI) -> 1.2
             isCurrentSlayerTask(player, target) &&
                 player.hasEquipped(EquipmentType.HEAD, *BLACK_MASKS, *SLAYER_HELMETS) -> 7.0 / 6.0
             else -> 1.0
@@ -218,9 +241,7 @@ object TargetModifiers {
         if (isDragonbaneRanged(player, target)) {
             multiplier *= DHCB_ACCURACY
         }
-        if (hasImbuedSlayerHelmetTaskBoost(player, target)) {
-            multiplier *= IMBUED_SLAYER_HELMET_BOOST
-        }
+        multiplier *= imbuedBoost(player, target, magic = false)
         return multiplier
     }
 
@@ -289,9 +310,7 @@ object TargetModifiers {
         if (isDragonbaneRanged(player, target)) {
             multiplier *= DHCB_DAMAGE
         }
-        if (hasImbuedSlayerHelmetTaskBoost(player, target)) {
-            multiplier *= IMBUED_SLAYER_HELMET_BOOST
-        }
+        multiplier *= imbuedBoost(player, target, magic = false)
         return multiplier
     }
 }

@@ -167,9 +167,7 @@ object MagicCombatFormula : CombatFormula {
             hit = Math.floor(baseMax * (1.0 + additive))
             // Imbued Slayer helmet (OSRS-audit 2026-09-17b, see TargetModifiers.IMBUED_SLAYER_HELMETS):
             // "a 15% boost to Magic accuracy and Magic damage" against the player's current Slayer task.
-            if (TargetModifiers.hasImbuedSlayerHelmetTaskBoost(pawn, target)) {
-                hit = Math.floor(hit * TargetModifiers.IMBUED_SLAYER_HELMET_BOOST)
-            }
+            hit = Math.floor(hit * TargetModifiers.imbuedBoost(pawn, target, magic = true))
             // Revenant sceptres: "an additional 50% magic accuracy and damage boost ... when attacking any NPC in the Wilderness",
             // "also applied to any combat spells cast when it is equipped" (RevenantWeapons).
             if (pawn is Player && gg.rsmod.plugins.content.items.osrs.RevenantWeapons.wildernessBuff(pawn, target)) hit = Math.floor(hit * 3 / 2)
@@ -301,9 +299,7 @@ object MagicCombatFormula : CombatFormula {
         // Tome of Water: water spells +10 % (NPC) / +20 % (player), curse spells +20 % accuracy (Tomes).
         // Mystic smoke staff: +10 % additive magic accuracy for standard spells, before the tome factor (wiki DPS calculator order).
         var smoke = Math.floor(base * gg.rsmod.plugins.content.items.osrs.SmokeStaves.accuracyMultiplier(player, castingSpell(player)))
-        if (TargetModifiers.hasImbuedSlayerHelmetTaskBoost(player, target)) {
-            smoke = Math.floor(smoke * TargetModifiers.IMBUED_SLAYER_HELMET_BOOST)
-        }
+        smoke = Math.floor(smoke * TargetModifiers.imbuedBoost(player, target, magic = true))
         if (gg.rsmod.plugins.content.items.osrs.RevenantWeapons.wildernessBuff(player, target)) smoke = Math.floor(smoke * 3 / 2)
         // N522: Amulet of avarice, "an additional 20% increase in accuracy and damage when fighting revenants" (OSRS Wiki).
         if (gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.avariceBoost(player, target)) smoke = Math.floor(smoke * 6 / 5)
