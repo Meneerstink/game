@@ -45,7 +45,13 @@ class DeadmanStarterPackTests {
         val drops = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops
         f.inventory[0] = Item(pack)
         assertEquals(DeadmanStarterPack.Result.OK, DeadmanStarterPack.open(f.player))
-        val used = f.inventory.rawItems.count { it != null } - sigilsHeld()
+        // A later pack holds fewer items than the first (money and tabs are given once), so the room it needs is measured on a second
+        // pack - opened inside the 24 hours, so without a sigil.
+        f.inventory.rawItems.indices.forEach { f.inventory[it] = null }
+        f.inventory[0] = Item(pack)
+        assertEquals(DeadmanStarterPack.Result.OK, DeadmanStarterPack.open(f.player))
+        assertEquals(0, sigilsHeld())
+        val used = f.inventory.rawItems.count { it != null }
         // Refill exactly so that the pack's own items fit and nothing else does.
         f.inventory.rawItems.indices.forEach { f.inventory[it] = null }
         f.attr.remove(drops.STARTER_SIGIL_AT)
