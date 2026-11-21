@@ -126,11 +126,13 @@ class ClueScrollManager(
             if (expectedProgress != null && progress(player, tier) != expectedProgress) return false
             val completed = progress(player, tier) + 1
             val length = player.attr[lengthAttrs.getValue(tier)] ?: return false
+            // PROJECT48 S50 Sigil of the Bloodhound: a 75% chance that a completed step returns the reward casket at once.
+            val finished = completed >= length || gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops.bloodhound(player)
             val staged = ItemContainer(player.inventory)
             for (id in consume) {
                 if (!staged.remove(id, 1, assureFullRemoval = true).hasSucceeded()) return false
             }
-            if (completed >= length) {
+            if (finished) {
                 if (tier.casketId < 0) return false
                 staged[slot] = null
                 if (!staged.add(tier.casketId, 1, assureFullInsertion = true).hasSucceeded()) return false
@@ -148,7 +150,7 @@ class ClueScrollManager(
                 val next = staged[i]
                 if (old?.id != next?.id || old?.amount != next?.amount || old?.attr != next?.attr) player.inventory[i] = next
             }
-            if (completed >= length) {
+            if (finished) {
                 player.attr.remove(progressAttrs.getValue(tier))
                 player.attr.remove(lengthAttrs.getValue(tier))
                 (messages?.second ?: "You've found a casket!").takeIf { it.isNotEmpty() }?.let { player.message(it) } // "" = the caller says it (Uri tbox)

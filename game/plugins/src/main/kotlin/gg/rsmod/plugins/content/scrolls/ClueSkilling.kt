@@ -38,9 +38,9 @@ object ClueSkilling {
     }
 
     fun rolls(base: Int, level: Int, eligible: (ClueScrollTier) -> Boolean, random: Random = Random.Default,
-              wealth: Boolean = false, combatAchievement: (ClueScrollTier) -> Boolean = { false }): List<ClueScrollTier> =
+              wealth: Boolean = false, combatAchievement: (ClueScrollTier) -> Boolean = { false }, boost: Double = 1.0): List<ClueScrollTier> =
         multipliers.keys.filter { tier -> eligible(tier) && random.nextDouble() <
-            (if (wealth) 2.0 else 1.0) / denominator(base, level, tier, combatAchievement(tier)) }
+            (if (wealth) 2.0 else 1.0) * boost / denominator(base, level, tier, combatAchievement(tier)) }
 
     fun woodcutting(player: Player, tree: TreeType) = award(player, "woodcutting", tree.name, Skills.WOODCUTTING, nest = true)
     fun mining(player: Player, rock: RockType) = award(player, "mining", rock.name, Skills.MINING)
@@ -53,7 +53,7 @@ object ClueSkilling {
         // Invisible familiar boosts, 200m pet modifiers and the woodcutting cape do not enter this formula.
         val selected = rolls(base, player.skills.getCurrentLevel(skillId), { tier ->
             ClueContainers.count(player, tier) < ClueContainers.capacity(player, tier)
-        }, wealth = wealth)
+        }, wealth = wealth, boost = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops.clueFactor(player).toDouble())
         for (tier in selected) {
             val box = ClueContainers.rewardId(player, tier)
             if (box == null) {

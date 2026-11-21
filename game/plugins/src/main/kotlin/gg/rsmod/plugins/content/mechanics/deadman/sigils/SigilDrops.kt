@@ -48,4 +48,10 @@ object SigilDrops {
         val sigil = Sigil.values().filter { it.tier == tier }.random()
         return Item(sigil.unattunedId)
     }
+
+    /** S18 Treasure Hunter: "Clue Scrolls drop 3x more often" - the factor on every clue drop chance. */
+    fun clueFactor(player: Player): Int = if (Sigils.effective(player, Sigil.THE_TREASURE_HUNTER)) 3 else 1
+
+    /** S50 Bloodhound: a 75% chance that a completed clue step returns the reward casket. */
+    fun bloodhound(player: Player): Boolean = Sigils.effective(player, Sigil.THE_BLOODHOUND) && player.world.randomDouble() < 0.75
 }

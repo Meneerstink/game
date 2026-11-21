@@ -55,8 +55,9 @@ object ClueNpcSources {
     fun tables(player: Player, npc: Int, tables: List<DropTable>): List<DropTable> =
         strip(tables, verified(player, npc).map { it.tier }.toSet())
 
-    private fun denominator(player: Player, row: Row): Int = if (player.tile.getWildernessLevel() > 0)
-        WildernessNpcDrops.clueDenominator(player, row.denominator) else row.denominator
+    private fun denominator(player: Player, row: Row): Int = (if (player.tile.getWildernessLevel() > 0)
+        WildernessNpcDrops.clueDenominator(player, row.denominator) else row.denominator) /
+        gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops.clueFactor(player) // S18 Treasure Hunter: 3x more often
 
     fun roll(player: Player, npc: Int, random: Random = Random.Default): List<Item> = verified(player, npc).mapNotNull { row ->
         if (random.nextInt(denominator(player, row).coerceAtLeast(1)) != 0) return@mapNotNull null
