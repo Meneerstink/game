@@ -121,7 +121,8 @@ class FairyRingTravelLogTests {
         FairyRings.record(player, "aiq")
         FairyRings.record(player, "dkr")
         sent.clear()
-        assertTrue(FairyRings.open(player, FairyRings.Source.TRINKET))
+        // HOUSE = same dial + log without the Fairy Tale II gate (the trinket now shares that gate, P48 4b).
+        assertTrue(FairyRings.open(player, FairyRings.Source.HOUSE))
         assertTrue(player.interfaces.isVisible(FairyRings.TRAVEL_LOG_INTERFACE))
         assertEquals(
             mapOf(15 to "<br>Asgarnia: Mudskipper Point", 72 to "<br>Misthalin: Edgeville"),
@@ -134,7 +135,7 @@ class FairyRingTravelLogTests {
     @Test
     fun `an account without journeys gets an empty log`() {
         val player = newPlayer()
-        assertTrue(FairyRings.open(player, FairyRings.Source.TRINKET))
+        assertTrue(FairyRings.open(player, FairyRings.Source.HOUSE))
         assertTrue(logTexts().isEmpty())
     }
 
