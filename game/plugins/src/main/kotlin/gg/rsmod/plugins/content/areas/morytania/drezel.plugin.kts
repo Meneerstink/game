@@ -46,6 +46,7 @@ on_npc_option(npc = Npcs.DREZEL_7707, option = "talk-to") {
     }
     if (player.getCurrentStage(quest = PriestInPeril) == 61 && player.tile.regionId == 13722) {
         player.queue {
+            if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.DREZEL_7707)) return@queue
             mainChat(this, player)
         }
     }

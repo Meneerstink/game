@@ -104,10 +104,10 @@ create_shop(
 }
 
 on_npc_option(npc = Npcs.AVA, option = "talk-to") {
-    if (!checkRequirements(player)) {
-        return@on_npc_option
-    }
     player.queue {
+        // PROJECT48 (Animal Magnetism mini-quest): the quest talk first; its own requirements are checked by the quest.
+        if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.AVA)) return@queue
+        if (!checkRequirements(player)) return@queue
         chatNpc(
             *"Hello there and welcome to my humble abode. It's sadly rather more humble than I'd like, to be honest, although perhaps you can help with that?"
                 .splitForDialogue(),

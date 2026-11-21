@@ -21,7 +21,7 @@ import gg.rsmod.plugins.content.quests.red
 
 /** PROJECT48: the mini-quests of combat bracket 3-50 (Q01-Q09), in the order of VOORTGANG.tsv. */
 object B0350Quests {
-    val ALL: List<ShortQuest> = listOf(ErnestTheChicken, GoblinDiplomacy, ShieldOfArrav, MerlinsCrystal, HolyGrail)
+    val ALL: List<ShortQuest> = listOf(ErnestTheChicken, GoblinDiplomacy, ShieldOfArrav, MerlinsCrystal, HolyGrail, NatureSpirit, AnimalMagnetism)
 
     /** Veronica and Professor Oddenstein stand in the world already (spawns_12340) but have no Talk-to plugin: only bound here. */
     val NPCS: List<BracketNpc> =
@@ -38,6 +38,10 @@ object B0350Quests {
                 extra = { excaliburReclaim() },
             ),
             BracketNpc(Npcs.GALAHAD, null, gg.rsmod.game.model.Direction.NORTH, listOf("A quiet life by the woods suits me.")),
+            BracketNpc(Npcs.FILLIMAN_TARLOCK, gg.rsmod.game.model.Tile(3440, 3336, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("Wooo... woo... the swamp is cold.")),
+            BracketNpc(Npcs.ALICES_HUSBAND, Tile(3626, 3524, 0), gg.rsmod.game.model.Direction.EAST, listOf("Woo... the chickens are restless today.")),
+            BracketNpc(Npcs.WITCH_5200, null, gg.rsmod.game.model.Direction.NORTH, listOf("Hee hee hee.")),
+            BracketNpc(Npcs.TURAEL, null, gg.rsmod.game.model.Direction.WEST, listOf("Hello. The Slayer masters give out tasks.")),
             BracketNpc(Npcs.GENERAL_WARTFACE_4494, null, gg.rsmod.game.model.Direction.EAST, listOf("Bentnoze is wrong about everything. Everything!")),
         )
 }
@@ -605,6 +609,126 @@ object HolyGrail : ShortQuest(
                     } else {
                         player.inventory.remove(Items.HOLY_GRAIL)
                         chatNpc("The Holy Grail! You have the thanks of all Camelot.", facialExpression = FacialExpression.HAPPY)
+                        true
+                    }
+                },
+            ),
+        )
+}
+
+// ------------------------------------------------------------------------------------------ Q06 Nature Spirit
+
+private val DREZEL_BASEMENT = Tile(3440, 9895, 0)
+private val GROTTO_ENTRANCE = Tile(3440, 3336, 0)
+private val GHAST_SWAMP = Tile(3401, 3361, 0)
+
+object NatureSpirit : ShortQuest(
+    name = "Nature Spirit",
+    startPoint = "Speak to Drezel in the basement of Paterdomus Temple.",
+    rewards = "2 Quest Points, 3,000 Crafting XP, 2,000 Defence XP, 2,000 Hitpoints XP, access to Mort Myre, a blessed silver sickle and a druid pouch.",
+    pointReward = 2,
+    questId = Varps.NATURE_SPIRIT_PROGRESS,
+    slot = 80,
+    completedValue = 5, // internal: steps.size + 1 (ownSteps)
+    usesVarbits = false,
+    startNpc = Npcs.DREZEL_7707,
+    startNpcName = "Drezel",
+    startPlace = "Paterdomus Temple's basement",
+    startLocation = DREZEL_BASEMENT,
+) {
+    override val ownSteps: Boolean get() = true
+
+    override val needs = QuestRequirements(quests = listOf("Priest in Peril", "The Restless Ghost"))
+
+    override val recommendation = Recommendation.combat(20)
+
+    override val reward =
+        QuestReward(
+            icon = Items.SILVER_SICKLE_B,
+            xp = listOf(Skills.CRAFTING to 3_000.0, Skills.DEFENCE to 2_000.0, Skills.CONSTITUTION to 2_000.0),
+            items = listOf(Items.SILVER_SICKLE_B to 1, Items.DRUID_POUCH to 1),
+            lines = listOf("3,000 Crafting XP", "2,000 Defence XP", "2,000 Hitpoints XP", "Access to Mort Myre and the Nature Spirit altar", "A blessed silver sickle and a druid pouch"),
+        )
+
+    override suspend fun QueueTask.intro(): Boolean {
+        chatNpc(
+            "A druid named Filliman Tarlock went into Mort Myre",
+            "swamp long ago and was never seen again. Some say",
+            "his ghost still walks near a grotto there.",
+            facialExpression = FacialExpression.WORRIED,
+        )
+        chatNpc("You will need a ghostspeak amulet to hear him.", facialExpression = FacialExpression.CALM_TALK)
+        if (options("I'll look for Filliman.", "Not right now.", title = "Start Nature Spirit?") != 1) return false
+        chatPlayer("I'll go to the swamp and look for him.", facialExpression = FacialExpression.CALM_TALK)
+        return true
+    }
+
+    override val steps =
+        listOf(
+            QuestStep(
+                npc = Npcs.FILLIMAN_TARLOCK,
+                journal = listOf("I should find ${red("Filliman Tarlock")}'s ghost at the grotto in Mort", "Myre swamp. I need to wear a ghostspeak amulet."),
+                done = listOf("Filliman's ghost asked me to have Drezel bless me."),
+                place = "the grotto in Mort Myre",
+                location = GROTTO_ENTRANCE,
+                tip = "Wear your ghostspeak amulet, or Filliman only wails.",
+                talk = {
+                    if (!player.equipment.contains(Items.GHOSTSPEAK_AMULET)) {
+                        chatNpc("Wooo woooo wooo woo!", "(You cannot understand him - wear a ghostspeak amulet.)", facialExpression = FacialExpression.WORRIED)
+                        false
+                    } else {
+                        chatNpc(
+                            "I am Filliman Tarlock. I must become a nature",
+                            "spirit to rest, but I need a blessing first.",
+                            "Ask Drezel to bless you, then come back.",
+                            facialExpression = FacialExpression.WORRIED,
+                        )
+                        true
+                    }
+                },
+            ),
+            QuestStep(
+                npc = Npcs.DREZEL_7707,
+                journal = listOf("I should ask ${red("Drezel")} in Paterdomus' basement to bless me."),
+                done = listOf("Drezel blessed me."),
+                place = "Paterdomus Temple's basement",
+                location = DREZEL_BASEMENT,
+                talk = {
+                    chatNpc("You wish to help the druid's ghost? Then kneel -", "I will bless you in Saradomin's name.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("Go in peace. The ghasts of the swamp will", "trouble you on the way back.", facialExpression = FacialExpression.WORRIED)
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.DREZEL_7707,
+                journal = listOf("I must defeat the two ${red("ghasts")} (level 30) that haunt Mort", "Myre swamp."),
+                done = listOf("I drove off the ghasts of Mort Myre."),
+                place = "Mort Myre swamp",
+                location = GHAST_SWAMP,
+                tip = "Ghasts rot your food; they are only hurt by a blessed hand. Bring spare food.",
+                fight =
+                    QuestFight(
+                        Npcs.GHAST, "ghast", 30, GHAST_SWAMP, "Grrrr...",
+                        chain = listOf(Npcs.GHAST_1053 to "Another one rises from the mud!"),
+                    ),
+                talk = {
+                    chatNpc("The ghasts bar the way to the grotto. Drive them off.", facialExpression = FacialExpression.WORRIED)
+                    true
+                },
+            ),
+            QuestStep(
+                npc = Npcs.FILLIMAN_TARLOCK,
+                journal = listOf("I should return to ${red("Filliman")} at the grotto."),
+                done = listOf("Filliman became a nature spirit and blessed my sickle."),
+                place = "the grotto in Mort Myre",
+                location = GROTTO_ENTRANCE,
+                talk = {
+                    if (!player.equipment.contains(Items.GHOSTSPEAK_AMULET)) {
+                        chatNpc("Wooo woooo!", "(Wear your ghostspeak amulet.)", facialExpression = FacialExpression.WORRIED)
+                        false
+                    } else {
+                        chatNpc("The ritual is done - I am the nature spirit now.", "Take this blessed sickle and the druid's pouch.", facialExpression = FacialExpression.HAPPY)
+                        chatNpc("The swamp's mushrooms will serve you well. Farewell!", facialExpression = FacialExpression.HAPPY)
                         true
                     }
                 },
