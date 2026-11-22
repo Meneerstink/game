@@ -445,8 +445,12 @@ class SigilTests {
         fun coins(withSigil: Boolean, roll: Int): Int {
             val player = mockk<Player>(relaxed = true)
             every { player.attr } returns AttributeMap()
-            every { player.inventory } returns ItemContainer(mockk<DefinitionSet>(relaxed = true), 28, ContainerStackType.STACK)
-            val bank = ItemContainer(mockk<DefinitionSet>(relaxed = true), 800, ContainerStackType.STACK)
+            // Coins need a real ItemDef: a relaxed DefinitionSet hands back a bare Definition mock (ClassCastException in add).
+            val defs = mockk<DefinitionSet>(relaxed = true)
+            every { defs.get(gg.rsmod.game.fs.def.ItemDef::class.java, gg.rsmod.plugins.api.cfg.Items.COINS_995) } returns
+                gg.rsmod.game.fs.def.ItemDef(gg.rsmod.plugins.api.cfg.Items.COINS_995).apply { name = "Coins"; stacks = true }
+            every { player.inventory } returns ItemContainer(defs, 28, ContainerStackType.STACK)
+            val bank = ItemContainer(defs, 800, ContainerStackType.STACK)
             every { player.bank } returns bank
             if (withSigil) attune(player, Sigil.AGILE_FORTUNE)
             player.inventory[0] = null

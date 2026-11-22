@@ -38,7 +38,7 @@ import gg.rsmod.plugins.content.quests.red
 
 private val GARTH_POST = Tile(3667, 3216, 0)
 private val KAEL_POST = Tile(3664, 3219, 0)
-private val RANIS_FIGHT = Tile(3660, 3220, 0)
+private val RANIS_FIGHT = Tile(3659, 3219, 0) // 3660,3220 lies under loc 64066 (NewPlayerFoundationTests)
 private val TOH_SAFALAAN = Tile(3589, 3335, 0)
 private val HIDEOUT_FIGHT = Tile(3614, 3215, 0) // free 2x2 (clipmap 22-11): the abomination is size 2
 private val RAL_HOUSE = Tile(3602, 3209, 0)
@@ -139,7 +139,7 @@ object ATasteOfHope : ShortQuest(
                 done = listOf("The abomination is dead, but the Myreque lost many friends."),
                 place = "the Meiyerditch hideout",
                 location = HIDEOUT_FIGHT,
-                tip = "It uses melee and ranged attacks of up to 23. Protect from Missiles helps.",
+                tip = "Melee and ranged up to 23. Pray missiles.",
                 fight = QuestFight(XNpcs.ABOMINATION, "Abomination", 149, HIDEOUT_FIGHT, ""),
                 talk = {
                     chatNpc("Vanstrom's creature! Kill it before it kills us all!", facialExpression = FacialExpression.WORRIED)
@@ -166,12 +166,12 @@ object ATasteOfHope : ShortQuest(
                     ),
             ),
             QuestStep(
-                npc = Npcs.KAEL_FORSHAW,
+                npc = XNpcs.GARTH, // Kael Forshaw 4465 has no Talk-to in this cache (NewPlayerFoundationTests): Garth stands in Ver Sinhaza too
                 journal = listOf("Ranis Drakan speaks to the people in Ver Sinhaza. I must defeat", "${red("Ranis Drakan")} (level 233)."),
                 done = listOf("Ranis Drakan is dead. The people of Meiyerditch heard my speech."),
                 place = "Ver Sinhaza",
                 location = RANIS_FIGHT,
-                tip = "Ranis hits up to 20 with melee and magic. Two vyrewatch come to his aid. Bring good food.",
+                tip = "Hits up to 20, two vyrewatch help him.",
                 fight =
                     QuestFight(
                         XNpcs.RANIS_DRAKAN, "Ranis Drakan", 233, RANIS_FIGHT, "You dare to face me, human?",
@@ -301,7 +301,7 @@ object ANightAtTheTheatre : ShortQuest(
                 done = listOf("I cut a hespori bark from the dead plant."),
                 place = "the island in Mort Myre",
                 location = HESPORI_ISLAND,
-                tip = "The hespori does not move. It hits twice with ranged (up to 8) or once with magic (up to 14).",
+                tip = "Ranged up to 8, magic up to 14.",
                 fight = QuestFight(XNpcs.HESPORI, "Hespori", 302, HESPORI_ISLAND, ""),
                 talk = {
                     chatNpc("North-east, on the island. It will fight for its life.", facialExpression = FacialExpression.WORRIED)

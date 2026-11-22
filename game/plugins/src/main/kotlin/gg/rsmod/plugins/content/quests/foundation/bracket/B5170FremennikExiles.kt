@@ -109,7 +109,7 @@ object FremennikExiles : ShortQuest(
                 done = listOf("A basilisk youngling hid in the sand pit. It carried an unsealed letter:", "a basilisk army is coming for Rellekka."),
                 place = "the sand pit of Rellekka",
                 location = SAND_PIT,
-                tip = "Its gaze drains your stats in OSRS - a mirror shield protects you. It hits up to 5.",
+                tip = "A mirror shield blocks its gaze. Hits up to 5.",
                 fight = QuestFight(XNpcs.BASILISK_YOUNGLING, "Basilisk Youngling", 57, SAND_PIT, ""),
                 talk = {
                     chatNpc("Look in the sand pit - something is down there!", facialExpression = FacialExpression.WORRIED)
@@ -186,7 +186,7 @@ object FremennikExiles : ShortQuest(
                 done = listOf("The basilisks were driven out of the market. Their king waits on the", "shore to the north."),
                 place = "the market of Rellekka",
                 location = MARKET,
-                tip = "Wear a mirror shield: the basilisks' gaze drains your stats. The monstrous basilisk hits up to 11, two basilisks (level 61) follow.",
+                tip = "Wear a mirror shield. Hits up to 11, two basilisks follow.",
                 fight =
                     QuestFight(
                         XNpcs.MONSTROUS_BASILISK, "Monstrous Basilisk", 135, MARKET, "",
@@ -204,7 +204,7 @@ object FremennikExiles : ShortQuest(
                 done = listOf("Typhor, the Serpent King's guardian, is dead."),
                 place = "the frozen shore north of Rellekka",
                 location = TYPHOR_SHORE,
-                tip = "Typhor uses melee and magic, up to 20. Bring food and prayer potions.",
+                tip = "Melee and magic up to 20. Bring food.",
                 fight = QuestFight(XNpcs.TYPHOR, "Typhor", 218, TYPHOR_SHORE, ""),
                 talk = {
                     chatNpc("North, on the frozen shore. Typhor guards the Serpent King.", facialExpression = FacialExpression.TOUGH)
@@ -217,7 +217,7 @@ object FremennikExiles : ShortQuest(
                 done = listOf("Jormungand, the Serpent King, is defeated."),
                 place = "the frozen shore north of Rellekka",
                 location = JORMUNGAND_SHORE,
-                tip = "Jormungand uses melee and magic, up to 22. Bring food, prayer potions and restores.",
+                tip = "Melee and magic up to 22. Bring food.",
                 fight = QuestFight(XNpcs.JORMUNGAND, "Jormungand", 363, JORMUNGAND_SHORE, ""),
                 talk = {
                     chatNpc("The Serpent King himself! End this, Fremennik!", facialExpression = FacialExpression.TOUGH)

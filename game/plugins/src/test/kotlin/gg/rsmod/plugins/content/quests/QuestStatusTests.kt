@@ -104,7 +104,7 @@ class QuestStatusTests {
             } finally {
                 library.close()
             }
-        assertEquals(188, slots.size)
+        assertEquals(194, slots.size)
         assertEquals(slots.toSortedSet(), QuestList.ENTRIES.map { it.slot }.toSortedSet())
         assertEquals(QuestList.ENTRIES.size, QuestList.ENTRIES.map { it.slot }.distinct().size)
     }
@@ -152,13 +152,13 @@ class QuestStatusTests {
                 assertEquals(2, readAt(complete), "slot $slot")
             }
         }
-        assertEquals(170, simple, "simple 2193 cases")
+        assertEquals(176, simple, "simple 2193 cases")
     }
 
     @Test
-    fun `quest points come from the cache and the wiki and the maximum is 349`() {
-        assertEquals(349, QuestStatus.MAX_POINTS)
-        assertEquals(26, QuestList.ENTRIES.filter { it.slot >= 185 }.sumOf { it.points }, "the ten OSRS quests")
+    fun `quest points come from the cache and the wiki and the maximum is 356`() {
+        assertEquals(356, QuestStatus.MAX_POINTS)
+        assertEquals(33, QuestList.ENTRIES.filter { it.slot >= 185 }.sumOf { it.points }, "the ten OSRS quests + the six PROJECT48 X-quests (wiki: 2+1+2+2+0+0)")
         assertEquals(0, QuestList.entry(193)!!.points, "Mage Arena II is a miniquest")
         assertEquals(10, QuestList.entry(87)!!.points, "Recipe for Disaster with its nine subquests")
         assertEquals(mapOf(17 to 5, 159 to 3, 152 to 3, 156 to 1), listOf(17, 159, 152, 156).associateWith { QuestList.entry(it)!!.points })
@@ -184,9 +184,9 @@ class QuestStatusTests {
             }
         }
         // 26 points in the eight choice quests + 2 for Beneath Cursed Sands (N462 owner E2: a new account plays the short version).
-        assertEquals(349 - 28, QuestStatus.points(account.player))
-        assertEquals(349 - 28, account.player.getVarp(Varps.QUEST_POINTS))
-        assertEquals(349, account.player.getVarp(Varps.MAX_QUEST_POINTS))
+        assertEquals(356 - 28, QuestStatus.points(account.player))
+        assertEquals(356 - 28, account.player.getVarp(Varps.QUEST_POINTS))
+        assertEquals(356, account.player.getVarp(Varps.MAX_QUEST_POINTS))
         assertFalse(QuestStatus.hasAllQuestPoints(account.player))
     }
 
@@ -229,7 +229,7 @@ class QuestStatusTests {
         val account = Account(isNew = false)
         QuestStatus.login(account.player)
         QuestList.ENTRIES.forEach { assertEquals(QuestStatus.COMPLETE, it.progress.read(account.player), it.name) }
-        assertEquals(349, account.player.getVarp(Varps.QUEST_POINTS))
+        assertEquals(356, account.player.getVarp(Varps.QUEST_POINTS))
         assertTrue(QuestStatus.hasAllQuestPoints(account.player))
     }
 
@@ -242,7 +242,7 @@ class QuestStatusTests {
         assertEquals(QuestStatus.COMPLETE, QuestList.entry(DragonSlayerII.slot)!!.progress.read(account.player))
         // Live: Quest Points follow at once and the list is told to rebuild: the grouping varbit 4536 is flipped and back,
         // which re-sends its varp - a varp the list rebuild (clientscript 2169) is triggered by (1384 from 2165, or 1402).
-        assertEquals(349 - 28 + 5, account.player.getVarp(Varps.QUEST_POINTS))
+        assertEquals(356 - 28 + 5, account.player.getVarp(Varps.QUEST_POINTS))
         account.varps.clean()
         KingsRansom.setStage(account.player, 2)
         assertEquals(State.IN_PROGRESS, QuestStatus.state(account.player, KingsRansom))
@@ -252,7 +252,7 @@ class QuestStatusTests {
         assertTrue(account.varps.isDirty(refreshVarp), "quest list refresh sent")
         assertTrue(FoundationRewards.complete(account.player, KingsRansom))
         assertEquals(State.COMPLETED, QuestStatus.state(account.player, KingsRansom))
-        assertEquals(349 - 28 + 5 + 1, account.player.getVarp(Varps.QUEST_POINTS))
+        assertEquals(356 - 28 + 5 + 1, account.player.getVarp(Varps.QUEST_POINTS))
         // The Deadman Groups panel reads the same status.
         QuestStatus.CHOICE_QUESTS.values.forEach { quest ->
             assertEquals(QuestStatus.isCompleted(account.player, quest), DeadmanGroupsView.questFinished(account.player, quest), quest.name)

@@ -141,8 +141,9 @@ class DeathExecutorTests {
         assertFalse(DeathExecutor.execute(world, result))
         assertFalse(gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.consume(victim, angel))
         verify(exactly = 1) { world.spawn(any<GroundItem>()) }
-        // Without the sigil the same death keeps nothing.
-        victim.inventory[1] = Item(LOST_ITEM, 1)
+        // Without the sigil the same death keeps nothing. The kept item was restored into a slot of its own (slot 1 after the
+        // attuned sigil), so the second item goes into the first free slot instead of overwriting it.
+        victim.inventory[victim.inventory.rawItems.indexOfFirst { it == null }] = Item(LOST_ITEM, 1)
         val again = DeathResolver.resolve(victim, killer, skulled = true, valueProvider = value)
         assertEquals(2, again.itemRisk.lost.size, "a PvP death without the Guardian Angel keeps nothing")
     }

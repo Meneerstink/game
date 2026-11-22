@@ -73,6 +73,9 @@ class SpecialAttackSoundTests {
             // CoX 16-11: Shield Bash (Dinh's bulwark) - no sound in the Wiki 'List of sound IDs', the imported OSRS sequence 7511 is
             // silent (SeqSoundProbeTool SEQ_17695 SILENT). Open until an OSRS source is found (dossier COX.txt).
             Exemption.OpenN3("cox_weapon_specials.plugin.kts", "SpecialAttacks.register(50, bulwark)"),
+            // PROJECT48 DMM-ITEMS 22-11: Soulflame horn Entice - no sound/animation id in hand (OSRS Wiki item page names none);
+            // open until an OSRS source is found (dossier DMM-ITEMS).
+            Exemption.OpenN3("soulflame_horn.plugin.kts", "SoulflameHorn.use(player)"),
         )
 
     /** Every registration block in every plugin script, cut at the next registration in the same file. */

@@ -174,7 +174,7 @@ object MakingFriendsWithMyArm : ShortQuest(
                 done = listOf("Mother is dead. Snowflake is the new leader of Weiss."),
                 place = "Weiss, the snowy north coast",
                 location = WEISS_FIGHT,
-                tip = "Both use melee and ranged (Mother up to 16). No teleporting out until the fire is out - bring food.",
+                tip = "Melee and ranged up to 16. Bring food.",
                 fight =
                     QuestFight(
                         XNpcs.DONT_KNOW_WHAT, "Don't Know What", 163, WEISS_FIGHT, "Mother says kill!",
@@ -326,7 +326,7 @@ object TheGeneralsShadow : ShortQuest(
                 done = listOf("I threw the severed leg and finished Bouncer: 'Away, darn spot!'"),
                 place = "the Goblin Cave by the Fishing Guild",
                 location = GOBLIN_CAVE,
-                tip = "Bouncer hits up to 15 and is weak to wind spells. Bring food.",
+                tip = "Hits up to 15, weak to wind spells.",
                 fight = QuestFight(Npcs.BOUNCER_5564, "Bouncer", 160, GOBLIN_CAVE, "Grrrrr!"),
                 talk = {
                     chatNpc("Go to the cave. Your reward awaits.", facialExpression = FacialExpression.LAUGHING)
@@ -403,7 +403,7 @@ object HisFaithfulServants : ShortQuest(
                 done = listOf("I gave the strange icon to the Strange Old Man."),
                 place = "the Barrows",
                 location = BARROWS_POST,
-                tip = "Defeat all six brothers, then open the chest in the crypt.",
+                tip = "Kill all six, then open the chest.",
                 talk = {
                     if (player.attr[ICON] != true) {
                         chatNpc("No icon? The brothers still have it. Kill them all", "and open their chest.", facialExpression = FacialExpression.CALM_TALK)
