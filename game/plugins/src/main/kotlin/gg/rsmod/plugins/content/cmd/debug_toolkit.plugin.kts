@@ -1016,6 +1016,19 @@ gg.rsmod.game.CommandServerCommands.handlers["botlogin"] = { w, a ->
         "bot $name online at ${bot.tile.x},${bot.tile.z},${bot.tile.height}" + (if (at != asked) " (moved: ${asked.x},${asked.z} is not standable)" else "")
     }
 }
+// P48 S65 (22-11): `botpriv <bot> <privilege id>` - test server only. A bot set up with 'admin' is staff, and a kill with staff
+// involved is an abuse kill (ValidPkKill.abuseKill) = never a PvP death; dropping the bot to player (0) after the setup lets two bots
+// prove a real PvP death (Guardian Angel). Bots have no address, so the same-address rule does not fire between them.
+gg.rsmod.game.CommandServerCommands.handlers["botpriv"] = { w, a ->
+    val bot = cmdBots[a.getOrNull(0) ?: ""]
+    val priv = a.getOrNull(1)?.toIntOrNull()?.let { w.privileges.get(it) }
+    if (System.getProperty("rsps.testServer") != "true") "Only on the test server."
+    else if (bot == null || priv == null) "usage: botpriv <bot> <privilege id> (a bot made with botlogin)"
+    else {
+        bot.privilege = priv
+        "bot ${bot.username} privilege ${priv.id} staff=${gg.rsmod.plugins.content.mechanics.pvp.ValidPkKill.isStaff(bot)}"
+    }
+}
 gg.rsmod.game.CommandServerCommands.handlers["botlogout"] = { w, a ->
     val bot = cmdBots.remove(a.getOrNull(0) ?: "")
     if (bot == null) "usage: botlogout <name> (a bot made with botlogin)"
