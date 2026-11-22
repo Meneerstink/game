@@ -139,7 +139,7 @@ object DropTableFactory {
             }
         }
         if (type == DropTableType.KILL) {
-            // PROJECT48 SIGILS S-K5: the Deadman-only drop table (chance 0 until the owner names the rates).
+            // PROJECT48 SIGILS S-K5: the Deadman-only drop table (owner 22-11: tier 1/2/3 = 1/600, 1/1200, 1/2000 per kill, Prosperity x1.2).
             gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops.rollGlobalTable(player, npcId)?.let {
                 createDrop(world, it, tile, player)
                 received.getOrPut(player) { mutableListOf() } += it

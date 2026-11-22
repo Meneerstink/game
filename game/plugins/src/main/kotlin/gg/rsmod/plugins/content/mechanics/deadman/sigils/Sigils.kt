@@ -211,6 +211,23 @@ object Sigils {
         }
     }
 
+    /**
+     * A sigil used up by its own effect (S65 Guardian Angel on a PvP death): the attuned item leaves the inventory (or the bank) and the
+     * sigil leaves the attuned list, so its slot is free again. False when [sigil] was not attuned (nothing changes).
+     */
+    fun consume(
+        player: Player,
+        sigil: Sigil,
+    ): Boolean {
+        val on = attuned(player)
+        if (sigil !in on) return false
+        if (player.inventory.remove(sigil.attunedId).hasFailed()) player.bank.remove(sigil.attunedId)
+        store(player, on - sigil)
+        onChanged(player, sigil, attuned = false)
+        SigilWornSlot.refresh(player)
+        return true
+    }
+
     /** OSRS Wiki, infobox of every attuned sigil item: the answer to its Destroy option. */
     const val DESTROY_ATTUNED_MESSAGE = "You must unattune the Sigil before you can destroy it."
 

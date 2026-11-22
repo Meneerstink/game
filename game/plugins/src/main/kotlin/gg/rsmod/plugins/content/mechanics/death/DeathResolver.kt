@@ -97,7 +97,7 @@ object DeathResolver {
             DeathItemRiskCalculator.calculate(
                 inventory = victim.inventory.items.copyOf(),
                 equipment = victim.equipment.items.copyOf(),
-                keepCount = DeathRules.keepCount(context, skulled),
+                keepCount = DeathRules.keepCount(context, skulled) + DeathRules.guardianAngelKeep(victim, context),
                 valueProvider = valueProvider,
                 // N593 owner 2026-11-05: only actually locked (l) states are extra keeps on PvM death.
                 alwaysProtected = {

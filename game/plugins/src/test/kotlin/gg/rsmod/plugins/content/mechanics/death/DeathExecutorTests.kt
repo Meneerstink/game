@@ -107,6 +107,46 @@ class DeathExecutorTests {
         verify(exactly = 1) { world.spawn(any<GroundItem>()) }
     }
 
+    /**
+     * PROJECT48 S65 Sigil of the Guardian Angel (owner 22-11, choice B), dupe breaktest: the most valuable item stays with the victim,
+     * the rest is the killer's exactly once, the sigil is consumed once - nothing is created, nothing is kept twice.
+     */
+    @Test
+    fun `the guardian angel keeps the most valuable item on a PvP death and is consumed once`() {
+        val angel = gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.THE_GUARDIAN_ANGEL
+        val victim = newPlayer()
+        val killer = newPlayer()
+        killer.attr[BEST_KILLSTREAK_ATTR] = 5
+        killer.attr[gg.rsmod.plugins.content.mechanics.pvp.LootKeys.ENABLED] = false
+        val world = mockk<World>(relaxed = true)
+        every { world.getMultiCombatChunks() } returns emptySet()
+        every { world.getMultiCombatRegions() } returns emptySet()
+        victim.attr[gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.ATTUNED] = angel.number.toString()
+        victim.inventory[0] = Item(angel.attunedId, 1)
+        victim.inventory[1] = Item(LOST_ITEM, 1)
+        victim.inventory[2] = Item(KEPT_ITEM, 1)
+        val value = ItemRiskValueProvider { id -> if (id == KEPT_ITEM) 1_000_000L else 1L }
+
+        val result = DeathResolver.resolve(victim, killer, skulled = true, valueProvider = value)
+        assertEquals(DeathContext.WILDERNESS_PVP, result.context)
+        assertEquals(listOf(LOST_ITEM), result.itemRisk.lost.map { it.item.id }, "only the cheaper item is lost")
+        assertTrue(DeathExecutor.execute(world, result))
+        assertTrue(gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.consume(victim, angel))
+
+        val left = victim.inventory.rawItems.filterNotNull().map { it.id }
+        assertEquals(listOf(KEPT_ITEM), left, "the valuable item is kept, the sigil is gone, the lost item left")
+        assertFalse(gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.has(victim, angel), "the sigil is no longer attuned")
+        verify(exactly = 1) { world.spawn(any<GroundItem>()) }
+        // A second death call or consume changes nothing (no second loot, no second keep).
+        assertFalse(DeathExecutor.execute(world, result))
+        assertFalse(gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.consume(victim, angel))
+        verify(exactly = 1) { world.spawn(any<GroundItem>()) }
+        // Without the sigil the same death keeps nothing.
+        victim.inventory[1] = Item(LOST_ITEM, 1)
+        val again = DeathResolver.resolve(victim, killer, skulled = true, valueProvider = value)
+        assertEquals(2, again.itemRisk.lost.size, "a PvP death without the Guardian Angel keeps nothing")
+    }
+
     @Test
     fun `multi-combat kill never grants grace while still counting the PvP death`() {
         val victim = newPlayer()

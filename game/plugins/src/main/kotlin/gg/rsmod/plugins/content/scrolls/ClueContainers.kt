@@ -27,7 +27,12 @@ object ClueContainers {
     fun boxTier(item: Int): ClueScrollTier? = boxes.entries.firstOrNull { ClueItems.local(it.value) == item }?.key
     fun containers(player: Player) = listOf(player.inventory, player.bank, player.gravestone, player.deathRecovery)
     fun held(player: Player, item: Int): Boolean = item >= 0 && ClueOwnership.stored(player).any { it.id == item }
-    fun capacity(player: Player, tier: ClueScrollTier): Int = 2 + cases.count { (it.tier == tier || it.tier == null) && opened(player, it) }
+    fun capacity(player: Player, tier: ClueScrollTier): Int = 2 + cases.count { (it.tier == tier || it.tier == null) && opened(player, it) } +
+        fortuneFarmer(player)
+
+    /** PROJECT48 S64 Sigil of the Fortune Farmer (owner 22-11, choice A): +2 scroll boxes of every tier while it is attuned. */
+    fun fortuneFarmer(player: Player): Int =
+        if (gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.THE_FORTUNE_FARMER)) 2 else 0
     fun count(player: Player, tier: ClueScrollTier): Int {
         val box = ClueItems.local(boxes.getValue(tier))
         return ClueOwnership.stored(player).filter { ClueOwnership.tier(it.id) == tier || it.id == box }

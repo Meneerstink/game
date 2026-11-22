@@ -14,6 +14,9 @@ import gg.rsmod.plugins.content.skills.slayer.data.slayerData
  * Sumona, Duradel and Kuradal advertised Get-task/Trade/Rewards in the cache with nothing bound, and Chaeldar/Sumona/
  * Duradel only answered Talk-to with the generic one-line fallback greeting.
  */
+/** PROJECT48 S63 Sigil of Slaughter: the price of choosing a task (OSRS Wiki). */
+val SLAUGHTER_COST = 60
+
 val npcIds = SlayerMaster.values().map { it.id }.toTypedArray()
 
 // Sumona is spawned as her varbit-transforming wrapper npc 7779 (-> 7780); bind the wrapper too, so her options work
@@ -183,9 +186,27 @@ suspend fun giveTask(
         val repeat =
             previous != null && slayerCape && world.randomDouble() < 0.1 &&
                 it.options("Yes, ${previous.assignment.identifier.lowercase()} again.", "No, a new task.", title = "Repeat your previous task?") == 1
+        // PROJECT48 S63 Sigil of Slaughter (OSRS Wiki: "Pay 60 Slayer Points to choose your own Slayer Task"; owner 22-11 choice A:
+        // a dialogue choice at the Slayer master, no window). Offered only while the sigil is attuned and 60 points are held.
+        var chosen: gg.rsmod.plugins.content.skills.slayer.data.Assignment? = null
+        if (!repeat && gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.SLAUGHTER) &&
+            player.getSlayerPointsCount() >= SLAUGHTER_COST &&
+            it.options("Choose my own task ($SLAUGHTER_COST Slayer points).", "Give me a random task.", title = "Sigil of Slaughter") == 1
+        ) {
+            val pick = it.options(*validAssignments.map { a -> a.assignment.identifier }.toTypedArray(), title = "Choose your Slayer task")
+            if (pick < 1) return
+            if (!player.subtractSlayerPoints(SLAUGHTER_COST)) {
+                it.chatNpc("You need $SLAUGHTER_COST Slayer points to choose your own task.", wrap = true)
+                return
+            }
+            chosen = validAssignments[pick - 1]
+            player.message("You pay $SLAUGHTER_COST Slayer points to choose your own task.")
+        }
         val selectedAssignment =
             if (repeat) {
                 previous!!
+            } else if (chosen != null) {
+                chosen
             } else {
                 val totalWeight = validAssignments.sumOf { it.weight }
                 var weightSum = 0.0

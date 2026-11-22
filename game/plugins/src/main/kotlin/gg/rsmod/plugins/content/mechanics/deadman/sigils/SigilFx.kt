@@ -75,6 +75,11 @@ object SigilFx {
         player.playSound(SOUND_ATTUNE)
     }
 
+    /** SIGIL_OF_THE_GUARDIAN_ANGEL 1992: the wings when the sigil saves an item on a PvP death and is consumed. */
+    val GUARDIAN_ANGEL = spot(1992)
+
+    fun guardianAngel(player: Player) = player.graphic(GUARDIAN_ANGEL)
+
     fun unattuned(player: Player) {
         player.graphic(UNATTUNE)
         player.playSound(SOUND_UNATTUNE)

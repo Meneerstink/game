@@ -29,35 +29,36 @@ object SigilDrops {
     }
 
     /**
-     * The Deadman-only drop table (S-K5 b): the chance of a sigil per kill, by tier. The wiki gives NO number for it (checked pages
-     * "Deadman: Armageddon", "Deadman: Armageddon/Sigils": "obtained as drops ... as part of the Deadman-only drop table"), so the chances
-     * stay 0 until the owner gives them (STAND.txt VRAGEN) - nothing is invented. Sigil of Prosperity raises the chance by 20%.
+     * The Deadman-only drop table (S-K5 b). The wiki gives NO number for it ("obtained as drops ... as part of the Deadman-only drop
+     * table", pages "Deadman: Armageddon" and "Deadman: Armageddon/Sigils"), so the owner chose the rates (22-11, choice A): on EVERY
+     * npc kill tier 1 = 1/600, tier 2 = 1/1200, tier 3 = 1/2000. Sigil of Prosperity raises each chance by 20% (wiki S26).
      */
-    val GLOBAL_TABLE_CHANCE: Map<Int, Double> = mapOf(1 to 0.0, 2 to 0.0, 3 to 0.0)
+    val GLOBAL_TABLE_CHANCE: Map<Int, Double> = mapOf(1 to 1.0 / 600, 2 to 1.0 / 1200, 3 to 1.0 / 2000)
 
-    /** Rolls the Deadman-only table for one kill of [npcId]; returns the sigil item to drop, or null. */
+    /** Rolls the Deadman-only table for one kill of [npcId]: the rarest tier first, at most one sigil; returns it, or null. */
     fun rollGlobalTable(
         player: Player,
         npcId: Int,
     ): Item? {
-        val tier = 1 + player.world.random(2)
-        val base = GLOBAL_TABLE_CHANCE[tier] ?: return null
-        if (base <= 0.0) return null
-        val chance = if (Sigils.effective(player, Sigil.PROSPERITY)) base * 1.2 else base
-        if (player.world.randomDouble() >= chance) return null
-        val sigil = Sigil.values().filter { it.tier == tier }.random()
-        return Item(sigil.unattunedId)
+        val factor = if (Sigils.effective(player, Sigil.PROSPERITY)) 1.2 else 1.0
+        for (tier in 3 downTo 1) {
+            val chance = (GLOBAL_TABLE_CHANCE[tier] ?: 0.0) * factor
+            if (chance <= 0.0 || player.world.randomDouble() >= chance) continue
+            val pool = Sigil.values().filter { it.tier == tier }
+            return Item(pool[player.world.random(pool.size - 1)].unattunedId)
+        }
+        return null
     }
 
     /**
      * S-K5: "A random sigil can also be claimed every 24 hours as part of a starter pack" (OSRS Wiki Deadman: Armageddon, Sigils).
-     * The wiki gives no tier or weight, so it is one of the sigils that do something on this server, each equally likely.
+     * The wiki gives no tier or weight: the owner chose (22-11, choice c) ONLY tier 1 sigils, each equally likely.
      */
     val STARTER_SIGIL_AT = gg.rsmod.game.model.attr.AttributeKey<Int>(persistenceKey = "p48_sigil_starter_at")
     const val STARTER_SIGIL_SECONDS = 24 * 60 * 60
 
-    /** The sigils that have no effect on this server (their content does not exist here): never handed out. */
-    val WITHOUT_EFFECT: Set<Sigil> = setOf(Sigil.SLAUGHTER, Sigil.THE_FORTUNE_FARMER, Sigil.THE_GUARDIAN_ANGEL)
+    /** The 24-hour starter-pack pool (owner 22-11: tier 1 only). */
+    val STARTER_POOL: List<Sigil> by lazy { Sigil.values().filter { it.tier == 1 } }
 
     private fun nowSeconds(): Int = (System.currentTimeMillis() / 1000L).toInt()
 
@@ -73,8 +74,7 @@ object SigilDrops {
         now: Int = nowSeconds(),
     ): Sigil? {
         if (!starterSigilReady(player, now)) return null
-        val pool = Sigil.values().filter { it !in WITHOUT_EFFECT }
-        return pool[player.world.random(pool.size - 1)]
+        return STARTER_POOL[player.world.random(STARTER_POOL.size - 1)]
     }
 
     fun markStarterSigil(

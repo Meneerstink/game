@@ -59,6 +59,26 @@ class DeathResolverTests {
     }
 
     @Test
+    fun `the guardian angel adds one kept item to a PvP death only`() {
+        val home = Tile(3140, 3640, 0)
+        val victim = newPlayer(tile = Tile(3200, 3200), home = home)
+        val killer = mockk<Player>(relaxed = true)
+        victim.attr[gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.ATTUNED] = "65"
+        victim.inventory[0] = Item(995, 1)
+        victim.inventory[1] = Item(996, 1)
+        victim.inventory[2] = Item(997, 1)
+        victim.inventory[3] = Item(998, 1)
+        val value = ItemRiskValueProvider { id -> if (id == 997) 500L else 1L }
+
+        val pvp = DeathResolver.resolve(victim, killer, valueProvider = value)
+        assertEquals(1, pvp.itemRisk.protectedItemCount)
+        assertEquals(listOf(997), pvp.itemRisk.protected.map { it.item.id }, "the most valuable item is kept")
+        val pvm = DeathResolver.resolve(victim, killer = null, valueProvider = value)
+        assertEquals(DeathContext.PVM_SAFE, pvm.context)
+        assertEquals(3, pvm.itemRisk.protectedItemCount, "a monster death keeps its normal 3, the sigil adds nothing there")
+    }
+
+    @Test
     fun `a monster-caused death in the wilderness resolves as PvM recovery`() {
         val home = Tile(3140, 3640, 0)
         val victim = newPlayer(tile = Tile(3040, 3528), home = home)

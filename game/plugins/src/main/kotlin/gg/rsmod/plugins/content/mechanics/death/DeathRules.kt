@@ -34,6 +34,20 @@ object DeathRules {
     ): Int = if (context == DeathContext.PVM_SAFE && !skulled) PVM_UNSKULLED_KEEP else 0
 
     /**
+     * PROJECT48 S65 Sigil of the Guardian Angel (owner 22-11, choice B; the wiki effect is a Bank Key, which this server does not
+     * have): a player-caused death keeps 1 extra item, the most valuable one. The sigil is consumed by that death (death.plugin.kts,
+     * [gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.consume]). Every caller of [DeathResolver.resolve] sees it, so the
+     * Items Kept on Death screen and the risk skull predict the same keep as the death.
+     */
+    fun guardianAngelKeep(
+        victim: Player,
+        context: DeathContext,
+    ): Int =
+        if (context == DeathContext.WILDERNESS_PVP &&
+            gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(victim, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.THE_GUARDIAN_ANGEL)
+        ) 1 else 0
+
+    /**
      * OSRS: an untradeable breaks "if the death occurred at level 20 Wilderness and below" and is destroyed / mangled "above
      * level 20" (OSRS Wiki "Trouver parchment"). Deadman dangerous areas outside the Wilderness are level 0.
      */

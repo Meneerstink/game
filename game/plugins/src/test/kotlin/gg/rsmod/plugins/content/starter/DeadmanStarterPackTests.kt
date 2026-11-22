@@ -38,7 +38,9 @@ class DeadmanStarterPackTests {
         val given = f.attr[drops.STARTER_SIGIL_AT]!!
         assertFalse(drops.starterSigilReady(f.player, given + drops.STARTER_SIGIL_SECONDS - 1))
         assertTrue(drops.starterSigilReady(f.player, given + drops.STARTER_SIGIL_SECONDS))
-        assertTrue(drops.WITHOUT_EFFECT.none { it == drops.rollStarterSigil(f.player, given + drops.STARTER_SIGIL_SECONDS) })
+        // Owner 22-11: the 24-hour starter sigil is a tier 1 sigil.
+        assertEquals(1, drops.rollStarterSigil(f.player, given + drops.STARTER_SIGIL_SECONDS)?.tier)
+        assertTrue(drops.STARTER_POOL.isNotEmpty() && drops.STARTER_POOL.all { it.tier == 1 })
     }
 
     @Test fun `a full inventory keeps the starter sigil for the next pack`() {

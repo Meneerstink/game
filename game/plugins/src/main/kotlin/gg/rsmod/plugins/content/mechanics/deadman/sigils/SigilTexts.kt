@@ -254,11 +254,12 @@ object SigilTexts {
                 "effects.",
             // Sigil of the Fortune Farmer
             64 to
-                "All clue scrolls will drop as stackable scroll boxes that can be opened when this sigil is attuned.",
+                // Owner 22-11 choice A (our clues already drop as scroll boxes): +2 scroll boxes of every tier while attuned.
+                "While this sigil is attuned you can hold 2 more scroll boxes of every clue tier.",
             // Sigil of the Guardian Angel
             65 to
-                "Upon dying to another player, this Sigil is consumed, and you will lose the items you are carrying as " +
-                "normal. However, you will not drop a Bank Key.",
+                // Owner 22-11 choice B (this server has no Bank Keys): keeps 1 extra item instead.
+                "Upon dying to another player, this Sigil is consumed and you keep your most valuable item.",
         )
 
     /** The wiki effect text of [sigil], or an empty string for a sigil without one. */

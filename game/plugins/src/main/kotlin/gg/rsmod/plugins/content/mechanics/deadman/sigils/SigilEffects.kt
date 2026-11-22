@@ -114,4 +114,7 @@ object SigilEffects {
     }
 
     private const val IMMUNITY_TICKS = 1000
+
+    /** S63 Sigil of Slaughter: true when this Slayer task kill does NOT lower the task count (50%, OSRS Wiki); the XP is given anyway. */
+    fun slaughterKeepsCount(player: Player): Boolean = Sigils.effective(player, Sigil.SLAUGHTER) && player.world.randomDouble() < 0.5
 }

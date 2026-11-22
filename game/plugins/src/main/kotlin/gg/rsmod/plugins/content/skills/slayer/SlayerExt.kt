@@ -48,7 +48,9 @@ fun Player.handleDecrease(npc: Npc) {
     if (attr.has(SLAYER_AMOUNT)) {
         addXp(Skills.SLAYER, gg.rsmod.game.model.combat.NpcEncounter.slayerXp(npc))
         val amount = attr.getOrDefault(SLAYER_AMOUNT, 0)
-        attr.put(SLAYER_AMOUNT, amount - 1)
+        // PROJECT48 S63 Sigil of Slaughter: "a 50% chance for a Slayer Task kill to not count towards the task while still gaining
+        // you Slayer XP" (OSRS Wiki; there are no bracelets of slaughter/expeditious service here to stack with).
+        if (!gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilEffects.slaughterKeepsCount(this)) attr.put(SLAYER_AMOUNT, amount - 1)
     }
     if (attr.getOrDefault(SLAYER_AMOUNT, 0) <= 0) {
         if (attr[Krystilia.TASK] == true) {

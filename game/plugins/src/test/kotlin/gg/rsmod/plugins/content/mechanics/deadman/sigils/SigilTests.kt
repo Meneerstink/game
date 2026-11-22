@@ -119,8 +119,33 @@ class SigilTests {
     fun `the three starting sigils are the tier 2 choices of the wiki`() {
         assertEquals(3, Sigils.START_CHOICES.size)
         Sigils.START_CHOICES.forEach { assertEquals(2, it.tier) }
-        assertNull(SigilDrops.rollGlobalTable(newPlayer(), 1), "the Deadman-only table has chance 0 until the owner names the rates")
+        // Owner 22-11 choice A: tier 1 = 1/600, tier 2 = 1/1200, tier 3 = 1/2000 per kill.
+        assertEquals(1.0 / 600, SigilDrops.GLOBAL_TABLE_CHANCE[1])
+        assertEquals(1.0 / 1200, SigilDrops.GLOBAL_TABLE_CHANCE[2])
+        assertEquals(1.0 / 2000, SigilDrops.GLOBAL_TABLE_CHANCE[3])
         assertNotNull(Sigil.values().firstOrNull())
+    }
+
+    @Test
+    fun `a consumed sigil leaves the inventory and frees its slot once`() {
+        val player = newPlayer()
+        assertEquals(Sigils.Result.OK, attune(player, Sigil.THE_GUARDIAN_ANGEL))
+        assertTrue(Sigils.consume(player, Sigil.THE_GUARDIAN_ANGEL))
+        assertFalse(Sigils.has(player, Sigil.THE_GUARDIAN_ANGEL))
+        assertNull(player.inventory[0], "the attuned item is gone")
+        assertFalse(Sigils.consume(player, Sigil.THE_GUARDIAN_ANGEL), "a second consume changes nothing")
+    }
+
+    @Test
+    fun `the slaughter sigil keeps the task count about half of the time`() {
+        val player = newPlayer()
+        val world = mockk<gg.rsmod.game.model.World>(relaxed = true)
+        every { player.world } returns world
+        every { world.randomDouble() } returnsMany listOf(0.2, 0.7)
+        assertFalse(SigilEffects.slaughterKeepsCount(player), "without the sigil every kill counts")
+        attune(player, Sigil.SLAUGHTER)
+        assertTrue(SigilEffects.slaughterKeepsCount(player), "a roll under 0.5 does not count")
+        assertFalse(SigilEffects.slaughterKeepsCount(player), "a roll of 0.5 or more counts")
     }
 
     @Test

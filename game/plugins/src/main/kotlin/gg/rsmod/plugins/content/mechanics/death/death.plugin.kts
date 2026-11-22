@@ -79,6 +79,9 @@ fun resolveDeath(victim: Player) {
     // Everything the victim carried before the death takes it counts as earned for Perdu's Lost Property.
     PerduLostProperty.observe(victim)
     PvpDeathBreakables.crumbleUsedAmulets(victim)
+    // PROJECT48 S65: the Guardian Angel's extra kept item is part of the resolution below; the sigil is consumed once the death ran.
+    val guardianAngel = pvpDeath &&
+        gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(victim, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.THE_GUARDIAN_ANGEL)
     // Owner 2026-09-26: Protect Item keeps 1 item (skull irrelevant), ranked by guide price / untradeable repair price.
     val resolved =
         DeathResolver.resolve(
@@ -143,6 +146,12 @@ fun resolveDeath(victim: Player) {
         // N517 / N503 D9 (owner 2026-11-01): a player killer (not an alt or staff, not a guard) - the victim gets a Deadman chest
         // (78,000 coins + a Deadman's skull), at most one an hour (PvpRespawnChest).
         gg.rsmod.plugins.content.starter.PvpRespawnChest.grant(victim)
+    }
+    if (executed && guardianAngel &&
+        gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.consume(victim, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.THE_GUARDIAN_ANGEL)
+    ) {
+        gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilFx.guardianAngel(victim)
+        victim.message("<col=ef1020>Your Sigil of the Guardian Angel is consumed. It saved one more of your items.")
     }
     if (executed) {
         // Audit X-05: persist the transfer at once, like trades do - a crash before the next autosave
