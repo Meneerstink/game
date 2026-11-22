@@ -19,7 +19,8 @@ import gg.rsmod.plugins.content.quests.red
 
 // PROJECT48 Q18: The Grand Tree (bracket 71-90). OSRS Wiki: 25 Agility (boostable), a level 172 Black demon; 5 QP, 18,400 Attack XP,
 // 7,900 Agility XP, 2,150 Magic XP. ONTGR: the gnome gliders (mechanics\travel\gnome_glider.plugin.kts) and the Gnome Stronghold rocks
-// shortcut (skills\agility\sourced_shortcuts.plugin.kts, with Tree Gnome Village). The mine under the Grand Tree does not exist here.
+// shortcut (skills\agility\sourced_shortcuts.plugin.kts, with Tree Gnome Village) and the Grand Tree mine: the roots 2451 'Push'
+// (areas\gnomestronghold\grand_tree_roots.plugin.kts, run 4 O16) with its rocks in skills\mining\RockType.kt.
 // King Narnode Shareen already has a Talk-to plugin (grandexchange_unlocks.plugin.kts) that calls FoundationQuests.talk first.
 
 private val NARNODE_POST = Tile(2466, 3497, 0)

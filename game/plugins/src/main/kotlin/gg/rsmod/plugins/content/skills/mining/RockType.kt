@@ -38,6 +38,9 @@ enum class RockType(
         highChance = 392,
         objectIds =
             arrayOf(
+                Objs.ROCKS_32429, // PROJECT48 O16 Grand Tree mine (Void rocks.objs.toml clay_rocks_dirt; depleted in objs.yml)
+                Objs.ROCKS_32430, // PROJECT48 O16 Grand Tree mine (Void rocks.objs.toml clay_rocks_dirt; depleted in objs.yml)
+                Objs.ROCKS_32431, // PROJECT48 O16 Grand Tree mine (Void rocks.objs.toml clay_rocks_dirt; depleted in objs.yml)
                 Objs.ROCKS_15504,
                 Objs.ROCKS_15503,
                 Objs.ROCKS_15505,
@@ -126,6 +129,9 @@ enum class RockType(
         highChance = 346,
         objectIds =
             arrayOf(
+                Objs.ROCKS_32441, // PROJECT48 O16 Grand Tree mine (Void rocks.objs.toml iron_rocks_dirt; depleted in objs.yml)
+                Objs.ROCKS_32442, // PROJECT48 O16 Grand Tree mine (Void rocks.objs.toml iron_rocks_dirt; depleted in objs.yml)
+                Objs.ROCKS_32443, // PROJECT48 O16 Grand Tree mine (Void rocks.objs.toml iron_rocks_dirt; depleted in objs.yml)
                 Objs.ROCKS_37309,
                 Objs.ROCKS_37307,
                 Objs.ROCKS_37308,
@@ -152,6 +158,9 @@ enum class RockType(
         highChance = 200,
         objectIds =
             arrayOf(
+                Objs.ROCKS_32444, // PROJECT48 O16 Grand Tree mine (Void rocks.objs.toml silver_rocks_dirt; depleted in objs.yml)
+                Objs.ROCKS_32445, // PROJECT48 O16 Grand Tree mine (Void rocks.objs.toml silver_rocks_dirt; depleted in objs.yml)
+                Objs.ROCKS_32446, // PROJECT48 O16 Grand Tree mine (Void rocks.objs.toml silver_rocks_dirt; depleted in objs.yml)
                 Objs.ROCKS_37306,
                 Objs.ROCKS_37304,
                 Objs.ROCKS_37305,
@@ -175,6 +184,8 @@ enum class RockType(
         highChance = 100,
         objectIds =
             arrayOf(
+                Objs.ROCKS_32427, // PROJECT48 O16 Grand Tree mine (Void rocks.objs.toml coal_rocks_dirt; depleted in objs.yml)
+                Objs.ROCKS_32428, // PROJECT48 O16 Grand Tree mine (Void rocks.objs.toml coal_rocks_dirt; depleted in objs.yml)
                 Objs.ROCKS_32426, // 667 Void rocks.objs.toml clone of the coal rock (traversal census 2026-09-24)
                 Objs.ROCKS_11932,
                 Objs.ROCKS_11930,
@@ -235,6 +246,9 @@ enum class RockType(
         highChance = 50,
         objectIds =
             arrayOf(
+                Objs.ROCKS_32438, // PROJECT48 O16 Grand Tree mine (Void rocks.objs.toml mithril_rocks_dirt; depleted in objs.yml)
+                Objs.ROCKS_32439, // PROJECT48 O16 Grand Tree mine (Void rocks.objs.toml mithril_rocks_dirt; depleted in objs.yml)
+                Objs.ROCKS_32440, // PROJECT48 O16 Grand Tree mine (Void rocks.objs.toml mithril_rocks_dirt; depleted in objs.yml)
                 Objs.ROCKS_11942,
                 Objs.ROCKS_11943,
                 Objs.ROCKS_11944,
@@ -262,6 +276,9 @@ enum class RockType(
         highChance = 25,
         objectIds =
             arrayOf(
+                Objs.ROCKS_32435, // PROJECT48 O16 Grand Tree mine (Void rocks.objs.toml adamantite_rocks_dirt; depleted in objs.yml)
+                Objs.ROCKS_32436, // PROJECT48 O16 Grand Tree mine (Void rocks.objs.toml adamantite_rocks_dirt; depleted in objs.yml)
+                Objs.ROCKS_32437, // PROJECT48 O16 Grand Tree mine (Void rocks.objs.toml adamantite_rocks_dirt; depleted in objs.yml)
                 Objs.ROCKS_11939,
                 Objs.ROCKS_11941,
                 Objs.ROCKS_2104,
