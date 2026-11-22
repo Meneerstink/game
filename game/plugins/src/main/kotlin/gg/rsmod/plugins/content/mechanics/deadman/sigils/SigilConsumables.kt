@@ -35,9 +35,16 @@ object SigilConsumables {
         return true
     }
 
-    /** S22 Faith: a 40% chance to gain twice the prayer points from a prayer-restoring potion. */
+    /**
+     * S22 Faith: a 40% chance to gain twice the prayer points from a prayer-restoring potion. The chat line is the real one
+     * (D01 PROJECT48 23-11: OCR of DMM video z_PHEY6D9XY 18:04 / 18:10 / 24:00, 'Your Sigil of Faith doubles your prayer restoration!').
+     */
     fun faith(
         player: Player,
         points: Int,
-    ): Int = if (points > 0 && Sigils.effective(player, Sigil.FAITH) && player.world.randomDouble() < 0.40) points * 2 else points
+    ): Int {
+        if (points <= 0 || !Sigils.effective(player, Sigil.FAITH) || player.world.randomDouble() >= 0.40) return points
+        player.message("Your Sigil of Faith doubles your prayer restoration!")
+        return points * 2
+    }
 }
