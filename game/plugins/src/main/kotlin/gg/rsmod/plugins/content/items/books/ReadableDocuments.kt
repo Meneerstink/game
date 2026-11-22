@@ -663,6 +663,214 @@ object ReadableDocuments {
         Document(Items.KNIGHTS_NOTES, "Knight's notes", "https://oldschool.runescape.wiki/w/Knight%27s_notes", """
             My friend, you were right to send me to investigate the dwarf's drunken claims, for I have discovered a treasure beyond our wildest dreams. The aviansie are alive, and I suspect they still guard the Godsword! Beneath the remnants of the temple a great battle is being fought between followers of Bandos, Armadyl, Saradomin and Zamorak. My command was slaughtered and I am grieviously wounded. YOU MUST PREVENT THE GODSWORD FROM FALLING INTO THE WRONG HANDS! I do not know how I am going to get this message to you, why is that talking skull never around when he's needed? Your comrade, Sir Gerry.
         """.trimIndent()),
+        // Source: https://oldschool.runescape.wiki/w/Transcript:Old_journal (PROJECT48 O10)
+        Document(Items.OLD_JOURNAL, "Old journal", "https://oldschool.runescape.wiki/w/Old_journal", """
+            We came to cleanse this underground pass of the dark forces that dwell here. We knew the journey would be treacherous, but even I was not prepared for the darkness that fills this place.
+
+            To hold the darkness at bay, I had the mages create some Spheres of Light for us. I have positioned them in the tunnels around the well where we have made camp.
+
+            These spheres are imbued with the holy light of Saradomin himself. They will give us the faith and courage we need.
+
+            And yet...
+
+            I still feel...
+
+            the relentlessly tugging...
+
+            at my weak soul...
+        """.trimIndent()),
+        // Source: https://oldschool.runescape.wiki/w/Transcript:Intel_report (PROJECT48 O10)
+        Document(Items.INTEL_REPORT, "Intel report", "https://oldschool.runescape.wiki/w/Intel_report", """
+            Intelligence Report
+            There is an archaeologist with mining equipment hanging
+            around the statue outside of the city. Could she be on to
+            a hidden treasure buried near the statue?
+
+            A new channel has been dug and a barge has been
+            assembled near the digsite. The Varrock museum seems
+            to be paying for it. Could they have information about
+            new treasures?
+        """.trimIndent()),
+        // Source: https://oldschool.runescape.wiki/w/Transcript:Hazelmere%27s_scroll (PROJECT48 O10)
+        Document(Items.HAZELMERES_SCROLL, "Hazelmere's scroll", "https://oldschool.runescape.wiki/w/Hazelmere%27s_scroll", """
+            Es lemanto meso pro eis prit ta Cinqo mond.
+            Mi lovos te lemanto Daconia arpos
+            et Daconia arpos eto meriz ta priwl!
+        """.trimIndent()),
+        // Source: https://oldschool.runescape.wiki/w/Transcript:Lumber_order (PROJECT48 O10)
+        Document(Items.LUMBER_ORDER, "Lumber order", "https://oldschool.runescape.wiki/w/Lumber_order", """
+            Karamja shipyard
+
+            Order
+
+            Order for 30 Karamja battleships
+            Lumber required: 2000
+            Troop capacity: 300
+        """.trimIndent()),
+        // Source: https://oldschool.runescape.wiki/w/Transcript:Big_Book_of_Bangs (PROJECT48 O10)
+        Document(Items.BIG_BOOK_OF_BANGS, "Big Book of Bangs", "https://oldschool.runescape.wiki/w/Big_Book_of_Bangs", """
+            Introduction
+            In my travels, I have witnessed many explosive creations. One of particular note, is fire oil. Used in the far east, fire oil has an incredible explosive capability. However, it also sticks to anything it touches.
+
+            The following pages detail the required ingredients to create fire oil, along with the process of combining them.
+
+            Quicklime
+            This is a highly caustic compound. It is created by the endothermic reaction of heating limestone. Ensure it is crushed before use. To avoid bodily harm, suitable containers and hand protection should be used.
+
+            Sulphur
+            Also known as yellow crystals. Odorless, insoluble and brittle as a solid. But as gas, quite toxic, preventing respiration. Like quicklime, it should be crushed before use.
+
+            Naphtha
+            A colourless, flammable solvent. One of the more volatile fractions of the fractional distillation of coal tar.
+
+            Preparation
+            The quicklime, sulphur, naphtha and can be mixed at any time. A large container, such as a barrel, is recommended for holding them in.
+
+            Once combined, exposure to a naked flame will result in an instant reaction so great care must be taken. A fuse of some sort should be used to provide a suitable delay.
+        """.trimIndent()),
+        // Source: https://oldschool.runescape.wiki/w/Transcript:Lift_manual (PROJECT48 O10)
+        Document(Items.LIFT_MANUAL, "Lift manual", "https://oldschool.runescape.wiki/w/Lift_manual", """
+            Troubleshooting your AMCE Lift-In-A-Box
+
+            'My lift doesn't work!'
+
+            1. Have you added the pulleys? Make sure you have a long top beam with a pulley, and pulleys on the two crossbeams. We recommend AMCE Pulley- Beams-In-A-Box.
+
+            2. Have you attached a rope? Wind one of your AMCE Ropes-In-A-Box through the pulleys.
+
+            3. Is the platform broken? Repair it with one of your AMCE Beams-In-A-Box. 4. Have you added the engine? The AMCE Lift-In-A-Box does not include an engine.
+
+            5. Have you added coal to the engine? All compatible coal engines have a maximum load of five chunks of coal.
+
+            (AMCE Lift-In-A-Box, Pulley-Beams-In-A-Box, Beams-In-A-Box and Ropes-In-A-Box are all registered trademarks of Ali Morrisane Commercial Enterprises (AMCE) Ltd.)
+        """.trimIndent()),
+        // Source: https://oldschool.runescape.wiki/w/Transcript:Queen_help_book (PROJECT48 O10)
+        Document(Items.QUEEN_HELP_BOOK, "Queen help book", "https://oldschool.runescape.wiki/w/Queen_help_book", """
+            1) Collector: Pick up yellow egg. Pass to healer. Take omega egg from Defender. Load into turret.
+
+            2) Healer: Take yellow egg from Collector. Poison egg in pool. Pass to Attacker.
+
+            3) Attacker: Take poisoned, yellow egg from healer. Add spikes from mushroom. Pass to Defender.
+
+            4) Defender: Take poisoned, spiked, yellow egg from Attacker. Dunk in lava. Pass to Collector.
+        """.trimIndent()),
+        // Source: https://oldschool.runescape.wiki/w/Transcript:Tarn%27s_diary (PROJECT48 O10)
+        Document(Items.TARNS_DIARY, "Tarn's diary", "https://oldschool.runescape.wiki/w/Tarn%27s_diary", """
+            4th of Bennath
+            All my long hours of research have finally paid off! Today I discovered an ancient journal in the great library, which detailed a ceremony for giving life back to greater beasts after they have died! I shall finally be able to unravel the secrets of the Skeletal Wyverns!
+
+            18th of Raktuber
+            I have spent over a month studying the spell of Greater Animation now. My studies have led me to believe that although this spell is more powerful than any I have ever encountered, and will indeed reanimate the skeletons of long dead dragons and such creatures, it does not provide any way of controlling them. Whoever devised this spell must have been insane, because without somebody to control them, these undead monsters would have been free to destroy everything that they encountered! No wonder the spell was hidden away in the great library. There is, however, a reference to an amulet of such power that any undead creature would tremble before someone wielding it. I must return to the library and see if I can find any further reference to this magical amulet. Once I have it and can create and control undead dragons, even Lord Drakan and his minions shall tremble before my might!
+
+            29th of Raktuber
+            I have spent nearly 2 full weeks searching the great library for a reference to the writings that I need, with no success. Soon I shall be forced to start searching through the tombs and grimoires page by page.
+
+            8th of Pentember
+            I have found a reference to the crystal! This morning, while reading the histories of Morytania, I happened upon this extract: 'And so our mighty Ruler ordered the mines to be sealed forever and all those who slaved in the mines to be slain. Only by doing this could we seal away the threat of the Accursed Shard for all time!' I suspect this Accursed Shard to be the crystal that I seek! My next course of action must be to discover where these mines that are mentioned can be found.
+
+            10th of Pentember
+            Once again, the great library has provided the answer. I have found an ancient map that shows a series of mines in south-western Morytania, on the River Salve. These mines are not shown on modern maps. They must be the place I seek. Tomorrow I shall go and find them!
+
+            11th of Pentember
+            Today has been a hard day. We travelled south through desolate swamps, which were infested with ghasts. Many of my servants and soldiers fell to these creatures, but I have granted them eternal life as the undead, so that they may continue to serve me.
+
+            12th of Pentember
+            This morning we found out that all our food had spoiled over-night. We will need to hunt for food today, as we continue our trek southward, to the mines. I will be only too pleased to see the end of these accursed swamps
+
+            16th of Pentember
+            At last we have reached the mines! All my human companions have perished, but I have animated their corpses and now have servants aplenty to do my bidding. I just wish they weren't all so stupid! This afternoon we shall search for the entrance to the mines.
+
+            17th of Pentember
+            It has been an eventful morning. The day started with us finding a madman wandering in the area, also searching for an entrance to the mine. I tricked him into telling me where the original entrance was, and from there my zombie minions soon found a way into the mines themselves. I can feel very powerful magic at work here, possibly even stronger than my own! In an attempt to find the source of this magic, I shall spend this afternoon preparing and casting spells of location and scrying.
+
+            18th of Pentember
+            I have seen the crystal that I seek, however it is guarded by a spirit of extreme power! I shall have my undead create a small dungeon, where I will be safe from attack and then I shall send them forth to slay this fell spirit. I'm sure even one as powerful as that will fall to the numbers of undead that I can summon.
+
+            19th of Pentember
+            Work began on the passage to my suite of rooms. My slaves work hard when the work is as simple as this, and we made excellent progress. The only thing of interest is that we found some strange stone blocks, of a design that I have not seen before. I may study them further when I have more time available.
+
+            20th of Pentember
+            Today we excavated the entrance to a building! I do not recognise the style of masonry used, but the creators must have been about the same height and girth as I am, judging by the size of doorways and stair- cases. The temple is fraught with traps, but will make a fine base for me to wait whilst my army of undead retrieve a piece of the Salve Crystal. I have several theories pertaining to the origin of this strange temple. If I am correct we are deep underground, directly below the village of Burgh de Rott. It may be that this temple was built as a fortification against an invasion from the desert nomads, who live to the west of here. Alternatively, perhaps it was built at the bequest of one of the lesser vampyre lords who ruled this area when Drakan came to power. However, I believe that it was probably built to guard an ancient treasure. My reasoning is thus; there doesn't seem to be any type of altar that we have found yet and the temple is littered with traps. Further research may reveal an answer. In the meantime I have enchanted this diary of mine with the spell needed to enhance the powers of the crystal. I await my minions' return.
+        """.trimIndent()),
+        // Source: https://oldschool.runescape.wiki/w/Transcript:Brewin%27_guide (PROJECT48 O10)
+        Document(Items.BREWIN_GUIDE, "Brewin' guide", "https://oldschool.runescape.wiki/w/Brewin%27_guide", """
+            BREWIN' GUIDE
+            A guide to brewin'
+
+            Chapters
+            1: Ingredients
+            1.1: Bitternuts
+            1.2: Sweetgrubs
+            1.3: Scrapey Tree Bark
+            1.4: Water
+            2: Boilers
+            3: Brewin'
+            4: Sabotage and Repair
+            4.1: Makin' Repair Items
+            4.2: The Steam Pump
+            5: Plunder
+
+            Ingredients
+            Bitternuts
+            Sweetgrubs
+            Scrapey Tree Bark
+            Coloured Water
+            Water
+
+            Mos Le'Harmless 'rum' is based loosely on the recipe fer Braindeath 'rum', with the main exception bein' that it is brewed from items found locally to the island.
+
+            Bitternuts
+            Bitternuts be foul tastin' but highly intoxicatin' nuts found inside the brewin' compound. The trees they are in be too tall to climb, especially with all the action goin' on in the area. Hence, tis the best idea to capture a monkey, and put it up the tree to get the nut for ye. However, the monkey will need to be dyed the same colour as yer team, or confusion will arise. Fortunately, a bowl of coloured water from the kettle will colour the monkey with only mild scaldin'. Some people tell tales that they can talk to the monkeys and persuade them to pass them the nut faster. Admittedly they say you need a magic amulet, but then again that sounds a little far-fetched to me. It should also be noted that if someone puts a different coloured monkey up the tree, then the two monkeys will fight over which gets the bitternut.
+
+            Sweetgrubs
+            Sweetgrubs be vicious little grubs that live in mounds inside the brewin' area. They will go fer any meat nearby, so tis best to grab some rat meat and lay it on the mound.  The grubs be very sleepy after they have eaten, and ye'll be able te scoop them up after they have devoured the meat. To get the best results, one load of sweetgrubs be needed fer every bottle of rum.
+
+            Scrapey Tree Bark
+            Scrapey Tree Bark is added to give the mix a little more body. There be a few Scrapey Trees in the area that ye can go fer, all ye need is an axe. Take a knife te the logs, and that'll get the bark. Mind ye don't get nay of the sap on yer hands, as it carries an annoyin' little disease.
+
+            Water
+            The last two ingredients be the easiest to plunder; water from either the lake in the middle of the brewery compound, or from one of the pumps can be put into the correct hopper with nary a trouble. The coloured water be gained by placing the petals of rare flowers into a kettle of boilin' water. This leeches the colour from them, and the water can be siphoned off into bowls.  It takes 5 buckets of water, and three bowls of coloured water to make one bottle of rum.
+
+            Boilers
+            While ye'll need all these te make 'rum', ye'll also need to keep the boilers nice and hot. These are quite easy te feed. Just take some logs and put them in the boiler, then light them on fire with a tinderbox. Once it's burnin' it'll take up a few logs every now and again. So long as there are at least three burnin' then the 'rum' will be produced. It's always best to keep them fed though, as ye never know when they will run out.
+
+            Brewin'
+            Assumin' all the stuff is in the hoppers, and all the boilers are burnin' and all the pipes are nice and fixed, then the right amount of stuff will be taken out of the hoppers, and the brewin' will begin. This takes a little while te do, but not too long though.  When it is done, the rum will pop out on the conveyor belt, and all ye have te do is pick it up and put it in the crate.
+
+            However, it should be noted that if ye have not contributed enough to any bottle of rum, then you will not be able te collect it. To qualify, ye must add enough of any ingredient te the hoppers to make the light turn green. Hence, if ye add 5 buckets of water, ye qualify te collect 1 bottle, and if ye add five bitternuts, ye qualify fer 5. If ye add both, then ye qualify fer 6 bottles.
+
+            Sabotage and Repair
+            As it is against the Pirates Code, ye'll not be able te kill anyone in there directly. However, the stills are fair game. Most of them can be burned down with a torch, if ye try hard enough.
+
+            When some scum-sucking dog has set yer still on fire don't panic. Just take a bucket of water and douse the fire. Then, dependin' on what was burnin', use either a pipe section, lumber patch or bridge section on the burned bit to repair it. Pipe sections be used fer pipes and the water pump.
+
+            Lumber Patches fer the hoppers.
+
+            Bridge sections be needed fer bridges.
+
+            Makin' More Repair Items.
+            If ye run low on items (as will happen if yer enemy be in a fiery mood) then ye will need te make yer own items.
+
+            This is quite easy, as there be a bench full of handy tools fer ye te uses to make more. Just take a log and use it on the table, and ye'll be able te craft up as many of the items as ye need.
+
+            The Steam Pump
+            If things be looking dreadful, then ye can use the steam pump to raise the pressure in the boilers, and then vent it through the damaged parts te put out fires and badly scald anyone lurkin' nearby. The pump be quite stiff te work, and ye'll need a lot of energy te keep it goin'. Just haul on the lever fer a while until ye gets tired, and that will put up the pressure.
+
+            When yer base is under attack, and things be on fire, then vent the pressure te give them a nasty surprise. Be warned though, the steam will damage the pipes and hoppers as it comes out, so that might do more harm than good.
+
+            Plunder
+            Well, ye've set things on fire, worked the steam pump and stashed the rum, and now the game is over.  What do ye get?  Plunder!
+
+            Ye will be awarded a number of Pieces of Eight depending on how well yer team did, and how hard ye worked during' the game. If ye have a word with Honest Jimmy, then he'll sell ye some nice items fer all yer hard work.
+
+            Tricorn hats are the latest in pirate fashions. They go well with any outfit, and will make ye the envy of all the other pirates as ye walk down the plank.
+
+            Nothin' says 'I lived the Navy lifestyle before deserting te make me fortune' like an old tattered Navy uniform, and Jimmy has plenty.  All pre-tattered and authentic, get one today!
+
+            If ye save up enough Pieces of Eight, then ye can own yer very own surplus pirate flag! Jimmy has plenty on offer, including a rare example from the ghost ship The Phasmatys Pride!
+
+            Last but by no means least, be The Stuff. Jimmy won't tell us where he gets it, as the Cooking Guild keeps threatening te reduce him te soup if he keeps sellin' it. It works by bein' sprinkled into yer ale before ye add the hops, and the effect means that yer a little more likely te get a mature ale by the end of it.
+        """.trimIndent()),
     ).associateBy { it.item }
 
     fun read(player: Player, slot: Int, id: Int): Boolean {
