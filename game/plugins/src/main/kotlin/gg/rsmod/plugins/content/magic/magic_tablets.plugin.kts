@@ -36,6 +36,7 @@ ENCHANT_TABLETS.forEach { (tablet, level) ->
     EnchantmentData.values().filter { it.spell == level }.forEach { jewellery ->
         on_item_on_item(tablet, jewellery.raw) {
             if (!player.inventory.contains(tablet) || !player.inventory.contains(jewellery.raw)) return@on_item_on_item
+            if (!gg.rsmod.plugins.content.areas.varrock.VarrockMuseum.mayEnchant(player, jewellery.raw)) return@on_item_on_item
             if (player.inventory.remove(tablet).hasSucceeded() && player.inventory.remove(jewellery.raw).hasSucceeded()) {
                 player.inventory.add(jewellery.product)
                 player.playSound(jewellery.sound)

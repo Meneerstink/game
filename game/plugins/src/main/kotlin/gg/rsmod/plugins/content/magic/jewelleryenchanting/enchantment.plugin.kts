@@ -119,6 +119,9 @@ fun performEnchantment(
         return false
     }
 
+    // OSRS Wiki Clean necklace: ruby necklaces only after an archaeologist studied the clean necklace (P48 O17).
+    if (!gg.rsmod.plugins.content.areas.varrock.VarrockMuseum.mayEnchant(player, item.id)) return false
+
     // Determine the animation and graphic to play based on the spell being cast
     val animation =
         when (spell) {
