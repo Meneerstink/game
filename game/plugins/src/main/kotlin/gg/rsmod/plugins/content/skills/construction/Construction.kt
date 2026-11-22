@@ -22,8 +22,8 @@ object Construction {
         }
         while (true) {
             val built = player.attr[BUILT_ATTR] ?: emptyList()
-            // Assist System: a lent Construction level lists (and builds) the pieces the assister could build.
-            val level = player.skills.getMaxLevel(Skills.CONSTRUCTION)
+            // OSRS: a boosted Construction level (tea, crystal saw, Sigil of Exaggeration) lists and builds the higher pieces.
+            val level = player.skills.getCurrentLevel(Skills.CONSTRUCTION)
             val available = ConstructionData.PIECES.filter { level >= it.level && it.id !in built }
             if (available.isEmpty()) {
                 it.messageBox("You have nothing left to build at your current Construction level.")
@@ -42,7 +42,7 @@ object Construction {
                 )
                 continue
             }
-            if (player.skills.getMaxLevel(Skills.CONSTRUCTION) < piece.level) {
+            if (player.skills.getCurrentLevel(Skills.CONSTRUCTION) < piece.level) {
                 it.messageBox("You need a Construction level of ${piece.level} to build the ${piece.name}.")
                 continue
             }

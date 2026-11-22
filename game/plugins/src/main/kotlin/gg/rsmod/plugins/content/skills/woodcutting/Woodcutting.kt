@@ -252,7 +252,7 @@ object Woodcutting {
             player.message("You do not have an axe which you have the woodcutting level to use.")
             return false
         }
-        if (player.skills.getMaxLevel(Skills.WOODCUTTING) < tree.level) {
+        if (player.skills.getCurrentLevel(Skills.WOODCUTTING) < tree.level) {
             player.message("You need a Woodcutting level of ${tree.level} to chop down this tree.")
             return false
         }

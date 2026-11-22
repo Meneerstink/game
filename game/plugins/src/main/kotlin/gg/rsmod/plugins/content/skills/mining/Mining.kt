@@ -229,7 +229,7 @@ object Mining {
             )
             return false
         }
-        if (p.skills.getMaxLevel(Skills.MINING) < rock.level) {
+        if (p.skills.getCurrentLevel(Skills.MINING) < rock.level) {
             it.messageBox("You need a Mining level of ${rock.level} to mine this rock.")
             return false
         }
