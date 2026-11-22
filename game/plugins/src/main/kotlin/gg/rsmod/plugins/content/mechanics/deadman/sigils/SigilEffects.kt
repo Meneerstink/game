@@ -19,7 +19,8 @@ object SigilEffects {
         sigil: Sigil,
     ) {
         when (sigil) {
-            Sigil.BINDING -> player.message("Binding: your next binding spell within ${sigil.windowSeconds} seconds is much more accurate.")
+            // OSRS DMM video cMUhQb_j3dw 05:34.
+            Sigil.BINDING -> player.message("The Sigil of Binding pulses with energy, ready to help you bind an opponent.")
             Sigil.SPECIALISED_STRIKES -> player.message("Specialised Strikes: your next special attack costs 10 less for ${sigil.windowSeconds} seconds.")
             Sigil.THE_PORCUPINE -> player.message("Porcupine: attackers are hurt by recoil for ${sigil.windowSeconds} seconds.")
             Sigil.FINALITY -> player.message("Finality: your next special attack within ${sigil.windowSeconds} seconds cannot miss.")

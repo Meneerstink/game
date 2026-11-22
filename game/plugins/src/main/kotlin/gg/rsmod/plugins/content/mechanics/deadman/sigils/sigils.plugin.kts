@@ -103,7 +103,15 @@ on_player_death { SigilCombat.onDeath(player) }
 
 // SigilFx: the OSRS sounds "no longer active" (a window ran out) and "cooldown finished" of an activated sigil.
 SigilFx.WINDOW_TIMER.forEach { (sigil, key) -> on_timer(key) { if (Sigils.effective(player, sigil)) SigilFx.windowEnded(player, sigil) } }
-SigilFx.COOLDOWN_TIMER.forEach { (sigil, key) -> on_timer(key) { if (Sigils.effective(player, sigil)) SigilFx.cooldownFinished(player) } }
+// Chat line from OSRS DMM video cMUhQb_j3dw 02:04 (Sigil of Binding; same wording with the sigil's own name for the others).
+SigilFx.COOLDOWN_TIMER.forEach { (sigil, key) ->
+    on_timer(key) {
+        if (Sigils.effective(player, sigil)) {
+            SigilFx.cooldownFinished(player)
+            player.message("The cooldown for your ${sigil.label} is over. It can now be activated.")
+        }
+    }
+}
 
 // An attuned sigil whose item is nowhere (inventory, bank) can never be unattuned: free its slot and say so (Sigils.reconcile).
 on_login {
