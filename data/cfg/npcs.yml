@@ -7096,6 +7096,10 @@
   examine: "He doesn't look very pleased to see you."
 - id: 4406
   examine: "He doesn't look very pleased to see you."
+- id: 4407
+  examine: "An ugly green creature."
+- id: 4408
+  examine: "These goblins have grown strong."
 - id: 4415
   examine: "A popular dwarven delicacy."
 - id: 4433
@@ -7116,6 +7120,26 @@
   examine: "A very angry nymph."
 - id: 4474
   examine: "This is ready for you to cast magic at it."
+- id: 4479
+  examine: "An ugly green creature."
+- id: 4480
+  examine: "An ugly green creature."
+- id: 4482
+  examine: "An ugly green creature."
+- id: 4483
+  examine: "An ugly green creature."
+- id: 4484
+  examine: "An ugly green creature."
+- id: 4485
+  examine: "An ugly green creature."
+- id: 4488
+  examine: "An ugly green creature."
+- id: 4489
+  examine: "An ugly green creature."
+- id: 4491
+  examine: "An ugly green creature."
+- id: 4492
+  examine: "An ugly green creature."
 - id: 4500
   examine: "I think they're some kind of beetle..."
 - id: 4509
@@ -7342,6 +7366,8 @@
   examine: "An extremely vicious lobster."
 - id: 4893
   examine: "An extremely vicious lobster."
+- id: 4898
+  examine: "An ugly, smelly creature."
 - id: 4910
   examine: "An earth elemental."
 - id: 4920
@@ -8082,6 +8108,12 @@
   examine: "Known for his light-fingered qualities."
 - id: 5929
   examine: "Known for his light-fingered qualities."
+- id: 5941
+  examine: "This man guards the entrance to the Museum's cleaning area."
+- id: 5943
+  examine: "This man guards the workman's entrance."
+- id: 5946
+  examine: "Cheeky little chappy."
 - id: 5993
   examine: "A very odd looking creature."
 - id: 5994
@@ -8524,6 +8556,16 @@
   examine: "Without a Crystal chime you don't think you can harm this terrorbird."
 - id: 6344
   examine: "Duck!"
+- id: 6346
+  examine: "Avast ye scurvy land lubbers!"
+- id: 6347
+  examine: "Avast ye scurvy land lubbers!"
+- id: 6348
+  examine: "Avast ye scurvy land lubbers!"
+- id: 6349
+  examine: "Avast ye scurvy land lubbers!"
+- id: 6350
+  examine: "Avast ye scurvy land lubbers!"
 - id: 6358
   examine: "The mother of all pests!"
 - id: 6359
