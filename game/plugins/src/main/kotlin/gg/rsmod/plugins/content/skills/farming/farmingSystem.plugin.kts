@@ -17,6 +17,11 @@ on_timer(playerFarmingTimer) {
     PlayerManager.onFarmingTick(player)
 }
 
+// PROJECT48 S62 Sigil of Nature: the extra farming cycles, one a minute.
+on_timer(PlayerManager.natureTimer) {
+    PlayerManager.onNatureStep(player)
+}
+
 on_timer(worldFarmingTimer) {
     WorldFarmingManager.onFarmingTick(world)
 }

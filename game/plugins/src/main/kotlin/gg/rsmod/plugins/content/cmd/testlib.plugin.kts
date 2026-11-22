@@ -180,6 +180,18 @@ CommandServerCommands.handlers["sigilroll"] = { _, a ->
     }
 }
 
+// `pcwin <name>` (PROJECT48 S61): ends the Pest Control game this player is in as a WIN with enough zeal, through the real
+// PestControlGame.end -> PestControlHandler.pay (points incl. the Sigil of Hoarding x3) - no need to kill 4 portals with a bot.
+CommandServerCommands.handlers["pcwin"] = { _, a ->
+    val p = findPlayer(a)
+    val game = p?.let { gg.rsmod.plugins.content.activity.pest_control.PestControlHandler.gameOf(it) }
+    if (p == null || game == null) "usage: pcwin <name> (player must be inside a running Pest Control game: board + pcstart)" else {
+        p.attr[gg.rsmod.plugins.content.activity.pest_control.PestControlHandler.ZEAL_ATTR] = 100
+        game.end(true, reason = "pcwin test command")
+        "pcwin ${p.username}: game ended as a win"
+    }
+}
+
 // `dropview <name> <source key>` (N620): opens the Drop Viewer straight on one source (key = '<name lowercase>|<level>', spaces as _,
 // e.g. nechryael|115) - a screenshot of one table without clicking through the list.
 CommandServerCommands.handlers["dropview"] = { _, a ->

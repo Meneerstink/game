@@ -14,14 +14,47 @@ object PlayerManager {
      */
     fun onFarmingTick(player: Player) {
         grow(player, FarmTicker.seedTypesForTick)
-        // PROJECT48 S62 Sigil of Nature: a farming cycle every minute instead of every five = four extra growth steps per world tick.
-        if (gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.NATURE)) {
-            for (ahead in 1..4) grow(player, FarmTicker.futureSeedTypes(player.world, ahead))
-        }
 
         player.timers[Constants.playerFarmingTimer] = Constants.playerFarmingTickLength
         player.attr[LAST_WORLD_FARMING_TICK] = player.world.attr[Constants.worldFarmTick]!!
+        // PROJECT48 S62 Sigil of Nature (wiki: 'Farming cycles occur every minute instead of every five minutes'): the four extra
+        // cycles run ONE A MINUTE between two farming ticks. Run 3 (22-11) measured the old version, which ran all five at once: a
+        // crop that caught a disease died in the same burst, so a player never had the cycle to cure it.
+        if (natureActive(player)) {
+            player.attr[NATURE_STEP] = 1
+            player.timers[natureTimer] = NATURE_STEP_TICKS
+        }
     }
+
+    /** S62: the next of the four extra Sigil of Nature cycles (one a minute after the farming tick). */
+    fun onNatureStep(player: Player) {
+        val step = player.attr[NATURE_STEP] ?: return
+        if (step !in 1..4 || !natureActive(player)) {
+            player.attr.remove(NATURE_STEP)
+            return
+        }
+        // Cycle 'step' after the world farming tick this player last handled (stays right when the world tick moved meanwhile).
+        val base = player.attr[LAST_WORLD_FARMING_TICK] ?: player.world.attr[Constants.worldFarmTick]!!
+        val ahead = base + step - player.world.attr[Constants.worldFarmTick]!!
+        grow(player, FarmTicker.futureSeedTypes(player.world, ahead))
+        if (step < 4) {
+            player.attr[NATURE_STEP] = step + 1
+            player.timers[natureTimer] = NATURE_STEP_TICKS
+        } else {
+            player.attr.remove(NATURE_STEP)
+        }
+    }
+
+    private fun natureActive(player: Player): Boolean =
+        gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(
+            player,
+            gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.NATURE,
+        )
+
+    /** Not persisted: a relog only loses the remaining extra cycles of that one farming tick. */
+    val natureTimer = gg.rsmod.game.model.timer.TimerKey()
+    private val NATURE_STEP = AttributeKey<Int>()
+    const val NATURE_STEP_TICKS = Constants.playerFarmingTickLength / 5
 
     /**
      * Initializes the player farming logic upon login. Replays farming ticks that occurred while logged out and
