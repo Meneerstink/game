@@ -27,6 +27,11 @@ on_command("p48", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
         QuestStatus.sync(player)
         return@on_command player.message("p48: cohort = $cohort")
     }
+    if (sub == "barrowschest") {
+        // X6 His Faithful Servants: the real Barrows chest loot (reward, kill count, Deadman Tasks and the quest's icon hook).
+        gg.rsmod.plugins.content.npcs.definitions.barrows.Barrows.loot(player)
+        return@on_command player.message("p48: barrows chest looted.")
+    }
     if (sub == "list") {
         return@on_command player.message("p48 quests: " + BracketQuests.ALL.joinToString(", ") { "${it.slot}=${it.name}" }.take(480))
     }
@@ -62,7 +67,14 @@ on_command("p48", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
         }
         "req" -> {
             quest.needs.skills.forEach { (skill, level) -> if (player.skills.getMaxLevel(skill) < level) player.skills.setBaseLevel(skill, level) }
-            quest.needs.quests.forEach { name -> QuestList.ENTRIES.firstOrNull { it.name == name }?.progress?.complete?.invoke(player) }
+            // Transitive: a real player meeting the needs has also done the prerequisites' prerequisites (X1: Brundt otherwise opens The Fremennik Trials first).
+            val seen = mutableSetOf<String>()
+            fun completeChain(name: String) {
+                if (!seen.add(name)) return
+                BracketQuests.ALL.firstOrNull { it.name == name }?.needs?.quests?.forEach { completeChain(it) }
+                QuestList.ENTRIES.firstOrNull { it.name == name }?.progress?.complete?.invoke(player)
+            }
+            quest.needs.quests.forEach { completeChain(it) }
             if (quest.needs.questPoints > 0) QuestList.ENTRIES.filter { it.points > 0 }.forEach { if (QuestStatus.points(player) < quest.needs.questPoints) it.progress.complete(player) }
             QuestStatus.sync(player)
             player.message("p48 ${quest.name}: requirements given (met=${quest.needs.met(player)}).")

@@ -11,7 +11,7 @@ import gg.rsmod.plugins.content.quests.foundation.ShortQuest
  * FoundationQuests.talk first.
  */
 object B91110Quests {
-    val ALL: List<ShortQuest> = listOf(DragonSlayer, HeroesQuest, IcthlarinsLittleHelper, Contact, InSearchOfTheMyreque, InAidOfTheMyreque, DarknessOfHallowvale)
+    val ALL: List<ShortQuest> = listOf(DragonSlayer, HeroesQuest, IcthlarinsLittleHelper, Contact, InSearchOfTheMyreque, InAidOfTheMyreque, DarknessOfHallowvale, ATasteOfHope, ANightAtTheTheatre)
 
     val NPCS: List<BracketNpc> =
         listOf(
@@ -35,6 +35,10 @@ object B91110Quests {
             BracketNpc(Npcs.IVAN_STROM, Tile(3484, 3243, 0), Direction.SOUTH, listOf("I just want to go home.")),
             BracketNpc(Npcs.OLD_MAN_RAL, null, Direction.SOUTH, listOf("Meiyerditch is a grim place.")),
             BracketNpc(Npcs.SAFALAAN, Tile(3589, 3335, 0), Direction.SOUTH, listOf("The Myreque endure.")),
+            // PROJECT48 X2/X3: A Taste of Hope + A Night at the Theatre (Ver Sinhaza).
+            BracketNpc(XNpcs.GARTH, Tile(3667, 3216, 0), Direction.SOUTH, listOf("Serafina was the bravest of us all.")),
+            BracketNpc(Npcs.KAEL_FORSHAW, Tile(3664, 3219, 0), Direction.SOUTH, listOf("Ver Sinhaza belongs to the people now.")),
+            BracketNpc(XNpcs.MYSTERIOUS_STRANGER, Tile(3672, 3225, 0), Direction.SOUTH, listOf("...")),
             BracketNpc(Npcs.SARIUS_GUILE, Tile(3590, 3337, 0), Direction.SOUTH, listOf("Knowledge is the best weapon.")),
             BracketNpc(Npcs.WORMBRAIN, null, Direction.SOUTH, listOf("Me no talk to you!")),
         )

@@ -9,6 +9,8 @@ import gg.rsmod.util.Misc
 
 on_npc_option(npc = Npcs.WISE_OLD_MAN, option = "talk-to") {
     player.queue {
+        // PROJECT48 X4: Making Friends with My Arm asks the Wise Old Man for help.
+        if (gg.rsmod.plugins.content.quests.foundation.FoundationQuests.talk(this, Npcs.WISE_OLD_MAN)) return@queue
         if (gg.rsmod.plugins.content.quests.QuestStatus.hasAllQuestPoints(player)) {
             questCapeDialogue(this)
         } else {

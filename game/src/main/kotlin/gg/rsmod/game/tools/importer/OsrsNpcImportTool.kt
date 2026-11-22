@@ -77,6 +77,12 @@ object OsrsNpcImportTool {
             // attackable one, level 148), Assassin 12062 (level 262), Big Fish 12053 (Hazeel at Weiss). The Carnillean guard is the
             // rev-667 npc 887 already at the mansion door. The Strange Creature 12073 is skeletal: OsrsPetImportTool skeletal-npc sotn.
             "sotn" to listOf(12047, 12062, 12053),
+            // PROJECT48 X1-X6 (owner choice a 22-11: the OSRS story and npcs, nearest existing place; RuneLite gameval NpcID):
+            // The Fremennik Exiles: VIKINGEXILE_YOUNGLING 9282, VIKINGEXILE_BASILISK_SUPERIOR 9287 (Monstrous Basilisk), TYPHOR 9296,
+            // JORMUNGAND 9291; A Taste of Hope: MYQ4_ABOMINATION 8262; A Night at the Theatre: TOB_STRANGER_1OP 10875 (Mysterious
+            // Stranger), ARAXYTE_NORMAL 11175, TOBQUEST_HESPORI 11192; Making Friends with My Arm: MY2ARM_MOTHER_BATTLE_MELEE 8428,
+            // MY2ARM_DONTKNOWWHAT_BATTLE 8439. Basilisk, Vyrewatch, Ranis, Garth, the Barrows brothers, Bouncer and Khazard exist in 667.
+            "p48x" to listOf(9282, 9287, 9296, 9291, 8262, 10875, 11175, 11192, 8428, 8439, 8244, 8207),
             // CLUE: individually pinned Wiki NPCs, verified against cache 2686
             // by ClueStepAssetProbe (docs/CLUE/cache/step-assets.json). Existing
             // Uri, hard agents and god wizards are reused, never duplicated.
@@ -225,6 +231,12 @@ object OsrsNpcImportTool {
             "mimic" to listOf(8308, 8309, 8310),
             // PROJECT48 Q41: RuneLite gameval AnimationID M_ASSASSIN_ATTACK 1413 (the assassin's bow-sword).
             "sotn" to listOf(1413),
+            // PROJECT48 X1-X6 (RuneLite gameval AnimationID, next to each npc's own stand/walk set from the import plan):
+            // BASILISK_ATTACK 1546 / DEATH 1548 (younglings, Monstrous Basilisk); Typhor stands on the Basilisk Knight rig:
+            // BASILISK_KNIGHT_MELEE 8499 / MAGIC 8500 / DEATH 8501; JORMUNGAND_MELEE 8510 / MAGIC 8511 / DEATH_PART_1 8516;
+            // MYQ4_ABOMINATION_MELEE 8025 / RANGE 8026 / DEATH 8024; NPC_ARAXYTE01_ATTACK 9140 / DEATH 9141; HESPORI_ATTACK_RANGED 8224 /
+            // DEATH 8225; Mother and Don't Know What stand on the My Arm troll rig: MY2ARM_TROLL_ATTACK_MELEE 8158 / RANGED 8159 / DEATH 8160.
+            "p48x" to listOf(1546, 1548, 8499, 8500, 8501, 8510, 8511, 8516, 8025, 8026, 8024, 9140, 9141, 8224, 8225, 8158, 8159, 8160, 8033, 8034, 8039),
             // deadman-guard: the gnome guards' combat on the OSRS gnome skeleton (base of GNOME_READY 2331): GNOME_ATTACKBOW 12043,
             // GNOME_ATTACKSWORD 12045, GNOME_BLOCK 12046, GNOME_DEATH 12048 (RuneLite gameval AnimationID, 2026-09-24).
             // The Sophanem / Rellekka guards stand with the imported HUMAN_STAFFREADY 813 (OSRS human skeleton), so their combat uses

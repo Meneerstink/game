@@ -318,6 +318,13 @@ object QuestList {
             QuestListEntry(192, "Bone Voyage", 1, varp(1917, complete = 1)),
             QuestListEntry(193, "Mage Arena II", 0, varp(1918, complete = 2)), // N415: earned full miniquest; Claude must patch clientscript2193.
             QuestListEntry(194, "Beneath Cursed Sands", 2, varp(1919, complete = 10)), // N462: short quest, complete = BeneathCursedSands.completedValue (clientscript 2193 case patched to 10)
+            // PROJECT48 X1-X6 (22-11): bracket mini-quests (OSRS Wiki quest points; The General's Shadow and His Faithful Servants are miniquests).
+            QuestListEntry(195, "The Fremennik Exiles", 2, varp(1920, complete = 1)),
+            QuestListEntry(196, "A Taste of Hope", 1, varp(1922, complete = 1)),
+            QuestListEntry(197, "A Night at the Theatre", 2, varp(1923, complete = 1)),
+            QuestListEntry(198, "Making Friends with My Arm", 2, varp(1924, complete = 1)),
+            QuestListEntry(199, "The General's Shadow", 0, varp(1925, complete = 1)),
+            QuestListEntry(200, "His Faithful Servants", 0, varp(1926, complete = 1)),
         )
 
     private val bySlot = ENTRIES.associateBy { it.slot }

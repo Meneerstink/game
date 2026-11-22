@@ -419,13 +419,23 @@ class NewPlayerFoundationTests {
         // N415: Mage Arena II is a list entry too (a full earned miniquest, 2 stages).
         val listed = FoundationQuests.COMPLETED + gg.rsmod.plugins.content.areas.wilderness.MageArenaIIQuest
         // PROJECT48 Q41: Secrets of the North is a bracket mini-quest now; it keeps its list slot and varp, its steps are its own.
-        val played = gg.rsmod.plugins.content.quests.foundation.bracket.SecretsOfTheNorth
-        val slots = (FoundationQuests.OLD_SHORT.filter { !it.usesVarbits } + listed).map { it.slot }.toSet() + played.slot
+        // PROJECT48 X1-X6: the six quests that were not on this server are bracket mini-quests too (own steps, OSRS slot + varp).
+        val played =
+            listOf(
+                    gg.rsmod.plugins.content.quests.foundation.bracket.SecretsOfTheNorth,
+                    gg.rsmod.plugins.content.quests.foundation.bracket.FremennikExiles,
+                    gg.rsmod.plugins.content.quests.foundation.bracket.ATasteOfHope,
+                    gg.rsmod.plugins.content.quests.foundation.bracket.ANightAtTheTheatre,
+                    gg.rsmod.plugins.content.quests.foundation.bracket.MakingFriendsWithMyArm,
+                    gg.rsmod.plugins.content.quests.foundation.bracket.TheGeneralsShadow,
+                    gg.rsmod.plugins.content.quests.foundation.bracket.HisFaithfulServants,
+                )
+        val slots = (FoundationQuests.OLD_SHORT.filter { !it.usesVarbits } + listed).map { it.slot }.toSet() + played.map { it.slot }
         assertEquals(QuestListCacheTool.QUESTS.map { it.slot }.toSet(), slots)
         QuestListCacheTool.QUESTS.forEach { entry ->
             val quest = (FoundationQuests.OLD_SHORT + listed + played).first { it.slot == entry.slot }
             assertEquals(entry.varp, quest.questId, entry.name)
-            if (quest !== played) assertEquals(entry.complete, quest.stages, entry.name)
+            if (quest !in played) assertEquals(entry.complete, quest.stages, entry.name)
         }
         val account = Account(isNew = true)
         FoundationQuests.applyQuestListOrder(account.player)
@@ -765,15 +775,18 @@ class NewPlayerFoundationTests {
             val fights = quest.steps.mapNotNull { it.fight }
             // Desert Treasure: Dessous, Kamil, Damis and Fareed; the others one or two fights.
             assertEquals(if (quest == DesertTreasure) 4 else if (quest.ownSteps) fights.size else fights.size.coerceIn(1, 2), fights.size, "${quest.name} fights")
-            fights.flatMap { it.chain }.forEach { (npc, _) -> assertTrue(defs[npc] != null, "${quest.name}: chained foe $npc has a combat definition") }
-            // PROJECT48 Q41: the imported OSRS foes of Secrets of the North get their combat definition from
-            // secrets_of_the_north.plugin.kts (set_combat_def, wiki stats), not from combat-defs.json; the OSRS level is in the cache.
-            val ownDefs = gg.rsmod.plugins.content.quests.foundation.bracket.SotnFoes.ids.toSet()
+            // PROJECT48 Q41 + X1-X6: the imported OSRS foes of Secrets of the North and of the six X quests get their combat definition
+            // from secrets_of_the_north.plugin.kts / x_quests.plugin.kts (set_combat_def, wiki stats), not from combat-defs.json; the
+            // OSRS level is in the cache.
+            val ownDefs =
+                gg.rsmod.plugins.content.quests.foundation.bracket.SotnFoes.ids.toSet() +
+                    gg.rsmod.plugins.content.quests.foundation.bracket.XFoes.ids.toSet()
+            fights.flatMap { it.chain }.forEach { (npc, _) -> assertTrue(defs[npc] != null || npc in ownDefs, "${quest.name}: chained foe $npc has a combat definition") }
             fights.forEach { fight ->
                 val def = defs[fight.npc]
                 assertTrue(def != null || fight.npc in ownDefs, "${quest.name}: npc ${fight.npc} has a combat definition")
                 if (def != null) assertEquals(fight.level, def.get("combat_level").asInt, "${quest.name}: journal level matches the npc")
-                fight.secondForm?.let { assertTrue(defs[it] != null, "${quest.name}: second form $it has a combat definition") }
+                fight.secondForm?.let { assertTrue(defs[it] != null || it in ownDefs, "${quest.name}: second form $it has a combat definition") }
                 val step = quest.steps.first { it.fight == fight }
                 assertEquals(fight.tile, step.location, "${quest.name}: the fight tile is the step's travel tile (walkability-checked)")
                 assertTrue(step.journal.joinToString(" ").contains("level ${fight.level}"), "${quest.name}: journal shows the level")

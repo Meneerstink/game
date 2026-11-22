@@ -62,6 +62,14 @@ object QuestListCacheTool {
             NewQuest(193, "Mage Arena II", "Mage Arena II (sort)", 5, 2538, 4716, 1918, 2), // N415: full earned miniquest, Wiki startmap.
             // N462: Beneath Cursed Sands is a short quest since 2026-11-06 (server BeneathCursedSands.completedValue 10, 1..3 = in progress).
             NewQuest(194, "Beneath Cursed Sands", "Beneath Cursed Sands (sort)", 3, GE_X, GE_Z, 1919, 10),
+            // PROJECT48 X1-X6 (22-11): the six bracket quests that were not on the server; Wiki startmap, or the nearest existing place
+            // (Ver Sinhaza does not exist: Meiyerditch). Varp 1921 is left out on purpose (kept free).
+            NewQuest(195, "The Fremennik Exiles", "The Fremennik Exiles (sort)", 3, 2658, 3668, 1920, 1),
+            NewQuest(196, "A Taste of Hope", "A Taste of Hope (sort)", 2, 3604, 3210, 1922, 1),
+            NewQuest(197, "A Night at the Theatre", "A Night at the Theatre (sort)", 3, 3606, 3212, 1923, 1),
+            NewQuest(198, "Making Friends with My Arm", "Making Friends with My Arm (sort)", 3, 2841, 10060, 1924, 1),
+            NewQuest(199, "The General's Shadow", "The General's Shadow (sort)", 2, 2716, 3631, 1925, 1),
+            NewQuest(200, "His Faithful Servants", "His Faithful Servants (sort)", 2, 3565, 3292, 1926, 1),
         )
 
     @JvmStatic

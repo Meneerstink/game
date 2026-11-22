@@ -23,11 +23,21 @@ import gg.rsmod.plugins.content.quests.red
  * Npcs that already have a Talk-to plugin or a QuestNpcPost are NOT listed here (their handler calls FoundationQuests.talk first).
  */
 object B111Quests {
-    val ALL: List<ShortQuest> = listOf(BlackKnightsFortress, MurderMystery, JunglePotion, ShiloVillage, OneSmallFavour, ATailOfTwoCats, DeviousMinds, SecretsOfTheNorth, RecipeForDisaster)
+    val ALL: List<ShortQuest> = listOf(BlackKnightsFortress, MurderMystery, JunglePotion, ShiloVillage, OneSmallFavour, ATailOfTwoCats, DeviousMinds, SecretsOfTheNorth, MakingFriendsWithMyArm, TheGeneralsShadow, HisFaithfulServants, RecipeForDisaster)
 
     val NPCS: List<BracketNpc> =
         B111Rfd.NPCS + listOf(
             BracketNpc(Npcs.MURPHY, null, Direction.SOUTH, listOf("Fine sailing weather.")),
+            // PROJECT48 X4-X6: Making Friends with My Arm, The General's Shadow, His Faithful Servants.
+            BracketNpc(Npcs.BURNTMEAT, null, Direction.SOUTH, listOf("Goat stew again tonight.")),
+            BracketNpc(Npcs.MY_ARM, null, Direction.SOUTH, listOf("My Arm is a happy troll.")),
+            BracketNpc(Npcs.GENERAL_KHAZARD, Tile(2712, 3628, 0), Direction.SOUTH, listOf("Wooo... the Shadow Realm is cold.")),
+            BracketNpc(Npcs.SIN_SEER, Tile(2708, 3484, 0), Direction.SOUTH, listOf("I see your sins, traveller.")),
+            BracketNpc(Npcs.SCOUT, Tile(2826, 3066, 0), Direction.SOUTH, listOf("Wooo...")),
+            BracketNpc(Npcs.SCOUT_5568, Tile(2461, 3374, 0), Direction.SOUTH, listOf("Wooo...")),
+            BracketNpc(Npcs.SCOUT_5569, Tile(3072, 3344, 0), Direction.SOUTH, listOf("Wooo...")),
+            BracketNpc(Npcs.SCOUT_5570, Tile(3303, 3110, 0), Direction.SOUTH, listOf("Wooo...")),
+            BracketNpc(Npcs.STRANGE_OLD_MAN, null, Direction.SOUTH, listOf("Heh heh heh.")),
             // Q41 Secrets of the North: the guard and the barman stand in the world already; Hazeel, Claus and Big Fish get a post.
             BracketNpc(Npcs.GUARD_887, null, Direction.SOUTH, listOf("Move along. Nothing to see at the mansion.")),
             BracketNpc(Npcs.ANGOR, null, Direction.NORTH, listOf("What can I get you?")),

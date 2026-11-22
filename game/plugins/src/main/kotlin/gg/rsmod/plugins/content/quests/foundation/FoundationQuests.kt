@@ -1505,6 +1505,14 @@ object OsrsQuestSlots {
     const val BONE_VOYAGE = 192
     const val MAGE_ARENA_II = 193
     const val BENEATH_CURSED_SANDS = 194
+
+    // PROJECT48 X1-X6 (22-11): the six bracket quests that were not on the server.
+    const val THE_FREMENNIK_EXILES = 195
+    const val A_TASTE_OF_HOPE = 196
+    const val A_NIGHT_AT_THE_THEATRE = 197
+    const val MAKING_FRIENDS_WITH_MY_ARM = 198
+    const val THE_GENERALS_SHADOW = 199
+    const val HIS_FAITHFUL_SERVANTS = 200
 }
 
 /** Their progress varps (free in cache and server, see the file comment). */
@@ -1519,6 +1527,14 @@ object OsrsQuestVarps {
     const val BONE_VOYAGE = 1917
     const val MAGE_ARENA_II = 1918
     const val BENEATH_CURSED_SANDS = 1919
+
+    // PROJECT48 X1-X6: 1921 stays free on purpose (QuestListCacheTool).
+    const val THE_FREMENNIK_EXILES = 1920
+    const val A_TASTE_OF_HOPE = 1922
+    const val A_NIGHT_AT_THE_THEATRE = 1923
+    const val MAKING_FRIENDS_WITH_MY_ARM = 1924
+    const val THE_GENERALS_SHADOW = 1925
+    const val HIS_FAITHFUL_SERVANTS = 1926
 }
 
 /** An OSRS quest that is simply complete for every account (owner: "Alle andere quests ... staan op voltooid"). */

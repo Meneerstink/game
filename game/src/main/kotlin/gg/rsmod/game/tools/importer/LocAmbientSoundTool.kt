@@ -15,20 +15,30 @@ import java.io.File
  * imported yet is reported as MISSING and the loc is skipped - import it first with OsrsFxImportTool toa-ambient-synth).
  * Never touches a loc that already has op 78/79.
  *
- * Usage: `LocAmbientSoundTool plan|apply`  (apply = both caches, one CacheTransaction; testserver + fileserver stopped).
+ * Usage: `LocAmbientSoundTool plan|apply [region-import names...]`  (apply = both caches, one CacheTransaction; testserver + fileserver stopped).
+ * N643 (PROJECT48 22-11): with names (e.g. cox-map rev-caves wildy-lairs) the locs come from the OSRS_IMPORT_MASTER.yml blocks
+ * "OSRS region import '<name>'" (loc_ids, native locs kept as the rev-667 loc are skipped) instead of the ToA ids.tsv; synths from the
+ * ToA ids.tsv AND every imported synth recorded in the asset map (fx_kind synth).
  */
 object LocAmbientSoundTool {
     private val IDS = File("C:/RSPS/game/game/data/cfg/toa/ids.tsv")
 
     @JvmStatic
     fun main(args: Array<String>) {
-        require(args.isNotEmpty() && args[0] in setOf("plan", "apply")) { "Usage: plan|apply" }
+        require(args.isNotEmpty() && args[0] in setOf("plan", "apply")) { "Usage: plan|apply [region-import names...]" }
         val locMap = LinkedHashMap<Int, Int>()
         val synthMap = HashMap<Int, Int>()
+        val regions = args.drop(1)
         IDS.readLines().forEach { line ->
             val p = line.split('\t')
-            if (p.size >= 3 && p[0] == "loc") locMap[p[1].toInt()] = p[2].toInt()
+            if (regions.isEmpty() && p.size >= 3 && p[0] == "loc") locMap[p[1].toInt()] = p[2].toInt()
             if (p.size >= 3 && p[0] == "synth") synthMap[p[1].toInt()] = p[2].toInt()
+        }
+        if (regions.isNotEmpty()) {
+            OsrsFxImportTool.existingFx(File(FeroxImportTool.ASSET_MAP.toString())).forEach { (key, local) ->
+                if (key.startsWith("synth:")) synthMap.putIfAbsent(key.removePrefix("synth:").toInt(), local)
+            }
+            locMap.putAll(regionLocs(regions))
         }
         val mutations = ArrayList<CacheMutation>()
         val missing = sortedMapOf<Int, MutableList<String>>()
@@ -97,5 +107,32 @@ object LocAmbientSoundTool {
         verify.forEach { println("VERIFY_ERROR: $it") }
         check(verify.isEmpty()) { "Post-apply verification failed; see journal ${tx.id} for rollback." }
         println("VERIFY_OK both targets hold intended bytes")
+    }
+
+    /** OSRS loc id -> local loc id from the asset-map blocks of the named region imports (native kept locs, local == osrs, skipped). */
+    private fun regionLocs(names: List<String>): Map<Int, Int> {
+        val out = LinkedHashMap<Int, Int>()
+        val found = HashSet<String>()
+        val entry = Regex("""- \{ upstream_id: (\d+), local_id: (\d+), mode: IMPORT \}""")
+        var current: String? = null
+        var inLocs = false
+        File(FeroxImportTool.ASSET_MAP.toString()).forEachLine { line ->
+            if (line.startsWith("  - ")) {
+                current = Regex("""^  - name: OSRS region import '([^']+)'""").find(line)?.groupValues?.get(1)?.takeIf { it in names }
+                current?.let { found += it }
+                inLocs = false
+            } else if (current != null) {
+                if (line.startsWith("    loc_ids:")) inLocs = true
+                else if (line.startsWith("    ") && !line.startsWith("      ")) inLocs = false
+                else if (inLocs) entry.find(line)?.let { m ->
+                    val osrs = m.groupValues[1].toInt()
+                    val local = m.groupValues[2].toInt()
+                    if (osrs != local) out.putIfAbsent(osrs, local)
+                }
+            }
+        }
+        check(found.containsAll(names)) { "region imports not in the asset map: ${names - found}" }
+        println("REGION LOCS ${out.size} from $names")
+        return out
     }
 }

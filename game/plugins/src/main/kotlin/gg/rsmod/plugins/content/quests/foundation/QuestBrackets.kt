@@ -79,7 +79,7 @@ object QuestBrackets {
                 fixed = emptyList(),
                 // RFD: Another Cook's Quest + Mountain Dwarf, Goblin Generals, Pirate Pete, Lumbridge Guide, Evil Dave, Skrach Uglogwee.
                 rfdSubquests = 6,
-                option1 = Storyline("Fremennik storyline", listOf("The Fremennik Trials", "The Fremennik Isles", "Lunar Diplomacy"), listOf("The Fremennik Exiles")),
+                option1 = Storyline("Fremennik storyline", listOf("The Fremennik Trials", "The Fremennik Isles", "Lunar Diplomacy", "The Fremennik Exiles")),
                 option2 = Storyline("Elf storyline", listOf("Plague City", "Biohazard", "Underground Pass", "Regicide", "Roving Elves")),
                 notOnServer = listOf("Slayer reward: Bigger and Badder"),
             ),
@@ -105,8 +105,10 @@ object QuestBrackets {
                 option2 =
                     Storyline(
                         "Myreque storyline",
-                        listOf("In Search of the Myreque", "In Aid of the Myreque", "Darkness of Hallowvale"),
-                        listOf("A Taste of Hope", "A Night at the Theatre"),
+                        listOf(
+                            "In Search of the Myreque", "In Aid of the Myreque", "Darkness of Hallowvale", "A Taste of Hope",
+                            "A Night at the Theatre",
+                        ),
                     ),
             ),
             Step(
@@ -121,8 +123,10 @@ object QuestBrackets {
                 option2 =
                     Storyline(
                         "Mahjarrat storyline #7-#11",
-                        listOf("Hazeel Cult", "Fight Arena", "Devious Minds", "Secrets of the North"),
-                        listOf("Making Friends with My Arm", "The General's Shadow", "His Faithful Servants"),
+                        listOf(
+                            "Hazeel Cult", "Fight Arena", "Devious Minds", "Secrets of the North", "Making Friends with My Arm",
+                            "The General's Shadow", "His Faithful Servants",
+                        ),
                     ),
             ),
         )

@@ -102,9 +102,10 @@ listOf(Items.SERPENTINE_HELM_UNCHARGED, Items.SERPENTINE_VISAGE).forEach { disma
 
 // Neitiznot faceguard (N557, OSRS Wiki 'Neitiznot faceguard' + 'Transcript:Basilisk jaw'): the jaw goes on a helm of Neitiznot only after
 // Olaf the Bard told the basilisk jaw story (olaf_the_bard.plugin.kts sets OsrsInspectTexts.BASILISK_STORY); before that the OSRS refusal.
-// The Fremennik Exiles is not in this world, so it is not asked. Dismantle gives both parts back.
+// PROJECT48 X1 (22-11): The Fremennik Exiles is a bracket mini-quest now and is asked, as in OSRS (wiki reward: 'Ability to create
+// the Neitiznot faceguard'). Dismantle gives both parts back.
 gg.rsmod.plugins.content.items.combine.AttachConfirm.route(Items.BASILISK_JAW, Items.HELM_OF_NEITIZNOT, Items.NEITIZNOT_FACEGUARD) {
-    it.attr[OsrsInspectTexts.BASILISK_STORY] == true
+    it.attr[OsrsInspectTexts.BASILISK_STORY] == true && gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(it, "The Fremennik Exiles")
 }
 on_item_on_item(item1 = Items.BASILISK_JAW, item2 = Items.HELM_OF_NEITIZNOT) {
     if (!player.inventory.contains(Items.BASILISK_JAW) || !player.inventory.contains(Items.HELM_OF_NEITIZNOT)) return@on_item_on_item
@@ -112,6 +113,10 @@ on_item_on_item(item1 = Items.BASILISK_JAW, item2 = Items.HELM_OF_NEITIZNOT) {
         player.message(
             "You're not quite sure how to do that. Perhaps Olaf the Bard can help. He's likely to know a good story about Basilisk Jaws.",
         )
+        return@on_item_on_item
+    }
+    if (!gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, "The Fremennik Exiles")) {
+        player.message("You need to complete The Fremennik Exiles to make a Neitiznot faceguard.")
         return@on_item_on_item
     }
     player.inventory.remove(Items.BASILISK_JAW, 1)

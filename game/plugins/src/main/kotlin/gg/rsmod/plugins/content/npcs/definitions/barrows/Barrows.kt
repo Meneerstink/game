@@ -787,6 +787,8 @@ object Barrows {
         runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, "barrows", items.map { it.id to it.amount }) }
         newCollectionLogItems(player, items)
         runCatching { gg.rsmod.plugins.content.quests.tab.DeadmanTasks.onBarrowsChest(player) }
+        // PROJECT48 X6: His Faithful Servants - the strange icon lies in the chest while the quest is open.
+        runCatching { gg.rsmod.plugins.content.quests.foundation.bracket.HisFaithfulServants.onBarrowsChest(player) }
         // The run's kills stay until the next run starts (ensureRun): while the tunnels collapse every door summons a brother
         // "whom you did not kill on that run" (OSRS Wiki Barrows/Strategies).
         refreshVarbits(player)
