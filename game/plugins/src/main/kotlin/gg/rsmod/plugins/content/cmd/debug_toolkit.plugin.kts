@@ -579,6 +579,21 @@ gg.rsmod.game.CommandServerCommands.handlers["opheldu"] = { w, a ->
         if (p.gameSystem.inject(msg)) "used $from (slot $fromSlot) on $to (slot $toSlot) for ${p.username}" else "no handler"
     }
 }
+// `opspellitem <name> <spell interface> <spell component> <item id>` (PROJECT48 22-11): cast a spell on an inventory item through the real
+// OpHeldU route, e.g. High Level Alchemy = 192 59 (alchemy.plugin.kts) - the first inventory slot holding the id is used.
+gg.rsmod.game.CommandServerCommands.handlers["opspellitem"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
+    val inter = a.getOrNull(1)?.toIntOrNull()
+    val comp = a.getOrNull(2)?.toIntOrNull()
+    val id = a.getOrNull(3)?.toIntOrNull()
+    val slot = if (p != null && id != null) p.inventory.rawItems.indexOfFirst { it?.id == id } else -1
+    if (p == null || inter == null || comp == null || slot < 0) "usage: opspellitem <name> <spell interface> <spell component> <item id in the inventory>"
+    else {
+        // the 667 client sends a spell on an item as OpHeldU without a source item (OpHeldUHandler spell branch; OpHeldT is not decoded)
+        val msg = gg.rsmod.game.message.impl.OpHeldUMessage((inter shl 16) or comp, -1, -1, 679 shl 16, slot, id!!)
+        if (p.gameSystem.inject(msg)) "cast $inter:$comp on $id (slot $slot) for ${p.username}" else "no handler"
+    }
+}
 gg.rsmod.game.CommandServerCommands.handlers["opnpcitem"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
     val slot = a.getOrNull(1)?.toIntOrNull()
