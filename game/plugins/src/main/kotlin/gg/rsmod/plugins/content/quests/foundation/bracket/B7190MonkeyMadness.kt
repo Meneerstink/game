@@ -87,7 +87,7 @@ object MonkeyMadness : ShortQuest(
                 place = "the glider hangar",
                 location = HANGAR_POST,
                 talk = {
-                    chatNpc("The royal seal! I can fly you as far as Crash Island.", "Waydar will help you across.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("The royal seal! I can fly you as far as", "Crash Island. Waydar will help you across.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -98,7 +98,7 @@ object MonkeyMadness : ShortQuest(
                 place = "Crash Island",
                 location = WAYDAR_POST,
                 talk = {
-                    chatNpc("A gnome seal... The way to Ape Atoll is by boat from", "here. Speak to Garkor of the 10th squad over there.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("A gnome seal... The way to Ape Atoll", "is by boat from here. Speak to", "Garkor of the 10th squad over there.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -109,7 +109,7 @@ object MonkeyMadness : ShortQuest(
                 place = "Ape Atoll",
                 location = GARKOR_POST,
                 talk = {
-                    chatNpc("The squad is held below the temple. Zooknock, the", "monkey expert in the tunnels, can give you a way to", "talk to the monkeys.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("The squad is held below the temple.", "Zooknock, the monkey expert in the tunnels,", "can give you a way to talk to the monkeys.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -122,7 +122,7 @@ object MonkeyMadness : ShortQuest(
                 gives = listOf(Items.MONKEYSPEAK_AMULET to 1, Items.MONKEY_GREEGREE to 1),
                 tip = "Wield the greegree and wear the amulet before you speak.",
                 talk = {
-                    chatNpc("Take this amulet - it lets you understand the monkeys - and", "a greegree, so you can pass as one of them.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("Take this amulet - it lets you", "understand the monkeys - and a greegree,", "so you can pass as one of them.", facialExpression = FacialExpression.HAPPY)
                     FoundationRewards.grant(player, Items.MONKEYSPEAK_AMULET, 1)
                     FoundationRewards.grant(player, Items.MONKEY_GREEGREE, 1)
                     true
@@ -137,7 +137,7 @@ object MonkeyMadness : ShortQuest(
                 tip = "Wield the greegree: the king only speaks to monkeys.",
                 talk = {
                     if (!player.hasEquipped(EquipmentType.WEAPON, Items.MONKEY_GREEGREE)) {
-                        chatNpc("Ook! Ook! (A human! Guards - no, wait... only a monkey", "may speak to the king!)", facialExpression = FacialExpression.ANGRY)
+                        chatNpc("Ook! Ook! (A human! Guards - no, wait...", "only a monkey may speak to the king!)", facialExpression = FacialExpression.ANGRY)
                         false
                     } else {
                         chatNpc("Ook ook. (A fellow monkey. The 10th squad? It is", "held below. I will hold my guards back.)", facialExpression = FacialExpression.CALM_TALK)
@@ -153,7 +153,7 @@ object MonkeyMadness : ShortQuest(
                 location = GARKOR_POST,
                 gives = listOf(Items._10TH_SQUAD_SIGIL to 1),
                 talk = {
-                    chatNpc("Take the squad's sigil. It teleports you to the arena", "where the Jungle demon waits. Be careful!", facialExpression = FacialExpression.TOUGH)
+                    chatNpc("Take the squad's sigil. It teleports you to the", "arena where the Jungle demon waits. Be careful!", facialExpression = FacialExpression.TOUGH)
                     FoundationRewards.grant(player, Items._10TH_SQUAD_SIGIL, 1)
                     true
                 },
@@ -167,7 +167,7 @@ object MonkeyMadness : ShortQuest(
                 tip = "The Jungle demon uses all three styles. Bring prayer.",
                 fight = QuestFight(Npcs.JUNGLE_DEMON, "Jungle demon", 195, DEMON_FIGHT, "You cannot stop what has begun!"),
                 talk = {
-                    chatNpc("The demon waits in the arena. Use the sigil and finish it!", facialExpression = FacialExpression.TOUGH)
+                    chatNpc("The demon waits in the arena.", "Use the sigil and finish it!", facialExpression = FacialExpression.TOUGH)
                     true
                 },
             ),
@@ -178,7 +178,7 @@ object MonkeyMadness : ShortQuest(
                 place = "the Grand Tree",
                 location = NARNODE_POST,
                 talk = {
-                    chatNpc("The 10th squad is free and the monkeys are at peace. The", "gnomes are in your debt. Daero offers you his training.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("The 10th squad is free and the monkeys", "are at peace. The gnomes are in your", "debt. Daero offers you his training.", facialExpression = FacialExpression.HAPPY)
                     when (options("Attack and Defence (35,000 XP each).", "Strength and Hitpoints (35,000 XP each).", title = "Daero's training")) {
                         1 -> {
                             player.addXp(Skills.ATTACK, 35_000.0, modifiers = false)

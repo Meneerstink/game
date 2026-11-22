@@ -63,9 +63,9 @@ object Regicide : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "King Tyras, my brother, lives - and I fear he will be",
-            "the death of Ardougne. He must be stopped, in the",
-            "land of the elves. Will you go?",
+            "King Tyras, my brother, lives - and I fear he",
+            "will be the death of Ardougne. He must be",
+            "stopped, in the land of the elves. Will you go?",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll go to Tirannwn.", "Not right now.", title = "Start Regicide?") != 1) return false
@@ -95,7 +95,7 @@ object Regicide : ShortQuest(
                 location = IORWERTH_POST,
                 gives = listOf(Items.BIG_BOOK_OF_BANGS to 1),
                 talk = {
-                    chatNpc("The tyrant Tyras is camped to the west. Take this", "book: it explains how to build the weapon you need.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("The tyrant Tyras is camped to the", "west. Take this book: it explains", "how to build the weapon you need.", facialExpression = FacialExpression.CALM_TALK)
                     FoundationRewards.grant(player, Items.BIG_BOOK_OF_BANGS, 1)
                     true
                 },
@@ -154,7 +154,7 @@ object Regicide : ShortQuest(
                         false
                     } else {
                         player.inventory.remove(Items.MESSAGE)
-                        chatNpc("Tyras is dead... Arianwyn tells me the truth is", "different from what I said. Ardougne owes you much.", facialExpression = FacialExpression.WORRIED)
+                        chatNpc("Tyras is dead... Arianwyn tells me", "the truth is different from what I", "said. Ardougne owes you much.", facialExpression = FacialExpression.WORRIED)
                         true
                     }
                 },

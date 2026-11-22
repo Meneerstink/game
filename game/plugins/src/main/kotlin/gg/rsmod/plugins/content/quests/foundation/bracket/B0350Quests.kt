@@ -184,9 +184,9 @@ object GoblinDiplomacy : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "The goblin race is on the brink of civil war! Our",
-            "armour must be orange, but General Wartface insists",
-            "it stays the colour it always was.",
+            "The goblin race is on the brink of civil war!",
+            "Our armour must be orange, but General Wartface",
+            "insists it stays the colour it always was.",
             facialExpression = FacialExpression.ANGRY,
         )
         chatNpc("Surely a human can settle this? Take a look at", "the armour, and make a suggestion.", facialExpression = FacialExpression.CALM_TALK)
@@ -207,7 +207,7 @@ object GoblinDiplomacy : ShortQuest(
                 gives = listOf(Items.ORANGE_GOBLIN_MAIL to 1, Items.BLUE_GOBLIN_MAIL to 1, Items.GOBLIN_MAIL to 1),
                 talk = {
                     chatNpc("So the goblins are quarrelling over their armour", "again? Hold still, dearie...", facialExpression = FacialExpression.EVIL)
-                    chatNpc("There: one orange, one blue, and a plain one as well.", "Do take them back to those silly generals.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("There: one orange, one blue, and a plain one as", "well. Do take them back to those silly generals.", facialExpression = FacialExpression.HAPPY)
                     FoundationRewards.grant(player, Items.ORANGE_GOBLIN_MAIL, 1)
                     FoundationRewards.grant(player, Items.BLUE_GOBLIN_MAIL, 1)
                     FoundationRewards.grant(player, Items.GOBLIN_MAIL, 1)
@@ -289,9 +289,10 @@ object ShieldOfArrav : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "The Shield of Arrav is the most famous treasure of",
-            "Varrock. It was broken in two, and both halves are",
-            "said to lie with the Phoenix Gang and the Black Arm Gang.",
+            "The Shield of Arrav is the most famous",
+            "treasure of Varrock. It was broken in",
+            "two, and both halves are said to lie with",
+            "the Phoenix Gang and the Black Arm Gang.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll look for the shield halves.", "Not right now.", title = "Start Shield of Arrav?") != 1) return false
@@ -412,9 +413,9 @@ object MerlinsCrystal : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Merlin, my wizard, has been trapped in a crystal by",
-            "a dark force. If you want to prove yourself to the",
-            "Knights of the Round Table, set him free.",
+            "Merlin, my wizard, has been trapped in a crystal",
+            "by a dark force. If you want to prove yourself",
+            "to the Knights of the Round Table, set him free.",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll free Merlin.", "Not right now.", title = "Start Merlin's Crystal?") != 1) return false
@@ -433,9 +434,9 @@ object MerlinsCrystal : ShortQuest(
                 location = GAWAIN_POST,
                 talk = {
                     chatNpc(
-                        "Merlin was taken by Morgan Le Faye's magic. Her son,",
-                        "Sir Mordred, guards Keep Le Faye to the south.",
-                        "Defeat him and she will give up her secret.",
+                        "Merlin was taken by Morgan Le Faye's magic. Her",
+                        "son, Sir Mordred, guards Keep Le Faye to the",
+                        "south. Defeat him and she will give up her secret.",
                         facialExpression = FacialExpression.WORRIED,
                     )
                     true
@@ -450,7 +451,7 @@ object MerlinsCrystal : ShortQuest(
                 tip = "Sir Mordred hits with melee. Bring food.",
                 fight = QuestFight(Npcs.SIR_MORDRED, "Sir Mordred", 39, KEEP_LE_FAYE, "You dare enter my mother's keep?"),
                 talk = {
-                    chatNpc("Keep Le Faye lies south of here. Mordred waits there.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("Keep Le Faye lies south of", "here. Mordred waits there.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -540,9 +541,9 @@ object HolyGrail : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Now that Merlin is free, a new quest awaits: the Holy",
-            "Grail itself has been lost. Find it, and you will earn",
-            "your place at the Round Table.",
+            "Now that Merlin is free, a new quest awaits: the",
+            "Holy Grail itself has been lost. Find it, and",
+            "you will earn your place at the Round Table.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll find the Holy Grail.", "Not right now.", title = "Start Holy Grail?") != 1) return false
@@ -578,8 +579,8 @@ object HolyGrail : ShortQuest(
                 gives = listOf(Items.HOLY_TABLE_NAPKIN to 1),
                 talk = {
                     chatNpc(
-                        "The Holy Grail? I have only the napkin from its table.",
-                        "It will open the way to the Fisher Realm.",
+                        "The Holy Grail? I have only the napkin from its",
+                        "table. It will open the way to the Fisher Realm.",
                         "Take it - the Grail's keeper will let you pass.",
                         facialExpression = FacialExpression.CALM_TALK,
                     )
@@ -614,7 +615,7 @@ object HolyGrail : ShortQuest(
                         false
                     } else {
                         player.inventory.remove(Items.HOLY_GRAIL)
-                        chatNpc("The Holy Grail! You have the thanks of all Camelot.", facialExpression = FacialExpression.HAPPY)
+                        chatNpc("The Holy Grail! You have", "the thanks of all Camelot.", facialExpression = FacialExpression.HAPPY)
                         true
                     }
                 },
@@ -680,7 +681,7 @@ object NatureSpirit : ShortQuest(
                 tip = "Wear your ghostspeak amulet, or Filliman only wails.",
                 talk = {
                     if (!player.equipment.contains(Items.GHOSTSPEAK_AMULET)) {
-                        chatNpc("Wooo woooo wooo woo!", "(You cannot understand him - wear a ghostspeak amulet.)", facialExpression = FacialExpression.WORRIED)
+                        chatNpc("Wooo woooo wooo woo! (You cannot understand", "him - wear a ghostspeak amulet.)", facialExpression = FacialExpression.WORRIED)
                         false
                     } else {
                         chatNpc(
@@ -718,7 +719,7 @@ object NatureSpirit : ShortQuest(
                         chain = listOf(Npcs.GHAST_1053 to "Another one rises from the mud!"),
                     ),
                 talk = {
-                    chatNpc("The ghasts bar the way to the grotto. Drive them off.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("The ghasts bar the way to", "the grotto. Drive them off.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -734,7 +735,7 @@ object NatureSpirit : ShortQuest(
                         false
                     } else {
                         chatNpc("The ritual is done - I am the nature spirit now.", "Take this blessed sickle and the druid's pouch.", facialExpression = FacialExpression.HAPPY)
-                        chatNpc("The swamp's mushrooms will serve you well. Farewell!", facialExpression = FacialExpression.HAPPY)
+                        chatNpc("The swamp's mushrooms will", "serve you well. Farewell!", facialExpression = FacialExpression.HAPPY)
                         true
                     }
                 },

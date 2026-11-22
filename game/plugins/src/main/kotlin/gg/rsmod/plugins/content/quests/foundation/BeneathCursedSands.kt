@@ -55,9 +55,9 @@ object BeneathCursedSands : ShortQuest(
         )
 
     override suspend fun QueueTask.intro(): Boolean {
-        chatNpc("Hello there. Looking to buy some of my wares? I also have a special item in stock that I reckon you'll love!", npc = JAMILA)
+        chatNpc("Hello there. Looking to buy some of", "my wares? I also have a special item", "in stock that I reckon you'll love!", npc = JAMILA)
         chatPlayer("What's this special item?", facialExpression = FacialExpression.THINKING)
-        chatNpc("Oh it's fantastic! It's an exclusive item just for you! Consider it a thank you for all you've done for our city.", npc = JAMILA)
+        chatNpc("Oh it's fantastic! It's an exclusive", "item just for you! Consider it a thank", "you for all you've done for our city.", npc = JAMILA)
         if (player.combatLevel < 85) {
             messageBox("Before starting this quest, be aware that your combat level is lower than the recommended level of 85.")
         }
@@ -73,7 +73,7 @@ object BeneathCursedSands : ShortQuest(
         messageBox("Jamila tries to put the ring on your finger. As she does, she slips you a message.")
         chatNpc("Ah, it seems the ring is too small. Never mind.", npc = JAMILA)
         chatPlayer("Wait... what?", facialExpression = FacialExpression.CONFUSED)
-        chatNpc("Well, time for me to get on with my work. Come back soon.", npc = JAMILA)
+        chatNpc("Well, time for me to get on", "with my work. Come back soon.", npc = JAMILA)
         return true
     }
 
@@ -87,22 +87,22 @@ object BeneathCursedSands : ShortQuest(
                 location = MAISA_CAMP,
                 talk = {
                     chatNpc("Good, you made it.")
-                    chatPlayer("I know you! You're Maisa, that spy from Al Kharid. But you're meant to be in Menaphos!", facialExpression = FacialExpression.SHOCK)
-                    chatNpc("I told Osman I was done with that posting, and I meant it.")
+                    chatPlayer("I know you! You're Maisa, that spy from Al", "Kharid. But you're meant to be in Menaphos!", facialExpression = FacialExpression.SHOCK)
+                    chatNpc("I told Osman I was done with", "that posting, and I meant it.")
                     chatPlayer("But how did you get out of the city?", facialExpression = FacialExpression.THINKING)
-                    chatNpc("The same way I helped those citizens of yours. Even with the quarantine, Menaphos are still sending their dead to Sophanem.")
-                    chatPlayer("So you hid yourself among them? I see. Why are you out here though? And why did you send me that message?", facialExpression = FacialExpression.THINKING)
-                    chatNpc("Because there's something very strange going on. I intend to work out what, but I need your help.")
+                    chatNpc("The same way I helped those citizens of", "yours. Even with the quarantine, Menaphos", "are still sending their dead to Sophanem.")
+                    chatPlayer("So you hid yourself among them? I", "see. Why are you out here though? And", "why did you send me that message?", facialExpression = FacialExpression.THINKING)
+                    chatNpc("Because there's something very strange going on.", "I intend to work out what, but I need your help.")
                     chatPlayer("Right... so what are these strange happenings?")
-                    chatNpc("Citizens from Menaphos have been disappearing. Guards as well. They've been leaving the city, despite the quarantine.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("Citizens from Menaphos have been", "disappearing. Guards as well. They've been", "leaving the city, despite the quarantine.", facialExpression = FacialExpression.WORRIED)
                     chatPlayer("They've been bypassing the quarantine? How?", facialExpression = FacialExpression.THINKING)
-                    chatNpc("No idea, but I have managed to find out where they've been going.")
+                    chatNpc("No idea, but I have managed to", "find out where they've been going.")
                     chatPlayer("Where?")
-                    chatNpc("South of here, to the old necropolis. They're excavating something there, but I don't know what. There's also something strange going on with them.")
+                    chatNpc("South of here, to the old necropolis. They're", "excavating something there, but I don't know what.", "There's also something strange going on with them.")
                     chatPlayer("What do you mean?")
-                    chatNpc("I went to this excavation of theirs to have a look around, and the way they're acting is very unusual. It's like nothing I've seen before.")
-                    chatPlayer("Interesting. I think I need to see this for myself.")
-                    chatNpc("Well let me know when you're ready, and I'll take you down there.")
+                    chatNpc("I went to this excavation of theirs to have a", "look around, and the way they're acting is very", "unusual. It's like nothing I've seen before.")
+                    chatPlayer("Interesting. I think I need", "to see this for myself.")
+                    chatNpc("Well let me know when you're ready,", "and I'll take you down there.")
                     true
                 },
             ),
@@ -129,10 +129,10 @@ object BeneathCursedSands : ShortQuest(
                     }
                     chatPlayer("Let's go.")
                     chatPlayer("How weird. Can we get a closer look?", facialExpression = FacialExpression.THINKING)
-                    chatNpc("Should be able to. When I came to investigate before, I was able to walk right up to them. They didn't even seem to care. It was like they were in some sort of trance.")
+                    chatNpc("Should be able to. When I came to investigate", "before, I was able to walk right up to them.", "They didn't even seem to care. It was like", "they were in some sort of trance.")
                     chatPlayer("I'm going to have a look around.")
                     chatNpc("I'll keep watch here. Try to keep a low profile.")
-                    chatPlayer("I'll try, but low profile isn't really one of my specialties.")
+                    chatPlayer("I'll try, but low profile isn't", "really one of my specialties.")
                     chatNpc("Oh good. I'll prepare for violence then.")
                     true
                 },
@@ -147,18 +147,18 @@ object BeneathCursedSands : ShortQuest(
                     chatNpc("Nice job keeping things low profile.")
                     chatPlayer("To be fair, I did warn you.")
                     chatNpc("I suppose. Were you able to discover anything?")
-                    chatPlayer("Sort of. I still don't know why these people are here, but I do know who sent them.")
+                    chatPlayer("Sort of. I still don't know why these people", "are here, but I do know who sent them.")
                     chatNpc("Who?")
                     chatPlayer("Amascut, the Devourer.")
                     chatNpc("What? The goddess? You're joking!", facialExpression = FacialExpression.SHOCK)
                     chatNpc("Speaking of Osman, that reminds me.")
                     chatNpc("He left this for you.")
                     messageBox("Maisa shows you a spear with a keris on the end.")
-                    chatNpc("Anyway, he wasn't the only one with something for you. This is from the High Priest.")
+                    chatNpc("Anyway, he wasn't the only one with something", "for you. This is from the High Priest.")
                     messageBox("Maisa shows you an enchanted circlet.")
                     chatPlayer("I'm sure I'll be able to put it to good use.")
-                    chatNpc("The citizens should hopefully be nearly done unblocking the entrance to Osmumten's Tomb. I'm going to head down there.")
-                    chatNpc("As for you, I'd say you've earnt a small break. Take whatever time you need to prepare, then meet me at the tomb once you're ready.")
+                    chatNpc("The citizens should hopefully be nearly", "done unblocking the entrance to Osmumten's", "Tomb. I'm going to head down there.")
+                    chatNpc("As for you, I'd say you've earnt a small", "break. Take whatever time you need to prepare,", "then meet me at the tomb once you're ready.")
                     chatPlayer("Alright, I'll see you soon. Good luck.")
                     true
                 },

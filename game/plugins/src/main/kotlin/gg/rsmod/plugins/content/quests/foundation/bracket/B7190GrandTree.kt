@@ -62,9 +62,10 @@ object TheGrandTree : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "The Grand Tree is dying, and I do not know why. Take",
-            "this bark sample to Hazelmere, the hermit on the island",
-            "east of Yanille - he may know what ails it.",
+            "The Grand Tree is dying, and I do not",
+            "know why. Take this bark sample to",
+            "Hazelmere, the hermit on the island east",
+            "of Yanille - he may know what ails it.",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll help.", "Not right now.", title = "Start The Grand Tree?") != 1) return false
@@ -89,7 +90,7 @@ object TheGrandTree : ShortQuest(
                         false
                     } else {
                         player.inventory.remove(Items.BARK_SAMPLE)
-                        chatNpc("The tree is being poisoned from within - someone fed it", "Daconia rocks. Take this scroll to the king.", facialExpression = FacialExpression.WORRIED)
+                        chatNpc("The tree is being poisoned from", "within - someone fed it Daconia", "rocks. Take this scroll to the king.", facialExpression = FacialExpression.WORRIED)
                         FoundationRewards.grant(player, Items.HAZELMERES_SCROLL, 1)
                         true
                     }
@@ -102,7 +103,7 @@ object TheGrandTree : ShortQuest(
                 place = "the top floor of the Grand Tree",
                 location = CHARLIE_POST,
                 talk = {
-                    chatNpc("Glough paid me to fetch the rocks from Hazelmere! I", "did not know what he wanted them for. Ask at the", "Karamja shipyard - password: Ka-Lu-Min.", facialExpression = FacialExpression.SAD)
+                    chatNpc("Glough paid me to fetch the rocks from Hazelmere!", "I did not know what he wanted them for. Ask at", "the Karamja shipyard - password: Ka-Lu-Min.", facialExpression = FacialExpression.SAD)
                     true
                 },
             ),
@@ -128,12 +129,12 @@ object TheGrandTree : ShortQuest(
                 location = NARNODE_POST,
                 talk = {
                     if (!player.inventory.contains(Items.HAZELMERES_SCROLL) || !player.inventory.contains(Items.LUMBER_ORDER)) {
-                        chatNpc("Bring me Hazelmere's scroll and the foreman's lumber", "order as proof.", facialExpression = FacialExpression.CALM_TALK)
+                        chatNpc("Bring me Hazelmere's scroll and the", "foreman's lumber order as proof.", facialExpression = FacialExpression.CALM_TALK)
                         false
                     } else {
                         player.inventory.remove(Items.HAZELMERES_SCROLL)
                         player.inventory.remove(Items.LUMBER_ORDER)
-                        chatNpc("Glough! After all I did for him... Go to his house and", "find out what lies under the trapdoor.", facialExpression = FacialExpression.ANGRY)
+                        chatNpc("Glough! After all I did for him... Go to his", "house and find out what lies under the trapdoor.", facialExpression = FacialExpression.ANGRY)
                         true
                     }
                 },
@@ -147,7 +148,7 @@ object TheGrandTree : ShortQuest(
                 tip = "The Black demon hits hard. Protect from melee.",
                 fight = QuestFight(Npcs.BLACK_DEMON_677, "Black demon", 172, DEMON_FIGHT, "Glough sends his regards!"),
                 talk = {
-                    chatNpc("Glough's trapdoor leads to the tunnels. Be careful -", "he has left a guard.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("Glough's trapdoor leads to the tunnels.", "Be careful - he has left a guard.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -158,7 +159,7 @@ object TheGrandTree : ShortQuest(
                 place = "the Grand Tree",
                 location = NARNODE_POST,
                 talk = {
-                    chatNpc("The Daconia rocks are gone and Glough is exposed. The", "Grand Tree is saved - the gnomes are in your debt.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("The Daconia rocks are gone and", "Glough is exposed. The Grand Tree is", "saved - the gnomes are in your debt.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),

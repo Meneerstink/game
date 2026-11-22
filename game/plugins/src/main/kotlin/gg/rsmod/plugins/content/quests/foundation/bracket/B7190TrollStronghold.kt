@@ -63,14 +63,15 @@ object TrollStronghold : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "The trolls have taken Godric, Dunstan's son, to their",
-            "stronghold. The pass is full of them, and their general",
-            "keeps the prison key. Can you free him?",
+            "The trolls have taken Godric, Dunstan's",
+            "son, to their stronghold. The pass is",
+            "full of them, and their general keeps",
+            "the prison key. Can you free him?",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll free Godric.", "Not right now.", title = "Start Troll Stronghold?") != 1) return false
         chatPlayer("I'll bring him home.", facialExpression = FacialExpression.CALM_TALK)
-        chatNpc("Start with Dad, the troll who guards the pass on Trollheim.", facialExpression = FacialExpression.CALM_TALK)
+        chatNpc("Start with Dad, the troll who", "guards the pass on Trollheim.", facialExpression = FacialExpression.CALM_TALK)
         return true
     }
 
@@ -85,7 +86,7 @@ object TrollStronghold : ShortQuest(
                 tip = "Dad hits hard in melee and can be safespotted.",
                 fight = QuestFight(Npcs.DAD, "Dad", 101, DAD_FIGHT, "Raaargh! Nobody passes Dad!"),
                 talk = {
-                    chatNpc("Dad is the troll on the Trollheim pass. Beat him and the", "way to the stronghold is open.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("Dad is the troll on the Trollheim pass. Beat", "him and the way to the stronghold is open.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -140,7 +141,7 @@ object TrollStronghold : ShortQuest(
  */
 suspend fun QueueTask.lawTalismanReclaim(): Boolean {
     if (!gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, "Troll Stronghold")) return false
-    chatNpc("Lost your Law talisman? I can make another for 1,000 coins.", facialExpression = FacialExpression.CALM_TALK)
+    chatNpc("Lost your Law talisman? I can", "make another for 1,000 coins.", facialExpression = FacialExpression.CALM_TALK)
     if (options("Buy a Law talisman (1,000 coins).", "No thanks.", title = "Law talisman") != 1) return true
     if (player.inventory.contains(Items.LAW_TALISMAN)) {
         chatNpc("You already have one.", facialExpression = FacialExpression.CALM_TALK)

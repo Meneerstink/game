@@ -64,14 +64,14 @@ object EnakhrasLament : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "I wish to build a statue to honour the dead of this",
-            "temple... but it needs a stone sculptor with great skill.",
-            "Will you build it for me?",
+            "I wish to build a statue to honour the dead of",
+            "this temple... but it needs a stone sculptor",
+            "with great skill. Will you build it for me?",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll build the statue.", "Not right now.", title = "Start Enakhra's Lament?") != 1) return false
         chatPlayer("I'll build the statue.", facialExpression = FacialExpression.CALM_TALK)
-        chatNpc("Excellent! Come and see me in the temple below when it is done.", facialExpression = FacialExpression.HAPPY)
+        chatNpc("Excellent! Come and see me in the", "temple below when it is done.", facialExpression = FacialExpression.HAPPY)
         return true
     }
 
@@ -85,7 +85,7 @@ object EnakhrasLament : ShortQuest(
                 location = TEMPLE_LAZIM,
                 gives = listOf(Items.Z_SIGIL to 1, Items.M_SIGIL to 1, Items.R_SIGIL to 1, Items.K_SIGIL to 1),
                 talk = {
-                    chatNpc("The statue is finished - and it has opened a way down.", "Take these four sigils; the temple's guardian answers", "to them.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("The statue is finished - and it has opened", "a way down. Take these four sigils; the", "temple's guardian answers to them.", facialExpression = FacialExpression.HAPPY)
                     FoundationRewards.grant(player, Items.Z_SIGIL, 1)
                     FoundationRewards.grant(player, Items.M_SIGIL, 1)
                     FoundationRewards.grant(player, Items.R_SIGIL, 1)
@@ -102,11 +102,11 @@ object EnakhrasLament : ShortQuest(
                 tip = "Protect from Melee before you speak to the Boneguard.",
                 talk = {
                     if (!Prayers.isActive(player, Prayer.PROTECT_FROM_MELEE)) {
-                        chatNpc("The Boneguard lashes out at you! You should have been protected from melee.", facialExpression = FacialExpression.ANGRY)
+                        chatNpc("The Boneguard lashes out at you! You", "should have been protected from melee.", facialExpression = FacialExpression.ANGRY)
                         false
                     } else {
-                        chatNpc("It tries to attack you - twice - and its blows glance off", "your prayer. It stops, impressed.", facialExpression = FacialExpression.CALM_TALK)
-                        chatNpc("You... are strong. Enakhra's curse binds my brother", "and me. Free Akthanakos, I beg you.", facialExpression = FacialExpression.SAD)
+                        chatNpc("It tries to attack you - twice - and its blows", "glance off your prayer. It stops, impressed.", facialExpression = FacialExpression.CALM_TALK)
+                        chatNpc("You... are strong. Enakhra's curse binds my", "brother and me. Free Akthanakos, I beg you.", facialExpression = FacialExpression.SAD)
                         true
                     }
                 },
@@ -129,7 +129,7 @@ object EnakhrasLament : ShortQuest(
                 place = "Enakhra's Temple",
                 location = ENAKHRA_POST,
                 talk = {
-                    chatNpc("Enough! My brother and I will leave this place. The", "temple is yours. Take this Camulet as a token.", facialExpression = FacialExpression.SAD)
+                    chatNpc("Enough! My brother and I will leave this place.", "The temple is yours. Take this Camulet as a token.", facialExpression = FacialExpression.SAD)
                     true
                 },
             ),

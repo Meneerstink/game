@@ -52,9 +52,9 @@ object FremennikTrials : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "You are an outlander. If you wish to be one of us you",
-            "must win the votes of the council of Rellekka. Prove",
-            "yourself in the trials.",
+            "You are an outlander. If you wish to be one",
+            "of us you must win the votes of the council",
+            "of Rellekka. Prove yourself in the trials.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll prove myself.", "Not right now.", title = "Start The Fremennik Trials?") != 1) return false
@@ -118,7 +118,7 @@ object FremennikTrials : ShortQuest(
                             ),
                     ),
                 talk = {
-                    chatNpc("Koschei waits in the cellar. Fight him bare-handed.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("Koschei waits in the cellar.", "Fight him bare-handed.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),

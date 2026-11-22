@@ -95,16 +95,18 @@ object SecretsOfTheNorth : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Ceril Carnillean is dead - stabbed in his own study, and",
-            "the family vault emptied. We found an amulet of the",
-            "Khazard army by the broken window. Will you help?",
+            "Ceril Carnillean is dead - stabbed in his",
+            "own study, and the family vault emptied.",
+            "We found an amulet of the Khazard army by",
+            "the broken window. Will you help?",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll find the killer.", "Not right now.", title = "Start Secrets of the North?") != 1) return false
         chatPlayer("I'll look into it.", facialExpression = FacialExpression.CALM_TALK)
         chatNpc(
-            "The amulet has a name on the back: 'Evelot'. I cannot",
-            "question Khazard's people. Try Angor, at the Fight Arena bar.",
+            "The amulet has a name on the back:",
+            "'Evelot'. I cannot question Khazard's",
+            "people. Try Angor, at the Fight Arena bar.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         return true
@@ -121,15 +123,16 @@ object SecretsOfTheNorth : ShortQuest(
                 tip = "Bring $BRIBE coins for the barman.",
                 talk = {
                     chatPlayer("Do you know anyone called Evelot?", facialExpression = FacialExpression.CALM_TALK)
-                    chatNpc("Might do. My memory is not what it was... $BRIBE coins would help.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("Might do. My memory is not what it", "was... $BRIBE coins would help.", facialExpression = FacialExpression.CALM_TALK)
                     if (player.inventory.getItemCount(Items.COINS_995) < BRIBE) {
                         chatPlayer("I don't have $BRIBE coins on me.", facialExpression = FacialExpression.SAD)
                         false
                     } else {
                         player.inventory.remove(Items.COINS_995, BRIBE)
                         chatNpc(
-                            "She left in a hurry, just now. Follow her tracks round",
-                            "the arena: she keeps a rowboat south of the Tower of Life.",
+                            "She left in a hurry, just now. Follow",
+                            "her tracks round the arena: she keeps",
+                            "a rowboat south of the Tower of Life.",
                             facialExpression = FacialExpression.HAPPY,
                         )
                         true
@@ -145,7 +148,7 @@ object SecretsOfTheNorth : ShortQuest(
                 tip = "Evelot hits up to 34 with melee and is weakest to magic. Bring food.",
                 fight = QuestFight(SotnNpcs.EVELOT, "Evelot", 148, EVELOT_SHORE, "You should not have followed me!"),
                 talk = {
-                    chatNpc("I told you: her rowboat, south of the Tower of Life.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("I told you: her rowboat,", "south of the Tower of Life.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -158,9 +161,10 @@ object SecretsOfTheNorth : ShortQuest(
                 talk = {
                     chatPlayer("Evelot says she stole a scroll for your cult.", facialExpression = FacialExpression.CALM_TALK)
                     chatNpc(
-                        "She brought it, yes - but none of mine hired her, and",
-                        "none of mine killed Ceril. A third hand is at work.",
-                        "Question the household: somebody saw something.",
+                        "She brought it, yes - but none of mine",
+                        "hired her, and none of mine killed",
+                        "Ceril. A third hand is at work. Question",
+                        "the household: somebody saw something.",
                         facialExpression = FacialExpression.ANGRY,
                     )
                     true
@@ -174,8 +178,9 @@ object SecretsOfTheNorth : ShortQuest(
                 location = CLAUS_POST,
                 talk = {
                     chatNpc(
-                        "The night the master died it went cold down here, bitter",
-                        "cold, and a shadow went past the shelves - into the wall!",
+                        "The night the master died it went cold",
+                        "down here, bitter cold, and a shadow",
+                        "went past the shelves - into the wall!",
                         facialExpression = FacialExpression.WORRIED,
                     )
                     messageBox("Behind the shelves a button opens the wall. In the hidden room you pick the lock of a chest and find a dusty scroll with a faded symbol.")
@@ -191,11 +196,12 @@ object SecretsOfTheNorth : ShortQuest(
                 tip = "Before you travel north: bring food, prayer potions and antipoison.",
                 talk = {
                     chatNpc(
-                        "Do not stare. It is I, Hazeel. This symbol is half of the",
-                        "crest that seals the prison below old Ghorrock.",
+                        "Do not stare. It is I, Hazeel. This",
+                        "symbol is half of the crest that",
+                        "seals the prison below old Ghorrock.",
                         facialExpression = FacialExpression.CALM_TALK,
                     )
-                    chatNpc("Whoever holds the other half is close. Look - we are not alone.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("Whoever holds the other half is", "close. Look - we are not alone.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -208,7 +214,7 @@ object SecretsOfTheNorth : ShortQuest(
                 tip = "The assassin hits up to 39 with his bow-sword. Bring food and antipoison.",
                 fight = QuestFight(SotnNpcs.ASSASSIN, "The assassin", 262, ASSASSIN_FIGHT, "We meet again."),
                 talk = {
-                    chatNpc("The assassin! Deal with him - I cannot be seen here.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("The assassin! Deal with him", "- I cannot be seen here.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -233,11 +239,12 @@ object SecretsOfTheNorth : ShortQuest(
                 location = GUARD_POST,
                 talk = {
                     chatPlayer(
-                        "Evelot stole the scroll, but the killer was an assassin",
-                        "who serves somebody in the far North. He got away.",
+                        "Evelot stole the scroll, but the killer",
+                        "was an assassin who serves somebody in",
+                        "the far North. He got away.",
                         facialExpression = FacialExpression.CALM_TALK,
                     )
-                    chatNpc("Then Ardougne owes you its thanks. I will write it up.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("Then Ardougne owes you its", "thanks. I will write it up.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),

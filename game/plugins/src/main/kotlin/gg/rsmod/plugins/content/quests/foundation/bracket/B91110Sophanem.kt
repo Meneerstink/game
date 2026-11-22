@@ -65,8 +65,9 @@ object IcthlarinsLittleHelper : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "My cat has run off into the city of Sophanem, and the",
-            "guards will not let me in. Please find my cat for me.",
+            "My cat has run off into the city of",
+            "Sophanem, and the guards will not let",
+            "me in. Please find my cat for me.",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll find your cat.", "Not right now.", title = "Start Icthlarin's Little Helper?") != 1) return false
@@ -84,7 +85,7 @@ object IcthlarinsLittleHelper : ShortQuest(
                 place = "Sophanem",
                 location = SPHINX_POST,
                 talk = {
-                    chatNpc("The cat was last seen near the temple. Speak to the High", "Priest of Icthlarin.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("The cat was last seen near the temple.", "Speak to the High Priest of Icthlarin.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -95,7 +96,7 @@ object IcthlarinsLittleHelper : ShortQuest(
                 place = "the temple of Icthlarin",
                 location = HIGH_PRIEST_POST,
                 talk = {
-                    chatNpc("A restless spirit has taken the priest below the temple.", "Fetch a holy symbol from the Embalmer to subdue it.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("A restless spirit has taken the priest", "below the temple. Fetch a holy symbol", "from the Embalmer to subdue it.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -132,7 +133,7 @@ object IcthlarinsLittleHelper : ShortQuest(
                 place = "the temple of Icthlarin",
                 location = HIGH_PRIEST_POST,
                 talk = {
-                    chatNpc("The spirit is gone! Take this Catspeak amulet: with it", "you can understand the cats of the desert.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("The spirit is gone! Take this Catspeak amulet:", "with it you can understand the cats of the desert.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),
@@ -174,13 +175,14 @@ object Contact : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Something stirs beneath Sophanem: scarabs gather under",
-            "the city. Will you help me find who leads them?",
+            "Something stirs beneath Sophanem:",
+            "scarabs gather under the city. Will",
+            "you help me find who leads them?",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll help.", "Not right now.", title = "Start Contact!?") != 1) return false
         chatPlayer("I'll find out who leads them.", facialExpression = FacialExpression.CALM_TALK)
-        chatNpc("Speak to Jex first: he knows the way into the dungeon.", facialExpression = FacialExpression.HAPPY)
+        chatNpc("Speak to Jex first: he knows", "the way into the dungeon.", facialExpression = FacialExpression.HAPPY)
         return true
     }
 
@@ -193,7 +195,7 @@ object Contact : ShortQuest(
                 place = "Sophanem",
                 location = JEX_POST,
                 talk = {
-                    chatNpc("The dungeon entrance is below the temple. Maisa has", "gone down there already.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("The dungeon entrance is below the temple.", "Maisa has gone down there already.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -204,7 +206,7 @@ object Contact : ShortQuest(
                 place = "the dungeon below Sophanem",
                 location = MAISA_POST,
                 talk = {
-                    chatNpc("The scarabs are led by a giant one! Bring Osman: he is", "the spymaster and knows what to do.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("The scarabs are led by a giant one! Bring Osman:", "he is the spymaster and knows what to do.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),

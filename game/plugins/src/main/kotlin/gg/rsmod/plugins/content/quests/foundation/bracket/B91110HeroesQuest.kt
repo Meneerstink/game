@@ -71,14 +71,14 @@ object HeroesQuest : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "So you want to join the Heroes' Guild? Bring me a fire",
-            "feather, a master thieves' armband and a lava eel,",
-            "and the guild is yours.",
+            "So you want to join the Heroes' Guild? Bring",
+            "me a fire feather, a master thieves' armband",
+            "and a lava eel, and the guild is yours.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll prove myself.", "Not right now.", title = "Start Heroes' Quest?") != 1) return false
         chatPlayer("I'll bring the three things.", facialExpression = FacialExpression.CALM_TALK)
-        chatNpc("A fire feather lies with the Entrana firebird, but its", "lair is guarded by the cold: bring ice gloves, from the Ice", "Queen.", facialExpression = FacialExpression.HAPPY)
+        chatNpc("A fire feather lies with the Entrana", "firebird, but its lair is guarded by the", "cold: bring ice gloves, from the Ice Queen.", facialExpression = FacialExpression.HAPPY)
         return true
     }
 
@@ -108,7 +108,7 @@ object HeroesQuest : ShortQuest(
                 gives = listOf(Items.FIRE_FEATHER to 1),
                 fight = QuestFight(Npcs.ENTRANA_FIREBIRD, "Entrana firebird", 2, FIREBIRD_FIGHT, "Squawk!"),
                 talk = {
-                    chatNpc("The firebird roosts on Entrana. Wear the ice gloves!", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("The firebird roosts on", "Entrana. Wear the ice gloves!", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -119,7 +119,7 @@ object HeroesQuest : ShortQuest(
                 place = "the Phoenix Gang hideout",
                 location = STRAVEN_POST,
                 talk = {
-                    chatNpc("You want a master thieves' armband? Steal Scarface", "Pete's candlestick from his manor in Brimhaven, then", "come back.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("You want a master thieves' armband?", "Steal Scarface Pete's candlestick from", "his manor in Brimhaven, then come back.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -133,7 +133,7 @@ object HeroesQuest : ShortQuest(
                 gives = listOf(Items.PETES_CANDLESTICK to 1),
                 fight = QuestFight(Npcs.GRIP, "Grip", 22, GRIP_FIGHT, "Woof! Intruder!"),
                 talk = {
-                    chatNpc("Scarface Pete's head guard Grip keeps the candlestick.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("Scarface Pete's head guard", "Grip keeps the candlestick.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -150,7 +150,7 @@ object HeroesQuest : ShortQuest(
                         false
                     } else {
                         player.inventory.remove(Items.PETES_CANDLESTICK)
-                        chatNpc("Excellent work! Here is your master thieves' armband.", facialExpression = FacialExpression.HAPPY)
+                        chatNpc("Excellent work! Here is your", "master thieves' armband.", facialExpression = FacialExpression.HAPPY)
                         FoundationRewards.grant(player, Items.THIEVES_ARMBAND, 1)
                         true
                     }
@@ -164,7 +164,7 @@ object HeroesQuest : ShortQuest(
                 location = GERRANT_POST,
                 gives = listOf(Items.LAVA_EEL to 1),
                 talk = {
-                    chatNpc("A lava eel for the Heroes' Guild? Cook it carefully:", "here is one, fresh from the lava.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("A lava eel for the Heroes' Guild? Cook it", "carefully: here is one, fresh from the lava.", facialExpression = FacialExpression.HAPPY)
                     FoundationRewards.grant(player, Items.LAVA_EEL, 1)
                     true
                 },
@@ -179,7 +179,7 @@ object HeroesQuest : ShortQuest(
                     val p = player
                     val things = listOf(Items.FIRE_FEATHER, Items.THIEVES_ARMBAND, Items.LAVA_EEL)
                     if (things.any { !p.inventory.contains(it) }) {
-                        chatNpc("You need the fire feather, the master thieves' armband", "and the lava eel.", facialExpression = FacialExpression.CALM_TALK)
+                        chatNpc("You need the fire feather, the master", "thieves' armband and the lava eel.", facialExpression = FacialExpression.CALM_TALK)
                         false
                     } else {
                         things.forEach { p.inventory.remove(it) }

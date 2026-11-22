@@ -81,9 +81,10 @@ object ATasteOfHope : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Have you heard the tale of Serafina? She fought the",
-            "vampyres in the Theatre and never came out. Ranis",
-            "Drakan himself watches the games from up there.",
+            "Have you heard the tale of Serafina? She",
+            "fought the vampyres in the Theatre and",
+            "never came out. Ranis Drakan himself",
+            "watches the games from up there.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("Tell Safalaan what I saw.", "Not right now.", title = "Start A Taste of Hope?") != 1) return false
@@ -142,7 +143,7 @@ object ATasteOfHope : ShortQuest(
                 tip = "Melee and ranged up to 23. Pray missiles.",
                 fight = QuestFight(XNpcs.ABOMINATION, "Abomination", 149, HIDEOUT_FIGHT, ""),
                 talk = {
-                    chatNpc("Vanstrom's creature! Kill it before it kills us all!", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("Vanstrom's creature! Kill", "it before it kills us all!", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -179,7 +180,7 @@ object ATasteOfHope : ShortQuest(
                         chainAtTile = true,
                     ),
                 talk = {
-                    chatNpc("He is up there, telling them the Myreque are dead. Show them", "they are wrong!", facialExpression = FacialExpression.TOUGH)
+                    chatNpc("He is up there, telling them the Myreque", "are dead. Show them they are wrong!", facialExpression = FacialExpression.TOUGH)
                     true
                 },
             ),
@@ -191,7 +192,7 @@ object ATasteOfHope : ShortQuest(
                 location = TOH_SAFALAAN,
                 talk = {
                     chatPlayer("Ranis Drakan is dead.", facialExpression = FacialExpression.CALM_TALK)
-                    chatNpc("You have given Meiyerditch a taste of hope, my friend.", "Kael found this medallion on his body - it is yours.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("You have given Meiyerditch a taste", "of hope, my friend. Kael found this", "medallion on his body - it is yours.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),
@@ -227,9 +228,9 @@ object ANightAtTheTheatre : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Verzik Vitur grows stronger, and nobody knows why.",
-            "Ranis' memories could tell us. You killed him - will",
-            "you bring me what is left of him?",
+            "Verzik Vitur grows stronger, and nobody knows",
+            "why. Ranis' memories could tell us. You killed",
+            "him - will you bring me what is left of him?",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll help you.", "Not right now.", title = "Start A Night at the Theatre?") != 1) return false
@@ -269,7 +270,7 @@ object ANightAtTheTheatre : ShortQuest(
                 tip = "Araxytes hit up to 13.",
                 fight = QuestFight(XNpcs.ARAXYTE, "Araxyte", 96, SPIDER_NEST, ""),
                 talk = {
-                    chatNpc("Dissolve the sac and take the eggs. Watch for the spiders.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("Dissolve the sac and take the", "eggs. Watch for the spiders.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -280,7 +281,7 @@ object ANightAtTheTheatre : ShortQuest(
                 place = "Ver Sinhaza",
                 location = STRANGER_POST,
                 talk = {
-                    chatNpc("Nylocas... bred with something from a plant. Find out", "what a hespori is.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("Nylocas... bred with something from", "a plant. Find out what a hespori is.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -291,7 +292,7 @@ object ANightAtTheTheatre : ShortQuest(
                 place = "the Nature Grotto, Mort Myre",
                 location = FILLIMAN_POST,
                 talk = {
-                    chatNpc("A hespori? Very rare. There is one to the north-east, on", "a small island in the swamp. Be careful.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("A hespori? Very rare. There is", "one to the north-east, on a small", "island in the swamp. Be careful.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -304,7 +305,7 @@ object ANightAtTheTheatre : ShortQuest(
                 tip = "Ranged up to 8, magic up to 14.",
                 fight = QuestFight(XNpcs.HESPORI, "Hespori", 302, HESPORI_ISLAND, ""),
                 talk = {
-                    chatNpc("North-east, on the island. It will fight for its life.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("North-east, on the island.", "It will fight for its life.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -316,9 +317,10 @@ object ANightAtTheTheatre : ShortQuest(
                 location = STRANGER_POST,
                 talk = {
                     chatNpc(
-                        "The Nylocas Queen... her bite gave Verzik her powers.",
-                        "We went through the Theatre together, you and I, and",
-                        "when Verzik fled I touched her. One memory is left.",
+                        "The Nylocas Queen... her bite gave Verzik",
+                        "her powers. We went through the Theatre",
+                        "together, you and I, and when Verzik fled",
+                        "I touched her. One memory is left.",
                         facialExpression = FacialExpression.CALM_TALK,
                     )
                     true
@@ -332,9 +334,9 @@ object ANightAtTheTheatre : ShortQuest(
                 location = STRANGER_POST,
                 talk = {
                     chatNpc(
-                        "That was no vampyre. The Verzik in the Theatre is the",
-                        "Nylocas Queen herself, and she wants Morytania.",
-                        "Take these lamps - you earned them.",
+                        "That was no vampyre. The Verzik in the Theatre",
+                        "is the Nylocas Queen herself, and she wants",
+                        "Morytania. Take these lamps - you earned them.",
                         facialExpression = FacialExpression.WORRIED,
                     )
                     true

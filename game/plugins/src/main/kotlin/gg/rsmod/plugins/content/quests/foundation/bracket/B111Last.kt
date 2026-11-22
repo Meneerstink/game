@@ -62,13 +62,14 @@ object ATailOfTwoCats : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "My cat, Bob, has not been the same since he left. Could you",
-            "find out what troubles him? I fear for his mind.",
+            "My cat, Bob, has not been the same",
+            "since he left. Could you find out what",
+            "troubles him? I fear for his mind.",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll look into it.", "Not right now.", title = "Start A Tail of Two Cats?") != 1) return false
         chatPlayer("I'll find out what is wrong.", facialExpression = FacialExpression.CALM_TALK)
-        chatNpc("Hild, over there, can enchant a Catspeak amulet for you.", facialExpression = FacialExpression.HAPPY)
+        chatNpc("Hild, over there, can enchant", "a Catspeak amulet for you.", facialExpression = FacialExpression.HAPPY)
         return true
     }
 
@@ -81,7 +82,7 @@ object ATailOfTwoCats : ShortQuest(
                 place = "Burthorpe",
                 location = HILD_POST,
                 talk = {
-                    chatNpc("A Catspeak amulet? It will do: now you can hear Bob.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("A Catspeak amulet? It will", "do: now you can hear Bob.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -92,7 +93,7 @@ object ATailOfTwoCats : ShortQuest(
                 place = "Burthorpe",
                 location = BOB_POST,
                 talk = {
-                    chatNpc("Meow... I remember Robert the Strong, who fought the", "Dragonkin. The Sphinx knows more.", facialExpression = FacialExpression.SAD)
+                    chatNpc("Meow... I remember Robert the Strong, who", "fought the Dragonkin. The Sphinx knows more.", facialExpression = FacialExpression.SAD)
                     true
                 },
             ),
@@ -103,7 +104,7 @@ object ATailOfTwoCats : ShortQuest(
                 place = "Sophanem",
                 location = SPHINX_POST,
                 talk = {
-                    chatNpc("Bob's memories are from before: he is a cat who once", "was a hero's companion. He is not ill.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("Bob's memories are from before: he is a cat who", "once was a hero's companion. He is not ill.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -114,7 +115,7 @@ object ATailOfTwoCats : ShortQuest(
                 place = "Varrock",
                 location = APOTHECARY_POST,
                 talk = {
-                    chatNpc("So Unferth is not ill, just sad? Then tell him his cat", "is well. Here, take a hat as thanks.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("So Unferth is not ill, just sad? Then tell him", "his cat is well. Here, take a hat as thanks.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),
@@ -125,7 +126,7 @@ object ATailOfTwoCats : ShortQuest(
                 place = "Burthorpe",
                 location = UNFERTH_POST,
                 talk = {
-                    chatNpc("Bob is well! Thank you - here are two lamps and a hat", "for your trouble.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("Bob is well! Thank you - here are two", "lamps and a hat for your trouble.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),
@@ -172,13 +173,14 @@ object DeviousMinds : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "A strange scheme: I need a sword that is also a bow. A",
-            "sword from the finest mithril and a bowstring - bring",
-            "them to Doric, who will make it. Will you do this?",
+            "A strange scheme: I need a sword that is",
+            "also a bow. A sword from the finest",
+            "mithril and a bowstring - bring them to",
+            "Doric, who will make it. Will you do this?",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll help.", "Not right now.", title = "Start Devious Minds?") != 1) return false
-        chatPlayer("I'll bring a mithril 2h sword and a bow string to Doric.", facialExpression = FacialExpression.CALM_TALK)
+        chatPlayer("I'll bring a mithril 2h sword", "and a bow string to Doric.", facialExpression = FacialExpression.CALM_TALK)
         return true
     }
 
@@ -198,7 +200,7 @@ object DeviousMinds : ShortQuest(
                     } else {
                         p.inventory.remove(Items.MITHRIL_2H_SWORD)
                         p.inventory.remove(Items.BOW_STRING)
-                        chatNpc("Hm. A bow-sword. Odd, but done! Take it to the monk.", facialExpression = FacialExpression.HAPPY)
+                        chatNpc("Hm. A bow-sword. Odd, but", "done! Take it to the monk.", facialExpression = FacialExpression.HAPPY)
                         true
                     }
                 },
@@ -210,7 +212,7 @@ object DeviousMinds : ShortQuest(
                 place = "outside the Paterdomus temple",
                 location = MONK_POST,
                 talk = {
-                    chatNpc("A bow-sword! Now take this orb, in a large pouch, to", "the altar on Entrana, and do not look at it.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("A bow-sword! Now take this orb, in a large pouch,", "to the altar on Entrana, and do not look at it.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),
@@ -240,7 +242,7 @@ object DeviousMinds : ShortQuest(
                 place = "Falador Park",
                 location = TIFFY_POST,
                 talk = {
-                    chatNpc("A theft on Entrana? The White Knights will look into it.", "Thank you for the warning, adventurer.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("A theft on Entrana? The White Knights will look", "into it. Thank you for the warning, adventurer.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),

@@ -62,9 +62,10 @@ object FairyTaleII : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "The Fairy Queen is not only ill - she has been poisoned!",
-            "The fairies need someone who can brew a cure and",
-            "who is not afraid of Gorak. Will you help?",
+            "The Fairy Queen is not only ill - she",
+            "has been poisoned! The fairies need",
+            "someone who can brew a cure and who is",
+            "not afraid of Gorak. Will you help?",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll cure the queen.", "Not right now.", title = "Start Fairy Tale II?") != 1) return false
@@ -83,9 +84,10 @@ object FairyTaleII : ShortQuest(
                 location = GODFATHER_POST2,
                 talk = {
                     chatNpc(
-                        "You are a friend of the fairies. From now on the fairy",
-                        "rings answer your call - with a dramen or lunar staff.",
-                        "Go to the Fairy Very Wise in the hideout.",
+                        "You are a friend of the fairies. From",
+                        "now on the fairy rings answer your call",
+                        "- with a dramen or lunar staff. Go to",
+                        "the Fairy Very Wise in the hideout.",
                         facialExpression = FacialExpression.HAPPY,
                     )
                     true
@@ -99,9 +101,9 @@ object FairyTaleII : ShortQuest(
                 location = VERY_WISE_POST,
                 talk = {
                     chatNpc(
-                        "The queen was poisoned by Gorak's claws. To cure her I",
-                        "need a Gorak claw and a star flower from the Cosmic",
-                        "Being. Bring me both.",
+                        "The queen was poisoned by Gorak's claws. To",
+                        "cure her I need a Gorak claw and a star",
+                        "flower from the Cosmic Being. Bring me both.",
                         facialExpression = FacialExpression.WORRIED,
                     )
                     true
@@ -117,7 +119,7 @@ object FairyTaleII : ShortQuest(
                 tip = "Gorak is a strong melee fighter. Bring food and prayer.",
                 fight = QuestFight(Npcs.GORAK, "Gorak", 145, GORAK_PLANE, "Rarrrgh!"),
                 talk = {
-                    chatNpc("Gorak lives on the Gorak Plane, east of the fairy ring", "d-l-q. Take his claw.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("Gorak lives on the Gorak Plane, east of", "the fairy ring d-l-q. Take his claw.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -147,7 +149,7 @@ object FairyTaleII : ShortQuest(
                     } else {
                         player.inventory.remove(Items.GORAK_CLAWS)
                         player.inventory.remove(Items.STAR_FLOWER)
-                        chatNpc("Splendid! The cure is brewed. Take it to the queen.", facialExpression = FacialExpression.HAPPY)
+                        chatNpc("Splendid! The cure is brewed.", "Take it to the queen.", facialExpression = FacialExpression.HAPPY)
                         true
                     }
                 },

@@ -56,14 +56,14 @@ object FightArena : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "My husband and my son were taken to General",
-            "Khazard's fight arena. The guards will not let me in. Will",
-            "you rescue them?",
+            "My husband and my son were taken to",
+            "General Khazard's fight arena. The guards",
+            "will not let me in. Will you rescue them?",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll rescue them.", "Not right now.", title = "Start Fight Arena?") != 1) return false
         chatPlayer("I'll bring them home.", facialExpression = FacialExpression.CALM_TALK)
-        chatNpc("Take this armour so the guards let you in. Start with the head guard in the prison.", facialExpression = FacialExpression.HAPPY)
+        chatNpc("Take this armour so the guards let you in.", "Start with the head guard in the prison.", facialExpression = FacialExpression.HAPPY)
         FoundationRewards.grant(player, Items.KHAZARD_HELMET, 1)
         FoundationRewards.grant(player, Items.KHAZARD_ARMOUR, 1)
         return true
@@ -79,9 +79,9 @@ object FightArena : ShortQuest(
                 location = GUARD_POST,
                 gives = listOf(Items.KHAZARD_CELL_KEYS to 1),
                 talk = {
-                    chatNpc("I would kill for a Khali brew... last time I drank too much", "and fell asleep on the job.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("I would kill for a Khali brew... last time I", "drank too much and fell asleep on the job.", facialExpression = FacialExpression.CALM_TALK)
                     chatPlayer("Here, have a Khali brew on me.", facialExpression = FacialExpression.HAPPY)
-                    chatNpc("Hic... thanks... take the keys... hic... if you want.", facialExpression = FacialExpression.LAUGH_EXCITED)
+                    chatNpc("Hic... thanks... take the", "keys... hic... if you want.", facialExpression = FacialExpression.LAUGH_EXCITED)
                     FoundationRewards.grant(player, Items.KHAZARD_CELL_KEYS, 1)
                     true
                 },
@@ -94,11 +94,11 @@ object FightArena : ShortQuest(
                 location = JEREMY_POST,
                 talk = {
                     if (!player.inventory.contains(Items.KHAZARD_CELL_KEYS)) {
-                        chatNpc("The cell is locked. Get the keys from the head guard!", facialExpression = FacialExpression.SAD)
+                        chatNpc("The cell is locked. Get the", "keys from the head guard!", facialExpression = FacialExpression.SAD)
                         false
                     } else {
                         player.inventory.remove(Items.KHAZARD_CELL_KEYS)
-                        chatNpc("You opened the cell! My father is forced to fight in the", "arena - please save him.", facialExpression = FacialExpression.WORRIED)
+                        chatNpc("You opened the cell! My father is forced", "to fight in the arena - please save him.", facialExpression = FacialExpression.WORRIED)
                         true
                     }
                 },
@@ -116,7 +116,7 @@ object FightArena : ShortQuest(
                     chainAtTile = true,
                 ),
                 talk = {
-                    chatNpc("The arena is to the east. Fight the ogre, the scorpion", "and the Bouncer to free my father.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("The arena is to the east. Fight the ogre, the", "scorpion and the Bouncer to free my father.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),

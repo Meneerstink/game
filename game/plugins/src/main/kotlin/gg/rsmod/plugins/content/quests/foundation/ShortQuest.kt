@@ -145,7 +145,7 @@ abstract class ShortQuest(
 
     /** The reply of the start npc when something in [needs] is missing, one box per three lines. */
     suspend fun QueueTask.refuseStart(missing: List<String>) {
-        chatNpc("I could do with your help, but you are not ready for this yet.", facialExpression = gg.rsmod.plugins.api.cfg.FacialExpression.THINKING)
+        chatNpc("I could do with your help, but", "you are not ready for this yet.", facialExpression = gg.rsmod.plugins.api.cfg.FacialExpression.THINKING)
         missing.chunked(3).forEach { chatNpc(*it.toTypedArray(), facialExpression = gg.rsmod.plugins.api.cfg.FacialExpression.THINKING) }
     }
 

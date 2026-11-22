@@ -68,7 +68,7 @@ object DragonSlayer : ShortQuest(
         )
         if (options("I'll slay Elvarg.", "Not right now.", title = "Start Dragon Slayer?") != 1) return false
         chatPlayer("I will slay the dragon Elvarg.", facialExpression = FacialExpression.CALM_TALK)
-        chatNpc("Then speak to Oziach in Edgeville: he knows the dragon.", facialExpression = FacialExpression.HAPPY)
+        chatNpc("Then speak to Oziach in", "Edgeville: he knows the dragon.", facialExpression = FacialExpression.HAPPY)
         return true
     }
 
@@ -81,7 +81,7 @@ object DragonSlayer : ShortQuest(
                 place = "Edgeville",
                 location = OZIACH_POST,
                 talk = {
-                    chatNpc("Elvarg lives on Crandor. To reach it you need the three", "pieces of Crandor's map, a ship, and a shield against", "dragonfire.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("Elvarg lives on Crandor. To reach it you", "need the three pieces of Crandor's map,", "a ship, and a shield against dragonfire.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -95,7 +95,7 @@ object DragonSlayer : ShortQuest(
                 gives = listOf(Items.MAP_PART_1536 to 1),
                 fight = QuestFight(Npcs.MELZAR_THE_MAD, "Melzar the Mad", 43, MELZAR_FIGHT, "None shall pass me!"),
                 talk = {
-                    chatNpc("Melzar the Mad guards the maze north of Rimmington.", "Defeat him and take the map piece.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("Melzar the Mad guards the maze north of", "Rimmington. Defeat him and take the map piece.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -120,7 +120,7 @@ object DragonSlayer : ShortQuest(
                 location = WORMBRAIN_POST,
                 gives = listOf(Items.MAP_PART to 1),
                 talk = {
-                    chatNpc("Me not give map piece! ...Oh, you got the Wormbrain", "crown jewels? Here, take it.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("Me not give map piece! ...Oh, you got the", "Wormbrain crown jewels? Here, take it.", facialExpression = FacialExpression.WORRIED)
                     FoundationRewards.grant(player, Items.MAP_PART, 1)
                     true
                 },
@@ -133,7 +133,7 @@ object DragonSlayer : ShortQuest(
                 location = DUKE_POST,
                 gives = listOf(Items.ANTIDRAGON_SHIELD to 1),
                 talk = {
-                    chatNpc("A brave dragon slayer! Take this shield: it will protect", "you from the dragon's fire.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("A brave dragon slayer! Take this shield: it", "will protect you from the dragon's fire.", facialExpression = FacialExpression.HAPPY)
                     FoundationRewards.grant(player, Items.ANTIDRAGON_SHIELD, 1)
                     true
                 },
@@ -148,7 +148,7 @@ object DragonSlayer : ShortQuest(
                     val p = player
                     val parts = listOf(Items.MAP_PART, Items.MAP_PART_1536, Items.MAP_PART_1537)
                     if (parts.any { !p.inventory.contains(it) } || p.inventory.getItemCount(Items.COINS_995) < 2_000) {
-                        chatNpc("You need all three map pieces and 2,000 coins for the", "ship, and the voyage is dangerous.", facialExpression = FacialExpression.CALM_TALK)
+                        chatNpc("You need all three map pieces and 2,000 coins", "for the ship, and the voyage is dangerous.", facialExpression = FacialExpression.CALM_TALK)
                         false
                     } else {
                         parts.forEach { p.inventory.remove(it) }
@@ -179,7 +179,7 @@ object DragonSlayer : ShortQuest(
                 place = "Edgeville",
                 location = OZIACH_POST,
                 talk = {
-                    chatNpc("Ye slew the dragon! Then ye have earned the right to", "wear a rune platebody - ask me to sell ye one.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("Ye slew the dragon! Then ye have earned the right", "to wear a rune platebody - ask me to sell ye one.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),

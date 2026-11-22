@@ -122,8 +122,9 @@ object RecipeForDisaster : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Disaster! The Culinaromancer has frozen the council that",
-            "was to eat at the centennial feast! I need someone to free",
+            "Disaster! The Culinaromancer has frozen",
+            "the council that was to eat at the",
+            "centennial feast! I need someone to free",
             "all of them, one by one. Will you help?",
             facialExpression = FacialExpression.WORRIED,
         )
@@ -142,7 +143,7 @@ object RecipeForDisaster : ShortQuest(
                 place = "Lumbridge Castle",
                 location = COOK_POST,
                 talk = {
-                    chatNpc("A newt's eye, ale, a tomato and a dirty blast... well, you", "have shown you are willing. Let us start freeing them.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("A newt's eye, ale, a tomato and a dirty", "blast... well, you have shown you are", "willing. Let us start freeing them.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),
@@ -173,7 +174,7 @@ object RecipeForDisaster : ShortQuest(
                     if (!gate(QuestRequirements(quests = listOf("Goblin Diplomacy")))) {
                         false
                     } else {
-                        chatNpc("A meal both generals agree on? A slop of compromise,", "it is. Take it.", facialExpression = FacialExpression.HAPPY)
+                        chatNpc("A meal both generals agree on? A", "slop of compromise, it is. Take it.", facialExpression = FacialExpression.HAPPY)
                         true
                     }
                 },
@@ -189,7 +190,7 @@ object RecipeForDisaster : ShortQuest(
                     if (!gate(QuestRequirements(skills = listOf(Skills.COOKING to 31), boostable = setOf(Skills.COOKING)))) {
                         false
                     } else {
-                        chatNpc("Pete needs a fishcake. First, clear the mudskippers", "off the shore: five of them.", facialExpression = FacialExpression.CALM_TALK)
+                        chatNpc("Pete needs a fishcake. First, clear the", "mudskippers off the shore: five of them.", facialExpression = FacialExpression.CALM_TALK)
                         true
                     }
                 },
@@ -256,7 +257,7 @@ object RecipeForDisaster : ShortQuest(
                     if (!gate(QuestRequirements(quests = listOf("Gertrude's Cat", "Shadow of the Storm", "Demon Slayer", "The Golem")))) {
                         false
                     } else {
-                        chatNpc("David lives in the basement. The hell-rats took the spices", "- but a spicy stew will thaw him, yes.", facialExpression = FacialExpression.HAPPY)
+                        chatNpc("David lives in the basement. The hell-rats took", "the spices - but a spicy stew will thaw him, yes.", facialExpression = FacialExpression.HAPPY)
                         true
                     }
                 },
@@ -392,7 +393,7 @@ object RecipeForDisaster : ShortQuest(
                     ) {
                         false
                     } else {
-                        chatNpc("The council is free! The Culinaromancer's portal is", "open. You must face his six foes without Prayer.", facialExpression = FacialExpression.WORRIED)
+                        chatNpc("The council is free! The", "Culinaromancer's portal is open. You", "must face his six foes without Prayer.", facialExpression = FacialExpression.WORRIED)
                         true
                     }
                 },
@@ -430,7 +431,7 @@ object RecipeForDisaster : ShortQuest(
                 place = "Lumbridge Castle",
                 location = COOK_POST,
                 talk = {
-                    chatNpc("The Culinaromancer is gone? The feast can begin! You", "have saved the council - and my kitchen.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("The Culinaromancer is gone? The feast can begin!", "You have saved the council - and my kitchen.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),

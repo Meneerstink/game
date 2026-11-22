@@ -57,13 +57,14 @@ object AnimalMagnetism : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Hello there and welcome to my humble abode. It is",
-            "rather more humble than I would like. If you help me",
-            "mend my bed, I will make something useful for you.",
+            "Hello there and welcome to my humble",
+            "abode. It is rather more humble than I",
+            "would like. If you help me mend my bed,",
+            "I will make something useful for you.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll help you, Ava.", "Not right now.", title = "Start Animal Magnetism?") != 1) return false
-        chatNpc("Splendid. I need two undead chickens. The farm west", "of the Ectofuntus sells them - bring a ghostspeak amulet.", facialExpression = FacialExpression.HAPPY)
+        chatNpc("Splendid. I need two undead chickens.", "The farm west of the Ectofuntus sells", "them - bring a ghostspeak amulet.", facialExpression = FacialExpression.HAPPY)
         return true
     }
 
@@ -78,14 +79,14 @@ object AnimalMagnetism : ShortQuest(
                 gives = listOf(Items.UNDEAD_CHICKEN to 2),
                 talk = {
                     if (!player.equipment.contains(Items.GHOSTSPEAK_AMULET)) {
-                        chatNpc("Woo woo wooo!", "(You cannot understand him - wear a ghostspeak amulet.)", facialExpression = FacialExpression.WORRIED)
+                        chatNpc("Woo woo wooo! (You cannot understand", "him - wear a ghostspeak amulet.)", facialExpression = FacialExpression.WORRIED)
                         false
                     } else if (player.inventory.getItemCount(Items.ECTOTOKEN) < 20) {
                         chatNpc("Undead chickens are 10 ecto-tokens each. You need", "20 ecto-tokens for two.", facialExpression = FacialExpression.CALM_TALK)
                         false
                     } else {
                         player.inventory.remove(Items.ECTOTOKEN, 20)
-                        chatNpc("Two undead chickens - and mind they do not peck you.", facialExpression = FacialExpression.HAPPY)
+                        chatNpc("Two undead chickens - and", "mind they do not peck you.", facialExpression = FacialExpression.HAPPY)
                         FoundationRewards.grant(player, Items.UNDEAD_CHICKEN, 2)
                         true
                     }
@@ -103,7 +104,7 @@ object AnimalMagnetism : ShortQuest(
                         false
                     } else {
                         player.inventory.remove(Items.UNDEAD_CHICKEN, 2)
-                        chatNpc("Lovely! Now I need a bar magnet. The witch next door", "can turn five iron bars into the right kind of iron.", facialExpression = FacialExpression.HAPPY)
+                        chatNpc("Lovely! Now I need a bar magnet. The", "witch next door can turn five iron", "bars into the right kind of iron.", facialExpression = FacialExpression.HAPPY)
                         true
                     }
                 },
@@ -154,7 +155,7 @@ object AnimalMagnetism : ShortQuest(
                 gives = listOf(Items.UNDEAD_TWIGS to 1),
                 talk = {
                     if (!player.inventory.contains(Items.HOLY_SYMBOL)) {
-                        chatNpc("The undead trees need a blessed hand. Bring a holy symbol.", facialExpression = FacialExpression.CALM_TALK)
+                        chatNpc("The undead trees need a blessed", "hand. Bring a holy symbol.", facialExpression = FacialExpression.CALM_TALK)
                         false
                     } else {
                         player.inventory.remove(Items.HOLY_SYMBOL)

@@ -89,7 +89,7 @@ object InSearchOfTheMyreque : ShortQuest(
         )
         if (options("I'll find the Myreque.", "Not right now.", title = "Start In Search of the Myreque?") != 1) return false
         chatPlayer("I'll find them.", facialExpression = FacialExpression.CALM_TALK)
-        chatNpc("Cyreg Paddlehorn ferries travellers over the Mort Myre swamp. Speak to him.", facialExpression = FacialExpression.HAPPY)
+        chatNpc("Cyreg Paddlehorn ferries travellers", "over the Mort Myre swamp. Speak to him.", facialExpression = FacialExpression.HAPPY)
         return true
     }
 
@@ -102,7 +102,7 @@ object InSearchOfTheMyreque : ShortQuest(
                 place = "the Mort Myre swamp",
                 location = CYREG_POST,
                 talk = {
-                    chatNpc("The Myreque? Ask Curpile Fyod, at the swamp's edge.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("The Myreque? Ask Curpile", "Fyod, at the swamp's edge.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -113,7 +113,7 @@ object InSearchOfTheMyreque : ShortQuest(
                 place = "the Mort Myre swamp",
                 location = CURPILE_POST,
                 talk = {
-                    chatNpc("You look trustworthy. The hideout is below the tavern in", "Canifis: ask for Veliaf Hurtz.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("You look trustworthy. The hideout is below", "the tavern in Canifis: ask for Veliaf Hurtz.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -124,7 +124,7 @@ object InSearchOfTheMyreque : ShortQuest(
                 place = "the Myreque hideout",
                 location = HIDEOUT_VELIAF,
                 talk = {
-                    chatNpc("Vanstrom is no friend of ours: a Skeleton Hellhound", "guards the tunnel. Slay it.", facialExpression = FacialExpression.ANGRY)
+                    chatNpc("Vanstrom is no friend of ours: a Skeleton", "Hellhound guards the tunnel. Slay it.", facialExpression = FacialExpression.ANGRY)
                     true
                 },
             ),
@@ -148,7 +148,7 @@ object InSearchOfTheMyreque : ShortQuest(
                 place = "the Myreque hideout",
                 location = HIDEOUT_VELIAF,
                 talk = {
-                    chatNpc("The hound is dead - you have earned the Myreque's trust.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("The hound is dead - you have", "earned the Myreque's trust.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),
@@ -190,8 +190,9 @@ object InAidOfTheMyreque : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Burgh de Rott lies in ruins and vampyres rule it. Help us",
-            "retake it and the Myreque may have a new home.",
+            "Burgh de Rott lies in ruins and",
+            "vampyres rule it. Help us retake it",
+            "and the Myreque may have a new home.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll help.", "Not right now.", title = "Start In Aid of the Myreque?") != 1) return false
@@ -250,7 +251,7 @@ object InAidOfTheMyreque : ShortQuest(
                 place = "the Burgh de Rott inn cellar",
                 location = BURGH_VELIAF,
                 talk = {
-                    chatNpc("Burgh de Rott is ours again! Drezel in Paterdomus can", "make a rod against the vampyres.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("Burgh de Rott is ours again! Drezel in", "Paterdomus can make a rod against the vampyres.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),
@@ -262,7 +263,7 @@ object InAidOfTheMyreque : ShortQuest(
                 location = DREZEL_POST,
                 gives = listOf(Items.ROD_OF_IVANDIS_10 to 1),
                 talk = {
-                    chatNpc("A rod against the vampyres - the Rod of Ivandis! Take it.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("A rod against the vampyres -", "the Rod of Ivandis! Take it.", facialExpression = FacialExpression.HAPPY)
                     FoundationRewards.grant(player, Items.ROD_OF_IVANDIS_10, 1)
                     true
                 },
@@ -281,7 +282,7 @@ object InAidOfTheMyreque : ShortQuest(
                         chainAtTile = true,
                     ),
                 talk = {
-                    chatNpc("Vampyres stand between me and the way out. Help me!", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("Vampyres stand between me", "and the way out. Help me!", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -292,7 +293,7 @@ object InAidOfTheMyreque : ShortQuest(
                 place = "the Burgh de Rott inn cellar",
                 location = BURGH_VELIAF,
                 talk = {
-                    chatNpc("Ivan is safe? Then the Myreque have a way out of Burgh", "de Rott. We are in your debt.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("Ivan is safe? Then the Myreque have a way", "out of Burgh de Rott. We are in your debt.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),
@@ -336,8 +337,9 @@ object DarknessOfHallowvale : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Vanstrom Klause rules Meiyerditch, the city of the vampyres.",
-            "We must learn how Castle Drakan is built. Will you scout it?",
+            "Vanstrom Klause rules Meiyerditch, the",
+            "city of the vampyres. We must learn how",
+            "Castle Drakan is built. Will you scout it?",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll scout Castle Drakan.", "Not right now.", title = "Start Darkness of Hallowvale?") != 1) return false
@@ -366,7 +368,7 @@ object DarknessOfHallowvale : ShortQuest(
                 place = "the Myreque base, Darkmeyer",
                 location = SAFALAAN_POST,
                 talk = {
-                    chatNpc("We need a sketch of Castle Drakan. Go to the lookout", "and draw it - and beware of Vanstrom.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("We need a sketch of Castle Drakan. Go to the", "lookout and draw it - and beware of Vanstrom.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -391,7 +393,7 @@ object DarknessOfHallowvale : ShortQuest(
                 location = SARIUS_POST,
                 gives = listOf(Items.HAEMALCHEMY to 1),
                 talk = {
-                    chatNpc("A sketch of the castle? Take my Haemalchemy book to", "Safalaan: it explains the vampyres.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("A sketch of the castle? Take my Haemalchemy", "book to Safalaan: it explains the vampyres.", facialExpression = FacialExpression.HAPPY)
                     FoundationRewards.grant(player, Items.HAEMALCHEMY, 1)
                     true
                 },
@@ -409,7 +411,7 @@ object DarknessOfHallowvale : ShortQuest(
                         false
                     } else {
                         player.inventory.remove(Items.HAEMALCHEMY)
-                        chatNpc("Excellent. Take this sealed message to King Roald in", "Varrock.", facialExpression = FacialExpression.HAPPY)
+                        chatNpc("Excellent. Take this sealed", "message to King Roald in Varrock.", facialExpression = FacialExpression.HAPPY)
                         FoundationRewards.grant(player, Items.SEALED_MESSAGE, 1)
                         true
                     }
@@ -427,7 +429,7 @@ object DarknessOfHallowvale : ShortQuest(
                         false
                     } else {
                         player.inventory.remove(Items.SEALED_MESSAGE)
-                        chatNpc("A message from the Myreque! Varrock will not forget this.", facialExpression = FacialExpression.HAPPY)
+                        chatNpc("A message from the Myreque!", "Varrock will not forget this.", facialExpression = FacialExpression.HAPPY)
                         true
                     }
                 },

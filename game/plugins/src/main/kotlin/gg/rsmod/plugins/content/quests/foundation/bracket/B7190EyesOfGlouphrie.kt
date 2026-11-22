@@ -60,9 +60,10 @@ object TheEyesOfGlouphrie : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Glouphrie's eyes were stolen long ago, and now a",
-            "strange illusion hides something in the Stronghold. I",
-            "need help to understand it. Will you go to Hazelmere?",
+            "Glouphrie's eyes were stolen long ago, and",
+            "now a strange illusion hides something in",
+            "the Stronghold. I need help to understand",
+            "it. Will you go to Hazelmere?",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll help.", "Not right now.", title = "Start The Eyes of Glouphrie?") != 1) return false
@@ -80,7 +81,7 @@ object TheEyesOfGlouphrie : ShortQuest(
                 place = "Hazelmere's island, east of Yanille",
                 location = HAZELMERE_POST,
                 talk = {
-                    chatNpc("Glouphrie's eyes... an illusion is hiding evil creatures in", "the Stronghold. Tell Brimstail to build his machine.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("Glouphrie's eyes... an illusion is", "hiding evil creatures in the Stronghold.", "Tell Brimstail to build his machine.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -91,7 +92,7 @@ object TheEyesOfGlouphrie : ShortQuest(
                 place = "Brimstail's cave",
                 location = BRIMSTAIL_POST,
                 talk = {
-                    chatNpc("The machine is built - and look, that cute creature was a", "spy! Evil creatures are loose in the Stronghold. Hunt", "them down!", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("The machine is built - and look, that cute", "creature was a spy! Evil creatures are", "loose in the Stronghold. Hunt them down!", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -104,7 +105,7 @@ object TheEyesOfGlouphrie : ShortQuest(
                 tip = "The evil creatures have 1 hitpoint each.",
                 search = QuestSearch(STRONGHOLD_HUNT, "You hunt down the evil creatures one by one - each falls with a single blow.", 3),
                 talk = {
-                    chatNpc("The creatures are somewhere in the Stronghold. Find", "and crush them!", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("The creatures are somewhere in the", "Stronghold. Find and crush them!", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -115,7 +116,7 @@ object TheEyesOfGlouphrie : ShortQuest(
                 place = "Brimstail's cave",
                 location = BRIMSTAIL_POST,
                 talk = {
-                    chatNpc("The illusion is gone and the Stronghold is safe. Take", "this crystal saw - it makes carpentry easier.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("The illusion is gone and the Stronghold is safe.", "Take this crystal saw - it makes carpentry easier.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),

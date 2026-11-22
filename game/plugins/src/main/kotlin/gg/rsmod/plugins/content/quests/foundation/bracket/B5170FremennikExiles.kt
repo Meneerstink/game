@@ -75,9 +75,10 @@ object FremennikExiles : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Something disturbed the folk by the sand pit last night.",
-            "Freygerd will not stop talking about red eyes at her",
-            "window. Will you look into it, outerlander?",
+            "Something disturbed the folk by the sand",
+            "pit last night. Freygerd will not stop",
+            "talking about red eyes at her window.",
+            "Will you look into it, outerlander?",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll look into it.", "Not right now.", title = "Start The Fremennik Exiles?") != 1) return false
@@ -95,9 +96,9 @@ object FremennikExiles : ShortQuest(
                 location = FREYGERD_POST,
                 talk = {
                     chatNpc(
-                        "Two red eyes, outerlander, right there at the window!",
-                        "And this morning the boxes outside were knocked over",
-                        "and the sand pit was all churned up.",
+                        "Two red eyes, outerlander, right there at the",
+                        "window! And this morning the boxes outside were",
+                        "knocked over and the sand pit was all churned up.",
                         facialExpression = FacialExpression.WORRIED,
                     )
                     true
@@ -124,15 +125,17 @@ object FremennikExiles : ShortQuest(
                 location = BRUNDT_POST,
                 talk = {
                     chatNpc(
-                        "Basilisks? The army of Jormungand, the Serpent King,",
-                        "who once enslaved our people! The hero V threw him",
-                        "down with a shield that reflected his gaze.",
+                        "Basilisks? The army of Jormungand, the",
+                        "Serpent King, who once enslaved our",
+                        "people! The hero V threw him down with",
+                        "a shield that reflected his gaze.",
                         facialExpression = FacialExpression.WORRIED,
                     )
                     chatNpc(
-                        "The Council blames you, outerlander, and wants you",
-                        "gone - but I need you. Make a new V's shield: lunar",
-                        "glass, V's sigil and a polished rock on a shield.",
+                        "The Council blames you, outerlander,",
+                        "and wants you gone - but I need you.",
+                        "Make a new V's shield: lunar glass, V's",
+                        "sigil and a polished rock on a shield.",
                         facialExpression = FacialExpression.SAD,
                     )
                     true
@@ -165,7 +168,7 @@ object FremennikExiles : ShortQuest(
                 location = BRUNDT_POST,
                 tip = "Bring $KEGS kegs of beer.",
                 talk = {
-                    chatNpc("You made it? Then bring the Council $KEGS kegs of beer and they will listen.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("You made it? Then bring the Council", "$KEGS kegs of beer and they will listen.", facialExpression = FacialExpression.HAPPY)
                     if (player.inventory.getItemCount(Items.KEG_OF_BEER) < KEGS) {
                         chatPlayer("I don't have $KEGS kegs of beer on me.", facialExpression = FacialExpression.SAD)
                         false
@@ -194,7 +197,7 @@ object FremennikExiles : ShortQuest(
                         chainAtTile = true,
                     ),
                 talk = {
-                    chatNpc("To the market! Hold up V's shield - or a mirror shield -", "against their gaze and fight!", facialExpression = FacialExpression.TOUGH)
+                    chatNpc("To the market! Hold up V's shield - or a", "mirror shield - against their gaze and fight!", facialExpression = FacialExpression.TOUGH)
                     true
                 },
             ),
@@ -207,7 +210,7 @@ object FremennikExiles : ShortQuest(
                 tip = "Melee and magic up to 20. Bring food.",
                 fight = QuestFight(XNpcs.TYPHOR, "Typhor", 218, TYPHOR_SHORE, ""),
                 talk = {
-                    chatNpc("North, on the frozen shore. Typhor guards the Serpent King.", facialExpression = FacialExpression.TOUGH)
+                    chatNpc("North, on the frozen shore.", "Typhor guards the Serpent King.", facialExpression = FacialExpression.TOUGH)
                     true
                 },
             ),
@@ -232,7 +235,7 @@ object FremennikExiles : ShortQuest(
                 location = BRUNDT_POST,
                 talk = {
                     chatPlayer("Jormungand is defeated.", facialExpression = FacialExpression.CALM_TALK)
-                    chatNpc("Then the songs will be about you for a hundred years! Skal!", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("Then the songs will be about", "you for a hundred years! Skal!", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),

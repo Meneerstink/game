@@ -54,9 +54,9 @@ object Biohazard : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Thank you for freeing me before - but the plague is",
-            "not natural. The Mourners are hiding something. Will",
-            "you help me find out what?",
+            "Thank you for freeing me before - but the",
+            "plague is not natural. The Mourners are hiding",
+            "something. Will you help me find out what?",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll help you, Elena.", "Not right now.", title = "Start Biohazard?") != 1) return false
@@ -74,7 +74,7 @@ object Biohazard : ShortQuest(
                 place = "West Ardougne",
                 location = OMART_POST,
                 talk = {
-                    chatNpc("Mourners run the city, and their headquarters lie to", "the east. Take a distillator from one of them.", facialExpression = FacialExpression.SECRETLY_TALKING)
+                    chatNpc("Mourners run the city, and their headquarters lie", "to the east. Take a distillator from one of them.", facialExpression = FacialExpression.SECRETLY_TALKING)
                     true
                 },
             ),
@@ -104,7 +104,7 @@ object Biohazard : ShortQuest(
                         false
                     } else {
                         player.inventory.remove(Items.DISTILLATOR)
-                        chatNpc("This will let me analyse the plague. Take the sample", "and this touch paper to Guidor in Varrock.", facialExpression = FacialExpression.HAPPY)
+                        chatNpc("This will let me analyse the plague. Take the", "sample and this touch paper to Guidor in Varrock.", facialExpression = FacialExpression.HAPPY)
                         FoundationRewards.grant(player, Items.PLAGUE_SAMPLE, 1)
                         FoundationRewards.grant(player, Items.TOUCH_PAPER, 1)
                         true

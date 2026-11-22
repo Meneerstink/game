@@ -59,9 +59,10 @@ object TheDigSite : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Would you like to take the Earth Sciences exam? The",
-            "Museum only lets the successful dig at the Digsite.",
-            "Take this letter to Curator Haig Halen to be stamped.",
+            "Would you like to take the Earth Sciences",
+            "exam? The Museum only lets the successful",
+            "dig at the Digsite. Take this letter to",
+            "Curator Haig Halen to be stamped.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll take the exam.", "Not right now.", title = "Start The Dig Site?") != 1) return false
@@ -82,11 +83,11 @@ object TheDigSite : ShortQuest(
                 gives = listOf(Items.SEALED_LETTER to 1),
                 talk = {
                     if (!player.inventory.contains(Items.UNSTAMPED_LETTER)) {
-                        chatNpc("Bring me the examiner's letter and I shall stamp it.", facialExpression = FacialExpression.CALM_TALK)
+                        chatNpc("Bring me the examiner's", "letter and I shall stamp it.", facialExpression = FacialExpression.CALM_TALK)
                         false
                     } else {
                         player.inventory.remove(Items.UNSTAMPED_LETTER)
-                        chatNpc("Ah, a student of the Museum! The letter is stamped -", "take it back to the Exam Centre.", facialExpression = FacialExpression.HAPPY)
+                        chatNpc("Ah, a student of the Museum! The letter is", "stamped - take it back to the Exam Centre.", facialExpression = FacialExpression.HAPPY)
                         FoundationRewards.grant(player, Items.SEALED_LETTER, 1)
                         true
                     }
@@ -104,7 +105,7 @@ object TheDigSite : ShortQuest(
                         chatNpc("You need the stamped letter from the curator.", facialExpression = FacialExpression.CALM_TALK)
                         false
                     } else {
-                        chatNpc("Question: which people are allowed to use the Digsite?", facialExpression = FacialExpression.CALM_TALK)
+                        chatNpc("Question: which people are", "allowed to use the Digsite?", facialExpression = FacialExpression.CALM_TALK)
                         val answer = options("Anybody who pays.", "All that have passed the appropriate Earth Sciences exam.", "Only the Museum curator.", title = "The exam")
                         if (answer != 2) {
                             chatNpc("I am afraid that is wrong. Study and try again.", facialExpression = FacialExpression.SAD)
@@ -125,7 +126,7 @@ object TheDigSite : ShortQuest(
                 place = "the Exam Centre",
                 location = EXPERT_POST,
                 talk = {
-                    chatNpc("A trowel and a pass - splendid. Talk to Doug Deeping", "down the shaft; he found something odd.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("A trowel and a pass - splendid. Talk to Doug", "Deeping down the shaft; he found something odd.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -137,7 +138,7 @@ object TheDigSite : ShortQuest(
                 location = DOUG_POST,
                 gives = listOf(Items.STONE_TABLET to 1),
                 talk = {
-                    chatNpc("This stone tablet fell out of the wall. Take it to the", "expert - I have never seen such markings.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("This stone tablet fell out of the wall. Take it", "to the expert - I have never seen such markings.", facialExpression = FacialExpression.WORRIED)
                     FoundationRewards.grant(player, Items.STONE_TABLET, 1)
                     true
                 },

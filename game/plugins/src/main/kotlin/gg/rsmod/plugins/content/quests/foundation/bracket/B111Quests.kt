@@ -106,14 +106,15 @@ object BlackKnightsFortress : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "The Black Knights are plotting something in their fortress",
-            "south of Falador. Find out what - and ruin it, if you can.",
+            "The Black Knights are plotting something",
+            "in their fortress south of Falador. Find",
+            "out what - and ruin it, if you can.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll infiltrate the fortress.", "Not right now.", title = "Start Black Knights' Fortress?") != 1) return false
         chatPlayer("I'll find out what they plan.", facialExpression = FacialExpression.CALM_TALK)
         FoundationRewards.grant(player, Items.CABBAGE, 1)
-        chatNpc("Take this cabbage - it may come in useful in a witch's cauldron.", facialExpression = FacialExpression.HAPPY)
+        chatNpc("Take this cabbage - it may come", "in useful in a witch's cauldron.", facialExpression = FacialExpression.HAPPY)
         return true
     }
 
@@ -149,7 +150,7 @@ object BlackKnightsFortress : ShortQuest(
                 place = "the White Knights' Castle, Falador",
                 location = AMIK_POST,
                 talk = {
-                    chatNpc("Excellent! The Black Knights' plan is ruined. Here is", "your reward, 2,500 coins.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("Excellent! The Black Knights' plan is", "ruined. Here is your reward, 2,500 coins.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),
@@ -194,13 +195,14 @@ object MurderMystery : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Have you heard? Lord Sinclair has been murdered! The",
-            "killer is one of the family. Will you find out who?",
+            "Have you heard? Lord Sinclair has",
+            "been murdered! The killer is one of",
+            "the family. Will you find out who?",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll investigate.", "Not right now.", title = "Start Murder Mystery?") != 1) return false
         chatPlayer("I'll find the murderer.", facialExpression = FacialExpression.CALM_TALK)
-        chatNpc("The poison used was bought somewhere - ask the Poison Salesman in Seers' Village.", facialExpression = FacialExpression.HAPPY)
+        chatNpc("The poison used was bought somewhere - ask", "the Poison Salesman in Seers' Village.", facialExpression = FacialExpression.HAPPY)
         return true
     }
 
@@ -296,14 +298,14 @@ object JunglePotion : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "I need a rare herb from the jungle and a rogue's purse",
-            "from the dungeon to brew a potion for the spirits.",
-            "Will you gather them for me?",
+            "I need a rare herb from the jungle and a",
+            "rogue's purse from the dungeon to brew a potion",
+            "for the spirits. Will you gather them for me?",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll gather them.", "Not right now.", title = "Start Jungle Potion?") != 1) return false
         chatPlayer("I'll bring both.", facialExpression = FacialExpression.CALM_TALK)
-        chatNpc("Snake weed grows in the swamp south-west of the village.", facialExpression = FacialExpression.HAPPY)
+        chatNpc("Snake weed grows in the swamp", "south-west of the village.", facialExpression = FacialExpression.HAPPY)
         return true
     }
 

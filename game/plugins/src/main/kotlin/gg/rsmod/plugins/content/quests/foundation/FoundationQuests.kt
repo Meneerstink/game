@@ -111,8 +111,8 @@ object DesertTreasure : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "I've found the tomb of a Mahjarrat under the sand -",
-            "Azzanadra, sealed in by four diamonds. The four",
+            "I've found the tomb of a Mahjarrat under the sand",
+            "- Azzanadra, sealed in by four diamonds. The four",
             "warriors who sealed him still keep them.",
             facialExpression = FacialExpression.CALM_TALK,
         )
@@ -178,7 +178,7 @@ object DesertTreasure : ShortQuest(
                         trigger = FightTrigger(Items.BLESSED_POT_4665, DESSOUS_TOMB, "Use the blessed pot on the Vampyre tomb to wake Dessous."),
                     ),
                 talk = {
-                    chatNpc("Pour the blessed pot onto the Vampyre tomb and Dessous", "will rise. Protect yourself well.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("Pour the blessed pot onto the Vampyre tomb", "and Dessous will rise. Protect yourself well.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -296,14 +296,14 @@ object LunarDiplomacy : ShortQuest(
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
             "The Fremennik and my people, the Moon Clan, have",
-            "not spoken in an age. I would end that silence, but",
-            "they will not listen to a Moon Clan mage.",
+            "not spoken in an age. I would end that silence,",
+            "but they will not listen to a Moon Clan mage.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         chatNpc(
-            "Lokar Searunner sails from Rellekka's west dock. He",
-            "knows the way to our isle - and a Fremennik who",
-            "carries a Seal of passage may come ashore.",
+            "Lokar Searunner sails from Rellekka's west dock.",
+            "He knows the way to our isle - and a Fremennik",
+            "who carries a Seal of passage may come ashore.",
             facialExpression = FacialExpression.SECRETLY_TALKING,
         )
         if (options("I'll carry your message to the Fremennik.", "Not right now.", title = "Start Lunar Diplomacy?") != 1) return false
@@ -327,8 +327,9 @@ object LunarDiplomacy : ShortQuest(
                         facialExpression = FacialExpression.LAUGH,
                     )
                     chatNpc(
-                        "Only our chieftain, Brundt, can give you one. You'll",
-                        "find him in the longhall. Come back with the Seal.",
+                        "Only our chieftain, Brundt, can give",
+                        "you one. You'll find him in the",
+                        "longhall. Come back with the Seal.",
                         facialExpression = FacialExpression.CALM_TALK,
                     )
                     true
@@ -354,7 +355,7 @@ object LunarDiplomacy : ShortQuest(
                     )
                     val answer = options("Honour.", "Mead.", "A fine longship.", title = "Brundt's question")
                     if (answer != 1) {
-                        chatNpc("Hah! Spoken like an outerlander. Think again and come back.", facialExpression = FacialExpression.LAUGH)
+                        chatNpc("Hah! Spoken like an outerlander.", "Think again and come back.", facialExpression = FacialExpression.LAUGH)
                         return@QuestStep false
                     }
                     chatNpc(
@@ -529,9 +530,10 @@ object TempleAtSenntisten : ShortQuest(
             facialExpression = FacialExpression.CALM_TALK,
         )
         chatNpc(
-            "The Frostenhorn, lost in the ice of Ghorrock, and the",
-            "icon the Barrows brothers guard. Ali the Wise of",
-            "Nardah has kept my secrets before. Start with him.",
+            "The Frostenhorn, lost in the ice of",
+            "Ghorrock, and the icon the Barrows",
+            "brothers guard. Ali the Wise of Nardah has",
+            "kept my secrets before. Start with him.",
             facialExpression = FacialExpression.SECRETLY_TALKING,
         )
         if (options("I'll help you restore the temple.", "Not right now.", title = "Start The Temple at Senntisten?") != 1) return false
@@ -577,8 +579,8 @@ object TempleAtSenntisten : ShortQuest(
                         facialExpression = FacialExpression.SECRETLY_TALKING,
                     )
                     chatNpc(
-                        "First the Frostenhorn. It lies in Ghorrock, deep in",
-                        "the frozen north of the Wilderness, and an ice",
+                        "First the Frostenhorn. It lies in Ghorrock, deep",
+                        "in the frozen north of the Wilderness, and an ice",
                         "demon keeps it. Water will not touch that beast.",
                         facialExpression = FacialExpression.WORRIED,
                     )
@@ -594,7 +596,7 @@ object TempleAtSenntisten : ShortQuest(
                 tip = "Deep Wilderness. Water spells do not harm the ice demon.",
                 fight = QuestFight(Npcs.ICE_DEMON, "Ice demon", 177, GHORROCK, "Cold... so cold... you will join me!"),
                 talk = {
-                    chatNpc("The Frostenhorn waits in Ghorrock. Beware the Wilderness.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("The Frostenhorn waits in", "Ghorrock. Beware the Wilderness.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -608,9 +610,10 @@ object TempleAtSenntisten : ShortQuest(
                 fight = QuestFight(Npcs.DHAROK_THE_WRETCHED_14264, "Dharok the Wretched", 115, BARROWS, "You dare disturb my rest?"),
                 talk = {
                     chatNpc(
-                        "The Frostenhorn! Now the icon. The Barrows brothers",
-                        "will not part with it - Dharok least of all. His axe",
-                        "hits harder the closer he is to death.",
+                        "The Frostenhorn! Now the icon. The",
+                        "Barrows brothers will not part with it",
+                        "- Dharok least of all. His axe hits",
+                        "harder the closer he is to death.",
                         facialExpression = FacialExpression.WORRIED,
                     )
                     true
@@ -707,9 +710,10 @@ object KingsRansom : ShortQuest(
                 location = SINCLAIR_MANSION,
                 talk = {
                     chatNpc(
-                        "I didn't kill anyone! They found the butler dead and",
-                        "my knife beside him - but I lost that knife a week",
-                        "ago. My trial is today, and nobody believes me.",
+                        "I didn't kill anyone! They found the",
+                        "butler dead and my knife beside him -",
+                        "but I lost that knife a week ago. My",
+                        "trial is today, and nobody believes me.",
                         facialExpression = FacialExpression.DISTRESSED,
                     )
                     chatNpc(
@@ -741,7 +745,7 @@ object KingsRansom : ShortQuest(
                         return@QuestStep false
                     }
                     messageBox("Under questioning, a guard confesses: the Black Knights paid him to frame the Sinclairs - and they hold King Arthur.")
-                    chatNpc("You saved me. Now save the king - Merlin knows where he is!", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("You saved me. Now save the king", "- Merlin knows where he is!", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),
@@ -753,8 +757,9 @@ object KingsRansom : ShortQuest(
                 location = CAMELOT,
                 talk = {
                     chatNpc(
-                        "At last! The Black Knights sealed my cell with four",
-                        "tumblers. I heard them set it: high, low, low, high.",
+                        "At last! The Black Knights sealed",
+                        "my cell with four tumblers. I heard",
+                        "them set it: high, low, low, high.",
                         facialExpression = FacialExpression.WORRIED,
                     )
                     val combination = listOf("High", "Low", "Low", "High")
@@ -767,9 +772,10 @@ object KingsRansom : ShortQuest(
                     }
                     messageBox("With a click, the cell door swings open.")
                     chatNpc(
-                        "Thank you! King Arthur is held in the Black Knights'",
-                        "fortress, turned to stone by their magic. I have",
-                        "broken the spell from here - go and bring him home.",
+                        "Thank you! King Arthur is held in the",
+                        "Black Knights' fortress, turned to stone",
+                        "by their magic. I have broken the spell",
+                        "from here - go and bring him home.",
                         facialExpression = FacialExpression.HAPPY,
                     )
                     true
@@ -896,14 +902,14 @@ object DesertTreasureII : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "There's a vault in the desert that wasn't there last",
-            "year. Old Zarosian work, with four statues at its",
-            "heart - and the statues have started to move.",
+            "There's a vault in the desert that wasn't there",
+            "last year. Old Zarosian work, with four statues at",
+            "its heart - and the statues have started to move.",
             facialExpression = FacialExpression.WORRIED,
         )
         chatNpc(
-            "Ali the Wise knows the desert's secrets better than",
-            "anyone. Start with him?",
+            "Ali the Wise knows the desert's secrets",
+            "better than anyone. Start with him?",
             facialExpression = FacialExpression.THINKING,
         )
         if (options("I'll investigate the vault.", "Not right now.", title = "Start Desert Treasure II?") != 1) return false
@@ -921,9 +927,10 @@ object DesertTreasureII : ShortQuest(
                 location = NARDAH,
                 talk = {
                     chatNpc(
-                        "The vault holds the Forgotten Four, Zaros's greatest",
-                        "servants, sealed in stone: Vardorvis the blade, Duke",
-                        "Sucellus in his ice, the Leviathan of the deep...",
+                        "The vault holds the Forgotten Four,",
+                        "Zaros's greatest servants, sealed in",
+                        "stone: Vardorvis the blade, Duke Sucellus",
+                        "in his ice, the Leviathan of the deep...",
                         facialExpression = FacialExpression.WORRIED,
                     )
                     chatNpc(
@@ -1014,9 +1021,10 @@ object DesertTreasureII : ShortQuest(
                 location = GE_HALL,
                 talk = {
                     chatNpc(
-                        "The vault is safe. The Ruinous Powers are now open",
-                        "to you, but first find and read the Ruinous powers",
-                        "book. It is a rare drop, not a gift I can give you.",
+                        "The vault is safe. The Ruinous Powers",
+                        "are now open to you, but first find and",
+                        "read the Ruinous powers book. It is a",
+                        "rare drop, not a gift I can give you.",
                         facialExpression = FacialExpression.CALM_TALK,
                     )
                     true
@@ -1144,9 +1152,10 @@ object DragonSlayerII : ShortQuest(
                 location = DRAYNOR,
                 talk = {
                     chatNpc(
-                        "Another dragon? My knees! Still, the Lady Lumbridge",
-                        "never lost a crew yet. Climb aboard - it's Crandor,",
-                        "where old Elvarg's bones were stirring.",
+                        "Another dragon? My knees! Still, the",
+                        "Lady Lumbridge never lost a crew yet.",
+                        "Climb aboard - it's Crandor, where",
+                        "old Elvarg's bones were stirring.",
                         facialExpression = FacialExpression.LAUGH,
                     )
                     if (!DangerWarning.confirmQuestTravel(this, CRANDOR)) return@QuestStep false
@@ -1228,9 +1237,10 @@ object SongOfTheElves : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Elena went back into West Ardougne. She says the",
-            "plague was never real - that the Mourners and King",
-            "Lathas lied to keep the city walled. I'm worried sick.",
+            "Elena went back into West Ardougne. She",
+            "says the plague was never real - that",
+            "the Mourners and King Lathas lied to",
+            "keep the city walled. I'm worried sick.",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll find Elena.", "Not right now.", title = "Start Song of the Elves?") != 1) return false
@@ -1248,9 +1258,10 @@ object SongOfTheElves : ShortQuest(
                 location = EAST_ARDOUGNE,
                 talk = {
                     chatNpc(
-                        "Father sent you? I'm fine. I've seen the proof: there",
-                        "is no plague. The Mourners are Lord Iorwerth's",
-                        "elves and Lathas's men, keeping the west walled.",
+                        "Father sent you? I'm fine. I've seen",
+                        "the proof: there is no plague. The",
+                        "Mourners are Lord Iorwerth's elves and",
+                        "Lathas's men, keeping the west walled.",
                         facialExpression = FacialExpression.ANGRY,
                     )
                     chatNpc(
@@ -1827,7 +1838,7 @@ object FoundationQuests {
                     !player.inventory.contains(item) && !player.bank.contains(item) && !player.equipment.contains(item)
             }
         if (lost.isNotEmpty()) {
-            task.chatNpc("You've lost what I gave you? Here, take it again - and be careful this time.")
+            task.chatNpc("You've lost what I gave you? Here, take", "it again - and be careful this time.")
             lost.forEach { (item, amount) -> FoundationRewards.grant(player, item, amount) }
         }
         task.chatPlayer(*step.journal.map { it.replace(Regex("<[^>]+>"), "") }.toTypedArray(), facialExpression = FacialExpression.THINKING)

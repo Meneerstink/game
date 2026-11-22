@@ -68,8 +68,9 @@ object ShiloVillage : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "A restless spirit haunts Shilo Village. Trufitus in Tai Bwo",
-            "Wannai knows how to quiet it. Take this belt to him.",
+            "A restless spirit haunts Shilo Village.",
+            "Trufitus in Tai Bwo Wannai knows how to",
+            "quiet it. Take this belt to him.",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll help.", "Not right now.", title = "Start Shilo Village?") != 1) return false
@@ -92,7 +93,7 @@ object ShiloVillage : ShortQuest(
                         false
                     } else {
                         player.inventory.remove(Items.WAMPUM_BELT)
-                        chatNpc("The belt! The spirit is Rashiliyia. Search the temple of", "Shilo for Zadimus's corpse.", facialExpression = FacialExpression.WORRIED)
+                        chatNpc("The belt! The spirit is Rashiliyia. Search", "the temple of Shilo for Zadimus's corpse.", facialExpression = FacialExpression.WORRIED)
                         true
                     }
                 },
@@ -204,13 +205,13 @@ object OneSmallFavour : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "I wonder... would you do me a small favour? It is a long",
-            "chain of errands, but the reward is good.",
+            "I wonder... would you do me a small favour? It is",
+            "a long chain of errands, but the reward is good.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll do the favour.", "Not right now.", title = "Start One Small Favour?") != 1) return false
         chatPlayer("I'll do it.", facialExpression = FacialExpression.CALM_TALK)
-        chatNpc("Start with the Jungle Forester south of the village.", facialExpression = FacialExpression.HAPPY)
+        chatNpc("Start with the Jungle Forester", "south of the village.", facialExpression = FacialExpression.HAPPY)
         return true
     }
 
@@ -223,7 +224,7 @@ object OneSmallFavour : ShortQuest(
                 place = "south of Shilo Village",
                 location = FORESTER_POST,
                 talk = {
-                    chatNpc("My axe is blunt. Brian in Port Sarim could sharpen it -", "tell him I sent you.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("My axe is blunt. Brian in Port Sarim", "could sharpen it - tell him I sent you.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -234,7 +235,7 @@ object OneSmallFavour : ShortQuest(
                 place = "Port Sarim",
                 location = BRIAN_POST,
                 talk = {
-                    chatNpc("I will sharpen it, but I am out of grindstone dust.", "Ask Aggie in Draynor.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("I will sharpen it, but I am out of", "grindstone dust. Ask Aggie in Draynor.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -245,7 +246,7 @@ object OneSmallFavour : ShortQuest(
                 place = "Draynor Village",
                 location = AGGIE_POST,
                 talk = {
-                    chatNpc("Grindstone dust? Hammerspike Stoutbeard in the Dwarven", "Mine has some, but his gang guards him.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("Grindstone dust? Hammerspike Stoutbeard in the", "Dwarven Mine has some, but his gang guards him.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -274,7 +275,7 @@ object OneSmallFavour : ShortQuest(
                 place = "Taverley",
                 location = SANFEW_POST,
                 talk = {
-                    chatNpc("The last thing you need is in the Goblin Cave: Slagilith.", "Defeat it to free Petra Fyiad.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("The last thing you need is in the Goblin Cave:", "Slagilith. Defeat it to free Petra Fyiad.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -298,7 +299,7 @@ object OneSmallFavour : ShortQuest(
                 place = "Shilo Village",
                 location = YANNI_POST,
                 talk = {
-                    chatNpc("You have done me a great favour! Take this Steel key", "ring, and two lamps.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("You have done me a great favour! Take", "this Steel key ring, and two lamps.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),

@@ -105,7 +105,7 @@ object RovingElves : ShortQuest(
                 location = ELUNED_POST,
                 talk = {
                     if (!player.inventory.contains(Items.CONSECRATION_SEED)) {
-                        chatNpc("Bring me the consecration seed from Glarial's tomb.", facialExpression = FacialExpression.CALM_TALK)
+                        chatNpc("Bring me the consecration", "seed from Glarial's tomb.", facialExpression = FacialExpression.CALM_TALK)
                         if (FoundationRewards.waitingInBank(player, listOf(Items.CONSECRATION_SEED))) chatNpc(FoundationRewards.IN_BANK_LINE, facialExpression = FacialExpression.CALM_TALK)
                         false
                     } else {

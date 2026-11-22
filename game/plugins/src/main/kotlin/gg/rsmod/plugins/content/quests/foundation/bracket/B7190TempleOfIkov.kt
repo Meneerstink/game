@@ -61,15 +61,15 @@ object TempleOfIkov : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "I need the Staff of Armadyl from the Temple of Ikov.",
-            "There are traps and guardians - and a fire warrior.",
-            "Will you fetch it for me?",
+            "I need the Staff of Armadyl from the Temple",
+            "of Ikov. There are traps and guardians - and",
+            "a fire warrior. Will you fetch it for me?",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll go.", "Not right now.", title = "Start Temple of Ikov?") != 1) return false
         chatPlayer("I'll find the staff.", facialExpression = FacialExpression.CALM_TALK)
         FoundationRewards.grant(player, Items.PENDANT_OF_LUCIEN, 1)
-        chatNpc("Take this pendant. Winelda the witch will let you through.", facialExpression = FacialExpression.HAPPY)
+        chatNpc("Take this pendant. Winelda the", "witch will let you through.", facialExpression = FacialExpression.HAPPY)
         return true
     }
 
@@ -83,7 +83,7 @@ object TempleOfIkov : ShortQuest(
                 location = WINELDA_POST,
                 gives = listOf(Items.ICE_ARROWS to 25),
                 talk = {
-                    chatNpc("A pendant from Lucien? Pass, then - and take these ice", "arrows: only they hurt the fire warrior.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("A pendant from Lucien? Pass, then - and take these", "ice arrows: only they hurt the fire warrior.", facialExpression = FacialExpression.CALM_TALK)
                     FoundationRewards.grant(player, Items.ICE_ARROWS, 25)
                     true
                 },
@@ -97,7 +97,7 @@ object TempleOfIkov : ShortQuest(
                 tip = "Ice arrows hurt the Fire Warrior: fire them with a bow.",
                 fight = QuestFight(Npcs.FIRE_WARRIOR_OF_LESARKUS, "Fire Warrior of Lesarkus", 84, FIRE_WARRIOR_FIGHT, "Fool! You cannot pass!"),
                 talk = {
-                    chatNpc("The Fire Warrior of Lesarkus guards the stair. Use the", "ice arrows!", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("The Fire Warrior of Lesarkus guards", "the stair. Use the ice arrows!", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -109,7 +109,7 @@ object TempleOfIkov : ShortQuest(
                 location = GUARDIAN_POST,
                 gives = listOf(Items.ARMADYL_PENDANT to 1),
                 talk = {
-                    chatNpc("You have beaten the warrior and bear the pendant of", "Lucien... Take this Armadyl pendant: we will deal with", "Lucien ourselves.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("You have beaten the warrior and bear the", "pendant of Lucien... Take this Armadyl", "pendant: we will deal with Lucien ourselves.", facialExpression = FacialExpression.CALM_TALK)
                     FoundationRewards.grant(player, Items.ARMADYL_PENDANT, 1)
                     true
                 },
@@ -123,7 +123,7 @@ object TempleOfIkov : ShortQuest(
                 tip = "Lucien is only level 14.",
                 fight = QuestFight(Npcs.LUCIEN, "Lucien", 14, LUCIEN_FIGHT, "You will not stop me!"),
                 talk = {
-                    chatNpc("Lucien lied to you. Face him at the Flying Horse Inn!", facialExpression = FacialExpression.ANGRY)
+                    chatNpc("Lucien lied to you. Face him", "at the Flying Horse Inn!", facialExpression = FacialExpression.ANGRY)
                     true
                 },
             ),
@@ -134,7 +134,7 @@ object TempleOfIkov : ShortQuest(
                 place = "the Temple of Ikov sanctuary",
                 location = GUARDIAN_POST,
                 talk = {
-                    chatNpc("Lucien is dead? Armadyl's guardians are in your debt.", "The Staff of Armadyl is safe again.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("Lucien is dead? Armadyl's guardians are in", "your debt. The Staff of Armadyl is safe again.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),

@@ -68,9 +68,9 @@ object FremennikIsles : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "The isles of Neitiznot and Jatizso have been at odds",
-            "since the trolls came down from the north. Speak to",
-            "King Gjuki on Jatizso - he needs a hero.",
+            "The isles of Neitiznot and Jatizso have been at",
+            "odds since the trolls came down from the north.",
+            "Speak to King Gjuki on Jatizso - he needs a hero.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll go to Jatizso.", "Not right now.", title = "Start The Fremennik Isles?") != 1) return false
@@ -87,7 +87,7 @@ object FremennikIsles : ShortQuest(
                 place = "Jatizso",
                 location = GJUKI_POST,
                 talk = {
-                    chatNpc("The trolls threaten both our isles. Go to Mawnis", "Burowgar on Neitiznot - together we will stop them.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("The trolls threaten both our isles.", "Go to Mawnis Burowgar on Neitiznot", "- together we will stop them.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -120,7 +120,7 @@ object FremennikIsles : ShortQuest(
                             ),
                     ),
                 talk = {
-                    chatNpc("The troll cave lies north of the village. Fight them", "one by one.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("The troll cave lies north of the", "village. Fight them one by one.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),

@@ -95,14 +95,15 @@ object TreeGnomeVillage : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "The Khazard troops have stolen the three orbs of",
-            "protection that keep our village safe. Without them the",
-            "enemy walks in. Will you help us get them back?",
+            "The Khazard troops have stolen the three",
+            "orbs of protection that keep our village",
+            "safe. Without them the enemy walks in.",
+            "Will you help us get them back?",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll help.", "Not right now.", title = "Start Tree Gnome Village?") != 1) return false
         chatPlayer("I'll get your orbs back.", facialExpression = FacialExpression.CALM_TALK)
-        chatNpc("Commander Montai leads the defence at the battlefield. Go and see him.", facialExpression = FacialExpression.HAPPY)
+        chatNpc("Commander Montai leads the defence", "at the battlefield. Go and see him.", facialExpression = FacialExpression.HAPPY)
         return true
     }
 
@@ -126,7 +127,7 @@ object TreeGnomeVillage : ShortQuest(
                 place = "near the Khazard fort",
                 location = TRACKER_POST,
                 talk = {
-                    chatNpc("The Khazard warlord carries the orbs. He stands just", "outside the fort - be ready, he is a level 112 fighter.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("The Khazard warlord carries the orbs.", "He stands just outside the fort - be", "ready, he is a level 112 fighter.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -152,11 +153,11 @@ object TreeGnomeVillage : ShortQuest(
                 location = BOLREN_POST,
                 talk = {
                     if (!player.inventory.contains(Items.ORBS_OF_PROTECTION)) {
-                        chatNpc("You have not brought the orbs yet. The warlord has them.", facialExpression = FacialExpression.WORRIED)
+                        chatNpc("You have not brought the orbs", "yet. The warlord has them.", facialExpression = FacialExpression.WORRIED)
                         false
                     } else {
                         player.inventory.remove(Items.ORBS_OF_PROTECTION)
-                        chatNpc("The orbs! The village is safe. You have our eternal", "thanks - and the spirit trees are open to you.", facialExpression = FacialExpression.HAPPY)
+                        chatNpc("The orbs! The village is safe.", "You have our eternal thanks - and", "the spirit trees are open to you.", facialExpression = FacialExpression.HAPPY)
                         true
                     }
                 },

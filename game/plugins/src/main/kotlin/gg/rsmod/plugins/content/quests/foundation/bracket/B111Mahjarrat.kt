@@ -84,9 +84,9 @@ object MakingFriendsWithMyArm : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "A troll from Weiss came. Wolfbone. He wants My Arm",
-            "to visit his leader, Mother, far to the north. My Arm",
-            "needs a friend to go with him.",
+            "A troll from Weiss came. Wolfbone. He wants My",
+            "Arm to visit his leader, Mother, far to the",
+            "north. My Arm needs a friend to go with him.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll go with My Arm.", "Not right now.", title = "Start Making Friends with My Arm?") != 1) return false
@@ -131,9 +131,9 @@ object MakingFriendsWithMyArm : ShortQuest(
                 location = WISE_OLD_MAN_POST,
                 talk = {
                     chatNpc(
-                        "Kill me? Ha! But I can pretend. The Apothecary in",
-                        "Varrock can make a reduced cadava potion - it makes",
-                        "you look dead for a while.",
+                        "Kill me? Ha! But I can pretend. The Apothecary",
+                        "in Varrock can make a reduced cadava potion -",
+                        "it makes you look dead for a while.",
                         facialExpression = FacialExpression.LAUGHING,
                     )
                     true
@@ -148,11 +148,11 @@ object MakingFriendsWithMyArm : ShortQuest(
                 tip = "Bring cadava berries.",
                 talk = {
                     if (player.inventory.getItemCount(Items.CADAVA_BERRIES) < 1) {
-                        chatNpc("A reduced cadava potion? Bring me some cadava berries", "and I will make one.", facialExpression = FacialExpression.CALM_TALK)
+                        chatNpc("A reduced cadava potion? Bring me some", "cadava berries and I will make one.", facialExpression = FacialExpression.CALM_TALK)
                         false
                     } else {
                         player.inventory.remove(Items.CADAVA_BERRIES, 1)
-                        chatNpc("Here. Just a sip - any more and he really will be dead.", facialExpression = FacialExpression.CALM_TALK)
+                        chatNpc("Here. Just a sip - any more", "and he really will be dead.", facialExpression = FacialExpression.CALM_TALK)
                         true
                     }
                 },
@@ -193,7 +193,7 @@ object MakingFriendsWithMyArm : ShortQuest(
                 place = "the Troll Stronghold",
                 location = MY_ARM_POST,
                 talk = {
-                    chatNpc("My Arm and Snowflake forever! My Arm made a friend -", "you, human!", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("My Arm and Snowflake forever! My", "Arm made a friend - you, human!", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),
@@ -296,7 +296,7 @@ object TheGeneralsShadow : ShortQuest(
                     if (!understood()) {
                         false
                     } else {
-                        chatNpc("So you are one of us. My scouts are out there:", "Karamja, the Gnome Stronghold, Draynor and the desert.", "Bring me their reports.", facialExpression = FacialExpression.CALM_TALK)
+                        chatNpc("So you are one of us. My scouts are out", "there: Karamja, the Gnome Stronghold, Draynor", "and the desert. Bring me their reports.", facialExpression = FacialExpression.CALM_TALK)
                         true
                     }
                 },
@@ -383,8 +383,9 @@ object HisFaithfulServants : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Something wants its icon back. The brothers guard it",
-            "in their chest. Bring it to me... or don't. Heh heh.",
+            "Something wants its icon back. The",
+            "brothers guard it in their chest.",
+            "Bring it to me... or don't. Heh heh.",
             facialExpression = FacialExpression.CALM_TALK,
         )
         if (options("I'll fetch the icon.", "Not right now.", title = "Start His Faithful Servants?") != 1) return false
@@ -410,7 +411,7 @@ object HisFaithfulServants : ShortQuest(
                         false
                     } else {
                         chatPlayer("Here is the strange icon.", facialExpression = FacialExpression.CALM_TALK)
-                        chatNpc("Ahh... their master will be pleased. Take this lamp.", facialExpression = FacialExpression.HAPPY)
+                        chatNpc("Ahh... their master will be", "pleased. Take this lamp.", facialExpression = FacialExpression.HAPPY)
                         player.attr.remove(ICON)
                         true
                     }

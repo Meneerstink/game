@@ -54,7 +54,7 @@ object PlagueCity : ShortQuest(
         )
         if (options("I'll find Elena.", "Not right now.", title = "Start Plague City?") != 1) return false
         chatPlayer("I'll bring her home.", facialExpression = FacialExpression.CALM_TALK)
-        chatNpc("Speak to my wife Alrena - she has a gas mask for you.", facialExpression = FacialExpression.HAPPY)
+        chatNpc("Speak to my wife Alrena -", "she has a gas mask for you.", facialExpression = FacialExpression.HAPPY)
         return true
     }
 
@@ -68,7 +68,7 @@ object PlagueCity : ShortQuest(
                 location = ALRENA_POST,
                 gives = listOf(Items.GAS_MASK to 1),
                 talk = {
-                    chatNpc("Elena is in West Ardougne. Take this gas mask - the", "air there is thick with plague.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("Elena is in West Ardougne. Take this gas", "mask - the air there is thick with plague.", facialExpression = FacialExpression.WORRIED)
                     FoundationRewards.grant(player, Items.GAS_MASK, 1)
                     true
                 },
@@ -81,7 +81,7 @@ object PlagueCity : ShortQuest(
                 location = BRAVEK_POST,
                 gives = listOf(Items.WARRANT to 1),
                 talk = {
-                    chatNpc("A warrant? ...Very well, if it means you stop pestering", "me. Take it.", facialExpression = FacialExpression.ANGRY)
+                    chatNpc("A warrant? ...Very well, if it means", "you stop pestering me. Take it.", facialExpression = FacialExpression.ANGRY)
                     FoundationRewards.grant(player, Items.WARRANT, 1)
                     true
                 },
@@ -94,7 +94,7 @@ object PlagueCity : ShortQuest(
                 location = PLAGUE_HOUSE,
                 talk = {
                     if (!player.inventory.contains(Items.WARRANT)) {
-                        chatNpc("The mourners will not let you in without a warrant.", facialExpression = FacialExpression.WORRIED)
+                        chatNpc("The mourners will not let", "you in without a warrant.", facialExpression = FacialExpression.WORRIED)
                         false
                     } else {
                         player.inventory.remove(Items.WARRANT)

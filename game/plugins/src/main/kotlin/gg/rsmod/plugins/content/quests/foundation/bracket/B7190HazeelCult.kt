@@ -60,7 +60,7 @@ object HazeelCult : ShortQuest(
         )
         if (options("I'll help.", "Not right now.", title = "Start Hazeel Cult?") != 1) return false
         chatPlayer("I'll get your armour back.", facialExpression = FacialExpression.CALM_TALK)
-        chatNpc("Clivet, a cultist, is hiding in the caves south of the manor.", facialExpression = FacialExpression.HAPPY)
+        chatNpc("Clivet, a cultist, is hiding in", "the caves south of the manor.", facialExpression = FacialExpression.HAPPY)
         return true
     }
 

@@ -55,9 +55,10 @@ object FairyTaleI : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "Everywhere I look the crops are failing! The fairies say",
-            "their queen is ill, and that the sickness flows into",
-            "every field. Will you go to Zanaris and help?",
+            "Everywhere I look the crops are failing!",
+            "The fairies say their queen is ill, and",
+            "that the sickness flows into every",
+            "field. Will you go to Zanaris and help?",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll go to Zanaris.", "Not right now.", title = "Start Fairy Tale I?") != 1) return false
@@ -75,7 +76,7 @@ object FairyTaleI : ShortQuest(
                 place = "Zanaris",
                 location = GODFATHER_POST,
                 talk = {
-                    chatNpc("The Fairy Queen is sick and the land suffers with her.", "Speak to Fairy Nuff: she knows what must be done.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("The Fairy Queen is sick and the land", "suffers with her. Speak to Fairy", "Nuff: she knows what must be done.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -118,7 +119,7 @@ object FairyTaleI : ShortQuest(
                 tip = "Magic secateurs hurt Tanglefoot. Bring food.",
                 fight = QuestFight(Npcs.TANGLEFOOT, "Tanglefoot", 111, TANGLEFOOT_LAIR, "Grrraaarrr!"),
                 talk = {
-                    chatNpc("Tanglefoot lurks in the thorns. Use the magic secateurs.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("Tanglefoot lurks in the thorns.", "Use the magic secateurs.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),

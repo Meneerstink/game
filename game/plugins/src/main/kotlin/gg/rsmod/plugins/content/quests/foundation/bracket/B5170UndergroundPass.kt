@@ -63,14 +63,15 @@ object UndergroundPass : ShortQuest(
 
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc(
-            "My brother Tyras has gone west through the Underground",
-            "Pass to fight the dark lord Iban. The pass is full of",
-            "danger. Will you follow and bring him back?",
+            "My brother Tyras has gone west through",
+            "the Underground Pass to fight the dark",
+            "lord Iban. The pass is full of danger.",
+            "Will you follow and bring him back?",
             facialExpression = FacialExpression.WORRIED,
         )
         if (options("I'll follow him.", "Not right now.", title = "Start Underground Pass?") != 1) return false
         chatPlayer("I'll go through the pass.", facialExpression = FacialExpression.CALM_TALK)
-        chatNpc("Speak to Koftik at the pass entrance, west of West Ardougne.", facialExpression = FacialExpression.HAPPY)
+        chatNpc("Speak to Koftik at the pass", "entrance, west of West Ardougne.", facialExpression = FacialExpression.HAPPY)
         return true
     }
 
@@ -84,8 +85,9 @@ object UndergroundPass : ShortQuest(
                 location = KOFTIK_POST,
                 talk = {
                     chatNpc(
-                        "The pass is guarded: three paladins turned bad, three",
-                        "demons, and Kalrag, Iban's spider. Defeat them all.",
+                        "The pass is guarded: three paladins",
+                        "turned bad, three demons, and Kalrag,",
+                        "Iban's spider. Defeat them all.",
                         facialExpression = FacialExpression.WORRIED,
                     )
                     true
@@ -105,7 +107,7 @@ object UndergroundPass : ShortQuest(
                         chain = listOf(Npcs.SIR_CARL to "You will not pass!", Npcs.SIR_HARRY to "Die, intruder!"),
                     ),
                 talk = {
-                    chatNpc("The paladins hold the pass beyond the first bridge.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("The paladins hold the pass", "beyond the first bridge.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -136,7 +138,7 @@ object UndergroundPass : ShortQuest(
                 tip = "Kalrag is a giant spider. Bring an antipoison.",
                 fight = QuestFight(Npcs.KALRAG, "Kalrag", 89, KALRAG_LAIR, "Hsssss!"),
                 talk = {
-                    chatNpc("Kalrag lurks in the last cave before Iban's temple.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("Kalrag lurks in the last", "cave before Iban's temple.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -155,7 +157,7 @@ object UndergroundPass : ShortQuest(
                         missing = "You need the doll of Iban to destroy him.",
                     ),
                 talk = {
-                    chatNpc("Iban's temple lies at the end of the pass. Take the doll there.", facialExpression = FacialExpression.CALM_TALK)
+                    chatNpc("Iban's temple lies at the end of", "the pass. Take the doll there.", facialExpression = FacialExpression.CALM_TALK)
                     true
                 },
             ),
@@ -166,7 +168,7 @@ object UndergroundPass : ShortQuest(
                 place = "Ardougne Castle",
                 location = LATHAS_UP,
                 talk = {
-                    chatNpc("Iban is gone, and the pass is safe. Ardougne thanks you.", facialExpression = FacialExpression.HAPPY)
+                    chatNpc("Iban is gone, and the pass is", "safe. Ardougne thanks you.", facialExpression = FacialExpression.HAPPY)
                     true
                 },
             ),
