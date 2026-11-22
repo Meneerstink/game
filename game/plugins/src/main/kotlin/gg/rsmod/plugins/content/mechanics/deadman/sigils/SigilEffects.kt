@@ -100,7 +100,15 @@ object SigilEffects {
         player.queue {
             val labels = books.map { it.name.lowercase().replaceFirstChar { c -> c.uppercase() } }
             val choice = options(*labels.toTypedArray(), title = "Swap to which spellbook?")
-            if (choice in 1..books.size) gg.rsmod.plugins.content.magic.Spellbooks.select(player, books[choice - 1])
+            if (choice in 1..books.size) {
+                val book = books[choice - 1]
+                if (gg.rsmod.plugins.content.magic.Spellbooks.select(player, book)) {
+                    // OSRS DMM chat line (video p6P1-FCaNvM 02:36 'standard', 03:04 'Ancient'): "Your Sigil of Versatility refreshes
+                    // your memory of the <book> spellbook." - standard in lower case, the named books capitalised.
+                    val name = if (book == gg.rsmod.plugins.api.Spellbook.STANDARD) "standard" else labels[choice - 1]
+                    player.message("Your Sigil of Versatility refreshes your memory of the $name spellbook.")
+                }
+            }
         }
     }
 
