@@ -6,6 +6,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.ext.heal
 import gg.rsmod.plugins.api.ext.hit
+import gg.rsmod.plugins.api.ext.message
 
 /**
  * PROJECT48 SIGILS - the damage-over-time sigils (OSRS Wiki Deadman: Armageddon/Sigils): S54 the Ruthless Ranger ("a 10% chance to cripple the
@@ -52,7 +53,11 @@ object SigilDots {
         val noEnergy = target is Player && target.runEnergy <= 0.0
         val base = SigilCombat.crippleDamage(attacker)
         val total = if (noEnergy) base * 2 else base
-        if (target is Player) target.runEnergy = Math.max(0.0, target.runEnergy - 15.0)
+        if (target is Player) {
+            target.runEnergy = Math.max(0.0, target.runEnergy - 15.0)
+            // OSRS line (DMM video 3Gk3LFtZQbQ 01:04-02:14, SIGIL-TEKST-BRON): the crippled player reads it.
+            target.message("${gg.rsmod.util.Misc.formatForDisplay(attacker.username)}'s Sigil of the Ruthless Ranger is rapidly draining your run energy.")
+        }
         run(attacker, target, total, CRIPPLED, heal = false)
     }
 
@@ -62,6 +67,13 @@ object SigilDots {
     ) {
         if (target.attr[CURSED] == true) return
         target.attr[CURSED] = true
+        // OSRS line (DMM video 3Gk3LFtZQbQ 06:48, SIGIL-TEKST-BRON): the cursed player reads it.
+        if (target is Player) {
+            target.message(
+                "A Sigil of the Menacing Mage is draining your life force and feeding it to its master, " +
+                    "${gg.rsmod.util.Misc.formatForDisplay(attacker.username)}.",
+            )
+        }
         run(attacker, target, SigilCombat.curseDamage(attacker), CURSED, heal = true)
     }
 

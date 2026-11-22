@@ -49,11 +49,19 @@ STATIONS.forEach { origin ->
                 player.message("You must complete The Grand Tree before the gnome gliders will take you.")
                 return@queue
             }
-            val choice = options(*destinations.map { it.label }.toTypedArray(), title = "Fly to...")
-            if (choice < 1 || choice > destinations.size) {
+            // PROJECT48 O13 ONTGR (OSRS Wiki "Gnome glider": Lemantolly Undri "One Small Favour must be partially completed"): the Feldip
+            // route opens once Gnormadium's runway lights are fixed, which the OSRS guide places just before the Slagilith fight
+            // (our step 6). The refusal line has no OSRS source.
+            if (!feldipOpen(player) && (origin.npc == Npcs.GNORMADIUM_AVLAFRIM)) {
+                player.message("You need to progress further in One Small Favour before Gnormadium can fly you anywhere.")
                 return@queue
             }
-            val dest = destinations[choice - 1]
+            val allowed = if (feldipOpen(player)) destinations else destinations.filter { it.npc != Npcs.GNORMADIUM_AVLAFRIM }
+            val choice = options(*allowed.map { it.label }.toTypedArray(), title = "Fly to...")
+            if (choice < 1 || choice > allowed.size) {
+                return@queue
+            }
+            val dest = allowed[choice - 1]
             // Deadman PvP guards plan (2026-09-16): a real "non-teleport transport" network -
             // the Gnome Glider bypassed player.canTeleport entirely before this (it called
             // player.teleport(...) directly), so it also had no combat-recency/skull gate at all.
@@ -65,3 +73,8 @@ STATIONS.forEach { origin ->
         }
     }
 }
+
+/** One Small Favour stage 6 = the Slagilith step (B111Shilo); QuestStatus counts every quest done outside the brackets. */
+fun feldipOpen(player: gg.rsmod.game.model.entity.Player): Boolean =
+    gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, "One Small Favour") ||
+        gg.rsmod.plugins.content.quests.foundation.bracket.OneSmallFavour.stage(player) >= 6

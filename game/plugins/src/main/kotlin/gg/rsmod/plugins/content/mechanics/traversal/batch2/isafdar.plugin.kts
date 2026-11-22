@@ -103,6 +103,10 @@ fun crossLoc(
     }
 }
 
+// The chain landing between two forests (2232,3218 / 2235,3218) is walled in on every side, so the engine route to the next forest
+// failed ("I can't reach that!", bot 22-11 18:2x) and the player was stuck between them. Adjacent = act; the handler walks to its
+// own lane start anyway (same as the swamp stepping stones).
+FOREST_LOCS.forEach { world.plugins.setObjApproachDistance(it, 1) }
 crossLoc(3937, "Enter", ANIM_OVER, null)
 listOf(3938, 3939, 3998, 3999).forEach { crossLoc(it, "Enter", ANIM_THROUGH, null) }
 crossLoc(3922, "Pass", ANIM_STICK_TRAP, "You manage to skillfully pass the trap.") { t, f -> stickCrossing(t, f) }

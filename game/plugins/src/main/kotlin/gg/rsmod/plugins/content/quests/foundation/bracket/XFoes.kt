@@ -31,6 +31,15 @@ object XNpcs {
     const val DONT_KNOW_WHAT = 15346
     const val RANIS_DRAKAN = 15347 // A Taste of Hope
     const val GARTH = 15348 // A Taste of Hope (Ver Sinhaza); Npcs.GARTH 2330 is another, rev-667 Garth
+
+    // PROJECT48 O03 (run 4, batch p48-fairy): the Fairy Tale I/II npcs and Roving Elves' moss guardian, none of them in the 667 cache.
+    const val FAIRY_NUFF = 15349 // OSRS 1841 (Zanaris)
+    const val FAIRY_QUEEN = 15350 // OSRS 1842
+    const val FAIRY_VERY_WISE = 15351 // OSRS 1847
+    const val MOSS_GUARDIAN = 15352 // OSRS 891 (Glarial's Tomb)
+    const val MOSS_GUARDIAN_DEFEND = 17851 // GIANT_UPDATE_MOSS_DEFEND 4657
+    const val MOSS_GUARDIAN_ATTACK = 17852 // GIANT_UPDATE_MOSS_ATTACK 4658
+    const val MOSS_GUARDIAN_DEATH = 17853 // GIANT_UPDATE_MOSS_DEATH 4659
 }
 
 /**
@@ -44,7 +53,7 @@ object XFoes : CombatScript() {
     override val ids =
         intArrayOf(
             XNpcs.BASILISK_YOUNGLING, XNpcs.MONSTROUS_BASILISK, XNpcs.TYPHOR, XNpcs.JORMUNGAND, XNpcs.ABOMINATION,
-            XNpcs.ARAXYTE, XNpcs.HESPORI, XNpcs.MOTHER, XNpcs.DONT_KNOW_WHAT, XNpcs.RANIS_DRAKAN,
+            XNpcs.ARAXYTE, XNpcs.HESPORI, XNpcs.MOTHER, XNpcs.DONT_KNOW_WHAT, XNpcs.RANIS_DRAKAN, XNpcs.MOSS_GUARDIAN,
         )
 
     const val BASILISK_ATTACK = 17826
@@ -90,6 +99,8 @@ object XFoes : CombatScript() {
                     XNpcs.HESPORI -> if (coin) { ranged(npc, target, HESPORI_ATTACK, 8); ranged(npc, target, -1, 8) } else magic(npc, target, HESPORI_ATTACK, 14)
                     XNpcs.MOTHER -> if (coin) melee(npc, target, TROLL_MELEE, StyleType.CRUSH, 16) else ranged(npc, target, TROLL_RANGED, 16)
                     XNpcs.DONT_KNOW_WHAT -> if (coin) melee(npc, target, TROLL_MELEE, StyleType.CRUSH, 10) else ranged(npc, target, TROLL_RANGED, 10)
+                    // Moss Guardian (O03, wiki): crush / "magical melee", max hit 14.
+                    XNpcs.MOSS_GUARDIAN -> melee(npc, target, XNpcs.MOSS_GUARDIAN_ATTACK, StyleType.CRUSH, 14)
                     XNpcs.RANIS_DRAKAN -> if (coin) melee(npc, target, RANIS_CLAW, StyleType.SLASH, 20) else magic(npc, target, RANIS_MAGIC, 20)
                 }
             }

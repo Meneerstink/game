@@ -47,6 +47,8 @@ object ClueSkilling {
     fun fishing(player: Player, fish: Fish) = award(player, "fishing", fish.name, Skills.FISHING)
 
     private fun award(player: Player, skill: String, activity: String, skillId: Int, nest: Boolean = false) {
+        // ONTBREKEND 25: every gathered log/ore/fish also rolls for a sigil (SigilDrops.rollGathering).
+        gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops.rollGathering(player)
         val base = base(skill, activity) ?: return // RS2-only activities have no invented OSRS rate.
         val wealth = player.tile.getWildernessLevel() > 0 && WildernessNpcDrops.clueDenominator(player, 128) == 64
         // No Combat Achievements provider exists in this server, so none of its rewards are unlocked.

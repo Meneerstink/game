@@ -7,6 +7,7 @@ import gg.rsmod.plugins.api.ext.heal
 import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.api.ext.isProtectedFrom
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
@@ -224,8 +225,23 @@ object SigilCombat {
         val bonus = if (attacker.attr[FORMIDABLE_NEXT_HIT] == true) FORMIDABLE_BONUS else 0.0
         val armed = attacker.world.randomDouble() < FORMIDABLE_CHANCE
         attacker.attr[FORMIDABLE_NEXT_HIT] = armed
-        if (armed) SigilFx.proc(attacker, Sigil.THE_FORMIDABLE_FIGHTER)
+        if (armed) {
+            SigilFx.proc(attacker, Sigil.THE_FORMIDABLE_FIGHTER)
+            // OSRS line (DMM Armageddon video x_-SE55x4E0 18:20, SIGIL-TEKST-BRON).
+            attacker.message("Your Sigil of the Formidable Fighter enhances the strength of your next melee attack.")
+        }
         return bonus
+    }
+
+    /**
+     * A death drops an armed Formidable bonus, with the OSRS line. Source: DMM Armageddon video x_-SE55x4E0 02:14-02:20 (run 4, 2 frames/s):
+     * 'enhances the strength of your next melee attack' -> 'Oh dear, you are dead!' -> at the respawn, beside 'You have 50 minutes of PvP
+     * protection left.', 'Your Sigil of the Formidable Fighter cools down, its energy dissipating.' No timer: the wiki says only "your next hit".
+     */
+    fun onDeath(player: Player) {
+        if (player.attr[FORMIDABLE_NEXT_HIT] != true) return
+        player.attr[FORMIDABLE_NEXT_HIT] = false
+        player.message("Your Sigil of the Formidable Fighter cools down, its energy dissipating.")
     }
 
     private fun taken(
@@ -391,13 +407,40 @@ object SigilCombat {
         if (attacker.attr[RAMPAGE_CYCLE] == now && attacker.attr[RAMPAGE_STYLE] == style) return attacker.attr[RAMPAGE_COUNT] ?: 0
         val last = attacker.attr[RAMPAGE_STYLE]
         val idle = now - (attacker.attr[RAMPAGE_CYCLE] ?: Int.MIN_VALUE / 2) > RAMPAGE_RESET_TICKS
-        var count = if (idle) 0 else attacker.attr[RAMPAGE_COUNT] ?: 0
-        count = if (last != null && last != style && !idle) minOf(3, count + 1) else if (last == style) 0 else count
+        val before = if (idle) 0 else attacker.attr[RAMPAGE_COUNT] ?: 0
+        val changed = last != null && last != style && !idle
+        val count = if (changed) minOf(RAMPAGE_MAX, before + 1) else if (last == style) 0 else before
         if (count > (attacker.attr[RAMPAGE_COUNT] ?: 0)) SigilFx.rampage(attacker, count)
+        // OSRS lines (DMM video fgfVGXW2vwI 00:58-03:22, chat OCR run 4; that season's maximum was 5, ours is 3 per the wiki). The
+        // green line (frame colour ~006000) is cut off in the frame ("devastating b" / "your opponents."): "blows to" is read from the wrap.
+        if (changed) {
+            if (count == RAMPAGE_MAX && before < RAMPAGE_MAX) {
+                attacker.message("<col=006000>Your Sigil of Rampage is radiating with energy, making you deal devastating blows to your opponents.</col>")
+            }
+            attacker.message("Your Sigil of Rampage glows with power, making your attacks stronger. Your rampage count is: $count")
+        } else if (last == style && before > 0) {
+            attacker.message("Your Sigil of Rampage cools down as your attack style remains unchanged.")
+        }
         attacker.attr[RAMPAGE_STYLE] = style
         attacker.attr[RAMPAGE_COUNT] = count
         attacker.attr[RAMPAGE_CYCLE] = now
+        if (count > 0) coolDownWhenIdle(attacker, now)
         return count
+    }
+
+    private const val RAMPAGE_MAX = 3
+
+    /** "Your rampage count will reset after not attacking for 6 seconds" - with the OSRS line, at the moment it happens. */
+    private fun coolDownWhenIdle(
+        attacker: Player,
+        cycle: Int,
+    ) {
+        attacker.world.queue {
+            wait(RAMPAGE_RESET_TICKS + 1)
+            if (!attacker.isOnline || attacker.attr[RAMPAGE_CYCLE] != cycle || (attacker.attr[RAMPAGE_COUNT] ?: 0) == 0) return@queue
+            attacker.attr[RAMPAGE_COUNT] = 0
+            attacker.message("Your Sigil of Rampage cools down as you haven't attacked in a while.")
+        }
     }
 
     /** The combat spell of the attack that is being dealt now, if it is a spell. */

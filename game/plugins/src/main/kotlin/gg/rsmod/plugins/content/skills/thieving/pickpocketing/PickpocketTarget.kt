@@ -664,6 +664,53 @@ enum class PickpocketTarget(
         damage = 30..30,
         stunnedTicks = 8,
     ),
+    // PROJECT48 O02 (OSRS Wiki "Elf (Thieving)", run 4): the Lletya elves Arvel, Goreu, Kelyn and Mawrth - level 85, 353.3 xp, 2.4% at
+    // level 1 to 39.2% at 99 (Mod Ash), stun 6 s, 5 damage; loot DropsLineSkill (128ths) + crystal shard 1/35. Ysgawyn is left out:
+    // the wiki says he can no longer be pickpocketed.
+    Elf(
+        objectIds = listOf(Npcs.ARVEL, Npcs.GOREU, Npcs.KELYN, Npcs.MAWRTH),
+        level = 85,
+        minChance = 6,
+        maxChance = 100,
+        xp = 353.3,
+        drops =
+            DropTableFactory.build {
+                main {
+                    total(128)
+                    obj(Items.COINS_995, quantityRange = 280..350, slots = 105)
+                    obj(Items.DEATH_RUNE, quantity = 2, slots = 8)
+                    obj(Items.JUG_OF_WINE, slots = 6)
+                    obj(Items.NATURE_RUNE, quantity = 3, slots = 5)
+                    obj(Items.FIRE_ORB, slots = 2)
+                    obj(Items.DIAMOND, slots = 1)
+                    obj(Items.GOLD_ORE, slots = 1)
+                }
+                table("crystal_shard") {
+                    total(35)
+                    obj(Items.CRYSTAL_SHARD, slots = 1)
+                }
+            },
+        damage = 50..50,
+        stunnedTicks = 10,
+    ),
+    // PROJECT48 O02 (OSRS Wiki "'Black-eye'", "'Gummy'", "'No fingers'", run 4): the Tower of Life builders - level 1, 8 xp, always a
+    // triangle sandwich; success 180/255 at level 1 to 240/255 at 99 (wiki success chart, Jagex data). No stun/damage on the wiki:
+    // the ordinary man's values. The quest-only builder's boots ('No fingers') wait for Tower of Life itself.
+    TowerOfLifeBuilder(
+        objectIds = listOf(Npcs.BLACKEYE, Npcs.NO_FINGERS, Npcs.GUMMY),
+        level = 1,
+        minChance = 180,
+        maxChance = 240,
+        xp = 8.0,
+        drops =
+            DropTableFactory.build {
+                guaranteed {
+                    obj(Items.TRIANGLE_SANDWICH)
+                }
+            },
+        damage = 10..10,
+        stunnedTicks = 8,
+    ),
     DwarfTrader(
         objectIds =
             listOf(

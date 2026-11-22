@@ -254,6 +254,19 @@ val BULK_SHOPS = listOf(
     BulkShop("Bettamax's Shop", intArrayOf(13106), false, listOf(19967 to 100)),
 )
 
+/** Opens [title] for [player]; a quest-gated store (Aurel's Supplies, In Aid of the Myreque) refuses with its OSRS line instead. */
+fun openBulkShop(
+    player: gg.rsmod.game.model.entity.Player,
+    title: String,
+) {
+    val burgh = gg.rsmod.plugins.content.quests.foundation.bracket.BurghDeRottAmenities
+    if (title == "Aurel's Supplies" && !burgh.open(player)) {
+        burgh.refuseShop(player)
+        return
+    }
+    player.openShop(title)
+}
+
 /** Keepers of [shop] whose Trade/Shop/Buy option exists in the cache and has no handler yet, as (npc id, slot). */
 fun freeKeepers(world: gg.rsmod.game.model.World, shop: BulkShop): List<Pair<Int, Int>> =
     shop.npcs.toList().mapNotNull { id: Int ->
@@ -275,7 +288,7 @@ on_world_init_late {
             // every other keeper of the same shop (alternate ids, other towns) is bound to it here instead of
             // being left on a dead Trade option (root cause of e.g. Draynor seed seller 2233 doing nothing).
             val extra = freeKeepers(world, shop)
-            extra.forEach { (id, slot) -> world.plugins.bindNpc(id, slot) { player.openShop(shop.title) } }
+            extra.forEach { (id, slot) -> world.plugins.bindNpc(id, slot) { openBulkShop(player, shop.title) } }
             bound += extra.size
             if (extra.isEmpty()) skipped.add("${shop.title} (title exists)")
             return@forEach
@@ -302,7 +315,7 @@ on_world_init_late {
         created++
         keepers.forEach { (id, slot) ->
             world.plugins.bindNpc(id, slot) {
-                player.openShop(shop.title)
+                openBulkShop(player, shop.title)
             }
             bound++
         }

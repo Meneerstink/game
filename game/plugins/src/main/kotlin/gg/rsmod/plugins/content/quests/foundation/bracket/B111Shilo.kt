@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.quests.foundation.bracket
 
 import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.FacialExpression
@@ -24,8 +25,8 @@ import gg.rsmod.plugins.content.quests.red
 //    access to Shilo Village. ONTGR: the Brimhaven -> Shilo Village travel cart only runs for a player who finished it (travel_cart.plugin.kts).
 //    Not gated: the Shilo gem mine teleport of the Karamja gloves and the walking route; the Lady of the Waves charter does not exist.
 //  - One Small Favour: Rune Mysteries, Shilo Village, 36 Agility, 25 Crafting, 18 Herblore, 30 Smithing (boostable); Dwarf gang members
-//    (44/48/49) and Slagilith (92); 2 QP, two 10,000 XP lamps, the Steel key ring. Not built: Guthix rest tea, pot lids, the Feldip glider
-//    route. All tiles that are not a donor spawn are estimates (dossier BRACKET-QUESTS).
+//    (44/48/49) and Slagilith (92); 2 QP, two 10,000 XP lamps, the Steel key ring. Built run 4: the pot lid gate (FormPotteryAction),
+//    Guthix rest making (herb_tea.plugin.kts), the Feldip glider gate (gnome_glider). All tiles that are not a donor spawn are estimates (dossier BRACKET-QUESTS).
 
 private val MOSOL_POST = Tile(2883, 2951, 0)
 private val TRUFITUS_POST = Tile(2808, 3086, 0)
@@ -185,6 +186,15 @@ object OneSmallFavour : ShortQuest(
     startLocation = YANNI_POST,
 ) {
     override val ownSteps: Boolean get() = true
+
+    /** Wiki Unfired pot lid: "after partial completion of One Small Favour" - the airtight pot is Aggie's errand, so from the dwarf step (stage 4). */
+    fun potLidsTaught(player: Player): Boolean = stage(player) >= POT_LID_STAGE
+
+    /** Wiki Guthix rest: "Once Sanfew explains how players can make it ... they unlock the ability to ... make their own" - after his step (stage 6). */
+    fun guthixRestTaught(player: Player): Boolean = stage(player) >= GUTHIX_REST_STAGE
+
+    private const val POT_LID_STAGE = 4
+    private const val GUTHIX_REST_STAGE = 6
 
     override val needs =
         QuestRequirements(

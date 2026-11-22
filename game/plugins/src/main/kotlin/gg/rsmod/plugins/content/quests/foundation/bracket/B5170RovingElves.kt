@@ -91,7 +91,7 @@ object RovingElves : ShortQuest(
                 location = GLARIAL_TOMB,
                 gives = listOf(Items.CONSECRATION_SEED to 1),
                 tip = "Bring food: the tomb guardians hit hard.",
-                fight = QuestFight(Npcs.MOSS_GIANT_1681, "moss guardian", 84, GLARIAL_TOMB, "The tomb is mine!"),
+                fight = QuestFight(XNpcs.MOSS_GUARDIAN, "moss guardian", 84, GLARIAL_TOMB, "The tomb is mine!"),
                 talk = {
                     chatNpc("The tomb is guarded by a moss guardian.", facialExpression = FacialExpression.WORRIED)
                     true

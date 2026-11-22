@@ -258,12 +258,43 @@ object FairyRings {
             player.message("The fairy ring only works for those who wield fairy magic.")
             return
         }
+        questLock(player, code)?.let { quest ->
+            player.message("You need to complete $quest to travel there.")
+            return
+        }
         val destination = CODES[code]
         player.canTeleport(source.teleport) {
             player.teleport(destination?.tile ?: ZANARIS, source.teleport, exact = destination?.exact == true)
             record(player, code)
         }
     }
+
+    /**
+     * PROJECT48 ONTGR (OSRS Wiki "Fairy ring", code table): codes that need a quest - BJR "partial completion of Holy Grail" (from the
+     * Fisher Realm step), CIP The Fremennik Trials, CLR Monkey Madness I, DLS In Search of the Myreque. BLQ (Land of the Goblins) and BJS
+     * (Regicide, Zul-Andra: no destination here) have nothing to lock. Returns the quest still needed, or null. QuestStatus counts every
+     * quest done for accounts outside the brackets. The refusal line has no OSRS source (BUGLIJST question).
+     */
+    fun questLock(
+        player: Player,
+        code: String,
+    ): String? {
+        val status = gg.rsmod.plugins.content.quests.QuestStatus
+        val quest =
+            when (code) {
+                "bjr" -> "Holy Grail"
+                "cip" -> "The Fremennik Trials"
+                "clr" -> "Monkey Madness"
+                "dls" -> "In Search of the Myreque"
+                else -> return null
+            }
+        if (status.isCompleted(player, quest)) return null
+        if (code == "bjr" && gg.rsmod.plugins.content.quests.foundation.bracket.HolyGrail.stage(player) >= HOLY_GRAIL_FISHER_REALM) return null
+        return quest
+    }
+
+    /** Holy Grail stage 3 = the Black Knight Titan step in the Fisher Realm (B0350Quests). */
+    private const val HOLY_GRAIL_FISHER_REALM = 3
 
     /** The dialled code from the three dial varbits. */
     fun code(dials: IntArray): String = dials.mapIndexed { i, v -> DIAL_LETTERS[i][v and 3] }.joinToString("")

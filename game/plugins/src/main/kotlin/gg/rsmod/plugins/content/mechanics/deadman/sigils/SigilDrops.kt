@@ -5,6 +5,7 @@ import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.addXp
 import gg.rsmod.plugins.api.ext.filterableMessage
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.content.skills.prayer.burying.BoneData
 import gg.rsmod.plugins.content.skills.prayer.scattering.AshData
 
@@ -48,6 +49,34 @@ object SigilDrops {
             return Item(pool[player.world.random(pool.size - 1)].unattunedId)
         }
         return null
+    }
+
+    /**
+     * ONTBREKEND 25 (owner 22-11 'wel via skills'): "Sigils can be obtained ... training gathering skills" (OSRS Wiki Deadman:
+     * Armageddon). The wiki gives no rate; owner 22-11 chose 'as rare as the drop table': one roll per gathered resource (log, ore,
+     * fish, catch) at the kill chances (tier 1 = 1/600, tier 2 = 1/1200, tier 3 = 1/2000; Prosperity x1.2).
+     */
+    const val GATHER_FACTOR = 1.0
+
+    /** The sigil one gathered resource yields, or null (rarest tier first, at most one). */
+    fun gatherRoll(player: Player): Sigil? {
+        val factor = GATHER_FACTOR * (if (Sigils.effective(player, Sigil.PROSPERITY)) 1.2 else 1.0)
+        for (tier in 3 downTo 1) {
+            val chance = (GLOBAL_TABLE_CHANCE[tier] ?: 0.0) * factor
+            if (chance <= 0.0 || player.world.randomDouble() >= chance) continue
+            val pool = Sigil.values().filter { it.tier == tier }
+            return pool[player.world.random(pool.size - 1)]
+        }
+        return null
+    }
+
+    /** Rolls [gatherRoll] for one gathered resource; the sigil goes to the inventory, else the ground under the player. */
+    fun rollGathering(player: Player) {
+        val sigil = gatherRoll(player) ?: return
+        if (!player.inventory.add(sigil.unattunedId, 1).hasSucceeded()) {
+            player.world.spawn(gg.rsmod.game.model.entity.GroundItem(Item(sigil.unattunedId), player.tile, player))
+        }
+        player.message("<col=ef1020>You find a ${sigil.label}!</col>")
     }
 
     /**

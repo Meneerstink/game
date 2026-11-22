@@ -58,6 +58,12 @@ bankers.forEach {
  */
 listOf(Npcs.CORNELIUS, Npcs.CORNELIUS_3569).forEach { cornelius ->
     on_npc_option(cornelius, option = "talk-to", lineOfSightDistance = 2) {
+        val burgh = gg.rsmod.plugins.content.quests.foundation.bracket.BurghDeRottAmenities
+        // PROJECT48 ONTGR (In Aid of the Myreque): he only runs the bank once the player has repaired it.
+        if (!burgh.open(player)) {
+            player.queue { with(burgh) { refuseBank(cornelius) } }
+            return@on_npc_option
+        }
         player.queue { BankerDialogue.chat(this) }
     }
 }

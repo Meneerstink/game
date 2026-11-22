@@ -79,6 +79,12 @@ object FormPotteryAction {
             return false
         }
 
+        // Wiki Unfired pot lid: made "after partial completion of One Small Favour" (Tassie teaches it on the Aggie errand).
+        if (data.unfired == Items.UNFIRED_POT_LID && !gg.rsmod.plugins.content.quests.foundation.bracket.OneSmallFavour.potLidsTaught(player)) {
+            player.message("You need to progress further in One Small Favour before you can make a pot lid.")
+            return false
+        }
+
         if (player.skills.getCurrentLevel(Skills.CRAFTING) < data.levelRequired) {
             task.itemMessageBox(
                 "You need a Crafting level of ${data.levelRequired} to<br>make ${Misc.formatWithIndefiniteArticle(

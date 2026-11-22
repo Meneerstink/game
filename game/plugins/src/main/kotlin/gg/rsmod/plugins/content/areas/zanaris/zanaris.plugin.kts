@@ -88,5 +88,12 @@ on_npc_option(Npcs.IRKSOL, "trade") {
 }
 
 on_item_on_obj(Objs.CHICKEN_SHRINE, item = rawChicken) {
+    // ONTBREKEND 21 (OSRS Wiki "Evil Chicken's Lair"): "accessible during and after the Recipe for Disaster subquest Freeing Sir Amik
+    // Varze" = RFD part 8, open once part 7 (Awowogei) is done (QuestBrackets.rfdSubquests; non-bracket accounts are never gated).
+    val q = gg.rsmod.plugins.content.quests.foundation.QuestBrackets
+    if (q.applies(player) && q.rfdSubquests(player) < 7) {
+        player.message("Nothing interesting happens.")
+        return@on_item_on_obj
+    }
     dragonLairTeleport(player)
 }

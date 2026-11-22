@@ -121,6 +121,7 @@ object Hunter {
                 gg.rsmod.plugins.api.cfg.Items.RED_CHINCHOMPA -> gg.rsmod.plugins.content.skills.summoning.SkillingPets.chinchompa(player, red = true)
             }
             player.filterableMessage("You collect your catch: ${trap.creature.name}.")
+            gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops.rollGathering(player) // ONTBREKEND 25
         } else {
             player.filterableMessage("You pick up your trap.")
             player.inventory.add(trap.creature.trapItem, 1)

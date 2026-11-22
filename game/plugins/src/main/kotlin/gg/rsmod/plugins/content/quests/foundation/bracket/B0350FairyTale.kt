@@ -81,7 +81,7 @@ object FairyTaleI : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.FAIRY_4443,
+                npc = XNpcs.FAIRY_NUFF,
                 journal = listOf("I should speak to ${red("Fairy Nuff")} in Zanaris."),
                 done = listOf("Fairy Nuff says the queen needs Magic secateurs;", "Malignius Mortifer can make them."),
                 place = "Zanaris",
@@ -111,7 +111,7 @@ object FairyTaleI : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.FAIRY_4443,
+                npc = XNpcs.FAIRY_NUFF,
                 journal = listOf("I must defeat ${red("Tanglefoot")} (level 111) in his lair in Zanaris", "with the Magic secateurs."),
                 done = listOf("I cut down Tanglefoot with the Magic secateurs."),
                 place = "Zanaris",

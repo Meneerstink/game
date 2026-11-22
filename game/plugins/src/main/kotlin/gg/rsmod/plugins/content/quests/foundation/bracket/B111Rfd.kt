@@ -40,7 +40,9 @@ private val JUBBLY_FIGHT = Tile(2640, 2990, 0)
 private val AWOWOGEI_POST = Tile(2802, 2755, 0)
 private val SNAKE_FIGHT = Tile(2796, 2760, 0)
 private val AMIK_POST = Tile(2962, 3337, 2)
-private val DRAGON_FIGHT = Tile(2830, 9825, 0)
+// ONTBREKEND 21 (OSRS Wiki "Freeing Sir Amik Varze" + "Evil Chicken's Lair"): the egg comes from the Evil Chicken in the northern cave
+// of the Evil Chicken's Lair (Zanaris, raw chicken on the Chicken Shrine; this map has the lair at 1540-1575, 4355-4405).
+private val CHICKEN_FIGHT = Tile(1566, 4401, 0)
 private val GYPSY_POST = Tile(3206, 3214, 0)
 private val FINAL_FIGHT = Tile(3235, 3220, 0)
 
@@ -329,7 +331,7 @@ object RecipeForDisaster : ShortQuest(
             QuestStep(
                 npc = Npcs.SIR_AMIK_VARZE,
                 journal = listOf("I should speak to ${red("Sir Amik Varze")} in the White Knights' Castle."),
-                done = listOf("Sir Amik told me about the black dragon's egg."),
+                done = listOf("Sir Amik told me about the Evil Chicken's egg."),
                 place = "the White Knights' Castle, Falador",
                 location = AMIK_POST,
                 talk = {
@@ -346,21 +348,28 @@ object RecipeForDisaster : ShortQuest(
                     ) {
                         false
                     } else {
-                        chatNpc("A brulee supreme needs a black dragon's egg. Take", "one from the dragon's lair beneath Taverley.", facialExpression = FacialExpression.WORRIED)
+                        chatNpc(
+                            "A brulee supreme needs the Evil Chicken's egg. Its lair",
+                            "is in Zanaris: use a raw chicken on the Chicken Shrine.",
+                            facialExpression = FacialExpression.WORRIED,
+                        )
                         true
                     }
                 },
             ),
             QuestStep(
                 npc = Npcs.SIR_AMIK_VARZE,
-                journal = listOf("I must defeat the ${red("black dragon")} (level 227) beneath Taverley."),
+                journal = listOf(
+                    "I must defeat the ${red("Evil Chicken")} (level 159) in the northern cave of",
+                    "the Evil Chicken's Lair (raw chicken on the Chicken Shrine in Zanaris).",
+                ),
                 done = listOf("I freed Sir Amik Varze: the brulee supreme did it."),
-                place = "the black dragons beneath Taverley",
-                location = DRAGON_FIGHT,
-                tip = "Level 227 black dragon: bring an anti-dragon shield.",
-                fight = QuestFight(Npcs.BLACK_DRAGON, "Black dragon", 227, DRAGON_FIGHT, "RAAAWRRR!"),
+                place = "the Evil Chicken's Lair, Zanaris",
+                location = CHICKEN_FIGHT,
+                tip = "Four level 227 black dragons guard the lair: bring an anti-dragon shield. The chicken hits with Magic.",
+                fight = QuestFight(Npcs.EVIL_CHICKEN, "Evil Chicken", 159, CHICKEN_FIGHT, "MUAHAHAHAHAAA!"),
                 talk = {
-                    chatNpc("The black dragon waits beneath Taverley.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("The Evil Chicken waits in its lair in Zanaris.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -441,8 +450,8 @@ object RecipeForDisaster : ShortQuest(
 object B111Rfd {
     val NPCS: List<BracketNpc> =
         listOf(
-            BracketNpc(Npcs.ROHAK, null, Direction.SOUTH, listOf("A good rock cake needs patience.")),
-            BracketNpc(Npcs.GOBLIN_COOK, Tile(2955, 3510, 0), Direction.SOUTH, listOf("Mudknuckles cook best slop!")),
+            BracketNpc(Npcs.ROHAK, null, Direction.SOUTH, listOf("Hello there youngster.")),
+            BracketNpc(Npcs.GOBLIN_COOK, Tile(2955, 3510, 0), Direction.SOUTH, listOf("I thinking of calling it fast food, 'cos of how fast it goes from raw to burnt, see?")),
             BracketNpc(Npcs.RANTZ, Tile(2629, 2994, 0), Direction.SOUTH, listOf("Bwa! Rantz hungry.")),
             BracketNpc(Npcs.AWOWOGEI, Tile(2802, 2755, 0), Direction.SOUTH, listOf("Ook!")),
             BracketNpc(Npcs.GYPSY, Tile(3206, 3214, 0), Direction.SOUTH, listOf("I see great things in your future.")),

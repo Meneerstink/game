@@ -182,6 +182,7 @@ object Impling {
             }
             player.world.remove(npc)
             player.addXp(Skills.HUNTER, tier.xp, checkBrawlingGloves = true)
+            gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops.rollGathering(player) // ONTBREKEND 25
             if (hasJar) {
                 player.inventory.remove(Items.IMPLING_JAR, 1)
                 player.inventory.add(tier.jarItem, 1)

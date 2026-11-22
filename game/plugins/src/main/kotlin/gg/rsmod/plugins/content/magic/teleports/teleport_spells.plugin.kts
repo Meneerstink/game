@@ -27,9 +27,16 @@ fun Player.teleport(
     spell: TeleportSpell,
     data: SpellMetadata,
 ) {
-    if (spell == TeleportSpell.APE_ATOLL && !gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(this, "Monkey Madness")) {
-        message("You need to complete Monkey Madness to use this teleport.")
-        return
+    // ONTBREKEND 21 (OSRS Wiki "Ape Atoll Teleport (standard)"): unlocked by the Awowogei section of Recipe for Disaster (part 7;
+    // QuestBrackets.rfdSubquests counts bracket-given and played parts). Accounts outside the brackets keep the Monkey Madness gate.
+    if (spell == TeleportSpell.APE_ATOLL) {
+        val bracket = gg.rsmod.plugins.content.quests.foundation.QuestBrackets.applies(this)
+        val open = if (bracket) gg.rsmod.plugins.content.quests.foundation.QuestBrackets.rfdSubquests(this) >= AWOWOGEI_PART
+        else gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(this, "Monkey Madness")
+        if (!open) {
+            message(if (bracket) "You need to free King Awowogei in Recipe for Disaster to use this teleport." else "You need to complete Monkey Madness to use this teleport.")
+            return
+        }
     }
     // PROJECT48 ONTGR (Plague City): the Ardougne Teleport spell is unlocked by the quest (OSRS Wiki "Ardougne Teleport").
     if (spell == TeleportSpell.ARDOUGNE && !gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(this, "Plague City")) {
@@ -41,7 +48,10 @@ fun Player.teleport(
 }
 
 /** A random tile of the spell's area on its walkable ground (Landing: not inside scenery, not in a closed-off pocket). */
-fun Player.findValidTile(spell: TeleportSpell): Tile = gg.rsmod.game.model.collision.Landing.pick(world.collision, spell.endArea)
+fun Player.findValidTile(spell: TeleportSpell): Tile = gg.rsmod.game.model.collision.Landing.pick(world.collision, spell.endArea, spell.level)
+
+/** Recipe for Disaster part 7 = Freeing King Awowogei (B111Rfd). */
+val AWOWOGEI_PART = 7
 
 fun Player.teleport(
     type: TeleportType,

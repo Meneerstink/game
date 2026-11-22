@@ -156,9 +156,9 @@ object Sigils {
         // The cache item of the Sigil of Mobility has no "Attune" option at all, so an un-attuned sigil used on a bank attunes it.
         if (Sigil.ofUnattuned(item.id) != null) {
             when (attune(player, slot, atBank = true)) {
-                Result.OK -> player.message("The sigil hums as it attunes to you.")
+                Result.OK -> player.message("You feel a surge of power as you attune to the Sigil.")
                 Result.SKULLED -> player.message("You cannot attune a sigil while skulled.")
-                Result.FULL -> player.message("You can only have $MAX_ATTUNED sigils attuned at a time.")
+                Result.FULL -> player.message("You already have attuned to $MAX_ATTUNED Sigils. You must unattune one before attuning to more.")
                 Result.EXCLUSIVE -> player.message("This sigil cannot be used in conjunction with the sigil you already have attuned.")
                 Result.ALREADY -> player.message("You already have this sigil attuned.")
                 else -> player.message("Nothing interesting happens.")
@@ -167,7 +167,7 @@ object Sigils {
         }
         if (Sigil.ofAttuned(item.id) == null) return false
         when (unattune(player, slot, atBank = true)) {
-            Result.OK -> player.message("The sigil's attunement fades.")
+            Result.OK -> player.message("You unattune the Sigil. Its powers leave you for now.")
             Result.SKULLED -> player.message("You cannot unattune a sigil while skulled.")
             else -> player.message("Nothing interesting happens.")
         }

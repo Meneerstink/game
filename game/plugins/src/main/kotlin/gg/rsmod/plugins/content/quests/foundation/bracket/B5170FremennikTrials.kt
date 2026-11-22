@@ -102,11 +102,11 @@ object FremennikTrials : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.THORVALD_THE_WARRIOR,
-                journal = listOf("I must defeat ${red("Koschei the Deathless")} in all four of his forms (level 0)."),
+                journal = listOf("I must defeat ${red("Koschei the Deathless")} three times, each time stronger."),
                 done = listOf("I defeated Koschei the Deathless."),
                 place = "the cellar below the longhall",
                 location = KOSCHEI_ARENA,
-                tip = "Koschei has four forms, one after another.",
+                tip = "Koschei comes back stronger twice; beat his third form to pass.",
                 fight =
                     QuestFight(
                         Npcs.KOSCHEI_THE_DEATHLESS, "Koschei the Deathless", 0, KOSCHEI_ARENA, "You cannot kill me!",
@@ -114,7 +114,7 @@ object FremennikTrials : ShortQuest(
                             listOf(
                                 Npcs.KOSCHEI_THE_DEATHLESS_1291 to "I am still here!",
                                 Npcs.KOSCHEI_THE_DEATHLESS_1292 to "Fool - I cannot die!",
-                                Npcs.KOSCHEI_THE_DEATHLESS_1293 to "Now you face my final form!",
+                                // The fourth form (1293) only shows itself: QuestFights.FINALE (owner 22-11: passed after form 3).
                             ),
                     ),
                 talk = {

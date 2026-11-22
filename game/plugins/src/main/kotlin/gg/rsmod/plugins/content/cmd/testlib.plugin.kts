@@ -180,6 +180,19 @@ CommandServerCommands.handlers["sigilroll"] = { _, a ->
     }
 }
 
+// `sigilgather <name> [n=100000]` (ONTBREKEND 25): the same count for the gathering roll (SigilDrops.gatherRoll, every log/ore/fish/catch).
+CommandServerCommands.handlers["sigilgather"] = { _, a ->
+    val p = findPlayer(a)
+    val n = (a.getOrNull(1)?.toIntOrNull() ?: 100_000).coerceIn(1, 1_000_000)
+    if (p == null) {
+        "usage: sigilgather <name> [n]"
+    } else {
+        val tiers = IntArray(4)
+        repeat(n) { gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops.gatherRoll(p)?.let { tiers[it.tier]++ } }
+        "sigilgather x$n: " + (1..3).joinToString(" | ") { t -> "tier $t ${tiers[t]}x (1/${"%.1f".format(n.toDouble() / maxOf(1, tiers[t]))})" }
+    }
+}
+
 // `pcwin <name>` (PROJECT48 S61): ends the Pest Control game this player is in as a WIN with enough zeal, through the real
 // PestControlGame.end -> PestControlHandler.pay (points incl. the Sigil of Hoarding x3) - no need to kill 4 portals with a bot.
 CommandServerCommands.handlers["pcwin"] = { _, a ->

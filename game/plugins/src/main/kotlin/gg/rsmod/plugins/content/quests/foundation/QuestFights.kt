@@ -38,6 +38,16 @@ object QuestFights {
      */
     const val NEAR_STEPS = 36
 
+    /**
+     * O23 (owner 22-11 'na vorm 3 gehaald'): a last form that only shows itself once the step is passed, keyed by the foe whose
+     * kill passes it. OSRS Wiki, The Fremennik Trials: "You only need to defeat Koschei for the first 3 rounds" - his fourth form
+     * (255 Hitpoints, 255 Defence) still rises with its shout, then leaves; it never attacks and its kill counts for nothing.
+     */
+    private val FINALE = mapOf(gg.rsmod.plugins.api.cfg.Npcs.KOSCHEI_THE_DEATHLESS_1292 to (gg.rsmod.plugins.api.cfg.Npcs.KOSCHEI_THE_DEATHLESS_1293 to "Now you face my final form!"))
+
+    /** How long (ticks) a [FINALE] form stays before it leaves. */
+    private const val FINALE_TICKS = 6
+
     fun active(player: Player): Npc? = player.attr[ACTIVE_FOE]?.get()?.takeIf { it.isSpawned() && it.isAlive() }
 
     /** Spawns the foe of [quest]'s fight step [stage] for [player]; false when it cannot (wrong place or no fight). */
@@ -154,7 +164,29 @@ object QuestFights {
             }
         }
         killer.attr.remove(ACTIVE_FOE)
+        FINALE[npc.id]?.let { (last, shout) -> showFinale(killer, last, shout, npc.tile) }
         FoundationQuests.completeStep(killer, quest, stage)
+    }
+
+    /** Spawns a [FINALE] form for [player] alone; it shouts, stands and leaves after [FINALE_TICKS]. */
+    private fun showFinale(
+        player: Player,
+        id: Int,
+        shout: String,
+        near: Tile,
+    ) {
+        val world = player.world
+        val form = Npc(player, id, spawnTile(player, id, near), world)
+        form.respawnOverride = false
+        if (!world.spawn(form)) return
+        // Only shown: it can neither be attacked nor fight back (run 4 test: a clicked fourth Koschei swung back for its 6 ticks).
+        form.lock = gg.rsmod.game.model.LockState.FULL_WITH_DAMAGE_IMMUNITY
+        form.forceChat(shout)
+        form.facePawn(player)
+        world.queue {
+            wait(FINALE_TICKS)
+            if (form.isSpawned()) world.remove(form)
+        }
     }
 
     /**

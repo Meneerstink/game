@@ -55,6 +55,10 @@ on_command("p48", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
             val n = args.getOrNull(2)?.toIntOrNull() ?: return@on_command player.message("p48 step <slot> <n>")
             quest.setStage(player, n)
             QuestStatus.sync(player)
+            // A reset stops the helper timer (nothing in progress); a set step starts it again, as a real quest start does.
+            if (gg.rsmod.plugins.content.quests.foundation.QuestHelper.needsTimer(player)) {
+                gg.rsmod.plugins.content.quests.foundation.QuestHelper.start(player)
+            }
             player.message("p48 ${quest.name}: step set to $n (now ${quest.stage(player)}).")
         }
         "reset" -> {

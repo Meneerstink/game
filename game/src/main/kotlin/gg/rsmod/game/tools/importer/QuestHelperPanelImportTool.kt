@@ -22,6 +22,9 @@ object QuestHelperPanelImportTool {
     // cut off on one line (night run 2026-10-08, seen in the client).
     const val HEIGHT = 156
 
+    /** Top of the panel in the game view: 6 + 15 px of room for the mouse-over text. */
+    const val PANEL_Y = 21
+
     const val ROOT = 0
     const val PANEL = 1
     const val BG = 2
@@ -51,7 +54,9 @@ object QuestHelperPanelImportTool {
     fun components(fonts: LootKeyInterfaceImportTool.Fonts): List<Comp> {
         val b = Builder(fonts)
         b.add(Comp(ROOT, TYPE_LAYER, 0, 0, 0, 0, -1, resizeX = 1, resizeY = 1))
-        b.add(Comp(PANEL, TYPE_LAYER, 6, 6, WIDTH, HEIGHT, ROOT))
+        // PROJECT48 D10 QH-PANEEL-UPTEXT (run 4): below the mouse-over text, like RuneLite's top-left snap corner
+        // (SnapCorners: BORDER 5 + MOUSEOVERTEXT_OFFSET 15); at y 6 the "Talk-to Garth / 2 more options" text covered the title.
+        b.add(Comp(PANEL, TYPE_LAYER, 6, PANEL_Y, WIDTH, HEIGHT, ROOT))
         b.add(Comp(BG, TYPE_RECTANGLE, 0, 0, WIDTH, HEIGHT, PANEL, colour = 0x120405, filled = true, transparency = 60))
         b.add(Comp(OUTER, TYPE_RECTANGLE, 0, 0, WIDTH, HEIGHT, PANEL, colour = GOLD_DARK))
         b.add(Comp(INNER, TYPE_RECTANGLE, 1, 1, WIDTH - 2, HEIGHT - 2, PANEL, colour = BLOOD))

@@ -27,12 +27,12 @@ object B111Quests {
 
     val NPCS: List<BracketNpc> =
         B111Rfd.NPCS + listOf(
-            BracketNpc(Npcs.MURPHY, null, Direction.SOUTH, listOf("Fine sailing weather.")),
+            BracketNpc(Npcs.MURPHY, null, Direction.SOUTH, listOf("Well hello my brave adventurer.")),
             // PROJECT48 X4-X6: Making Friends with My Arm, The General's Shadow, His Faithful Servants.
-            BracketNpc(Npcs.BURNTMEAT, null, Direction.SOUTH, listOf("Goat stew again tonight.")),
+            BracketNpc(Npcs.BURNTMEAT, null, Direction.SOUTH, listOf("Hmm? What human do in troll kitchen?", "Burntmeat tired of cooking goats. Human look tasty.")),
             BracketNpc(Npcs.MY_ARM, null, Direction.SOUTH, listOf("My Arm is a happy troll.")),
             BracketNpc(Npcs.GENERAL_KHAZARD, Tile(2712, 3628, 0), Direction.SOUTH, listOf("Wooo... the Shadow Realm is cold.")),
-            BracketNpc(Npcs.SIN_SEER, Tile(2708, 3484, 0), Direction.SOUTH, listOf("I see your sins, traveller.")),
+            BracketNpc(Npcs.SIN_SEER, Tile(2708, 3484, 0), Direction.SOUTH, listOf("Augh! Your sins! They BLIND me!")),
             BracketNpc(Npcs.SCOUT, Tile(2826, 3066, 0), Direction.SOUTH, listOf("Wooo...")),
             BracketNpc(Npcs.SCOUT_5568, Tile(2461, 3374, 0), Direction.SOUTH, listOf("Wooo...")),
             BracketNpc(Npcs.SCOUT_5569, Tile(3072, 3344, 0), Direction.SOUTH, listOf("Wooo...")),
@@ -44,21 +44,21 @@ object B111Quests {
             BracketNpc(Npcs.HAZEEL, Tile(2607, 9673, 0), Direction.SOUTH, listOf("The north remembers its masters.")),
             BracketNpc(Npcs.CLAUS_THE_CHEF, Tile(2570, 9668, 0), Direction.SOUTH, listOf("Mind the pots, they are hot.")),
             BracketNpc(SotnNpcs.BIG_FISH, Tile(2868, 3938, 0), Direction.SOUTH, listOf("Blub.")),
-            BracketNpc(Npcs.TRAIBORN, null, Direction.SOUTH, listOf("Thurgo... no, wait.")),
-            BracketNpc(Npcs.DORIS, null, Direction.SOUTH, listOf("My son lives in the basement.")),
-            BracketNpc(Npcs.SIR_AMIK_VARZE, null, Direction.SOUTH, listOf("The White Knights are ever vigilant.")),
+            BracketNpc(Npcs.TRAIBORN, null, Direction.SOUTH, listOf("Ello young thingummywut.")),
+            BracketNpc(Npcs.DORIS, null, Direction.SOUTH, listOf("Hello again dearie. How are you doing?")),
+            BracketNpc(Npcs.SIR_AMIK_VARZE, null, Direction.SOUTH, listOf("Hello, friend!")),
             BracketNpc(Npcs.POISON_SALESMAN, null, Direction.SOUTH, listOf("Poisons for every occasion, friend.")),
             BracketNpc(Npcs.MOSOL_REI, null, Direction.SOUTH, listOf("Shilo Village is a sad place, bwana.")),
-            BracketNpc(Npcs.YANNI_SALIKA, null, Direction.SOUTH, listOf("Antiques from the jungle, bwana?")),
+            BracketNpc(Npcs.YANNI_SALIKA, null, Direction.SOUTH, listOf("Greetings Bwana! My name is Yanni and I buy and sell antiques.")),
             BracketNpc(Npcs.JUNGLE_FORESTER, null, Direction.SOUTH, listOf("The jungle is full of things that bite.")),
-            BracketNpc(Npcs.UNFERTH, Tile(2920, 3559, 0), Direction.SOUTH, listOf("Bob has not been the same.")),
+            BracketNpc(Npcs.UNFERTH, Tile(2920, 3559, 0), Direction.SOUTH, listOf("It's just not the same without Bob around.")),
             BracketNpc(Npcs.HILD, null, Direction.SOUTH, listOf("Burthorpe is a fine place to live.")),
             BracketNpc(Npcs.BOB_2635, Tile(2917, 3561, 0), Direction.SOUTH, listOf("Meow.")),
             BracketNpc(Npcs.APOTHECARY, null, Direction.SOUTH, listOf("I am the Apothecary. I brew potions.")),
-            BracketNpc(Npcs.MONK_803, Tile(3425, 3485, 0), Direction.SOUTH, listOf("Peace be with you.")),
+            BracketNpc(Npcs.MONK_803, Tile(3425, 3485, 0), Direction.SOUTH, listOf("Greetings traveller.")),
             BracketNpc(Npcs.HIGH_PRIEST, null, Direction.SOUTH, listOf("Welcome to the church of Entrana.")),
             BracketNpc(Npcs.SIR_TIFFY_CASHIEN, null, Direction.SOUTH, listOf("Good day. Falador's park is lovely.")),
-            BracketNpc(Npcs.TRUFITUS, null, Direction.SOUTH, listOf("The spirits of the jungle are restless.")),
+            BracketNpc(Npcs.TRUFITUS, null, Direction.SOUTH, listOf("My greatest respects Bwana, I have communed with my gods and the future", "looks good for my people.")),
         )
 }
 

@@ -94,7 +94,7 @@ object FairyTaleII : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.FAIRY_4444,
+                npc = XNpcs.FAIRY_VERY_WISE,
                 journal = listOf("I should speak to the ${red("Fairy Very Wise")} in the fairy resistance", "hideout about the queen's poison."),
                 done = listOf("The Fairy Very Wise needs a Gorak claw and a star flower."),
                 place = "the fairy hideout",
@@ -110,7 +110,7 @@ object FairyTaleII : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.FAIRY_4444,
+                npc = XNpcs.FAIRY_VERY_WISE,
                 journal = listOf("I must defeat ${red("Gorak")} (level 145) on the Gorak Plane and take", "his claw."),
                 done = listOf("I took a Gorak claw from Gorak."),
                 place = "the Gorak Plane",
@@ -137,7 +137,7 @@ object FairyTaleII : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.FAIRY_4444,
+                npc = XNpcs.FAIRY_VERY_WISE,
                 journal = listOf("I should bring the Gorak claw and the star flower to the", "${red("Fairy Very Wise")}."),
                 done = listOf("The Fairy Very Wise brewed the cure."),
                 place = "the fairy hideout",
@@ -155,7 +155,7 @@ object FairyTaleII : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.FAIRY_4446,
+                npc = XNpcs.FAIRY_QUEEN,
                 journal = listOf("I should give the cure to the ${red("Fairy Queen")}."),
                 done = listOf("The Fairy Queen woke - cured."),
                 place = "the fairy hideout",

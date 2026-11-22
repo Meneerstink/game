@@ -83,6 +83,10 @@ object OsrsNpcImportTool {
             // Stranger), ARAXYTE_NORMAL 11175, TOBQUEST_HESPORI 11192; Making Friends with My Arm: MY2ARM_MOTHER_BATTLE_MELEE 8428,
             // MY2ARM_DONTKNOWWHAT_BATTLE 8439. Basilisk, Vyrewatch, Ranis, Garth, the Barrows brothers, Bouncer and Khazard exist in 667.
             "p48x" to listOf(9282, 9287, 9296, 9291, 8262, 10875, 11175, 11192, 8428, 8439, 8244, 8207),
+            // PROJECT48 O03 Fairy Tale I/II + Roving Elves (OSRS Wiki infobox ids; none of them is in the 667 cache): Fairy Nuff 1841
+            // (Zanaris version), Fairy Queen 1842 (hideout version: same model, but 1161 has no movement sequences), Fairy Very Wise 1847,
+            // Moss Guardian 891 (Glarial's Tomb, level 84).
+            "p48-fairy" to listOf(1841, 1842, 1847, 891),
             // CLUE: individually pinned Wiki NPCs, verified against cache 2686
             // by ClueStepAssetProbe (docs/CLUE/cache/step-assets.json). Existing
             // Uri, hard agents and god wizards are reused, never duplicated.
@@ -229,6 +233,8 @@ object OsrsNpcImportTool {
                 // DEMON_ATTACK 64, DEMON_BLOCK 65, DEMON_DEATH 67; HUMAN_CASTING 811 and HUMAN_DEATH 836 (human form).
                 132, 129, 131, 5322, 5320, 5321, 812, 843, 424, 64, 65, 67, 811, 836),
             "mimic" to listOf(8308, 8309, 8310),
+            // PROJECT48 O03 Moss Guardian: RuneLite gameval AnimationID GIANT_UPDATE_MOSS_DEFEND 4657, _ATTACK 4658, _DEATH 4659.
+            "p48-fairy" to listOf(4657, 4658, 4659),
             // PROJECT48 Q41: RuneLite gameval AnimationID M_ASSASSIN_ATTACK 1413 (the assassin's bow-sword).
             "sotn" to listOf(1413),
             // PROJECT48 X1-X6 (RuneLite gameval AnimationID, next to each npc's own stand/walk set from the import plan):

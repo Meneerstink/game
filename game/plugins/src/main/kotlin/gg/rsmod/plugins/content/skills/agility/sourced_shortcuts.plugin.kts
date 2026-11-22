@@ -276,7 +276,10 @@ on_world_init {
     // 256 in the 667 cache); next tick tele(player.transform(0, y > obj.y ? -2 : 2)). Darkan's leave-the-falconry-area confirmation needs its falconry controller (not on this server).
     shortcut(19222, "Climb-over") {
         obstacle { target ->
-            val landing = player.darkanTransform(0, if (player.tile.z > target.tile.z) -2 else 2)
+            // The 667 stile covers 2371,3620-3621 (both unwalkable, fence between z 3620/3621): Darkan's +-2 put a player from the
+            // south inside it (bot 22-11 18:1x "cannot step in any direction"). Land on the tile just past the stile on the far side.
+            val fromNorth = player.tile.z > target.tile.z
+            val landing = Tile(target.tile.x, if (fromNorth) target.tile.z - 1 else target.tile.z + 2, player.tile.height)
             player.animate(1560)
             wait(1)
             player.moveTo(landing)
@@ -361,6 +364,9 @@ on_world_init {
     // Shilo / Jogre waterfall stepping stones 2333-2335 (667: 2925,2948-2950). Darkan Karamja.java:129-133 (handleJogreWaterfall
     // SteppingStones): level 30; forceMove(the clicked stone's tile, 741, 0, 30) from the route tile (was anim 769 with a 48/60
     // slide + wait). Void's messages, the adjacency check and 3 xp are kept.
+    // A stone is a walled-in tile: from it the engine route to the next stone failed ("I can't reach that!", bot 22-11 18:4x, the
+    // player stuck on 2925,2948). Adjacent = act (the handler keeps its own radius-1 check), as the Isafdar forests.
+    intArrayOf(2333, 2334, 2335).forEach { world.plugins.setObjApproachDistance(it, 1) }
     intArrayOf(2333, 2334, 2335).forEach { id ->
         shortcut(id, "Cross") {
             if (player.skills.getCurrentLevel(Skills.AGILITY) < 30) {

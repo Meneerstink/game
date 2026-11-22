@@ -502,6 +502,9 @@ object Combat {
         target: Pawn,
     ): Boolean {
         if (target.attr[gg.rsmod.plugins.content.mechanics.deadman.UndeadThralls.THRALL] == true) return false
+        // An npc locked with damage immunity (a burrowed Giant Mole, a shielded Pest Control portal, a quest boss's shown-only last form)
+        // cannot be engaged: only the Player branch below asked the lock, so a click still started a fight (run 4: Koschei's fourth form).
+        if (target is Npc && !target.lock.canBeAttacked()) return false
         if (pawn.isDead() || target.isDead() || pawn.invisible || target.invisible) {
             return false
         }

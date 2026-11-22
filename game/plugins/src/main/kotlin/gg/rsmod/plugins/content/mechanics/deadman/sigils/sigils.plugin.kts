@@ -32,10 +32,10 @@ fun sigilMessage(
     attuning: Boolean,
 ) {
     when (result) {
-        Sigils.Result.OK -> player.message(if (attuning) "The sigil hums as it attunes to you." else "The sigil's attunement fades.")
+        Sigils.Result.OK -> player.message(if (attuning) "You feel a surge of power as you attune to the Sigil." else "You unattune the Sigil. Its powers leave you for now.")
         Sigils.Result.NOT_AT_BANK -> player.message("You can only ${if (attuning) "attune" else "unattune"} a sigil at a bank.")
         Sigils.Result.SKULLED -> player.message("You cannot ${if (attuning) "attune" else "unattune"} a sigil while skulled.")
-        Sigils.Result.FULL -> player.message("You can only have ${Sigils.MAX_ATTUNED} sigils attuned at a time.")
+        Sigils.Result.FULL -> player.message("You already have attuned to ${Sigils.MAX_ATTUNED} Sigils. You must unattune one before attuning to more.")
         Sigils.Result.EXCLUSIVE -> player.message("This sigil cannot be used in conjunction with the sigil you already have attuned.")
         Sigils.Result.ALREADY -> player.message("You already have this sigil attuned.")
         else -> player.message("Nothing interesting happens.")
@@ -98,6 +98,9 @@ Sigil.values().forEach { sigil ->
 
 on_login { player.timers[SigilSkilling.LITHENESS_TIMER] = SigilSkilling.LITHENESS_TICKS }
 
+// An armed Formidable Fighter bonus is lost at death, with the OSRS line (SigilCombat.onDeath).
+on_player_death { SigilCombat.onDeath(player) }
+
 // SigilFx: the OSRS sounds "no longer active" (a window ran out) and "cooldown finished" of an activated sigil.
 SigilFx.WINDOW_TIMER.forEach { (sigil, key) -> on_timer(key) { if (Sigils.effective(player, sigil)) SigilFx.windowEnded(player, sigil) } }
 SigilFx.COOLDOWN_TIMER.forEach { (sigil, key) -> on_timer(key) { if (Sigils.effective(player, sigil)) SigilFx.cooldownFinished(player) } }
@@ -112,9 +115,36 @@ on_timer(SigilSkilling.LITHENESS_TIMER) { SigilSkilling.lithenessTick(player) }
  * S-K5 a: the starting sigil. A player who has not chosen one yet picks 1 of the 3 Tier 2 starting sigils a few ticks after login
  * (team test accounts and bots skip it so their scripts are not interrupted).
  */
+fun needsStart(player: gg.rsmod.game.model.entity.Player) =
+    player.attr[Sigils.START_CHOSEN] != true && !player.username.lowercase().startsWith("teamtest")
+
 on_login {
-    if (player.attr[Sigils.START_CHOSEN] == true || player.username.lowercase().startsWith("teamtest")) return@on_login
+    if (!needsStart(player)) return@on_login
+    // OSRS line (DMM Armageddon video x_-SE55x4E0 01:16, SIGIL-TEKST-BRON).
+    player.message("You are eligible to receive a free Sigil. Click the Sigils button on the Worn Items side panel to open the menu.")
     player.timers[Sigils.START_PROMPT_TIMER] = Sigils.START_PROMPT_FIRST_TICKS
+}
+
+/** The choice of the free starting sigil (the login prompt and the Worn Items Sigils button while none was chosen). */
+fun chooseStart(player: gg.rsmod.game.model.entity.Player) {
+    player.queue {
+        if (player.attr[Sigils.START_CHOSEN] == true) return@queue
+        val labels = Sigils.START_CHOICES.map { it.label.removePrefix("Sigil of ").removePrefix("the ").replaceFirstChar { c -> c.uppercase() } }
+        val choice = options(*labels.toTypedArray(), title = "Choose your starting sigil")
+        if (choice in 1..labels.size) {
+            val sigil = Sigils.START_CHOICES[choice - 1]
+            if (player.inventory.add(sigil.unattunedId, 1).hasSucceeded() || player.bank.add(sigil.unattunedId, 1).hasSucceeded()) {
+                player.attr[Sigils.START_CHOSEN] = true
+                // OSRS item box (DMM Armageddon video x_-SE55x4E0 01:36, SIGIL-TEKST-BRON).
+                itemMessageBox(
+                    "You have claimed your free sigil.<br>Click on it, in a safe area such as a bank, to attune<br>so you can receive its benefits.",
+                    sigil.unattunedId,
+                )
+            } else {
+                player.message("You have no room for your starting sigil. Make room and log in again to choose it.")
+            }
+        }
+    }
 }
 
 // The choice opens only at a quiet moment (Sigils.quietForStartChoice): never over the new-player introduction, in a fight, in a
@@ -125,20 +155,7 @@ on_timer(Sigils.START_PROMPT_TIMER) {
         player.timers[Sigils.START_PROMPT_TIMER] = Sigils.START_PROMPT_RETRY_TICKS
         return@on_timer
     }
-    player.queue {
-        if (player.attr[Sigils.START_CHOSEN] == true) return@queue
-        val labels = Sigils.START_CHOICES.map { it.label.removePrefix("Sigil of ").removePrefix("the ").replaceFirstChar { c -> c.uppercase() } }
-        val choice = options(*labels.toTypedArray(), title = "Choose your starting sigil")
-        if (choice in 1..labels.size) {
-            val sigil = Sigils.START_CHOICES[choice - 1]
-            if (player.inventory.add(sigil.unattunedId, 1).hasSucceeded() || player.bank.add(sigil.unattunedId, 1).hasSucceeded()) {
-                player.attr[Sigils.START_CHOSEN] = true
-                player.message("You receive the ${sigil.label}. Attune it at a bank (Attune).")
-            } else {
-                player.message("You have no room for your starting sigil. Make room and log in again to choose it.")
-            }
-        }
-    }
+    chooseStart(player)
 }
 
 on_command("sigils") {
@@ -147,7 +164,7 @@ on_command("sigils") {
 }
 
 // SIGIL-WORN-ICOON: the sigil slot of the Worn Items tab opens the Attuned Sigils window.
-on_button(interfaceId = SigilWornSlot.INTERFACE_ID, component = SigilWornSlot.ICON) { SigilWornSlot.click(player) }
+on_button(interfaceId = SigilWornSlot.INTERFACE_ID, component = SigilWornSlot.ICON) { if (needsStart(player)) chooseStart(player) else SigilWornSlot.click(player) }
 
 // SIGIL-INFO-UI: the "Attuned Sigils" window (owner design 21-11). Unattune per slot = the item option's rules (bank, no skull).
 on_button(interfaceId = AttunedSigilsUi.INTERFACE_ID, component = gg.rsmod.game.tools.importer.AttunedSigilsInterfaceImportTool.AS.CLOSE) {

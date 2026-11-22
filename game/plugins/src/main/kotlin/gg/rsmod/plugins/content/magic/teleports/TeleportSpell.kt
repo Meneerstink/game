@@ -9,6 +9,7 @@ enum class TeleportSpell(
     val endArea: Area,
     val xp: Double,
     val spriteId: Int? = null,
+    val level: Int = 0,
 ) {
     /**
      * Standard.
@@ -21,7 +22,9 @@ enum class TeleportSpell(
     ARDOUGNE("Ardougne Teleport", TeleportType.MODERN, Area(2659, 3300, 2665, 3310), 61.0),
     WATCHTOWER("Watchtower Teleport", TeleportType.MODERN, Area(2551, 3113, 2553, 3116), 68.0),
     TROLLHEIM("Trollheim Teleport", TeleportType.MODERN, Area(2888, 3675, 2890, 3678), 68.0),
-    APE_ATOLL("Teleport to Ape Atoll", TeleportType.MODERN, Area(2760, 2781, 2763, 2784), 74.0),
+    // ONTBREKEND 21 (OSRS Wiki "Ape Atoll Teleport (standard)"): "next to Hafuba in the safe upstairs section of the Temple of
+    // Marimbo", map 2798,2799 r=2 on the first floor (was the 2011 jungle spot 2760,2781).
+    APE_ATOLL("Teleport to Ape Atoll", TeleportType.MODERN, Area(2796, 2797, 2800, 2801), 74.0, level = 1),
 
     /**
      * Ancient Magicks (interface 193). Destinations from the 2009scape AncientTeleportPlugin, cross-checked

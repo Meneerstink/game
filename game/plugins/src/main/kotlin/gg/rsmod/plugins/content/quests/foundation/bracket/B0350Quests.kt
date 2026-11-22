@@ -27,28 +27,28 @@ object B0350Quests {
     /** Veronica and Professor Oddenstein stand in the world already (spawns_12340) but have no Talk-to plugin: only bound here. */
     val NPCS: List<BracketNpc> =
         listOf(
-            BracketNpc(Npcs.VERONICA, null, gg.rsmod.game.model.Direction.NORTH_WEST, listOf("I do hope Ernest is all right in there.")),
-            BracketNpc(Npcs.PROFESSOR_ODDENSTEIN, null, gg.rsmod.game.model.Direction.EAST, listOf("Be careful what you touch in here,", "young one. Some of it bites.")),
+            BracketNpc(Npcs.VERONICA, null, gg.rsmod.game.model.Direction.NORTH_WEST, listOf("Thank you for rescuing Ernest.")),
+            BracketNpc(Npcs.PROFESSOR_ODDENSTEIN, null, gg.rsmod.game.model.Direction.EAST, listOf("Be careful in here, there's lots of dangerous equipment.")),
             // Goblin Village (spawns_11830, no Talk-to plugin yet): the two generals.
-            BracketNpc(Npcs.GENERAL_BENTNOZE_4493, null, gg.rsmod.game.model.Direction.SOUTH, listOf("Grr. Humans. What do you want?")),
+            BracketNpc(Npcs.GENERAL_BENTNOZE_4493, null, gg.rsmod.game.model.Direction.SOUTH, listOf("Grr. Humans. What do you want?"), extra = { goblinGenerals() }),
             BracketNpc(Npcs.BARAEK, null, gg.rsmod.game.model.Direction.WEST, listOf("Furs! Fine furs! Best prices in Varrock!")),
             BracketNpc(Npcs.STRAVEN, null, gg.rsmod.game.model.Direction.NORTH, listOf("What do you want? I am busy.")),
-            BracketNpc(Npcs.SIR_GAWAIN, null, gg.rsmod.game.model.Direction.NORTH, listOf("Camelot stands, and the Round Table with it.")),
+            BracketNpc(Npcs.SIR_GAWAIN, null, gg.rsmod.game.model.Direction.NORTH, listOf("Good day to you!")),
             BracketNpc(
                 Npcs.THE_LADY_OF_THE_LAKE, null, gg.rsmod.game.model.Direction.NORTH, listOf("The lake keeps what it keeps."),
                 extra = { excaliburReclaim() },
             ),
-            BracketNpc(Npcs.GALAHAD, null, gg.rsmod.game.model.Direction.NORTH, listOf("A quiet life by the woods suits me.")),
+            BracketNpc(Npcs.GALAHAD, null, gg.rsmod.game.model.Direction.NORTH, listOf("Welcome to my home. It's rare for me to have guests!")),
             BracketNpc(Npcs.FILLIMAN_TARLOCK, gg.rsmod.game.model.Tile(3440, 3336, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("Wooo... woo... the swamp is cold.")),
             BracketNpc(Npcs.ALICES_HUSBAND, Tile(3625, 3523, 0), gg.rsmod.game.model.Direction.EAST, listOf("Woo... the chickens are restless today.")),
-            BracketNpc(Npcs.WITCH_5200, null, gg.rsmod.game.model.Direction.NORTH, listOf("Hee hee hee.")),
-            BracketNpc(Npcs.FAIRY_GODFATHER_11328, Tile(2449, 4430, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("The queen sleeps, and Zanaris waits.")),
-            BracketNpc(Npcs.FAIRY_4443, Tile(2445, 4430, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("Fairy Nuff at your service.")),
+            BracketNpc(Npcs.WITCH_5200, null, gg.rsmod.game.model.Direction.NORTH, listOf("Hello deary. Don't worry, I'm friendly.")),
+            BracketNpc(Npcs.FAIRY_GODFATHER_11328, Tile(2449, 4430, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("Yous just-a better keep-a your nose outa my business.", "I's da Godfather and I's da one who's inna charge here.")),
+            BracketNpc(XNpcs.FAIRY_NUFF, Tile(2445, 4430, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("Fairy Nuff at your service.")),
             BracketNpc(Npcs.MALIGNIUS_MORTIFER, null, gg.rsmod.game.model.Direction.NORTH, listOf("Enchantments are my trade.")),
-            BracketNpc(Npcs.FAIRY_4444, Tile(2451, 4424, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("Hush - the Fairy Queen needs rest.")),
-            BracketNpc(Npcs.FAIRY_4446, Tile(2447, 4429, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("Zanaris is quiet, thanks to you.")),
-            BracketNpc(Npcs.COSMIC_BEING, Tile(2162, 4833, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("The cosmos hums, mortal.")),
-            BracketNpc(Npcs.GENERAL_WARTFACE_4494, null, gg.rsmod.game.model.Direction.EAST, listOf("Bentnoze is wrong about everything. Everything!")),
+            BracketNpc(XNpcs.FAIRY_VERY_WISE, Tile(2451, 4424, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("Hush - the Fairy Queen needs rest.")),
+            BracketNpc(XNpcs.FAIRY_QUEEN, Tile(2447, 4429, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("Zanaris is quiet, thanks to you.")),
+            BracketNpc(Npcs.COSMIC_BEING, Tile(2162, 4833, 0), gg.rsmod.game.model.Direction.SOUTH, listOf("I hope the beauty of my world brings you great joy.")),
+            BracketNpc(Npcs.GENERAL_WARTFACE_4494, null, gg.rsmod.game.model.Direction.EAST, listOf("Bentnoze is wrong about everything. Everything!"), extra = { goblinGenerals() }),
         )
 }
 
@@ -497,6 +497,46 @@ private suspend fun QueueTask.excaliburReclaim(): Boolean {
     if (held) return false
     chatNpc("You have lost Excalibur? It is yours by right.", "Take it back, and guard it better.", facialExpression = FacialExpression.CALM_TALK)
     FoundationRewards.grant(player, Items.EXCALIBUR, 1)
+    return true
+}
+
+/**
+ * ONTBREKEND O05: the two generals' standard OSRS dialogue (wiki Transcript:General_Bentnoze, 'Standard dialogue', one at random;
+ * dialogue 1 needs Grubfoot and the Another Slice of H.A.M. ones need that quest - not built). Dialogue 5 only after Goblin Diplomacy.
+ */
+private suspend fun QueueTask.goblinGenerals(): Boolean {
+    val b = Npcs.GENERAL_BENTNOZE_4493
+    val w = Npcs.GENERAL_WARTFACE_4494
+    val angry = FacialExpression.ANGRY
+    val done = gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, "Goblin Diplomacy")
+    when (player.world.random(if (done) 3 else 2)) {
+        0 -> {
+            chatNpc("What we do now Wartface?", npc = b, facialExpression = FacialExpression.CALM_TALK)
+            chatNpc("Me dunno... maybe we change armour colour again.", npc = w, facialExpression = FacialExpression.CALM_TALK)
+            chatNpc("Human, what colour you think best?", npc = b, facialExpression = FacialExpression.CALM_TALK)
+            chatPlayer("What about brown?")
+            chatNpc("Yeah brown is nice.", npc = w)
+            chatNpc("Thanks human.", npc = b)
+        }
+        1 -> {
+            chatNpc("Our soldiers need better weapons. We give them all warhammers!", npc = b, facialExpression = angry)
+            chatNpc("No no give them battleaxes!", npc = w, facialExpression = angry)
+            chatNpc("Axes stupid! They things you cut wood with!", npc = b, facialExpression = angry)
+            chatNpc("But hammers things you put nails in wood with! At least axes sharp!", npc = w, facialExpression = angry)
+            chatNpc("You not need sharp when you have strong goblin swinging big lump of iron!", npc = b, facialExpression = angry)
+            chatPlayer("Do you want me to...")
+            chatNpc("Shut up human, we sort this one out ourselves!", npc = w, facialExpression = angry)
+        }
+        2 -> {
+            chatNpc("Me tell Mudknuckles make worm stew for dinner.", npc = w, facialExpression = FacialExpression.CALM_TALK)
+            chatNpc("Me not like worm stew! Tell him make beetle pie!", npc = b, facialExpression = angry)
+            chatNpc("Beetle pie give you wind! You smell bad enough already!", npc = w, facialExpression = angry)
+        }
+        else -> {
+            chatNpc("Now you've solved our argument, we gotta think of something else to do.", npc = w, facialExpression = FacialExpression.CALM_TALK)
+            chatNpc("Yep, we bored now.", npc = b, facialExpression = FacialExpression.CALM_TALK)
+        }
+    }
     return true
 }
 

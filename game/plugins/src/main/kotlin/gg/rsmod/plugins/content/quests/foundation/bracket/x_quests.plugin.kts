@@ -77,6 +77,15 @@ set_combat_def(npc = XNpcs.RANIS_DRAKAN) {
     anims { attack = XFoes.RANIS_CLAW; death = XFoes.RANIS_DEATH }
 }
 
+// PROJECT48 O03 Moss Guardian (Roving Elves, Glarial's Tomb; OSRS Wiki infobox 891): level 84, 120 hitpoints, attack / strength /
+// defence 60, attack bonus 66, strength bonus 62, no defence bonuses, attack speed 6, crush, aggressive.
+set_combat_def(npc = XNpcs.MOSS_GUARDIAN) {
+    configs { attackSpeed = 6; attackStyle = StyleType.CRUSH; respawnDelay = 0 }
+    stats { hitpoints = 1200; attack = 60; strength = 60; defence = 60; magic = 1; ranged = 1 }
+    bonuses { attackBonus = 66; strengthBonus = 62 }
+    anims { attack = XNpcs.MOSS_GUARDIAN_ATTACK; block = XNpcs.MOSS_GUARDIAN_DEFEND; death = XNpcs.MOSS_GUARDIAN_DEATH }
+}
+
 on_npc_combat(*XFoes.ids) {
     npc.queue { XFoes.handleSpecialCombat(this) }
 }

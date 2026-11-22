@@ -27,8 +27,8 @@ import gg.rsmod.plugins.content.quests.red
 //    Attack/Strength/Crafting/Defence XP, the Gadderhammer, the Rod of Ivandis.
 //  - Darkness of Hallowvale: 5 Construction, 20 Mining, 22 Thieving, 26 Agility, 32 Crafting, 33 Magic, 40 Strength; no kill (Vanstrom's
 //    five blows are a search step at the lookout); 2 QP, 7,000 Agility, 6,000 Thieving, 2,000 Construction XP, a Tome of experience.
-// ONTGR not built: the Hollows / fairy ring DLS, Burgh de Rott bank/shop/furnace, Meiyerditch shortcut doors and the Temple Trekking minigame
-// do not exist on this server (dossier BRACKET-QUESTS). Tiles: Void donor spawns; Vanstrom Klause (no donor tile) stands in the Hair of the Dog.
+// ONTGR built: fairy ring DLS needs In Search of the Myreque (FairyRings.questLock); Burgh de Rott bank + store open after the Gadderanks
+// step (BurghDeRottAmenities). Not built: the furnace (not on this map), Meiyerditch shortcut doors, Temple Trekking (dossier BRACKET-QUESTS). Tiles: Void donor spawns; Vanstrom Klause (no donor tile) stands in the Hair of the Dog.
 
 private val VANSTROM_POST = Tile(3496, 3492, 0)
 private val CYREG_POST = Tile(3522, 3284, 0)
@@ -435,4 +435,30 @@ object DarknessOfHallowvale : ShortQuest(
                 },
             ),
         )
+}
+
+/**
+ * PROJECT48 ONTGR (In Aid of the Myreque): Burgh de Rott's general store and bank only work once the player has repaired them in the
+ * quest. Here the repairs are not separate steps; Razvan's step says "The shop, the bank and the furnace will work again once Gadderanks is
+ * gone", so they open from the step after the Gadderanks fight (stage 4) or once the quest counts as finished (every non-bracket account).
+ * The refusals are the OSRS lines (Transcript:In Aid of the Myreque): Aurel "I'm sorry my friend, but I cannot open a store which has no
+ * stock.", Cornelius "I'm Cornelius. I don't really do anything here.". The OSRS furnace (3527,3209) is not on this map (findloc, run 4).
+ */
+object BurghDeRottAmenities {
+    private const val AFTER_GADDERANKS = 4
+
+    fun open(player: gg.rsmod.game.model.entity.Player): Boolean =
+        InAidOfTheMyreque.isFinished(player) || InAidOfTheMyreque.stage(player) >= AFTER_GADDERANKS
+
+    /** Aurel's Trade before the store is stocked. */
+    fun refuseShop(player: gg.rsmod.game.model.entity.Player) {
+        player.queue {
+            chatNpc("I'm sorry my friend, but I cannot open a store which has no", "stock.", npc = Npcs.AUREL, facialExpression = FacialExpression.CALM_TALK)
+        }
+    }
+
+    /** Cornelius before he runs the bank. */
+    suspend fun QueueTask.refuseBank(npc: Int) {
+        chatNpc("I'm Cornelius. I don't really do anything here.", npc = npc, facialExpression = FacialExpression.CALM_TALK)
+    }
 }

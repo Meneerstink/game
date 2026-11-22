@@ -380,6 +380,26 @@ enum class CookingData(
         lowChance = 255,
         highChance = 255,
     ),
+    // Wiki Cup of hot water / Bowl of hot water: a cup (bowl) of water heated on a range or fire, no level, no experience, never fails.
+    // The cup of hot water is the base of Guthix rest (herb_tea.plugin.kts, One Small Favour).
+    CUP_OF_HOT_WATER(
+        raw = Items.CUP_OF_WATER,
+        cooked = Items.CUP_OF_HOT_WATER,
+        burnt = Items.CUP_OF_WATER,
+        levelRequirement = 1,
+        experience = 0.0,
+        lowChance = 255,
+        highChance = 255,
+    ),
+    BOWL_OF_HOT_WATER(
+        raw = Items.BOWL_OF_WATER,
+        cooked = Items.BOWL_OF_HOT_WATER,
+        burnt = Items.BOWL_OF_WATER,
+        levelRequirement = 1,
+        experience = 0.0,
+        lowChance = 255,
+        highChance = 255,
+    ),
 
     BAKED_POTATO(
         raw = Items.POTATO,
