@@ -384,13 +384,13 @@ on_magic_spell_button("Superglass Make") { metadata ->
     }
 }
 
-/** Log -> plank with the 2011 sawmill fee reduced by 30% (Plank Make): 70, 122, 245, 735 coins. */
+/** Log -> plank for 70% of the sawmill fee (OSRS Wiki 'Plank Make' cost table: 70, 175, 350, 1050 coins; sawmill 100/250/500/1500). */
 private val PLANK_MAKE =
     mapOf(
         Items.LOGS to (Items.PLANK to 70),
-        Items.OAK_LOGS to (Items.OAK_PLANK to 122),
-        Items.TEAK_LOGS to (Items.TEAK_PLANK to 245),
-        Items.MAHOGANY_LOGS to (Items.MAHOGANY_PLANK to 735),
+        Items.OAK_LOGS to (Items.OAK_PLANK to 175),
+        Items.TEAK_LOGS to (Items.TEAK_PLANK to 350),
+        Items.MAHOGANY_LOGS to (Items.MAHOGANY_PLANK to 1050),
     )
 
 on_magic_spell_button("Plank Make") { metadata ->

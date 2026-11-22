@@ -8,7 +8,7 @@ package gg.rsmod.plugins.content.npcs
  *    we do not have, so no answer).
  *  - Stray dog "Shoo-away" (wiki "Stray dog": player "Thbbbbt!", dog "Whine!" and runs away). The OSRS "Pet" option is not on
  *    these 667 dog ids (5917/5918 only have Shoo-away), so it is not wired.
- * Plague cow "Pet": the wiki gives no text or effect for it, so it is left unwired (BUGLIJST question).
+ * Plague cow "Pet" (O22): "Transcript:Plague cow" - the player says one of two lines at random, no effect.
  */
 
 on_npc_option(Npcs.DOUG_DEEPING, "Steal-from") {
@@ -64,5 +64,17 @@ listOf(Npcs.STRAY_DOG_5917, Npcs.STRAY_DOG_5918).forEach { dog ->
                 line.second.forEach { npc.movementQueue.addStep(it, gg.rsmod.game.model.MovementQueue.StepType.FORCED_RUN, true) }
             }
         }
+    }
+}
+
+val PLAGUE_COW_PET_LINES =
+    listOf(
+        "Awww, look at the poor sick cow. We'd never make a burger out of you.",
+        "Don't worry cow, I'm sure somebody will find a cure for this plague soon.",
+    )
+
+listOf(Npcs.PLAGUE_COW, Npcs.PLAGUE_COW_1999, Npcs.PLAGUE_COW_2000).forEach { cow ->
+    on_npc_option(cow, "Pet") {
+        player.queue { chatPlayer(PLAGUE_COW_PET_LINES.random()) }
     }
 }

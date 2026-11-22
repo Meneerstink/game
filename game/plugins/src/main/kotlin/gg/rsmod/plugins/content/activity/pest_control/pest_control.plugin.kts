@@ -118,7 +118,8 @@ on_obj_option(obj = PC_TOWER_LADDER, option = "climb") { PestControlBarricades.c
 
 // ---- rewards ----------------------------------------------------------------------------------------------------------
 
-for (knight in intArrayOf(Npcs.VOID_KNIGHT_3786, Npcs.VOID_KNIGHT_3788, Npcs.VOID_KNIGHT_3789)) {
+// O22 run 4: 5956 stands on the outpost too (spawns_10537) with the same Exchange option - it was the only one left dead.
+for (knight in intArrayOf(Npcs.VOID_KNIGHT_3786, Npcs.VOID_KNIGHT_3788, Npcs.VOID_KNIGHT_3789, Npcs.VOID_KNIGHT_5956)) {
     on_npc_option(npc = knight, option = "exchange") { PestControlRewards.open(player) }
 }
 
