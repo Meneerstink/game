@@ -102,6 +102,23 @@ CommandServerCommands.handlers["npchp"] = { w, a ->
     }
 }
 
+// `npcdel <x> <z> <radius>` (PROJECT48 run 3, 22-11): removes every npc within the radius - leftover aggressive npcs from an
+// earlier bot measurement ('I'm already under attack!') spoiled the next one. Only on the test server.
+CommandServerCommands.handlers["npcdel"] = { w, a ->
+    val x = a.getOrNull(0)?.toIntOrNull()
+    val z = a.getOrNull(1)?.toIntOrNull()
+    val r = a.getOrNull(2)?.toIntOrNull() ?: 8
+    if (!gg.rsmod.util.io.SharedDataFiles.testServer()) {
+        "npcdel: only on the test server"
+    } else if (x == null || z == null) {
+        "usage: npcdel <x> <z> [radius]"
+    } else {
+        val gone = w.npcs.entries.filterNotNull().filter { Math.abs(it.tile.x - x) <= r && Math.abs(it.tile.z - z) <= r }
+        gone.forEach { w.remove(it) }
+        "npcdel: removed ${gone.size} npc(s) ${gone.joinToString(" ") { "${it.id}#${it.index}" }}"
+    }
+}
+
 CommandServerCommands.handlers["testevents"] = { _, a ->
     val p = findPlayer(a)
     if (p == null) {

@@ -100,7 +100,7 @@ set_combat_def(id) {
         poisonDamage = 6
     }
     species {
-        NpcSpecies.UNDEAD
+        +NpcSpecies.UNDEAD
     }
     stats {
         hitpoints = 1430

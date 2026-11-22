@@ -28,6 +28,8 @@ on_item_option(DmmItems.ESCAPE_CRYSTAL, "configure") {
 }
 
 /* Salve amulet (i)/(ei) 'Uncharge' (cache option; the OSRS Wiki lists it but not its effect): the imbue is permanent here. */
+// Nothing is undone, so no shared "Are you sure" question first (ITEM-UNCHARGE-MELDING: after "Yes" the message never showed).
+gg.rsmod.plugins.content.items.ItemActionGuard.selfConfirming("uncharge", 25485, 25486)
 for (salve in intArrayOf(25485, 25486)) on_item_option(salve, "uncharge") { player.message("This amulet is permanently imbued; there is nothing to uncharge.") }
 
 /* Ring of wealth (i) 'Features': OSRS opens the boss kill log + coin collection, which this server does not have. */

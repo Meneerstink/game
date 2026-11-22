@@ -55,6 +55,8 @@ RevenantCaveRevenants.REVS.forEach { rev ->
             block = rev.defend
             death = rev.death
         }
+        // Revenants are undead (OSRS Wiki): Salve amulet, Trinket of undead, Opal bolts (e) life leech (SALVE-ONDOOD 22-11).
+        species { +NpcSpecies.UNDEAD }
         // N522 fix 3: Slayer xp per revenant (OSRS Wiki infobox slayxp, fetched 2026-11-05; 0 XP before).
         slayer { experience = REVENANT_SLAYER_XP.getValue(rev.id) }
     }

@@ -99,7 +99,7 @@ set_combat_def(id) {
         respawnDelay = 30
     }
     species {
-        NpcSpecies.UNDEAD
+        +NpcSpecies.UNDEAD
     }
     stats {
         hitpoints = 100
