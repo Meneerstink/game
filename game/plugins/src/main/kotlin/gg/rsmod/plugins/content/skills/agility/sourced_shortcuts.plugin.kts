@@ -375,11 +375,19 @@ on_world_init {
             }
             obstacle { target ->
                 if (player.tile == target.tile || !player.tile.isWithinRadius(target.tile, 1)) return@obstacle
+                val fromNorth = player.tile.z > target.tile.z
                 player.filterableMessage("You attempt to balance on the stepping stone.")
                 player.playSound(SOUND_JUMP)
                 darkanForceMove(player, Tile(target.tile), startCycles = 0, speedCycles = 30, anim = ANIM_STEPPING_STONE_JUMP)
                 player.filterableMessage("You manage to make the jump.")
                 player.addXp(Skills.AGILITY, 3.0)
+                // Both end stones are walled in toward their bank: on 2335 (2925,2948) coming from the north and on 2333
+                // (2925,2950) coming from the south the player could not walk off (bot 22-11 18:3x + 19:0x, walk to 2945 / 2953
+                // stayed put). Step on to the bank tile (2925,2947 / 2925,2951), the tile the crossing starts from the other way.
+                val bankStep = if (id == 2335 && fromNorth) -1 else if (id == 2333 && !fromNorth) 1 else 0
+                if (bankStep != 0) {
+                    darkanForceMove(player, Tile(target.tile.x, target.tile.z + bankStep, target.tile.height), startCycles = 0, speedCycles = 30, anim = ANIM_STEPPING_STONE_JUMP)
+                }
             }
         }
     }

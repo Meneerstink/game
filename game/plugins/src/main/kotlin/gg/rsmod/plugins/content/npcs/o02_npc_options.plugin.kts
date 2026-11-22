@@ -35,29 +35,33 @@ listOf(Npcs.STRAY_DOG_5917, Npcs.STRAY_DOG_5918).forEach { dog ->
         val npc = player.getInteractingNpc()
         player.forceChat("Thbbbbt!")
         npc.forceChat("Whine!")
-        // Run up to 4 tiles away from the player: the free straight line that points most away from him (a blind diagonal
-        // stopped after one tile against the Varrock houses, bot 22-11 18:0x).
+        // Run up to 4 tiles straight away from the player: only directions that do not point toward him (dot >= 0), the longest
+        // free line first, the most "away" one on a tie. The steps are queued one by one along that line: walkTo planned a route
+        // through the player's own tile and the npc entity-block refused it (bot 22-11 19:07, breachtrace step.refused), and a
+        // longer line that pointed back at him used to win over a short one pointing away.
         val ax = npc.tile.x - player.tile.x
         val az = npc.tile.z - player.tile.z
-        val run =
+        val line =
             Direction.ANGLED_ORDER
-                .sortedByDescending { it.getDeltaX() * ax + it.getDeltaZ() * az }
+                .filter { it.getDeltaX() * ax + it.getDeltaZ() * az >= 0 }
                 .map { dir ->
-                    var steps = 0
+                    val tiles = mutableListOf<Tile>()
                     var t = npc.tile
-                    while (steps < 4 && world.collision.canStep(t, dir)) {
+                    while (tiles.size < 4 && world.collision.canStep(t, dir) && !t.step(dir).sameAs(player.tile)) {
                         t = t.step(dir)
-                        steps++
+                        tiles += t
                     }
-                    t to steps
-                }.firstOrNull { it.second >= 2 }
-        if (run != null) {
-            // Next tick, in the dog's own queue: the interaction that fired this option holds and turns the npc this tick.
-            npc.queue {
+                    Triple(dir, tiles, dir.getDeltaX() * ax + dir.getDeltaZ() * az)
+                }.filter { it.second.isNotEmpty() }
+                .maxWithOrNull(compareBy<Triple<Direction, MutableList<Tile>, Int>>({ minOf(it.second.size, 2) }, { it.third }))
+        if (line != null) {
+            // Next tick, in the world queue: the interaction that fired this option stops and turns the npc this tick (the dog's own
+            // queue never ran the block, bot 22-11 18:2x p170).
+            world.queue {
                 wait(1)
                 npc.resetFacePawn()
-                npc.walkMask = npc.def.walkMask
-                npc.walkTo(run.first, gg.rsmod.game.model.MovementQueue.StepType.FORCED_RUN)
+                npc.movementQueue.clear()
+                line.second.forEach { npc.movementQueue.addStep(it, gg.rsmod.game.model.MovementQueue.StepType.FORCED_RUN, true) }
             }
         }
     }
