@@ -9,6 +9,9 @@ import gg.rsmod.plugins.content.magic.teleport
 
 val COMBAT_BRACELET =
     intArrayOf(
+        // O26 PROJECT48: (6)/(5) from the Fountain of Rune (OSRS imports).
+        gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.COMBAT_6,
+        gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.COMBAT_5,
         Items.COMBAT_BRACELET_4,
         Items.COMBAT_BRACELET_3,
         Items.COMBAT_BRACELET_2,
@@ -103,6 +106,8 @@ fun Player.teleport(
  */
 fun replacement(original: Int): Int {
     return when (original) {
+        gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.COMBAT_6 -> gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.COMBAT_5
+        gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.COMBAT_5 -> Items.COMBAT_BRACELET_4
         in Items.COMBAT_BRACELET_4..Items.COMBAT_BRACELET_2 -> original + 2
         else -> -1
     }
@@ -116,6 +121,8 @@ fun replacement(original: Int): Int {
  */
 fun message(original: Int): String {
     return when (original) {
+        gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.COMBAT_6 -> "Your combat bracelet has five charges left."
+        gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.COMBAT_5 -> "Your combat bracelet has four charges left."
         Items.COMBAT_BRACELET_4 -> "Your combat bracelet has three charges left."
         Items.COMBAT_BRACELET_3 -> "Your combat bracelet has two charges left."
         Items.COMBAT_BRACELET_2 -> "Your combat bracelet has one charge left."

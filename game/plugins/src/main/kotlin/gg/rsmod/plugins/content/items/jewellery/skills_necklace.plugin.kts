@@ -17,6 +17,9 @@ private val LOCATIONS =
 
 val SKILLS_NECKLACE =
     intArrayOf(
+        // O26 PROJECT48: (6)/(5) from the Fountain of Rune (OSRS imports).
+        gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.SKILLS_6,
+        gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.SKILLS_5,
         Items.SKILLS_NECKLACE_4,
         Items.SKILLS_NECKLACE_3,
         Items.SKILLS_NECKLACE_2,
@@ -102,7 +105,11 @@ fun Player.teleport(
  * @return The replacement item ID, or -1 if the original item is out of charges.
  */
 fun replacement(original: Int): Int {
-    return original + 2
+    return when (original) {
+        gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.SKILLS_6 -> gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.SKILLS_5
+        gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.SKILLS_5 -> Items.SKILLS_NECKLACE_4
+        else -> original + 2
+    }
 }
 
 /**
@@ -113,6 +120,8 @@ fun replacement(original: Int): Int {
  */
 fun message(original: Int): String {
     return when (original) {
+        gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.SKILLS_6 -> "Your skills necklace has five charges left."
+        gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.SKILLS_5 -> "Your skills necklace has four charges left."
         Items.SKILLS_NECKLACE_4 -> "Your skills necklace has three charges left."
         Items.SKILLS_NECKLACE_3 -> "Your skills necklace has two charges left."
         Items.SKILLS_NECKLACE_2 -> "Your skills necklace has one charge left."

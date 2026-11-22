@@ -37,7 +37,9 @@ object DmmItems {
     const val WILDERNESS_SWORD_4 = 25483
 
     /** Wilderness sword 3 + 4 (wiki): teleport to the Fountain of Rune; sword 4 without limit, sword 3 once per (real-world) day. */
-    private val FOUNTAIN_OF_RUNE = Tile(3375, 3894, 0)
+    // O26 PROJECT48 23-11: the fountain (3x3 from 3373,3892, FountainOfRune) is solid now; 3375,3894 was inside it. South of its middle,
+    // within the wiki's effect area; the exact OSRS landing tile has no source.
+    private val FOUNTAIN_OF_RUNE = Tile(3374, 3891, 0)
     private val SWORD_DAY = AttributeKey<Int>(persistenceKey = "wild_sword_day")
 
     fun wildernessSwordTeleport(

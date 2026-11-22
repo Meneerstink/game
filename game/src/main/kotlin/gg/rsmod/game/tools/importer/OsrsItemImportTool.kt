@@ -1040,6 +1040,13 @@ object OsrsItemImportTool {
             // OSRS item (RuneLite gameval AMULET_OF_GLORY6 11978) and glory(5) 11976, the charge it becomes after one teleport (OSRS
             // 6 -> 5 -> 4), both with noted forms; no wield requirement upstream, no client params.
             "glory6" to listOf(Spec(11978, noted = true), Spec(11976, noted = true)),
+            // O26 PROJECT48 23-11: the Fountain of Rune charges dragonstone jewellery to 6 (ring of wealth 5) - wiki 'Fountain of Rune',
+            // 'Skills necklace', 'Combat bracelet', 'Ring of wealth'. None of these charges exist in the 667 cache: OSRS gameval
+            // AMULET_OF_GLORY_TRIMMED6/5 11964/11966, SKILLS_NECKLACE6/5 11968/11970, COMBAT_BRACELET6/5 11972/11974, RING_OF_WEALTH5 11980.
+            "fountain-of-rune-jewellery" to listOf(
+                Spec(11964, noted = true), Spec(11966, noted = true), Spec(11968, noted = true), Spec(11970, noted = true),
+                Spec(11972, noted = true), Spec(11974, noted = true), Spec(11980, noted = true),
+            ),
             "owner0929" to
                 listOf(
                     Spec(11936, noted = true), // Dark crab

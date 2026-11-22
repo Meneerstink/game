@@ -7,8 +7,9 @@ import gg.rsmod.plugins.content.skills.agility.doorStep
  */
 
 // Define an array of jewelry IDs that can be recharged
+// O26 PROJECT48 23-11: no ring of wealth - OSRS Wiki 'Ring of wealth': it 'can only be charged at the Fountain of Rune'.
 val GloryOrROW =
-    intArrayOf(1704, 1706, 1708, 1710, 1712, 10354, 10356, 10358, 10360, 10362, 2572, 20653, 20655, 20657, 20659)
+    intArrayOf(1704, 1706, 1708, 1710, 1712, 10354, 10356, 10358, 10360, 10362)
 
 // Iterate over each jewelry ID
 for (jewelryId in GloryOrROW) {
@@ -59,7 +60,6 @@ fun getChargedId(itemId: Int): Int {
     return when (itemId) {
         in intArrayOf(1704, 1706, 1708, 1710) -> 1712
         in intArrayOf(10356, 10358, 10360, 10362) -> 10354
-        in intArrayOf(2572, 20653, 20655, 20657) -> 20659
         else -> -1
     }
 }

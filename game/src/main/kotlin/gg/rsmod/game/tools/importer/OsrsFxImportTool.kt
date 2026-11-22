@@ -271,6 +271,8 @@ object OsrsFxImportTool {
      */
     val SEQ_BATCHES: Map<String, List<Int>> =
         mapOf(
+            // O26 PROJECT48 23-11: the gushing energy above the Fountain of Rune (OSRS loc 26783 anim 7141); before OsrsLocImportTool fountain-of-rune.
+            "fountain-of-rune-seq" to listOf(7141),
             // PROJECT48 SIGILS: the player halves - gameval AnimationID DMM_LAST_RECALL_TELEPORT_DISAPPEAR 9147 / _REAPPEAR 9149 and
             // HUMAN_SPELLCAST_DMM_NOHELD 10655 (the spotanim halves 9148 / 9150 / FX_SPELLCAST_DMM 9151.. come with the spotanims).
             "sigil-fx" to listOf(9147, 9149, 10655),
@@ -508,6 +510,8 @@ object OsrsFxImportTool {
             "toa-ambient-synth" to listOf(1992,2041,2043,2044,2045,2046,2048,2065,2077,2150,2158,2169,2184,2185,3050,3051,3052,3053,3054,3055,3083,3109,3139,4037,4039,4123,4976,4979,6270,6273,6274,6275,6276,6278,6279,6280,6281,6283,6284,6285,6286,6287,6288,6289,6290,6291,6292,6293,6294,6295,6296,6297,6298,6299,6301,6302,6303,6305,6306,6307,6308,6309,6310,6311,6312,6313,6314,6315,6317,6319,6320,6321,6322,6323,6324,6325,6326,6327,6328,6329,6331,6332,6333,6334,6335,6336,6337,6338,6339,6341,6342,6343,6344,6345,6346,6347,6348,6349,6350,6351,6352,6353,6354,6355,6356,6357,6358,6360,6361,6362,6363,6364,6366,6367,6368,6370,6371,6372,6373,6374,6375,6376,6377,6378,6379,6380,6381,6382,6383,6384,6385,6386,6387,6388,6389,6390,6391,6392,6393,6395,6396,6397,6398,6399,6400,6401,6402,6403,6404),
             // N643 PROJECT48 22-11: the loc ambient sounds of the other region imports (CoX, Necropolis, wildy lairs/caves, ToB area ...) - LocAmbientSoundTool plan MISSING_IDS.
             "region-ambient-synth" to listOf(1993,1995,2052,2066,2124,2147,2152,2168,2171,2172,2179,2180,2183,2209,3048,3049,3061,3073,3078,3080,3081,3087,3088,3093,3095,3288,3711,3712,3713,3714,3827,3828,3829,3830,3831,4038,4040,4041,4042,4066,4069,4072,4074,4077,4079,4086,4090,4091,4093,4098,4110,4117,4124,4125,4126),
+            // O25 PROJECT48 23-11: the one missing synth of the last two region imports (clue-mimic-arena, dmm2-poh-wilderness).
+            "region-ambient-synth-2" to listOf(3424),
             "breachsfx" to
                 listOf(
                     400, 404, 403, // demon_attack / demon_hit / demon_death (Porazdir, ADAPTED family)

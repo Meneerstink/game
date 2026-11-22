@@ -25,6 +25,9 @@ object OsrsLocImportTool {
     val BATCHES: Map<String, List<Int>> =
         mapOf(
             // DMM2: three OSRS Armageddon rug pieces (cache 2686); no custom POH assets.
+            // O26 PROJECT48 23-11: Fountain of Rune (OSRS cache 2499 square 13372: multiloc 26782 -> 31941 desktop at 3373,3892,0 rot 0, 3x3,
+            // plus the gushing energy 26783 (anim 7141) on plane 1 of the same tile). Not on the rev-667 map; the server places both.
+            "fountain-of-rune" to listOf(31941, 26783),
             "dmm2-locs" to listOf(54114, 54115, 54116),
             // Cache2686/gameval: Loot! cycling and chosen-weapon objects. Import seq10426 first; no guessed player animation.
             "dmm2-advanced-loot" to listOf(49564, 49565),

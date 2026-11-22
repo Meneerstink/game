@@ -9,6 +9,8 @@ import gg.rsmod.plugins.content.magic.teleport
 
 val RING_OF_WEALTH =
     intArrayOf(
+        // O26 PROJECT48: (5) from the Fountain of Rune (OSRS import), the only place a ring of wealth is charged.
+        gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.WEALTH_5,
         Items.RING_OF_WEALTH_4,
         Items.RING_OF_WEALTH_3,
         Items.RING_OF_WEALTH_2,
@@ -97,6 +99,7 @@ fun replacement(original: Int): Int {
     if (original == Items.RING_OF_WEALTH_1) {
         return Items.RING_OF_WEALTH
     }
+    if (original == gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.WEALTH_5) return Items.RING_OF_WEALTH_4
     return original - 2
 }
 
@@ -108,6 +111,7 @@ fun replacement(original: Int): Int {
  */
 fun message(original: Int): String {
     return when (original) {
+        gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.WEALTH_5 -> "Your ring of wealth has four charges left."
         Items.RING_OF_WEALTH_4 -> "Your ring of wealth has three charges left."
         Items.RING_OF_WEALTH_3 -> "Your ring of wealth has two charges left."
         Items.RING_OF_WEALTH_2 -> "Your ring of wealth has one charge left."

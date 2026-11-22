@@ -136,6 +136,8 @@ object Mining {
                     Items.AMULET_OF_GLORY_T2,
                     Items.AMULET_OF_GLORY_T3,
                     Items.AMULET_OF_GLORY_T4,
+                    gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.GLORY_T6,
+                    gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.GLORY_T5,
                     Items.AMULET_OF_GLORY_T_10719,
                     Items.AMULET_OF_GLORY_8283,
                 )
