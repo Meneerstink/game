@@ -303680,6 +303680,7 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+    skill_reqs: [{'skill': 1, 'level': 40}, {'skill': 4, 'level': 70}]
 - id: 25498
   name: "Hueycoatl hide body"
   examine: "Made from real Huey hide!"

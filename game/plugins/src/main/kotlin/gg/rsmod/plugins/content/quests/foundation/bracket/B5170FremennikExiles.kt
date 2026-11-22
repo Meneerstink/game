@@ -32,7 +32,7 @@ import gg.rsmod.plugins.content.quests.red
 
 private val BRUNDT_POST = Tile(2658, 3667, 0)
 private val FREYGERD_POST = Tile(2667, 3701, 0)
-private val SAND_PIT = Tile(2668, 3706, 0)
+private val SAND_PIT = Tile(2662, 3705, 0) // west side of the sand pit, free 3x3 (clipmap 22-11): 2668,3706 had a wall north, the youngling landed outside the fence
 private val RELLEKKA_ANVIL = Tile(2615, 3669, 0)
 private val MARKET = Tile(2644, 3677, 0) // south-west corner of a free 3x3 (clipmap 22-11): the monstrous basilisk is size 3
 private val TYPHOR_SHORE = Tile(2867, 3931, 0) // free 3x3

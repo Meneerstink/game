@@ -594,6 +594,24 @@ gg.rsmod.game.CommandServerCommands.handlers["opspellitem"] = { w, a ->
         if (p.gameSystem.inject(msg)) "cast $inter:$comp on $id (slot $slot) for ${p.username}" else "no handler"
     }
 }
+// `opspellnpc <name> <spell interface> <spell component> <npc id>` (PROJECT48 22-11): cast a spell on the nearest npc with that id through
+// the real OpNpcT route (OpNpcTHandler -> executeSpellOnNpc), e.g. Bind = 192 36, Wind Strike = 192 25.
+gg.rsmod.game.CommandServerCommands.handlers["opspellnpc"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
+    val inter = a.getOrNull(1)?.toIntOrNull()
+    val comp = a.getOrNull(2)?.toIntOrNull()
+    val id = a.getOrNull(3)?.toIntOrNull()
+    var npc: gg.rsmod.game.model.entity.Npc? = null
+    if (p != null && id != null) {
+        w.npcs.forEach { n -> if (n.id == id && n.tile.height == p.tile.height && (npc == null || n.tile.getDistance(p.tile) < npc!!.tile.getDistance(p.tile))) npc = n }
+    }
+    val target = npc
+    if (p == null || inter == null || comp == null || target == null) "usage: opspellnpc <name> <spell interface> <spell component> <npc id on his plane>"
+    else {
+        val msg = gg.rsmod.game.message.impl.OpNpcTMessage(target.index, (inter shl 16) or comp, -1, 0)
+        if (p.gameSystem.inject(msg)) "cast $inter:$comp on npc $id#${target.index} for ${p.username}" else "no handler"
+    }
+}
 gg.rsmod.game.CommandServerCommands.handlers["opnpcitem"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
     val slot = a.getOrNull(1)?.toIntOrNull()

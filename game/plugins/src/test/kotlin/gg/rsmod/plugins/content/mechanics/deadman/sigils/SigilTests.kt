@@ -423,4 +423,41 @@ class SigilTests {
         }
         assertEquals("Every attack does +1 damage to the target.", SigilTexts.of(Sigil.CONSISTENCY))
     }
+
+    @Test
+    fun `Prosperity raises every Deadman-table chance by 20 percent - a roll between 1-2000 and 1_2-2000 is a tier 3 sigil only with it`() {
+        // 0.00055: above the tier 3 chance 1/2000 (0.0005) but under 1.2/2000 (0.0006); under the tier 2 chance 1/1200 (0.00083).
+        fun rolled(withSigil: Boolean): Item? {
+            val player = newPlayer()
+            if (withSigil) attune(player, Sigil.PROSPERITY)
+            val world = mockk<gg.rsmod.game.model.World>(relaxed = true)
+            every { player.world } returns world
+            every { world.randomDouble() } returns 0.00055
+            every { world.random(any<Int>()) } returns 0
+            return SigilDrops.rollGlobalTable(player, 117)
+        }
+        assertEquals(2, rolled(false)?.let { Sigil.ofUnattuned(it.id)?.tier }, "without Prosperity the roll misses tier 3 and lands on tier 2")
+        assertEquals(3, rolled(true)?.let { Sigil.ofUnattuned(it.id)?.tier }, "with Prosperity the same roll is a tier 3 sigil")
+    }
+
+    @Test
+    fun `Agile Fortune gives 10,000 coins on a lucky lap and nothing without the sigil or on an unlucky roll`() {
+        fun coins(withSigil: Boolean, roll: Int): Int {
+            val player = mockk<Player>(relaxed = true)
+            every { player.attr } returns AttributeMap()
+            every { player.inventory } returns ItemContainer(mockk<DefinitionSet>(relaxed = true), 28, ContainerStackType.STACK)
+            val bank = ItemContainer(mockk<DefinitionSet>(relaxed = true), 800, ContainerStackType.STACK)
+            every { player.bank } returns bank
+            if (withSigil) attune(player, Sigil.AGILE_FORTUNE)
+            player.inventory[0] = null
+            val world = mockk<gg.rsmod.game.model.World>(relaxed = true)
+            every { player.world } returns world
+            every { world.random(2) } returns roll
+            SigilSkilling.agileFortune(player)
+            return player.inventory.getItemCount(gg.rsmod.plugins.api.cfg.Items.COINS_995) + bank.getItemCount(gg.rsmod.plugins.api.cfg.Items.COINS_995)
+        }
+        assertEquals(10_000, coins(withSigil = true, roll = 0), "a lucky lap with the sigil")
+        assertEquals(0, coins(withSigil = true, roll = 1), "an unlucky lap (2 in 3)")
+        assertEquals(0, coins(withSigil = false, roll = 0), "no sigil, no coins")
+    }
 }
