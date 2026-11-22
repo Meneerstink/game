@@ -67,7 +67,7 @@ object QuestHelperPanel {
             if (quest.startPlace == "the Grand Exchange hall") return null
             return Triple(quest.startPlace, tile, quest.startNpc)
         }
-        val step = quest.steps.getOrNull(stage - 1) ?: return null
+        val step = quest.helperStep(player, stage) ?: return null
         val place = step.place ?: return null
         val tile = step.location ?: return null
         if (place == "the Grand Exchange hall") return null
@@ -145,8 +145,10 @@ object QuestHelperPanel {
             line(player, "enemy", i + 1, names)
         }
         quest.reward.lines.forEach { line(player, "reward", 0, it) }
-        quest.steps.forEachIndexed { i, step ->
+        quest.steps.forEachIndexed { i, listed ->
             val n = i + 1
+            // O29: the open step as the player needs it now (a route step can depend on what he carries).
+            val step = if (n == stage) quest.helperStep(player, n) ?: listed else listed
             line(player, "step", n, step.journal.joinToString(" "))
             step.place?.let { line(player, "place", n, it) }
             val where = step.fight?.tile ?: step.location

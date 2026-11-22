@@ -32,6 +32,16 @@ on_command("p48", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
         gg.rsmod.plugins.content.npcs.definitions.barrows.Barrows.loot(player)
         return@on_command player.message("p48: barrows chest looted.")
     }
+    if (sub == "qhcheck") {
+        // O29: every quest the Quest Helper knows has a step for each stage before completion (stages 1 .. completedValue-1).
+        // Played short quests only reach stages 1..steps.size (completeStep); the old 667 quests (RouteQuest) write every raw value.
+        val gaps = gg.rsmod.plugins.content.quests.foundation.FoundationQuests.HELPERS.filterIsInstance<gg.rsmod.plugins.content.quests.foundation.RouteQuest>()
+            .filter { q -> (1 until q.completedValue).any { q.helperStep(player, it) == null } }
+        return@on_command player.message(
+            "p48 qhcheck: ${gg.rsmod.plugins.content.quests.foundation.FoundationQuests.HELPERS.size} quests, gaps=" +
+                gaps.joinToString(", ") { q -> q.name + " " + (1 until q.completedValue).filter { q.helperStep(player, it) == null } }.ifEmpty { "none" }.take(400),
+        )
+    }
     if (sub == "list") {
         return@on_command player.message("p48 quests: " + BracketQuests.ALL.joinToString(", ") { "${it.slot}=${it.name}" }.take(480))
     }

@@ -138,6 +138,13 @@ abstract class ShortQuest(
     abstract val steps: List<QuestStep>
 
     /**
+     * PROJECT48 O29: the step the Quest Helper shows for [stage] (arrow, panel, map icon). Normally the stage's own step; a
+     * [RouteQuest] (the old 2011Scape quests) can pick it from what the player has done inside one stage (Cook's Assistant: egg,
+     * flour, milk). Quest logic (talk, fights, searches) keeps using [steps].
+     */
+    open fun helperStep(player: Player, stage: Int): QuestStep? = steps.getOrNull(stage - 1)
+
+    /**
      * PROJECT48 F2: what a player needs to PLAY this quest (skills, quests, quest points). Checked by [FoundationQuests] before the
      * start conversation; the combat bracket unlocks the quest without any of it. The old short quests keep [QuestRequirements.NONE].
      */

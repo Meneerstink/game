@@ -225,7 +225,7 @@ object QuestHelper {
             npcId = quest.startNpc
             place = quest.startLocation
         } else {
-            val step = quest.steps.getOrNull(stage - 1) ?: return
+            val step = quest.helperStep(player, stage) ?: return
             lines = step.journal.map { it.replace(Regex("<[^>]+>"), "") }
             npcId = step.npc
             place = step.location ?: step.search?.tile
@@ -234,12 +234,13 @@ object QuestHelper {
                 place = fight.tile
             }
         }
-        val stepKey = "${quest.slot}:$stage"
+        // O29: a route step can change inside one stage (Cook's Assistant: egg, flour, milk), so the text is part of the key.
+        val stepKey = "${quest.slot}:$stage:${lines.hashCode()}"
         if (player.attr[LAST_STEP] != stepKey) {
             player.attr[LAST_STEP] = stepKey
             if (setting(player, "showStepMessages")) player.message("<col=0b6fb8>Quest Helper (${quest.name}):</col> ${lines.joinToString(" ")}")
         }
-        val step = quest.steps.getOrNull(stage - 1)
+        val step = quest.helperStep(player, stage)
         val foe = QuestFights.active(player)
         val found = foe ?: nearestNpc(player, npcId)
         // Owner 2026-10-07 ("quest helper stays stuck"): an npc on another floor (the hall's first floor) is reached by the
@@ -265,7 +266,7 @@ object QuestHelper {
         sendDialogueHints(player, quest, stage)
         val floorName = goal?.let { g -> FLOORS.getOrElse(g.height) { "level ${g.height}" } }
         // No way: the npc who offers the travel (on any floor near here), and the way to that npc.
-        val guide = if (otherFloor && climb == null) (if (stage <= 0) quest.startNpc else quest.steps.getOrNull(stage - 1)?.npc)?.let { nearestNpc(player, it) } else null
+        val guide = if (otherFloor && climb == null) (if (stage <= 0) quest.startNpc else quest.helperStep(player, stage)?.npc)?.let { nearestNpc(player, it) } else null
         val guideClimb = guide?.takeIf { it.tile.height != player.tile.height }?.let { climbLoc(player, up = it.tile.height > player.tile.height, goal = it.tile) }
         // The step's own npc is the one to reach (a talk step): "Ask Sir Lancelot (first floor) to take you there" sent the player
         // to the very npc he could not reach (quests run 2026-10-10, King's Ransom after the Knight Waves).
@@ -512,7 +513,7 @@ object QuestHelper {
 
     /** Who offers the quest travel for this stage: the step's npc (a fight step's npc sends the player in). */
     private fun travelNpcName(player: Player, quest: ShortQuest, stage: Int): String {
-        val id = if (stage <= 0) quest.startNpc else quest.steps.getOrNull(stage - 1)?.npc ?: return "the quest's contact"
+        val id = if (stage <= 0) quest.startNpc else quest.helperStep(player, stage)?.npc ?: return "the quest's contact"
         return FoundationQuests.NPC_NAMES[id] ?: player.world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, id)?.name ?: "the quest's contact"
     }
 
