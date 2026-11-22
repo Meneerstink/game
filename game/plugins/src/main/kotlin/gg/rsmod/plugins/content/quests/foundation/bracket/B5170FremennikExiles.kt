@@ -186,7 +186,7 @@ object FremennikExiles : ShortQuest(
                 done = listOf("The basilisks were driven out of the market. Their king waits on the", "shore to the north."),
                 place = "the market of Rellekka",
                 location = MARKET,
-                tip = "The monstrous basilisk hits up to 11. Two basilisks (level 61) follow it.",
+                tip = "Wear a mirror shield: the basilisks' gaze drains your stats. The monstrous basilisk hits up to 11, two basilisks (level 61) follow.",
                 fight =
                     QuestFight(
                         XNpcs.MONSTROUS_BASILISK, "Monstrous Basilisk", 135, MARKET, "",
@@ -194,7 +194,7 @@ object FremennikExiles : ShortQuest(
                         chainAtTile = true,
                     ),
                 talk = {
-                    chatNpc("To the market! Hold up V's shield and fight!", facialExpression = FacialExpression.TOUGH)
+                    chatNpc("To the market! Hold up V's shield - or a mirror shield -", "against their gaze and fight!", facialExpression = FacialExpression.TOUGH)
                     true
                 },
             ),
