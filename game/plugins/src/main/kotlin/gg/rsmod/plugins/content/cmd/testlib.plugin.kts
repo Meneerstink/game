@@ -161,6 +161,25 @@ CommandServerCommands.handlers["droproll"] = { _, a ->
     }
 }
 
+// `sigilroll <name> [n=100000]` (PROJECT48 S26): rolls the Deadman-only sigil table (SigilDrops.rollGlobalTable, what every kill
+// rolls) n times for that player and counts per tier - with and without the Sigil of Prosperity (x1.2) in seconds instead of 600 kills.
+CommandServerCommands.handlers["sigilroll"] = { _, a ->
+    val p = findPlayer(a)
+    val n = (a.getOrNull(1)?.toIntOrNull() ?: 100_000).coerceIn(1, 1_000_000)
+    if (p == null) {
+        "usage: sigilroll <name> [n]"
+    } else {
+        val tiers = IntArray(4)
+        repeat(n) {
+            gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops.rollGlobalTable(p, 0)?.let { item ->
+                val s = gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.values().firstOrNull { it.unattunedId == item.id }
+                if (s != null) tiers[s.tier]++
+            }
+        }
+        "sigilroll x$n: " + (1..3).joinToString(" | ") { t -> "tier $t ${tiers[t]}x (1/${"%.1f".format(n.toDouble() / maxOf(1, tiers[t]))})" }
+    }
+}
+
 // `dropview <name> <source key>` (N620): opens the Drop Viewer straight on one source (key = '<name lowercase>|<level>', spaces as _,
 // e.g. nechryael|115) - a screenshot of one table without clicking through the list.
 CommandServerCommands.handlers["dropview"] = { _, a ->
