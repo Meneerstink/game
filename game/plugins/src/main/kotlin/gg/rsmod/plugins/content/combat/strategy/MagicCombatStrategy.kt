@@ -47,8 +47,6 @@ object MagicCombatStrategy : CombatStrategy {
     const val SMOKE_POISON_CHANCE = 8
 
     /** Undead npc names Crumble Undead may be cast on (2011 wiki: skeletons, zombies, ghosts, shades and their variants). */
-    private val UNDEAD_NAMES = listOf("skeleton", "zombie", "ghost", "shade", "ghast", "revenant", "mummy", "zogre", "banshee", "ankou", "crawling hand", "aberrant spectre", "undead", "skeletal", "spectre", "wight", "zombified")
-
     override fun getAttackRange(pawn: Pawn): Int =
         if (pawn is Player && gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.isSalamander(pawn.getEquipment(EquipmentType.WEAPON)?.id)) {
             1
@@ -190,11 +188,7 @@ object MagicCombatStrategy : CombatStrategy {
         return false
     }
 
-    fun isUndead(target: Pawn): Boolean {
-        if (target !is Npc) return false
-        val name = target.def.name.lowercase()
-        return UNDEAD_NAMES.any { name.contains(it) }
-    }
+    fun isUndead(target: Pawn): Boolean = gg.rsmod.plugins.content.combat.formula.TargetModifiers.isUndead(target)
 
     fun convertToRotation(value: Int): Int {
         return when (value) {

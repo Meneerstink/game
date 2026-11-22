@@ -42,6 +42,27 @@ class TargetModifiersTests {
     }
 
     @Test
+    fun `isUndead follows the OSRS Wiki undead list by name for npcs without a species block`() {
+        assertTrue(TargetModifiers.isUndead(namedNpc("Skeleton")))
+        assertTrue(TargetModifiers.isUndead(namedNpc("Zombie")))
+        assertTrue(TargetModifiers.isUndead(namedNpc("Vet'ion")))
+        assertTrue(TargetModifiers.isUndead(namedNpc("Ankou")))
+        // Wiki 'Undead (attribute)': wights (Barrows brothers), ghouls, ghasts and skeletal wyverns are NOT undead.
+        assertFalse(TargetModifiers.isUndead(namedNpc("Ghoul")))
+        assertFalse(TargetModifiers.isUndead(namedNpc("Ghast")))
+        assertFalse(TargetModifiers.isUndead(namedNpc("Skeletal Wyvern")))
+        assertFalse(TargetModifiers.isUndead(namedNpc("Dharok the Wretched")))
+    }
+
+    private fun namedNpc(name: String): Npc {
+        val npc = newNpc()
+        val def = mockk<gg.rsmod.game.fs.def.NpcDef>(relaxed = true)
+        every { def.name } returns name
+        every { npc.def } returns def
+        return npc
+    }
+
+    @Test
     fun `isUndead is false for a player target`() {
         val player = newPlayer()
         assertFalse(TargetModifiers.isUndead(player))

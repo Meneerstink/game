@@ -71,8 +71,8 @@ ids.forEach {
             respawnDelay = 30
         }
         species {
-            NpcSpecies.BASIC_DRAGON
-            NpcSpecies.FIERY
+            +NpcSpecies.BASIC_DRAGON
+            +NpcSpecies.FIERY
         }
         stats {
             hitpoints = 1400

@@ -130,8 +130,8 @@ set_combat_def(npc = KBD) {
         respawnDelay = 16
     }
     species {
-        NpcSpecies.BASIC_DRAGON
-        NpcSpecies.FIERY
+        +NpcSpecies.BASIC_DRAGON
+        +NpcSpecies.FIERY
     }
     stats {
         hitpoints = 2400

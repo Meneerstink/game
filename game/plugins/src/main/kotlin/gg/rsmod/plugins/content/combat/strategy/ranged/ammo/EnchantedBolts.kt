@@ -133,7 +133,7 @@ object EnchantedBolts {
             Effect.DOWN_TO_EARTH -> target is Player
             Effect.EARTHS_FURY -> target is Npc
             Effect.SEA_CURSE -> !(target is Player && target.hasEquipped(EquipmentType.WEAPON, *WATER_STAVES))
-            Effect.LIFE_LEECH -> !(target is Npc && target.isSpecies(NpcSpecies.UNDEAD))
+            Effect.LIFE_LEECH -> !gg.rsmod.plugins.content.combat.formula.TargetModifiers.isUndead(target)
             Effect.DRAGONS_BREATH -> !immuneToDragonfire(target)
             Effect.MAGICAL_POISON -> !Poison.isImmune(target)
             Effect.BLOOD_FORFEIT -> attacker.getCurrentLifepoints() - bloodForfeitCost(attacker) >= 1 && bloodForfeitCost(attacker) >= 1

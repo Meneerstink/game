@@ -106,7 +106,30 @@ object TargetModifiers {
             else -> 1.0
         }
 
-    fun isUndead(target: Pawn): Boolean = target is Npc && target.isSpecies(NpcSpecies.UNDEAD)
+    /**
+     * OSRS undead attribute (Salve amulet, Crumble Undead, Ruby bolts (e) immunity). Most of our npcs have no combat script
+     * with a species block, so besides the UNDEAD species the npc name is matched against the OSRS Wiki list
+     * 'Undead (attribute)' (22-11 SALVE-ONDOOD; names with the wiki qualifier stripped). The wiki explicitly excludes wights
+     * (Barrows brothers), ghouls, ghasts, skeletal wyverns, vampyres and spiritual creatures - none of those names are listed.
+     */
+    fun isUndead(target: Pawn): Boolean =
+        target is Npc && (target.isSpecies(NpcSpecies.UNDEAD) || target.def.name.lowercase().trim() in OSRS_UNDEAD_NAMES)
+
+    private val OSRS_UNDEAD_NAMES =
+        setOf(
+        "aberrant spectre", "abhorrent spectre", "ankou", "armoured zombie", "arrav", "asyn shade", "asyn shadow", "banshee", "calvar'ion",
+        "corpse", "crawling hand", "crushing hand", "dark ankou", "deviant spectre", "fiyr shade", "forgotten soul", "ghost",
+        "giant skeleton", "greater skeleton hellhound", "haze", "headless beast", "loar shade", "monkey zombie", "nazastarool",
+        "pestilent bloat", "phrin shade", "repugnant spectre", "revenant cyclops", "revenant dark beast", "revenant demon",
+        "revenant dragon", "revenant goblin", "revenant hellhound", "revenant hobgoblin", "revenant imp", "revenant knight",
+        "revenant maledictus", "revenant ork", "revenant pyrefiend", "riyl shade", "riyl shadow", "screaming banshee",
+        "screaming twisted banshee", "shade", "skeletal mystic", "skeleton", "skeleton brute", "skeleton champion", "skeleton fremennik",
+        "skeleton heavy", "skeleton hellhound", "skeleton hero", "skeleton mage", "skeleton thug", "skeleton warlord", "skogre",
+        "slash bash", "sorebones", "summoned zombie", "tarn", "the draugen", "tormented soul", "tortured soul", "trapped soul",
+        "tree spirit", "treus dayth", "twisted banshee", "ulfric", "undead binder", "undead chicken", "undead cow", "undead druid",
+        "undead lumberjack", "undead one", "urium shade", "vet'ion", "vorkath", "zogre", "zombie", "zombie pirate", "zombie rat",
+        "zombie swab", "zombified spawn",
+        )
 
     /**
      * True only while [target] is an [Npc] whose [gg.rsmod.game.model.combat.NpcCombatDef.slayerAssignment]

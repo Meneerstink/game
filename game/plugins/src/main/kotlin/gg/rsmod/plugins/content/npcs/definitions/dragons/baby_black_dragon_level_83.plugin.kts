@@ -25,7 +25,7 @@ set_combat_def(id) {
         respawnDelay = 30
     }
     species {
-        NpcSpecies.BASIC_DRAGON
+        +NpcSpecies.BASIC_DRAGON
     }
     stats {
         hitpoints = 800
