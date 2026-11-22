@@ -62,6 +62,22 @@ class GroundItemTimingTests {
     }
 
     @Test
+    fun `a never-public item stays with its owner and still despawns`() {
+        GroundItem.neverPublic = { it == WHIP }
+        try {
+            val drop = GroundItem(WHIP, 1, Tile(3204, 3200), owner)
+            world.spawn(drop)
+            cycles(150)
+            assertFalse(drop.isPublic(), "a sigil-like item never turns public")
+            assertTrue(world.isSpawned(drop))
+            cycles(50)
+            assertFalse(world.isSpawned(drop), "gone after the world's 200 cycles like any private item")
+        } finally {
+            GroundItem.neverPublic = null
+        }
+    }
+
+    @Test
     fun `public at once when nobody owns it`() {
         val loot = GroundItem(WHIP, 1, Tile(3202, 3200), null).also { it.publicCycles = 0; it.despawnCycles = 400 }
         world.spawn(loot)

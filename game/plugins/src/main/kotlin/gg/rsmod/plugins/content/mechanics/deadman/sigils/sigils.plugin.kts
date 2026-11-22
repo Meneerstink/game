@@ -11,6 +11,9 @@ import gg.rsmod.plugins.content.objs.bank_locs.NotedFoodOnBank
  * Attune and unattune only at a bank (a bank booth, chest or counter within 2 tiles), never while skulled.
  */
 
+// G14: a dropped sigil stays visible to the one who dropped it only (wiki: not tradeable, GE only) - no floor trades.
+gg.rsmod.game.model.entity.GroundItem.neverPublic = { Sigils.isSigilItem(it) }
+
 fun nearBank(player: Player): Boolean {
     for (dx in -2..2) {
         for (dz in -2..2) {

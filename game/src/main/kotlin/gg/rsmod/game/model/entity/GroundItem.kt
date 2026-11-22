@@ -110,5 +110,13 @@ class GroundItem private constructor(
          * The default amount of cycles for this item to despawn from the world.
          */
         const val DEFAULT_DESPAWN_CYCLES = 200
+
+        /**
+         * PROJECT48 G14 (OSRS Wiki, sigils: "Tradeable: No", traded only via the Grand Exchange): items that never turn public
+         * on the floor although the server marks them tradeable for the GE. Set by the sigil plugin; null = none.
+         */
+        @Volatile
+        @JvmStatic
+        var neverPublic: ((Int) -> Boolean)? = null
     }
 }

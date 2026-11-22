@@ -360,7 +360,9 @@ class World(
         while (groundItemIterator.hasNext()) {
             val groundItem = groundItemIterator.next()
 
-            val remainPrivate = !definitions.get(ItemDef::class.java, groundItem.item).tradeable
+            val remainPrivate =
+                !definitions.get(ItemDef::class.java, groundItem.item).tradeable ||
+                    GroundItem.neverPublic?.invoke(groundItem.item) == true
             groundItem.currentCycle++
 
             if ((groundItem.isPublic() || remainPrivate) &&
