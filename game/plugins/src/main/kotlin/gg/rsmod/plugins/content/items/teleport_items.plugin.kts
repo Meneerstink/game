@@ -140,6 +140,19 @@ on_item_option(item = Items.CAMULET, option = "Check-charge") {
     player.message("Your Camulet has $charges ${if (charges == 1) "charge" else "charges"} left.")
     if (charges == 0) player.message("You can recharge it by applying camel dung.")
 }
+// PROJECT48 run 4 O20 (Enakhra's Lament ONTGR): a bucket of Ugthanki dung on the Camulet = 4 charges again (OSRS Wiki 'Camulet';
+// lines + bucket back: Void Camulet.kt itemOnItem ugthanki_dung).
+on_item_on_item(item1 = Items.UGTHANKI_DUNG, item2 = Items.CAMULET) {
+    if (player.camuletCharges() >= 4) {
+        player.message("Your Camulet already has 4 charges.")
+        return@on_item_on_item
+    }
+    if (player.inventory.remove(Items.UGTHANKI_DUNG, 1).hasSucceeded()) {
+        player.inventory.add(Items.BUCKET, 1)
+        player.message("You recharge the Camulet using camel dung. Yuck!")
+        player.attr[CAMULET_CHARGES] = 4
+    }
+}
 
 // Pharaoh's sceptre (3) -> (1), then the uncharged sceptre.
 val SCEPTRE_DESTS =
