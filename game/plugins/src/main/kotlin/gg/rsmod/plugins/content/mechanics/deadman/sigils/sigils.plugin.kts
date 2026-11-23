@@ -87,7 +87,7 @@ Sigil.values().forEach { sigil ->
     // Destroy on an ATTUNED sigil (wiki infobox: "You must unattune the Sigil before you can destroy it."). The inventory sends Drop /
     // Destroy as option 10 (IfButton1Handler), so it is bound by number; bound here, the generic Destroy dialogue (destroy_item) skips it.
     // Without this the item was destroyed while the sigil stayed attuned: its effect for ever and a slot that never came free.
-    on_item_option(sigil.attunedId, 10) { player.message(Sigils.DESTROY_ATTUNED_MESSAGE) }
+    on_item_option(sigil.attunedId, 10) { player.message(if (sigil.enabled) Sigils.DESTROY_ATTUNED_MESSAGE else Sigils.REMOVED_MESSAGE) }
     listOf(sigil.attunedId, sigil.unattunedId).filter { hasInvOption(it, "inspect") }.forEach { id ->
         on_item_option(id, "inspect") {
             player.message("${sigil.label} (tier ${sigil.tier}, ${sigil.kind.name.lowercase()}).")
