@@ -584,10 +584,13 @@ class SigilTests {
     fun `retired sigils are blocked on the GE but preserved by the removal purge`() {
         val player = newPlayer()
         val retired = Sigil.values().filterNot { it.enabled }
+        val hidden = java.io.File("../../data/cfg/removed/ge_hidden.txt").readLines()
+            .filter { it.isNotBlank() && !it.startsWith("#") }.map { it.toInt() }.toSet()
         for ((slot, sigil) in retired.withIndex()) {
             player.inventory[slot] = Item(sigil.unattunedId)
             for (id in listOf(sigil.attunedId, sigil.unattunedId)) {
                 val def = gg.rsmod.game.fs.def.ItemDef(id).apply { tradeable = true }
+                assertTrue(id in hidden, "retired sigil is excluded from the GE search table")
                 assertTrue(gg.rsmod.plugins.content.mechanics.removed.RemovedItems.isExchangeBlocked(def))
                 assertFalse(gg.rsmod.plugins.content.mechanics.removed.RemovedItems.isUnobtainable(def), "no destructive login purge")
             }
