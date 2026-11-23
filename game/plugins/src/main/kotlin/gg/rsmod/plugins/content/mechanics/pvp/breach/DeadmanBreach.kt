@@ -33,7 +33,8 @@ import kotlin.random.Random
 /**
  * OSRS permanent Deadman Mode breaches (OSRS Wiki "Deadman Mode" #Breaches, "Breach (scenery)", "Boss Spawn"):
  *
- * - Schedule: "every weekend in four-hour intervals, starting on Saturday at 02:00 GMT and ending on Sunday at 22:00 GMT" ([nextStart]).
+ * - Schedule (Deadman: Armageddon, PROJECT48 D2): "three fixed points in time every day, and a fourth random time" - 02:00, 10:00,
+ *   19:00 UTC + one random minute per day ([nextStart], [randomSlot]); the old permanent-world weekend schedule is gone.
  * - Types: "Localised breach in two locations, of which one is in single-way combat and other in multicombat" and "a region breach in
  *   which the breach monsters spawn widely across given region" ([Kind]). Locations: the wiki's Deadman: Annihilation tables
  *   (`data/cfg/deadman/breach-locations.json`); single-way locations have three spawners, multicombat ones one ("either one or three").
@@ -223,24 +224,49 @@ object DeadmanBreach {
     // ---- schedule ---------------------------------------------------------------------------------------------------
 
     /**
-     * When breaches open, always in UTC so daylight saving never moves them. Default: the OSRS permanent-world schedule,
-     * Saturday 02:00 .. Sunday 22:00 every four hours. `data/cfg/deadman/breach-schedule.json` overrides it
-     * (`{"days": ["SATURDAY", "SUNDAY"], "hours": [2, 6, 10, 14, 18, 22]}`), read at boot.
+     * When breaches open, always in UTC so daylight saving never moves them. Default (PROJECT48 D2, owner 22-11 '6A'): the
+     * Deadman: Armageddon schedule, OSRS Wiki "Deadman: Armageddon" #Breaches: "A set of breaches will tear open at three fixed
+     * points in time every day, and a fourth random time" - 02:00, 10:00 and 19:00 UTC + [randomPerDay].
+     * `data/cfg/deadman/breach-schedule.json` overrides it (`{"days": [...], "hours": [2, 10, 19], "randomPerDay": true}`), read at boot.
      */
     class Schedule(
-        val days: Set<DayOfWeek> = setOf(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY),
-        val hours: List<Int> = (2..22 step 4).toList(),
+        val days: Set<DayOfWeek> = DayOfWeek.values().toSet(),
+        val hours: List<Int> = listOf(2, 10, 19),
+        /** One extra opening per day at a random minute ([randomSlot]). */
+        val randomPerDay: Boolean = true,
     )
 
     const val SCHEDULE_PATH = "./data/cfg/deadman/breach-schedule.json"
+
+    /**
+     * ADAPTED (the wiki only says "a fourth random time"): the random opening keeps [RANDOM_GAP_MINUTES] away from each fixed hour,
+     * so it never falls inside a running breach (an opening while one is active is skipped). It is drawn per UTC date from a salt
+     * made at boot: stable for the whole uptime, unknowable from the source; a restart draws a new one.
+     */
+    const val RANDOM_GAP_MINUTES = 60
+
+    @Volatile
+    var randomSalt: Long = java.security.SecureRandom().nextLong()
 
     fun loadSchedule(file: File = File(SCHEDULE_PATH)): Schedule {
         if (!file.exists()) return Schedule()
         val root = FileReader(file).use { Gson().fromJson(it, JsonObject::class.java) }
         val days = root["days"].asJsonArray.map { DayOfWeek.valueOf(it.asString.uppercase()) }.toSet()
         val hours = root["hours"].asJsonArray.map { it.asInt }.filter { it in 0..23 }.sorted()
-        require(days.isNotEmpty() && hours.isNotEmpty()) { "$file needs at least one day and one hour" }
-        return Schedule(days, hours)
+        val random = root["randomPerDay"]?.asBoolean ?: false
+        require(days.isNotEmpty() && (hours.isNotEmpty() || random)) { "$file needs at least one day and one opening" }
+        return Schedule(days, hours, random)
+    }
+
+    /** The random opening of [date] (UTC): a minute of the day at least [RANDOM_GAP_MINUTES] from every fixed hour of [plan]. */
+    fun randomSlot(
+        date: java.time.LocalDate,
+        plan: Schedule = schedule,
+        salt: Long = randomSalt,
+    ): ZonedDateTime {
+        val allowed = (0 until 24 * 60).filter { m -> plan.hours.all { h -> kotlin.math.abs(m - h * 60) >= RANDOM_GAP_MINUTES } }
+        val pick = allowed[java.util.Random(date.toEpochDay() * 0x9E3779B97F4A7C15uL.toLong() xor salt).nextInt(allowed.size)]
+        return date.atTime(pick / 60, pick % 60).atZone(ZoneOffset.UTC)
     }
 
     /** The first opening of [schedule] strictly after [now] (UTC). */
@@ -250,10 +276,9 @@ object DeadmanBreach {
         val plan = schedule
         repeat(8) {
             if (day.dayOfWeek in plan.days) {
-                for (hour in plan.hours) {
-                    val slot = day.atTime(hour, 0).atZone(ZoneOffset.UTC)
-                    if (slot.isAfter(utc)) return slot
-                }
+                val slots = plan.hours.map { day.atTime(it, 0).atZone(ZoneOffset.UTC) }.toMutableList()
+                if (plan.randomPerDay) slots += randomSlot(day, plan)
+                slots.sorted().firstOrNull { it.isAfter(utc) }?.let { return it }
             }
             day = day.plusDays(1)
         }

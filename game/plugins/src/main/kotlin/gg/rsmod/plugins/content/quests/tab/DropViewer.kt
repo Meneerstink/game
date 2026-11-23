@@ -506,7 +506,7 @@ object DropViewer {
     const val BRACKET_Y = 86
     const val WINDOW_RIGHT = 493
 
-    /** "Your bracket", the bracket ("96+"), "·  5x on rare drops" (or "no boost on this loot" where the bracket does not count). */
+    /** "Your bracket", the bracket ("111-138"), "·  5x on rare drops" (or "no boost on this loot" where the bracket does not count). */
     fun bracketLine(player: Player, source: DropSources.Source): Triple<String, String, String> {
         val tier = AnnihilationTier.of(player)
         val boosted = source.kind in setOf(DropSources.Kind.NPC, DropSources.Kind.BREACH, DropSources.Kind.BARROWS)

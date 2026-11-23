@@ -87,7 +87,7 @@ class AnnihilationRatesTests {
     // ------------------------------------------------------------------------------------------------------------- N92 XP
 
     @Test
-    fun `N92 owner case - combat 138 with every skill 99 gains combat XP at 20x and skilling XP at 10x`() {
+    fun `N92 owner case - combat 138 with every skill 99 gains combat XP at 15x and skilling XP at 10x`() {
         val owner = player("n92owner", OWNER_TILE)
         for (skill in 0 until SKILL_COUNT) owner.skills.setBaseXp(skill, OWNER_XP)
         owner.calculateAndSetCombatLevel()
@@ -96,20 +96,20 @@ class AnnihilationRatesTests {
         val attack = gain(owner, Skills.ATTACK, 4.0) // one 1-damage melee hit: 4 raw Attack XP
         val hitpoints = gain(owner, Skills.CONSTITUTION, 1.33)
         val woodcutting = gain(owner, Skills.WOODCUTTING, 25.0) // one normal log
-        assertEquals("Attack: 4 raw x 20 (Annihilation 96+ combat), not the 2011 curve x5.04", 80.0, attack, 1e-6)
-        assertEquals("Hitpoints count as combat (wiki: ALL combat skills including Hitpoints)", 1.33 * 20, hitpoints, 1e-6)
+        assertEquals("Attack: 4 raw x 15 (Armageddon 111+ combat), not the 2011 curve x5.04", 60.0, attack, 1e-6)
+        assertEquals("Hitpoints count as combat (wiki: ALL combat skills including Hitpoints)", 1.33 * 15, hitpoints, 1e-6)
         assertEquals("Woodcutting: 25 raw x 10 (skilling is 10x in every bracket)", 250.0, woodcutting, 1e-6)
         val prayer = gain(owner, Skills.PRAYER, 10.0)
         val summoning = gain(owner, Skills.SUMMONING, 10.0) // one pouch-sized gain
-        assertEquals("Prayer counts as combat: 10 raw x 20", 200.0, prayer, 1e-6)
-        assertEquals("Summoning is NOT combat for XP (owner 2026-10-18, VRAGEN 33 = B): 10 raw x 10 at combat 138, not x20", 100.0, summoning, 1e-6)
+        assertEquals("Prayer counts as combat: 10 raw x 15", 150.0, prayer, 1e-6)
+        assertEquals("Summoning is NOT combat for XP (owner 2026-10-18, VRAGEN 33 = B): 10 raw x 10 at combat 138, not x15", 100.0, summoning, 1e-6)
         assertEquals("xpMultiplier(Summoning) tells the real gain", 10.0, owner.xpMultiplier(Skills.SUMMONING), 1e-9)
     }
 
     @Test
     fun `N92 class - every skill gains exactly its bracket rate in every bracket and xpMultiplier tells the real gain`() {
         val failures = mutableListOf<String>()
-        for (target in listOf(3, 60, 61, 80, 81, 95, 96, 126, 138)) {
+        for (target in listOf(3, 50, 51, 70, 71, 90, 91, 110, 111, 126, 138)) {
             val p = player("n92c$target", OWNER_TILE)
             setCombat(p, target)
             val tier = WIKI.single { target in it.levels }
@@ -124,6 +124,19 @@ class AnnihilationRatesTests {
             }
         }
         assertTrue(failures.joinToString("\n"), failures.isEmpty())
+    }
+
+    @Test
+    fun `PROJECT48 D2 - the rate table is the Armageddon table on exactly the five combat brackets`() {
+        val tiers = gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationTier.values().toList()
+        assertEquals(WIKI.map { it.levels }, tiers.map { it.levels })
+        assertEquals(gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.Bracket.values().map { it.levels }, tiers.map { it.levels })
+        assertEquals(gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.Bracket.values().map { it.label }, tiers.map { it.label })
+        WIKI.zip(tiers).forEach { (w, t) ->
+            assertEquals("${t.label} combat", w.combatXp, t.combatXp, 0.0)
+            assertEquals("${t.label} skilling", w.skillingXp, t.skillingXp, 0.0)
+            assertEquals("${t.label} drops", w.dropRate, t.dropRate, 0.0)
+        }
     }
 
     @Test
@@ -208,8 +221,8 @@ class AnnihilationRatesTests {
     }
 
     @Test
-    fun `N92 red line - exactly once per rate change at 61, 81 and 96, never at relog, never for an existing account`() {
-        for (border in listOf(61, 81, 96)) {
+    fun `N92 red line - exactly once per rate change at 51, 71 and 111, none at 91 (same rates), never at relog, never for an existing account`() {
+        for (border in listOf(51, 71, 111)) {
             val p = player("n92b$border", OWNER_TILE)
             val (others, attack) = crossing(border)
             setLevels(p, others, attack)
@@ -239,13 +252,23 @@ class AnnihilationRatesTests {
             assertTrue("precondition: combat lowered to ${p.combatLevel}", p.combatLevel < border)
             assertEquals("the rate never drops", 10.0 * above.combatXp, gain(p, Skills.STRENGTH, 10.0), 1e-6)
         }
+        // 90 -> 91: a new bracket but every rate stays (Armageddon 71-90 = 91-110): no "now" line.
+        run {
+            val p = player("n92b91", OWNER_TILE)
+            val (others, attack) = crossing(91)
+            setLevels(p, others, attack)
+            login(p)
+            levelUp(p, Skills.ATTACK, WIKI.single { 90 in it.levels })
+            assertEquals(91, p.combatLevel)
+            assertEquals("no rate line at 91 (rates unchanged): ${messages(p)}", 0, rateLines(p).size)
+        }
         val veteran = player("n92vet", OWNER_TILE)
         for (skill in 0 until SKILL_COUNT) veteran.skills.setBaseXp(skill, OWNER_XP)
         login(veteran)
         assertEquals("the owner's 138 account logs in after the deploy: no line ${messages(veteran)}", 0, rateLines(veteran).size)
         val fresh = player("n92new", OWNER_TILE)
         login(fresh)
-        assertEquals("a new account starts in 3-60: no line ${messages(fresh)}", 0, rateLines(fresh).size)
+        assertEquals("a new account starts in 3-50: no line ${messages(fresh)}", 0, rateLines(fresh).size)
     }
 
     @Test
@@ -274,7 +297,7 @@ class AnnihilationRatesTests {
     @Test
     fun `N92 rate command - the real rate command prints the rate the player really gains, every skill by name and by number in every bracket`() {
         val failures = mutableListOf<String>()
-        for (target in listOf(3, 60, 61, 80, 81, 95, 96, 126, 138)) {
+        for (target in listOf(3, 50, 51, 70, 71, 90, 91, 110, 111, 126, 138)) {
             val p = player("n92r$target", OWNER_TILE)
             setCombat(p, target)
             val tier = WIKI.single { target in it.levels }
@@ -308,11 +331,11 @@ class AnnihilationRatesTests {
         owner.calculateAndSetCombatLevel()
         assertEquals(138, owner.combatLevel)
         // Keurmeester round 3, VPS teamtest1 (combat 138, console, key `): 'rate attack' showed 5.04x, 'rate summoning' 5.04x.
-        assertEquals("rate attack at 138", "Your experience rate for attack is 20x", rate(owner, "attack").single())
+        assertEquals("rate attack at 138", "Your experience rate for attack is 15x", rate(owner, "attack").single())
         assertEquals("rate summoning at 138 (VRAGEN 33 = B: skilling rate)", "Your experience rate for summoning is 10x", rate(owner, "summoning").single())
-        assertEquals("rate prayer at 138 (Prayer = combat)", "Your experience rate for prayer is 20x", rate(owner, "prayer").single())
+        assertEquals("rate prayer at 138 (Prayer = combat)", "Your experience rate for prayer is 15x", rate(owner, "prayer").single())
         assertEquals("rate woodcutting at 138", "Your experience rate for woodcutting is 10x", rate(owner, "woodcutting").single())
-        assertEquals("rate 0 at 138", "Your experience rate for attack is 20x", rate(owner, "0").single())
+        assertEquals("rate 0 at 138", "Your experience rate for attack is 15x", rate(owner, "0").single())
 
         // New account (VPS vpsfresh9331, combat 3): 'rate attack' showed 1.00x.
         val fresh = player("n92rfresh", OWNER_TILE)
@@ -320,21 +343,21 @@ class AnnihilationRatesTests {
         assertEquals("rate attack at combat 3", "Your experience rate for attack is 10x", rate(fresh, "attack").single())
         assertEquals("rate woodcutting at combat 3", "Your experience rate for woodcutting is 10x", rate(fresh, "woodcutting").single())
 
-        // The command follows the tier the red line announces: 15x from combat 61, and a lowered level never lowers it.
+        // The command follows the tier the red line announces: 15x from combat 71, and a lowered level never lowers it.
         val climber = player("n92rclimb", OWNER_TILE)
-        val (others, attack) = crossing(61)
+        val (others, attack) = crossing(71)
         setLevels(climber, others, attack)
         login(climber)
-        assertEquals("rate attack at combat 60", "Your experience rate for attack is 10x", rate(climber, "attack").single())
-        levelUp(climber, Skills.ATTACK, WIKI.first())
-        assertEquals(61, climber.combatLevel)
-        assertEquals("rate attack at combat 61", "Your experience rate for attack is 15x", rate(climber, "attack").single())
-        assertEquals("rate woodcutting at combat 61", "Your experience rate for woodcutting is 10x", rate(climber, "woodcutting").single())
+        assertEquals("rate attack at combat 70", "Your experience rate for attack is 10x", rate(climber, "attack").single())
+        levelUp(climber, Skills.ATTACK, WIKI.single { 70 in it.levels })
+        assertEquals(71, climber.combatLevel)
+        assertEquals("rate attack at combat 71", "Your experience rate for attack is 15x", rate(climber, "attack").single())
+        assertEquals("rate woodcutting at combat 71", "Your experience rate for woodcutting is 10x", rate(climber, "woodcutting").single())
         login(climber)
         assertEquals("rate attack after a relog", "Your experience rate for attack is 15x", rate(climber, "attack").single())
         climber.skills.setBaseLevel(Skills.ATTACK, 1)
         climber.calculateAndSetCombatLevel()
-        assertTrue("precondition: combat lowered to ${climber.combatLevel}", climber.combatLevel < 61)
+        assertTrue("precondition: combat lowered to ${climber.combatLevel}", climber.combatLevel < 71)
         assertEquals("rate attack after a lowered level (never down)", "Your experience rate for attack is 15x", rate(climber, "attack").single())
     }
 
@@ -408,11 +431,12 @@ class AnnihilationRatesTests {
             class Expect(val helm: Double, val coins: Double, val nested: Double, val whip: Double)
             val expected =
                 mapOf(
+                    2.0 to Expect(2 / 128.0, 64 / 128.0, 8 / 128.0, 2 / 1000.0),
                     3.0 to Expect(3 / 128.0, 96 / 128.0, 12 / 128.0, 3 / 1000.0),
                     4.0 to Expect(4 / 128.0, 1 - 4 / 128.0 - 16 / 128.0, 16 / 128.0, 4 / 1000.0),
                     5.0 to Expect(5 / 128.0, 1 - 5 / 128.0 - 20 / 128.0, 20 / 128.0, 5 / 1000.0),
                 )
-            for ((combat, k) in listOf(138 to 5.0, 3 to 3.0, 85 to 4.0, 70 to 3.0)) {
+            for ((combat, k) in listOf(138 to 4.0, 3 to 2.0, 85 to 3.0, 70 to 3.0)) {
                 val e = expected.getValue(k)
                 val killer = player("n100k$combat", DROP_TILE)
                 setCombat(killer, combat)
@@ -476,7 +500,7 @@ class AnnihilationRatesTests {
         assertTrue("the real bulk tables (${bulk.size})", bulk.size > 1_000)
         bulk.forEach { (npc, table) -> DropTableFactory.register(table, VIEWER_OFFSET + npc) }
         val failures = mutableListOf<String>()
-        for ((combat, k) in listOf(3 to 3.0, 70 to 3.0, 90 to 4.0, 138 to 5.0)) {
+        for ((combat, k) in listOf(3 to 2.0, 70 to 3.0, 90 to 3.0, 138 to 4.0)) {
             val viewer = player("n100v$combat", DROP_TILE)
             setCombat(viewer, combat)
             for (npc in bulk.keys) {
@@ -540,7 +564,7 @@ class AnnihilationRatesTests {
         val followerId = (6203..6283).first { GodWars.frozenKeyPiece(it) != null && Npc(it, DROP_TILE, world).def.combatLevel in 1..GodWars.KEY_PIECE_MAX_COMBAT }
         val zamorakFollower = Npc(followerId, DROP_TILE, world)
         assertTrue("a Godwars follower the key piece applies to (combat ${zamorakFollower.def.combatLevel})", zamorakFollower.def.combatLevel <= GodWars.KEY_PIECE_MAX_COMBAT)
-        for ((combat, rate) in listOf(3 to 3.0, 70 to 3.0, 90 to 4.0, 138 to 5.0)) {
+        for ((combat, rate) in listOf(3 to 2.0, 70 to 3.0, 90 to 3.0, 138 to 4.0)) {
             val killer = player("n100g$combat", DROP_TILE)
             setCombat(killer, combat)
             assertEquals("the killer's rate", rate, DropTableFactory.killRate(killer), 0.0)
@@ -772,10 +796,12 @@ class AnnihilationRatesTests {
         /** OSRS Wiki "Deadman: Annihilation" (fetched 2026-10-17): bracket | combat XP | skilling XP | drop rate. */
         val WIKI =
             listOf(
-                Tier(3..60, 10.0, 10.0, 3.0),
-                Tier(61..80, 15.0, 10.0, 3.0),
-                Tier(81..95, 15.0, 10.0, 4.0),
-                Tier(96..138, 20.0, 10.0, 5.0),
+                // PROJECT48 D2 (owner 22-11 "6A"): OSRS Wiki "Deadman: Armageddon" #Multipliers.
+                Tier(3..50, 10.0, 10.0, 2.0),
+                Tier(51..70, 10.0, 10.0, 3.0),
+                Tier(71..90, 15.0, 10.0, 3.0),
+                Tier(91..110, 15.0, 10.0, 3.0),
+                Tier(111..138, 15.0, 10.0, 4.0),
             )
 
         /** Prayer counts as combat (wiki); Summoning does NOT - it gains the skilling rate (VRAGEN 33 = B); Slayer is skilling. */

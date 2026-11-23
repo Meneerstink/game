@@ -113,12 +113,19 @@ class BreachRewardTests {
         val loaded = DeadmanBreach.loadSchedule(file)
         assertEquals(DeadmanBreach.Schedule().days, loaded.days)
         assertEquals(DeadmanBreach.Schedule().hours, loaded.hours)
-        // 2026-10-25 is the EU clock change (Sunday): the openings stay on the UTC hours.
-        val amsterdam = java.time.ZonedDateTime.of(2026, 10, 25, 1, 30, 0, 0, java.time.ZoneId.of("Europe/Amsterdam"))
-        val next = DeadmanBreach.nextStart(amsterdam)
-        assertEquals(java.time.ZoneOffset.UTC, next.zone)
-        assertEquals(2, next.hour)
-        assertEquals(0, next.minute)
+        assertEquals(DeadmanBreach.Schedule().randomPerDay, loaded.randomPerDay)
+        // 2026-10-25 is the EU clock change (Sunday): the fixed openings stay on the UTC hours (random one switched off here).
+        val saved = DeadmanBreach.schedule
+        try {
+            DeadmanBreach.schedule = DeadmanBreach.Schedule(randomPerDay = false)
+            val amsterdam = java.time.ZonedDateTime.of(2026, 10, 25, 1, 30, 0, 0, java.time.ZoneId.of("Europe/Amsterdam"))
+            val next = DeadmanBreach.nextStart(amsterdam)
+            assertEquals(java.time.ZoneOffset.UTC, next.zone)
+            assertEquals(2, next.hour)
+            assertEquals(0, next.minute)
+        } finally {
+            DeadmanBreach.schedule = saved
+        }
     }
 
     @Test

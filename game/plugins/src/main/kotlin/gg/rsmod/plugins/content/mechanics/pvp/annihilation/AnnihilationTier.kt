@@ -10,19 +10,24 @@ import gg.rsmod.plugins.api.ext.message
  * (engine hook [gg.rsmod.game.model.skill.XpRates], installed by `annihilation_tier.plugin.kts`), every monster-kill drop roll
  * (DropTableFactory) and the Drop Viewer, and later the Character Summary / drop viewer (N108/N109) and protection (N23).
  *
- * Source: OSRS Wiki "Deadman: Annihilation" (fetched 2026-10-17), owner-approved VRAGEN 22 = A:
+ * Source since PROJECT48 D2 (owner 22-11 "6A": the 5 brackets at once; rule: every DMM part = the wiki): OSRS Wiki
+ * "Deadman: Armageddon" #Multipliers (was "Deadman: Annihilation", VRAGEN 22 = A):
  *   combat bracket | combat XP | skilling XP | drop rate
- *   3-60           | 10x       | 10x         | 3x
- *   61-80          | 15x       | 10x         | 3x
- *   81-95          | 15x       | 10x         | 4x
- *   96-126 (138)   | 20x       | 10x         | 5x
+ *   3-50           | 10x       | 10x         | 2x
+ *   51-70          | 10x       | 10x         | 3x
+ *   71-90          | 15x       | 10x         | 3x
+ *   91-110         | 15x       | 10x         | 3x
+ *   111-126 (138)  | 15x       | 10x         | 4x
+ * The levels are the combat brackets of [gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets] (one bracket system).
+ * ADAPTED: the wiki gives the drop rate "for a specific list of unique items" without the list; it stays on every
+ * non-guaranteed line (DropTableFactory, as before).
  * "Prayer is counted as a combat skill for the purpose of these multipliers"; "ALL Combat skills (including Hitpoints)";
  * Summoning (not in OSRS) gains the skilling rate, always 10x (owner 2026-10-18, VRAGEN 33 = B);
  * "it is not possible to move back down a combat bracket". The pattern - one multiplier function every gain reads - is the
  * Void donor's (Donors/void/game/src/main/kotlin/content/entity/player/stat/BonusExperience.kt:67); no donor has the table.
  *
- * NOT the attack range: who may attack whom stays the +/-14 combat levels ("bracket" in AreaState / DeadmanHud). The two
- * are never mixed up, hence the separate name.
+ * Who may attack whom is [gg.rsmod.plugins.content.mechanics.pvp.DeadmanBrackets.sameBracket]; this enum only holds the rates
+ * (AnnihilationRatesTests checks that its levels equal the brackets).
  */
 enum class AnnihilationTier(
     val levels: IntRange,
@@ -30,20 +35,21 @@ enum class AnnihilationTier(
     val skillingXp: Double,
     val dropRate: Double,
 ) {
-    TIER_3_60(3..60, 10.0, 10.0, 3.0),
-    TIER_61_80(61..80, 15.0, 10.0, 3.0),
-    TIER_81_95(81..95, 15.0, 10.0, 4.0),
-    TIER_96_PLUS(96..Int.MAX_VALUE, 20.0, 10.0, 5.0),
+    TIER_3_50(3..50, 10.0, 10.0, 2.0),
+    TIER_51_70(51..70, 10.0, 10.0, 3.0),
+    TIER_71_90(71..90, 15.0, 10.0, 3.0),
+    TIER_91_110(91..110, 15.0, 10.0, 3.0),
+    TIER_111_PLUS(111..gg.rsmod.plugins.content.mechanics.pvp.AreaState.MAX_COMBAT_LEVEL, 15.0, 10.0, 4.0),
     ;
 
-    /** "3-60" ... "96+" (Character Summary / drop viewer text). */
+    /** "3-50" ... "111-138" (Character Summary / drop viewer text; the same labels as the bracket HUD). */
     val label: String get() = if (levels.last == Int.MAX_VALUE) "${levels.first}+" else "${levels.first}-${levels.last}"
 
     companion object {
         /** The highest tier the account ever reached (ordinal): the rate never goes down, the red line comes once per rise. */
         val REACHED = AttributeKey<Int>(persistenceKey = "annihilation_tier_reached")
 
-        fun forCombatLevel(level: Int): AnnihilationTier = values().lastOrNull { level >= it.levels.first } ?: TIER_3_60
+        fun forCombatLevel(level: Int): AnnihilationTier = values().lastOrNull { level >= it.levels.first } ?: TIER_3_50
 
         /** The player's tier: by combat level, never below the highest tier the account already reached. */
         fun of(player: Player): AnnihilationTier {
@@ -97,6 +103,9 @@ enum class AnnihilationTier(
             }
             if (now.ordinal <= reached) return false
             player.attr[REACHED] = now.ordinal
+            // 71-90 -> 91-110 keeps every rate (Armageddon table): no "now" line without a change.
+            val before = values().getOrNull(reached)
+            if (before != null && before.combatXp == now.combatXp && before.skillingXp == now.skillingXp && before.dropRate == now.dropRate) return false
             player.message(AnnihilationConfig.rateChangeMessage(now))
             return true
         }

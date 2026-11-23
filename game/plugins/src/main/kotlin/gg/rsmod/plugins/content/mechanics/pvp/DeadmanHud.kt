@@ -19,7 +19,7 @@ import gg.rsmod.plugins.api.ext.sendOption
  * <pre>
  *        [skull-and-crossbones] [!]        (Guarded: the crossed-out skull instead)
  *              Deadman                     ("Guarded" / "Level: N" in the Wilderness)
- *               81-95                      (the +/-14 combat bracket, everywhere)
+ *               91-110                     (the combat bracket, everywhere - DeadmanBrackets)
  *           [own skull] 5:00               (only while PK-skulled; refreshes every 30 s)
  * </pre>
  *

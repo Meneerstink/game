@@ -136,17 +136,42 @@ class DeadmanBreachTests {
     }
 
     @Test
-    fun `schedule is every four hours from Saturday 02 00 to Sunday 22 00 GMT`() {
-        var t = ZonedDateTime.of(2026, 9, 18, 12, 0, 0, 0, ZoneOffset.UTC) // Friday
-        val slots = mutableListOf<ZonedDateTime>()
-        repeat(13) {
-            t = DeadmanBreach.nextStart(t)
-            slots += t
+    fun `schedule is Armageddon - 02 00, 10 00, 19 00 UTC and one random time every day`() {
+        val saved = DeadmanBreach.schedule
+        val savedSalt = DeadmanBreach.randomSalt
+        try {
+            DeadmanBreach.schedule = DeadmanBreach.Schedule()
+            for (salt in listOf(1L, 42L, -7L, 123456789L)) {
+                DeadmanBreach.randomSalt = salt
+                var t = ZonedDateTime.of(2026, 9, 18, 0, 0, 0, 0, ZoneOffset.UTC) // Friday
+                val slots = mutableListOf<ZonedDateTime>()
+                repeat(4 * 7) {
+                    t = DeadmanBreach.nextStart(t)
+                    slots += t
+                }
+                val byDay = slots.groupBy { it.toLocalDate() }
+                assertEquals(7, byDay.size, "every day of the week has openings")
+                byDay.forEach { (day, list) ->
+                    assertEquals(4, list.size, "$day: three fixed + one random")
+                    val fixed = list.filter { it.minute == 0 && it.hour in listOf(2, 10, 19) }
+                    assertTrue(fixed.map { it.hour }.containsAll(listOf(2, 10, 19)), "$day fixed hours: $list")
+                    val random = (list - fixed.toSet()).singleOrNull() ?: list.first { it == DeadmanBreach.randomSlot(day) }
+                    assertEquals(DeadmanBreach.randomSlot(day), random, "$day: the random opening is the drawn one")
+                    listOf(2, 10, 19).forEach { h ->
+                        val gap = kotlin.math.abs(random.hour * 60 + random.minute - h * 60)
+                        assertTrue(gap >= DeadmanBreach.RANDOM_GAP_MINUTES, "$day random $random too close to $h:00")
+                    }
+                }
+                assertTrue(slots.zipWithNext().all { (a, b) -> b.isAfter(a) }, "openings strictly increase")
+            }
+            // Different days draw different random times (not one fixed fourth hour).
+            DeadmanBreach.randomSalt = 99L
+            val days = (0L until 14L).map { DeadmanBreach.randomSlot(java.time.LocalDate.of(2026, 9, 18).plusDays(it)).toLocalTime() }
+            assertTrue(days.toSet().size >= 10, "random times vary per day: $days")
+        } finally {
+            DeadmanBreach.schedule = saved
+            DeadmanBreach.randomSalt = savedSalt
         }
-        val weekend = slots.take(12)
-        assertEquals(listOf(2, 6, 10, 14, 18, 22, 2, 6, 10, 14, 18, 22), weekend.map { it.hour })
-        assertEquals(List(6) { DayOfWeek.SATURDAY } + List(6) { DayOfWeek.SUNDAY }, weekend.map { it.dayOfWeek })
-        assertEquals(ZonedDateTime.of(2026, 9, 26, 2, 0, 0, 0, ZoneOffset.UTC), slots[12], "after Sunday 22:00 the next is Saturday 02:00")
     }
 
     @Test

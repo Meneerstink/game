@@ -385,7 +385,7 @@ class QuestTabTests {
         assertTrue("5 minutes" in all(Subject.SKULL) && "6 s" in all(Subject.SKULL))
         val table = QuestTabInfo.page(account.player, Subject.BRACKETS).table!!
         assertEquals(listOf("Level", "Combat XP", "Skills XP", "Drops"), table.first())
-        assertTrue(table.any { it[0].startsWith("96+") && it.drop(1) == listOf("20x", "10x", "5x") })
+        assertTrue(table.any { it[0].startsWith("111-138") && it.drop(1) == listOf("15x", "10x", "4x") }, "Armageddon top bracket: $table")
         // DMM-ARMAGEDDON: own combat bracket (D8), 6 s teleport/logout while skulled (D1).
         assertTrue("own combat bracket" in QuestTabInfo.page(account.player, Subject.BRACKETS).text)
         assertTrue("3 - 50" in QuestTabInfo.page(account.player, Subject.BRACKETS).bar, "the bar names the bracket")
