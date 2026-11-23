@@ -51,6 +51,10 @@ class DmmCItemsTests {
         assertTrue("SoulflameHorn.use(player)" in File(main + "combat/specialattack/weapons/soulflame_horn.plugin.kts").readText())
         assertEquals(10, SoulflameHorn.DURATION_TICKS)
         assertEquals(25, SoulflameHorn.COST_PER_ALLY)
+        // OSRS Wiki "Soulflame horn" (23-11): 4-tick cooldown, +50 % accuracy against players, the no-one-listens line.
+        assertEquals(4, SoulflameHorn.COOLDOWN_TICKS)
+        assertEquals(1.5, SoulflameHorn.PVP_ACCURACY)
+        assertTrue("You blow your horn into the wind. No-one nearby is able to listen." in SoulflameHorn.NO_ONE_LISTENS)
         val items = File("../../data/cfg/items.yml").readText()
         assertTrue("- id: 25631\n  name: \"Soiled page\"" in items.replace("\r\n", "\n"), "the soiled page is imported")
     }

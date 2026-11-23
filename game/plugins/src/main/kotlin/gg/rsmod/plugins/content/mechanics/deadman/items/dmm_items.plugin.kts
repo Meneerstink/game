@@ -50,8 +50,14 @@ on_item_option(DmmItems.CRYSTAL_OF_ECHOES, "teleport-back") { DmmItems.teleportB
 on_item_option(DmmItems.CRYSTAL_OF_ECHOES, "save-memory") { DmmItems.saveMemory(player) }
 on_item_option(DmmItems.CRYSTAL_OF_ECHOES, "check-memories") { DmmItems.checkMemory(player) }
 
-on_item_option(DmmItems.ETERNAL_TELEPORT_CRYSTAL, "lletya") { DmmItems.eternalCrystal(player) }
+on_item_option(DmmItems.ETERNAL_TELEPORT_CRYSTAL, "lletya") { DmmItems.eternalCrystalLletya(player) }
 on_item_option(DmmItems.ETERNAL_TELEPORT_CRYSTAL, "prifddinas") { DmmItems.eternalCrystal(player) }
+/* Toggle (OSRS: swaps the left-click between Lletya and Prifddinas). Prifddinas has no map here, so Lletya stays the left-click
+ * (owner 23-11: 'Melding: geen Prifddinas'). Bound only when the cache item has the option (BOOTFIX 21893d13a). */
+run {
+    val crystalDef = world.definitions.get(ItemDef::class.java, DmmItems.ETERNAL_TELEPORT_CRYSTAL)
+    if (crystalDef.inventoryMenu.any { it.equals("toggle", true) }) on_item_option(DmmItems.ETERNAL_TELEPORT_CRYSTAL, "toggle") { DmmItems.eternalCrystal(player) }
+}
 
 on_item_option(DmmItems.AMULET_OF_ETERNAL_GLORY, "rub") {
     player.queue {

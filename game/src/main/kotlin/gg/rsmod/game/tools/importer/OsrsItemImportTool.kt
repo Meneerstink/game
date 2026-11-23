@@ -132,6 +132,9 @@ object OsrsItemImportTool {
             ),
             // PROJECT48 DMM-ITEMS C3: Soiled page (charges the Tome of earth), OSRS id 30068 (ItemID.SOILED_PAGE).
             "p48-items-d" to listOf(Spec(30068)),
+            // DMM-ITEMS Soulflame horn Entice: hidden hand-object of seqs 12158/12159 (gameval ItemID.SOULFLAME_HORN_SPECIAL_DUMMY 30762),
+            // imported before OsrsFxImportTool p48-soulflame so the sequences keep it (cache2762).
+            "p48-soulflame-dummy" to listOf(Spec(30762)),
             // p48-gptb-rest: wiki rev15403804 + cache2762. Ancient fabric and base cape already imported by N415.
             "p48-ancient-deadman" to listOf(Spec(34607, rev667Params = mapOf(749 to 6, 750 to 75))),
             // Fractured Archive rewards, cache2762; acquisition awaits the owner. Notes/count models follow parents.

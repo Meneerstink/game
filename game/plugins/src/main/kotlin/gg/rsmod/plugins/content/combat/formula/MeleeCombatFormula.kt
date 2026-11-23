@@ -88,9 +88,13 @@ object MeleeCombatFormula : CombatFormula {
             !gg.rsmod.plugins.content.mechanics.pvp.CityGuards.bypassesProtectionPrayer(pawn)) {
             return 0.0 // Hits will never land
         }
-        // Soulflame horn, Entice: the next melee attack within 10 ticks is always a successful hit (SoulflameHorn).
-        if (pawn is Player && gg.rsmod.plugins.content.items.osrs.SoulflameHorn.consume(pawn)) return 1.0
-        val attack = getAttackRoll(pawn, target, specialAttackMultiplier)
+        // Soulflame horn, Entice: the next melee attack within 10 ticks is always a successful hit; against a player it is a 50 %
+        // accuracy increase instead (SoulflameHorn, wiki change 22 July 2026).
+        val enticed = pawn is Player && gg.rsmod.plugins.content.items.osrs.SoulflameHorn.consume(pawn)
+        if (enticed && target !is Player) return 1.0
+        val attack =
+            (getAttackRoll(pawn, target, specialAttackMultiplier) *
+                (if (enticed) gg.rsmod.plugins.content.items.osrs.SoulflameHorn.PVP_ACCURACY else 1.0)).toInt()
         val defence =
             (when {
                 // A MAGIC_MELEE attack is rolled against the target's MAGIC defence, whoever the

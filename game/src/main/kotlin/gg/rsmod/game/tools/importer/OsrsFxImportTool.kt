@@ -35,6 +35,9 @@ object OsrsFxImportTool {
     val BATCHES: Map<String, List<Int>> =
         mapOf(
             "p48-archive-fx" to (4427..4435).toList() + listOf(4437, 4438, 4439),
+            // DMM-ITEMS Soulflame horn Entice (source2762): gameval SpotanimID VFX_SOULFLAME_HORN_SPOTANIM01 3282 (flame at the horn) +
+            // VFX_SOULFLAME_HORN_IMPACT_SPOTANIM01 3283 (on each enticed player); seq + synth halves in SEQ_/SYNTH_BATCHES.
+            "p48-soulflame" to listOf(3282, 3283),
             // PROJECT48 SIGILS (owner 21-11: sounds + animations of the sigils): gameval SpotanimID SIGIL_ATTUNE_COMBAT 1970 / _UTILITY
             // 1971 / _SKILLING 1972, SIGIL_UNATTUNE 1973, SIGIL_OF_THE_FORMIDABLE_FIGHTER 1974, _FREEDOM 1975, _BINDING 1976,
             // _THE_MENACING_MAGE 1977, _ESCAPING 1978, _PORCUPINE 1979, _THE_FERAL_FIGHTER 1980, _THE_RUTHLESS_RANGER 1981, _FINALITY
@@ -273,6 +276,9 @@ object OsrsFxImportTool {
     val SEQ_BATCHES: Map<String, List<Int>> =
         mapOf(
             "p48-archive-seq" to (15110..15116).toList() + (15135..15148).toList() + listOf(15158),
+            // DMM-ITEMS Soulflame horn Entice: gameval AnimationID SOULFLAME_HORN_BLOW_03 12158 + _BLOW_03_NO_FIRE 12159 (wiki: with
+            // nobody to entice 'the flame effect around the mouth of the horn will not appear').
+            "p48-soulflame" to listOf(12158, 12159),
             // O26 PROJECT48 23-11: the gushing energy above the Fountain of Rune (OSRS loc 26783 anim 7141); before OsrsLocImportTool fountain-of-rune.
             "fountain-of-rune-seq" to listOf(7141),
             // PROJECT48 SIGILS: the player halves - gameval AnimationID DMM_LAST_RECALL_TELEPORT_DISAPPEAR 9147 / _REAPPEAR 9149 and
@@ -474,6 +480,8 @@ object OsrsFxImportTool {
         mapOf(
             // OSRS Wiki List of sound IDs/12001-13000 rev15411172 (Jagex spells it zaryas).
             "p48-archive-sfx" to listOf(12648, 12660, 12661, 12662),
+            // DMM-ITEMS Soulflame horn Entice: gameval SoundEffectID YAMA_SOULFLAME_HORN_WHOOSH_01 10220, _FIRE_01 10233, _BUFF_01 10236.
+            "p48-soulflame" to listOf(10220, 10233, 10236),
             // PROJECT48 SIGILS: gameval SoundEffectID DMM_LAST_RECALL_TELE_REAPPEAR 5064 .. DMM_GUARDIAN_WING_RETREAT 5094 (attune 5078,
             // deattune 5066, activate 5069, combat activation 5074, no longer active 5090, cooldown finish 5092, Rampage, Guardian).
             "sigil-fx" to (5064..5094).toList(),

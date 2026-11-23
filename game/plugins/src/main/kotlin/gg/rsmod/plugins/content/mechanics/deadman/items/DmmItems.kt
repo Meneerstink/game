@@ -173,9 +173,21 @@ object DmmItems {
         }
     }
 
-    /** Eternal teleport crystal: Lletya and Prifddinas do not exist on this server (no map), so it only says so. */
+    /**
+     * Eternal teleport crystal (OSRS Wiki "Eternal teleport crystal": Lletya {{TeleportLocationLine|x=2328|y=3170}}, infinite charges).
+     * Lletya exists here (the 2011 Teleport crystal goes there too); Prifddinas has no map on this server, so that option only says so.
+     * ADAPTED: TeleportType.JEWELRY, like the Teleport crystal (teleport_items.plugin.kts).
+     */
+    val LLETYA = Tile(2328, 3170, 0)
+
+    fun eternalCrystalLletya(player: Player) {
+        player.canTeleport(TeleportType.JEWELRY) {
+            player.teleport(LLETYA, TeleportType.JEWELRY)
+        }
+    }
+
     fun eternalCrystal(player: Player) {
-        player.message("Lletya and Prifddinas are not part of this world.")
+        player.message("Prifddinas is not part of this world.")
     }
 
     /** Amulet of eternal glory: the glory amulet's four teleports with no charges to lose; works up to level 30 Wilderness (JEWELRY). */
