@@ -23,12 +23,11 @@ class PetPlacesTests {
         assertEquals("This doesn't seem like a suitable place to take a pet.", PetPlaces.MSG_NEX)
         assertEquals("You should pick up your follower before entering building mode.", PetPlaces.MSG_BUILD_MODE)
         assertEquals("You cannot drop items while in building mode.", PetPlaces.MSG_BUILD_MODE_DROP)
-        assertEquals("You can't enter a waiting area with a follower.", PetPlaces.MSG_SOUL_WARS)
         assertEquals("Your little friend can't make it over the obstacle...", PetPlaces.MSG_APE_ATOLL)
         assertEquals("Your follower hides in your pack, this is too violent an area for it.", PetPlaces.HiddenArea.PEST_CONTROL.dropRefusal)
         assertEquals("Your pet stays in your pack, frightened by something.", PetPlaces.HiddenArea.SORCERESS_GARDEN.dropRefusal)
         // N476: Castle Wars waits for the owner's N442 test.
-        assertEquals(setOf("PEST_CONTROL", "SOUL_WARS", "SORCERESS_GARDEN", "CORP_CAVE"), PetPlaces.HiddenArea.values().map { it.name }.toSet())
+        assertEquals(setOf("PEST_CONTROL", "SORCERESS_GARDEN", "CORP_CAVE"), PetPlaces.HiddenArea.values().map { it.name }.toSet())
     }
 
     @Test
@@ -37,7 +36,6 @@ class PetPlacesTests {
         assertTrue("PetPlaces.MSG_CORP_ENTER" in corp, "Corporeal Beast's cave entrance")
         val nex = source("areas/godwars/nex/nex_arena.plugin.kts")
         assertTrue("pets.carriesPet(player)" in nex && "option == 1 && !refused()" in nex, "Nex: before the warning and again on Climb down")
-        assertTrue("PetPlaces.carriesPet(player)" in source("activity/soul_wars/SoulWarsHandler.kt"), "Soul Wars lobby")
         assertTrue("PetPlaces.MSG_BUILD_MODE" in source("areas/poh/PohBuild.kt"), "building mode")
         assertTrue("if (PohBuild.setBuildMode(player, choice == 2)) enterHouse(player)" in source("areas/poh/player_house.plugin.kts"), "house portal")
         val ape = source("mechanics/traversal/batch9/ape_atoll.plugin.kts")

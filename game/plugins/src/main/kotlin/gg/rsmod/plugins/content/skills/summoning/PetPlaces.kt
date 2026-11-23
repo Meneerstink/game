@@ -7,9 +7,9 @@ import gg.rsmod.plugins.api.ext.message
  * N407 checklist point 15 (K02): the places a pet may not follow - OSRS Wiki "Pet", section Restrictions (fetched 2026-10-31),
  * for the ones this world has. The messages are the wiki's.
  *
- * - Hidden follower (Pest Control, Soul Wars, Sorceress's Garden): a following pet is hidden on the way in ("Your pet has been
+ * - Hidden follower (Pest Control, Sorceress's Garden): a following pet is hidden on the way in ("Your pet has been
  *   hidden as you enter this area."), can't be called, picked up or dropped inside, and is out again on leaving ([Pets.tick]).
- *   Soul Wars also refuses a pet carried in the backpack (its join calls [carriesPet]).
+ *   (Soul Wars is gone since PROJECT48 D2 - owner choice 1: its island is Varlamore land.)
  * - Unable to enter with a follower: Corporeal Beast's cave (a teleport in hides the pet, [HiddenArea.CORP_CAVE]), Nex (also not
  *   in the backpack), building mode in the house.
  * - Ape Atoll Agility Course: an obstacle puts a following pet in the backpack ([beforeApeAtollObstacle]).
@@ -24,7 +24,6 @@ object PetPlaces {
     const val MSG_NEX = "This doesn't seem like a suitable place to take a pet."
     const val MSG_BUILD_MODE = "You should pick up your follower before entering building mode."
     const val MSG_BUILD_MODE_DROP = "You cannot drop items while in building mode."
-    const val MSG_SOUL_WARS = "You can't enter a waiting area with a follower."
     const val MSG_APE_ATOLL = "Your little friend can't make it over the obstacle..."
 
     /**
@@ -43,7 +42,6 @@ object PetPlaces {
     /** A minigame that hides a following pet; [dropRefusal] answers a pet item dropped inside. */
     enum class HiddenArea(val dropRefusal: String) {
         PEST_CONTROL("Your follower hides in your pack, this is too violent an area for it."),
-        SOUL_WARS(MSG_SOUL_WARS),
         SORCERESS_GARDEN("Your pet stays in your pack, frightened by something."),
 
         /** The cave entrance refuses a following pet; a teleport in (games necklace, house portal) hides it instead. */
@@ -60,13 +58,8 @@ object PetPlaces {
     /** The minigame [player] is in that hides a pet: waiting or playing, by the minigame's own lists (any way in counts). */
     fun hiddenArea(player: Player): HiddenArea? {
         val pestControl = gg.rsmod.plugins.content.activity.pest_control.PestControlHandler
-        val soulWars = gg.rsmod.plugins.content.activity.soul_wars.SoulWarsMatch
-        // A listed player counts only in the lobby (N477: the list drops whoever leaves it, once per tick).
-        val soulWarsLobby = gg.rsmod.plugins.content.activity.soul_wars.SoulWarsHandler.LOBBY_REGION
         return when {
             pestControl.lobbyOf(player) != null || player.attr[pestControl.GAME_ATTR]?.active == true -> HiddenArea.PEST_CONTROL
-            player.attr[gg.rsmod.plugins.content.activity.soul_wars.SW_TEAM] != null ||
-                (player in soulWars.lobbyPlayers && player.tile.regionId == soulWarsLobby) -> HiddenArea.SOUL_WARS
             player.tile.regionId == SORCERESS_GARDEN_REGION -> HiddenArea.SORCERESS_GARDEN
             player.tile.height == CORP_CAVE_HEIGHT && player.tile.regionId in CORP_CAVE_REGIONS -> HiddenArea.CORP_CAVE
             else -> null
@@ -83,6 +76,6 @@ object PetPlaces {
                 else -> null
             }
 
-    /** A pet item in [player]'s backpack (Soul Wars and Nex refuse one). */
+    /** A pet item in [player]'s backpack (Nex refuses one). */
     fun carriesPet(player: Player): Boolean = player.inventory.toList().any { it != null && Pets.isPetItem(it.id) }
 }

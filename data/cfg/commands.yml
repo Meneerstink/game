@@ -1211,11 +1211,6 @@
   usage: "::slayerkills"
   description: "Show your slayer monster kill counts."
   example: "::slayerkills"
-- name: soulwarsleave
-  rank: player
-  usage: "::soulwarsleave"
-  description: "Leave the Soul Wars lobby."
-  example: "::soulwarsleave"
 - name: store
   rank: player
   usage: "::store"
