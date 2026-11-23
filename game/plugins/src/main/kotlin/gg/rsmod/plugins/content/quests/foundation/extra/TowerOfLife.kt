@@ -37,8 +37,8 @@ object TowerOfLife : ShortQuest(
 
     override val steps = listOf(
         QuestStep(Npcs.BONAFIDO, listOf("Obtain and wear a builder's costume, then speak to Bonafido."),
-            listOf("Bonafido accepted me as a builder."), place = "Bonafido outside the tower", location = Tile(2650, 3227, 0),
-            tip = "Hat: Black-eye. Shirt: beer for The Guns. Trousers: plants. Boots: pickpocket No fingers.",
+            listOf("Bonafido accepted me as a builder."), place = "Bonafido outside the tower", location = Tile(2649, 3226, 0),
+            tip = "Hat: Black-eye. Shirt: The Guns. Trousers: plants. Boots: No fingers.",
             talk = {
                 player.attr[OUTFIT_REQUESTED] = true
                 if (!OUTFIT.all { player.equipment.contains(it) }) {

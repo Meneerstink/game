@@ -76,6 +76,14 @@ class SpecialAttackSoundTests {
             // PROJECT48 DMM-ITEMS 23-11: Soulflame horn Entice - OSRS seq SOULFLAME_HORN_BLOW_03 12158 (local 17924, cfg/dmm2/ids.tsv)
             // carries YAMA_SOULFLAME_HORN_WHOOSH_01 + _FIRE_01 as frame sounds; the buff sound goes to each enticed player (SoulflameHorn).
             Exemption.FrameSound("soulflame_horn.plugin.kts", "SoulflameHorn.use(player)", 17924),
+            // PROJECT48 Zorya's tome (GPT-B, live 23-11): the special is cast by ZoryaSpell.fire(special = true), which plays the
+            // OSRS special sound (OSRS synth 12661 via cfg/dmm2/ids.tsv) to the caster and bystanders.
+            Exemption.Delegated(
+                "archive_weapons.plugin.kts",
+                "ZoryaTome.SPECIAL_ENERGY",
+                "gg/rsmod/plugins/content/combat/strategy/ZoryaSpell.kt",
+                "player.playSound(sound)",
+            ),
         )
 
     /** Every registration block in every plugin script, cut at the next registration in the same file. */

@@ -25,7 +25,8 @@ object HauntedMine : ShortQuest(
     override val reward = QuestReward(Items.SALVE_AMULET, xp = listOf(Skills.STRENGTH to 22_000.0),
         lines = listOf("22,000 Strength XP", "You can cut salve shards and make salve amulets"))
     val RETURNED_KEY = AttributeKey<Boolean>(persistenceKey = "extra_haunted_mine_returned_key")
-    val FUNGUS = Tile(2792, 4493, 0)
+    // Walkable tile beside the glowing fungus (the fungus object itself stands on 2792,4493 = blocked; map test 23-11).
+    val FUNGUS = Tile(2793, 4491, 0)
     val VALVE = Tile(2807, 4496, 0)
     val FIGHT = Tile(2788, 4450, 0)
     val CRYSTALS = Tile(2788, 4429, 0)
@@ -48,7 +49,7 @@ object HauntedMine : ShortQuest(
             place = "the mine's water valve", location = VALVE,
             search = QuestSearch(VALVE, "You use the Zealot's key to open the water supply to the lift.",
                 tools = listOf(Items.ZEALOTS_KEY to 1, Items.GLOWING_FUNGUS to 1))),
-        QuestStep(-1, listOf("Defeat Treus Dayth in the lowest chamber."), listOf("I defeated Treus Dayth and obtained the crystal-mine key."),
+        QuestStep(-1, listOf("Defeat Treus Dayth (level 95) in the lowest chamber."), listOf("I defeated Treus Dayth and obtained the crystal-mine key."),
             place = "Treus Dayth's chamber", location = FIGHT, gives = listOf(Items.CRYSTALMINE_KEY to 1),
             fight = QuestFight(Npcs.TREUS_DAYTH, "Treus Dayth", 95, FIGHT, ""),
             tip = "Bring combat equipment and food. Death follows the normal rules here."),

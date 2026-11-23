@@ -38,7 +38,12 @@ class ExtraQuestsTests {
             every { player.world } returns world
             every { player.attr } returns attributes
             every { player.varps } returns varps
-            every { player.skills } returns SkillSet(25)
+            val skills = SkillSet(25)
+            every { player.skills } returns skills
+            // Quest XP goes through Player.addXp (a member): the relaxed mock would drop it, so book it like NewPlayerFoundationTests.
+            every { player.addXp(any(), any(), any(), any()) } answers {
+                skills.setBaseXp(firstArg<Int>(), skills.getCurrentXp(firstArg<Int>()) + secondArg<Double>())
+            }
             every { player.inventory } returns ItemContainer(DEFINITIONS, INVENTORY_KEY)
             every { player.bank } returns ItemContainer(DEFINITIONS, BANK_KEY)
             every { player.equipment } returns ItemContainer(DEFINITIONS, EQUIPMENT_KEY)
