@@ -131,6 +131,8 @@ object OsrsItemImportTool {
             ),
             // PROJECT48 DMM-ITEMS C3: Soiled page (charges the Tome of earth), OSRS id 30068 (ItemID.SOILED_PAGE).
             "p48-items-d" to listOf(Spec(30068)),
+            // p48-gptb-rest: wiki rev15403804 + cache2762. Ancient fabric and base cape already imported by N415.
+            "p48-ancient-deadman" to listOf(Spec(34607, rev667Params = mapOf(749 to 6, 750 to 75))),
             // N415: OSRS Wiki + cache 2686 MA2 remains/symbol. Local ids come from the importer, never the upstream ids.
             // Ancient fabric/capes are absent in 2686 and intentionally require an isolated newer-source batch.
             "mage-arena" to listOf(Spec(21797), Spec(21798), Spec(21799), Spec(21800)),

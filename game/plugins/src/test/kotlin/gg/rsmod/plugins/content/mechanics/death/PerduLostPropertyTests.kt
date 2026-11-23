@@ -17,6 +17,7 @@ import io.mockk.mockk
 import org.junit.BeforeClass
 import java.nio.file.Paths
 import kotlin.test.Test
+import kotlin.test.assertNull
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -27,6 +28,27 @@ import kotlin.test.assertTrue
  * multiples of".
  */
 class PerduLostPropertyTests {
+    @Test
+    fun `old MA2 death records cannot bypass completion or the 250k lost property price`() {
+        val player = newPlayer()
+        PerduReclaim.record(player, Item(Items.IMBUED_ZAMORAK_CAPE), 96_000)
+        player.inventory[0] = Item(Items.IMBUED_ZAMORAK_CAPE)
+        PerduLostProperty.observe(player)
+        player.inventory[0] = null
+        assertTrue(PerduReclaim.paidOffers(player).none { it.itemId == Items.IMBUED_ZAMORAK_CAPE })
+        val old = PerduReclaim.Offer(Items.IMBUED_ZAMORAK_CAPE, 1, 96_000, record = PerduReclaim.records(player).single())
+        assertEquals("I don't have that any more.", PerduReclaim.claim(player, old))
+        player.attr[gg.rsmod.plugins.content.areas.wilderness.MageArenaII.STARTED] = true
+        player.attr[gg.rsmod.plugins.content.areas.wilderness.MageArenaII.DELIVERED] = 7
+        val offer = PerduReclaim.paidOffers(player).single { it.itemId == Items.IMBUED_ZAMORAK_CAPE }
+        assertEquals(250_000L, offer.price)
+        player.inventory.add(Items.COINS_995, 500_000)
+        assertNull(PerduReclaim.claim(player, offer))
+        assertEquals("You don't need that back - you still have it.", PerduReclaim.claim(player, offer))
+        assertEquals(250_000, player.inventory.getItemCount(Items.COINS_995))
+        assertEquals(1, player.inventory.getItemCount(Items.IMBUED_ZAMORAK_CAPE))
+    }
+
     @Test
     fun `an earned item is offered once it is gone, never while the player owns one`() {
         val player = newPlayer()

@@ -84,6 +84,8 @@ object PerduReclaim {
         // anywhere (Possessions: carried, worn, bank, gravestone, Death's Office, Grand Exchange, familiar), and one per item; the
         // other records of that item stay saved for when it is lost again.
         records(player).withIndex().filter { !tradeable(player, it.value.itemId) }
+            // MA2 has one earned/unowned offer at 250k. Old deep-Wilderness records must not bypass the quest or sell for 96k.
+            .filter { !PerduLostProperty.isMageArenaCape(it.value.itemId) }
             .filter { stackable(player, it.value.itemId) || gg.rsmod.plugins.content.mechanics.ownership.Possessions.whereOwned(player, family(it.value.itemId)) == null }
             .distinctBy { if (stackable(player, it.value.itemId)) "row:${it.index}" else "item:${family(it.value.itemId).minOrNull()}" }
             .map { Offer(it.value.itemId, it.value.amount, it.value.price, record = it.value) } +
@@ -98,6 +100,7 @@ object PerduReclaim {
         val base = lockables.ALIASES[itemId] ?: itemId
         val lockable = lockables.ALL.firstOrNull { base == it.baseItemId || base == it.lockedItemId || base == it.brokenItemId || base == it.mangledItemId }
         val ids = mutableSetOf(itemId, base)
+        PerduLostProperty.entryFor(itemId)?.let { ids += it.variants }
         lockable?.let { ids += listOfNotNull(it.baseItemId, it.lockedItemId, it.brokenItemId, it.mangledItemId) }
         ids += lockables.ALIASES.filterValues { it in ids }.keys
         return ids
@@ -170,6 +173,7 @@ object PerduReclaim {
         offer: Offer,
     ): String? {
         // Re-read: the list may have changed while the window or the dialogue was open.
+        if (offer.record != null && PerduLostProperty.isMageArenaCape(offer.itemId)) return "I don't have that any more."
         val current = records(player).toMutableList()
         val index = offer.record?.let { current.indexOf(it) } ?: -1
         if (offer.record != null && index < 0) return "I don't have that any more."
