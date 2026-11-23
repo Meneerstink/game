@@ -214,6 +214,47 @@ class ExtraQuestsTests {
         assertFalse(a.player.inventory.contains(Items.ZEALOTS_KEY))
     }
 
+    @Test fun `The Lost Tribe has the wiki requirements reward start and completion mirror`() {
+        val q = TheLostTribe
+        assertEquals(2082, q.startNpc)
+        assertEquals(4, q.steps.size)
+        assertEquals(listOf(Skills.AGILITY to 13, Skills.THIEVING to 13, Skills.MINING to 17), q.needs.skills)
+        assertEquals(listOf("Goblin Diplomacy", "Rune Mysteries"), q.needs.quests)
+        assertEquals(listOf(Skills.MINING to 3_000.0), q.reward.xp)
+        assertEquals(listOf(Items.RING_OF_LIFE to 1), q.reward.items)
+        assertEquals(1, q.pointReward)
+        val a = Account(); a.open(q)
+        assertFalse(q.needs.met(a.player))
+        q.needs.skills.forEach { (skill, level) -> a.player.skills.setBaseLevel(skill, level) }
+        q.needs.quests.forEach { QuestList.ENTRIES.first { e -> e.name == it }.progress.complete(a.player) }
+        assertTrue(q.needs.met(a.player))
+        q.setStage(a.player, q.completedValue)
+        assertEquals(11, a.player.getVarbit(Varbits.THE_LOST_TRIBE_PROGRESS))
+    }
+
+    @Test fun `Sigmund investigation requires Duke report key and chest before silverware`() {
+        val a = Account(); val q = TheLostTribe; a.open(q)
+        assertFalse(q.stealKey(a.player))
+        q.setStage(a.player, 3)
+        assertFalse(q.stealKey(a.player))
+        a.attributes[q.THEFT_KNOWN] = true
+        assertFalse(q.stealKey(a.player), "13 Thieving is required at the action too")
+        a.player.skills.setBaseLevel(Skills.THIEVING, 13)
+        assertFalse(q.searchCrate(a.player))
+        assertFalse(q.openChest(a.player))
+        assertTrue(q.stealKey(a.player))
+        assertTrue(q.openChest(a.player))
+        assertTrue(q.openChest(a.player))
+        assertEquals(1, a.player.inventory.getItemCount(Items.HAM_SHIRT))
+        assertTrue(q.searchCrate(a.player))
+        assertEquals(1, a.player.inventory.getItemCount(Items.SILVERWARE))
+        a.player.inventory.remove(Items.SILVERWARE)
+        assertTrue(q.searchCrate(a.player), "a lost silverware can be recovered at its original crate")
+        assertEquals(1, a.player.inventory.getItemCount(Items.SILVERWARE))
+        q.setStage(a.player, q.completedValue)
+        assertFalse(q.stealKey(a.player))
+    }
+
     companion object {
         private val DEFINITIONS = DefinitionSet()
         @BeforeClass @JvmStatic fun loadCache() {

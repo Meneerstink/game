@@ -94,6 +94,61 @@ on_item_on_item(item1 = Items.SALVE_SHARD, item2 = Items.BALL_OF_WOOL) {
     player.inventory.add(Items.SALVE_AMULET, 1)
 }
 
+spawn_npc(npc = Npcs.MISTAG, x = 3320, z = 9615, direction = Direction.WEST)
+spawn_npc(npc = Npcs.KAZGAR, x = 3230, z = 9611, direction = Direction.EAST)
+// The brooch is a real, replaceable ground find, also after the automatic first search.
+spawn_item(item = Items.BROOCH, amount = 1, x = 3230, z = 9610, respawnCycles = 10)
+on_npc_option(Npcs.SIGMUND_2082, "Talk-to") {
+    player.queue {
+        if (!FoundationQuests.talk(this, Npcs.SIGMUND_2082) && TheLostTribe.isFinished(player)) {
+            chatNpc("...And I would have gotten away with it too,", "if it wasn't for that pesky adventurer!")
+        }
+    }
+}
+on_npc_option(Npcs.SIGMUND_2082, "Pickpocket") {
+    player.queue {
+        if (TheLostTribe.stealKey(player)) {
+            with(TheLostTribe) { offerTravel("the castle spinning wheel room", CHEST_POST) }
+        }
+    }
+}
+on_obj_option(Objs.CHEST_6910, "Open") {
+    player.queue {
+        if (TheLostTribe.openChest(player)) {
+            with(TheLostTribe) { offerTravel("the H.A.M. hideout entrance", CRATE_POST) }
+        }
+    }
+}
+on_obj_option(Objs.CRATE_6911, "Search") {
+    player.queue {
+        if (TheLostTribe.searchCrate(player)) {
+            with(TheLostTribe) { offerTravel("Lumbridge Castle's first floor", startLocation!!, Npcs.DUKE_HORACIO) }
+        }
+    }
+}
+listOf(Npcs.MISTAG, Npcs.KAZGAR).forEach { id ->
+    on_npc_option(id, "Talk-to") {
+        player.queue {
+            if (!FoundationQuests.talk(this, id) && (TheLostTribe.isFinished(player) || TheLostTribe.stage(player) >= 2)) {
+                with(TheLostTribe) {
+                    if (id == Npcs.KAZGAR) offerTravel("the Dorgeshuun mines", MISTAG_POST, Npcs.MISTAG)
+                    else offerTravel("the cellar tunnel entrance", BROOCH_POST, Npcs.KAZGAR)
+                }
+            }
+        }
+    }
+    on_npc_option(id, "Follow") {
+        player.queue {
+            if (TheLostTribe.isFinished(player) || TheLostTribe.stage(player) >= 2) {
+                with(TheLostTribe) {
+                    if (id == Npcs.KAZGAR) offerTravel("the Dorgeshuun mines", MISTAG_POST, Npcs.MISTAG)
+                    else offerTravel("the cellar tunnel entrance", BROOCH_POST, Npcs.KAZGAR)
+                }
+            }
+        }
+    }
+}
+
 // Repeatable gathering after losing the worm; the automatic search is the short quest's first step.
 listOf(58, 2013, 2989, 2990, 2991, 2992, 2993, 2994).filter { if_obj_has_option(it, "Check") }.forEach { vine ->
 on_obj_option(vine, "Check") {

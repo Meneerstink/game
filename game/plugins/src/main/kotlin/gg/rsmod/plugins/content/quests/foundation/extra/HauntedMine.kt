@@ -30,6 +30,8 @@ object HauntedMine : ShortQuest(
     val FIGHT = Tile(2788, 4450, 0)
     val CRYSTALS = Tile(2788, 4429, 0)
 
+    override fun onReset(player: Player) { player.attr.remove(RETURNED_KEY) }
+
     override suspend fun QueueTask.intro(): Boolean {
         chatNpc("The mine hides crystals blessed by Saradomin.", "Treus Dayth guards them, even beyond death.", "My key opens the way into the lower mine.")
         return options("I'll investigate the mine.", "Not now.", title = "Start Haunted Mine?") == 1

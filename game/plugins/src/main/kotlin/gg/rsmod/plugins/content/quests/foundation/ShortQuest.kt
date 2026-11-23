@@ -169,6 +169,9 @@ abstract class ShortQuest(
     /** PROJECT48: called by [FoundationQuests.completeStep] when step [stage] is done (before the next stage is written). */
     open fun onStepDone(player: Player, stage: Int) {}
 
+    /** Optional quest-specific bookkeeping reset, used only when explicitly resetting the quest to stage zero. */
+    open fun onReset(player: Player) {}
+
     /**
      * PROJECT48 F1: a bracket mini-quest keeps its step in its own persistent attribute ([stepKey]) instead of the cache varp/varbit
      * (many 667 quest variables have too few values for the steps, and in-between values can change the world). The quest list reads
@@ -238,6 +241,7 @@ abstract class ShortQuest(
                 // Back to not started (::questreset / ::p48 reset): the list entry too, so the quest list shows it as open.
                 gg.rsmod.plugins.content.quests.QuestList.ENTRIES.firstOrNull { it.slot == slot }?.progress?.reset?.invoke(player)
                 player.attr.remove(stepKey)
+                onReset(player)
             } else {
                 player.attr[stepKey] = value
                 if (showStartedInList && listEntryRead(player) == 0) {
