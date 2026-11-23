@@ -187,6 +187,20 @@ object QuestBrackets {
 
     fun reached(player: Player): List<Step> = STEPS.filter { it.bracket.ordinal <= DeadmanBrackets.of(player).ordinal }
 
+    /**
+     * BARCRAWL (24-11): a quest of the photo that has no entry in our quest list ([Step.notOnServer], the miniquest Alfred Grimhand's
+     * Barcrawl in bracket 3-50) is completed like the listed quests of its bracket: for an Armageddon account once that bracket is
+     * reached (3-50 = every account from the start, as in OSRS Deadman: Armageddon), for older accounts always (they have every quest).
+     * Any other unknown name stays false, so a typo in a requirement never opens a quest.
+     */
+    fun givesUnlisted(
+        player: Player,
+        name: String,
+    ): Boolean {
+        val step = STEPS.firstOrNull { name in it.notOnServer } ?: return false
+        return !applies(player) || step in reached(player)
+    }
+
     private val optionKeys: Map<Bracket, AttributeKey<Int>> =
         Bracket.values().associateWith { AttributeKey<Int>(persistenceKey = "armageddon_quest_option_${it.name.lowercase()}") }
 

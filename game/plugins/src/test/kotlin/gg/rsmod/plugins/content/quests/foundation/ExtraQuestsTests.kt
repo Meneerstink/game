@@ -165,7 +165,7 @@ class ExtraQuestsTests {
         assertEquals(1, a.player.inventory.getItemCount(Items.FISHING_TROPHY))
     }
 
-    @Test fun `Scorpion Catcher keeps its hard missing prerequisite and exact wiki reward`() {
+    @Test fun `Scorpion Catcher keeps its wiki prerequisites and exact wiki reward`() {
         val q = ScorpionCatcher
         assertEquals(389, q.startNpc)
         assertEquals(5, q.steps.size)
@@ -173,9 +173,16 @@ class ExtraQuestsTests {
         assertEquals(listOf("Alfred Grimhand's Barcrawl"), q.needs.quests)
         assertEquals(listOf(Skills.STRENGTH to 6_625.0), q.reward.xp)
         val a = Account(); a.open(q)
+        // BARCRAWL: the miniquest belongs to bracket 3-50 (Armageddon photo) = completed for every account; Prayer 31 still blocks.
+        a.player.skills.setBaseLevel(Skills.PRAYER, 30)
+        assertFalse(q.needs.met(a.player))
+        val missing = q.needs.missing(a.player)
+        assertEquals(1, missing.size)
+        assertTrue(missing.single().startsWith("You need level 31"))
         a.player.skills.setBaseLevel(Skills.PRAYER, 31)
-        assertFalse(q.needs.met(a.player), "missing Barcrawl must never be waived")
-        assertTrue(q.needs.missing(a.player).any { it.contains("Alfred Grimhand") })
+        assertTrue(q.needs.met(a.player), "Barcrawl comes with bracket 3-50")
+        assertTrue(QuestBrackets.givesUnlisted(Account(QuestChoices.LEGACY).player, "Alfred Grimhand's Barcrawl"))
+        assertFalse(QuestBrackets.givesUnlisted(a.player, "Alfred Grimhands Barcrawl"), "a misspelt requirement never opens a quest")
         q.setStage(a.player, q.completedValue)
         assertEquals(6, a.player.getVarp(Varps.SCORPION_CATCHER_PROGRESS))
     }

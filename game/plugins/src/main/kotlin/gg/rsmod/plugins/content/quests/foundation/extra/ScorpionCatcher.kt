@@ -18,8 +18,8 @@ object ScorpionCatcher : ShortQuest(
 ) {
     override val ownSteps = true
     override val showStartedInList = true
-    // Barcrawl is absent from this server's list. QuestRequirements deliberately refuses an unknown prerequisite.
-    // Owner question in BRACKET-QUESTS: implement it separately or explicitly waive it; never assume it completed.
+    // The miniquest Barcrawl has no quest-list entry: it belongs to the Armageddon bracket 3-50, so it is completed for every account
+    // (QuestBrackets.givesUnlisted, BARCRAWL 24-11). Prayer 31 stays the one real requirement.
     override val needs = QuestRequirements(skills = listOf(Skills.PRAYER to 31), quests = listOf("Alfred Grimhand's Barcrawl"))
     override val reward = QuestReward(Items.SCORPION_CAGE_463, xp = listOf(Skills.STRENGTH to 6_625.0),
         lines = listOf("6,625 Strength XP", "Thormac can enchant battlestaves for 40,000 coins"))

@@ -38,7 +38,11 @@ class QuestRequirements(
         quests.forEach { name ->
             val entry = QuestList.ENTRIES.firstOrNull { it.name == name }
             // An unknown name never lets the quest start (and the P48 tests list every name against the quest list).
-            out += Line(name, entry != null && QuestStatus.state(player, entry.slot) == QuestStatus.State.COMPLETED)
+            // BARCRAWL: a quest of the Armageddon photo without a list entry (the miniquest Alfred Grimhand's Barcrawl) counts as
+            // completed once its bracket is reached, exactly like the listed quests of that bracket.
+            val met = if (entry == null) QuestBrackets.givesUnlisted(player, name)
+                else QuestStatus.state(player, entry.slot) == QuestStatus.State.COMPLETED
+            out += Line(name, met)
         }
         if (questPoints > 0) out += Line("$questPoints Quest points", QuestStatus.points(player) >= questPoints)
         extra.forEach { out += Line(it, true, blocking = false) }
