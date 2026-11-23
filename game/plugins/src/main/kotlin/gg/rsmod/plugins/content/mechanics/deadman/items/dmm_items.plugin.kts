@@ -158,3 +158,5 @@ on_item_option(BookOfTheDead.ITEM, "destroy") {
         }
     }
 }
+
+on_equipment_option(BookOfTheDead.ITEM, "check") { BookOfTheDead.check(player) }

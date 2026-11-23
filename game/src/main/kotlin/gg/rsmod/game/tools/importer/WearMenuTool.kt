@@ -27,12 +27,13 @@ object WearMenuTool {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val mode = args.getOrNull(0) ?: "plan"
+        val bookOnly = "--book-of-the-dead" in args
+        val mode = args.firstOrNull { !it.startsWith("--") } ?: "plan"
         require(mode == "plan" || mode == "apply") { "Usage: plan|apply" }
         val library = CacheLibrary(GAME_CACHE)
         val mutations = ArrayList<CacheMutation>()
         try {
-            ITEMS.forEach { item ->
+            (if (bookOnly) listOf(25479) else ITEMS).forEach { item ->
                 val bytes = library.data(INDEX_ITEMS, item ushr 8, item and 0xFF) ?: error("item $item missing")
                 val def = ItemDef(item).also { it.decode(Unpooled.wrappedBuffer(bytes)) }
                 println("ITEM $item '${def.name}' inventory=${def.inventoryMenu.toList()} worn=${def.equipmentMenu.toList()}")
@@ -45,7 +46,7 @@ object WearMenuTool {
                     if (second == null) removed += OP1 else strings[OP1] = second
                 }
                 val fifth = def.params[532] as? String
-                val params = if (fifth != null) mapOf(ItemDef.WORN_OP6_PARAM to fifth) else emptyMap()
+                val params = if (bookOnly) mapOf(528 to "Check") else if (fifth != null) mapOf(ItemDef.WORN_OP6_PARAM to fifth) else emptyMap()
                 if (strings.isEmpty() && params.isEmpty()) return@forEach
                 val edited =
                     ItemDefCodec.cloneWithOverrides(
@@ -58,7 +59,7 @@ object WearMenuTool {
                 val after = ItemDef(item).also { it.decode(Unpooled.wrappedBuffer(edited)) }
                 println("ITEM $item AFTER inventory=${after.inventoryMenu.toList()} worn=${after.equipmentMenu.toList()}")
                 check(after.inventoryMenu[1]?.lowercase() in WEAR) { "item $item: Wear is not on op 2" }
-                check(after.equipmentMenu.filterNotNull() == def.equipmentMenu.filterNotNull()) { "item $item: the worn menu changed" }
+                check(after.equipmentMenu.filterNotNull() == (if (bookOnly) listOf("Check") else def.equipmentMenu.filterNotNull())) { "item $item: the worn menu changed" }
                 mutations += CacheMutation(INDEX_ITEMS, item ushr 8, item and 0xFF, edited, "item $item: Wear on op 2, fifth worn option in 1211", CacheItemProbeTool.sha1(bytes))
             }
         } finally {
