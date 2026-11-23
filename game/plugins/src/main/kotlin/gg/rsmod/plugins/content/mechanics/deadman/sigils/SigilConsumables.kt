@@ -14,11 +14,18 @@ object SigilConsumables {
     private val POTION_SAVED = TimerKey()
     private const val SAVE_COOLDOWN_TICKS = 10
 
-    /** S09 The Well Fed: a 30% chance to gain twice the number of hitpoints from any food or potion. */
+    /**
+     * S09 The Well Fed: a 30% chance to gain twice the number of hitpoints from any food or potion. Chat line = OCR of DMM video
+     * z_PHEY6D9XY 23:18 / 23:56 / 24:14 (D01 PROJECT48 23-11): 'Your Sigil of the Well Fed doubles your healing!'.
+     */
     fun wellFed(
         player: Player,
         heal: Int,
-    ): Int = if (heal > 0 && Sigils.effective(player, Sigil.THE_WELL_FED) && player.world.randomDouble() < 0.30) heal * 2 else heal
+    ): Int {
+        if (heal <= 0 || !Sigils.effective(player, Sigil.THE_WELL_FED) || player.world.randomDouble() >= 0.30) return heal
+        player.message("Your Sigil of the Well Fed doubles your healing!")
+        return heal * 2
+    }
 
     /** S13 The Food Master: a 40% chance not to consume the food; after it triggered it cannot trigger again for 6 seconds. */
     fun keepsFood(player: Player): Boolean {
@@ -33,6 +40,8 @@ object SigilConsumables {
         if (!Sigils.effective(player, Sigil.THE_POTION_MASTER) || player.timers.has(POTION_SAVED)) return false
         if (player.world.randomDouble() >= 0.20) return false
         player.timers[POTION_SAVED] = SAVE_COOLDOWN_TICKS
+        // Chat line = OCR of DMM video z_PHEY6D9XY 24:26 / 24:42 (D01 PROJECT48 23-11).
+        player.message("Your Sigil of the Potion Master saves a dose of your potion.")
         return true
     }
 
