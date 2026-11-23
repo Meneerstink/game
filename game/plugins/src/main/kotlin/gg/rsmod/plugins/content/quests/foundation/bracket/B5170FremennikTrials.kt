@@ -102,7 +102,7 @@ object FremennikTrials : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.THORVALD_THE_WARRIOR,
-                journal = listOf("I must defeat ${red("Koschei the Deathless")} three times, each time stronger."),
+                journal = listOf("I must defeat ${red("Koschei the Deathless")} (level 0) three times, each time stronger."),
                 done = listOf("I defeated Koschei the Deathless."),
                 place = "the cellar below the longhall",
                 location = KOSCHEI_ARENA,

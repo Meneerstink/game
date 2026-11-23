@@ -366,7 +366,7 @@ object RecipeForDisaster : ShortQuest(
                 done = listOf("I freed Sir Amik Varze: the brulee supreme did it."),
                 place = "the Evil Chicken's Lair, Zanaris",
                 location = CHICKEN_FIGHT,
-                tip = "Four level 227 black dragons guard the lair: bring an anti-dragon shield. The chicken hits with Magic.",
+                tip = "Bring an anti-dragon shield (4 black dragons). The chicken uses Magic.",
                 fight = QuestFight(Npcs.EVIL_CHICKEN, "Evil Chicken", 159, CHICKEN_FIGHT, "MUAHAHAHAHAAA!"),
                 talk = {
                     chatNpc("The Evil Chicken waits in its lair in Zanaris.", facialExpression = FacialExpression.WORRIED)
