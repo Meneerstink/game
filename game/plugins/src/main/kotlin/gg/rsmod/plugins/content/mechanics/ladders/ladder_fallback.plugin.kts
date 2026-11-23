@@ -16,7 +16,8 @@ import gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports
  *   (content/entity/obj/Stairs.kt), then the object's own Climb-up / Climb-down route (its handler when one is bound).
  */
 world.plugins.bindObjectFallback { player, obj, opt ->
-    val def = player.world.definitions.get(ObjectDef::class.java, obj.getTransform(player))
+    // LADDER-NPE: a multiloc can transform to -1 (nothing) for this player - then there is no definition and no fallback.
+    val def = player.world.definitions.getNullable(ObjectDef::class.java, obj.getTransform(player)) ?: return@bindObjectFallback false
     val ladder = GenericLadders.isLadder(def)
     val stairs = def.name.contains("stair", ignoreCase = true)
     if (!ladder && !stairs) return@bindObjectFallback false

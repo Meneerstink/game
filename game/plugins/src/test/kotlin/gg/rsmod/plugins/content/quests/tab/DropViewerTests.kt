@@ -492,6 +492,17 @@ class DropViewerTests {
     }
 
     @Test
+    fun `a reached level task is never listed as closest to done (DMM-TASKS-OVERLAP)`() {
+        val account = Account()
+        every { account.player.combatLevel } returns 45
+        val closest = DeadmanTasks.closest(account.player, n = DeadmanTasks.TASKS.size)
+        assertFalse(closest.any { it.id == "e_cb40" }, "combat 40 is reached: not an open task")
+        assertTrue(closest.all { DeadmanTasks.progress(account.player, it) < it.target })
+        DeadmanTasks.check(account.player)
+        assertTrue("e_cb40" in DeadmanTasks.done(account.player))
+    }
+
+    @Test
     fun `a skulled minute counts only while the skull counts down in a dangerous area - never standing still or in a guarded city`() {
         val account = Account()
         val timers = TimerMap()

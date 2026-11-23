@@ -76,7 +76,8 @@ val BANK_OBJECT_NAMES = setOf("bank booth", "bank chest", "bank counter")
 val BANK_OPEN_OPTIONS = setOf("use", "use-quickly", "bank")
 
 world.plugins.bindObjectFallback { player, obj, opt ->
-    val def = player.world.definitions.get(ObjectDef::class.java, obj.getTransform(player))
+    // LADDER-NPE: a multiloc can transform to -1 (nothing) for this player - then there is no definition and no fallback.
+    val def = player.world.definitions.getNullable(ObjectDef::class.java, obj.getTransform(player)) ?: return@bindObjectFallback false
     val options = def.options.map { it?.lowercase() }
     val name = def.name.lowercase()
     if (name !in BANK_OBJECT_NAMES && !(name == "counter" && "use-quickly" in options)) return@bindObjectFallback false

@@ -14,7 +14,8 @@ val PICK_SOUND = 2581 // Void pick
 
 // Void Nettles.kt - "Pick" on every nettle loc (by cache name): needs gloves or you are stung (20 poison damage).
 world.plugins.bindObjectFallback { player, obj, opt ->
-    val def = player.world.definitions.get(ObjectDef::class.java, obj.getTransform(player))
+    // LADDER-NPE: a multiloc can transform to -1 (nothing) for this player - then there is no definition and no fallback.
+    val def = player.world.definitions.getNullable(ObjectDef::class.java, obj.getTransform(player)) ?: return@bindObjectFallback false
     if (!def.name.equals("Nettles", ignoreCase = true) || def.options.getOrNull(opt - 1)?.lowercase() != "pick") return@bindObjectFallback false
     if (player.inventory.isFull) {
         player.queue { messageBox("You can't carry any more nettles.") }
@@ -73,7 +74,8 @@ BUSHES.forEach { bush ->
 
 // Void HayBales.kt (Jagex Ash on x.com): 2 % a prick for 1 hitpoint, 10 % a needle, otherwise nothing.
 world.plugins.bindObjectFallback { player, obj, opt ->
-    val def = player.world.definitions.get(ObjectDef::class.java, obj.getTransform(player))
+    // LADDER-NPE: a multiloc can transform to -1 (nothing) for this player - then there is no definition and no fallback.
+    val def = player.world.definitions.getNullable(ObjectDef::class.java, obj.getTransform(player)) ?: return@bindObjectFallback false
     val name = def.name.lowercase()
     if ((name != "hay bales" && name != "hay bale") || def.options.getOrNull(opt - 1)?.lowercase() != "search") return@bindObjectFallback false
     player.queue {

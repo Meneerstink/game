@@ -56,7 +56,8 @@ ALTARS_PRAY_AT.forEach { altar ->
 val PRAY_OPTIONS = setOf("pray", "pray-at")
 
 world.plugins.bindObjectFallback { player, obj, opt ->
-    val def = player.world.definitions.get(ObjectDef::class.java, obj.getTransform(player))
+    // LADDER-NPE: a multiloc can transform to -1 (nothing) for this player - then there is no definition and no fallback.
+    val def = player.world.definitions.getNullable(ObjectDef::class.java, obj.getTransform(player)) ?: return@bindObjectFallback false
     if (!def.name.lowercase().contains("altar")) return@bindObjectFallback false
     if (def.options.getOrNull(opt - 1)?.lowercase() !in PRAY_OPTIONS) return@bindObjectFallback false
     player.queue {

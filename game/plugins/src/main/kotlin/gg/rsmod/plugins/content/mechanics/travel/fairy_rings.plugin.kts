@@ -12,7 +12,8 @@ import gg.rsmod.game.fs.def.ObjectDef
 val USED_RING = gg.rsmod.game.model.attr.AttributeKey<gg.rsmod.game.model.Tile>()
 
 world.plugins.bindObjectFallback { player, obj, opt ->
-    val def = player.world.definitions.get(ObjectDef::class.java, obj.getTransform(player))
+    // LADDER-NPE: a multiloc can transform to -1 (nothing) for this player - then there is no definition and no fallback.
+    val def = player.world.definitions.getNullable(ObjectDef::class.java, obj.getTransform(player)) ?: return@bindObjectFallback false
     if (!def.name.equals("Fairy ring", ignoreCase = true) || def.options.getOrNull(opt - 1)?.lowercase() != "use") {
         return@bindObjectFallback false
     }

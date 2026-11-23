@@ -437,6 +437,9 @@ object QuestTab {
 
     private fun drawTasks(player: Player) {
         val p = Tab.TASKS.panel
+        // DMM-TASKS-OVERLAP: levels and emblem tiers reached since the last task event complete before the tab is drawn
+        // (they showed as 1000/1000 under 'Closest to done' without points).
+        runCatching { DeadmanTasks.check(player) }.onFailure { gg.rsmod.game.model.Trace.crash("deadman tasks draw", it) }
         val world = player.world
         val earned = DeadmanTasks.earned(player)
         val right = "${N108Ui.number(earned)} DP"

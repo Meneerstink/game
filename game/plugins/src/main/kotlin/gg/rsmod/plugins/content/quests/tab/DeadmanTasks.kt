@@ -245,7 +245,8 @@ object DeadmanTasks {
     /** "Closest to done": open tasks with the most progress first (share of the target), at most [n]. */
     fun closest(player: Player, n: Int = 4): List<Task> {
         val doneIds = done(player)
-        return TASKS.filter { it.id !in doneIds }
+        // DMM-TASKS-OVERLAP: a reached level/emblem task that check() has not completed yet is not "open" either.
+        return TASKS.filter { it.id !in doneIds && progress(player, it) < it.target }
             .sortedWith(compareByDescending<Task> { progress(player, it).toDouble() / it.target }.thenBy { it.tier.ordinal }.thenBy { it.target })
             .take(n)
     }
