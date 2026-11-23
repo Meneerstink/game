@@ -7,9 +7,10 @@ import gg.rsmod.plugins.content.quests.foundation.*
 
 /** Extra short quests, deliberately outside the Armageddon unlock tables. */
 object ExtraQuests {
-    val ALL: List<ShortQuest> by lazy { listOf(FishingContest, ScorpionCatcher) }
+    val ALL: List<ShortQuest> by lazy { listOf(FishingContest, ScorpionCatcher, HauntedMine) }
     val OPTIONS: List<Pair<Int, String>> = listOf(232 to "Talk-to", 3679 to "Talk-to", 225 to "Talk-to", 225 to "Pay",
-        389 to "Talk-to", 388 to "Talk-to", 385 to "Pick-up", 386 to "Pick-up", 387 to "Pick-up")
+        389 to "Talk-to", 388 to "Talk-to", 385 to "Pick-up", 386 to "Pick-up", 387 to "Pick-up",
+        1528 to "Talk-to", 1528 to "Pickpocket", 1543 to "Take")
     fun bySlot(slot: Int): ShortQuest? = ALL.firstOrNull { it.slot == slot }
 
     fun held(player: Player, item: Int): Boolean =

@@ -174,6 +174,46 @@ class ExtraQuestsTests {
         assertEquals(1, a.player.inventory.getItemCount(456))
     }
 
+    @Test fun `Haunted Mine has the wiki requirements fight reward and completion mirror`() {
+        val q = HauntedMine
+        assertEquals(1528, q.startNpc)
+        assertEquals(5, q.steps.size)
+        assertEquals(listOf(Skills.CRAFTING to 35), q.needs.skills)
+        assertEquals(listOf("Priest in Peril"), q.needs.quests)
+        assertEquals(setOf(Skills.CRAFTING), q.needs.boostable)
+        assertEquals(listOf(Skills.STRENGTH to 22_000.0), q.reward.xp)
+        assertEquals(2, q.pointReward)
+        val fight = q.steps.single { it.fight != null }.fight!!
+        assertEquals(1540, fight.npc)
+        assertEquals(95, fight.level)
+        assertEquals(listOf(Items.CRYSTALMINE_KEY to 1), q.steps[3].gives)
+        assertEquals(listOf(Items.CHISEL to 1, Items.CRYSTALMINE_KEY to 1), q.steps[4].search!!.tools)
+        val a = Account(); a.open(q)
+        assertFalse(q.needs.met(a.player))
+        a.player.skills.setBaseLevel(Skills.CRAFTING, 35)
+        assertTrue(q.needs.met(a.player))
+        q.setStage(a.player, q.completedValue)
+        assertEquals(11, a.player.getVarp(Varps.HAUNTED_MINE_PROGRESS))
+    }
+
+    @Test fun `Zealot key before start during quest and after return follows transcript`() {
+        val a = Account(); val q = HauntedMine; a.open(q)
+        assertFalse(q.stealKey(a.player))
+        assertFalse(a.player.inventory.contains(Items.ZEALOTS_KEY))
+        q.setStage(a.player, 1)
+        assertTrue(q.stealKey(a.player))
+        assertEquals(2, q.stage(a.player))
+        assertTrue(q.stealKey(a.player))
+        assertEquals(1, a.player.inventory.getItemCount(Items.ZEALOTS_KEY))
+        a.player.inventory.remove(Items.ZEALOTS_KEY)
+        assertTrue(q.stealKey(a.player))
+        q.setStage(a.player, q.completedValue)
+        a.player.inventory.remove(Items.ZEALOTS_KEY)
+        a.attributes[q.RETURNED_KEY] = true
+        assertFalse(q.stealKey(a.player))
+        assertFalse(a.player.inventory.contains(Items.ZEALOTS_KEY))
+    }
+
     companion object {
         private val DEFINITIONS = DefinitionSet()
         @BeforeClass @JvmStatic fun loadCache() {
