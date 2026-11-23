@@ -106,7 +106,7 @@ object DizanasQuiver {
     }
 
     fun isArrowOrBolt(ammoId: Int?): Boolean =
-        ammoId != null && RangedProjectile.values.any { ammoId in it.items && (it.type == ProjectileType.ARROW || it.type == ProjectileType.BOLT) }
+        ammoId != null && (gg.rsmod.plugins.content.mechanics.deadman.items.ArchiveWeapons.isBolt(ammoId) || RangedProjectile.values.any { ammoId in it.items && (it.type == ProjectileType.ARROW || it.type == ProjectileType.BOLT) })
 
     /** True while a bow or crossbow shot with arrows or bolts gains Dizana's Sunfire. */
     fun applies(player: Player): Boolean =

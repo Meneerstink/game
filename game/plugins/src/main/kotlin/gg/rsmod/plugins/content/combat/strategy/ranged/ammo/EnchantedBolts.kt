@@ -14,6 +14,7 @@ import gg.rsmod.plugins.api.NpcSkills
 import gg.rsmod.plugins.api.NpcSpecies
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.getEquipment
 import gg.rsmod.plugins.api.ext.freeze
 import gg.rsmod.plugins.api.ext.hasEquipped
 import gg.rsmod.plugins.api.ext.heal
@@ -112,7 +113,15 @@ object EnchantedBolts {
     /** One-shot: the attacker's next applicable bolt activates (IntroGuardScene - the owner's single Armour Piercing). */
     val FORCE_NEXT_PROC = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
 
-    fun boltFor(ammoId: Int?): Bolt? = ammoId?.let { ROSTER[it] }
+    fun boltFor(ammoId: Int?): Bolt? {
+        if (ammoId == null) return null
+        val ids = gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids
+        return when (ammoId) {
+            ids.item(34696) -> Bolt(ammoId, Effect.ARMOUR_PIERCING, 0.05, 0.025, false)
+            ids.item(34708) -> Bolt(ammoId, Effect.LIFE_LEECH, 0.055, 0.05, true)
+            else -> ROSTER[ammoId]
+        }
+    }
 
     fun chance(
         bolt: Bolt,
@@ -199,6 +208,8 @@ object EnchantedBolts {
         roll: Double,
     ): Resolution {
         val none = Resolution(null, landHit, DEFAULT_MIN_HIT, maxHit, 0)
+        if (gg.rsmod.plugins.content.mechanics.deadman.items.ArchiveWeapons.isBolt(ammoId) &&
+            !gg.rsmod.plugins.content.mechanics.deadman.items.ArchiveWeapons.isCrossbow(attacker.getEquipment(EquipmentType.WEAPON)?.id)) return none
         val bolt = boltFor(ammoId) ?: return none
         if (!activates(bolt, attacker, target, landHit, special, roll)) return none
         val change = shotChange(bolt, attacker, target, special)

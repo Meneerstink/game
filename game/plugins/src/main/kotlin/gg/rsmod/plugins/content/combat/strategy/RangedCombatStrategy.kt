@@ -112,6 +112,7 @@ object RangedCombatStrategy : CombatStrategy {
                     else -> DEFAULT_ATTACK_RANGE
                 }
 
+            if (gg.rsmod.plugins.content.mechanics.deadman.items.ArchiveWeapons.isCrossbow(weapon?.id)) range = 6
             if (attackStyle == WeaponStyle.LONG_RANGE) {
                 range += if (weapon?.id == Items.SLING) 1 else 2
                 if (range > 10) range = 10
@@ -160,6 +161,10 @@ object RangedCombatStrategy : CombatStrategy {
                 pawn.resetFacePawn()
                 return false
             }
+            if (gg.rsmod.plugins.content.mechanics.deadman.items.ArchiveWeapons.isCrossbow(weapon?.id) &&
+                (fired == null || gg.rsmod.plugins.content.mechanics.deadman.items.ArchiveWeapons.projectile(fired.item.id) == null ||
+                    listOf(15113, 15114, 15115, 15116).any { gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.seq(it) == null } ||
+                    gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.sound(12648) == null)) return false
             val crossbow = CrossbowType.values.firstOrNull { it.item == gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.bowBase(weapon?.id) }
             if (crossbow != null && fired == null) {
                 val message =
@@ -204,7 +209,10 @@ object RangedCombatStrategy : CombatStrategy {
         val starterAppearance = (pawn as? Player)?.getEquipment(EquipmentType.WEAPON)?.takeIf {
             gg.rsmod.plugins.content.starter.DeadmanStarterPack.isBow(it.id)
         }?.let { gg.rsmod.plugins.content.starter.StarterWeaponCombat.bowAppearance }
-        val animation = starterAppearance?.animation?.takeIf { it > 0 } ?: CombatConfigs.getAttackAnimation(pawn)
+        val ascensionAnimation = (pawn as? Player)?.takeIf {
+            gg.rsmod.plugins.content.mechanics.deadman.items.ArchiveWeapons.isCrossbow(it.getEquipment(EquipmentType.WEAPON)?.id)
+        }?.let { gg.rsmod.plugins.content.mechanics.deadman.items.ArchiveWeapons.nextAnimation(it, target is Player) }
+        val animation = ascensionAnimation ?: starterAppearance?.animation?.takeIf { it > 0 } ?: CombatConfigs.getAttackAnimation(pawn)
 
         /*
          * A list of actions that will be executed upon this hit dealing damage
@@ -254,7 +262,13 @@ object RangedCombatStrategy : CombatStrategy {
             val ammoProjectile = if (ammo != null) RangedProjectile.values.firstOrNull { ammo.id in it.items } else null
             // OSRS-IMPORT Venator bow: every arrow flies as the bow's own ARROW_VENATOR01_LAUNCH01 / TRAVEL01 (gameval SpotanimID, weaponfx2).
             val venator = pawn.getEquipment(EquipmentType.WEAPON)?.id == gg.rsmod.plugins.api.cfg.Items.VENATOR_BOW
-            if (ammoProjectile != null && venator) {
+            val ascension = gg.rsmod.plugins.content.mechanics.deadman.items.ArchiveWeapons.isCrossbow(pawn.getEquipment(EquipmentType.WEAPON)?.id)
+            if (ascension) {
+                gg.rsmod.plugins.content.mechanics.deadman.items.ArchiveWeapons.projectile(ammo?.id)?.let {
+                    world.spawn(pawn.createProjectile(target, it, ProjectileType.BOLT))
+                }
+                gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.sound(12648)?.let { pawn.playSound(it); pawn.soundToBystanders(it) }
+            } else if (ammoProjectile != null && venator) {
                 pawn.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.VENATOR_ARROW_LAUNCH, ammoProjectile.drawback?.height ?: 96)
                 world.spawn(pawn.createProjectile(target, gg.rsmod.plugins.content.items.osrs.OsrsGfx.VENATOR_ARROW_TRAVEL, ammoProjectile.type))
             } else if (ammoProjectile != null) {
@@ -329,7 +343,7 @@ object RangedCombatStrategy : CombatStrategy {
             if (!sequenceSilent) pawn.frameSoundToBystanders(animation)
             // A server shot cue: the shooter gets it directly, the players around him as an area sound.
             val shot = { id: Int -> pawn.playSound(id); pawn.soundToBystanders(id) }
-            if (sequenceSilent && pawn.hasWeaponType(WeaponType.CROSSBOW)) shot(Sfx.CROSSBOW) // crossbow sound
+            if (sequenceSilent && !ascension && pawn.hasWeaponType(WeaponType.CROSSBOW)) shot(Sfx.CROSSBOW) // crossbow sound
             // Crystal bows / Bow of Faerdhinen shoot with their own item sound (OSRS crystal_bow2 1352, owner C3 2026-10-11); every
             // other bow keeps the shortbow cue.
             val crystalSound =

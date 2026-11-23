@@ -17,7 +17,7 @@ class PoweredStavesTests {
         assertEquals(2_500, staves.getValue(PoweredStaves.Staff.SWAMP).maxCharges)
         assertEquals(20_000, staves.getValue(PoweredStaves.Staff.SEAS_E).maxCharges)
         assertEquals(20_000, staves.getValue(PoweredStaves.Staff.SWAMP_E).maxCharges)
-        PoweredStaves.Staff.values().filterNot { it.leech || it.revenant || it.shadow }.forEach { staff ->
+        PoweredStaves.Staff.values().filterNot { it.leech || it.revenant || it.shadow || it.zorya }.forEach { staff ->
             val cost = staff.chargeCost.associate { it.id to it.amount }
             assertEquals(1, cost[Items.DEATH_RUNE], "$staff")
             assertEquals(1, cost[Items.CHAOS_RUNE], "$staff")

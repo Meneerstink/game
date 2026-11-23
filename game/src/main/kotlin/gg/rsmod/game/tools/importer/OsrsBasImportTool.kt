@@ -60,6 +60,12 @@ object OsrsBasImportTool {
             Stance("dinhs_bulwark", ready = 7508, walk = 7510, run = 7509),
         )
 
+    val ARCHIVE_STANCES = listOf(
+        Stance("ascension_crossbows", ready = 15110, walk = 15111, run = 15112),
+        Stance("zoryas_tome", ready = 15135, walk = 15136, walkBack = 15137, run = 15138),
+        Stance("zoryas_tome_female", ready = 15142, walk = 15143, walkBack = 15144, run = 15145),
+    )
+
     /** Payload width of every fixed-size BASType opcode (`BASType.decode`, rev-667 client). */
     private val FIXED =
         mapOf(1 to 4, 26 to 2, 29 to 1, 30 to 2, 31 to 1, 32 to 2, 33 to 2, 34 to 1, 35 to 2, 36 to 2, 37 to 1, 43 to 2, 44 to 2, 45 to 2, 53 to 0, 54 to 2, 55 to 3, 56 to 7) +
@@ -131,7 +137,7 @@ object OsrsBasImportTool {
         val records = mutableListOf<Pair<String, Int>>()
         try {
             var next = (library.index(INDEX_CONFIG).archive(GROUP_BAS)?.fileIds()?.maxOrNull() ?: error("no BAS group")) + 1
-            STANCES.forEach { stance ->
+            (if ("--p48-archive" in args) ARCHIVE_STANCES else STANCES).forEach { stance ->
                 val template = library.data(INDEX_CONFIG, GROUP_BAS, stance.template) ?: error("BAS ${stance.template} missing")
                 val bytes = build(template, stance) { osrs -> existing["seq:$osrs"] ?: error("OSRS sequence $osrs is not imported") }
                 val known = existing["bas:${stance.ready ?: stance.walk}"]

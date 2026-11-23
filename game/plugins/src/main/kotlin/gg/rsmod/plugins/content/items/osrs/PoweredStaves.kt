@@ -62,6 +62,7 @@ object PoweredStaves {
         /** N462 Tumeken's shadow: its own passive (equipment magic attack and damage x3, x4 inside ToA) and range/look. */
         val shadow: Boolean = false,
         val corrupted: Boolean = false,
+        val zorya: Boolean = false,
     ) {
         SEAS(
             Items.TRIDENT_OF_THE_SEAS, Items.UNCHARGED_TRIDENT, Items.TRIDENT_OF_THE_SEAS_FULL, 2_500, 75,
@@ -102,15 +103,19 @@ object PoweredStaves {
             null, 20_000, 85, listOf(Item(Items.SOUL_RUNE, 2), Item(Items.CHAOS_RUNE, 5)), setOf(Items.SOUL_RUNE, Items.CHAOS_RUNE), 1, 0.0,
             shadow = true,
         ),
+        ZORYA(
+            null, null, null, 20_000, 85, listOf(Item(Items.ASTRAL_RUNE, 3), Item(Items.NATURE_RUNE, 2)),
+            setOf(Items.ASTRAL_RUNE, Items.NATURE_RUNE), -10, 0.0, zorya = true,
+        ),
         CORRUPTED_SHADOW(
             null, null, null, 20_000, 75, listOf(Item(Items.SOUL_RUNE, 2), Item(Items.CHAOS_RUNE, 5)),
             setOf(Items.SOUL_RUNE, Items.CHAOS_RUNE), 1, 0.0, shadow = true, corrupted = true,
         ),
         ;
 
-        val available: Boolean get() = !corrupted || (gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SHADOW.local != null && gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SHADOW_EMPTY.local != null)
-        val charged: Int get() = if (corrupted) requireNotNull(gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SHADOW.local) else requireNotNull(chargedId)
-        val uncharged: Int get() = if (corrupted) requireNotNull(gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SHADOW_EMPTY.local) else requireNotNull(unchargedId)
+        val available: Boolean get() = if (zorya) gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.item(34725) != null && gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.item(34727) != null else !corrupted || (gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SHADOW.local != null && gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SHADOW_EMPTY.local != null)
+        val charged: Int get() = if (zorya) requireNotNull(gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.item(34725)) else if (corrupted) requireNotNull(gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SHADOW.local) else requireNotNull(chargedId)
+        val uncharged: Int get() = if (zorya) requireNotNull(gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.item(34727)) else if (corrupted) requireNotNull(gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SHADOW_EMPTY.local) else requireNotNull(unchargedId)
         val ids: Set<Int> get() = setOfNotNull(charged, uncharged, full)
 
         fun baseMaxHit(magicLevel: Int): Int = maxOf(1, magicLevel / 3 + maxHitOffset)

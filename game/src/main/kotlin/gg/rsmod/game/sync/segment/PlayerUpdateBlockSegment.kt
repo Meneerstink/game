@@ -290,7 +290,7 @@ class PlayerUpdateBlockSegment(
                     if (renderAnim == -1) {
                         if (weapon != null) {
                             val def: Any =
-                                gg.rsmod.game.model.RenderAnimations.forWeapon(weapon.id)
+                                gg.rsmod.game.model.RenderAnimations.forWeapon(weapon.id, !other.appearance.gender.isMale())
                                     ?: weapon.getDef(other.world.definitions).params.get(644)
                                     ?: 1426
                             appBuf.put(DataType.SHORT, def as Int)

@@ -133,6 +133,14 @@ object OsrsItemImportTool {
             "p48-items-d" to listOf(Spec(30068)),
             // p48-gptb-rest: wiki rev15403804 + cache2762. Ancient fabric and base cape already imported by N415.
             "p48-ancient-deadman" to listOf(Spec(34607, rev667Params = mapOf(749 to 6, 750 to 75))),
+            // Fractured Archive rewards, cache2762; acquisition awaits the owner. Notes/count models follow parents.
+            "p48-archive-weapons" to listOf(
+                Spec(34725, rev667Params = mapOf(686 to 1, 687 to 1, 749 to 6, 750 to 85), weaponType = 1,
+                    rev667StringParams = mapOf(528 to "Check")),
+                Spec(34727, noted = true, rev667Params = mapOf(686 to 1, 749 to 6, 750 to 85), weaponType = 1),
+                Spec(34681, noted = true, rev667Params = mapOf(686 to 17, 749 to 4, 750 to 80), weaponType = 17),
+                Spec(34684), Spec(34690), Spec(34696), Spec(34702), Spec(34708), Spec(34669),
+            ),
             // N415: OSRS Wiki + cache 2686 MA2 remains/symbol. Local ids come from the importer, never the upstream ids.
             // Ancient fabric/capes are absent in 2686 and intentionally require an isolated newer-source batch.
             "mage-arena" to listOf(Spec(21797), Spec(21798), Spec(21799), Spec(21800)),

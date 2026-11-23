@@ -9,6 +9,18 @@ enum class TippedBoltData(
     val levelRequirement: Int,
     val experience: Double,
 ) {
+    ASCENSION_DIAMOND(
+        plainBolt = gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.item(34684) ?: -100,
+        tip = Items.DIAMOND_BOLT_TIPS,
+        product = gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.item(34690) ?: -101,
+        levelRequirement = 86, experience = 7.0,
+    ),
+    ASCENSION_ONYX(
+        plainBolt = gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.item(34684) ?: -100,
+        tip = Items.ONYX_BOLT_TIPS,
+        product = gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.item(34702) ?: -102,
+        levelRequirement = 86, experience = 9.4,
+    ),
     OPAL(
         plainBolt = Items.BRONZE_BOLTS,
         tip = Items.OPAL_BOLT_TIPS,

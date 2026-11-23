@@ -50,7 +50,7 @@ fun chargeStaff(
 
 PoweredStaves.Staff.values().filter { it.available }.forEach staves@{ staff ->
     // Revenant sceptres charge, check and uncharge through revenant_weapons.plugin.kts (activation deposit, ether refund).
-    if (staff.revenant) return@staves
+    if (staff.revenant || staff.zorya) return@staves
     // Charging: use any charge item on an uncharged or partially charged staff ((full) is at the cap).
     listOf(staff.uncharged, staff.charged).forEach { staffId ->
         staff.chargeCost.map { it.id }.forEach { costId ->
