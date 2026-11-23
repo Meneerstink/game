@@ -3,21 +3,16 @@ package gg.rsmod.plugins.content.mechanics.deadman.sigils
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.setComponentItem
 
-/**
- * SIGIL-WORN-ICOON (owner 21-11, approved design screens/SIGILS/mock/sigil_venster_v3.png panel 2): the sigil slot in the Worn Items
- * tab, as in OSRS Deadman. The slot is three appended components of interface 387 (game tool `SigilWornSlotInterfaceTool`: layer 51,
- * background 52, icon 53 with the baked op "View"). The icon is a sigil item the server sets after every mount of the tab (the client
- * drops server-set state on a re-mount, ROOT_CAUSES #143); a click opens the Attuned Sigils window. No right-click menu of its own
- * (no OSRS source): attune / unattune stay on the item and in the window.
- */
+/** OSRS 387:29, scripts 5235/5237: the first occupied attunement slot, otherwise enum 4040 key 53. */
 object SigilWornSlot {
     const val INTERFACE_ID = 387
+    const val LAYER = 51
 
     /** `SigilWornSlotInterfaceTool.ICON`. */
     const val ICON = 53
 
-    /** The slot shows the first attuned sigil; with none attuned the plain sigil the owner's OSRS picture shows (tier 1, combat). */
-    val EMPTY_ICON = Sigil.CONSISTENCY.unattunedId
+    /** OSRS enum 4040 key 53 = 25991, unattuned Sigil of Resilience; not Consistency. */
+    val EMPTY_ICON = Sigil.RESILIENCE.unattunedId
 
     fun iconItem(player: Player): Int = Sigils.attuned(player).firstOrNull()?.attunedId ?: EMPTY_ICON
 

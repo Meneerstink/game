@@ -4,22 +4,13 @@ import com.displee.cache.CacheLibrary
 import gg.rsmod.game.tools.importer.LootKeyInterfaceImportTool.Component
 
 /**
- * PROJECT48 SIGIL-WORN-ICOON (owner 21-11, approved design screens/SIGILS/mock/sigil_venster_v3.png panel 2): the sigil slot of the
- * Worn Items tab, as in OSRS Deadman - a slot box beside the head slot that shows a sigil; a click opens the "Attuned Sigils" window
- * (no right-click menu: there is no OSRS source for one).
- *
- * The rev-667 Worn Items tab is interface 387 (51 components; every slot is a 36x36 layer with the slot background sprite 170 and a
- * 0x0 graphic the tab's script fills). This tool APPENDS three components and touches none of the existing ones:
- *  - [LAYER]  the slot layer, 36x36, centred like the other slots (x from the centre, y from the top);
- *  - [BACKGROUND] sprite 170 (the same slot background);
- *  - [ICON] a 36x32 graphic (outline 1, shadow 0x333333 = an OSRS item icon; owner 23-11: was 32x32 = squeezed and blurry) the server fills with a sigil item (IF_SETOBJECT) - op "View", its event baked (like 387:39).
- * Place = OSRS: left of the head slot, in the weapon column (centre offset -56, y 4; measured on the owner's OSRS picture). The
- * Dizana's quiver slot of this client (387:48) stands right of the head slot: the two never meet. Another place:
- * `--x=<n> --y=<n>` (re-running moves it).
- *
- * Server: plugins `mechanics/deadman/sigils/SigilWornSlot.kt`.
- *
- * Usage: `SigilWornSlotInterfaceTool [--x=-56] [--y=4] [--apply]` (servers stopped for --apply).
+ * OSRS cache 2686/2762 interface 387:29 and scripts 5235/5237 (not a screenshot estimate).
+ * Script 5235 creates a 36x36 background (sprite 170), then a 36x32 item graphic at (2,2),
+ * outline 1, shadow 0x333333. The parent has one operation, "Sigils", with no target name.
+ * OSRS layer x=18 relative to head x=77: centre offset -59 in the responsive 667 tab.
+ * Sprite 7929 is the byte-identical OSRS 170 already imported by LootKeyInterfaceImportTool.
+ * Only the three appended components are changed. Default invocation is a read-only preflight.
+ * Usage: SigilWornSlotInterfaceTool [--x=-59] [--y=4] [--apply]
  */
 object SigilWornSlotInterfaceTool {
     const val INTERFACE_ID = 387
@@ -28,10 +19,10 @@ object SigilWornSlotInterfaceTool {
     const val ICON = 53
     const val COUNT = 54
     private const val EXISTING = 51
-    private const val SLOT_SPRITE = 170
+    private val SLOT_SPRITE = LootKeyInterfaceImportTool.sprite(170)
     private const val TYPE_LAYER = 0
     private const val TYPE_GRAPHIC = 5
-    const val DEFAULT_X = -56
+    const val DEFAULT_X = -59
     const val DEFAULT_Y = 4
 
     fun components(
@@ -39,9 +30,9 @@ object SigilWornSlotInterfaceTool {
         y: Int,
     ): List<Component> =
         listOf(
-            Component(LAYER, TYPE_LAYER, x, y, 36, 36, -1, reposX = 1),
+            Component(LAYER, TYPE_LAYER, x, y, 36, 36, -1, reposX = 1, ops = listOf("Sigils"), events = 0x2),
             Component(BACKGROUND, TYPE_GRAPHIC, 0, 0, 36, 36, LAYER, graphic = SLOT_SPRITE),
-            Component(ICON, TYPE_GRAPHIC, 0, 2, 36, 32, LAYER, graphic = -1, outline = 1, graphicShadow = 0x333333, ops = listOf("View"), opBase = "Attuned Sigils", events = 0x2),
+            Component(ICON, TYPE_GRAPHIC, 2, 2, 36, 32, LAYER, graphic = -1, outline = 1, graphicShadow = 0x333333),
         )
 
     @JvmStatic

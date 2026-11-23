@@ -38,6 +38,17 @@ class SigilTests {
     }
 
     @Test
+    fun `worn slot uses OSRS resilience when empty and retains attunement slot order`() {
+        val player = newPlayer()
+        assertEquals(Sigil.RESILIENCE.unattunedId, SigilWornSlot.iconItem(player))
+        assertEquals(Sigils.Result.OK, attune(player, Sigil.RESILIENCE))
+        assertEquals(Sigils.Result.OK, attune(player, Sigil.CONSISTENCY))
+        assertEquals(Sigils.Result.OK, attune(player, Sigil.PRECISION))
+        assertEquals(listOf(Sigil.RESILIENCE, Sigil.CONSISTENCY, Sigil.PRECISION), Sigils.attuned(player))
+        assertEquals(Sigil.RESILIENCE.attunedId, SigilWornSlot.iconItem(player))
+    }
+
+    @Test
     fun `the 65 sigils are numbered 1 to 65 and their items never overlap`() {
         assertEquals((1..65).toList(), Sigil.values().map { it.number })
         val ids = Sigil.values().flatMap { listOf(it.unattunedId, it.attunedId) }

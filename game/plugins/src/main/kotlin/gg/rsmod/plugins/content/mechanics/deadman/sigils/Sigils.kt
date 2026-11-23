@@ -86,7 +86,8 @@ object Sigils {
 
     fun attuned(player: Player): List<Sigil> {
         val numbers = player.attr[ATTUNED]?.split(',')?.mapNotNull { it.toIntOrNull() } ?: return emptyList()
-        return Sigil.values().filter { it.number in numbers }
+        // OSRS scripts 5237: prefer attunement slot 1, then 2, then 3. Keep the saved slot order.
+        return numbers.distinct().mapNotNull { number -> Sigil.values().firstOrNull { it.number == number } }
     }
 
     private fun store(
