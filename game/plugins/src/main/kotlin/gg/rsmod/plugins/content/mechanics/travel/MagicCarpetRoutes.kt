@@ -6,7 +6,7 @@ import gg.rsmod.game.model.Tile
  * PROJECT48 run 4 O18: the flight paths of the magic carpets (Void 634 data/area/kharidian_desert/magic_carpet/magic_carpet.patrols.toml,
  * recorded from OSRS videos; generated, do not edit by hand). Key = "<from>_to_<to>".
  */
-internal object MagicCarpetRoutes {
+object MagicCarpetRoutes {
     val PATHS: Map<String, List<Tile>> =
         mapOf(
             "shantay_pass_to_north_pollnivneach" to listOf(Tile(3308, 3106), Tile(3310, 3105), Tile(3313, 3104), Tile(3315, 3102), Tile(3317, 3100), Tile(3319, 3098), Tile(3319, 3097), Tile(3319, 3094), Tile(3321, 3092), Tile(3322, 3091), Tile(3322, 3088), Tile(3322, 3085), Tile(3324, 3083), Tile(3325, 3082), Tile(3325, 3079), Tile(3325, 3076), Tile(3325, 3073), Tile(3327, 3071), Tile(3329, 3069), Tile(3330, 3068), Tile(3332, 3066), Tile(3334, 3065), Tile(3336, 3063), Tile(3337, 3061), Tile(3339, 3059), Tile(3341, 3057), Tile(3343, 3055), Tile(3343, 3052), Tile(3343, 3049), Tile(3345, 3047), Tile(3346, 3046), Tile(3346, 3007)),

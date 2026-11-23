@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.mechanics.deadman.sigils
 
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.TimerKey
+import gg.rsmod.plugins.api.ext.message
 
 /**
  * PROJECT48 SIGILS - what the sigils do to eating, drinking and potions (OSRS Wiki Deadman: Armageddon/Sigils). One function per hook; the
