@@ -150,6 +150,9 @@ object LootKeyInterfaceImportTool {
         val alignX: Int = 0,
         val alignY: Int = 0,
         val shadow: Boolean = false,
+        /** TYPE_GRAPHIC: item/sprite outline (1 = black edge, like OSRS item icons) and drop-shadow colour (0 = none). */
+        val outline: Int = 0,
+        val graphicShadow: Int = 0,
         val colour: Int = 0,
         val filled: Boolean = false,
         val lineWidth: Int = 1,
@@ -222,8 +225,8 @@ object LootKeyInterfaceImportTool {
                 o.p2(0) // angle2d
                 o.p1(if (c.tiling) 1 else 0) // bit 1 alpha off
                 o.p1(c.transparency)
-                o.p1(0) // outline
-                o.p4(0) // graphicShadow
+                o.p1(c.outline) // outline
+                o.p4(c.graphicShadow) // graphicShadow
                 o.p1(0) // horizontalFlip
                 o.p1(0) // verticalFlip
                 o.p4(0) // colour

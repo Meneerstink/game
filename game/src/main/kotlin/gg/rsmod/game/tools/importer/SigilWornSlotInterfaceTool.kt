@@ -12,7 +12,7 @@ import gg.rsmod.game.tools.importer.LootKeyInterfaceImportTool.Component
  * 0x0 graphic the tab's script fills). This tool APPENDS three components and touches none of the existing ones:
  *  - [LAYER]  the slot layer, 36x36, centred like the other slots (x from the centre, y from the top);
  *  - [BACKGROUND] sprite 170 (the same slot background);
- *  - [ICON] a 32x32 graphic the server fills with a sigil item (IF_SETOBJECT) - op "View", its event baked (like 387:39).
+ *  - [ICON] a 36x32 graphic (outline 1, shadow 0x333333 = an OSRS item icon; owner 23-11: was 32x32 = squeezed and blurry) the server fills with a sigil item (IF_SETOBJECT) - op "View", its event baked (like 387:39).
  * Place = OSRS: left of the head slot, in the weapon column (centre offset -56, y 4; measured on the owner's OSRS picture). The
  * Dizana's quiver slot of this client (387:48) stands right of the head slot: the two never meet. Another place:
  * `--x=<n> --y=<n>` (re-running moves it).
@@ -41,7 +41,7 @@ object SigilWornSlotInterfaceTool {
         listOf(
             Component(LAYER, TYPE_LAYER, x, y, 36, 36, -1, reposX = 1),
             Component(BACKGROUND, TYPE_GRAPHIC, 0, 0, 36, 36, LAYER, graphic = SLOT_SPRITE),
-            Component(ICON, TYPE_GRAPHIC, 2, 2, 32, 32, LAYER, graphic = -1, ops = listOf("View"), opBase = "Attuned Sigils", events = 0x2),
+            Component(ICON, TYPE_GRAPHIC, 0, 2, 36, 32, LAYER, graphic = -1, outline = 1, graphicShadow = 0x333333, ops = listOf("View"), opBase = "Attuned Sigils", events = 0x2),
         )
 
     @JvmStatic
