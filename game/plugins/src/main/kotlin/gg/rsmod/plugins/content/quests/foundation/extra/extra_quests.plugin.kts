@@ -4,6 +4,8 @@ import gg.rsmod.plugins.content.quests.foundation.FoundationQuests
 import gg.rsmod.plugins.content.quests.foundation.FoundationRewards
 import gg.rsmod.plugins.content.quests.foundation.QuestFights
 import gg.rsmod.game.model.combat.StyleType
+import gg.rsmod.game.model.combat.SlayerAssignment
+import gg.rsmod.plugins.api.NpcSpecies
 
 spawn_npc(npc = Npcs.VESTRI, x = 2821, z = 3487, direction = Direction.SOUTH)
 
@@ -33,7 +35,7 @@ ScorpionCatcher.SCORPIONS.keys.forEach { id ->
     // OSRS Pick-up always stings; catching uses the cage on the npc, even when a cage is carried.
     on_npc_option(id, "Pick-up") {
         player.message("The scorpion stings you!")
-        player.hit(30, type = HitType.REGULAR_HIT)
+        player.hit(3, type = HitType.REGULAR_HIT)
     }
     ScorpionCatcher.CAGES.forEach { cage ->
         on_item_on_npc(item = cage, npc = id) {
@@ -80,10 +82,12 @@ listOf(Objs.CRYSTAL_OUTCROP, Objs.CRYSTAL_OUTCROP_4927, Objs.CRYSTAL_OUTCROP_492
 // Reduced QuestFight: exact wiki base stats and melee max hit (8); machinery/teleport phases are omitted.
 // The old combat-defs entry gave a strength bonus of 69, incorrectly turning its melee hit into 15.
 set_combat_def(npc = Npcs.TREUS_DAYTH) {
-    configs { attackSpeed = 4; attackStyle = StyleType.CRUSH; respawnDelay = 0 }
+    configs { attackSpeed = 4; attackStyle = StyleType.CRUSH; respawnDelay = 0; poisonImmune = true }
     stats { hitpoints = 1000; attack = 70; strength = 70; defence = 100; magic = 1; ranged = 1 }
     bonuses { strengthBonus = 0; defenceStab = 5; defenceSlash = 5; defenceCrush = 5; defenceMagic = -5; defenceRanged = 5 }
     anims { attack = 5540; block = 5541; death = 5542 }
+    species { +NpcSpecies.UNDEAD }
+    slayer { assignment = SlayerAssignment.GHOST; level = 1; experience = 100.0 }
 }
 
 on_item_on_item(item1 = Items.SALVE_SHARD, item2 = Items.BALL_OF_WOOL) {
@@ -149,14 +153,64 @@ listOf(Npcs.MISTAG, Npcs.KAZGAR).forEach { id ->
     }
 }
 
-// Repeatable gathering after losing the worm; the automatic search is the short quest's first step.
-listOf(58, 2013, 2989, 2990, 2991, 2992, 2993, 2994).filter { if_obj_has_option(it, "Check") }.forEach { vine ->
-on_obj_option(vine, "Check") {
-    if (!FishingContest.isFinished(player) && FishingContest.stage(player) in 1..2) {
-        if (!player.inventory.contains(Items.SPADE)) player.message("You need a spade to dig for red vine worms.")
-        else if (FishingContest.stage(player) == 1) FoundationQuests.trySearch(player, FishingContest, 1)
-        else ExtraQuests.reclaim(player, Items.RED_VINE_WORM)
+spawn_npc(npc = Npcs.EFFIGY, x = 2640, z = 3218, direction = Direction.EAST)
+spawn_npc(npc = Npcs.THE_GUNS, x = 2643, z = 3226, direction = Direction.EAST)
+spawn_npc(npc = Npcs.HOMUNCULUS, x = 2649, z = 3218, height = 3, direction = Direction.WEST)
+listOf(Npcs.EFFIGY, Npcs.BONAFIDO, Npcs.HOMUNCULUS).forEach { id ->
+    on_npc_option(id, "Talk-to") {
+        player.queue {
+            if (!FoundationQuests.talk(this, id) && TowerOfLife.isFinished(player)) {
+                with(TowerOfLife) { offerTravel("the Tower of Life basement", BASEMENT) }
+            }
+        }
     }
 }
+on_npc_option(Npcs.BLACKEYE, "Talk-to") { player.queue { TowerOfLife.hardHat(this) } }
+on_npc_option(Npcs.THE_GUNS, "Talk-to") {
+    player.queue {
+        if (TowerOfLife.canGetOutfit(player)) {
+            chatNpc("Bring me a regular beer and you can have a shirt.")
+            TowerOfLife.shirt(player)
+        }
+    }
+}
+on_npc_option(Npcs.GUMMY, "Talk-to") {
+    player.queue {
+        if (TowerOfLife.canGetOutfit(player)) {
+            chatNpc("My spare trousers blew off the washing line.", "Search the plants around the tower.")
+        }
+    }
+}
+on_npc_option(Npcs.NO_FINGERS, "Talk-to") {
+    player.queue {
+        if (TowerOfLife.canGetOutfit(player)) chatNpc("Only real builders can wear these boots.", "I'm not giving them to you!")
+    }
+}
+on_obj_option(Objs.PLANT_21924, "Search") {
+    if (TowerOfLife.canGetOutfit(player)) ExtraQuests.reclaim(player, Items.BUILDERS_TROUSERS)
+}
+on_obj_option(Objs.PRESSURE_MACHINE, "Fix") {
+    if (!TowerOfLife.isFinished(player) && TowerOfLife.stage(player) == 2) FoundationQuests.trySearch(player, TowerOfLife, 2)
+}
+listOf(Objs.TRAPDOOR_21921 to "Open", Objs.TRAPDOOR_21922 to "Climb-down").forEach { (obj, option) ->
+    on_obj_option(obj, option) {
+        player.queue {
+            if (TowerOfLife.isFinished(player)) with(TowerOfLife) { offerTravel("the Tower of Life basement", BASEMENT) }
+            else player.message("You need to complete Tower of Life to enter the basement.")
+        }
+    }
+}
+on_obj_option(17974, "Climb-up") {
+    player.queue { with(TowerOfLife) { offerTravel("outside the Tower of Life", Tile(2648, 3213, 0)) } }
+}
 
+// Repeatable gathering after losing the worm; the automatic search is the short quest's first step.
+listOf(58, 2013, 2989, 2990, 2991, 2992, 2993, 2994).filter { if_obj_has_option(it, "Check") }.forEach { vine ->
+    on_obj_option(vine, "Check") {
+        if (!FishingContest.isFinished(player) && FishingContest.stage(player) in 1..2) {
+            if (!player.inventory.contains(Items.SPADE)) player.message("You need a spade to dig for red vine worms.")
+            else if (FishingContest.stage(player) == 1) FoundationQuests.trySearch(player, FishingContest, 1)
+            else ExtraQuests.reclaim(player, Items.RED_VINE_WORM)
+        }
+    }
 }

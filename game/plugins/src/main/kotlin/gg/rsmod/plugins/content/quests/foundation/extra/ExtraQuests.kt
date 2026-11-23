@@ -7,11 +7,16 @@ import gg.rsmod.plugins.content.quests.foundation.*
 
 /** Extra short quests, deliberately outside the Armageddon unlock tables. */
 object ExtraQuests {
-    val ALL: List<ShortQuest> by lazy { listOf(FishingContest, ScorpionCatcher, HauntedMine, TheLostTribe) }
+    val ALL: List<ShortQuest> by lazy { listOf(FishingContest, ScorpionCatcher, HauntedMine, TheLostTribe, TowerOfLife) }
     val OPTIONS: List<Pair<Int, String>> = listOf(232 to "Talk-to", 3679 to "Talk-to", 225 to "Talk-to", 225 to "Pay",
         389 to "Talk-to", 388 to "Talk-to", 385 to "Pick-up", 386 to "Pick-up", 387 to "Pick-up",
         1528 to "Talk-to", 1528 to "Pickpocket", 1543 to "Take",
-        2082 to "Talk-to", 2082 to "Pickpocket", 2084 to "Talk-to", 2084 to "Follow", 2086 to "Talk-to", 2086 to "Follow")
+        2082 to "Talk-to", 2082 to "Pickpocket", 2084 to "Talk-to", 2084 to "Follow", 2086 to "Talk-to", 2086 to "Follow",
+        5578 to "Talk-to", 5580 to "Talk-to", 5581 to "Talk-to", 5589 to "Talk-to", 5590 to "Talk-to", 5591 to "Talk-to", 5592 to "Talk-to",
+        5589 to "Pickpocket", 5590 to "Pickpocket", 5591 to "Pickpocket")
+    val OBJECT_OPTIONS = listOf(6910 to "Open", 6911 to "Search", 4932 to "Pick", 4933 to "Pick",
+        4926 to "Cut", 4927 to "Cut", 4928 to "Cut", 21873 to "Fix", 21924 to "Search",
+        21921 to "Open", 21922 to "Climb-down", 17974 to "Climb-up")
     fun bySlot(slot: Int): ShortQuest? = ALL.firstOrNull { it.slot == slot }
 
     fun held(player: Player, item: Int): Boolean =

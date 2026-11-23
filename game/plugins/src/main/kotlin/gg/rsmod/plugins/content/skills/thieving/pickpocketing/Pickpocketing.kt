@@ -81,6 +81,20 @@ object Pickpocketing {
             player.filterableMessage("Too late; they're dead.")
             return
         }
+        // Tower of Life's quest boots use a flat 1/4 roll (OSRS Wiki 'No fingers', Mod Ash).
+        // Reuse this existing binding: a second Pickpocket handler for this npc would abort plugin loading.
+        val tower = gg.rsmod.plugins.content.quests.foundation.extra.TowerOfLife
+        if (tower.wantsBoots(player, target.id)) {
+            player.animate(Anims.PICKPOCKET)
+            task.wait(waitTime)
+            if (player.world.random(4) == 0) {
+                if (tower.awardBoots(player)) {
+                    player.playSound(2581)
+                    player.addXp(Skills.THIEVING, targetInfo.xp, checkBrawlingGloves = true)
+                }
+            } else onFailure(player, target, targetInfo)
+            return
+        }
         player.animate(Anims.PICKPOCKET)
         if (rollForSuccess(targetInfo, player)) {
             onSuccess(task, player, target, targetInfo)
@@ -117,7 +131,7 @@ object Pickpocketing {
         val multiplier = getMultiplier(player, targetInfo)
         // Rogue equipment (see rogueOutfitDoubleLootChance's source note): an independent roll that doubles
         // whatever `multiplier` already produced - not exclusive with, and not the same roll as, `getMultiplier`.
-        val rogueDoubled = player.world.randomDouble() < rogueOutfitDoubleLootChance(player)
+        val rogueDoubled = targetInfo != PickpocketTarget.TowerOfLifeBuilder && player.world.randomDouble() < rogueOutfitDoubleLootChance(player)
         val totalMultiplier = if (rogueDoubled) multiplier * 2 else multiplier
         // Display is capped at the quadruple tier: the wiki never documents the visual/message result of both
         // an existing lucky proc AND the Rogue outfit's own double triggering on the same pickpocket (a rare
@@ -149,7 +163,7 @@ object Pickpocketing {
     ): Int {
         // N522 report section 5: the imported OSRS Rogue uses its ordinary loot roll plus the sourced Rogue-outfit effect.
         // The legacy agility/overshoot lucky triple/quadruple has no OSRS source (see class note), so do not introduce it here.
-        if (targetInfo == PickpocketTarget.WildernessRogue) return 1
+        if (targetInfo == PickpocketTarget.WildernessRogue || targetInfo == PickpocketTarget.TowerOfLifeBuilder) return 1
         val thievingLevelOvershoot = player.skills.getCurrentLevel(Skills.THIEVING) - targetInfo.level
         val agilityLevelOvershoot = player.skills.getCurrentLevel(Skills.AGILITY) - targetInfo.level
 

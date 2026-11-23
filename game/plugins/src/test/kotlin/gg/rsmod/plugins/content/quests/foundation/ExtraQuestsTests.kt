@@ -4,6 +4,7 @@ import com.displee.cache.CacheLibrary
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.fs.def.NpcDef
+import gg.rsmod.game.fs.def.ObjectDef
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeMap
 import gg.rsmod.game.model.container.ItemContainer
@@ -90,6 +91,10 @@ class ExtraQuestsTests {
             every { reconnect.varps } returns a.varps
             every { reconnect.world } returns a.player.world
             assertEquals(1, q.stage(reconnect))
+            a.attributes.remove(BracketQuests.TEST_OPEN) // Session-only flags do not survive a real reconnect.
+            QuestStatus.login(reconnect)
+            assertEquals(1, q.stage(reconnect), "${q.name}: login must not auto-complete an explicitly started quest")
+            assertEquals(QuestStatus.State.IN_PROGRESS, QuestStatus.state(reconnect, q))
             q.setStage(a.player, q.completedValue)
             assertEquals(2, QuestList.entry(q.slot)!!.progress.read(a.player))
             assertEquals(QuestStatus.State.COMPLETED, QuestStatus.state(a.player, q))
@@ -100,6 +105,10 @@ class ExtraQuestsTests {
         ExtraQuests.OPTIONS.forEach { (id, option) ->
             val def = DEFINITIONS.get(NpcDef::class.java, id)
             assertTrue(def.options.any { it.equals(option, ignoreCase = true) }, "$id lacks $option")
+        }
+        ExtraQuests.OBJECT_OPTIONS.forEach { (id, option) ->
+            val def = DEFINITIONS.get(ObjectDef::class.java, id)
+            assertTrue(def.options.any { it.equals(option, ignoreCase = true) }, "object $id lacks $option")
         }
         ExtraQuests.ALL.flatMap { q -> listOf(q.reward.icon) + q.reward.items.map { it.first } +
             q.steps.flatMap { s -> s.gives.map { it.first } + (s.search?.gives?.map { it.first } ?: emptyList()) } }
@@ -253,6 +262,111 @@ class ExtraQuestsTests {
         assertEquals(1, a.player.inventory.getItemCount(Items.SILVERWARE))
         q.setStage(a.player, q.completedValue)
         assertFalse(q.stealKey(a.player))
+    }
+
+    @Test fun `Tower of Life has the wiki start skills three steps reward and completion mirror`() {
+        val q = TowerOfLife
+        assertEquals(5578, q.startNpc)
+        assertEquals(3, q.steps.size)
+        assertEquals(listOf(Skills.CONSTRUCTION to 10), q.needs.skills)
+        assertEquals(listOf(Skills.CONSTRUCTION to 1_000.0, Skills.CRAFTING to 500.0, Skills.THIEVING to 500.0), q.reward.xp)
+        assertEquals(2, q.pointReward)
+        assertEquals(listOf(Items.HAMMER to 1, Items.SAW to 1), q.steps[1].search!!.tools)
+        val a = Account(); a.open(q)
+        assertFalse(q.needs.met(a.player))
+        a.player.skills.setBaseLevel(Skills.CONSTRUCTION, 10)
+        assertTrue(q.needs.met(a.player))
+        q.setStage(a.player, q.completedValue)
+        assertEquals(18, a.player.getVarbit(Varbits.TOWER_OF_LIFE_PROGRESS))
+    }
+
+    @Test fun `only No fingers supplies missing quest boots and bank or worn copies prevent duplicates`() {
+        val a = Account(); val q = TowerOfLife; a.open(q)
+        assertFalse(q.wantsBoots(a.player, Npcs.NO_FINGERS))
+        q.setStage(a.player, 1)
+        assertFalse(q.wantsBoots(a.player, Npcs.NO_FINGERS), "Bonafido must ask for the outfit first")
+        a.attributes[q.OUTFIT_REQUESTED] = true
+        assertFalse(q.wantsBoots(a.player, Npcs.GUMMY))
+        assertFalse(q.wantsBoots(a.player, Npcs.BLACKEYE))
+        assertTrue(q.awardBoots(a.player))
+        assertFalse(q.awardBoots(a.player))
+        a.player.inventory.remove(Items.BUILDERS_BOOTS)
+        a.player.bank.add(Items.BUILDERS_BOOTS, 1)
+        assertFalse(q.awardBoots(a.player))
+        a.player.bank.remove(Items.BUILDERS_BOOTS)
+        assertTrue(q.awardBoots(a.player), "lost boots are replaceable")
+        q.setStage(a.player, q.completedValue)
+        a.player.inventory.remove(Items.BUILDERS_BOOTS)
+        assertTrue(q.awardBoots(a.player), "wiki allows replacement after completion")
+    }
+
+    @Test fun `The Guns takes one regular beer per missing shirt and never charges for a banked shirt`() {
+        val a = Account(); val q = TowerOfLife; a.open(q)
+        q.setStage(a.player, 1); a.attributes[q.OUTFIT_REQUESTED] = true
+        assertFalse(q.shirt(a.player))
+        a.player.inventory.add(Items.BEER, 2)
+        assertTrue(q.shirt(a.player))
+        assertEquals(1, a.player.inventory.getItemCount(Items.BEER))
+        assertFalse(q.shirt(a.player))
+        assertEquals(1, a.player.inventory.getItemCount(Items.BEER))
+        a.player.inventory.remove(Items.BUILDERS_SHIRT)
+        a.player.bank.add(Items.BUILDERS_SHIRT, 1)
+        assertFalse(q.shirt(a.player))
+        assertEquals(1, a.player.inventory.getItemCount(Items.BEER))
+    }
+
+    @Test fun `reset clears investigation flags without changing any other quest`() {
+        val a = Account(); a.open(TheLostTribe)
+        a.attributes[TheLostTribe.HAM_FOUND] = true
+        a.attributes[TheLostTribe.THEFT_KNOWN] = true
+        a.attributes[TheLostTribe.BROOCH_RETURNED] = true
+        a.attributes[TowerOfLife.OUTFIT_REQUESTED] = true
+        TheLostTribe.setStage(a.player, 0)
+        assertNull(a.attributes[TheLostTribe.HAM_FOUND])
+        assertNull(a.attributes[TheLostTribe.THEFT_KNOWN])
+        assertNull(a.attributes[TheLostTribe.BROOCH_RETURNED])
+        assertTrue(a.attributes[TowerOfLife.OUTFIT_REQUESTED] == true)
+    }
+
+    @Test fun `each extra quest pays the exact wiki experience and reward items once`() {
+        ExtraQuests.ALL.forEach { q ->
+            val a = Account(); a.open(q)
+            q.setStage(a.player, q.steps.size)
+            val before = q.reward.xp.associate { it.first to a.player.skills.getCurrentXp(it.first) }
+            assertTrue(FoundationRewards.complete(a.player, q), q.name)
+            q.reward.xp.forEach { (skill, amount) ->
+                assertEquals(before.getValue(skill) + amount, a.player.skills.getCurrentXp(skill), 0.001, q.name)
+            }
+            q.reward.items.forEach { (item, amount) -> assertEquals(amount, a.player.inventory.getItemCount(item), q.name) }
+            assertFalse(FoundationRewards.complete(a.player, q), "${q.name} must never pay twice")
+            q.reward.xp.forEach { (skill, amount) ->
+                assertEquals(before.getValue(skill) + amount, a.player.skills.getCurrentXp(skill), 0.001, q.name)
+            }
+            q.reward.items.forEach { (item, amount) -> assertEquals(amount, a.player.inventory.getItemCount(item), q.name) }
+        }
+    }
+
+    @Test fun `a completed cache mirror wins over any stale saved step`() {
+        ExtraQuests.ALL.forEach { q ->
+            val a = Account(QuestChoices.LEGACY)
+            QuestList.entry(q.slot)!!.progress.complete(a.player)
+            a.attributes[q.stepKey] = 1
+            assertEquals(q.completedValue, q.stage(a.player), q.name)
+            assertEquals(QuestStatus.State.COMPLETED, QuestStatus.state(a.player, q), q.name)
+        }
+    }
+
+    @Test fun `a search requires its spade but never consumes that tool`() {
+        val a = Account(); val q = FishingContest; a.open(q)
+        q.setStage(a.player, 1)
+        every { a.player.tile } returns q.steps[0].location!!
+        assertFalse(FoundationQuests.trySearch(a.player, q, 1))
+        assertEquals(1, q.stage(a.player))
+        a.player.inventory.add(Items.SPADE, 1)
+        assertTrue(FoundationQuests.trySearch(a.player, q, 1))
+        assertEquals(1, a.player.inventory.getItemCount(Items.SPADE))
+        assertEquals(1, a.player.inventory.getItemCount(Items.RED_VINE_WORM))
+        assertEquals(2, q.stage(a.player))
     }
 
     companion object {
