@@ -1592,7 +1592,10 @@ object FoundationQuests {
     val OLD_SHORT: List<ShortQuest> =
         listOf(DesertTreasure, LunarDiplomacy, TempleAtSenntisten, KingsRansom, DesertTreasureII, DragonSlayerII, SongOfTheElves, MonkeyMadnessII, BeneathCursedSands)
 
-    val SHORT: List<ShortQuest> by lazy { OLD_SHORT + gg.rsmod.plugins.content.quests.foundation.bracket.BracketQuests.ALL }
+    val SHORT: List<ShortQuest> by lazy {
+        OLD_SHORT + gg.rsmod.plugins.content.quests.foundation.bracket.BracketQuests.ALL +
+            gg.rsmod.plugins.content.quests.foundation.extra.ExtraQuests.ALL
+    }
 
     /** PROJECT48 O1-O6: the quests the Quest Helper can follow: [SHORT] plus the read-only route mirrors of the six old quests. */
     val HELPERS: List<ShortQuest> by lazy { SHORT + HelperRoutes.ALL }
@@ -1800,7 +1803,7 @@ object FoundationQuests {
             return false
         }
         if (QuestFights.active(player) != null) return false
-        if (!search.needs.all { (item, amount) -> player.inventory.getItemCount(item) >= amount }) {
+        if (!(search.needs + search.tools).all { (item, amount) -> player.inventory.getItemCount(item) >= amount }) {
             if (player.attr[SEARCH_HINTED] != key) {
                 player.attr[SEARCH_HINTED] = key
                 player.message(search.missing)

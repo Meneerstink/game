@@ -47,6 +47,10 @@ object QuestStatus {
         }
         val choice = CHOICE_QUESTS[slot]
         if (choice == null) {
+            // An explicitly started extra quest keeps its saved progress after reconnect (TEST_OPEN is session-only).
+            // The default always-complete policy is unchanged: untouched accounts and existing complete mirrors still win.
+            val extra = gg.rsmod.plugins.content.quests.foundation.extra.ExtraQuests.bySlot(slot)
+            if (extra != null && extra.stage(player) in 1 until extra.completedValue) return State.IN_PROGRESS
             // DMM-ARMAGEDDON D7: for new accounts the quests of the Armageddon photo wait for their combat bracket / storyline,
             // unless they were really played (the list entry's own progress).
             // PROJECT48 (test server tool ::p48 reset): a bracket mini-quest forced open, so scenarios can play it although its bracket gave it.
@@ -57,7 +61,8 @@ object QuestStatus {
                 COMPLETE -> State.COMPLETED
                 1 -> State.IN_PROGRESS
                 // PROJECT48 F3: a bracket mini-quest in progress keeps its step in its own attribute (the cache variable stays 0).
-                else -> if (BracketQuests.bySlot(slot)?.let { (it.stage(player)) >= 1 } == true) State.IN_PROGRESS else State.NOT_STARTED
+                else -> if ((BracketQuests.bySlot(slot) ?: gg.rsmod.plugins.content.quests.foundation.extra.ExtraQuests.bySlot(slot))
+                        ?.let { it.stage(player) >= 1 } == true) State.IN_PROGRESS else State.NOT_STARTED
             }
         }
         val stage = choice.stage(player)

@@ -52,6 +52,8 @@ class QuestSearch(
     val gives: List<Pair<Int, Int>> = emptyList(),
     val needs: List<Pair<Int, Int>> = emptyList(),
     val missing: String = "You search the area, but you do not have what you need yet.",
+    /** Tools that must be carried but are not consumed by this search. */
+    val tools: List<Pair<Int, Int>> = emptyList(),
 )
 
 /**
@@ -167,6 +169,9 @@ abstract class ShortQuest(
     /** PROJECT48: called by [FoundationQuests.completeStep] when step [stage] is done (before the next stage is written). */
     open fun onStepDone(player: Player, stage: Int) {}
 
+    /** Optional quest-specific bookkeeping reset, used only when explicitly resetting the quest to stage zero. */
+    open fun onReset(player: Player) {}
+
     /**
      * PROJECT48 F1: a bracket mini-quest keeps its step in its own persistent attribute ([stepKey]) instead of the cache varp/varbit
      * (many 667 quest variables have too few values for the steps, and in-between values can change the world). The quest list reads
@@ -174,6 +179,9 @@ abstract class ShortQuest(
      * For such a quest [completedValue] is the internal steps.size + 1. The old short quests keep false: nothing changes for them.
      */
     open val ownSteps: Boolean get() = false
+
+    /** Opt-in for extra quests whose list variable can safely mirror the started state as 1. */
+    open val showStartedInList: Boolean get() = false
 
     private var stepKeyCache: gg.rsmod.game.model.attr.AttributeKey<Int>? = null
 
@@ -233,8 +241,12 @@ abstract class ShortQuest(
                 // Back to not started (::questreset / ::p48 reset): the list entry too, so the quest list shows it as open.
                 gg.rsmod.plugins.content.quests.QuestList.ENTRIES.firstOrNull { it.slot == slot }?.progress?.reset?.invoke(player)
                 player.attr.remove(stepKey)
+                onReset(player)
             } else {
                 player.attr[stepKey] = value
+                if (showStartedInList && listEntryRead(player) == 0) {
+                    if (usesVarbits) player.setVarbit(questId, 1) else player.setVarp(questId, 1)
+                }
             }
             FoundationQuests.refreshQuestList(player)
             return

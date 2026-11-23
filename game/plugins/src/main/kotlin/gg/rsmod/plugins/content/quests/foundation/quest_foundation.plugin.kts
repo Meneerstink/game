@@ -464,8 +464,8 @@ suspend fun QueueTask.questDirections() {
             3 -> return
         }
     }
-    // The bracket mini-quests have their own Quest Guide choice 'Bracket quests' (PROJECT48 F5); this list stays the eight old ones.
-    val open = FoundationQuests.OLD_SHORT.filterNot { it.isFinished(player) }
+    // Bracket quests keep their own menu; the five extra quests join the existing "Other quests" directions.
+    val open = (FoundationQuests.OLD_SHORT + gg.rsmod.plugins.content.quests.foundation.extra.ExtraQuests.ALL).filterNot { it.isFinished(player) }
     if (open.isEmpty()) {
         chatNpc("Every quest in my records carries your name already.", facialExpression = FacialExpression.HAPPY)
         return

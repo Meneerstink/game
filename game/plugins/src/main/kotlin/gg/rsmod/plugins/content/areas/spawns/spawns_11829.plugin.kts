@@ -7,7 +7,7 @@ spawn_npc(npc = Npcs.GUARD, x = 2964, z = 3392, walkRadius = 5, direction = Dire
 spawn_npc(npc = Npcs.BLACK_BEAR, x = 2959, z = 3445, walkRadius = 5, direction = Direction.WEST)
 spawn_npc(npc = Npcs.HIGHWAYMAN, x = 2988, z = 3423, walkRadius = 5, direction = Direction.SOUTH_EAST)
 spawn_npc(npc = Npcs.DORIC, x = 2953, z = 3450, walkRadius = 2, direction = Direction.NORTH_WEST)
-spawn_npc(npc = Npcs.KHARID_SCORPION_387, x = 3000, z = 3440, height = 1, direction = Direction.NORTH_WEST)
+spawn_npc(npc = Npcs.KHARID_SCORPION_387, x = 3058, z = 3488, height = 1, direction = Direction.NORTH_WEST)
 spawn_npc(npc = Npcs.IMP, x = 2962, z = 3421, walkRadius = 5, direction = Direction.SOUTH)
 spawn_npc(npc = Npcs.CUFFS, x = 2984, z = 3435, walkRadius = 5, direction = Direction.NORTH_WEST)
 spawn_npc(npc = Npcs.NARF, x = 2981, z = 3434, walkRadius = 5, direction = Direction.NORTH_WEST)
