@@ -19,7 +19,6 @@ import gg.rsmod.plugins.api.cfg.Gfx
 import gg.rsmod.plugins.api.cfg.SkillDialogueOption
 import gg.rsmod.plugins.api.cfg.Varbits
 import gg.rsmod.util.Misc
-import gg.rsmod.util.TextWrapping
 
 /**
  * The id for the appearance interface.
@@ -258,24 +257,55 @@ suspend fun QueueTask.searchItemInput(message: String): Int {
 internal const val MESSAGE_BOX_LINE_CHARS = 62
 
 internal fun wrapMessageBox(message: Array<out String>): List<String> {
-    fun visible(s: String) = s.replace(Regex("<[^>]+>"), "").length
-    if (message.all { visible(it) <= MESSAGE_BOX_LINE_CHARS }) return message.toList()
-    val lines = mutableListOf<String>()
-    message.forEach { text ->
-        var line = StringBuilder()
-        text.split(' ').forEach { word ->
-            val candidate = if (line.isEmpty()) word else "$line $word"
-            if (line.isNotEmpty() && visible(candidate) > MESSAGE_BOX_LINE_CHARS) {
-                lines += line.toString()
-                line = StringBuilder(word)
-            } else {
-                line = StringBuilder(candidate)
-            }
-        }
-        if (line.isNotEmpty()) lines += line.toString()
-    }
+    val lines = balanceDialogueLines(message, MESSAGE_BOX_LINE_CHARS)
     if (lines.size <= 5) return lines
     return lines.take(4) + lines.drop(4).joinToString(" ")
+}
+
+/** The widest npc/player chat line, in visible characters (the 241-244 / 64-67 boxes; [gg.rsmod.util.TextWrapping]'s 50). */
+const val DIALOG_LINE_CHARS = 50
+
+/**
+ * The lines of a dialogue box, re-wrapped only when one of them is wider than [width] visible characters (colour tags not
+ * counted). DIALOOG-WEES-REST (A9 live 2026-11-23, Cook "... right now, / sorry." and the Quest Tutor "I keep the /
+ * records / of every quest"): wrapping each over-long line on its own left a lone word under it, so the whole message is
+ * joined and wrapped again with the same number of lines a greedy wrap needs, but as narrow - and so as even - as that
+ * number allows. Messages whose lines all fit keep the caller's own line breaks.
+ */
+fun balanceDialogueLines(
+    message: Array<out String>,
+    width: Int,
+): List<String> {
+    fun visible(s: String) = s.replace(Regex("<[^>]+>"), "").length
+    // A "<br>" inside a line is a line break of its own (Mining's "... do not have a pickaxe<br><br>which you have ..."),
+    // so each piece is measured apart and the break becomes a space when the message is wrapped again.
+    val br = Regex("<br>", RegexOption.IGNORE_CASE)
+    if (message.all { line -> line.split(br).all { visible(it) <= width } }) return message.toList()
+    val words = message.joinToString(" ").replace(br, " ").split(' ').filter { it.isNotEmpty() }
+    fun greedy(w: Int): List<String> {
+        val lines = mutableListOf<String>()
+        var line = ""
+        for (word in words) {
+            val candidate = if (line.isEmpty()) word else "$line $word"
+            if (line.isNotEmpty() && visible(candidate) > w) {
+                lines += line
+                line = word
+            } else {
+                line = candidate
+            }
+        }
+        if (line.isNotEmpty()) lines += line
+        return lines
+    }
+    var best = greedy(width)
+    var w = width - 1
+    while (w > 0) {
+        val narrower = greedy(w)
+        if (narrower.size != best.size) break
+        best = narrower
+        w--
+    }
+    return best
 }
 
 suspend fun QueueTask.messageBox(vararg lines: String) {
@@ -410,7 +440,7 @@ suspend fun QueueTask.chatNpc(
 
     val wrappedMessages =
         if (wrap) {
-            message.flatMap { TextWrapping.wrap(it)?.toList() ?: emptyList() }
+            balanceDialogueLines(message, DIALOG_LINE_CHARS)
         } else {
             message.toList()
         }
@@ -457,7 +487,7 @@ suspend fun QueueTask.chatPlayer(
 
     val wrappedMessages =
         if (wrap) {
-            message.flatMap { TextWrapping.wrap(it)?.toList() ?: emptyList() }
+            balanceDialogueLines(message, DIALOG_LINE_CHARS)
         } else {
             message.toList()
         }

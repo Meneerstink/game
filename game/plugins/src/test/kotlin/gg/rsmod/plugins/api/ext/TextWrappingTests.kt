@@ -26,4 +26,26 @@ class TextWrappingTests {
         val word = "x".repeat(60)
         assertEquals(listOf(word, "end"), TextWrapping.wrap("$word end")!!.toList())
     }
+
+    @Test
+    fun `DIALOOG-WEES-REST an over-long line leaves no lone word`() {
+        val cook = balanceDialogueLines(arrayOf("I don't have anything for you to do right now, sorry."), DIALOG_LINE_CHARS)
+        assertEquals(listOf("I don't have anything for", "you to do right now, sorry."), cook)
+        val tutor =
+            balanceDialogueLines(
+                arrayOf("Welcome to the hall, adventurer. I keep the records", "of every quest in Gielinor - and of the paths each", "new hero chooses."),
+                DIALOG_LINE_CHARS,
+            )
+        assertEquals(3, tutor.size)
+        tutor.forEach { assertTrue(it.length <= DIALOG_LINE_CHARS && it.split(' ').size > 1, "'$it'") }
+        val pick = wrapMessageBox(arrayOf("You need a pickaxe to mine this rock. You do not have a pickaxe<br><br>which you have the Mining level to use."))
+        assertEquals(2, pick.size)
+        pick.forEach { assertTrue(it.length <= MESSAGE_BOX_LINE_CHARS && it.split(' ').size > 3, "'$it'") }
+    }
+
+    @Test
+    fun `lines that fit keep the caller's own breaks`() {
+        val lines = arrayOf("Short one.", "<col=ff0000>A coloured line that is long in tags only</col>", "two<br>pieces")
+        assertEquals(lines.toList(), balanceDialogueLines(lines, DIALOG_LINE_CHARS))
+    }
 }
