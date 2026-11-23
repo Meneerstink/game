@@ -28,8 +28,8 @@ object TheLostTribe : ShortQuest(
     val HAM_FOUND = AttributeKey<Boolean>(persistenceKey = "extra_lost_tribe_ham_found")
     val BROOCH_POST = Tile(3230, 9610, 0)
     val MISTAG_POST = Tile(3320, 9615, 0)
-    val CHEST_POST = Tile(3209, 3218, 1)
-    val CRATE_POST = Tile(3152, 9644, 0)
+    val CHEST_POST = Tile(3209, 3216, 1) // south of the chest: from the north side (3209,3218 is a wall) it cannot be reached (bot X5TRIBE 23-11)
+    val CRATE_POST = Tile(3153, 9645, 0) // 3152,9644 is not standable (bot X5TRIBE 23-11)
 
     override fun onReset(player: Player) {
         player.attr.remove(BROOCH_RETURNED)
