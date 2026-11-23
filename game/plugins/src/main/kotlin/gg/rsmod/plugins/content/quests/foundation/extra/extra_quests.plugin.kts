@@ -17,6 +17,28 @@ listOf(Npcs.AUSTRI, Npcs.VESTRI, Npcs.BONZO).forEach { id ->
         }
     }
 }
+
+spawn_npc(npc = Npcs.THORMAC, x = 2702, z = 3406, height = 3, direction = Direction.SOUTH)
+spawn_npc(npc = Npcs.KHARID_SCORPION, x = 2877, z = 9796, direction = Direction.SOUTH)
+on_npc_option(Npcs.THORMAC, "Talk-to") {
+    player.queue {
+        if (!ScorpionCatcher.isFinished(player)) ScorpionCatcher.reclaimCage(player)
+        if (!FoundationQuests.talk(this, Npcs.THORMAC)) ScorpionCatcher.enchant(this)
+    }
+}
+on_npc_option(Npcs.SEER, "Talk-to") { player.queue { FoundationQuests.talk(this, Npcs.SEER) } }
+ScorpionCatcher.SCORPIONS.keys.forEach { id ->
+    // OSRS Pick-up always stings; catching uses the cage on the npc, even when a cage is carried.
+    on_npc_option(id, "Pick-up") {
+        player.message("The scorpion stings you!")
+        player.hit(30, type = HitType.REGULAR_HIT)
+    }
+    ScorpionCatcher.CAGES.forEach { cage ->
+        on_item_on_npc(item = cage, npc = id) {
+            if (ScorpionCatcher.capture(player, id)) player.queue { FoundationQuests.offerNextStep(this, ScorpionCatcher, false) }
+        }
+    }
+}
 on_npc_option(Npcs.BONZO, "Pay") { player.queue { FishingContest.pay(this) } }
 
 // Repeatable gathering after losing the worm; the automatic search is the short quest's first step.

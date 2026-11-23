@@ -138,6 +138,42 @@ class ExtraQuestsTests {
         assertEquals(1, a.player.inventory.getItemCount(Items.FISHING_TROPHY))
     }
 
+    @Test fun `Scorpion Catcher keeps its hard missing prerequisite and exact wiki reward`() {
+        val q = ScorpionCatcher
+        assertEquals(389, q.startNpc)
+        assertEquals(5, q.steps.size)
+        assertEquals(listOf(Skills.PRAYER to 31), q.needs.skills)
+        assertEquals(listOf("Alfred Grimhand's Barcrawl"), q.needs.quests)
+        assertEquals(listOf(Skills.STRENGTH to 6_625.0), q.reward.xp)
+        val a = Account(); a.open(q)
+        a.player.skills.setBaseLevel(Skills.PRAYER, 31)
+        assertFalse(q.needs.met(a.player), "missing Barcrawl must never be waived")
+        assertTrue(q.needs.missing(a.player).any { it.contains("Alfred Grimhand") })
+        q.setStage(a.player, q.completedValue)
+        assertEquals(6, a.player.getVarp(Varps.SCORPION_CATCHER_PROGRESS))
+    }
+
+    @Test fun `scorpions can be caught out of order and a lost cage requires recapture`() {
+        val a = Account(); val q = ScorpionCatcher; a.open(q)
+        q.setStage(a.player, 2)
+        q.reclaimCage(a.player)
+        assertFalse(q.capture(a.player, 123))
+        assertTrue(q.capture(a.player, 386))
+        assertEquals(2, q.stage(a.player))
+        assertFalse(q.capture(a.player, 386))
+        assertTrue(q.capture(a.player, 385))
+        assertEquals(3, q.stage(a.player))
+        assertTrue(q.capture(a.player, 387))
+        assertEquals(5, q.stage(a.player))
+        assertTrue(a.player.inventory.contains(463))
+        a.player.inventory.remove(463)
+        q.reclaimCage(a.player)
+        assertEquals(2, q.stage(a.player))
+        assertTrue(a.player.inventory.contains(456))
+        q.reclaimCage(a.player)
+        assertEquals(1, a.player.inventory.getItemCount(456))
+    }
+
     companion object {
         private val DEFINITIONS = DefinitionSet()
         @BeforeClass @JvmStatic fun loadCache() {
