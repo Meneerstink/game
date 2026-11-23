@@ -103,12 +103,13 @@ on_player_death { SigilCombat.onDeath(player) }
 
 // SigilFx: the OSRS sounds "no longer active" (a window ran out) and "cooldown finished" of an activated sigil.
 SigilFx.WINDOW_TIMER.forEach { (sigil, key) -> on_timer(key) { if (Sigils.effective(player, sigil)) SigilFx.windowEnded(player, sigil) } }
-// Chat line from OSRS DMM video cMUhQb_j3dw 02:04 (Sigil of Binding; same wording with the sigil's own name for the others).
+// Chat line from OSRS DMM video cMUhQb_j3dw 02:04 (Sigil of Binding; same wording with the sigil's own name for the others:
+// HIisFATzF8c 09:48 Sigil of Finality). Green in both videos (cMUhQb_j3dw 05:34 transparent chat, HIisFATzF8c fixed chat).
 SigilFx.COOLDOWN_TIMER.forEach { (sigil, key) ->
     on_timer(key) {
         if (Sigils.effective(player, sigil)) {
             SigilFx.cooldownFinished(player)
-            player.message("The cooldown for your ${sigil.label} is over. It can now be activated.")
+            player.message("<col=006000>The cooldown for your ${sigil.label} is over. It can now be activated.</col>")
         }
     }
 }

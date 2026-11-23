@@ -23,7 +23,9 @@ object SigilEffects {
             Sigil.BINDING -> player.message("The Sigil of Binding pulses with energy, ready to help you bind an opponent.")
             Sigil.SPECIALISED_STRIKES -> player.message("Specialised Strikes: your next special attack costs 10 less for ${sigil.windowSeconds} seconds.")
             Sigil.THE_PORCUPINE -> player.message("Porcupine: attackers are hurt by recoil for ${sigil.windowSeconds} seconds.")
-            Sigil.FINALITY -> player.message("Finality: your next special attack within ${sigil.windowSeconds} seconds cannot miss.")
+            // OSRS DMM video HIisFATzF8c 01:54 + 10:02 (fixed chat; same green as the cooldown line in that video, which
+            // video cMUhQb_j3dw shows green in the transparent chat).
+            Sigil.FINALITY -> player.message("<col=006000>Your Sigil of Finality enables you to find a gap in your opponent's defences.</col>")
             else -> instant(player, sigil)
         }
     }
