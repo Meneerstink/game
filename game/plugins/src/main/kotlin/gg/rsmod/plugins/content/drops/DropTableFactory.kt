@@ -207,7 +207,11 @@ object DropTableFactory {
         val bldr = tables[type]!![tableId]
         if (bldr == null && !(type == DropTableType.KILL && gg.rsmod.plugins.content.scrolls.ClueNpcSources.has(tableId))) return null
         return try {
-            val built = DropTableBuilder(player, prng).also { if (bldr != null) bldr(it) }.build()
+            val built = DropTableBuilder(player, prng).also {
+                if (bldr != null) bldr(it)
+                // ZORYA-ASCENSION (owner 23-11): the Archive items drop from the wilderness bosses, as an extra table.
+                if (bldr != null && type == DropTableType.KILL) gg.rsmod.plugins.content.mechanics.deadman.items.ArchiveDrops.addTo(it, tableId)
+            }.build()
             if (type == DropTableType.KILL) gg.rsmod.plugins.content.scrolls.ClueNpcSources.tables(player, tableId, built) else built
         } catch (e: Exception) {
             gg.rsmod.game.model.Trace.crash("drop viewer table $tableId", e)
@@ -230,7 +234,11 @@ object DropTableFactory {
         val bldr = tables[type]!![tableId]
         if (bldr == null && !(type == DropTableType.KILL && gg.rsmod.plugins.content.scrolls.ClueNpcSources.has(tableId))) return null
         try {
-            val built = DropTableBuilder(player, prng).also { if (bldr != null) bldr(it) }.build()
+            val built = DropTableBuilder(player, prng).also {
+                if (bldr != null) bldr(it)
+                // ZORYA-ASCENSION (owner 23-11): the Archive items drop from the wilderness bosses, as an extra table.
+                if (bldr != null && type == DropTableType.KILL) gg.rsmod.plugins.content.mechanics.deadman.items.ArchiveDrops.addTo(it, tableId)
+            }.build()
             val tables = if (type == DropTableType.KILL) gg.rsmod.plugins.content.scrolls.ClueNpcSources.tables(player, tableId, built) else built
 
             val guaranteed = tables.firstOrNull { it.name == GUARANTEED_TABLE_NAME }
