@@ -52,6 +52,8 @@ class QuestSearch(
     val gives: List<Pair<Int, Int>> = emptyList(),
     val needs: List<Pair<Int, Int>> = emptyList(),
     val missing: String = "You search the area, but you do not have what you need yet.",
+    /** Tools that must be carried but are not consumed by this search. */
+    val tools: List<Pair<Int, Int>> = emptyList(),
 )
 
 /**
@@ -175,6 +177,9 @@ abstract class ShortQuest(
      */
     open val ownSteps: Boolean get() = false
 
+    /** Opt-in for extra quests whose list variable can safely mirror the started state as 1. */
+    open val showStartedInList: Boolean get() = false
+
     private var stepKeyCache: gg.rsmod.game.model.attr.AttributeKey<Int>? = null
 
     /** The persistent step attribute of this quest (ownSteps quests only). */
@@ -235,6 +240,9 @@ abstract class ShortQuest(
                 player.attr.remove(stepKey)
             } else {
                 player.attr[stepKey] = value
+                if (showStartedInList && listEntryRead(player) == 0) {
+                    if (usesVarbits) player.setVarbit(questId, 1) else player.setVarp(questId, 1)
+                }
             }
             FoundationQuests.refreshQuestList(player)
             return

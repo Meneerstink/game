@@ -57,7 +57,8 @@ object QuestStatus {
                 COMPLETE -> State.COMPLETED
                 1 -> State.IN_PROGRESS
                 // PROJECT48 F3: a bracket mini-quest in progress keeps its step in its own attribute (the cache variable stays 0).
-                else -> if (BracketQuests.bySlot(slot)?.let { (it.stage(player)) >= 1 } == true) State.IN_PROGRESS else State.NOT_STARTED
+                else -> if ((BracketQuests.bySlot(slot) ?: gg.rsmod.plugins.content.quests.foundation.extra.ExtraQuests.bySlot(slot))
+                        ?.let { it.stage(player) >= 1 } == true) State.IN_PROGRESS else State.NOT_STARTED
             }
         }
         val stage = choice.stage(player)

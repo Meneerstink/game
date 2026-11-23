@@ -52,7 +52,8 @@ on_command("p48", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
         QuestStatus.sync(player)
         return@on_command player.message("p48: slot $slot opened for play (state=${QuestStatus.state(player, slot)}).")
     }
-    val quest = BracketQuests.bySlot(slot) ?: return@on_command player.message("p48: slot $slot is not a bracket quest (p48 list).")
+    val quest = BracketQuests.bySlot(slot) ?: gg.rsmod.plugins.content.quests.foundation.extra.ExtraQuests.bySlot(slot)
+        ?: return@on_command player.message("p48: slot $slot is not a short quest (p48 list).")
     when (sub) {
         "status" -> {
             val lines = quest.needs.lines(player).joinToString("; ") { (if (it.met) "ok " else "MISSING ") + it.text }

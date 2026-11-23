@@ -1,0 +1,147 @@
+package gg.rsmod.plugins.content.quests.foundation
+
+import com.displee.cache.CacheLibrary
+import gg.rsmod.game.fs.DefinitionSet
+import gg.rsmod.game.fs.def.ItemDef
+import gg.rsmod.game.fs.def.NpcDef
+import gg.rsmod.game.model.World
+import gg.rsmod.game.model.attr.AttributeMap
+import gg.rsmod.game.model.container.ItemContainer
+import gg.rsmod.game.model.container.key.*
+import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.skill.SkillSet
+import gg.rsmod.game.model.varp.VarpSet
+import gg.rsmod.plugins.api.Skills
+import gg.rsmod.plugins.api.cfg.*
+import gg.rsmod.plugins.api.ext.*
+import gg.rsmod.plugins.content.quests.QuestList
+import gg.rsmod.plugins.content.quests.QuestStatus
+import gg.rsmod.plugins.content.quests.foundation.bracket.BracketQuests
+import gg.rsmod.plugins.content.quests.foundation.extra.*
+import io.mockk.every
+import io.mockk.mockk
+import org.junit.BeforeClass
+import java.nio.file.Paths
+import kotlin.test.*
+
+/** Written for Claude's single end build. Real cache definitions, containers, skills and persisted step storage. */
+class ExtraQuestsTests {
+    private class Account(cohort: String = QuestChoices.ARMAGEDDON) {
+        val attributes = AttributeMap()
+        val varps = VarpSet((0..8000).toSet())
+        val player = mockk<Player>(relaxed = true)
+        init {
+            attributes[QuestChoices.COHORT] = cohort
+            val world = mockk<World>(relaxed = true)
+            every { world.definitions } returns DEFINITIONS
+            every { player.world } returns world
+            every { player.attr } returns attributes
+            every { player.varps } returns varps
+            every { player.skills } returns SkillSet(25)
+            every { player.inventory } returns ItemContainer(DEFINITIONS, INVENTORY_KEY)
+            every { player.bank } returns ItemContainer(DEFINITIONS, BANK_KEY)
+            every { player.equipment } returns ItemContainer(DEFINITIONS, EQUIPMENT_KEY)
+        }
+        fun open(q: ShortQuest) {
+            BracketQuests.setTestOpen(player, q.slot, true)
+            q.setStage(player, 0)
+        }
+    }
+
+    @Test fun `extra quests have real list entries and never enter the bracket unlocks`() {
+        ExtraQuests.ALL.forEach { q ->
+            val entry = QuestList.entry(q.slot)!!
+            assertEquals(q.name, entry.name)
+            assertEquals(q.pointReward, entry.points)
+            assertTrue(q.ownSteps)
+            assertEquals(q.steps.size + 1, q.completedValue)
+            assertTrue(q.startNpc >= 0 && q.startLocation != null)
+            assertTrue(q.steps.all { it.location != null && it.journal.isNotEmpty() && it.done.isNotEmpty() })
+            assertFalse(q in BracketQuests.ALL)
+            assertTrue(q in FoundationQuests.HELPERS)
+        }
+    }
+
+    @Test fun `existing completed status is preserved for every cohort`() {
+        listOf(QuestChoices.LEGACY, QuestChoices.CHOICE, QuestChoices.ARMAGEDDON).forEach { cohort ->
+            val a = Account(cohort)
+            QuestStatus.login(a.player)
+            ExtraQuests.ALL.forEach { q ->
+                assertEquals(QuestStatus.State.COMPLETED, QuestStatus.state(a.player, q))
+                assertEquals(2, QuestList.entry(q.slot)!!.progress.read(a.player))
+                assertFalse(FoundationRewards.isRewarded(a.player, q))
+            }
+        }
+    }
+
+    @Test fun `explicitly opened quests keep steps across reconnection and show red yellow green`() {
+        ExtraQuests.ALL.forEach { q ->
+            val a = Account()
+            a.open(q)
+            assertEquals(QuestStatus.State.NOT_STARTED, QuestStatus.state(a.player, q))
+            assertEquals(0, QuestList.entry(q.slot)!!.progress.read(a.player))
+            q.setStage(a.player, 1)
+            assertEquals(1, QuestList.entry(q.slot)!!.progress.read(a.player))
+            assertEquals(QuestStatus.State.IN_PROGRESS, QuestStatus.state(a.player, q))
+            assertEquals(1, a.attributes[q.stepKey])
+            // A new Player wrapper over the same saved attributes/varps reads the same step.
+            val reconnect = mockk<Player>(relaxed = true)
+            every { reconnect.attr } returns a.attributes
+            every { reconnect.varps } returns a.varps
+            every { reconnect.world } returns a.player.world
+            assertEquals(1, q.stage(reconnect))
+            q.setStage(a.player, q.completedValue)
+            assertEquals(2, QuestList.entry(q.slot)!!.progress.read(a.player))
+            assertEquals(QuestStatus.State.COMPLETED, QuestStatus.state(a.player, q))
+        }
+    }
+
+    @Test fun `every bound option exists in the actual cache`() {
+        ExtraQuests.OPTIONS.forEach { (id, option) ->
+            val def = DEFINITIONS.get(NpcDef::class.java, id)
+            assertTrue(def.options.any { it.equals(option, ignoreCase = true) }, "$id lacks $option")
+        }
+        ExtraQuests.ALL.flatMap { q -> listOf(q.reward.icon) + q.reward.items.map { it.first } +
+            q.steps.flatMap { s -> s.gives.map { it.first } + (s.search?.gives?.map { it.first } ?: emptyList()) } }
+            .distinct().forEach { assertNotNull(DEFINITIONS.getNullable(ItemDef::class.java, it), "item $it") }
+    }
+
+    @Test fun `Fishing Contest wiki start requirements reward and client complete value`() {
+        val q = FishingContest
+        assertEquals(232, q.startNpc)
+        assertEquals(3, q.steps.size)
+        assertEquals(listOf(Skills.FISHING to 10), q.needs.skills)
+        assertEquals(listOf(Skills.FISHING to 2_437.0), q.reward.xp)
+        assertEquals(1, q.pointReward)
+        val a = Account(); a.open(q)
+        assertFalse(q.needs.met(a.player))
+        a.player.skills.setBaseLevel(Skills.FISHING, 10)
+        assertTrue(q.needs.met(a.player))
+        q.setStage(a.player, q.completedValue)
+        assertEquals(5, a.player.getVarp(Varps.FISHING_CONTEST_PROGRESS))
+    }
+
+    @Test fun `Bonzo refuses insufficient coins without taking supplies and accepts payment once`() {
+        val a = Account(); a.open(FishingContest)
+        FishingContest.setStage(a.player, 2)
+        listOf(Items.FISHING_PASS, Items.FISHING_ROD, Items.GARLIC, Items.RED_VINE_WORM).forEach { a.player.inventory.add(it, 1) }
+        a.player.inventory.add(Items.COINS_995, 4)
+        assertFalse(FishingContest.enter(a.player))
+        assertTrue(a.player.inventory.contains(Items.GARLIC))
+        assertTrue(a.player.inventory.contains(Items.RED_VINE_WORM))
+        assertEquals(4, a.player.inventory.getItemCount(Items.COINS_995))
+        a.player.inventory.add(Items.COINS_995, 1)
+        assertTrue(FishingContest.enter(a.player))
+        assertEquals(3, FishingContest.stage(a.player))
+        assertEquals(1, a.player.inventory.getItemCount(Items.FISHING_TROPHY))
+        assertFalse(FishingContest.enter(a.player))
+        assertEquals(1, a.player.inventory.getItemCount(Items.FISHING_TROPHY))
+    }
+
+    companion object {
+        private val DEFINITIONS = DefinitionSet()
+        @BeforeClass @JvmStatic fun loadCache() {
+            DEFINITIONS.loadAll(CacheLibrary(Paths.get("..", "..", "data", "cache").toString()))
+        }
+    }
+}
