@@ -371,6 +371,11 @@ object OsrsFxImportTool {
             // N462 07-11 square 13098 ('necropolis-west'): gameval AnimationID TEMPLETREK_BOAT_RIPPLES 3743, LIGHT_BEAM_BUTTERFLY 9845,
             // SAILING_BT_VFX_WATER_RAPIDS01_GENTLE01 13159 (loc animations of its scenery).
             "necropolis-west-seq" to listOf(3743, 9845, 13159),
+            // PROJECT48 D2 Kourend + Kebos (OsrsRegionImportTool 'kourend-kebos', dry-run 23-11 04:37): the loc animations of the 93
+            // squares; run with RSPS_OSRS_SOURCE_CACHE = import-source/openrs2-1884/extract/cache (the same cache aug-2024 as the map).
+            "kourend-kebos-seq" to listOf(472, 473, 477, 479, 494, 623, 1051, 1073, 1362, 1731, 1732, 1869, 1908, 2346, 2708, 3106, 3107,
+                3174, 3343, 3511, 3742, 4125, 4126, 4128, 4516, 5203, 5278, 5855, 5906, 6023, 6069, 6470, 6493, 6495, 7322, 7894, 8231,
+                9087, 9088, 9089),
             "weaponseq1" to
                 listOf(
                     3294, 3295, 3296, 3297, 3300, // ABYSSAL_DAGGER_HACK / BLOCK / IDLE / LUNGE / SPECIAL

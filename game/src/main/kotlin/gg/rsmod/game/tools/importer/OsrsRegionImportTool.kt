@@ -492,7 +492,26 @@ object OsrsRegionImportTool {
             // floors outside the cave walls; the same tiles again without them (tiles only, the locs and the fog record stay).
             "wildy-lairs-nohidden" to Batch(listOf(13473, 13215, 7092, 7604), emptyList(), "Wilderness boss lairs tiles without hidden overlays",
                 replaceSquares = setOf(13473, 13215, 7092, 7604), tilesOnly = true, dropHiddenOverlays = true),
+            // PROJECT48 D2 (owner 22-11: "import Kourend + Kebos"; 2B: only content up to July 2024 -> source = OpenRS2 1884, build 224,
+            // 2024-08-28, the "cache aug-2024"). Every OSRS land square north of Varlamore (squares y 53-62) that is empty in our map
+            // (team/dossiers/PROJECT48-notities/gebied-import/box_compare.py, 23-11); the CoX entrance squares 4918/4919/5174/5175 and
+            // Watson's house 6455 were imported before and are left out.
+            // Lessons of the earlier imports from the start: tile flag 0x8 = 'do not draw' in rev 667 (N522), OSRS hidden overlays out
+            // (N568), sea/river/lake water onto our sea overlay 111 (Necropolis + Hosidius river in 'watson-floor', N633).
+            "kourend-kebos" to Batch(KOUREND_KEBOS_SQUARES, emptyList(), "Great Kourend + Kebos Lowlands (cache aug-2024)",
+                clearTileFlags = 0x8, dropHiddenOverlays = true, overlayOverrides = NECROPOLIS_SEA,
+                sourceCache = gg.rsmod.game.RspsPaths.root("import-source/openrs2-1884/extract/cache"),
+                sourceKeys = gg.rsmod.game.RspsPaths.root("import-source/openrs2-1884/keys.json")),
         )
+
+    /** OSRS land squares (x 18-29, y 53-62) for 'kourend-kebos'; box_compare.py "O" cells, 23-11. */
+    val KOUREND_KEBOS_SQUARES: List<Int> get() = listOf(
+        6462, 6974, 5693, 5949, 6205, 6461, 6717, 6973, 7229, 4924, 5180, 5692, 5948, 6204, 6460, 6716, 6972, 7228, 7484,
+        4667, 4923, 5179, 5435, 5691, 5947, 6203, 6459, 6715, 6971, 7227, 4666, 4922, 5178, 5434, 5690, 5946, 6202, 6458, 6714,
+        6970, 7226, 4665, 4921, 5177, 5433, 5689, 5945, 6201, 6457, 6713, 6969, 7225, 4664, 4920, 5176, 5432, 5688, 5944, 6200,
+        6456, 6712, 6968, 7224, 4663, 5431, 5687, 5943, 6199, 6711, 6967, 7223, 7479, 4662, 5430, 5686, 5942, 6198, 6454, 6710,
+        6966, 7222, 7478, 4405, 4661, 4917, 5173, 5429, 5941, 6197, 6453, 6709, 6965, 7221,
+    )
 
     class Plan(
         val mutations: List<CacheMutation>,
