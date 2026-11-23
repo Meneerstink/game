@@ -304,6 +304,13 @@ object Sigils {
      * Activates [sigil]: checks that it is attuned and ready, starts the cooldown and the window. Returns false (with a message)
      * when it cannot be activated; the caller then runs the instant effect of sigils with window 0.
      */
+    /**
+     * SIGIL-TEKST-BRON 23-11: the cooldown refusal from DMM video frames (work/gpt-b/tmp/sigiltekst/strikes-sheet.jpg): 'Your Sigil still
+     * needs another 13 seconds before it's ready.' and, with one second left, 'Your Sigil can be activated in 1 second.'
+     */
+    fun notReady(left: Int): String =
+        if (left <= 1) "Your Sigil can be activated in 1 second." else "Your Sigil still needs another $left seconds before it's ready."
+
     fun activate(
         player: Player,
         sigil: Sigil,
@@ -315,7 +322,7 @@ object Sigils {
         }
         val left = cooldownLeft(player, sigil)
         if (left > 0) {
-            player.message("The ${sigil.label} will be ready in $left seconds.")
+            player.message(Sigils.notReady(left))
             return false
         }
         val now = nowSeconds()

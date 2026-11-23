@@ -632,4 +632,10 @@ class SigilTests {
         nature.onNatureStep(player)
         io.mockk.verify(exactly = 3) { manager.onFarmingTick(any()) }
     }
+
+    @Test
+    fun `cooldown refusal uses the DMM video lines (SIGIL-TEKST-BRON 23-11)`() {
+        kotlin.test.assertEquals("Your Sigil still needs another 13 seconds before it's ready.", Sigils.notReady(13))
+        kotlin.test.assertEquals("Your Sigil can be activated in 1 second.", Sigils.notReady(1))
+    }
 }

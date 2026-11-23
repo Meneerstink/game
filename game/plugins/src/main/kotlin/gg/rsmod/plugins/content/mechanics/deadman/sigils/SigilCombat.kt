@@ -487,6 +487,8 @@ object SigilCombat {
     /** The window of a one-shot sigil was used up by the special attack that just fired. */
     fun windowUsed(player: Player) {
         Sigils.consumeWindow(player, Sigil.SPECIALISED_STRIKES)
+        // SIGIL-TEKST-BRON 23-11: green line from the same DMM video (strikes-sheet.jpg).
+        player.message("<col=006000>Your Sigil of Specialised Strikes reduces the cost of your special attack.</col>")
     }
 
     private val BARROWS_WEAPONS = listOf("dharok's greataxe", "verac's flail", "torag's hammers", "guthan's warspear", "karil's crossbow", "ahrim's staff")

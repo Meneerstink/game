@@ -21,8 +21,11 @@ object SigilEffects {
         when (sigil) {
             // OSRS DMM video cMUhQb_j3dw 05:34.
             Sigil.BINDING -> player.message("The Sigil of Binding pulses with energy, ready to help you bind an opponent.")
-            Sigil.SPECIALISED_STRIKES -> player.message("Specialised Strikes: your next special attack costs 10 less for ${sigil.windowSeconds} seconds.")
-            Sigil.THE_PORCUPINE -> player.message("Porcupine: attackers are hurt by recoil for ${sigil.windowSeconds} seconds.")
+            // SIGIL-TEKST-BRON 23-11 (GPT-B + Claude): DMM 2021 videos - Porcupine youtube bbyU0XM4FWY 00:15 ("The Art of the Porcupine"),
+            // Specialised Strikes youtube DfnFt4CMyb8 ("DMM Verac tank 1v1s", frames strikes-sheet.jpg + strikes-275s.png). Other DMM version
+            // than Armageddon - allowed by the owner (22-11) when Armageddon has none.
+            Sigil.SPECIALISED_STRIKES -> player.message("Your Sigil of Specialised Strikes coats your weapon with potent dark energy, reducing the cost of your next special attack.")
+            Sigil.THE_PORCUPINE -> player.message("Your Sigil of the Porcupine protrudes magical spikes, ready to retaliate against your foes.")
             // Owner 23-11: state the custom accuracy bonus explicitly.
             Sigil.FINALITY -> player.message("<col=006000>Finality: your next special attack within ${sigil.windowSeconds} seconds gains 50% accuracy. Cooldown: ${sigil.cooldownSeconds} seconds.</col>")
             else -> instant(player, sigil)
@@ -68,7 +71,7 @@ object SigilEffects {
         }
         val left = Sigils.cooldownLeft(player, sigil)
         if (left > 0) {
-            player.message("The ${sigil.label} will be ready in $left seconds.")
+            player.message(Sigils.notReady(left))
             return
         }
         val from = player.attr[LAST_TELEPORT_FROM]
