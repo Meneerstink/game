@@ -55,7 +55,10 @@ object QuestStatus {
             // unless they were really played (the list entry's own progress).
             // PROJECT48 (test server tool ::p48 reset): a bracket mini-quest forced open, so scenarios can play it although its bracket gave it.
             val forcedOpen = BracketQuests.testOpen(player, slot)
-            if (!forcedOpen && !QuestBrackets.gates(player, slot)) return State.COMPLETED
+            // Owner 23-11 22:2x (QUEST-NPC-OPTIES): the five extra quests are OPEN for new (Armageddon) accounts - they play them for
+            // real; older accounts keep the always-complete status, so nobody loses a completion.
+            val extraOpen = extra != null && QuestBrackets.applies(player)
+            if (!forcedOpen && !extraOpen && !QuestBrackets.gates(player, slot)) return State.COMPLETED
             if (!forcedOpen && QuestBrackets.isUnlocked(player, slot)) return State.COMPLETED
             return when (QuestList.ENTRIES.firstOrNull { it.slot == slot }?.progress?.read?.invoke(player) ?: 0) {
                 COMPLETE -> State.COMPLETED

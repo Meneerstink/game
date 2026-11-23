@@ -203,6 +203,8 @@ class QuestStatusTests {
                     entry.slot == gg.rsmod.plugins.content.areas.wilderness.MageArenaII.SLOT -> State.NOT_STARTED
                     QuestStatus.CHOICE_QUESTS.containsKey(entry.slot) -> State.NOT_STARTED
                     entry.slot in brackets.PHOTO_SLOTS && entry.slot !in firstBracket -> State.NOT_STARTED
+                    // Owner 23-11 22:2x: the five extra quests are played for real by a new Armageddon account.
+                    gg.rsmod.plugins.content.quests.foundation.extra.ExtraQuests.bySlot(entry.slot) != null -> State.NOT_STARTED
                     else -> State.COMPLETED
                 }
             assertEquals(expected, QuestStatus.state(account.player, entry.slot), entry.name)

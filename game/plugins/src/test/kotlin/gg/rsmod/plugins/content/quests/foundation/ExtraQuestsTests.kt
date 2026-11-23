@@ -63,8 +63,21 @@ class ExtraQuestsTests {
         }
     }
 
-    @Test fun `existing completed status is preserved for every cohort`() {
-        listOf(QuestChoices.LEGACY, QuestChoices.CHOICE, QuestChoices.ARMAGEDDON).forEach { cohort ->
+    @Test fun `new Armageddon accounts play the extra quests, an earlier completion mirror stays completed (owner 23-11)`() {
+        val fresh = Account(QuestChoices.ARMAGEDDON)
+        QuestStatus.login(fresh.player)
+        ExtraQuests.ALL.forEach { q ->
+            assertEquals(QuestStatus.State.NOT_STARTED, QuestStatus.state(fresh.player, q), q.name)
+            assertEquals(0, QuestList.entry(q.slot)!!.progress.read(fresh.player), q.name)
+        }
+        val earlier = Account(QuestChoices.ARMAGEDDON)
+        ExtraQuests.ALL.forEach { q -> QuestList.entry(q.slot)!!.progress.complete(earlier.player) }
+        QuestStatus.login(earlier.player)
+        ExtraQuests.ALL.forEach { q -> assertEquals(QuestStatus.State.COMPLETED, QuestStatus.state(earlier.player, q), q.name) }
+    }
+
+    @Test fun `existing completed status is preserved for the older cohorts`() {
+        listOf(QuestChoices.LEGACY, QuestChoices.CHOICE).forEach { cohort ->
             val a = Account(cohort)
             QuestStatus.login(a.player)
             ExtraQuests.ALL.forEach { q ->

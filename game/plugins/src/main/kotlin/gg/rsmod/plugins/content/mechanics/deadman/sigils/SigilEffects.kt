@@ -123,7 +123,9 @@ object SigilEffects {
         gg.rsmod.plugins.content.mechanics.poison.Venom.cure(player, immunityTicks = IMMUNITY_TICKS, announce = false)
         player.timers[gg.rsmod.game.model.timer.POISON_IMMUNITY] = IMMUNITY_TICKS
         player.timers[gg.rsmod.game.model.timer.VENOM_IMMUNITY] = IMMUNITY_TICKS
-        player.message("The serpent sigil cures you and shields you from poison and venom for 10 minutes.")
+        // No OSRS source found (GPT-B 23-11 22:0x, list in SIGILS.txt); owner 23-11 22:2x: own line in the style of the real
+        // Porcupine / Specialised Strikes lines.
+        player.message("Your Sigil of the Serpent cleanses you of poison and venom, and will protect you from them for 10 minutes.")
     }
 
     private const val IMMUNITY_TICKS = 1000
