@@ -303803,7 +303803,7 @@
   equipment: null
 - id: 25504
   name: "Sigil of deft strikes"
-  examine: "You gain 30% more accuracy in all styles against all monsters."
+  examine: "You gain 10% more accuracy in all styles against all non-player enemies."
   tradeable: true
   weight: 0.1
   equipment: null
@@ -303815,7 +303815,7 @@
   equipment: null
 - id: 25506
   name: "Sigil of enhanced harvest"
-  examine: "You always gain triple resources from Mining, Fishing, Woodcutting or Farming. Does not work at Tithe Farm."
+  examine: "You always gain 2x resources from Mining, Fishing, Woodcutting, and Farming. This sigil does not stack with Sigil of the Forager."
   tradeable: true
   weight: 0.1
   equipment: null
@@ -303863,7 +303863,7 @@
   equipment: null
 - id: 25514
   name: "Sigil of resistance"
-  examine: "All attacks from monsters do 25% less damage. The damage reduction effect does not stack with the Sigil of Titanium."
+  examine: "All attacks from monsters are reduced by 15%. The damage reduction effect does not stack with the Sigil of Titanium."
   tradeable: true
   weight: 0.1
   equipment: null
@@ -303899,20 +303899,20 @@
   equipment: null
 - id: 25520
   name: "Sigil of the abyss"
-  examine: "A power enhancing sigil not yet attuned to you."
+  examine: "When Runecrafting, you gain 2x as many runes as usual."
   tradeable: true
   weight: 0.1
   equipment: null
 - id: 25521
   name: "Sigil of the alchemaniac"
-  examine: "A sigil attuned to you with great power."
+  examine: "This sigil has been removed and no longer grants any effect or uses an attunement slot."
   tradeable: false
   weight: 0.1
   equipment: null
 - id: 25522
   name: "Sigil of the alchemaniac"
-  examine: "When casting high or low alchemy on a stack of items, the spell will automatically recast over time, until the stack is depleted or moved."
-  tradeable: true
+  examine: "This sigil has been removed and no longer grants any effect or uses an attunement slot."
+  tradeable: false
   weight: 0.1
   equipment: null
 - id: 25523
@@ -303923,7 +303923,7 @@
   equipment: null
 - id: 25524
   name: "Sigil of the eternal jeweller"
-  examine: "A power enhancing sigil not yet attuned to you."
+  examine: "Teleporting via the following methods has a 50% chance not to use a charge: master scroll book, ring of dueling, ring of returning, Slayer ring, ring of wealth, amulet of glory, games necklace, skills necklace, Digsite pendant, combat bracelet, burning amulet, and necklace of passage."
   tradeable: true
   weight: 0.1
   equipment: null
@@ -303947,7 +303947,7 @@
   equipment: null
 - id: 25528
   name: "Sigil of the forager"
-  examine: "A power enhancing sigil not yet attuned to you."
+  examine: "You have a 50% chance to gain one extra resource per resource gathered from Mining, Fishing, Woodcutting, and Farming (1.5x on average). This sigil does not stack with the Sigil of Enhanced Harvest."
   tradeable: true
   weight: 0.1
   equipment: null
@@ -303995,7 +303995,7 @@
   equipment: null
 - id: 25536
   name: "Sigil of the treasure hunter"
-  examine: "Clue scrolls drop 3x more often. You have a 75% chance for a clue scroll to return the reward casket after you complete a clue step for any tier. You can hold an unlimited amount of Scroll boxes."
+  examine: "Clue Scrolls drop 1.5x more often, up to a 100% drop chance."
   tradeable: true
   weight: 0.1
   equipment: null
@@ -304067,7 +304067,7 @@
   equipment: null
 - id: 25548
   name: "Sigil of precision"
-  examine: "A power enhancing sigil not yet attuned to you."
+  examine: "You gain 20% more accuracy in all styles against all monsters."
   tradeable: true
   weight: 0.1
   equipment: null
@@ -304205,14 +304205,14 @@
   equipment: null
 - id: 25571
   name: "Sigil of aggression"
-  examine: "A sigil attuned to you with great power."
+  examine: "This sigil has been removed and no longer grants any effect or uses an attunement slot."
   tradeable: false
   weight: 0.1
   equipment: null
 - id: 25572
   name: "Sigil of aggression"
-  examine: "All attacks deal 10% more damage. This sigil does not stack with the Sigil of Rampage."
-  tradeable: true
+  examine: "This sigil has been removed and no longer grants any effect or uses an attunement slot."
+  tradeable: false
   weight: 0.1
   equipment: null
 - id: 25573
@@ -304223,7 +304223,7 @@
   equipment: null
 - id: 25574
   name: "Sigil of meticulousness"
-  examine: "You gain 75% more accuracy in all styles against all monsters."
+  examine: "Grants +30% Accuracy in all styles against NPCs. This is a higher-tier variant of the Sigil of Deft Strikes."
   tradeable: true
   weight: 0.1
   equipment: null
@@ -304247,7 +304247,7 @@
   equipment: null
 - id: 25578
   name: "Sigil of titanium"
-  examine: "All attacks from monsters do 60% less damage. The damage reduction effect does not stack with the Sigil of Resistance."
+  examine: "All attacks from monsters are reduced by 25%. The damage reduction effect does not stack with the Sigil of Resistance."
   tradeable: true
   weight: 0.1
   equipment: null
@@ -304367,20 +304367,20 @@
   equipment: null
 - id: 25598
   name: "Sigil of the augmented thrall"
-  examine: "The max hits of thralls is increased by 5x. Thralls last for twice their duration."
+  examine: "The max hits of your thralls are multiplied by 1.5 (rounded down)."
   tradeable: true
   weight: 0.1
   equipment: null
 - id: 25599
   name: "Sigil of the bloodhound"
-  examine: "A sigil attuned to you with great power."
+  examine: "This sigil has been removed and no longer grants any effect or uses an attunement slot."
   tradeable: false
   weight: 0.1
   equipment: null
 - id: 25600
   name: "Sigil of the bloodhound"
-  examine: "A power enhancing sigil not yet attuned to you."
-  tradeable: true
+  examine: "This sigil has been removed and no longer grants any effect or uses an attunement slot."
+  tradeable: false
   weight: 0.1
   equipment: null
 - id: 25601
@@ -304451,7 +304451,7 @@
   equipment: null
 - id: 25612
   name: "Sigil of finality"
-  examine: "Activate the sigil to guarantee 100% accuracy on your next special attack within the next 12 seconds. Once activated, the sigil has a 10 second cooldown."
+  examine: "Activate the Sigil to gain 50% more accuracy on your next special attack against players or monsters within the next 12 seconds. Once activated, the Sigil has a 60 second cooldown."
   tradeable: true
   weight: 0.1
   equipment: null
@@ -304493,14 +304493,14 @@
   equipment: null
 - id: 25619
   name: "Sigil of agile fortune"
-  examine: "A sigil attuned to you with great power."
+  examine: "This sigil has been removed and no longer grants any effect or uses an attunement slot."
   tradeable: false
   weight: 0.1
   equipment: null
 - id: 25620
   name: "Sigil of agile fortune"
-  examine: "When a Mark of Grace appears while training on a Rooftop Agility Course, 10,000 coins will appear alongside it. When handing in a pyramid top to Simon Templeton, receive 30,000 coins instead of 10,000 coins."
-  tradeable: true
+  examine: "This sigil has been removed and no longer grants any effect or uses an attunement slot."
+  tradeable: false
   weight: 0.1
   equipment: null
 - id: 25621
@@ -304511,7 +304511,7 @@
   equipment: null
 - id: 25622
   name: "Sigil of hoarding"
-  examine: "Receive 5x the amount of reward points from most minigames and activities that reward points, such as Barbarian Assault, Tempoross, Mastering Mixology, Mage Training Arena and many more."
+  examine: "You receive 1.5x the number of reward crates or points from Wintertodt, Tempoross, Guardians of the Rift and Pest Control, rounded down once per award."
   tradeable: true
   weight: 0.1
   equipment: null
@@ -304523,7 +304523,7 @@
   equipment: null
 - id: 25624
   name: "Sigil of nature"
-  examine: "Choose your own Farming Contracts. Farming patches will grow instantly and never catch diseases. Does not work at Tithe Farm."
+  examine: "Choose your own Farming Contracts. Crops grow 2x quicker, with one extra Farming cycle every five minutes. Extra cycles occur one at a time."
   tradeable: true
   weight: 0.1
   equipment: null

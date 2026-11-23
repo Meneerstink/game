@@ -1,7 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.deadman.sigils
 
 /**
- * PROJECT48 SIGILS: the effect text of every sigil, word for word from the OSRS Wiki (Deadman: Armageddon/Sigils; stored in
+ * PROJECT48 SIGILS: the effect text of every sigil, based on the OSRS Wiki with owner 23-11 nerfs (Deadman: Armageddon/Sigils; stored in
  * team/dossiers/PROJECT48-notities/SIGILS.tsv, column 8). Shown by Inspect and - once built - in the approved "Attuned Sigils"
  * window (owner 21-11, team/dossiers/GOEDGEKEURDE-ONTWERPEN.txt). Keyed by the sigil number S01-S65.
  */
@@ -13,11 +13,11 @@ object SigilTexts {
                 "Every attack does +1 damage to the target.",
             // Sigil of Deft Strikes
             2 to
-                "You gain 20% more accuracy in all styles against all non-player enemies.",
+                "You gain 10% more accuracy in all styles against all non-player enemies.",
             // Sigil of Enhanced Harvest
             3 to
-                "You always gain 3x resources from Mining, Fishing, Woodcutting, and Farming. This sigil does not stack " +
-                "with Sigil of the Forager.",
+                "You always gain 2x resources from Mining, Fishing, Woodcutting, and Farming. This sigil does not stack with " +
+                "Sigil of the Forager.",
             // Sigil of Exaggeration
             4 to
                 "All non-combat skills are permanently boosted by 5.",
@@ -29,8 +29,8 @@ object SigilTexts {
                 "Your hitpoints restore 15x faster than normal.",
             // Sigil of Resistance
             7 to
-                "All attacks from monsters are reduced by 25%. The damage reduction effect does not stack with the Sigil " +
-                "of Titanium.",
+                "All attacks from monsters are reduced by 15%. The damage reduction effect does not stack with the Sigil of " +
+                "Titanium.",
             // Sigil of Sustenance
             8 to
                 "You have a 50% chance not to consume secondary ingredients when creating potions.",
@@ -39,22 +39,22 @@ object SigilTexts {
                 "You have a 30% chance to gain twice the number of hitpoints from any food or potions consumed.",
             // Sigil of the Abyss
             10 to
-                "When Runecrafting, you gain 5x as many runes as usual.",
+                "When Runecrafting, you gain 2x as many runes as usual.",
             // Sigil of the Alchemaniac
             11 to
-                "High Level Alchemy will provide 30% extra coins.",
+                "This sigil has been removed and no longer grants any effect or uses an attunement slot.",
             // Sigil of the Eternal Jeweller
             12 to
-                "Teleporting via the following methods will never use charges: master scroll book, ring of dueling, ring " +
-                "of returning, Slayer ring, ring of wealth, amulet of glory, games necklace, skills necklace, Digsite " +
+                "Teleporting via the following methods has a 50% chance not to use a charge: master scroll book, ring of dueling, " +
+                "ring of returning, Slayer ring, ring of wealth, amulet of glory, games necklace, skills necklace, Digsite " +
                 "pendant, combat bracelet, burning amulet, and necklace of passage.",
             // Sigil of the Food Master
             13 to
                 "You have a 40% chance not to consume food when used. This effect has a 6 second cooldown.",
             // Sigil of the Forager
             14 to
-                "You always gain 2x resources from Mining, Fishing, Woodcutting, and Farming. This sigil does not stack " +
-                "with the Sigil of Enhanced Harvest.",
+                "You have a 50% chance to gain one extra resource per resource gathered from Mining, Fishing, Woodcutting, and " +
+                "Farming (1.5x on average). This sigil does not stack with the Sigil of Enhanced Harvest.",
             // Sigil of the Meticulous Mage
             15 to
                 "Your magic accuracy is increased by +40 and you have a 50% chance of saving runes or staff charges when " +
@@ -69,7 +69,7 @@ object SigilTexts {
                 "Ranged weapons, except when throwing Chinchompas.",
             // Sigil of the Treasure Hunter
             18 to
-                "Clue Scrolls drop 3x more often.",
+                "Clue Scrolls drop 1.5x more often, up to a 100% drop chance.",
             // Sigil of Arcane Swiftness
             19 to
                 "The attack speed of all magic weapons with a base attack speed above 4 will be reduced by 1. Cannot be " +
@@ -90,7 +90,7 @@ object SigilTexts {
                 "Your defence is increased by +50 for stab, slash, crush, and ranged.",
             // Sigil of Precision
             24 to
-                "You gain 50% more accuracy in all styles against all monsters.",
+                "You gain 20% more accuracy in all styles against all monsters.",
             // Sigil of Preservation
             25 to
                 "Stats boosted above your base level will not drain over time.",
@@ -134,12 +134,10 @@ object SigilTexts {
                 "used in conjunction with the sigil of the gunslinger or the sigil of arcane swiftness.",
             // Sigil of Aggression
             36 to
-                "All attacks deal 10% more damage, but you take 5% more damage from all sources. This sigil does not " +
-                "stack with the Sigil of Rampage.",
+                "This sigil has been removed and no longer grants any effect or uses an attunement slot.",
             // Sigil of Meticulousness
             37 to
-                "Grants +75% Accuracy in all styles against NPCs. This is a higher-tier variant of the Sigil of Deft " +
-                "Strikes.",
+                "Grants +30% Accuracy in all styles against NPCs. This is a higher-tier variant of the Sigil of Deft Strikes.",
             // Sigil of Pious Protection
             38 to
                 "Decrease the amount of damage you take from attacks of a given combat style by 35% when using the " +
@@ -147,8 +145,8 @@ object SigilTexts {
                 "combat style by 5%.",
             // Sigil of Titanium
             39 to
-                "All attacks from monsters are reduced by 60%. The damage reduction effect does not stack with the Sigil " +
-                "of Resistance.",
+                "All attacks from monsters are reduced by 25%. The damage reduction effect does not stack with the Sigil of " +
+                "Resistance.",
             // Sigil of the Rampart
             40 to
                 "Increases your Stab, Slash, Crush, and Ranged defences by +100. Does not stack with the Sigil of " +
@@ -186,11 +184,10 @@ object SigilTexts {
                 "Activate the Sigil to instantly swap your Spellbook to any unlocked Spellbook while outside of combat.",
             // Sigil of the Augmented Thrall
             49 to
-                "The max hits of your thralls are multiplied by 5.",
+                "The max hits of your thralls are multiplied by 1.5 (rounded down).",
             // Sigil of the Bloodhound
             50 to
-                "You have a 75% chance for a clue scroll to return the reward casket after you complete a clue step for " +
-                "any tier.",
+                "This sigil has been removed and no longer grants any effect or uses an attunement slot.",
             // Sigil of the Formidable Fighter
             51 to
                 "Your melee accuracy is increased by +30 in stab, slash, and crush. Upon a successful hit, you have a 30% " +
@@ -218,14 +215,13 @@ object SigilTexts {
                 "Once activated, the Sigil has a 3-minute cooldown.",
             // Sigil of Finality
             56 to
-                "Activate the Sigil to guarantee 100% accuracy on your next special attack within the next 12 seconds. " +
-                "Once activated, the Sigil has a 30 second cooldown.",
+                "Activate the Sigil to gain 50% more accuracy on your next special attack against players or monsters within the " +
+                "next 12 seconds. Once activated, the Sigil has a 60 second cooldown.",
             // Sigil of Rampage
             57 to
                 "Alternating combat styles will increase your rampage count, up to a maximum of 3. Consecutive attacks " +
                 "with the same style will reset the counter. Each rampage count increases your damage and accuracy by 3%. " +
-                "Your rampage count will reset after not attacking for 6 seconds. The damage bonus effect does not stack " +
-                "with the Sigil of Aggression.",
+                "Your rampage count will reset after not attacking for 6 seconds.",
             // Sigil of Remote Storage
             58 to
                 "Resources gathered from Mining, Fishing, Woodcutting, and Farming will be automatically sent to your " +
@@ -237,16 +233,15 @@ object SigilTexts {
                 "plank, 250 gp per teak plank, and 700 gp per mahogany plank.",
             // Sigil of Agile Fortune
             60 to
-                "When a Mark of Grace appears while training on a Rooftop Agility Course, 10,000 coins will appear " +
-                "alongside it.",
+                "This sigil has been removed and no longer grants any effect or uses an attunement slot.",
             // Sigil of Hoarding
             61 to
-                "When subduing the Wintertodt, you will receive 3 crates. When subduing Tempoross or completing Guardians " +
-                "of the Rift, you will receive 3x the amount of reward points.",
+                "You receive 1.5x the number of reward crates or points from Wintertodt, Tempoross, Guardians of the Rift and " +
+                "Pest Control, rounded down once per award.",
             // Sigil of Nature
             62 to
-                "Choose your own Farming Contracts. Farming cycles occur every minute instead of every five minutes, " +
-                "allowing crops to grow 5x quicker.",
+                "Choose your own Farming Contracts. Crops grow 2x quicker, with one extra Farming cycle every five minutes. Extra " +
+                "cycles occur one at a time.",
             // Sigil of Slaughter
             63 to
                 "Pay 60 Slayer Points to choose your own Slayer Task. You have a 50% chance for a Slayer Task kill to not " +

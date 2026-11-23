@@ -32,6 +32,7 @@ fun sigilMessage(
     attuning: Boolean,
 ) {
     when (result) {
+        Sigils.Result.REMOVED -> player.message(Sigils.REMOVED_MESSAGE)
         Sigils.Result.OK -> player.message(if (attuning) "You feel a surge of power as you attune to the Sigil." else "You unattune the Sigil. Its powers leave you for now.")
         Sigils.Result.NOT_AT_BANK -> player.message("You can only ${if (attuning) "attune" else "unattune"} a sigil at a bank.")
         Sigils.Result.SKULLED -> player.message("You cannot ${if (attuning) "attune" else "unattune"} a sigil while skulled.")

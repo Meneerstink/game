@@ -75,17 +75,17 @@ object SigilCombat {
     ): Double {
         if (attacker !is Player || !any(attacker)) return accuracy
         var factor = 1.0
-        // S02 Deft Strikes (+20% vs non-player enemies), S24 Precision (+50% vs all monsters), S37 Meticulousness (+75% vs NPCs, the
+        // S02 Deft Strikes (+10% vs non-player enemies), S24 Precision (+20% vs all monsters), S37 Meticulousness (+30% vs NPCs, the
         // higher-tier variant of Deft Strikes): they do not stack, the strongest one counts.
         if (target is Npc) {
-            if (Sigils.effective(attacker, Sigil.DEFT_STRIKES)) factor = maxOf(factor, 1.20)
-            if (Sigils.effective(attacker, Sigil.PRECISION)) factor = maxOf(factor, 1.50)
-            if (Sigils.effective(attacker, Sigil.METICULOUSNESS)) factor = maxOf(factor, 1.75)
+            if (Sigils.effective(attacker, Sigil.DEFT_STRIKES)) factor = maxOf(factor, 1.10)
+            if (Sigils.effective(attacker, Sigil.PRECISION)) factor = maxOf(factor, 1.20)
+            if (Sigils.effective(attacker, Sigil.METICULOUSNESS)) factor = maxOf(factor, 1.30)
         }
         val style = styleOf(formula)
         val special = attacker.attr[gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.SPECIAL_ATTACK_IN_PROGRESS] == true
-        // S56 Finality: the next special attack inside the window cannot miss.
-        if (special && Sigils.windowOpen(attacker, Sigil.FINALITY)) return 1.0
+        // Owner 23-11 S56: +50% accuracy for every hit of the next special, against players and monsters.
+        if (special && Sigils.windowOpen(attacker, Sigil.FINALITY)) factor *= 1.50
         // S44 Binding: +75% magic accuracy on the next binding spell inside the window.
         if (style == Style.MAGIC && Sigils.windowOpen(attacker, Sigil.BINDING) && castingBindingSpell(attacker)) {
             factor *= 1.75
@@ -193,13 +193,10 @@ object SigilCombat {
         if (Sigils.effective(attacker, Sigil.CONSISTENCY)) result += 1.0
         // S51 Formidable Fighter: "Upon a successful hit, you have a 30% chance for your next hit to deal +10 damage" (see [formidable]).
         result += formidable(attacker, type, result)
-        // S57 Rampage: +3% damage per count. "The damage bonus effect does not stack with the Sigil of Aggression": with Aggression
-        // attuned only Aggression's 10% counts (Rampage keeps its accuracy).
-        if (Sigils.effective(attacker, Sigil.RAMPAGE) && !Sigils.effective(attacker, Sigil.AGGRESSION)) {
+        // S57 Rampage: +3% damage per count (Aggression was retired on 23-11).
+        if (Sigils.effective(attacker, Sigil.RAMPAGE)) {
             result = Math.round(result * (1.0 + 0.03 * (attacker.attr[RAMPAGE_COUNT] ?: 0))).toDouble()
         }
-        // S36 Aggression: all attacks deal 10% more damage (a Rampage bonus does not stack with it).
-        if (Sigils.effective(attacker, Sigil.AGGRESSION)) result = Math.round(result * 1.10).toDouble()
         return result
     }
 
@@ -268,19 +265,17 @@ object SigilCombat {
                 if (right) result = Math.floor(result * 0.65) else if (wrong) result = Math.floor(result * 1.05)
             }
         }
-        // S36 Aggression: you take 5% more damage from all sources.
-        if (Sigils.effective(target, Sigil.AGGRESSION)) result = Math.round(result * 1.05).toDouble()
         return result
     }
 
-    /** S39 Titanium (-60%) and S07 Resistance (-25%): "all attacks from monsters"; they do not stack (Titanium wins). */
+    /** S39 Titanium (-25%) and S07 Resistance (-15%): "all attacks from monsters"; they do not stack (Titanium wins). */
     private fun fromMonster(
         target: Player,
         damage: Double,
     ): Double =
         when {
-            Sigils.effective(target, Sigil.TITANIUM) -> Math.floor(damage * 0.40)
-            Sigils.effective(target, Sigil.RESISTANCE) -> Math.floor(damage * 0.75)
+            Sigils.effective(target, Sigil.TITANIUM) -> Math.floor(damage * 0.75)
+            Sigils.effective(target, Sigil.RESISTANCE) -> Math.floor(damage * 0.85)
             else -> damage
         }
 
@@ -291,8 +286,7 @@ object SigilCombat {
     /**
      * The damage of a hit that does NOT come through `Pawn.dealHit`: a boss mechanic (fire rain, waves, explosions, a share of the
      * hitpoints ...) dealt with `Pawn.hit(damage, type, source = npc)`. Without this the monster sigils only worked on standard attacks.
-     * Titanium / Resistance: "all attacks from monsters" ([source] is an Npc). Aggression: "you take 5% more damage from all sources"
-     * ([source] is any pawn). `dealHit` uses the other `hit` overload (no source), so nothing is counted twice.
+     * Titanium / Resistance: "all attacks from monsters" ([source] is an Npc). `dealHit` uses the other `hit` overload (no source), so nothing is counted twice.
      */
     fun directHit(
         target: Pawn,
@@ -304,7 +298,6 @@ object SigilCombat {
         if (SHARE_OF_DEALT_HIT.get()) return damage
         var result = damage.toDouble()
         if (source is Npc) result = fromMonster(target, result)
-        if (Sigils.effective(target, Sigil.AGGRESSION)) result = Math.round(result * 1.05).toDouble()
         return result.toInt()
     }
 
@@ -313,7 +306,7 @@ object SigilCombat {
     /**
      * Deals a hit whose damage is a SHARE of a hit that already went through `dealHit` (Karil's second hit = half of the first, the
      * Twinflame staff's second spell = 40% of the first). The sigils are already inside that first hit, so [directHit] leaves this one
-     * alone - otherwise Aggression's 5% would be counted on top of itself.
+     * alone, so monster damage reduction is not applied twice.
      */
     fun <T> shareOfDealtHit(block: () -> T): T {
         val before = SHARE_OF_DEALT_HIT.get()
@@ -344,7 +337,7 @@ object SigilCombat {
         type: HitType,
         landed: Boolean,
     ) {
-        // S56 Finality: the window is used up by SpecialAttacks.execute once the whole special is performed (all its hits guaranteed).
+        // S56 Finality: the window is used up by SpecialAttacks.execute once the whole special is performed (all its hits receive the accuracy bonus).
         if (!landed) return
         // S54 Ruthless Ranger / S52 Menacing Mage: damage over time.
         SigilDots.onLanded(attacker, target, type)

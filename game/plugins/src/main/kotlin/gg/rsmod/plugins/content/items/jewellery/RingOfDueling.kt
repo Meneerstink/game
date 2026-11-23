@@ -36,7 +36,8 @@ object RingOfDueling {
         player.canTeleport(TeleportType.FEROCIOUS_RING) { // jewellery visuals, OSRS dueling limit: level 20
             if (!spend(player, used, slot, equipped)) return@canTeleport
             player.teleport(destination, TeleportType.FEROCIOUS_RING)
-            player.message(chargeMessage(used.id))
+            val container = if (equipped) player.equipment else player.inventory
+            if (container[slot] !== used) player.message(chargeMessage(used.id))
         }
     }
 }

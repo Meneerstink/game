@@ -15,6 +15,11 @@ import java.lang.ref.WeakReference
 object UndeadThralls {
     const val COOLDOWN_TICKS = 17 // 10 seconds rounded up to the next server tick
     const val ATTACK_TICKS = 4
+
+    /** Owner 23-11 S49: floor(3 x 1.5) = max hit 4, otherwise 3. */
+    fun maxHit(player: Player): Int =
+        if (gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(player,
+                gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.THE_AUGMENTED_THRALL)) 4 else 3
     enum class Choice(val sourceNpc: Int, val hit: HitType) { ZUK(15569, HitType.MELEE), KAL(15570, HitType.RANGE), WISP(15571, HitType.MAGIC) }
     /** Asset/path adapter is installed only after range, sequences and projectile timing are evidenced by Claude. */
     interface Appearance {
@@ -59,8 +64,7 @@ object UndeadThralls {
                     if (age % ATTACK_TICKS == ATTACK_TICKS - 1 && target != null && look.reach(actor, target, choice)) {
                         val delay = look.attack(actor, target, choice)
                         require(delay >= 0)
-                        // PROJECT48 S49 Sigil of the Augmented Thrall: the max hit of thralls is multiplied by 5 (3 -> 15).
-                        val damage = player.world.random.nextInt(if (gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.THE_AUGMENTED_THRALL)) 16 else 4)
+                        val damage = player.world.random.nextInt(maxHit(player) + 1)
                         actor.dealHit(target = target, minHit = damage - 0.1, maxHit = damage.toDouble(), landHit = true, delay = delay, hitType = choice.hit)
                     }
                 }

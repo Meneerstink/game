@@ -194,7 +194,7 @@ CommandServerCommands.handlers["sigilgather"] = { _, a ->
 }
 
 // `pcwin <name>` (PROJECT48 S61): ends the Pest Control game this player is in as a WIN with enough zeal, through the real
-// PestControlGame.end -> PestControlHandler.pay (points incl. the Sigil of Hoarding x3) - no need to kill 4 portals with a bot.
+// PestControlGame.end -> PestControlHandler.pay (points incl. the Sigil of Hoarding x1.5) - no need to kill 4 portals with a bot.
 CommandServerCommands.handlers["pcwin"] = { _, a ->
     val p = findPlayer(a)
     val game = p?.let { gg.rsmod.plugins.content.activity.pest_control.PestControlHandler.gameOf(it) }

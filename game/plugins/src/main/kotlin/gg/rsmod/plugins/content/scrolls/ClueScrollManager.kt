@@ -126,8 +126,8 @@ class ClueScrollManager(
             if (expectedProgress != null && progress(player, tier) != expectedProgress) return false
             val completed = progress(player, tier) + 1
             val length = player.attr[lengthAttrs.getValue(tier)] ?: return false
-            // PROJECT48 S50 Sigil of the Bloodhound: a 75% chance that a completed step returns the reward casket at once.
-            val finished = completed >= length || gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilDrops.bloodhound(player)
+            // Owner 23-11: Bloodhound is retired; only completing the full trail awards a casket.
+            val finished = completed >= length
             val staged = ItemContainer(player.inventory)
             for (id in consume) {
                 if (!staged.remove(id, 1, assureFullRemoval = true).hasSucceeded()) return false

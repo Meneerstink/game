@@ -7,16 +7,16 @@ import gg.rsmod.plugins.api.ext.addXp
 import gg.rsmod.plugins.api.ext.filterableMessage
 
 /**
- * PROJECT48 SIGILS - the gathering sigils (OSRS Wiki Deadman: Armageddon/Sigils): S03 Enhanced Harvest (3x resources), S14 the Forager
- * (2x; no stacking with Enhanced Harvest), S43 Storage (90% of new resources go straight to the bank) and S58 Remote Storage (all of them).
+ * PROJECT48 SIGILS - the gathering sigils (OSRS Wiki Deadman: Armageddon/Sigils): S03 Enhanced Harvest (2x resources), S14 the Forager
+ * (50% chance of an extra resource; no stacking with Enhanced Harvest), S43 Storage (90% of new resources go straight to the bank) and S58 Remote Storage (all of them).
  * Mining, Fishing, Woodcutting and Farming give their resource through [give] instead of `inventory.add`.
  */
 object SigilSkilling {
-    /** The multiplier of the gathered resource: 3 (Enhanced Harvest), 2 (the Forager) or 1. */
+    /** Owner 23-11: Enhanced Harvest x2; Forager has a 50% chance of one extra per resource, without stacking. */
     fun multiplier(player: Player): Int =
         when {
-            Sigils.effective(player, Sigil.ENHANCED_HARVEST) -> 3
-            Sigils.effective(player, Sigil.THE_FORAGER) -> 2
+            Sigils.effective(player, Sigil.ENHANCED_HARVEST) -> 2
+            Sigils.effective(player, Sigil.THE_FORAGER) -> if (player.world.randomDouble() < 0.5) 2 else 1
             else -> 1
         }
 
@@ -42,7 +42,7 @@ object SigilSkilling {
         if (!gg.rsmod.plugins.content.mechanics.pvp.AreaState.isDangerous(player.tile)) return log
         val weapon = player.getEquipment(gg.rsmod.plugins.api.EquipmentType.WEAPON)?.id
         if (weapon != null && player.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, weapon).name.lowercase().contains("infernal axe")) return log
-        // "Requires 50 gp per regular plank ...": the price is paid for EVERY plank of this chop (a harvest sigil gives 2 or 3).
+        // "Requires 50 gp per regular plank ...": the price is paid for EVERY plank of this chop (a harvest sigil can give 2).
         val price = plank.second * amount.coerceAtLeast(1)
         if (player.inventory.getItemCount(gg.rsmod.plugins.api.cfg.Items.COINS_995) < price ||
             !player.inventory.remove(gg.rsmod.plugins.api.cfg.Items.COINS_995, price).hasSucceeded()
@@ -80,22 +80,12 @@ object SigilSkilling {
         return item
     }
 
-    /** S60 Agile Fortune: a lap of an agility course has a 1 in 3 chance of 10,000 coins. */
-    fun agileFortune(player: Player) {
-        if (!Sigils.effective(player, Sigil.AGILE_FORTUNE) || player.world.random(2) != 0) return
-        if (player.inventory.add(gg.rsmod.plugins.api.cfg.Items.COINS_995, 10_000).hasSucceeded()) {
-            player.filterableMessage("Your sigil drops 10,000 coins into your pack.")
-        } else {
-            player.bank.add(gg.rsmod.plugins.api.cfg.Items.COINS_995, 10_000)
-            player.filterableMessage("Your sigil sends 10,000 coins to your bank.")
-        }
-    }
+    /** Owner 23-11 S61: floor(1.5 x the base award), once, including odd amounts. */
+    fun hoardingReward(player: Player, amount: Int): Int =
+        if (Sigils.effective(player, Sigil.HOARDING)) (amount.toLong() * 3 / 2).toInt() else amount
 
-    /** S61 Hoarding: 3x the reward points of a minigame win. */
-    fun hoardingMultiplier(player: Player): Int = if (Sigils.effective(player, Sigil.HOARDING)) 3 else 1
-
-    /** S10 Sigil of the Abyss: 5x as many runes when Runecrafting. */
-    fun runecraftMultiplier(player: Player): Int = if (Sigils.effective(player, Sigil.THE_ABYSS)) 5 else 1
+    /** Owner 23-11 S10: 2x as many runes when Runecrafting. */
+    fun runecraftMultiplier(player: Player): Int = if (Sigils.effective(player, Sigil.THE_ABYSS)) 2 else 1
 
     /** Whether this gathered resource goes to the bank (S58 always, S43 in 90% of the cases). */
     fun toBank(player: Player): Boolean =
@@ -113,7 +103,8 @@ object SigilSkilling {
         amount: Int = 1,
     ): ItemTransaction {
         if (player.attuned().isEmpty()) return gg.rsmod.plugins.content.mechanics.deadman.items.Sacks.add(player, gathered, amount)
-        val total = amount * multiplier(player)
+        val total = if (Sigils.effective(player, Sigil.ENHANCED_HARVEST)) amount * 2 else
+            (0 until amount).sumOf { multiplier(player) }
         val itemId = infernal(player, woodcraft(player, gathered, total))
         if (toBank(player)) {
             val banked = player.bank.add(itemId, total)
@@ -140,14 +131,14 @@ object SigilSkilling {
     private fun Player.attuned() = Sigils.attuned(this)
 }
 
-/** S12 Sigil of the Eternal Jeweller: teleporting with charged jewellery never uses a charge (the used item is kept as it is). */
+/** S12 Sigil of the Eternal Jeweller: teleporting with charged jewellery has a 50% chance to preserve a charge (the used item is kept as it is). */
 object SigilJeweller {
     fun keep(
         player: Player,
         usedId: Int,
         replacement: Int,
     ): Int {
-        if (!Sigils.effective(player, Sigil.THE_ETERNAL_JEWELLER)) return replacement
+        if (usedId == replacement || !Sigils.effective(player, Sigil.THE_ETERNAL_JEWELLER) || player.world.randomDouble() >= 0.5) return replacement
         // The charge is kept: the sigil's own icon (SigilFx).
         if (usedId != replacement) SigilFx.proc(player, Sigil.THE_ETERNAL_JEWELLER)
         return usedId

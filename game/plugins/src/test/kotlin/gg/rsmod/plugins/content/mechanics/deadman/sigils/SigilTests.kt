@@ -63,7 +63,7 @@ class SigilTests {
         assertEquals(Sigils.Result.OK, attune(player, Sigil.CONSISTENCY))
         assertEquals(Sigils.Result.OK, attune(player, Sigil.RESILIENCE))
         assertEquals(Sigils.Result.OK, attune(player, Sigil.PRECISION))
-        assertEquals(Sigils.Result.FULL, attune(player, Sigil.AGGRESSION))
+        assertEquals(Sigils.Result.FULL, attune(player, Sigil.DEFT_STRIKES))
         assertEquals(3, Sigils.attuned(player).size)
     }
 
@@ -149,29 +149,29 @@ class SigilTests {
     }
 
     @Test
-    fun `consistency adds one damage to a landed hit and aggression gives 10 percent more and 5 percent less protection`() {
+    fun `consistency adds one damage and legacy aggression never changes damage`() {
         val npc = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
         val attacker = newPlayer()
         attune(attacker, Sigil.CONSISTENCY)
         assertEquals(6.0, SigilCombat.modifyDamage(attacker, npc, 5.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, true))
         assertEquals(0.0, SigilCombat.modifyDamage(attacker, npc, 0.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, false), "a missed hit stays 0")
         val fighter = newPlayer()
-        attune(fighter, Sigil.AGGRESSION)
-        assertEquals(22.0, SigilCombat.modifyDamage(fighter, npc, 20.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, true))
+        fighter.attr[Sigils.ATTUNED] = "36"
+        assertEquals(20.0, SigilCombat.modifyDamage(fighter, npc, 20.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, true))
         val victim = newPlayer()
-        attune(victim, Sigil.AGGRESSION)
-        assertEquals(21.0, SigilCombat.modifyDamage(npc, victim, 20.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, true), "5% more damage taken")
+        victim.attr[Sigils.ATTUNED] = "36"
+        assertEquals(20.0, SigilCombat.modifyDamage(npc, victim, 20.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, true), "retired sigil has no effect")
     }
 
     @Test
-    fun `titanium takes 60 percent and resistance 25 percent off monster hits only`() {
+    fun `titanium takes 25 percent and resistance 15 percent off monster hits only`() {
         val npc = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
         val titan = newPlayer()
         attune(titan, Sigil.TITANIUM)
-        assertEquals(40.0, SigilCombat.modifyDamage(npc, titan, 100.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, true))
+        assertEquals(75.0, SigilCombat.modifyDamage(npc, titan, 100.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, true))
         val resist = newPlayer()
         attune(resist, Sigil.RESISTANCE)
-        assertEquals(75.0, SigilCombat.modifyDamage(npc, resist, 100.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, true))
+        assertEquals(85.0, SigilCombat.modifyDamage(npc, resist, 100.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, true))
         val other = newPlayer()
         assertEquals(100.0, SigilCombat.modifyDamage(other, resist, 100.0, gg.rsmod.plugins.api.HitType.REGULAR_HIT, true), "a player's hit is not reduced")
     }
@@ -181,13 +181,13 @@ class SigilTests {
     private fun container(size: Int) = ItemContainer(mockk<DefinitionSet>(relaxed = true), size, ContainerStackType.NORMAL)
 
     @Test
-    fun `a boss mechanic's direct hit is a monster attack - titanium, resistance and aggression count, poison and unsourced hits do not`() {
+    fun `a boss mechanic's direct hit is a monster attack - titanium and resistance count but retired aggression does not, poison and unsourced hits do not`() {
         val hit = gg.rsmod.plugins.api.HitType.REGULAR_HIT
         val npc = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
         val titan = newPlayer()
         attune(titan, Sigil.TITANIUM)
-        assertEquals(40, SigilCombat.directHit(titan, npc, 100, hit))
-        assertEquals(40, SigilCombat.directHit(titan, npc, 100, gg.rsmod.plugins.api.HitType.MAGIC))
+        assertEquals(75, SigilCombat.directHit(titan, npc, 100, hit))
+        assertEquals(75, SigilCombat.directHit(titan, npc, 100, gg.rsmod.plugins.api.HitType.MAGIC))
         assertEquals(100, SigilCombat.directHit(titan, npc, 100, gg.rsmod.plugins.api.HitType.POISON), "poison is not an attack")
         assertEquals(100, SigilCombat.directHit(titan, npc, 100, gg.rsmod.plugins.api.HitType.REFLECTED), "nor is reflected damage")
         assertEquals(100, SigilCombat.directHit(titan, null, 100, hit), "a hit without a source (a trap, a fall) is not a monster")
@@ -195,11 +195,11 @@ class SigilTests {
         assertEquals(0, SigilCombat.directHit(titan, npc, 0, hit))
         val resist = newPlayer()
         attune(resist, Sigil.RESISTANCE)
-        assertEquals(75, SigilCombat.directHit(resist, npc, 100, hit))
+        assertEquals(85, SigilCombat.directHit(resist, npc, 100, hit))
         val angry = newPlayer()
-        attune(angry, Sigil.AGGRESSION)
-        assertEquals(21, SigilCombat.directHit(angry, npc, 20, hit), "5% more from all sources")
-        assertEquals(21, SigilCombat.directHit(angry, newPlayer(), 20, hit))
+        angry.attr[Sigils.ATTUNED] = "36"
+        assertEquals(20, SigilCombat.directHit(angry, npc, 20, hit), "retired aggression does not amplify incoming hits")
+        assertEquals(20, SigilCombat.directHit(angry, newPlayer(), 20, hit))
         assertEquals(100, SigilCombat.directHit(newPlayer(), npc, 100, hit), "no sigil: untouched")
         assertEquals(100, SigilCombat.directHit(npc, npc, 100, hit), "an npc target has no sigils")
     }
@@ -208,10 +208,10 @@ class SigilTests {
     fun `a second hit that is a share of a dealt hit is not changed again`() {
         val npc = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
         val angry = newPlayer()
-        attune(angry, Sigil.AGGRESSION)
+        attune(angry, Sigil.RESISTANCE)
         val hit = gg.rsmod.plugins.api.HitType.RANGE
         assertEquals(20, SigilCombat.shareOfDealtHit { SigilCombat.directHit(angry, npc, 20, hit) })
-        assertEquals(21, SigilCombat.directHit(angry, npc, 20, hit), "and the switch is off again afterwards")
+        assertEquals(17, SigilCombat.directHit(angry, npc, 20, hit), "and the switch is off again afterwards")
     }
 
     @Test
@@ -282,7 +282,7 @@ class SigilTests {
     }
 
     @Test
-    fun `accuracy sigils scale the hit chance against monsters - deft 20, precision 50, meticulousness 75 percent, the strongest counts`() {
+    fun `accuracy sigils scale the hit chance against monsters - deft 10, precision 20, meticulousness 30 percent, the strongest counts`() {
         val melee = gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
         val npc = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
         val other = mockk<Player>(relaxed = true)
@@ -290,32 +290,31 @@ class SigilTests {
         assertEquals(0.20, SigilCombat.accuracy(plain, npc, 0.20, melee), 1e-9, "no sigil, no change")
         val deft = newPlayer()
         attune(deft, Sigil.DEFT_STRIKES)
-        assertEquals(0.24, SigilCombat.accuracy(deft, npc, 0.20, melee), 1e-9)
+        assertEquals(0.22, SigilCombat.accuracy(deft, npc, 0.20, melee), 1e-9)
         assertEquals(0.20, SigilCombat.accuracy(deft, other, 0.20, melee), 1e-9, "not against players")
         val precise = newPlayer()
         attune(precise, Sigil.PRECISION)
-        assertEquals(0.30, SigilCombat.accuracy(precise, npc, 0.20, melee), 1e-9)
+        assertEquals(0.24, SigilCombat.accuracy(precise, npc, 0.20, melee), 1e-9)
         val all = newPlayer()
         attune(all, Sigil.DEFT_STRIKES)
         attune(all, Sigil.PRECISION)
         attune(all, Sigil.METICULOUSNESS)
-        assertEquals(0.35, SigilCombat.accuracy(all, npc, 0.20, melee), 1e-9, "they do not stack: +75% only")
+        assertEquals(0.26, SigilCombat.accuracy(all, npc, 0.20, melee), 1e-9, "they do not stack: +30% only")
     }
 
     @Test
-    fun `finality guarantees every hit of the next special and is used up only when that special is performed`() {
-        // Found in the game (21-11 run 2): with a dragon dagger only the first of the two special hits was guaranteed - the first
-        // landed hit closed the window. Wiki: "guarantee 100% accuracy on your next special attack within the next 12 seconds".
+    fun `finality boosts every hit of the next special by 50 percent and is used up only when that special is performed`() {
+        // Preserve the multi-hit fix of 22-11 while applying the owner 23-11 accuracy nerf.
         val melee = gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
         val npc = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
         val player = newPlayer()
         attune(player, Sigil.FINALITY)
         assertTrue(Sigils.activate(player, Sigil.FINALITY))
         val special = gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.SPECIAL_ATTACK_IN_PROGRESS
-        assertEquals(0.20, SigilCombat.accuracy(player, npc, 0.20, melee), 1e-9, "a normal attack is not guaranteed")
+        assertEquals(0.20, SigilCombat.accuracy(player, npc, 0.20, melee), 1e-9, "a normal attack is not boosted")
         player.attr[special] = true
-        assertEquals(1.0, SigilCombat.accuracy(player, npc, 0.20, melee), 1e-9, "first hit of the special")
-        assertEquals(1.0, SigilCombat.accuracy(player, npc, 0.20, melee), 1e-9, "second hit of the same special")
+        assertEquals(0.30, SigilCombat.accuracy(player, npc, 0.20, melee), 1e-9, "first hit of the special")
+        assertEquals(0.30, SigilCombat.accuracy(player, npc, 0.20, melee), 1e-9, "second hit of the same special")
         player.attr.remove(special)
         val source = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/SpecialAttacks.kt").readText()
         assertTrue(source.contains("Sigils.consumeWindow(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.FINALITY)"))
@@ -362,14 +361,14 @@ class SigilTests {
     }
 
     @Test
-    fun `rampage stays attuned and effective beside aggression - only its damage bonus does not stack`() {
+    fun `rampage stays effective with a legacy aggression number in the save`() {
         val player = newPlayer()
         attune(player, Sigil.RAMPAGE)
-        attune(player, Sigil.AGGRESSION)
+        player.attr[Sigils.ATTUNED] = "57,36"
         assertTrue(Sigils.effective(player, Sigil.RAMPAGE), "Rampage keeps its count and accuracy")
-        assertTrue(Sigils.effective(player, Sigil.AGGRESSION))
+        assertFalse(Sigils.effective(player, Sigil.AGGRESSION))
         val npc = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
-        assertEquals(22.0, SigilCombat.modifyDamage(player, npc, 20.0, gg.rsmod.plugins.api.HitType.MELEE, true), "only Aggression's 10%")
+        assertEquals(20.0, SigilCombat.modifyDamage(player, npc, 20.0, gg.rsmod.plugins.api.HitType.MELEE, true), "no Aggression bonus")
     }
 
     @Test
@@ -386,21 +385,21 @@ class SigilTests {
     }
 
     @Test
-    fun `gathering multipliers - harvest 3x, forager 2x, hoarding 3x and the abyss 5x`() {
+    fun `gathering nerfs - harvest 2x, forager 50 percent, hoarding 1_5x and the abyss 2x`() {
         val none = newPlayer()
         assertEquals(1, SigilSkilling.multiplier(none))
-        assertEquals(1, SigilSkilling.hoardingMultiplier(none))
+        assertEquals(5, SigilSkilling.hoardingReward(none, 5))
         assertEquals(1, SigilSkilling.runecraftMultiplier(none))
         val forager = newPlayer()
         attune(forager, Sigil.THE_FORAGER)
         assertEquals(2, SigilSkilling.multiplier(forager))
         attune(forager, Sigil.ENHANCED_HARVEST)
-        assertEquals(3, SigilSkilling.multiplier(forager), "Enhanced Harvest wins over the Forager")
+        assertEquals(2, SigilSkilling.multiplier(forager), "Enhanced Harvest wins over the Forager")
         val abyss = newPlayer()
         attune(abyss, Sigil.THE_ABYSS)
         attune(abyss, Sigil.HOARDING)
-        assertEquals(5, SigilSkilling.runecraftMultiplier(abyss))
-        assertEquals(3, SigilSkilling.hoardingMultiplier(abyss))
+        assertEquals(2, SigilSkilling.runecraftMultiplier(abyss))
+        assertEquals(7, SigilSkilling.hoardingReward(abyss, 5))
     }
 
     @Test
@@ -441,27 +440,182 @@ class SigilTests {
     }
 
     @Test
-    fun `Agile Fortune gives 10,000 coins on a lucky lap and nothing without the sigil or on an unlucky roll`() {
-        fun coins(withSigil: Boolean, roll: Int): Int {
-            val player = mockk<Player>(relaxed = true)
-            every { player.attr } returns AttributeMap()
-            // Coins need a real ItemDef: a relaxed DefinitionSet hands back a bare Definition mock (ClassCastException in add).
-            val defs = mockk<DefinitionSet>(relaxed = true)
-            every { defs.get(gg.rsmod.game.fs.def.ItemDef::class.java, gg.rsmod.plugins.api.cfg.Items.COINS_995) } returns
-                gg.rsmod.game.fs.def.ItemDef(gg.rsmod.plugins.api.cfg.Items.COINS_995).apply { name = "Coins"; stacks = true }
-            every { player.inventory } returns ItemContainer(defs, 28, ContainerStackType.STACK)
-            val bank = ItemContainer(defs, 800, ContainerStackType.STACK)
-            every { player.bank } returns bank
-            if (withSigil) attune(player, Sigil.AGILE_FORTUNE)
-            player.inventory[0] = null
-            val world = mockk<gg.rsmod.game.model.World>(relaxed = true)
-            every { player.world } returns world
-            every { world.random(2) } returns roll
-            SigilSkilling.agileFortune(player)
-            return player.inventory.getItemCount(gg.rsmod.plugins.api.cfg.Items.COINS_995) + bank.getItemCount(gg.rsmod.plugins.api.cfg.Items.COINS_995)
+    fun `retired sigils cannot attune and legacy saves free the slot without deleting items`() {
+        assertEquals(setOf(11, 36, 50, 60), Sigil.values().filterNot { it.enabled }.map { it.number }.toSet())
+        assertEquals(61, Sigil.available.size)
+        for (retired in Sigil.values().filterNot { it.enabled }) {
+            val player = newPlayer()
+            every { player.bank } returns container(100)
+            assertEquals(Sigils.Result.REMOVED, attune(player, retired))
+            assertEquals(retired.unattunedId, player.inventory[0]?.id)
+            player.attr[Sigils.ATTUNED] = "1,${retired.number},6"
+            player.inventory[0] = Item(retired.attunedId)
+            player.inventory[1] = Item(Sigil.CONSISTENCY.attunedId)
+            player.bank[0] = Item(Sigil.RESILIENCE.attunedId)
+            assertFalse(Sigils.has(player, retired))
+            assertFalse(Sigils.effective(player, retired))
+            assertEquals(listOf(Sigil.CONSISTENCY, Sigil.RESILIENCE), Sigils.attuned(player))
+            assertNull(AttunedSigilsUi.sigilAt(player, 2), "third slot is free")
+            assertTrue(Sigils.reconcile(player).isEmpty(), "held active sigils remain")
+            assertEquals("1,6", player.attr[Sigils.ATTUNED])
+            assertEquals(retired.attunedId, player.inventory[0]?.id, "legacy item is preserved")
+            assertEquals(Sigils.Result.REMOVED, Sigils.unattune(player, 0, atBank = true))
+            assertTrue(Sigils.useOnBank(player, 0))
+            assertFalse(Sigils.activate(player, retired))
+            assertEquals(Sigils.REMOVED_MESSAGE, SigilTexts.of(retired))
+            player.inventory[2] = Item(Sigil.PRECISION.unattunedId)
+            assertEquals(Sigils.Result.OK, Sigils.attune(player, 2, atBank = true))
+            assertEquals(3, Sigils.attuned(player).size)
+            val empty = newPlayer()
+            empty.attr[Sigils.ATTUNED] = retired.number.toString()
+            assertTrue(Sigils.reconcile(empty).isEmpty(), "removed-only save loads safely")
+            assertTrue(Sigils.attuned(empty).isEmpty())
+            assertEquals("", empty.attr[Sigils.ATTUNED])
         }
-        assertEquals(10_000, coins(withSigil = true, roll = 0), "a lucky lap with the sigil")
-        assertEquals(0, coins(withSigil = true, roll = 1), "an unlucky lap (2 in 3)")
-        assertEquals(0, coins(withSigil = false, roll = 0), "no sigil, no coins")
+    }
+
+    @Test
+    fun `forager rolls one extra per resource at 50 percent and never stacks with enhanced harvest`() {
+        val player = newPlayer()
+        attune(player, Sigil.THE_FORAGER)
+        every { player.world.randomDouble() } returnsMany listOf(0.499999, 0.5, 0.999999)
+        assertEquals(2, SigilSkilling.multiplier(player))
+        assertEquals(1, SigilSkilling.multiplier(player))
+        assertEquals(1, SigilSkilling.multiplier(player))
+        attune(player, Sigil.ENHANCED_HARVEST)
+        assertFalse(Sigils.effective(player, Sigil.THE_FORAGER))
+        assertEquals(2, SigilSkilling.multiplier(player))
+        every { player.world.randomDouble() } throws AssertionError("Harvest must not roll Forager")
+        assertEquals(2, SigilSkilling.multiplier(player))
+    }
+
+    @Test
+    fun `hoarding scales an award once and floors odd totals without a random second award`() {
+        val player = newPlayer()
+        attune(player, Sigil.HOARDING)
+        for ((base, expected) in listOf(0 to 0, 1 to 1, 3 to 4, 5 to 7, 18 to 27)) {
+            assertEquals(expected, SigilSkilling.hoardingReward(player, base))
+        }
+    }
+
+    @Test
+    fun `titanium overrides resistance on normal and direct monster hits`() {
+        val player = newPlayer()
+        val npc = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
+        attune(player, Sigil.RESISTANCE)
+        attune(player, Sigil.TITANIUM)
+        assertEquals(75.0, SigilCombat.modifyDamage(npc, player, 100.0, gg.rsmod.plugins.api.HitType.MELEE, true))
+        assertEquals(75, SigilCombat.directHit(player, npc, 100, gg.rsmod.plugins.api.HitType.MAGIC))
+    }
+
+    @Test
+    fun `augmented thrall max hit is one and a half times three rounded down`() {
+        val player = newPlayer()
+        assertEquals(3, gg.rsmod.plugins.content.mechanics.deadman.UndeadThralls.maxHit(player))
+        attune(player, Sigil.THE_AUGMENTED_THRALL)
+        assertEquals(4, gg.rsmod.plugins.content.mechanics.deadman.UndeadThralls.maxHit(player))
+    }
+
+    @Test
+    fun `finality works against players and monsters on every style with a real sixty second cooldown`() {
+        val player = newPlayer()
+        attune(player, Sigil.FINALITY)
+        attune(player, Sigil.SPECIALISED_STRIKES)
+        assertTrue(Sigils.activate(player, Sigil.FINALITY))
+        assertEquals(60, Sigil.FINALITY.cooldownSeconds)
+        val until = player.attr[Sigils.COOLDOWN_UNTIL.getValue(Sigil.FINALITY)]!!
+        repeat(5) { assertFalse(Sigils.activate(player, Sigil.FINALITY)) }
+        assertEquals(until, player.attr[Sigils.COOLDOWN_UNTIL.getValue(Sigil.FINALITY)])
+        // At elapsed 30 seconds it is still blocked; at 60 it becomes ready without sleeping.
+        val now = (System.currentTimeMillis() / 1000L).toInt()
+        player.attr[Sigils.COOLDOWN_UNTIL.getValue(Sigil.FINALITY)] = now + 30
+        assertFalse(Sigils.activate(player, Sigil.FINALITY))
+        assertTrue(Sigils.activate(player, Sigil.SPECIALISED_STRIKES))
+        assertEquals(15, SigilCombat.specialCost(player, 25))
+        player.attr[gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.SPECIAL_ATTACK_IN_PROGRESS] = true
+        val targets = listOf(newPlayer(), mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true))
+        val formulas = listOf(gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula,
+            gg.rsmod.plugins.content.combat.formula.RangedCombatFormula,
+            gg.rsmod.plugins.content.combat.formula.MagicCombatFormula)
+        for (target in targets) for (formula in formulas) {
+            assertEquals(0.30, SigilCombat.accuracy(player, target, 0.20, formula), 1e-9)
+            assertEquals(1.0 - 0.2 / 1.5, SigilCombat.accuracy(player, target, 0.80, formula), 1e-9)
+            assertEquals(0.0, SigilCombat.accuracy(player, target, 0.0, formula), 1e-9, "no guaranteed hit")
+        }
+        SigilCombat.windowUsed(player)
+        assertEquals(25, SigilCombat.specialCost(player, 25))
+        assertTrue(Sigils.windowOpen(player, Sigil.FINALITY), "cost discount cannot consume Finality")
+        Sigils.consumeWindow(player, Sigil.FINALITY)
+        assertFalse(Sigils.windowOpen(player, Sigil.FINALITY))
+        assertFalse(Sigils.activate(player, Sigil.FINALITY), "using the special does not reset cooldown")
+        player.attr[Sigils.COOLDOWN_UNTIL.getValue(Sigil.FINALITY)] = now - 1
+        assertTrue(Sigils.activate(player, Sigil.FINALITY))
+    }
+
+    @Test
+    fun `jeweller saves a charge only on the lower half of rolls and never without attunement`() {
+        val player = newPlayer()
+        assertEquals(-1, SigilJeweller.keep(player, 2552, -1))
+        attune(player, Sigil.THE_ETERNAL_JEWELLER)
+        every { player.world.randomDouble() } returnsMany listOf(0.499999, 0.5, 0.999999)
+        assertEquals(2552, SigilJeweller.keep(player, 2552, -1))
+        assertEquals(-1, SigilJeweller.keep(player, 2552, -1))
+        assertEquals(-1, SigilJeweller.keep(player, 2552, -1))
+    }
+
+    @Test
+    fun `retired sigils never appear in any award pool even when every pool index is rolled`() {
+        val player = newPlayer()
+        val world = player.world
+        assertTrue(SigilDrops.STARTER_POOL.all { it.enabled && it.tier == 1 })
+        for ((tier, roll) in listOf(3 to 0.0, 2 to 0.0006, 1 to 0.001)) {
+            every { world.randomDouble() } returns roll
+            val pool = Sigil.available.filter { it.tier == tier }
+            for (index in pool.indices) {
+                every { world.random(any<Int>()) } returns index
+                assertEquals(pool[index].unattunedId, SigilDrops.rollGlobalTable(player, 0)?.id)
+                assertEquals(pool[index], SigilDrops.gatherRoll(player))
+                if (tier == 1) assertEquals(pool[index], SigilDrops.rollStarterSigil(player, 100000))
+            }
+        }
+    }
+
+    @Test
+    fun `retired sigils are blocked on the GE but preserved by the removal purge`() {
+        val player = newPlayer()
+        val retired = Sigil.values().filterNot { it.enabled }
+        for ((slot, sigil) in retired.withIndex()) {
+            player.inventory[slot] = Item(sigil.unattunedId)
+            for (id in listOf(sigil.attunedId, sigil.unattunedId)) {
+                val def = gg.rsmod.game.fs.def.ItemDef(id).apply { tradeable = true }
+                assertTrue(gg.rsmod.plugins.content.mechanics.removed.RemovedItems.isExchangeBlocked(def))
+                assertFalse(gg.rsmod.plugins.content.mechanics.removed.RemovedItems.isUnobtainable(def), "no destructive login purge")
+            }
+        }
+    }
+
+    @Test
+    fun `nature gives one separated extra growth cycle per five minutes and stops after unattuning`() {
+        val player = newPlayer()
+        val constants = gg.rsmod.plugins.content.skills.farming.constants.Constants
+        val manager = mockk<gg.rsmod.plugins.content.skills.farming.logic.FarmingManager>(relaxed = true)
+        player.attr[constants.farmingManagerAttr] = manager
+        every { player.world.attr } returns AttributeMap().apply { this[constants.worldFarmTick] = 100 }
+        every { player.timers } returns gg.rsmod.game.model.timer.TimerMap()
+        attune(player, Sigil.NATURE)
+        val nature = gg.rsmod.plugins.content.skills.farming.core.PlayerManager
+        nature.onFarmingTick(player)
+        io.mockk.verify(exactly = 1) { manager.onFarmingTick(any()) }
+        assertEquals(250, player.timers[nature.natureTimer], "one extra at 2.5 minutes")
+        player.timers.remove(nature.natureTimer) // timer expiry dispatch
+        nature.onNatureStep(player)
+        io.mockk.verify(exactly = 2) { manager.onFarmingTick(any()) }
+        assertFalse(player.timers.has(nature.natureTimer), "no further extras scheduled")
+        nature.onNatureStep(player)
+        io.mockk.verify(exactly = 2) { manager.onFarmingTick(any()) }
+        nature.onFarmingTick(player)
+        assertEquals(Sigils.Result.OK, Sigils.unattune(player, 0, atBank = true))
+        nature.onNatureStep(player)
+        io.mockk.verify(exactly = 3) { manager.onFarmingTick(any()) }
     }
 }

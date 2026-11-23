@@ -353,7 +353,7 @@ object PestControlHandler {
                 player.attr[PEST_WINS] = (player.attr[PEST_WINS] ?: 0) + 1
                 player.playJingle(PC_JINGLE_WIN)
                 // PROJECT48 S61 Sigil of Hoarding (proposal: 3x the reward points of our point-giving minigames; Pest Control is the one with points).
-                val points = game.tier.pointsPerWin * gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilSkilling.hoardingMultiplier(player)
+                val points = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilSkilling.hoardingReward(player, game.tier.pointsPerWin)
                 val total = gg.rsmod.game.model.attr.PointBalance.add(player.attr, PEST_POINTS, points) // N106: one balance helper
                 val coins = player.combatLevel * 10
                 val added = player.inventory.add(995, coins)

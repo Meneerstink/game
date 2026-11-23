@@ -45,7 +45,7 @@ object SigilDrops {
         for (tier in 3 downTo 1) {
             val chance = (GLOBAL_TABLE_CHANCE[tier] ?: 0.0) * factor
             if (chance <= 0.0 || player.world.randomDouble() >= chance) continue
-            val pool = Sigil.values().filter { it.tier == tier }
+            val pool = Sigil.available.filter { it.tier == tier }
             return Item(pool[player.world.random(pool.size - 1)].unattunedId)
         }
         return null
@@ -64,7 +64,7 @@ object SigilDrops {
         for (tier in 3 downTo 1) {
             val chance = (GLOBAL_TABLE_CHANCE[tier] ?: 0.0) * factor
             if (chance <= 0.0 || player.world.randomDouble() >= chance) continue
-            val pool = Sigil.values().filter { it.tier == tier }
+            val pool = Sigil.available.filter { it.tier == tier }
             return pool[player.world.random(pool.size - 1)]
         }
         return null
@@ -87,7 +87,7 @@ object SigilDrops {
     const val STARTER_SIGIL_SECONDS = 24 * 60 * 60
 
     /** The 24-hour starter-pack pool (owner 22-11: tier 1 only). */
-    val STARTER_POOL: List<Sigil> by lazy { Sigil.values().filter { it.tier == 1 } }
+    val STARTER_POOL: List<Sigil> by lazy { Sigil.available.filter { it.tier == 1 } }
 
     private fun nowSeconds(): Int = (System.currentTimeMillis() / 1000L).toInt()
 
@@ -128,9 +128,6 @@ object SigilDrops {
 
     const val START_SIGIL_EXCHANGE_MESSAGE = "The starting sigils cannot be traded on the Grand Exchange until you reach the 71-90 combat bracket."
 
-    /** S18 Treasure Hunter: "Clue Scrolls drop 3x more often" - the factor on every clue drop chance. */
-    fun clueFactor(player: Player): Int = if (Sigils.effective(player, Sigil.THE_TREASURE_HUNTER)) 3 else 1
-
-    /** S50 Bloodhound: a 75% chance that a completed clue step returns the reward casket. */
-    fun bloodhound(player: Player): Boolean = Sigils.effective(player, Sigil.THE_BLOODHOUND) && player.world.randomDouble() < 0.75
+    /** Owner 23-11 S18: clue drop probability x1.5, capped at certainty by the caller. */
+    fun clueFactor(player: Player): Double = if (Sigils.effective(player, Sigil.THE_TREASURE_HUNTER)) 1.5 else 1.0
 }

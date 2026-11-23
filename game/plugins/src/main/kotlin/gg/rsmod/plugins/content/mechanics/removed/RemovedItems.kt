@@ -104,7 +104,10 @@ object RemovedItems {
     val NOT_EXCHANGEABLE_IDS: Set<Int> by lazy {
         gg.rsmod.plugins.content.items.potion.RemovedPotions.itemIds + gg.rsmod.plugins.content.mechanics.pvp.breach.BreachLoot.EXCLUDED_TRINKETS +
             gg.rsmod.plugins.content.activity.pest_control.VoidDeflectorMigration.UNWEARABLE +
-            gg.rsmod.plugins.content.items.armor.DragonChainbodyMigration.UNWEARABLE
+            gg.rsmod.plugins.content.items.armor.DragonChainbodyMigration.UNWEARABLE +
+            // SIGIL-NERF 23-11: no GE acquisition; existing items stay pending the owner's compensation decision.
+            gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.values().filterNot { it.enabled }
+                .flatMap { listOf(it.attunedId, it.unattunedId) }
     }
 
     /** True for anything the Grand Exchange (player offers, the house, ::ge_buy / ::ge_sell) must refuse, noted forms included. */

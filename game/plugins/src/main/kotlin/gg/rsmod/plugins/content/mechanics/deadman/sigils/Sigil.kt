@@ -73,7 +73,7 @@ enum class Sigil(
     THE_PORCUPINE(53, "Sigil of the Porcupine", 2, Kind.COMBAT, 25605, 25606, 60, 15),
     THE_RUTHLESS_RANGER(54, "Sigil of the Ruthless Ranger", 2, Kind.COMBAT, 25607, 25608, -1, 0),
     THE_SERPENT(55, "Sigil of the Serpent", 2, Kind.UTILITY, 25609, 25610, 180, 600),
-    FINALITY(56, "Sigil of Finality", 3, Kind.COMBAT, 25611, 25612, 30, 12),
+    FINALITY(56, "Sigil of Finality", 3, Kind.COMBAT, 25611, 25612, 60, 12),
     RAMPAGE(57, "Sigil of Rampage", 3, Kind.COMBAT, 25613, 25614, -1, 0),
     REMOTE_STORAGE(58, "Sigil of Remote Storage", 3, Kind.SKILLING, 25615, 25616, -1, 0),
     WOODCRAFT(59, "Sigil of Woodcraft", 3, Kind.SKILLING, 25617, 25618, -1, 0),
@@ -87,9 +87,13 @@ enum class Sigil(
 
     enum class Kind { COMBAT, SKILLING, UTILITY }
 
+    /** Owner 23-11: retained only to recognise legacy items/saves; never active or awarded. */
+    val enabled: Boolean get() = number !in setOf(11, 36, 50, 60)
+
     val activatable: Boolean get() = cooldownSeconds >= 0
 
     companion object {
+        val available: List<Sigil> = values().filter { it.enabled }
         private val byAttuned: Map<Int, Sigil> = values().associateBy { it.attunedId }
         private val byUnattuned: Map<Int, Sigil> = values().associateBy { it.unattunedId }
 

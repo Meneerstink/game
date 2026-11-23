@@ -93,10 +93,7 @@ fun performAlchemy(
             hasStaff -> Anims.SPELL_ALCH_WITH_STAFF to Gfx.ALCHEMY_WTIH_STAFF
             else -> Anims.SPELL_ALCH to Gfx.ALCHEMY
         }
-    // PROJECT48 S11 Sigil of the Alchemaniac: high alchemy provides 30 percent extra coins.
-    val coinAmount = calculateCoinAmount(unnoted, highAlchemy).let { base ->
-        if (highAlchemy && gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.effective(player, gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.THE_ALCHEMANIAC)) base + base * 30 / 100 else base
-    }
+    val coinAmount = calculateCoinAmount(unnoted, highAlchemy)
     val experience = calculateExperience(highAlchemy)
 
     player.timers[ALCH_TIMER] = ALCH_TIMER_DURATION

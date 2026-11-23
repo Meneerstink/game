@@ -79,4 +79,30 @@ class SpecialAttackEnergyRefundTests {
         val darkBow = ranged.substringAfter("You need at least two arrows in your quiver to use this special attack.\")")
         assertTrue(darkBow.trimStart().startsWith("specialFailed()"))
     }
+
+    @Test
+    fun `finality and specialised strikes apply together and expire only after the performed special`() {
+        val weapon = 990_003
+        val p = player(weapon)
+        p.attr[gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.ATTUNED] = "56,47"
+        val sigils = gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils
+        val combat = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat
+        val finality = gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.FINALITY
+        val discount = gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.SPECIALISED_STRIKES
+        assertTrue(sigils.activate(p, finality))
+        assertTrue(sigils.activate(p, discount))
+        val target = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
+        SpecialAttacks.register(25, weapon) {
+            repeat(2) {
+                assertEquals(0.30, combat.accuracy(p, target, 0.20,
+                    gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula), 1e-9)
+            }
+        }
+        assertEquals(SpecialAttacks.Outcome.PERFORMED, SpecialAttacks.perform(p, target, mockk<World>(relaxed = true)))
+        assertEquals(85, energy, "25 minus 10 energy, once")
+        kotlin.test.assertFalse(sigils.windowOpen(p, finality))
+        kotlin.test.assertFalse(sigils.windowOpen(p, discount))
+        assertTrue(sigils.cooldownLeft(p, finality) in 59..60)
+        kotlin.test.assertFalse(sigils.activate(p, finality), "special cannot bypass sixty-second cooldown")
+    }
 }

@@ -113,4 +113,21 @@ class ClueNpcSourcesTests {
         assertTrue(vyres.all { it.level in setOf(87,105,110,120,125) && it.denominator==128 })
         assertFalse(vyres.any { it.level in setOf(130,140) })
     }
+
+    @Test fun `treasure hunter uses exact one and a half probability including certainty and the drop viewer`() {
+        val player = player()
+        player.attr[gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.ATTUNED] = "18"
+        assertEquals(1.5 / 128, ClueNpcSources.chance(player, row.copy(denominator = 128)), 1e-12)
+        assertEquals(0.5, ClueNpcSources.chance(player, row.copy(denominator = 3)), 1e-12)
+        assertEquals(1.0, ClueNpcSources.chance(player, row.copy(denominator = 1)))
+        val chance = (1.5 / row.denominator).coerceAtMost(1.0)
+        val viewer = ClueNpcSources.lines(player, row.npc).single { it.item == box }
+        assertEquals(chance, viewer.your, 1e-12)
+        fun roll(value: Double) = object : kotlin.random.Random() {
+            override fun nextBits(bitCount: Int): Int = error("use exact nextDouble roll")
+            override fun nextDouble(): Double = value
+        }
+        assertTrue(ClueNpcSources.roll(player, row.npc, roll(chance - 1e-10)).any { it.id == box })
+        if (chance < 1.0) assertFalse(ClueNpcSources.roll(player, row.npc, roll(chance)).any { it.id == box })
+    }
 }

@@ -66,13 +66,12 @@ object Sigils {
             Sigil.ENHANCED_HARVEST to Sigil.THE_FORAGER,
             Sigil.TITANIUM to Sigil.RESISTANCE,
             Sigil.THE_RAMPART to Sigil.FORTIFICATION,
-            // Aggression / Rampage are NOT here: "The damage bonus effect does not stack with the Sigil of Aggression" - only the damage
-            // bonus; Rampage keeps its count and its accuracy (SigilCombat.dealt leaves Rampage's damage out when Aggression is attuned).
         )
 
     enum class Result {
         OK,
         NOT_A_SIGIL,
+        REMOVED,
         NOT_AT_BANK,
         SKULLED,
         FULL,
@@ -86,7 +85,7 @@ object Sigils {
 
     fun attuned(player: Player): List<Sigil> {
         val numbers = player.attr[ATTUNED]?.split(',')?.mapNotNull { it.toIntOrNull() } ?: return emptyList()
-        return Sigil.values().filter { it.number in numbers }
+        return Sigil.available.filter { it.number in numbers }
     }
 
     private fun store(
@@ -128,6 +127,7 @@ object Sigils {
         if (slot !in 0 until player.inventory.capacity) return Result.ITEM_CHANGED
         val item = player.inventory[slot] ?: return Result.ITEM_CHANGED
         val sigil = Sigil.ofUnattuned(item.id) ?: return Result.NOT_A_SIGIL
+        if (!sigil.enabled) return Result.REMOVED
         if (!atBank) return Result.NOT_AT_BANK
         if (PvpSkull.hasSkullTimer(player)) return Result.SKULLED
         val on = attuned(player)
@@ -153,9 +153,14 @@ object Sigils {
         slot: Int,
     ): Boolean {
         val item = player.inventory[slot] ?: return false
+        if (Sigil.ofItem(item.id)?.enabled == false) {
+            player.message(REMOVED_MESSAGE)
+            return true
+        }
         // The cache item of the Sigil of Mobility has no "Attune" option at all, so an un-attuned sigil used on a bank attunes it.
         if (Sigil.ofUnattuned(item.id) != null) {
             when (attune(player, slot, atBank = true)) {
+                Result.REMOVED -> player.message(REMOVED_MESSAGE)
                 Result.OK -> player.message("You feel a surge of power as you attune to the Sigil.")
                 Result.SKULLED -> player.message("You cannot attune a sigil while skulled.")
                 Result.FULL -> player.message("You already have attuned to $MAX_ATTUNED Sigils. You must unattune one before attuning to more.")
@@ -167,6 +172,7 @@ object Sigils {
         }
         if (Sigil.ofAttuned(item.id) == null) return false
         when (unattune(player, slot, atBank = true)) {
+            Result.REMOVED -> player.message(REMOVED_MESSAGE)
             Result.OK -> player.message("You unattune the Sigil. Its powers leave you for now.")
             Result.SKULLED -> player.message("You cannot unattune a sigil while skulled.")
             else -> player.message("Nothing interesting happens.")
@@ -182,6 +188,7 @@ object Sigils {
         if (slot !in 0 until player.inventory.capacity) return Result.ITEM_CHANGED
         val item = player.inventory[slot] ?: return Result.ITEM_CHANGED
         val sigil = Sigil.ofAttuned(item.id) ?: return Result.NOT_A_SIGIL
+        if (!sigil.enabled) return Result.REMOVED
         if (!atBank) return Result.NOT_AT_BANK
         if (PvpSkull.hasSkullTimer(player)) return Result.SKULLED
         val on = attuned(player)
@@ -228,6 +235,9 @@ object Sigils {
         return true
     }
 
+    /** Owner 23-11: retired items are inert; compensation is still the owner's decision. */
+    const val REMOVED_MESSAGE = "This sigil has been removed and no longer grants any effect or uses an attunement slot."
+
     /** OSRS Wiki, infobox of every attuned sigil item: the answer to its Destroy option. */
     const val DESTROY_ATTUNED_MESSAGE = "You must unattune the Sigil before you can destroy it."
 
@@ -239,7 +249,14 @@ object Sigils {
      * an account that was already broken or an item removed by staff.
      */
     fun reconcile(player: Player): List<Sigil> {
+        // Free retired attunement slots without deleting or exchanging the legacy items.
+        val saved = player.attr[ATTUNED]?.split(',')?.mapNotNull { it.toIntOrNull() }.orEmpty()
+        val retired = Sigil.values().filter { !it.enabled && it.number in saved }
         val on = attuned(player)
+        if (retired.isNotEmpty()) {
+            store(player, on)
+            player.message(REMOVED_MESSAGE)
+        }
         if (on.isEmpty()) return emptyList()
         val lost = on.filter { !player.inventory.contains(it.attunedId) && !player.bank.contains(it.attunedId) }
         if (lost.isEmpty()) return emptyList()

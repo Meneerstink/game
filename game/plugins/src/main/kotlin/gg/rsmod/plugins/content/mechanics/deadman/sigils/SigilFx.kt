@@ -65,6 +65,7 @@ object SigilFx {
         player: Player,
         sigil: Sigil,
     ) {
+        if (!sigil.enabled) return
         player.graphic(
             when (sigil.kind) {
                 Sigil.Kind.COMBAT -> ATTUNE_COMBAT
@@ -93,6 +94,7 @@ object SigilFx {
         player: Player,
         sigil: Sigil,
     ) {
+        if (!sigil.enabled) return
         if (sigil.kind == Sigil.Kind.COMBAT) player.animate(ANIM_ACTIVATE) else player.playSound(SOUND_ACTIVATE)
         ICON[sigil]?.let { player.graphic(it) }
         COOLDOWN_TIMER[sigil]?.let { player.timers[it] = ticks(sigil.cooldownSeconds) }
@@ -115,6 +117,7 @@ object SigilFx {
         player: Player,
         sigil: Sigil,
     ) {
+        if (!sigil.enabled) return
         ICON[sigil]?.let { player.graphic(it) }
     }
 

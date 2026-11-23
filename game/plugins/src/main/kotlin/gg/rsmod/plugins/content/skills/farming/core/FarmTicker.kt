@@ -73,7 +73,7 @@ object FarmTicker {
             }
         }
 
-    /** The seed types that would grow [ahead] farming ticks from now (PROJECT48 S62 Sigil of Nature: crops grow 5x quicker). */
+    /** The seed types that would grow [ahead] farming ticks from now (PROJECT48 S62 Sigil of Nature: one extra cycle per five minutes). */
     fun futureSeedTypes(
         world: World,
         ahead: Int,

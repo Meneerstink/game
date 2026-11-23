@@ -17,19 +17,18 @@ object PlayerManager {
 
         player.timers[Constants.playerFarmingTimer] = Constants.playerFarmingTickLength
         player.attr[LAST_WORLD_FARMING_TICK] = player.world.attr[Constants.worldFarmTick]!!
-        // PROJECT48 S62 Sigil of Nature (wiki: 'Farming cycles occur every minute instead of every five minutes'): the four extra
-        // cycles run ONE A MINUTE between two farming ticks. Run 3 (22-11) measured the old version, which ran all five at once: a
-        // crop that caught a disease died in the same burst, so a player never had the cycle to cure it.
+        // Owner 23-11 S62 Nature: one extra cycle halfway between two five-minute farming ticks.
+        // Keep cycles separate so a disease can still be cured before the next cycle (fix of 22-11).
         if (natureActive(player)) {
             player.attr[NATURE_STEP] = 1
             player.timers[natureTimer] = NATURE_STEP_TICKS
         }
     }
 
-    /** S62: the next of the four extra Sigil of Nature cycles (one a minute after the farming tick). */
+    /** S62: exactly one extra growth cycle per five minutes, never a burst of growth. */
     fun onNatureStep(player: Player) {
         val step = player.attr[NATURE_STEP] ?: return
-        if (step !in 1..4 || !natureActive(player)) {
+        if (step != 1 || !natureActive(player)) {
             player.attr.remove(NATURE_STEP)
             return
         }
@@ -37,12 +36,7 @@ object PlayerManager {
         val base = player.attr[LAST_WORLD_FARMING_TICK] ?: player.world.attr[Constants.worldFarmTick]!!
         val ahead = base + step - player.world.attr[Constants.worldFarmTick]!!
         grow(player, FarmTicker.futureSeedTypes(player.world, ahead))
-        if (step < 4) {
-            player.attr[NATURE_STEP] = step + 1
-            player.timers[natureTimer] = NATURE_STEP_TICKS
-        } else {
-            player.attr.remove(NATURE_STEP)
-        }
+        player.attr.remove(NATURE_STEP)
     }
 
     private fun natureActive(player: Player): Boolean =
@@ -54,7 +48,7 @@ object PlayerManager {
     /** Not persisted: a relog only loses the remaining extra cycles of that one farming tick. */
     val natureTimer = gg.rsmod.game.model.timer.TimerKey()
     private val NATURE_STEP = AttributeKey<Int>()
-    const val NATURE_STEP_TICKS = Constants.playerFarmingTickLength / 5
+    const val NATURE_STEP_TICKS = Constants.playerFarmingTickLength / 2
 
     /**
      * Initializes the player farming logic upon login. Replays farming ticks that occurred while logged out and

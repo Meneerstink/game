@@ -47,4 +47,23 @@ class RingOfDuelingTests {
         assertEquals(original, p.inventory[4])
         assertTrue("Ferox Enclave" in RingOfDueling.DESTINATIONS)
     }
+
+    @Test fun `eternal jeweller preserves final charge on half of rolls and spends it once otherwise`() {
+        for (equipped in listOf(false, true)) for (roll in listOf(0.499999, 0.5)) {
+            val p = player()
+            p.attr[gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.ATTUNED] = "12"
+            every { p.world.randomDouble() } returns roll
+            val container = if (equipped) p.equipment else p.inventory
+            val slot = if (equipped) EquipmentType.RING.id else 4
+            val ring = Item(Items.RING_OF_DUELLING_1)
+            container[slot] = ring
+            assertTrue(RingOfDueling.spend(p, ring, slot, equipped))
+            if (roll < 0.5) {
+                assertSame(ring, container[slot], "saved final charge keeps exactly the same ring")
+            } else {
+                assertNull(container[slot], "spent final charge disappears")
+                assertFalse(RingOfDueling.spend(p, ring, slot, equipped), "replayed click cannot spend twice")
+            }
+        }
+    }
 }
