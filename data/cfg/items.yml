@@ -304569,3 +304569,333 @@
   tradeable: true
   weight: 0.005
   equipment: null
+- id: 25646
+  name: "Imbued ancient cape (Deadman)"
+  examine: "A cape from an almighty god, imbued with great power."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 7044
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 15
+    attack_ranged: 0
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 15
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 2.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 75}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25647
+  name: "Zorya's tome"
+  examine: "The book is weighed down by all the knowledge it contains."
+  tradeable: false
+  weight: 5.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 7045
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 3
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 45
+    attack_ranged: 0
+    defence_stab: 1
+    defence_slash: 5
+    defence_crush: 5
+    defence_magic: 10
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 15.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 85}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25648
+  name: "Zorya's tome (uncharged)"
+  examine: "The book is weighed down by all the knowledge it contains."
+  tradeable: true
+  weight: 4.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 7046
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 3
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 45
+    attack_ranged: 0
+    defence_stab: 1
+    defence_slash: 5
+    defence_crush: 5
+    defence_magic: 10
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 15.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 85}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25649
+  name: "Zorya's tome (uncharged)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25650
+  name: "null"
+  examine: ""
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 25651
+  name: "Ascension crossbows"
+  examine: "Ancient crossbows formed of powerful crystal."
+  tradeable: true
+  weight: 6.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 7048
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 17
+    attack_speed: 3
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 3
+    attack_ranged: 34
+    defence_stab: -7
+    defence_slash: -5
+    defence_crush: 0
+    defence_magic: 10
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 80}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25652
+  name: "Ascension crossbows"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25657
+  name: "Ascension bolts"
+  examine: "Bolts chiselled from powerful crystals."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 7049
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 53
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 80}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25662
+  name: "Diamond ascension bolts"
+  examine: "Bolts chiselled from powerful crystals, tipped with diamond."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 7049
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 58
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 80}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25667
+  name: "Diamond ascension bolts (e)"
+  examine: "Enchanted bolts chiselled from powerful crystals, tipped with diamond."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 7049
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 58
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 80}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25672
+  name: "Onyx ascension bolts"
+  examine: "Bolts chiselled from powerful crystals, tipped with onyx."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 7049
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 58
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 80}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25677
+  name: "Onyx ascension bolts (e)"
+  examine: "Enchanted bolts chiselled from powerful crystals, tipped with onyx."
+  tradeable: true
+  weight: 0.0
+  equipment:
+    equip_slot: 13
+    equip_type: -1
+    appearance_id: 7049
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 58
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 4, 'level': 80}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25678
+  name: "Ascension shards"
+  examine: "Shards of powerful crystal."
+  tradeable: true
+  weight: 0.0
+  equipment: null
