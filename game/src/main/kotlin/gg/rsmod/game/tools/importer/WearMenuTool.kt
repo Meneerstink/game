@@ -53,7 +53,7 @@ object WearMenuTool {
                         bytes,
                         strings,
                         removedOpcodes = removed,
-                        removedParamIds = if (fifth != null) setOf(532) else emptySet(),
+                        removedParamIds = if (bookOnly) (529..535).toSet() + ItemDef.WORN_OP6_PARAM else if (fifth != null) setOf(532) else emptySet(),
                         stringParams = params,
                     )
                 val after = ItemDef(item).also { it.decode(Unpooled.wrappedBuffer(edited)) }

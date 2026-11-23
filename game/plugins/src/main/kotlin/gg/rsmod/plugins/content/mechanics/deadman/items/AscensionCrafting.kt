@@ -5,7 +5,6 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
-import gg.rsmod.plugins.api.ext.addXp
 import gg.rsmod.plugins.content.mechanics.deadman.DeadmanInventory
 import gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids
 

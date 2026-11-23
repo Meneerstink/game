@@ -48,6 +48,20 @@ class ArchiveWeaponsTests {
         assertEquals(1, PoweredStaves.charges(charged))
     }
 
+    @Test fun `worn Charge uses inventory runes and refuses a stale equipment prompt`() {
+        ids()
+        val f = DeadmanPlayerFixture()
+        f.define(9100); f.define(9101)
+        f.define(Items.ASTRAL_RUNE, stackable = true); f.define(Items.NATURE_RUNE, stackable = true)
+        val book = PoweredStaves.withCharges(Item(9100), 1)
+        f.equipment[EquipmentType.WEAPON.id] = book
+        f.inventory.add(Items.ASTRAL_RUNE, 3); f.inventory.add(Items.NATURE_RUNE, 2)
+        assertEquals(1, ZoryaCharges.charge(f.player, EquipmentType.WEAPON.id, book, 1, equipped = true))
+        assertEquals(2, PoweredStaves.charges(f.equipment[EquipmentType.WEAPON.id]!!))
+        assertEquals(0, f.inventory.getItemCount(Items.ASTRAL_RUNE))
+        assertEquals(0, ZoryaCharges.charge(f.player, EquipmentType.WEAPON.id, book, 1, equipped = true))
+    }
+
     @Test fun `Zorya successful specs store five after the second empowered spec and refresh expiry`() {
         val f = DeadmanPlayerFixture()
         var cycle = 10
@@ -85,6 +99,10 @@ class ArchiveWeaponsTests {
         assertFalse(gg.rsmod.plugins.content.combat.strategy.ZoryaSpell.fire(f.player, target, false))
         assertEquals(0, ZoryaTome.remaining(f.player))
         assertFalse(gg.rsmod.plugins.content.combat.strategy.ZoryaSpell.fire(f.player, mockk<Player>(), true))
+    }
+
+    @Test fun `Zorya uses the current short flight hit delay at every attack range`() {
+        assertEquals(listOf(2, 2, 2, 2, 3, 3, 3, 3, 3), (1..9).map(ZoryaTome::hitDelay))
     }
 
     @Test fun `a special below 50 percent is refused before firing`() {
@@ -148,6 +166,18 @@ class ArchiveWeaponsTests {
         assertTrue(onyx.needsSuccessfulHit)
         assertEquals(3, ArchiveWeapons.baseSpeed(false))
         assertEquals(4, ArchiveWeapons.baseSpeed(true))
+    }
+
+    @Test fun `a lost charged tome produces one empty tome without charge attributes`() {
+        ids()
+        val charged = PoweredStaves.withCharges(Item(9100), 123)
+        val loot = gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakables.killerItems(charged)!!
+        assertEquals(1, loot.size)
+        assertEquals(9101, loot.single().id)
+        assertEquals(1, loot.single().amount)
+        assertEquals(0, PoweredStaves.charges(loot.single()))
+        assertFalse(loot.single().hasAnyAttr())
+        assertEquals(123, PoweredStaves.charges(charged), "conversion reads the death item without mutating its source")
     }
 
     @Test fun `Ascension firing alternates between left and right across targets`() {

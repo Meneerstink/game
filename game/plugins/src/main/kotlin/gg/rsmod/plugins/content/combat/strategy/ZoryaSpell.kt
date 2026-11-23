@@ -7,6 +7,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.*
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.createProjectile
+import gg.rsmod.plugins.content.combat.soundToBystanders
 import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.MagicCombatFormula
 import gg.rsmod.plugins.content.items.osrs.PoweredStaves
@@ -33,12 +34,17 @@ object ZoryaSpell {
         player.stopMovement()
         player.animate(Dmm2Ids.seq(animation)!!)
         player.graphic(Dmm2Ids.spot(cast)!!)
-        player.playSound(Dmm2Ids.sound(if (special) 12661 else 12662)!!)
-        val projectile = player.createProjectile(target, Dmm2Ids.spot(travel)!!, ProjectileType.MAGIC)
+        val sound = Dmm2Ids.sound(if (special) 12661 else 12662)!!
+        player.playSound(sound)
+        player.soundToBystanders(sound)
+        val hitDelay = ZoryaTome.hitDelay(gg.rsmod.plugins.content.combat.Combat.tileDistance(player, target))
+        val preset = ProjectileType.MAGIC
+        val projectile = player.createProjectile(target, Dmm2Ids.spot(travel)!!,
+            preset.startHeight, preset.endHeight, preset.angle, preset.steepness, preset.delay, hitDelay * 30)
         player.world.spawn(projectile)
         val landed = MagicCombatFormula.getAccuracy(player, target, shot.accuracy) >= player.world.randomDouble()
         val hit = player.dealHit(target, maxHit = MagicCombatFormula.getMaxHit(player, target, shot.damage),
-            landHit = landed, delay = MagicCombatStrategy.getHitDelay(player.getCentreTile(), target.getCentreTile()), hitType = HitType.MAGIC)
+            landHit = landed, delay = hitDelay, hitType = HitType.MAGIC)
         if (landed) target.graphic(Graphic(Dmm2Ids.spot(impact)!!, 0, projectile.lifespan)) else target.graphic(Graphic(85, 96, projectile.lifespan))
         if (special && landed && !gg.rsmod.plugins.content.areas.poh.PlayerHouse.isCombatDummy(target)) ZoryaTome.successfulSpecial(player)
         if (!gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.savesRunes(player)) {

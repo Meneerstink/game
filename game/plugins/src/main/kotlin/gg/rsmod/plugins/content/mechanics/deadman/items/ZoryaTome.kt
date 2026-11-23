@@ -37,5 +37,8 @@ object ZoryaTome {
             player.world.currentCycle + BUFF_TICKS, player.lastTeleportCycle)
     }
 
+    /** Wiki Hit delay rev15406093: distances1..4 =1 tick,5..9 =2; engine expects the NPC processing tick included. */
+    fun hitDelay(distance: Int): Int = if (distance <= 4) 2 else 3
+
     fun lastDelay(player: Player): Int = player.attr[LAST_DELAY] ?: 3
 }

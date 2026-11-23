@@ -2,7 +2,7 @@ package gg.rsmod.plugins.content.mechanics.deadman.items
 
 import gg.rsmod.plugins.content.items.books.Book
 
-/** OSRS Wiki Transcript:Kharedst's memoirs, CC BY-NC-SA 3.0; Rose's entries are read through the Book of the Dead.
+/** OSRS Wiki Transcript:Kharedst's memoirs, CC BY-NC-SA 3.0; Rose's five entries are read through the Book of the Dead; the optional knife-unlocked secret page is excluded.
  * https://oldschool.runescape.wiki/w/Special:PermanentLink/14330524
  */
 object RoseMemoirs {
@@ -137,13 +137,5 @@ Light burst from fathers' eyes and mouth and he slumped to the ground silently. 
 
 'You could say that,' I rushed to my desk and began filling in this entry. I fear everything is about to change.
 
-Tread Carefully
-If you're reading this, things haven't gone to plan and YOU should be worried. The King has been killed and I am 'Unfit for rule'... I have enough sanity left to know it won't be long until they come for me too.
-
-By all means, young stranger, attempt to rebuild this memoir, but I'm afraid you may not like the ending, I for one am not a fan. You may think you're ahead of the game, but the pieces have been in motion for decades and you are just another pawn, as was I.
-
-Perhaps we'll meet soon.
-
-R,
     """.trimIndent()
 }
