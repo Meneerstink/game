@@ -174,7 +174,7 @@ on_command("sigils") {
 }
 
 // SIGIL-WORN-ICOON: the sigil slot of the Worn Items tab opens the Attuned Sigils window.
-on_button(interfaceId = SigilWornSlot.INTERFACE_ID, component = SigilWornSlot.ICON) { if (needsStart(player)) chooseStart(player) else SigilWornSlot.click(player) }
+on_button(interfaceId = SigilWornSlot.INTERFACE_ID, component = SigilWornSlot.LAYER) { if (needsStart(player)) chooseStart(player) else SigilWornSlot.click(player) }
 
 // SIGIL-INFO-UI: the "Attuned Sigils" window (owner design 21-11). Unattune per slot = the item option's rules (bank, no skull).
 on_button(interfaceId = AttunedSigilsUi.INTERFACE_ID, component = gg.rsmod.game.tools.importer.AttunedSigilsInterfaceImportTool.AS.CLOSE) {

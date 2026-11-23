@@ -3,7 +3,7 @@ package gg.rsmod.plugins.content.skills.fletching.tippedbolts
 val tippedBoltData = TippedBoltData.values
 val byProduct = TippedBoltData.byProduct
 
-tippedBoltData.forEach { data ->
+tippedBoltData.filter { it.plainBolt >= 0 && it.product >= 0 }.forEach { data ->
     on_item_on_item(item1 = data.tip, item2 = data.plainBolt) {
         player.queue {
             produceItemBox(

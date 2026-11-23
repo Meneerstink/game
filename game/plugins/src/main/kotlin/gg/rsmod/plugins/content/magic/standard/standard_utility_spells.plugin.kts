@@ -187,8 +187,19 @@ BOLT_ENCHANTS.forEach { enchant ->
                 // gem-tipped dragon bolt of the same tier is only targeted when the player has fewer than 10
                 // normal bolts - see this block's class doc for why (SOURCE_GAP on the real selection order).
                 val useDragon = player.inventory.getItemCount(enchant.bolt) < 10 && enchant.dragonBolt != null && player.inventory.getItemCount(enchant.dragonBolt) >= 10
-                val bolt = if (useDragon) enchant.dragonBolt!! else enchant.bolt
-                val enchanted = if (useDragon) enchant.dragonEnchanted!! else enchant.enchanted
+                val ascensionPair = when (enchant.component) {
+                    38 -> 34690 to 34696
+                    44 -> 34702 to 34708
+                    else -> null
+                }?.let { (input, output) ->
+                    val a = gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.item(input)
+                    val b = gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.item(output)
+                    if (a != null && b != null) a to b else null
+                }
+                val useAscension = !useDragon && player.inventory.getItemCount(enchant.bolt) < 10 &&
+                    ascensionPair != null && player.inventory.getItemCount(ascensionPair.first) >= 10
+                val bolt = if (useAscension) ascensionPair!!.first else if (useDragon) enchant.dragonBolt!! else enchant.bolt
+                val enchanted = if (useAscension) ascensionPair!!.second else if (useDragon) enchant.dragonEnchanted!! else enchant.enchanted
                 if (player.inventory.getItemCount(bolt) < 10) {
                     player.message("You need at least 10 bolts to cast this spell.")
                     return@queue

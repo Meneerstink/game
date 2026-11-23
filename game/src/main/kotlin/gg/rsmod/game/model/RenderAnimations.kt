@@ -8,11 +8,15 @@ package gg.rsmod.game.model
  */
 object RenderAnimations {
     private val byWeapon = HashMap<Int, Int>()
+    private val femaleByWeapon = HashMap<Int, Int>()
 
     fun register(
         basId: Int,
         vararg weapons: Int,
     ) = weapons.forEach { byWeapon[it] = basId }
 
-    fun forWeapon(itemId: Int): Int? = byWeapon[itemId]
+    fun registerFemale(basId: Int, vararg weapons: Int) = weapons.forEach { femaleByWeapon[it] = basId }
+
+    fun forWeapon(itemId: Int, female: Boolean = false): Int? =
+        (if (female) femaleByWeapon[itemId] else null) ?: byWeapon[itemId]
 }

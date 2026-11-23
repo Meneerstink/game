@@ -203,6 +203,14 @@ object CombatConfigs {
             if (gg.rsmod.plugins.content.starter.StarterWeaponCombat.builtInStaff(pawn)) speed = 4
             if (gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.SHADOW.matches(weapon?.id) &&
                 gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn)) speed = 5
+            if (gg.rsmod.plugins.content.items.osrs.PoweredStaves.wielded(pawn)?.zorya == true &&
+                gg.rsmod.plugins.content.items.osrs.PoweredStaves.usingBuiltInSpell(pawn))
+                speed = gg.rsmod.plugins.content.mechanics.deadman.items.ZoryaTome.lastDelay(pawn)
+            if (gg.rsmod.plugins.content.mechanics.deadman.items.ArchiveWeapons.isCrossbow(weapon?.id)) {
+                speed = gg.rsmod.plugins.content.mechanics.deadman.items.ArchiveWeapons.baseSpeed(
+                    pawn.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR]?.get() is Player) -
+                    if (getAttackStyle(pawn) == WeaponStyle.RAPID) 1 else 0
+            }
             // Miasmic spells: melee and ranged attack speed is halved (doubled delay) for the effect duration. Magic is not
             // slowed (Void donor Combat.kt: `hasClock("miasmic") && (fightStyle == "range" || fightStyle == "melee")`); a
             // slowed player used to cast barrages every 10 ticks too (combat run 2026-09-29).
@@ -362,6 +370,9 @@ object CombatConfigs {
                 return shieldAnimation.blockAnimation.id
             }
             val weapon = pawn.getEquipment(EquipmentType.WEAPON)?.id ?: -1
+            if (gg.rsmod.plugins.content.items.osrs.PoweredStaves.staffFor(weapon)?.zorya == true) {
+                gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.seq(if (pawn.appearance.gender.isMale()) 15141 else 15148)?.let { return it }
+            }
             // N630 (17-11, bot trace screens\N630\looks-2259): the attack looks a DMM2 corrupted / (Deadman) weapon up through its presentation
             // base, the block did not -> Corrupted voidwaker blocked with the 667 HD sequence 15074. Same base for both.
             val lookId = if (weapon == -1) weapon else gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.presentationBase(weapon)

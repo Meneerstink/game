@@ -36,6 +36,8 @@ object RangedAmmo {
     /** Ammo item ids the wielded weapon accepts, or null when the weapon has no ammo list. */
     fun validAmmo(weaponId: Int?): Array<Int>? =
         when {
+            gg.rsmod.plugins.content.mechanics.deadman.items.ArchiveWeapons.isCrossbow(weaponId) ->
+                gg.rsmod.plugins.content.mechanics.deadman.items.ArchiveWeapons.bolts.toTypedArray()
             weaponId in SALAMANDER_WEAPONS -> SALAMANDER_AMMO
             else -> CrossbowType.values.firstOrNull { it.item == gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.bowBase(weaponId) }?.ammo
                 ?: BowType.values.firstOrNull { it.item == gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.bowBase(weaponId) }?.ammo?.takeIf { it.isNotEmpty() }?.let(::withSeekingArrows)
@@ -103,5 +105,5 @@ object RangedAmmo {
     }
 
     /** Audit I-01: arrows, bolts, javelins, darts, knives, ... - anything a ranged weapon can fire (not a god blessing). */
-    fun isAmmunition(itemId: Int): Boolean = RangedProjectile.values.any { itemId in it.items }
+    fun isAmmunition(itemId: Int): Boolean = gg.rsmod.plugins.content.mechanics.deadman.items.ArchiveWeapons.isBolt(itemId) || RangedProjectile.values.any { itemId in it.items }
 }

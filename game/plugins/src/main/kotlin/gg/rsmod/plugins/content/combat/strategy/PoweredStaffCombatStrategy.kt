@@ -85,6 +85,7 @@ object PoweredStaffCombatStrategy : CombatStrategy {
             player.message(PoweredStaves.PLAYER_TARGET_MESSAGE)
             return false
         }
+        if (PoweredStaves.staffFor(weapon.id)?.zorya == true && !ZoryaSpell.ready(player)) return false
         return true
     }
 
@@ -98,6 +99,10 @@ object PoweredStaffCombatStrategy : CombatStrategy {
         val staff = PoweredStaves.staffFor(weapon.id) ?: return
         val look = look(staff)
 
+        if (staff.zorya) {
+            ZoryaSpell.fire(player, target, special = false)
+            return
+        }
         player.stopMovement()
         if (look.castGfx.id >= 0) player.graphic(look.castGfx)
         player.animate(look.castAnimation)

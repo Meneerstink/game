@@ -35,6 +35,8 @@ class ModernItemDef(val id: Int) {
     var geTradeable: Boolean = false
     var weight: Int = 0
     var category: Int = -1
+    var holdingWhitelist: IntArray = IntArray(0)
+    var bronzeman: Boolean = false
     var maleModel0: Int = -1
     var maleModel1: Int = -1
     var maleModel2: Int = -1
@@ -251,6 +253,9 @@ object ModernItemDefDecoder {
             opcode == 148 -> def.placeholderId = buf.u16()
             opcode == 149 -> def.placeholderTemplateId = buf.u16()
             opcode == 160 -> def.stackable = 2
+            // RuneLite ItemLoader: cache2762 Zorya holding sequences; no guessed payload widths.
+            opcode == 161 -> def.holdingWhitelist = IntArray(buf.u16()) { buf.u16() }
+            opcode == 251 -> def.bronzeman = true
             opcode == 200 -> {
                 buf.u8() // op index
                 buf.u8() // sub-op id

@@ -144,3 +144,19 @@ on_global_item_pickup {
 for (sword in intArrayOf(DmmItems.WILDERNESS_SWORD_3, DmmItems.WILDERNESS_SWORD_4)) {
     on_item_option(sword, "teleport") { DmmItems.wildernessSwordTeleport(player, sword) }
 }
+
+/* p48-gptb-rest. Reminisce and Old Memorial recharge await the owner's Kourend decision. */
+on_item_option(BookOfTheDead.ITEM, "check") { BookOfTheDead.check(player) }
+on_item_option(BookOfTheDead.ITEM, "read") { RoseMemoirs.book.open(player) }
+on_item_option(BookOfTheDead.ITEM, "destroy") {
+    val slot = player.getInteractingItemSlot()
+    val expected = player.inventory[slot] ?: return@on_item_option
+    player.queue(TaskPriority.WEAK) {
+        if (confirmItemAction(BookOfTheDead.ITEM, "Are you sure you want to destroy this item?",
+                "You can obtain another from Commander Fullore at Kourend Castle.")) {
+            BookOfTheDead.destroy(player, slot, expected)
+        }
+    }
+}
+
+on_equipment_option(BookOfTheDead.ITEM, "check") { BookOfTheDead.check(player) }

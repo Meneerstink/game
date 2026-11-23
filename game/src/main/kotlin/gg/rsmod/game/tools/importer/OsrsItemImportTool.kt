@@ -38,6 +38,7 @@ object OsrsItemImportTool {
 
     /** Rev-667 bank-note template (item 1216 = `97=1215 98=799`). */
     const val NOTE_TEMPLATE = 799
+    private const val ASCENSION_HAND_ITEM = 34714
 
     /** Spotanim model fields are signed shorts; keep ids <= this for future GFX/projectile meshes. */
     const val SPOTANIM_MODEL_LIMIT = 32767
@@ -131,6 +132,17 @@ object OsrsItemImportTool {
             ),
             // PROJECT48 DMM-ITEMS C3: Soiled page (charges the Tome of earth), OSRS id 30068 (ItemID.SOILED_PAGE).
             "p48-items-d" to listOf(Spec(30068)),
+            // p48-gptb-rest: wiki rev15403804 + cache2762. Ancient fabric and base cape already imported by N415.
+            "p48-ancient-deadman" to listOf(Spec(34607, rev667Params = mapOf(749 to 6, 750 to 75))),
+            // Fractured Archive rewards, cache2762; acquisition awaits the owner. Notes/count models follow parents.
+            "p48-archive-weapons" to listOf(
+                Spec(34725, rev667Params = mapOf(686 to 1, 687 to 1, 749 to 6, 750 to 85), weaponType = 1,
+                    rev667StringParams = mapOf(528 to "Check")),
+                Spec(34727, noted = true, rev667Params = mapOf(686 to 1, 749 to 6, 750 to 85), weaponType = 1),
+                Spec(ASCENSION_HAND_ITEM), // Hidden hand-object of crossbow firing sequences15113..15116 (cache op7=34714+512).
+                Spec(34681, noted = true, rev667Params = mapOf(686 to 17, 749 to 4, 750 to 80), weaponType = 17),
+                Spec(34684), Spec(34690), Spec(34696), Spec(34702), Spec(34708), Spec(34669),
+            ),
             // N415: OSRS Wiki + cache 2686 MA2 remains/symbol. Local ids come from the importer, never the upstream ids.
             // Ancient fabric/capes are absent in 2686 and intentionally require an isolated newer-source batch.
             "mage-arena" to listOf(Spec(21797), Spec(21798), Spec(21799), Spec(21800)),
@@ -1485,7 +1497,10 @@ object OsrsItemImportTool {
                         val modelIds = entry.def.modelDependencies().values.distinct()
                         val worn = wornModels(entry.def)
                         fun converted(model: Int): ByteArray {
-                            val slot = if (model in worn) entry.def.wearPos1 else null
+                            // The crossbow animation dummy has no equip slot, but op7 uses its worn models as a weapon.
+                            val slot = if (model in worn) {
+                                if (entry.spec.upstreamId == ASCENSION_HAND_ITEM) 3 else entry.def.wearPos1
+                            } else null
                             // A hands mesh worn by both genders counts as male (hand position, OsrsBodyFrame; forearm fit), as
                             // OsrsWristTool does.
                             val handsFemale = model !in setOf(entry.def.maleModel0, entry.def.maleModel1, entry.def.maleModel2)

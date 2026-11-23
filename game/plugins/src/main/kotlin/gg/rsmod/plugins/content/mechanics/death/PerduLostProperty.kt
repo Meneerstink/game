@@ -101,13 +101,19 @@ object PerduLostProperty {
     private fun ancientCapeEntry(): Entry? {
         val a = gg.rsmod.plugins.content.items.osrs.AncientCape.assets
         val cape = a.cape ?: return null
-        return Entry(cape, 250_000, variants = setOfNotNull(cape, a.broken, a.locked, a.lockedBroken, a.lockedMangled))
+        return Entry(cape, 250_000, variants = setOfNotNull(cape, a.broken, a.locked, a.lockedBroken, a.lockedMangled, gg.rsmod.plugins.content.mechanics.deadman.Dmm2Ids.ItemId.ANCIENT_DEADMAN_CAPE.local))
     }
 
     private val byVariant: Map<Int, Entry> = ENTRIES.flatMap { e -> e.variants.map { it to e } }.toMap()
 
     /** Whether [itemId] (or a form of it) is on Perdu's own Lost Property list. */
     fun isLostPropertyItem(itemId: Int): Boolean = itemId in byVariant
+
+    fun entryFor(itemId: Int): Entry? = byVariant[itemId]
+
+    fun isMageArenaCape(itemId: Int): Boolean =
+        itemId in gg.rsmod.plugins.content.items.osrs.AncientCape.GOD_CAPES ||
+            itemId == gg.rsmod.plugins.content.items.osrs.AncientCape.assets.cape
 
     private val UNLOCKED = AttributeKey<String>(persistenceKey = "perdu_lost_property")
 
@@ -168,7 +174,7 @@ object PerduLostProperty {
         return ENTRIES.filter {
             // N415: a formerly unrestricted imported cape cannot bypass the actual miniquest unlock.
             // The source explicitly prevents Lost Property purchases before MA2 completion.
-            val ma2Cape = it.itemId in gg.rsmod.plugins.content.items.osrs.AncientCape.GOD_CAPES || it.itemId == gg.rsmod.plugins.content.items.osrs.AncientCape.assets.cape
+            val ma2Cape = isMageArenaCape(it.itemId)
             (!ma2Cape || gg.rsmod.plugins.content.areas.wilderness.MageArenaII.completed(player)) &&
                 it.itemId in earned && (it.multiple || !owns(player, it))
         } + lostPets(player) + lostTrinkets(player)
