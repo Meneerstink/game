@@ -33,10 +33,13 @@ on_npc_option(lundail, option = "trade") {
 
 suspend fun lundailDialogue(it: QueueTask) {
     it.chatNpc("How can I help you, brave adventurer?")
-    val option = it.options("What are you selling?", "What's that big old building above us?", "Claim free runes.") // TODO: ADD Claim free runes option after coding wilderness tasks.
+    val option = it.options("What are you selling?", "What's that big old building above us?", "Claim free runes.")
     when (option) {
         1 -> whatAreYouSelling(it)
         2 -> whatsThatBigOldBuilding(it)
+        // OSRS Wiki Transcript:Lundail. This server has no Wilderness Diary completion provider (see
+        // WildernessNpcDrops.mediumDiary); owning a diary reward item must not fabricate diary completion.
+        3 -> it.chatNpc("You'll need to have completed the Easy Wilderness Achievement Diary to qualify for free runes.")
     }
 }
 

@@ -58,6 +58,50 @@ import java.net.URLClassLoader
 import kotlin.test.*
 
 class MageArenaTests {
+    @Test fun `compiled Lundail free rune option explains the diary requirement instead of silently ending`() {
+        val a = Account()
+        val queues = gg.rsmod.game.model.queue.impl.PawnQueueTaskSet()
+        val sent = mutableListOf<gg.rsmod.game.message.Message>()
+        val npc = mockk<Npc>(relaxed = true)
+        every { npc.id } returns gg.rsmod.plugins.api.cfg.Npcs.LUNDAIL
+        every { npc.getTransform(a.player) } returns gg.rsmod.plugins.api.cfg.Npcs.LUNDAIL
+        every { npc.getTransmogId() } returns -1
+        a.attrs[gg.rsmod.game.model.attr.INTERACTING_NPC_ATTR] = WeakReference(npc)
+        every { a.defs.get(NpcDef::class.java, any()) } answers {
+            NpcDef(secondArg()).apply { name = "Lundail"; options[0] = "Talk-to"; options[2] = "Trade" }
+        }
+        every { a.player.executePlugin<Unit>(any()) } answers { firstArg<Plugin.() -> Unit>().invoke(Plugin(a.player)) }
+        every { a.player.queue(any(), any(), any()) } answers {
+            queues.queue(a.player, kotlinx.coroutines.Dispatchers.Unconfined, firstArg(), thirdArg(), persistent = secondArg())
+        }
+        every { a.player.write(*anyVararg<gg.rsmod.game.message.Message>()) } answers {
+            sent += firstArg<Array<gg.rsmod.game.message.Message>>().toList()
+        }
+        val repo = PluginRepository(a.world)
+        every { a.world.plugins } returns repo
+        URLClassLoader(arrayOf(File("scripts/build/classes/kotlin/main").toURI().toURL()), javaClass.classLoader).use {
+            it.loadClass("gg.rsmod.plugins.content.areas.wilderness.Lundail_plugin")
+                .getConstructor(PluginRepository::class.java, World::class.java, Server::class.java)
+                .newInstance(repo, a.world, mockk<Server>(relaxed = true))
+            for (full in listOf(false, true)) {
+                if (full) a.inventory.add(Items.SHARK, 28)
+                sent.clear()
+                assertTrue(repo.executeNpc(a.player, gg.rsmod.plugins.api.cfg.Npcs.LUNDAIL, 1))
+                queues.cycle()
+                queues.submitReturnValue(gg.rsmod.game.message.impl.ResumePauseButtonMessage(242, 0, 0))
+                queues.cycle()
+                queues.submitReturnValue(gg.rsmod.game.message.impl.ResumePauseButtonMessage(230, 4, 4))
+                queues.cycle()
+                val text = sent.filterIsInstance<gg.rsmod.game.message.impl.IfSetTextMessage>()
+                    .filter { it.parent in 241..244 && it.child >= 4 }.joinToString(" ") { it.text }
+                assertTrue("You'll need to have completed the Easy Wilderness Achievement Diary to qualify for free runes." in text,
+                    "Claim free runes must show the OSRS refusal: $text")
+                assertEquals(if (full) 28 else 0, a.inventory.getItemCount(Items.SHARK))
+                queues.terminateTasks()
+            }
+        }
+    }
+
     @Test fun `all normal god capes and staves use metadata Magic60 base requirement including duplicate Guthix cape`() {
         val metadata = ObjectMapper(YAMLFactory()).readTree(File("../../data/cfg/items.yml")).toList()
         for (id in listOf(2412, 2413, 2414, 2415, 2416, 2417, 10720)) {
