@@ -165,18 +165,19 @@ object PerduLostProperty {
     /** Earned items Perdu does not offer because the player still has them somewhere (the reason his list is empty). */
     fun stillOwned(player: Player): List<Pair<Entry, String>> {
         val earned = unlocked(player)
-        return ENTRIES.filter { it.itemId in earned && !it.multiple }.mapNotNull { e -> whereOwned(player, e)?.let { e to it } }
+        return ENTRIES.filter { entitled(player, it, earned) && !it.multiple }.mapNotNull { e -> whereOwned(player, e)?.let { e to it } }
     }
+
+    // Wiki 10 April 2024 / owner 14 November: MA2 unlocks every colour, including our ancient cape.
+    private fun entitled(player: Player, entry: Entry, earned: Set<Int>): Boolean =
+        if (isMageArenaCape(entry.itemId)) gg.rsmod.plugins.content.areas.wilderness.MageArenaII.completed(player)
+        else entry.itemId in earned
 
     /** What Perdu offers [player] now: earned items they do not own (the [Entry.multiple] ones always). */
     fun available(player: Player): List<Entry> {
         val earned = unlocked(player)
         return ENTRIES.filter {
-            // N415: a formerly unrestricted imported cape cannot bypass the actual miniquest unlock.
-            // The source explicitly prevents Lost Property purchases before MA2 completion.
-            val ma2Cape = isMageArenaCape(it.itemId)
-            (!ma2Cape || gg.rsmod.plugins.content.areas.wilderness.MageArenaII.completed(player)) &&
-                it.itemId in earned && (it.multiple || !owns(player, it))
+            entitled(player, it, earned) && (it.multiple || !owns(player, it))
         } + lostPets(player) + lostTrinkets(player)
     }
 }

@@ -199,6 +199,7 @@ enum class CombatSpell(
         impactGfx = Graphic(3159 /* OSRS 76 */, 100),
         autoCastId = 26,
         experience = 35.0,
+        effect = SpellEffect.GodDrain(Skills.PRAYER),
     ),
 
     CLAWS_OF_GUTHIX(
@@ -211,6 +212,7 @@ enum class CombatSpell(
         impactGfx = Graphic(3160 /* OSRS 77 */, 100),
         autoCastId = 28,
         experience = 35.0,
+        effect = SpellEffect.GodDrain(Skills.DEFENCE),
     ),
 
     FLAMES_OF_ZAMORAK(
@@ -223,6 +225,7 @@ enum class CombatSpell(
         impactGfx = Graphic(3161 /* OSRS 78 */, 0),
         autoCastId = 30,
         experience = 35.0,
+        effect = SpellEffect.GodDrain(Skills.MAGIC),
     ),
 
     WIND_WAVE(

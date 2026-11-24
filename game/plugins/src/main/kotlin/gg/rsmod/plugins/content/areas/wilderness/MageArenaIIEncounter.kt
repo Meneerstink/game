@@ -98,7 +98,6 @@ object MageArenaIIEncounter {
     class State(val follower: Follower, val owner: WeakReference<Player>, val point: Int) {
         var attacks = 0
         var boundUntil = -1
-        var teleBlockApplied = false
         val healers = mutableListOf<Npc>()
     }
 
@@ -115,18 +114,21 @@ object MageArenaIIEncounter {
     fun stateOf(npc: Npc): State? = npc.attr[STATE]
 
     fun active(player: Player, god: MageArenaII.God): Npc? =
-        player.attr[ACTIVE]?.get(god)?.get()?.takeIf { it.isSpawned() && it.isAlive() }
+        player.attr[ACTIVE]?.get(god)?.get()?.takeIf { it.isSpawned() }
 
     fun summon(player: Player, god: MageArenaII.God, location: MageArenaIITracking.Location): Npc? {
         val follower = FOLLOWERS.first { it.god == god }
         if (active(player, god) != null) return null
-        occupied[location.point]?.get()?.let { if (it.isSpawned() && it.isAlive()) return null }
+        occupied[location.point]?.get()?.let { if (it.isSpawned()) return null }
         val combatId = localNpc(follower.combat) ?: return null
         val npc = Npc(player, combatId, location.tile, player.world)
         npc.publicOwner = true
         npc.attr[gg.rsmod.plugins.content.combat.Combat.OWNER_ONLY_TARGET_ATTR] = true
         npc.respawnOverride = false
         npc.attr[STATE] = State(follower, WeakReference(player), location.point)
+        val guardian = MageArenaIIGuardians.ALL.first { it.god == god }
+        // The launch gate protects XP; this same rule must also cover direct and delayed special hits at impact.
+        npc.hitModifier = { hit -> MageArenaIIGuardians.modifyHit(guardian, hit) }
         if (!player.world.spawn(npc)) return null
         occupied[location.point] = WeakReference(npc)
         (player.attr[ACTIVE] ?: mutableMapOf<MageArenaII.God, WeakReference<Npc>>().also { player.attr[ACTIVE] = it })[god] = WeakReference(npc)
@@ -156,27 +158,25 @@ object MageArenaIIEncounter {
     }
 
     fun dismiss(npc: Npc) {
-        val state = stateOf(npc) ?: return
-        release(state)
+        // Keep a dying actor reserved until its death hook/drop, including during logout or rotation.
+        if (npc.isSpawned() && !npc.isAlive()) return
+        release(npc)
         if (npc.isSpawned() && npc.isAlive()) npc.world.remove(npc)
     }
 
     fun dismissAll(player: Player) {
         player.attr[ACTIVE]?.values?.mapNotNull { it.get() }?.forEach { dismiss(it) }
-        player.attr.remove(ACTIVE)
     }
 
-    /** Its energy balls go with it; its Tele Block fades immediately on its death (Wiki). */
-    fun release(state: State) {
+    /** Despawn removes actors, but does not cure Tele Block: only a kill does that (Wiki). */
+    private fun release(npc: Npc) {
+        val state = stateOf(npc) ?: return
         state.healers.forEach { if (it.isSpawned()) it.world.remove(it) }
         state.healers.clear()
-        val owner = state.owner.get()
-        if (state.teleBlockApplied && owner != null) {
-            owner.timers.remove(TELEBLOCK_TIMER)
-            owner.timers.remove(gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.TELEBLOCK_WARNING_TIMER)
+        occupied[state.point]?.takeIf { it.get() === npc }?.let { occupied.remove(state.point, it) }
+        state.owner.get()?.attr?.get(ACTIVE)?.let { active ->
+            if (active[state.follower.god]?.get() === npc) active.remove(state.follower.god)
         }
-        state.teleBlockApplied = false
-        occupied.entries.removeIf { it.key == state.point }
     }
 
     /**
@@ -185,17 +185,21 @@ object MageArenaIIEncounter {
      */
     fun died(npc: Npc) {
         val state = stateOf(npc) ?: return
-        release(state)
-        state.owner.get()?.attr?.get(ACTIVE)?.remove(state.follower.god)
+        release(npc)
+        state.owner.get()?.let { gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.clearTeleblockFrom(it, state) }
     }
 
     private fun protects(target: Pawn, style: CombatClass): Boolean =
         PrayerIcon.values().any { it.id == target.prayerIcon && style in it.protects }
 
-    /** Rolled with the normal formula's accuracy; a matching protection prayer halves rather than blocks (Wiki "up to 20+"). */
+    /** MA2 prayers do not confer immunity. Keep ordinary defence rolls, bypass only the generic NPC full-block rule. */
+    fun accuracy(npc: Npc, target: Pawn, style: CombatClass): Double =
+        if (style == CombatClass.MELEE) MeleeCombatFormula.getUnprotectedAccuracy(npc, target)
+        else MagicCombatFormula.getUnprotectedAccuracy(npc, target)
+
+    /** Existing damage reduction retained; its exact OSRS factor still needs primary-source measurement. */
     private fun hit(npc: Npc, target: Pawn, style: CombatClass, max: Int, delay: Int, landed: Boolean? = null): Int {
-        val formula = if (style == CombatClass.MELEE) MeleeCombatFormula else MagicCombatFormula
-        val land = landed ?: (formula.getAccuracy(npc, target) >= npc.world.randomDouble())
+        val land = landed ?: (npc.world.randomDouble() < accuracy(npc, target, style))
         val cap = if (protects(target, style)) max / 2.0 else max.toDouble()
         val type = if (style == CombatClass.MELEE) HitType.MELEE else HitType.MAGIC
         return npc.dealHit(target, maxHit = cap, landHit = land, delay = delay, hitType = type, applyDeflectProtection = false)
@@ -259,7 +263,7 @@ object MageArenaIIEncounter {
     private fun godSpell(npc: Npc, target: Pawn, f: Follower) {
         npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)
         seq(f.castSeq)?.let { npc.animate(it) }
-        val land = MagicCombatFormula.getAccuracy(npc, target) >= npc.world.randomDouble()
+        val land = npc.world.randomDouble() < accuracy(npc, target, CombatClass.MAGIC)
         // Recorded: the hit lands a tick after the cast; the god-spell graphic on a hit, the splash (85) on a miss.
         target.graphic(Graphic(if (land) gfx(f.castGfx) else 85, if (land) 0 else 124, 30))
         if (target is Player) target.playSound(if (land) f.castSound else 227, delay = 30)
@@ -277,8 +281,8 @@ object MageArenaIIEncounter {
         val aimed = Tile(target.tile)
         npc.queue {
             wait(SPECIAL_LAND_TICKS)
-            if (!npc.isAlive() || !target.isOnline || target.tile != aimed) return@queue
-            val land = MagicCombatFormula.getAccuracy(npc, target) >= npc.world.randomDouble()
+            if (!npc.isSpawned() || !npc.isAlive() || !target.isOnline || target.tile != aimed) return@queue
+            val land = npc.world.randomDouble() < accuracy(npc, target, CombatClass.MAGIC)
             if (!land) { target.graphic(Graphic(85, 124)); return@queue }
             target.graphic(Graphic(ICE_BARRAGE_IMPACT, 0)); target.playSound(gg.rsmod.plugins.api.cfg.Sfx.ICE_BARRAGE_IMPACT)
             hit(npc, target, CombatClass.MAGIC, BARRAGE_MAX, delay = 0, landed = true)
@@ -291,10 +295,10 @@ object MageArenaIIEncounter {
         seq(state.follower.castSeq)?.let { npc.animate(it) }
         npc.queue {
             wait(SPECIAL_LAND_TICKS)
-            if (!npc.isAlive() || !target.isOnline || target.timers.has(TELEBLOCK_TIMER)) return@queue
-            if (MagicCombatFormula.getAccuracy(npc, target) < npc.world.randomDouble()) { target.graphic(Graphic(85, 124)); return@queue }
-            gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.teleblock(target, if (protects(target, CombatClass.MAGIC)) TELE_BLOCK_PROTECTED_TICKS else TELE_BLOCK_TICKS)
-            state.teleBlockApplied = true
+            if (!npc.isSpawned() || !npc.isAlive() || !target.isOnline || target.timers.has(TELEBLOCK_TIMER)) return@queue
+            if (npc.world.randomDouble() >= accuracy(npc, target, CombatClass.MAGIC)) { target.graphic(Graphic(85, 124)); return@queue }
+            gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.teleblock(target,
+                if (protects(target, CombatClass.MAGIC)) TELE_BLOCK_PROTECTED_TICKS else TELE_BLOCK_TICKS, source = state)
             target.message("A teleport block has been cast on you!")
         }
     }
@@ -305,7 +309,7 @@ object MageArenaIIEncounter {
         MageArenaAssets.spotanim(SHOCK_WAVE_PROJ)?.let { npc.world.spawn(npc.createProjectile(aimed, it, ProjectileType.MAGIC)) }
         npc.queue {
             wait(SPECIAL_LAND_TICKS)
-            if (!npc.isAlive() || !target.isOnline || target.tile != aimed) return@queue
+            if (!npc.isSpawned() || !npc.isAlive() || !target.isOnline || target.tile != aimed) return@queue
             val drag = sideTiles(npc).filter { !npc.world.collision.isClipped(it) }.minByOrNull { it.getDistance(target.tile) } ?: return@queue
             target.moveTo(drag)
             if (target.freeze(BIND_TICKS, npc) { target.message("You have been bound.") }) state.boundUntil = npc.world.currentCycle + BIND_TICKS
@@ -324,7 +328,7 @@ object MageArenaIIEncounter {
         MageArenaAssets.spotanim(ENERGY_BALL_PROJ)?.let { npc.world.spawn(npc.createProjectile(target, it, ProjectileType.MAGIC)) }
         npc.queue {
             wait(SPECIAL_LAND_TICKS)
-            if (!npc.isAlive() || !target.isOnline) return@queue
+            if (!npc.isSpawned() || !npc.isAlive() || !target.isOnline) return@queue
             val distance = edgeDistance(npc, target)
             if (distance >= ENERGY_BALL_RANGE) return@queue
             val cap = ENERGY_BALL_MAX * (ENERGY_BALL_RANGE - distance) / (ENERGY_BALL_RANGE - 1)
@@ -343,7 +347,7 @@ object MageArenaIIEncounter {
         val owner = state.owner.get() ?: return
         npc.queue {
             wait(3)
-            if (!npc.isAlive() || npc.world.collision.isClipped(tile)) return@queue
+            if (!npc.isSpawned() || !npc.isAlive() || npc.world.collision.isClipped(tile)) return@queue
             val ball = Npc(owner, healerId, tile, npc.world).apply {
                 publicOwner = true; respawnOverride = false
                 attr[gg.rsmod.plugins.content.combat.Combat.OWNER_ONLY_TARGET_ATTR] = true
@@ -371,6 +375,8 @@ object MageArenaIICombatScript : CombatScript() {
             npc.facePawn(target)
             val melee = MageArenaIIEncounter.bound(npc)
             if (!npc.moveToAttackRange(it, target, distance = if (melee) 1 else 8, projectile = !melee)) {
+                // A failed route can return without suspending; retry on the next tick (FamiliarCombat).
+                it.wait(1)
                 target = npc.getCombatTarget() ?: break
                 continue
             }

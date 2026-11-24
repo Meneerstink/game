@@ -103,6 +103,9 @@ fun Pawn.liveLastHitBy(): Pawn? =
 /** Single-way rule: within the PJ window ([Combat.PJ_TIMER], 17 ticks) this pawn is being fought by someone that still exists, other than [other]. */
 // Owner and his familiar are one attacker for the single-way rules (Combat.sameSide, owner A9 2026-10-11).
 fun Pawn.isAttackedByOtherThan(other: Pawn): Boolean {
+    gg.rsmod.plugins.content.areas.wilderness.MageArenaPvp.reservation(this)?.let { opponent ->
+        if (!Combat.sameSide(opponent, other) && !gg.rsmod.plugins.content.areas.wilderness.MageArenaPvp.ownsOpponent(this, other)) return true
+    }
     gg.rsmod.plugins.content.scrolls.ClueGuardianPvp.reservation(this)?.let { opponent ->
         if (!Combat.sameSide(opponent, other)) return true
     }
@@ -111,7 +114,8 @@ fun Pawn.isAttackedByOtherThan(other: Pawn): Boolean {
     }
     return timers.has(Combat.PJ_TIMER) && liveLastHitBy().let {
         it != null && !Combat.sameSide(it, other) && !SinglesPlus.ignoresReservation(this, other, it) &&
-            !gg.rsmod.plugins.content.scrolls.ClueGuardianPvp.ignoresNpc(this, other, it)
+            !gg.rsmod.plugins.content.scrolls.ClueGuardianPvp.ignoresNpc(this, other, it) &&
+            !gg.rsmod.plugins.content.areas.wilderness.MageArenaPvp.ignoresReservation(this, other, it)
     }
 }
 
@@ -241,6 +245,7 @@ fun Pawn.dealHit(
     // Combat.postAttack - is an npc hit for the PJ timer (2.4 s no teleport), counted from the attack like postAttack does.
     if (this is Npc && target is Player) gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate.markNpcHit(target)
     gg.rsmod.plugins.content.scrolls.ClueGuardianPvp.recordAttack(attr[DAMAGE_CREDIT_ATTR]?.get() ?: this, target)
+    gg.rsmod.plugins.content.areas.wilderness.MageArenaPvp.recordAttack(attr[DAMAGE_CREDIT_ATTR]?.get() ?: this, target)
     // Calculate the 1:1 real damage, applying a random factor.
     // Combat formulas and hitpoints use the same 1:1 real-damage unit. Keep the hitmark value
     // identical to the rolled damage so server state, hitbars and client hit splats agree.
@@ -462,8 +467,10 @@ fun Pawn.dealHit(
             disruptionShieldAbsorbs(this, target, damage.toInt()) ||
             when {
                 this is Player && target is Player -> !AreaState.canPlayersFight(this, target) || !SinglesPlus.allowsImpact(this, target) ||
+                    !gg.rsmod.plugins.content.areas.wilderness.MageArenaPvp.allowsImpact(this, target) ||
                     !gg.rsmod.plugins.content.scrolls.ClueGuardianPvp.allowsImpact(this, target)
                 creditedPlayer != null && target is Player -> !AreaState.canPlayersFight(creditedPlayer, target) ||
+                    !gg.rsmod.plugins.content.areas.wilderness.MageArenaPvp.allowsImpact(creditedPlayer, target) ||
                     !gg.rsmod.plugins.content.scrolls.ClueGuardianPvp.allowsImpact(creditedPlayer, target)
                 else -> false
             }

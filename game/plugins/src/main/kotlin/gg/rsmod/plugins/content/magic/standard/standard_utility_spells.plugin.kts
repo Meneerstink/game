@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.magic.standard
 
 import gg.rsmod.game.model.attr.GOD_SPELL_CHARGE_ATTR
 import gg.rsmod.game.model.timer.GOD_SPELL_CHARGE_TIMER
+import gg.rsmod.plugins.content.areas.wilderness.MageArenaCharge
 import gg.rsmod.plugins.content.magic.MagicSpells
 import gg.rsmod.plugins.content.magic.MagicSpells.on_magic_spell_button
 import gg.rsmod.plugins.content.magic.SpellMetadata
@@ -99,8 +100,8 @@ on_magic_spell_button("Charge") { metadata ->
         player.message("You must claim a god staff from the Chamber guardian before casting Charge.")
         return@on_magic_spell_button
     }
-    if (player.timers.has(GOD_SPELL_CHARGE_TIMER)) {
-        player.message("You already have a charged spell active.")
+    if (player.timers.has(MageArenaCharge.COOLDOWN)) {
+        player.message("You cannot cast this spell again so soon.")
         return@on_magic_spell_button
     }
     // N69: no cape is needed to CAST Charge (OSRS Wiki Charge; Darkan / Void); the matching cape only matters for the hit
@@ -110,8 +111,7 @@ on_magic_spell_button("Charge") { metadata ->
     player.animate(811)
     player.graphic(308, 96)
     player.playSound(Sfx.CHARGE)
-    player.timers[GOD_SPELL_CHARGE_TIMER] = 700
-    player.attr[GOD_SPELL_CHARGE_ATTR] = true
+    MageArenaCharge.activate(player)
     player.addXp(Skills.MAGIC, 180.0, checkBrawlingGloves = true)
     player.message("You feel charged with magic power.")
 }

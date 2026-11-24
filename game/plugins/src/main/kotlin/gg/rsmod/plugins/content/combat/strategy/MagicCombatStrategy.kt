@@ -524,6 +524,7 @@ object MagicCombatStrategy : CombatStrategy {
                 drainSkill(target, Skills.ATTACK, sceptres.shadowDrainPercent(spell), if (sceptres.boosted(pawn)) 1.1 else 1.0)
             }
             is SpellEffect.StatDrain -> drainSkill(target, effect.skill, effect.percent, gg.rsmod.plugins.content.items.osrs.Tomes.drainBoost(pawn, spell))
+            is SpellEffect.GodDrain -> gg.rsmod.plugins.content.combat.strategy.magic.GodSpellEffects.apply(target, effect)
             is SpellEffect.Miasmic -> {
                 if (!target.timers.has(MIASMIC_IMMUNITY_TIMER)) {
                     target.timers[MIASMIC_TIMER] = effect.ticks

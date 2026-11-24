@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.hud
 
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.timer.TELEBLOCK_TIMER
 import gg.rsmod.game.model.timer.TimerKey
 
@@ -43,17 +44,30 @@ object TimerExpiry {
 
     /** The warning's own timer: ticks offline and persists exactly like [TELEBLOCK_TIMER], so a relog keeps both in step. */
     val TELEBLOCK_WARNING_TIMER = TimerKey(persistenceKey = "teleblock_warning", tickOffline = true, resetOnDeath = true)
+    private val TELEBLOCK_SOURCE = AttributeKey<Any>()
 
     /** Every route that teleblocks a player: the block and its 30-second warning together. */
     fun teleblock(
         player: Player,
         ticks: Int,
+        source: Any? = null,
     ) {
+        // Every new cast replaces ownership, including ordinary PvP casts with no source token.
+        if (source == null) player.attr.remove(TELEBLOCK_SOURCE) else player.attr[TELEBLOCK_SOURCE] = source
         player.timers[TELEBLOCK_TIMER] = ticks
         if (ticks > TELEBLOCK_WARNING_TICKS) {
             player.timers[TELEBLOCK_WARNING_TIMER] = ticks - TELEBLOCK_WARNING_TICKS
         } else {
             player.timers.remove(TELEBLOCK_WARNING_TIMER)
         }
+    }
+
+    /** A boss death may clear only its own still-active cast, never a later PvP Tele Block. */
+    fun clearTeleblockFrom(player: Player, source: Any): Boolean {
+        if (player.attr[TELEBLOCK_SOURCE] !== source || !player.timers.has(TELEBLOCK_TIMER)) return false
+        player.timers.remove(TELEBLOCK_TIMER)
+        player.timers.remove(TELEBLOCK_WARNING_TIMER)
+        player.attr.remove(TELEBLOCK_SOURCE)
+        return true
     }
 }

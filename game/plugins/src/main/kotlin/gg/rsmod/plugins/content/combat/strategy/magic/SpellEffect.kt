@@ -27,6 +27,9 @@ sealed class SpellEffect {
     /** Drain [skill] by [percent] of its base level, only if not already drained below that. */
     data class StatDrain(val skill: Int, val percent: Int) : SpellEffect()
 
+    /** God spells: one Prayer point, or 1 + 5% Defence/Magic while the stat is not below base. */
+    data class GodDrain(val skill: Int) : SpellEffect()
+
     /** Teleport-block the target for 500 ticks (250 with Protect from Magic / Deflect Magic). */
     object Teleblock : SpellEffect()
 }

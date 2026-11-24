@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.hud
 
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.attr.AttributeMap
 import gg.rsmod.game.model.timer.TELEBLOCK_TIMER
 import gg.rsmod.game.model.timer.TimerMap
 import io.mockk.every
@@ -17,6 +18,28 @@ import kotlin.test.assertTrue
  * skull, Tele Block and every buff timer; never the combat / PJ timer.
  */
 class TimerExpiryTests {
+    @Test fun `boss token clears its own teleblock and warning but never a later player or other boss cast`() {
+        val player = mockk<Player>(relaxed = true)
+        val timers = TimerMap()
+        every { player.attr } returns AttributeMap()
+        every { player.timers } returns timers
+        val boss = Any()
+        TimerExpiry.teleblock(player, 200, source = boss)
+        assertTrue(TimerExpiry.clearTeleblockFrom(player, boss))
+        assertFalse(timers.has(TELEBLOCK_TIMER))
+        assertFalse(timers.has(TimerExpiry.TELEBLOCK_WARNING_TIMER))
+        TimerExpiry.teleblock(player, 200, source = boss)
+        timers.remove(TELEBLOCK_TIMER) // natural expiry followed by a PKer's cast
+        TimerExpiry.teleblock(player, 500)
+        assertFalse(TimerExpiry.clearTeleblockFrom(player, boss))
+        assertEquals(500, timers[TELEBLOCK_TIMER])
+        assertEquals(450, timers[TimerExpiry.TELEBLOCK_WARNING_TIMER])
+        val otherBoss = Any()
+        TimerExpiry.teleblock(player, 100, source = otherBoss)
+        assertFalse(TimerExpiry.clearTeleblockFrom(player, boss))
+        assertTrue(TimerExpiry.clearTeleblockFrom(player, otherBoss))
+    }
+
     @Test
     fun `OSRS texts are word for word, the rest is red`() {
         assertEquals("<col=8f4808>Your stamina potion has expired.</col>", TimerExpiry.STAMINA_EXPIRED)
