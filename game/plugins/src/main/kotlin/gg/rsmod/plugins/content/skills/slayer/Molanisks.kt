@@ -46,6 +46,9 @@ object Molanisks {
         }
         if (!world.spawn(creature)) {
             active.remove(key)
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) {
+                "Molanisk could not spawn at ${wall.tile}; wall retained"
+            }
             return
         }
         world.remove(wall)
