@@ -8,7 +8,8 @@ try {
         if (!$test -or $test -match '[\r\n";&|<>]') { throw 'Invalid test filter' }
         $arguments += @('--tests', $test)
     }
-    $arguments += @('--priority', 'low', '--console=plain')
+    # rb/rbuild.sh adds --console=plain itself; passing it twice stops Gradle ('Multiple arguments ... --console', 25-11 00:48).
+    $arguments += @('--priority', 'low')
     & 'C:\RSPS\tools\remote\rgradle.cmd' @arguments
     if ($LASTEXITCODE -ne 0) { throw "rgradle exit $LASTEXITCODE" }
     Assert-LivePhase
