@@ -51,6 +51,9 @@ object WildernessNpcMechanics {
 
     fun chooseDragonfire(roll: Int): Boolean = roll == 0 // report: 1/6, after a reachable melee-range check
 
+    /** OSRS spotanim 1 FIREBREATH_ATTACK, local id 3523 (OsrsFxImportTool batch lava-dragonfire). */
+    const val LAVA_DRAGONFIRE_GFX = 3523
+
     suspend fun lavaCombat(task: QueueTask) {
         val npc = task.npc
         var target = npc.getCombatTarget() ?: return
@@ -60,7 +63,9 @@ object WildernessNpcMechanics {
                 if (chooseDragonfire(npc.world.random(5))) {
                     npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)
                     npc.animate(15610, priority = true) // imported upstream 81, NEVER gfx sequence 86
-                    // Report leaves the fire gfx/projectile assignment unknown. Reuse the existing chromatic protection formula.
+                    // LAVA-DRAAK-VUUR 24-11: the breath itself is OSRS SpotanimID FIREBREATH_ATTACK 1 (its own seq 86), imported as
+                    // local spotanim 3523 (tx-20261124-211835). Chromatic protection formula (OSRS Wiki: lava dragons share it).
+                    npc.graphic(LAVA_DRAGONFIRE_GFX)
                     npc.dealHit(target = target, formula = DragonfireFormula(DragonfireTable.Type.CHROMATIC), delay = 2)
                 } else {
                     npc.prepareAttack(CombatClass.MELEE, StyleType.SLASH, WeaponStyle.AGGRESSIVE)
