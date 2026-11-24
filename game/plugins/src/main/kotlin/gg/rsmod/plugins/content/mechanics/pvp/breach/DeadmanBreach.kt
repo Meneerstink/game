@@ -137,8 +137,8 @@ object DeadmanBreach {
     /** Audit D-14: the breach event ([Active.eventId]) a breach npc was spawned for. */
     internal val BREACH_EVENT_ATTR = AttributeKey<Int>()
 
-    /** Summons inherit their parent's event even while a newer breach is open. */
-    fun eventOf(npc: Npc): Int = npc.attr[BREACH_EVENT_ATTR] ?: lastEventId
+    /** Summons inherit their parent's event; a chest guardian has no breach event and must stay independent (id 0). */
+    fun eventOf(npc: Npc): Int = npc.attr[BREACH_EVENT_ATTR] ?: 0
 
     /** Audit D-14: id of the most recently opened breach event; npcs spawned while none is open belong to it. */
     @Volatile

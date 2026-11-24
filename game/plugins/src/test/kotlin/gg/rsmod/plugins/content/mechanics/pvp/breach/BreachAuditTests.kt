@@ -105,15 +105,20 @@ class BreachAuditTests {
         val summon = monster(14471, 17)
         val jadRek = monster(14477, 17)
         val newer = monster(14462, 18)
+        val chestGuardian = mockk<Npc>(relaxed = true)
+        every { chestGuardian.attr } returns AttributeMap()
+        val chestSummon = monster(14472, DeadmanBreach.eventOf(chestGuardian))
+        assertEquals(0, DeadmanBreach.eventOf(chestGuardian), "a chest guardian belongs to no breach")
         val before = DeadmanBreach.live.toSet()
         try {
             DeadmanBreach.live.clear()
-            DeadmanBreach.live += listOf(main, summon, jadRek, newer)
+            DeadmanBreach.live += listOf(main, summon, jadRek, newer, chestSummon)
             assertEquals(17, DeadmanBreach.eventOf(summon))
             assertEquals(3, DeadmanBreach.despawnEvent(world, 17))
             for (npc in listOf(main, summon, jadRek)) verify(exactly = 1) { world.remove(npc) }
             verify(exactly = 0) { world.remove(newer) }
-            assertEquals(setOf(newer), DeadmanBreach.live.toSet())
+            verify(exactly = 0) { world.remove(chestSummon) }
+            assertEquals(setOf(newer, chestSummon), DeadmanBreach.live.toSet())
             assertEquals(0, DeadmanBreach.despawnEvent(world, 17), "repeated cleanup pays/removes nothing twice")
         } finally {
             DeadmanBreach.live.clear()
