@@ -70,6 +70,7 @@ class MageArenaTests {
         every { a.defs.get(NpcDef::class.java, any()) } answers {
             NpcDef(secondArg()).apply { name = "Lundail"; options[0] = "Talk-to"; options[2] = "Trade" }
         }
+        every { a.defs.getNullable(NpcDef::class.java, any()) } answers { NpcDef(secondArg()) }
         every { a.player.executePlugin<Unit>(any()) } answers { firstArg<Plugin.() -> Unit>().invoke(Plugin(a.player)) }
         every { a.player.queue(any(), any(), any()) } answers {
             queues.queue(a.player, kotlinx.coroutines.Dispatchers.Unconfined, firstArg(), thirdArg(), persistent = secondArg())
@@ -80,7 +81,7 @@ class MageArenaTests {
         val repo = PluginRepository(a.world)
         every { a.world.plugins } returns repo
         URLClassLoader(arrayOf(File("scripts/build/classes/kotlin/main").toURI().toURL()), javaClass.classLoader).use {
-            it.loadClass("gg.rsmod.plugins.content.areas.wilderness.Lundail_plugin")
+            it.loadClass("Lundail_plugin")
                 .getConstructor(PluginRepository::class.java, World::class.java, Server::class.java)
                 .newInstance(repo, a.world, mockk<Server>(relaxed = true))
             for (full in listOf(false, true)) {
