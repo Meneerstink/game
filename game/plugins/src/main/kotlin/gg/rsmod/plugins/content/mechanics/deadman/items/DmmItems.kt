@@ -96,6 +96,7 @@ object DmmItems {
     val AUTOTELE_ON = AttributeKey<Int>(persistenceKey = "escape_autotele")
     val AUTOTELE_SECS = AttributeKey<Int>(persistenceKey = "escape_autotele_secs")
     private val AUTOTELE_HP = AttributeKey<Int>()
+    private val AUTOTELE_HIT = AttributeKey<Boolean>()
     const val AUTOTELE_DEFAULT_SECS = 10
 
     fun autoTeleEnabled(player: Player): Boolean = (player.attr[AUTOTELE_ON] ?: 0) == 1
@@ -117,17 +118,31 @@ object DmmItems {
     }
 
     /** One tick of the auto-teleport check (driven by the escape crystal timer in dmm_items.plugin.kts). */
+    /**
+     * ESCAPE-NULHIT (wiki Escape crystal: "upon taking damage (including zeros)"): every combat hit on the player - a 0 or a
+     * blocked hit too - is noted here from PawnExt.dealHit; the next [autoTeleTick] decides. A magic splash shows no hitsplat.
+     */
+    fun onHitTaken(player: Player) {
+        if (autoTeleEnabled(player)) player.attr[AUTOTELE_HIT] = true
+    }
+
     fun autoTeleTick(player: Player) {
         if (!autoTeleEnabled(player)) return
         val hp = player.getCurrentLifepoints()
         val last = player.attr[AUTOTELE_HP] ?: hp
         player.attr[AUTOTELE_HP] = hp
-        if (hp >= last) return
-        if (player.inventory.getItemIndex(ESCAPE_CRYSTAL, skipAttrItems = false) == -1) return
+        // A hitsplat (also a 0) or lost hitpoints without one (poison, venom) both count as taking damage.
+        val damaged = player.attr[AUTOTELE_HIT] == true || hp < last
+        if (!damaged) return
         val now = player.world.currentCycle
         val idleTicks = now - (player.attr[LAST_ACTIVE_CYCLE_ATTR] ?: now)
         val secs = player.attr[AUTOTELE_SECS] ?: AUTOTELE_DEFAULT_SECS
+        // Wiki: "The crystal will NOT activate while the player is moving. If the inactive time is reached at any point during
+        // movement, the crystal will activate when the player stops moving." - the hit stays pending until the player stands.
+        if (idleTicks * 0.6 >= secs && player.hasMoveDestination()) return
+        player.attr.remove(AUTOTELE_HIT)
         if (idleTicks * 0.6 < secs) return
+        if (player.inventory.getItemIndex(ESCAPE_CRYSTAL, skipAttrItems = false) == -1) return
         escapeCrystal(player)
     }
 

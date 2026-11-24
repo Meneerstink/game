@@ -506,6 +506,8 @@ fun Pawn.dealHit(
     if (target is Player && !(landHit.not() && (hitType == HitType.MAGIC || hitType == HitType.CRIT_MAGIC))) {
         val attacker = this as? Player
         hit.addAction { playPlayerDefendSound(target, attacker) }
+        // ESCAPE-NULHIT: the Escape crystal's auto-afk reacts to every hitsplat on the player, a 0 included (wiki).
+        hit.addAction { gg.rsmod.plugins.content.mechanics.deadman.items.DmmItems.onHitTaken(target) }
     }
 
     // Execute the provided onHit lambda
