@@ -41,6 +41,46 @@ object FountainOfRune {
 
     const val ETERNAL_CHANCE = 25_000
 
+    /**
+     * FONTEIN-RUNES (24-11): the range of the fountain's effect, the polygon of the OSRS Wiki 'Fountain of Rune' infobox map ("The range
+     * of the Fountain of Rune's effects", Mod Ash: "where you've got line-of-sight to the fountain"). Corners in tile coordinates.
+     */
+    val RANGE: List<Pair<Int, Int>> =
+        listOf(
+            3366 to 3899, 3367 to 3899, 3367 to 3898, 3368 to 3898, 3368 to 3897, 3369 to 3897, 3369 to 3896, 3368 to 3896, 3368 to 3893,
+            3367 to 3893, 3367 to 3890, 3377 to 3890, 3377 to 3889, 3378 to 3889, 3378 to 3888, 3379 to 3888, 3379 to 3887, 3380 to 3887,
+            3380 to 3886, 3381 to 3886, 3381 to 3885, 3388 to 3885, 3388 to 3895, 3387 to 3896, 3386 to 3897, 3385 to 3898, 3384 to 3899,
+            3383 to 3900, 3382 to 3901, 3381 to 3902, 3380 to 3903, 3366 to 3903,
+        )
+
+    /** True when [tile] (its centre) lies inside [RANGE] on the ground plane. */
+    fun inRange(tile: Tile): Boolean {
+        if (tile.height != 0 || tile.x !in 3366..3388 || tile.z !in 3885..3903) return false
+        val x = tile.x + 0.5
+        val z = tile.z + 0.5
+        var inside = false
+        var j = RANGE.size - 1
+        for (i in RANGE.indices) {
+            val (xi, zi) = RANGE[i]
+            val (xj, zj) = RANGE[j]
+            if ((zi > z) != (zj > z) && x < (xj - xi) * (z - zi) / (zj - zi).toDouble() + xi) inside = !inside
+            j = i
+        }
+        return inside
+    }
+
+    /** Ticks after a free cast without XP: the longest magic projectile lands well within 8 ticks. */
+    const val NO_XP_TICKS = 8
+
+    /** OSRS Wiki: "Players are also prevented from logging out of the game for three seconds after casting a spell with no rune cost." */
+    const val LOGOUT_TICKS = 5
+
+    /** A spell was cast here without runes: no XP for it, no logout for 3 s. */
+    fun markCast(p: gg.rsmod.game.model.entity.Player) {
+        gg.rsmod.game.model.skill.ExperienceLocks.blockAllUntil(p, p.world.currentCycle + NO_XP_TICKS)
+        gg.rsmod.plugins.content.combat.Combat.holdLogout(p, LOGOUT_TICKS)
+    }
+
     enum class Kind { GLORY, SKILLS_OR_COMBAT, WEALTH }
 
     /** Every piece the fountain charges -> (charged result, kind). The full piece itself is not in the table (nothing to charge). */

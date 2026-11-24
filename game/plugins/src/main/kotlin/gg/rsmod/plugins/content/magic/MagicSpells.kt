@@ -80,7 +80,13 @@ object MagicSpells {
         /** The spell's unique id; lets a Blighted sack replace the runes (`BlightedSacks`). -1 = no sack applies. */
         spellId: Int = -1,
     ): Boolean {
-        val problem = castProblem(p, lvl, items, spellId) ?: return true
+        val problem = castProblem(p, lvl, items, spellId)
+        if (problem == null) {
+            // FONTEIN-RUNES: no XP for a spell cast at the Fountain of Rune - marked here because alchemy/enchanting give their XP
+            // before removeRunes runs.
+            if (gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.inRange(p.tile)) gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.markCast(p)
+            return true
+        }
         // Debug toolkit: every refused cast with the spell and the reason.
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) { "cast refused ${p.username} spell=$spellId level=$lvl: $problem" }
         p.message(problem)
@@ -106,7 +112,10 @@ object MagicSpells {
         if (p.skills.getCurrentLevel(Skills.MAGIC) < lvl) {
             return "Your Magic level is not high enough for this spell."
         }
-        if (p.getVarbit(INF_RUNES_VARBIT) == 0 && !gg.rsmod.plugins.content.items.osrs.BlightedSacks.usable(p, spellId)) {
+        // FONTEIN-RUNES: "unlimited runes when casting a spell within its line-of-sight" (OSRS Wiki 'Fountain of Rune').
+        if (p.getVarbit(INF_RUNES_VARBIT) == 0 && !gg.rsmod.plugins.content.items.osrs.BlightedSacks.usable(p, spellId) &&
+            !gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.inRange(p.tile)
+        ) {
             if (runePlan(p, items) == null) {
                 gg.rsmod.plugins.content.items.osrs.BlightedSacks.safeZoneRefusal(p, spellId)?.let { return it }
                 val missing =
@@ -138,19 +147,22 @@ object MagicSpells {
         spellId: Int,
     ) {
         if (p.getVarbit(INF_RUNES_VARBIT) == 0) {
+            // FONTEIN-RUNES: at the Fountain of Rune the runes (and a Blighted sack) are not used; other items a spell takes still are.
+            val fountain = gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.inRange(p.tile)
+            if (fountain) gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.markCast(p)
             // Staff of the dead family: a combat spell uses no runes 1 time in 7 (StaffOfTheDead).
             // Kodai wand: 15 % for offensive spells (KodaiWand).
             val savedByStaff =
-                getMetadata(spellId)?.spellType == SpellType.COMBAT_SPELL_TYPE &&
+                !fountain && getMetadata(spellId)?.spellType == SpellType.COMBAT_SPELL_TYPE &&
                     (gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.savesRunes(p) || gg.rsmod.plugins.content.items.osrs.KodaiWand.savesRunes(p))
             // PROJECT48 S15 Meticulous Mage: "a 50% chance of saving runes or staff charges when using Magic". Only the RUNES (and the
             // Blighted sack that stands in for them) are saved: the other things a spell uses up (an orb, bones, the item to enchant ...)
             // are still taken below, or the spell would make its product from nothing.
             val savedBySigil = !savedByStaff && gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilCombat.savesRunes(p)
             // A usable Blighted sack is used up instead of the runes ("It is consumed upon cast").
-            if (!savedByStaff && (savedBySigil || !gg.rsmod.plugins.content.items.osrs.BlightedSacks.consume(p, spellId))) {
+            if (!savedByStaff && (savedBySigil || fountain || !gg.rsmod.plugins.content.items.osrs.BlightedSacks.consume(p, spellId))) {
                 // Runes: staves/tomes, then combination runes, then the rest, from the inventory and then the rune pouch (RunePayment).
-                (if (savedBySigil) null else runePlan(p, items))?.forEach { (rune, amount) ->
+                (if (savedBySigil || fountain) null else runePlan(p, items))?.forEach { (rune, amount) ->
                     val fromInventory = minOf(amount, p.inventory.getItemCount(rune))
                     if (fromInventory > 0) p.inventory.remove(rune, fromInventory)
                     if (amount > fromInventory) RunePouch.take(p, rune, amount - fromInventory)

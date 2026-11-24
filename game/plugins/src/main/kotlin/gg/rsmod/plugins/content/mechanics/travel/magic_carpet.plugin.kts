@@ -210,7 +210,10 @@ suspend fun QueueTask.ride(from: Any, to: Any) {
     to as Station
     val p = player
     // OSRS keeps the player in the world until the carpet has landed: no actions, no logout on the way.
-    p.lock = LockState.FULL
+    // TAPIJT-AGGRO (24-11): and out of reach - OSRS Wiki "Magic carpet": rugs are used "to safely traverse the desert". With FULL,
+    // aggressive desert npcs (bandits 839/840, 6051) picked the flying player and hit him (A9 live 23-11 04:13). The damage-immune
+    // lock is what teleports use: Combat.canEngage refuses it, so aggro neither picks nor keeps him and no hit lands.
+    p.lock = LockState.FULL_WITH_DAMAGE_IMMUNITY
     p.closeMainInterface()
     p.playJingle(JINGLE)
     p.moveTo(from.pad)

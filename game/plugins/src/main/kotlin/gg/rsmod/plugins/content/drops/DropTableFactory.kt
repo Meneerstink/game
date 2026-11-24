@@ -144,6 +144,8 @@ object DropTableFactory {
                 createDrop(world, it, tile, player)
                 received.getOrPut(player) { mutableListOf() } += it
             }
+            // DROP-MELDINGEN: OSRS 'Valuable drop' / 'Untradeable drop' chat lines, to each owner for his own share.
+            received.forEach { (owner, loot) -> loot.forEach { DropNotifications.notify(owner, it) } }
             if (received.isEmpty()) received[player] = mutableListOf()
             received.forEach { (owner, loot) -> gg.rsmod.plugins.content.mechanics.hud.LootTracker.npcKill(owner, npcId, loot) }
             // N104: the Collection Log, with the kill count of the Drop Viewer entry this npc belongs to.

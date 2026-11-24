@@ -135,7 +135,8 @@ class Dmm2BootTests {
                         val source = DropSources.Source("npc:$npc", npcs.getValue(npc).name, npc, intArrayOf(npc), 1,
                             DropSources.Group.MONSTERS, DropSources.Kind.NPC, npc)
                         val rate = DropTableFactory.killRate(f.player, npcId = npc)
-                        assertEquals(if (carrying && npc == 50) 4.0 else 3.0, rate)
+                        assertEquals(if (carrying && npc == 50) 4.0 else 3.0, rate, "DMM2BOOT-FORTUITY: carrying=$carrying npc=$npc fortuity=${DeadmanTrinkets.fortuity(f.player)} " +
+                            "source=${gg.rsmod.plugins.content.skills.summoning.BurdenTrinketDrops.sourceOf(f.world, npc)} tier=${gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationTier.of(f.player).dropRate}")
                         assertEquals(rate, DropViewer.sourceRate(f.player, source))
                         val line = DropSources.view(f.player, source).lines.single { it.item == Items.DRAGON_PICKAXE }
                         val built = assertNotNull(DropTableFactory.tables(f.player, npc)).single()

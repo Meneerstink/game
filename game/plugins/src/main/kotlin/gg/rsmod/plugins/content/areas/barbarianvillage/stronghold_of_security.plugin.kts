@@ -808,15 +808,42 @@ on_obj_option(obj = Objs.CRADLE_OF_LIFE, option = "search") {
     }
 }
 
-// Skull Sceptre Teleport
-on_item_option(Items.SKULL_SCEPTRE, option = "invoke") {
-    player.canTeleport(TeleportType.SKULL_SCEPTRE) {
-        player.teleport(endTile = Tile(3081, 3421, 0), TeleportType.SKULL_SCEPTRE)
+// Skull Sceptre Teleport. SKULLSCEPTRE-LADING (24-11), OSRS Wiki "Skull sceptre": Invoke "consumes one charge", the sceptre "initially
+// holds 10 charges" (more only through the Varrock Diary, which we do not have), "When all charges have been consumed, a non-imbued
+// sceptre will self-destruct", "Unimbued Skull Sceptres all share the same charges, and when one shatters, the next is magically back
+// at full charge" - so the charges are the player's, not the item's. Divine "shows the amount of charges the player has left".
+// The two chat lines below have no OSRS source for their exact wording (BUGLIJST SKULLSCEPTRE-LADING).
+val SCEPTRE_USED = gg.rsmod.game.model.attr.AttributeKey<Int>("skull_sceptre_used")
+val SCEPTRE_CHARGES = 10
+
+fun sceptreLeft(p: gg.rsmod.game.model.entity.Player): Int = (SCEPTRE_CHARGES - (p.attr[SCEPTRE_USED] ?: 0)).coerceIn(1, SCEPTRE_CHARGES)
+
+fun invokeSceptre(p: gg.rsmod.game.model.entity.Player) {
+    p.canTeleport(TeleportType.SKULL_SCEPTRE) {
+        // The countdown of a skulled player can end after the sceptre was dropped or banked: no sceptre, no teleport.
+        val inInventory = p.inventory.contains(Items.SKULL_SCEPTRE)
+        if (!inInventory && !p.equipment.contains(Items.SKULL_SCEPTRE)) return@canTeleport
+        p.teleport(endTile = Tile(3081, 3421, 0), TeleportType.SKULL_SCEPTRE)
+        val used = (p.attr[SCEPTRE_USED] ?: 0) + 1
+        if (used >= SCEPTRE_CHARGES) {
+            p.attr[SCEPTRE_USED] = 0
+            if (inInventory) p.inventory.remove(Items.SKULL_SCEPTRE, 1) else p.equipment.remove(Items.SKULL_SCEPTRE, 1)
+            p.message("Your skull sceptre crumbles to dust as you use its last charge.")
+        } else {
+            p.attr[SCEPTRE_USED] = used
+        }
     }
 }
 
-on_equipment_option(item = Items.SKULL_SCEPTRE, option = "invoke") {
-    player.canTeleport(TeleportType.SKULL_SCEPTRE) {
-        player.teleport(endTile = Tile(3081, 3421, 0), TeleportType.SKULL_SCEPTRE)
-    }
+fun divineSceptre(p: gg.rsmod.game.model.entity.Player) {
+    val left = sceptreLeft(p)
+    p.queue { messageBox("Your skull sceptre has $left ${if (left == 1) "charge" else "charges"} left.") }
+}
+
+on_item_option(Items.SKULL_SCEPTRE, option = "invoke") { invokeSceptre(player) }
+on_equipment_option(item = Items.SKULL_SCEPTRE, option = "invoke") { invokeSceptre(player) }
+// Bound only where the cache has the option (a missing option is a boot error).
+world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, Items.SKULL_SCEPTRE).let { def ->
+    if (def.inventoryMenu.any { it.equals("Divine", ignoreCase = true) }) on_item_option(Items.SKULL_SCEPTRE, option = "divine") { divineSceptre(player) }
+    if (def.equipmentMenu.any { it.equals("Divine", ignoreCase = true) }) on_equipment_option(item = Items.SKULL_SCEPTRE, option = "divine") { divineSceptre(player) }
 }
