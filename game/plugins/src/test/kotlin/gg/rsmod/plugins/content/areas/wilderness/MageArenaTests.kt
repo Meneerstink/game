@@ -19,6 +19,7 @@ import gg.rsmod.game.model.container.key.EQUIPMENT_KEY
 import gg.rsmod.game.model.container.key.INVENTORY_KEY
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.skill.SkillSet
 import gg.rsmod.game.model.timer.TimerMap
@@ -41,6 +42,9 @@ import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.NpcSpecies
 import gg.rsmod.plugins.api.Skills
+import gg.rsmod.plugins.api.NpcSkills
+import gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy
+import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.content.combat.attack.NpcAttacks
 import io.mockk.every
@@ -50,6 +54,44 @@ import java.net.URLClassLoader
 import kotlin.test.*
 
 class MageArenaTests {
+    @Test fun `god spells dispatch their Prayer Defence and NPC Magic drains at impact without stacking below base`() {
+        val a = Account()
+        val caster = Account().player
+        val effect = MagicCombatStrategy.javaClass.getDeclaredMethod("applyEffect",
+            Pawn::class.java, Pawn::class.java, CombatSpell::class.java, Int::class.javaPrimitiveType).apply { isAccessible = true }
+        fun cast(target: Pawn, spell: CombatSpell) { effect.invoke(MagicCombatStrategy, caster, target, spell, 0) }
+        a.skills.setBaseLevel(Skills.PRAYER, 3)
+        a.skills.setCurrentLevel(Skills.PRAYER, 3)
+        repeat(5) { cast(a.player, CombatSpell.SARADOMIN_STRIKE) }
+        assertEquals(0, a.skills.getCurrentLevel(Skills.PRAYER))
+        val npc = Npc(1, MageArena.FOE_TILE, a.world).apply { stats = Npc.Stats(5) }
+        for ((spell, playerSkill, npcSkill) in listOf(
+            Triple(CombatSpell.CLAWS_OF_GUTHIX, Skills.DEFENCE, NpcSkills.DEFENCE),
+            Triple(CombatSpell.FLAMES_OF_ZAMORAK, Skills.MAGIC, NpcSkills.MAGIC))) {
+            a.skills.setBaseLevel(playerSkill, 99)
+            npc.stats.setMaxLevel(npcSkill, 99)
+            a.skills.setCurrentLevel(playerSkill, 99); npc.stats.setCurrentLevel(npcSkill, 99)
+            cast(a.player, spell); cast(npc, spell)
+            assertEquals(94, a.skills.getCurrentLevel(playerSkill))
+            assertEquals(94, npc.stats.getCurrentLevel(npcSkill))
+            repeat(3) { cast(a.player, spell); cast(npc, spell) }
+            assertEquals(94, a.skills.getCurrentLevel(playerSkill))
+            assertEquals(94, npc.stats.getCurrentLevel(npcSkill))
+            a.skills.setCurrentLevel(playerSkill, 99)
+            cast(a.player, spell)
+            assertEquals(94, a.skills.getCurrentLevel(playerSkill), "recovery to base permits a fresh drain")
+            a.skills.setCurrentLevel(playerSkill, 119)
+            cast(a.player, spell)
+            assertEquals(113, a.skills.getCurrentLevel(playerSkill), "boosted stats are not immune (Contact! update)")
+            a.skills.setBaseLevel(playerSkill, 1); a.skills.setCurrentLevel(playerSkill, 1)
+            cast(a.player, spell)
+            assertEquals(0, a.skills.getCurrentLevel(playerSkill))
+        }
+        val strategy = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/MagicCombatStrategy.kt").readText()
+        assertTrue("if (landHit) {\n            pawnHit.hit.addAction { applyEffect" in strategy.replace("\r\n", "\n"),
+            "splashes must never schedule the impact effect")
+    }
+
     @Test fun `Charge recast cooldown ends at100 while its700 tick buff remains and refreshes on recast`() {
         val a = Account()
         val timers = TimerMap()
