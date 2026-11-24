@@ -175,6 +175,47 @@ class DeadmanBreachTests {
     }
 
     @Test
+    fun `Armageddon fixed breaches alternate across days and weeks while mystery times remain random`() {
+        // Jagex 17 July 2024: fixed-time breaches alternate, mystery-time breaches choose randomly.
+        val first = java.time.LocalDate.of(2026, 11, 23)
+        for (days in listOf(DayOfWeek.values().toSet(), setOf(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY))) {
+            val plan = DeadmanBreach.Schedule(days = days)
+            val kinds = (0L until 21).flatMap { offset ->
+                val day = first.plusDays(offset)
+                if (day.dayOfWeek !in days) emptyList() else {
+                    assertEquals(null, DeadmanBreach.scheduledKind(DeadmanBreach.randomSlot(day, plan, 42L), plan))
+                    plan.hours.map { hour ->
+                        val opening = day.atTime(hour, 0).atZone(ZoneOffset.UTC)
+                        val kind = DeadmanBreach.scheduledKind(opening, plan)
+                        assertTrue(kind != null, "fixed opening has a specified type")
+                        assertEquals(kind, DeadmanBreach.scheduledKind(opening.withZoneSameInstant(java.time.ZoneId.of("Europe/Amsterdam")), plan))
+                        kind
+                    }
+                }
+            }
+            assertTrue(kinds.size >= 6)
+            assertTrue(kinds.zipWithNext().all { (a, b) -> a != b }, "consecutive fixed openings must alternate: $kinds")
+        }
+    }
+
+    @Test
+    fun `both breach types spawn their opening burst together and all monsters before closing`() {
+        // Owner 2026-09-27 opening burst; OSRS Wiki Deadman Mode: spawning lasts about 15 minutes.
+        // Regression: the local sixth spawn was scheduled for tick 1500, outside the loop's 0..1499 window.
+        assertEquals(3, DeadmanBreach.plannedSpawnCount(0, DeadmanBreach.LOCALISED_MAX_NPCS))
+        assertEquals(12, DeadmanBreach.plannedSpawnCount(0, DeadmanBreach.REGIONAL_MAX_NPCS))
+        assertEquals(3, DeadmanBreach.plannedSpawnCount(498, 6))
+        assertEquals(4, DeadmanBreach.plannedSpawnCount(499, 6))
+        assertEquals(5, DeadmanBreach.plannedSpawnCount(1498, 6))
+        for (maximum in listOf(DeadmanBreach.LOCALISED_MAX_NPCS, DeadmanBreach.REGIONAL_MAX_NPCS)) {
+            val counts = (0 until DeadmanBreach.SPAWN_WINDOW_TICKS).map { DeadmanBreach.plannedSpawnCount(it, maximum) }
+            assertEquals(maximum, counts.last(), "all monsters must be due while the spawner is still open")
+            assertTrue(counts.zipWithNext().all { (before, after) -> after in before..(before + 1) })
+            assertEquals(maximum, DeadmanBreach.plannedSpawnCount(DeadmanBreach.SPAWN_WINDOW_TICKS, maximum), "never overspawn")
+        }
+    }
+
+    @Test
     fun `locations are the wiki tables - single-way sites have three spawners, multicombat one`() {
         val locs = DeadmanBreach.loadLocations(Paths.get("..", "..", "data", "cfg", "deadman", "breach-locations.json").toFile())
         assertEquals(72, locs.localised.size)

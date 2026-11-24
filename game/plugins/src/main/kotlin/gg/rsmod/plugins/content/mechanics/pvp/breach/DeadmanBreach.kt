@@ -46,7 +46,7 @@ import kotlin.random.Random
  * - Location via Perdu (grand_exchange_hub) and the broadcast at opening.
  *
  * ADAPTED where the sources are silent (listed for the owner): the projectile cadence spreads a breach's monsters evenly over the
- * 15 minutes; which of the two types opens is a fair coin; the regional spawner stands on the region's spawn point nearest its centre;
+ * 15 minutes; the mystery opening's type is a fair coin (fixed slots alternate); the regional spawner stands on the region's spawn point nearest its centre;
  * the broadcast and Perdu wording. The Breach and Boss Spawn animations and the breach spawn/despawn graphics are OSRS skeletal\n * animations baked into classic frames (SkeletalBakeTool, 2026-09-27).
  */
 object DeadmanBreach {
@@ -135,7 +135,10 @@ object DeadmanBreach {
     }
 
     /** Audit D-14: the breach event ([Active.eventId]) a breach npc was spawned for. */
-    private val BREACH_EVENT_ATTR = AttributeKey<Int>()
+    internal val BREACH_EVENT_ATTR = AttributeKey<Int>()
+
+    /** Summons inherit their parent's event; a chest guardian has no breach event and must stay independent (id 0). */
+    fun eventOf(npc: Npc): Int = npc.attr[BREACH_EVENT_ATTR] ?: 0
 
     /** Audit D-14: id of the most recently opened breach event; npcs spawned while none is open belong to it. */
     @Volatile
@@ -285,6 +288,21 @@ object DeadmanBreach {
         error("no breach slot within a week of $now")
     }
 
+    /**
+     * Jagex "Deadman: Armageddon & While Guthix Sleeps Updates" (17 July 2024): fixed-time breaches alternate between
+     * localised and regional; the mystery-time breach chooses randomly. A stable calendar phase survives restarts and
+     * ignores the random openings. The source does not specify which type starts the alternating sequence.
+     */
+    internal fun scheduledKind(opening: ZonedDateTime, plan: Schedule = schedule): Kind? {
+        val utc = opening.withZoneSameInstant(ZoneOffset.UTC)
+        val hours = plan.hours.distinct().sorted()
+        val slot = hours.indexOf(utc.hour)
+        if (utc.dayOfWeek !in plan.days || slot < 0 || utc.minute != 0 || utc.second != 0 || utc.nano != 0) return null
+        val weeks = Math.floorDiv(utc.toLocalDate().toEpochDay() + 3, 7)
+        val daysBefore = weeks * plan.days.size + plan.days.count { it.value < utc.dayOfWeek.value }
+        return if ((daysBefore * hours.size + slot) % 2L == 0L) Kind.LOCALISED else Kind.REGIONAL
+    }
+
     fun start(world: World) {
         locations = loadLocations(world)
         schedule = try { loadSchedule() } catch (e: Exception) { gg.rsmod.game.Server.logger.error("Breach schedule not loaded, using the default: {}", e.toString()); Schedule() }
@@ -294,8 +312,9 @@ object DeadmanBreach {
                 wait(100)
                 val now = ZonedDateTime.now(ZoneOffset.UTC)
                 if (!now.isBefore(nextOpening)) {
+                    val opening = nextOpening
                     nextOpening = nextStart(now)
-                    if (active == null) open(world, null)
+                    if (active == null) open(world, scheduledKind(opening))
                 }
             }
         }
@@ -519,6 +538,15 @@ object DeadmanBreach {
         return out
     }
 
+    /**
+     * Owner 2026-09-27: half the monsters at opening, the rest spread over the wiki's 15-minute spawning window.
+     * Counts through the current tick, so the final monster is due before the window closes, for either site type.
+     */
+    internal fun plannedSpawnCount(elapsed: Int, maxNpcs: Int): Int {
+        val burst = maxNpcs / 2
+        return burst + (elapsed + 1).coerceIn(0, SPAWN_WINDOW_TICKS) * (maxNpcs - burst) / SPAWN_WINDOW_TICKS
+    }
+
     private fun run(
         world: World,
         opened: Active,
@@ -532,9 +560,9 @@ object DeadmanBreach {
                     opened.sites.forEach { site ->
                         // Owner decision 2026-09-27: half of a site's monsters come out at once when the breach opens, the rest
                         // spread over the 15 minutes (OSRS gives no cadence; one every 2.5 minutes looked like an empty breach).
-                        val burst = site.maxNpcs / 2
-                        val interval = SPAWN_WINDOW_TICKS / (site.maxNpcs - burst).coerceAtLeast(1)
-                        if (site.spawned < site.maxNpcs && (site.spawned < burst || elapsed >= (site.spawned - burst + 1) * interval)) fire(world, site)
+                        // The final spawn belongs to tick 1499, before the 1500-tick window closes. Using an interval
+                        // of 500 scheduled a local site's sixth monster at tick 1500, so it could never appear.
+                        repeat((plannedSpawnCount(elapsed, site.maxNpcs) - site.spawned).coerceAtLeast(0)) { fire(world, site) }
                     }
 
                 } catch (e: Exception) {
@@ -556,13 +584,13 @@ object DeadmanBreach {
             gg.rsmod.game.Server.logger.info("Breach spawning stopped: {} monsters spawned, survivors linger {} ticks.", opened.sites.sumOf { it.spawned }, LINGER_TICKS)
             wait(LINGER_TICKS)
             if (closed()) return@queue
-            var removed = 0
             opened.sites.forEach { site ->
                 site.closed = true
-                site.npcs.forEach { if (world.npcs.contains(it) && !it.isDead()) { world.remove(it); removed++ } }
                 site.npcs.clear()
                 lingering -= site
             }
+            // The site's list contains only direct landings. Zemouregal summons and Jad-Rek must expire with their event too.
+            val removed = despawnEvent(world, opened.eventId)
             pruneLive(world)
             gg.rsmod.game.Server.logger.info("Breach cleanup: {} unkilled monsters removed.", removed)
         }
@@ -858,6 +886,7 @@ object DeadmanBreach {
         walkRadius: Int,
         lifetimeTicks: Int = -1,
         test: Boolean = false,
+        eventId: Int? = null,
     ): Npc {
         val npc = Npc(id, Tile(tile), world)
         npc.respawnOverride = false
@@ -875,7 +904,7 @@ object DeadmanBreach {
         npc.attr[BREACH_NPC_ATTR] = true
         // F4: a `breachtest` monster fights like the real one but pays nothing (no loot, emblem or points).
         if (test) markTest(npc)
-        npc.attr[BREACH_EVENT_ATTR] = active?.eventId ?: lastEventId
+        npc.attr[BREACH_EVENT_ATTR] = eventId ?: active?.eventId ?: lastEventId
         // OSRS Wiki: Durial321 "is also capable of running after his target, unlike most NPCs"; I DSCIM YOU "runs at its targets".
         if (id in BreachMonsters.RUNNERS) npc.attr[gg.rsmod.game.model.attr.NPC_RUNS_ATTR] = true
         world.spawn(npc)
@@ -893,6 +922,20 @@ object DeadmanBreach {
             }
         }
         return npc
+    }
+
+    /** All surviving monsters of one expired event, including summons; a newer event is never touched. */
+    internal fun despawnEvent(world: World, eventId: Int): Int {
+        val expired = live.filter { it.attr[BREACH_EVENT_ATTR] == eventId }
+        var removed = 0
+        expired.forEach { npc ->
+            if (world.npcs.contains(npc) && !npc.isDead()) {
+                world.remove(npc)
+                removed++
+            }
+        }
+        live.removeAll(expired.toSet())
+        return removed
     }
 
     /** Drops npcs that died or were removed from [live]. */
@@ -938,14 +981,20 @@ object DeadmanBreach {
         npc: Npc,
         hitType: HitType,
         damage: Int,
+        source: Pawn,
+        accurate: Boolean,
     ): Int {
         if (!isBreachNpc(npc)) return damage
         val m = BreachMonsters.BY_ID[npc.id] ?: return damage
+        val melee = hitType == HitType.MELEE || hitType == HitType.CRIT_MELEE
+        val ranged = hitType == HitType.RANGE || hitType == HitType.CRIT_RANGE
+        // OSRS Wiki "Flat armour": successful player melee/ranged only; magic, misses, thralls and other damage ignore it.
+        val afterArmour = if (source is Player && accurate && (melee || ranged)) (damage - m.stats.flatArmour).coerceAtLeast(0) else damage
         val result =
             when {
-                hitType == HitType.MELEE && m.immuneMelee -> 0
-                hitType == HitType.RANGE && m.immuneRanged -> 0
-                else -> damage
+                melee && m.immuneMelee -> 0
+                ranged && m.immuneRanged -> 0
+                else -> afterArmour
             }
         gg.rsmod.game.model.BreachTrace.log("damage.in") { "npc=${npc.id}#${npc.index} type=$hitType raw=$damage final=$result hp=${npc.getCurrentLifepoints()}" }
         return result
@@ -973,6 +1022,13 @@ object DeadmanBreach {
 
     fun contribution(npc: Npc): BreachContribution = npc.attr[CONTRIBUTION_ATTR] ?: BreachContribution()
 
+    /** Direct/reflected hits use the engine's final, HP-capped hitmarks, never the requested damage at queue time. */
+    fun recordHit(target: Pawn, source: Pawn, hit: gg.rsmod.game.model.Hit) {
+        if (target !is Npc || !isBreachNpc(target)) return
+        val credited = controllingPlayer(source) ?: return
+        hit.addAction { recordDamage(target, credited, hitmarks.sumOf { it.damage }) }
+    }
+
     /**
      * Poison and venom tick without a source, so the player who applied them is remembered when they take hold: the last pawn
      * that attacked the monster ([gg.rsmod.game.model.attr.LAST_HIT_BY_ATTR], set as the attack lands), credited to a familiar's
@@ -984,15 +1040,19 @@ object DeadmanBreach {
         target.attr[DOT_SOURCE_ATTR] = controllingPlayer(source)?.username ?: return
     }
 
-    /** A poison/venom tick on a breach monster counts for the player who applied it ([notePoisoner]). */
+    /** A poison/venom tick counts its actual damage at impact, for the poisoner when this tick was queued. */
     fun recordDotDamage(
         target: Pawn,
-        damage: Int,
+        hit: gg.rsmod.game.model.Hit,
     ) {
-        if (damage <= 0 || target !is Npc || !isBreachNpc(target) || target.attr[REWARDED_ATTR] == true) return
+        if (target !is Npc || !isBreachNpc(target) || target.attr[REWARDED_ATTR] == true) return
         val name = target.attr[DOT_SOURCE_ATTR] ?: return
-        val ledger = target.attr[CONTRIBUTION_ATTR] ?: BreachContribution().also { target.attr[CONTRIBUTION_ATTR] = it }
-        ledger.add(name, damage)
+        hit.addAction {
+            val damage = hitmarks.sumOf { it.damage }
+            if (damage <= 0 || target.attr[REWARDED_ATTR] == true) return@addAction
+            val ledger = target.attr[CONTRIBUTION_ATTR] ?: BreachContribution().also { target.attr[CONTRIBUTION_ATTR] = it }
+            ledger.add(name, damage)
+        }
     }
 
     // ---- loot -------------------------------------------------------------------------------------------------------

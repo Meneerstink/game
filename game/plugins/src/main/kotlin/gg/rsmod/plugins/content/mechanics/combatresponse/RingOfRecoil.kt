@@ -48,18 +48,18 @@ object RingOfRecoil {
             // N463 Rebuke: recoil effects deal 10 % more, rounded down (OSRS Wiki "Rebuke").
             val reflect = gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.rebuke(target, (damage / 10) + 1)
             val after = gg.rsmod.plugins.content.items.osrs.RingOfSuffering.afterRecoil(ring, reflect) ?: return
-            attacker.hit(damage = reflect, type = HitType.REFLECTED)
+            val reflectedHit = attacker.hit(damage = reflect, type = HitType.REFLECTED)
             attacker.damageMap.add(target, reflect)
-            gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(attacker, target, reflect)
+            gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordHit(attacker, target, reflectedHit)
             target.equipment[EquipmentType.RING.id] = after
             return
         }
         if (!target.hasEquipped(EquipmentType.RING, *RECOIL_RING_IDS)) return
 
         val reflected = gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.rebuke(target, (damage / 10) + 1)
-        attacker.hit(damage = reflected, type = HitType.REFLECTED)
+        val reflectedHit = attacker.hit(damage = reflected, type = HitType.REFLECTED)
         attacker.damageMap.add(target, reflected)
-        gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(attacker, target, reflected)
+        gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordHit(attacker, target, reflectedHit)
 
         val charge = (target.attr[RING_OF_RECOIL_CHARGE_ATTR] ?: 0) + reflected
         if (charge >= CHARGE_LIMIT) {

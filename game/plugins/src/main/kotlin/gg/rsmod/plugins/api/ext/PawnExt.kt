@@ -93,7 +93,9 @@ fun Pawn.hit(
     // audit 2026-10-09), the way Deflect, Ring of recoil and Vengeance credit theirs: damage map and Deadman breach record.
     if (source != null && damage > 0) {
         damageMap.add(source, damage)
-        gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(this, source, damage)
+        // Breach loot/points count only damage that actually lands. Queued direct hits may be cancelled or capped to the
+        // remaining HP; crediting their requested damage here paid for overkill (and hits that never happened).
+        gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordHit(this, source, hit)
     }
     // DMM-ARMAGEDDON D1 (owner 20-11 'nu oplossen'): a boss mechanic's hit (fire rain, waves, explosions ... given with its npc as
     // source) is an npc hit for the PJ timer like a normal attack - 2.4 s no teleport ([DeadmanTimerGate.NPC_HIT_TELEPORT_BLOCK_CYCLES]).

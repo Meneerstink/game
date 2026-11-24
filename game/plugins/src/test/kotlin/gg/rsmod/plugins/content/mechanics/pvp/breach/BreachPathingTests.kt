@@ -1,13 +1,17 @@
 package gg.rsmod.plugins.content.mechanics.pvp.breach
 
+import gg.rsmod.game.model.Direction
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.collision.CollisionManager
+import gg.rsmod.game.model.collision.CollisionUpdate
 import gg.rsmod.game.model.path.PathRequest
 import gg.rsmod.game.model.path.strategy.BFSPathFindingStrategy
 import gg.rsmod.game.model.region.ChunkSet
+import io.mockk.every
 import io.mockk.mockk
 import kotlin.test.Test
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
@@ -57,4 +61,30 @@ class BreachPathingTests {
             for (x in 0..1) for (z in 0..1) assertTrue(step.transform(x, z) !in man, "step $step walks through the npc")
         }
     }
+    @Test
+    fun `cache wall flags reject large breach landings in every wall orientation`() {
+        // CollisionMatrix.isClipped rejects ANY directional flag, so the existing usable check already rejects walls.
+        val corner = Tile(3300, 3800, 0)
+        for (size in 2..5) for (direction in listOf(Direction.EAST, Direction.NORTH, Direction.NORTH_EAST, Direction.NORTH_WEST)) {
+            val world = mockk<World>(relaxed = true)
+            val chunks = ChunkSet(world)
+            val map = CollisionManager(chunks)
+            every { world.chunks } returns chunks
+            every { world.collision } returns map
+            every { world.filestore.data(any<Int>(), any<String>()) } returns byteArrayOf(1)
+            assertTrue(DeadmanBreach.fits(world, corner, size), "open ground fits size $size")
+            // Only flag the far side of the internal edge: a correct link check considers both tiles.
+            val from = if (direction == Direction.NORTH_WEST) corner.transform(1, 0) else corner
+            val other = from.step(direction)
+            map.applyUpdate(CollisionUpdate.Builder().apply {
+                setType(CollisionUpdate.Type.ADD)
+                putTile(other, false, direction.getOpposite())
+            }.build())
+            assertFalse(map.isClipped(corner), "a wall does not clip the tile itself")
+            assertTrue(map.isClipped(other), "a directional wall flag is already clipped in this engine")
+            assertFalse(DeadmanBreach.fits(world, corner, size), "size $size must not cross an internal $direction wall")
+            assertTrue(DeadmanBreach.fits(world, corner, 1), "a wall outside a 1x1 body does not invalidate its tile")
+        }
+    }
+
 }

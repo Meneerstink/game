@@ -17,16 +17,19 @@ import kotlin.test.assertTrue
 class BreachWikiInfoboxTests {
     private val dir = Paths.get("..", "..", "data", "cfg", "deadman", "wiki-infobox").toFile()
 
-    /** Infobox fields of one version: `key` + version number first, then the shared `key`. */
+    /** Annihilation version, or the summoned form selected by its id; versioned fields precede shared fields. */
     private class Infobox(
         text: String,
+        osrsId: Int,
     ) {
         private val fields: Map<String, String> =
-            Regex("^\\|([^=]+?)\\s*=\\s*(.*)$", RegexOption.MULTILINE).findAll(text.substringAfter("{{Infobox Monster").substringBefore("\n}}"))
+            Regex("^\\|([^=\\r\\n]+?)[ \\t]*=[ \\t]*([^\\r\\n]*)", RegexOption.MULTILINE).findAll(text.substringAfter("{{Infobox Monster").substringBefore("\n}}"))
                 .associate { it.groupValues[1].trim() to it.groupValues[2].trim() }
 
         val version: Int =
-            (1..9).firstOrNull { fields["version$it"]?.contains("Annihilation") == true } ?: 0
+            (1..9).firstOrNull { fields["version$it"]?.contains("Annihilation") == true }
+                ?: (1..9).firstOrNull { fields["id$it"]?.split(',')?.any { id -> id.trim() == osrsId.toString() } == true }
+                ?: 0
 
         operator fun get(key: String): String? = (if (version > 0) fields["$key$version"] else null) ?: fields[key]
 
@@ -34,9 +37,26 @@ class BreachWikiInfoboxTests {
     }
 
     private fun infobox(osrsId: Int): Infobox? =
-        dir.listFiles { f -> f.name.endsWith(".txt") }?.map { Infobox(it.readText()) }?.firstOrNull { box ->
+        dir.listFiles { f -> f.name.endsWith(".txt") }?.map { Infobox(it.readText(), osrsId) }?.firstOrNull { box ->
             box["id"]?.split(',')?.map { it.trim() }?.contains(osrsId.toString()) == true
         }
+
+    @Test
+    fun `blank wiki fields do not swallow the next max hit or versioned weakness`() {
+        // Real wiki pages place a blank xpbonus before max hit, and Armageddon's blank weakness before Annihilation's.
+        for (newline in listOf("\n", "\r\n")) {
+            val text = listOf(
+                "{{Infobox Monster", "|version1 = Armageddon", "|version2 = Annihilation", "|id = 13659",
+                "|xpbonus = ", "|max hit = 32", "|elementalweaknesstype1 = ", "|elementalweaknesstype2 = Air",
+                "|elementalweaknesspercent1 = ", "|elementalweaknesspercent2 = 20", "}}",
+            ).joinToString(newline)
+            val box = Infobox(text, 13659)
+            kotlin.test.assertEquals(32, box.int("max hit"))
+            kotlin.test.assertEquals("Air", box["elementalweaknesstype"])
+            kotlin.test.assertEquals(20, box.int("elementalweaknesspercent"))
+            kotlin.test.assertEquals("", box["xpbonus"])
+        }
+    }
 
     @Test
     fun `every breach monster matches its Deadman Annihilation infobox`() {
@@ -44,7 +64,7 @@ class BreachWikiInfoboxTests {
         gg.rsmod.plugins.content.combat.formula.ElementalWeakness.idOverrides += BreachMonsters.WEAKNESS_OVERRIDES
         val failures = mutableListOf<String>()
         val missing = mutableListOf<String>()
-        BreachMonsters.ROSTER.filter { it.name != "Zemouregal Summon" }.forEach { m ->
+        BreachMonsters.ROSTER.forEach { m ->
             val box = infobox(m.osrsId)
             if (box == null) {
                 missing += "${m.id} ${m.name} (osrs ${m.osrsId})"
@@ -76,6 +96,7 @@ class BreachWikiInfoboxTests {
             check("dcrush", s.dcrush, box.int("dcrush"))
             check("dmagic", s.dmagic, box.int("dmagic"))
             check("dranged(dstandard)", s.dranged, box.int("dstandard"))
+            check("flat armour", s.flatArmour, box.int("flatarmour"))
             val poison = box.int("poisonresistance") == 100
             val venom = box.int("venomresistance") == 100
             if (box["poisonresistance"] != null && poison != (m.id in BreachMonsters.POISON_IMMUNE)) failures += "${m.name}: poison immune ours=${m.id in BreachMonsters.POISON_IMMUNE} wiki=$poison"
@@ -103,7 +124,7 @@ class BreachWikiInfoboxTests {
         try {
             val defs = gg.rsmod.game.fs.DefinitionSet()
             defs.load(store, gg.rsmod.game.fs.def.NpcDef::class.java)
-            BreachMonsters.ROSTER.filter { it.name != "Zemouregal Summon" }.forEach { m ->
+            BreachMonsters.ROSTER.forEach { m ->
                 val box = infobox(m.osrsId) ?: return@forEach
                 val def = defs.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, m.id) ?: return@forEach failures.add("${m.name}: no npc ${m.id}").let { }
                 // shown level = the spawn override (BreachMonsters.COMBAT_LEVEL_BY_OSRS) or the cache level
@@ -126,7 +147,7 @@ class BreachWikiInfoboxTests {
     fun `every breach monster's attack sections carry the Annihilation max hits`() {
         val rows = BreachMonsters.attackRows(Paths.get("..", "..", "data", "cfg", "npcs", "npc-attacks.json").toFile()).associateBy { it.id }
         val failures = mutableListOf<String>()
-        BreachMonsters.ROSTER.filter { it.name != "Zemouregal Summon" && it.id != 14470 }.forEach { m ->
+        BreachMonsters.ROSTER.filter { it.id != 14470 }.forEach { m ->
             val box = infobox(m.osrsId) ?: return@forEach
             val text = box["max hit"] ?: return@forEach
             val hits = rows.getValue(m.id).attacks.flatMap { a -> a.hits.map { h -> h.offense to h.max / 10 } }

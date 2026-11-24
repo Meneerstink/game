@@ -201,6 +201,31 @@ class MeleeCombatFormulaTests {
         assertTrue(MeleeCombatFormula.getAccuracy(playerAttacker, target, 1.0) > 0.0)
     }
 
+    @Test
+    fun `magical melee rolls against magic defence for players and NPCs and still respects melee protection`() {
+        // OSRS Wiki Jelly: magical acids bypass physical defence; Protect from Melee prevents the damage.
+        val attacker = newNpc()
+        every { attacker.combatDef } returns NpcCombatDef.DEFAULT.copy(attackStyleType = StyleType.MAGIC_MELEE)
+        every { attacker.equipmentBonuses } returns IntArray(18)
+        every { attacker.stats.getCurrentLevel(any()) } returns 200
+        every { CombatConfigs.getCombatStyle(attacker) } returns StyleType.MAGIC_MELEE
+        val player = newPlayer(defenceLevel = 99)
+        val npc = newNpc()
+        every { npc.equipmentBonuses } returns IntArray(18)
+        every { npc.stats.getCurrentLevel(any()) } returns 99
+        for (target in listOf(player, npc)) {
+            val baseline = MeleeCombatFormula.getAccuracy(attacker, target, 1.0)
+            assertTrue(baseline > 0.0)
+            target.equipmentBonuses[BonusSlot.DEFENCE_CRUSH.id] = 500
+            target.equipmentBonuses[BonusSlot.DEFENCE_STAB.id] = 500
+            assertEquals(baseline, MeleeCombatFormula.getAccuracy(attacker, target, 1.0), 1e-9, "physical armour must not help")
+            target.equipmentBonuses[BonusSlot.DEFENCE_MAGIC.id] = 500
+            assertTrue(MeleeCombatFormula.getAccuracy(attacker, target, 1.0) < baseline, "magic armour must help")
+        }
+        every { player.prayerIcon } returns PrayerIcon.PROTECT_FROM_MELEE.id
+        assertEquals(0.0, MeleeCombatFormula.getAccuracy(attacker, player, 1.0))
+    }
+
     // ---- helpers ----
 
     private fun getMaxHit(player: Player): Double {

@@ -786,6 +786,8 @@ object NpcAttacks {
             isMelee(offense) -> {
                 val style =
                     when {
+                        // Jellies and the other magical-melee rows roll against magic defence, while melee prayers apply.
+                        h.defence == "magic" -> StyleType.MAGIC_MELEE
                         offense.endsWith("stab") -> StyleType.STAB
                         offense.endsWith("slash") -> StyleType.SLASH
                         else -> StyleType.CRUSH
@@ -832,6 +834,9 @@ object NpcAttacks {
         val landsIgnoringPrayer =
             when {
                 !rollAccuracy -> true
+                // Owner's breach Sever rule: an accurate strike disables overheads even when protection blocked its damage.
+                // Other melee effects (e.g. clue-guardian poison) retain their existing protection behavior.
+                formula === MeleeCombatFormula && combatDef == "breach_dscim" -> MeleeCombatFormula.getUnprotectedAccuracy(npc, target) >= rollValue
                 formula === MagicCombatFormula -> MagicCombatFormula.getUnprotectedAccuracy(npc, target) >= rollValue
                 formula === RangedCombatFormula -> RangedCombatFormula.getUnprotectedAccuracy(npc, target) >= rollValue
                 else -> landHit

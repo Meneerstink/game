@@ -1,9 +1,17 @@
 package gg.rsmod.plugins.content.mechanics.pvp.breach
 
 import gg.rsmod.game.model.attr.AttributeMap
+import gg.rsmod.game.model.attr.DAMAGE_CREDIT_ATTR
+import gg.rsmod.game.model.attr.LAST_HIT_BY_ATTR
+import gg.rsmod.game.model.entity.Pawn
+import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.entity.Npc
+import gg.rsmod.plugins.api.HitType
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkObject
 import java.util.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -21,6 +29,105 @@ class BreachRewardTests {
         every { p.attr } returns AttributeMap()
         every { p.username } returns name
         return p
+    }
+
+    @Test
+    fun `breach guardian immunity also rejects critical melee and ranged hits`() {
+        mockkObject(DeadmanBreach)
+        try {
+            val source = player()
+            for (id in listOf(14446, 14447, 14448)) {
+                val npc = mockk<Npc>(relaxed = true)
+                every { npc.id } returns id
+                every { DeadmanBreach.isBreachNpc(npc) } returns true
+                for (type in listOf(HitType.MELEE, HitType.CRIT_MELEE, HitType.RANGE, HitType.CRIT_RANGE)) {
+                    assertEquals(0, DeadmanBreach.modifyIncomingDamage(npc, type, 40, source, true), "guardian $id $type")
+                }
+                assertEquals(40, DeadmanBreach.modifyIncomingDamage(npc, HitType.MAGIC, 40, source, true))
+            }
+        } finally { unmockkObject(DeadmanBreach) }
+    }
+
+    @Test
+    fun `Shade summon flat armour adds three per successful player physical hit only`() {
+        mockkObject(DeadmanBreach)
+        try {
+            val shade = mockk<Npc>(relaxed = true)
+            every { shade.id } returns 14472
+            every { DeadmanBreach.isBreachNpc(shade) } returns true
+            val source = player()
+            for (type in listOf(HitType.MELEE, HitType.CRIT_MELEE, HitType.RANGE, HitType.CRIT_RANGE)) {
+                assertEquals(13, DeadmanBreach.modifyIncomingDamage(shade, type, 10, source, true))
+                assertEquals(0, DeadmanBreach.modifyIncomingDamage(shade, type, 0, source, false), "misses stay zero")
+                assertEquals(3, DeadmanBreach.modifyIncomingDamage(shade, type, 0, source, true), "accurate zero roll gets the flat bonus")
+                assertEquals(10, DeadmanBreach.modifyIncomingDamage(shade, type, 10, mockk<Npc>(relaxed = true), true), "summons ignore flat armour")
+            }
+            val lizard = mockk<Npc>(relaxed = true)
+            every { lizard.id } returns 14456
+            every { DeadmanBreach.isBreachNpc(lizard) } returns true
+            assertEquals(11, DeadmanBreach.modifyIncomingDamage(lizard, HitType.MELEE, 10, source, true), "Sulphur Lizard has -1 flat armour")
+            assertEquals(10, DeadmanBreach.modifyIncomingDamage(lizard, HitType.MAGIC, 10, source, true))
+            for (type in listOf(HitType.MAGIC, HitType.CRIT_MAGIC, HitType.REGULAR_HIT)) {
+                assertEquals(10, DeadmanBreach.modifyIncomingDamage(shade, type, 10, source, true), "magic and other damage ignore flat armour")
+            }
+        } finally { unmockkObject(DeadmanBreach) }
+    }
+
+    @Test
+    fun `direct hits credit breach damage on impact after the HP cap and credit a summon's owner`() {
+        mockkObject(DeadmanBreach)
+        try {
+            val npc = mockk<Npc>(relaxed = true)
+            every { npc.attr } returns AttributeMap()
+            every { DeadmanBreach.isBreachNpc(npc) } returns true
+            val owner = player("owner")
+            val hit = npc.hit(80, delay = 5, source = owner)
+            assertEquals(0, DeadmanBreach.contribution(npc).size, "queued/cancelled hits must not claim a slot")
+            hit.hitmarks.single().damage = 1 // actual engine cap: only one HP remained at impact
+            val actions = hit.javaClass.declaredMethods.single { it.name.startsWith("invokeActions") }.apply { isAccessible = true }
+            actions.invoke(hit)
+            assertEquals(1, DeadmanBreach.contribution(npc).damageOf("owner"), "overkill is never damage dealt")
+            npc.hit(500, delay = 5, source = owner) // cancelled: no impact actions run
+            assertEquals(1, DeadmanBreach.contribution(npc).damageOf("owner"))
+            val summon = mockk<Npc>(relaxed = true)
+            every { summon.attr } returns AttributeMap()
+            summon.attr[DAMAGE_CREDIT_ATTR] = java.lang.ref.WeakReference<Pawn>(owner)
+            val summonedHit = npc.hit(4, source = summon)
+            assertEquals(1, DeadmanBreach.contribution(npc).damageOf("owner"))
+            actions.invoke(summonedHit)
+            assertEquals(5, DeadmanBreach.contribution(npc).damageOf("owner"), "the summoned attack belongs to its player")
+        } finally { unmockkObject(DeadmanBreach) }
+    }
+
+    @Test
+    fun `recoil poison and venom only credit capped impact damage and retain the queued poisoner`() {
+        mockkObject(DeadmanBreach)
+        try {
+            val npc = mockk<Npc>(relaxed = true)
+            every { npc.attr } returns AttributeMap()
+            every { DeadmanBreach.isBreachNpc(npc) } returns true
+            val owner = player("original")
+            val other = player("later")
+            val recoil = npc.hit(30, type = HitType.REFLECTED)
+            DeadmanBreach.recordHit(npc, owner, recoil)
+            val actions = recoil.javaClass.declaredMethods.single { it.name.startsWith("invokeActions") }.apply { isAccessible = true }
+            assertEquals(0, DeadmanBreach.contribution(npc).size)
+            recoil.hitmarks.single().damage = 1
+            actions.invoke(recoil)
+            assertEquals(1, DeadmanBreach.contribution(npc).damageOf("original"))
+            for (type in listOf(HitType.POISON, HitType.VENOM)) {
+                npc.attr[LAST_HIT_BY_ATTR] = java.lang.ref.WeakReference<Pawn>(owner)
+                DeadmanBreach.notePoisoner(npc)
+                val tick = npc.hit(20, type = type)
+                DeadmanBreach.recordDotDamage(npc, tick)
+                npc.attr[LAST_HIT_BY_ATTR] = java.lang.ref.WeakReference<Pawn>(other)
+                DeadmanBreach.notePoisoner(npc) // another player poisons before the pending tick lands
+                tick.hitmarks.single().damage = 1
+                actions.invoke(tick)
+            }
+            assertEquals(3, DeadmanBreach.contribution(npc).damageOf("original"))
+            assertEquals(0, DeadmanBreach.contribution(npc).damageOf("later"))
+        } finally { unmockkObject(DeadmanBreach) }
     }
 
     @Test

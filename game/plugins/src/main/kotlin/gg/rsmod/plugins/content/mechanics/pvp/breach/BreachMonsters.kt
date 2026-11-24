@@ -5,6 +5,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.plugins.content.combat.attack.NpcAttacks
+import gg.rsmod.plugins.content.combat.formula.ElementalWeakness
 import java.io.File
 import java.io.FileReader
 
@@ -45,6 +46,8 @@ object BreachMonsters {
         val dmagic: Int = 0,
         /** OSRS "dstandard" (rev 667 has one ranged defence; brothers.plugin.kts precedent). */
         val dranged: Int = 0,
+        /** OSRS flat armour, applied only to successful player melee/ranged hits. */
+        val flatArmour: Int = 0,
     )
 
     /** How a monster fights: a cloned Void row ([Template]) or its own sections ([Custom]). */
@@ -418,7 +421,7 @@ object BreachMonsters {
             ),
             Monster(
                 14456, 12458, "Sulphur Lizard",
-                Stats(2500, 150, 200, 75, 1, 1, dstab = 15, dslash = 25, dcrush = 25, dmagic = 0, dranged = 15),
+                Stats(2500, 150, 200, 75, 1, 1, dstab = 15, dslash = 25, dcrush = 25, dmagic = 0, dranged = 15, flatArmour = -1),
                 // "It attacks with melee, knocking back any players hit by it."
                 5, StyleType.CRUSH, 15656, -1, 15657,
                 Custom("breach_sulphur_lizard", 1, listOf(melee("crush", 15656, 21))),
@@ -609,7 +612,7 @@ object BreachMonsters {
             ),
             // Zemouregal Summons (OSRS Wiki "Zemouregal Summon" versions Mummy / Shade / Undead One / Pirate / Fremennik / Khazard).
             Monster(14471, 15558, "Zemouregal Summon", Stats(35, 250, 150, 150, 1, 1), 4, StyleType.CRUSH, 15688, 15689, 15690, Custom("breach_summon_mummy", 1, listOf(melee("crush", 15688, 16))), summon = true),
-            Monster(14472, 15559, "Zemouregal Summon", Stats(35, 250, 150, 10, 50, 1), 4, StyleType.CRUSH, 15691, 15692, 15693, Custom("breach_summon_shade", 1, listOf(melee("crush", 15691, 16))), summon = true),
+            Monster(14472, 15559, "Zemouregal Summon", Stats(35, 250, 150, 10, 50, 1, flatArmour = -3), 4, StyleType.CRUSH, 15691, 15692, 15693, Custom("breach_summon_shade", 1, listOf(melee("crush", 15691, 16))), summon = true),
             Monster(14473, 15560, "Zemouregal Summon", Stats(35, 200, 150, 100, 1, 1), 4, StyleType.SLASH, 15694, 15695, 15696, Custom("breach_summon_undead", 1, listOf(melee("slash", 15694, 16))), summon = true),
             Monster(14474, 15561, "Zemouregal Summon", Stats(35, 75, 100, 100, 1, 1), 5, StyleType.CRUSH, 15698, 15697, 15699, Custom("breach_summon_pirate", 1, listOf(melee("crush", 15698, 11))), summon = true),
             Monster(14475, 15562, "Zemouregal Summon", Stats(35, 250, 150, 50, 1, 1), 4, StyleType.SLASH, 15705, OSRS_HUMAN_BLOCK, OSRS_HUMAN_DEATH, Custom("breach_summon_fremennik", 1, listOf(melee("slash", 15705, 16))), summon = true),
@@ -720,13 +723,20 @@ object BreachMonsters {
     val FREEZE_IMMUNE: Set<Int> = setOf(14459, 14463, 14464, 14470)
 
     /**
-     * Where the Annihilation infobox's elemental weakness differs from the regular monster of the same name (the shared by-name
-     * table): Jal-ImKot "Water 30", Thermonuclear smoke devil none (the regular one is Air 20). Guarded by BreachWikiInfoboxTests.
+     * OSRS Wiki Annihilation infoboxes (rechecked 2026-11-24): Jal-ImKot Water 30, smoke devil Air 20.
+     * The six Zemouregal Summons share one name but have different weaknesses, so a by-name lookup cannot represent them.
+     * Guarded for every variant by BreachWikiInfoboxTests.
      */
-    val WEAKNESS_OVERRIDES: Map<Int, gg.rsmod.plugins.content.combat.formula.ElementalWeakness.Weakness?> =
+    val WEAKNESS_OVERRIDES: Map<Int, ElementalWeakness.Weakness?> =
         mapOf(
-            14453 to gg.rsmod.plugins.content.combat.formula.ElementalWeakness.Weakness(gg.rsmod.plugins.content.combat.formula.ElementalWeakness.Element.WATER, 30),
-            14460 to null,
+            14453 to ElementalWeakness.Weakness(ElementalWeakness.Element.WATER, 30),
+            14460 to ElementalWeakness.Weakness(ElementalWeakness.Element.AIR, 20),
+            14471 to ElementalWeakness.Weakness(ElementalWeakness.Element.FIRE, 50), // Mummy
+            14472 to ElementalWeakness.Weakness(ElementalWeakness.Element.AIR, 40), // Shade
+            14473 to ElementalWeakness.Weakness(ElementalWeakness.Element.FIRE, 50), // Undead One
+            14474 to ElementalWeakness.Weakness(ElementalWeakness.Element.FIRE, 50), // Pirate
+            14475 to null, // Fremennik
+            14476 to null, // Khazard
         )
 
     /** The monsters a breach spawns (everything but Zemouregal's summons). */

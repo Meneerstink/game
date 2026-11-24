@@ -25,10 +25,10 @@ on_timer(POISON_TIMER) {
     }
 
     val poisonDamage = Poison.getDamageForTicks(ticksLeft)
-    pawn.hit(damage = poisonDamage, type = HitType.POISON)
+    val damageHit = pawn.hit(damage = poisonDamage, type = HitType.POISON)
     // Audit X-10: damage over time also holds a disconnected player in the world (no x-log escape while poisoned).
     if (pawn is Player) gg.rsmod.plugins.content.combat.Combat.holdLogout(pawn)
-    gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDotDamage(pawn, poisonDamage)
+    gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDotDamage(pawn, damageHit)
     if (ticksLeft == 0) {
         // That was the severity-1 hit: the severity is now zero and the poison ends (orb back to normal) right away.
         if (pawn is Player) {
