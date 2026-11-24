@@ -62,11 +62,14 @@ NpcAttacks.condition("has_no_food") { _, t -> t is Player && !hasFilledPouch(t) 
 
 // The Void energy section hits 10-20 (1-2 hp); the wiki (Mod Ash) says 1-3 - the same section with max 30.
 // In on_world_init: the attack table is loaded by npc_attacks.plugin.kts, whose load order is not fixed.
+// Owner 24-11 22:2x ('skip eruit'): the Void 'skip' section (chance 20 of 23, no anim/message) has no source - the OSRS Wiki says every
+// ghast attack is a miss (7/10) or a rot/drain (3/10), and a filled druid pouch reveals it. Without skip the conditions give exactly that:
+// no pouch = miss 7 : rot-or-energy 3; filled pouch = reveal on the first attack.
 on_world_init { NpcAttacks.rowFor(GHAST)?.let { row ->
     NpcAttacks.register(
         NpcAttacks.Row(
             id = row.id, name = row.name, voidKey = row.voidKey, combatDef = row.combatDef, height = row.height, attackRange = row.attackRange,
-            attacks = row.attacks.map { a ->
+            attacks = row.attacks.filter { it.id != "skip" }.map { a ->
                 if (a.id != "energy") a else NpcAttacks.Attack(
                     id = a.id, chance = a.chance, range = a.range, condition = a.condition, say = a.say, anim = a.anim,
                     targetSounds = a.targetSounds, impactRegardless = a.impactRegardless, message = a.message,
