@@ -56,8 +56,17 @@ CocktailMaking.CUTS.forEach { cut ->
         val slot = player.inventory.getItemIndex(cut.fruit, skipAttrItems = false)
         val held = player.inventory.rawItems.getOrNull(slot) ?: return@on_item_on_item
         player.queue {
-            produceItemBox(cut.chunks, cut.slices, maxItems = 1, logic = { output, _ ->
-                queue { wait(2); CocktailMaking.cut(this.player, cut, output, slot, held) }
+            produceItemBox(cut.chunks, cut.slices, maxItems = player.inventory.getItemCount(cut.fruit), logic = { output, amount ->
+                queue {
+                    var current = held
+                    var currentSlot = slot
+                    repeat(amount) {
+                        wait(2)
+                        if (!CocktailMaking.cut(this.player, cut, output, currentSlot, current)) return@queue
+                        currentSlot = this.player.inventory.getItemIndex(cut.fruit, skipAttrItems = false)
+                        current = this.player.inventory.rawItems.getOrNull(currentSlot) ?: return@queue
+                    }
+                }
             })
         }
     }
