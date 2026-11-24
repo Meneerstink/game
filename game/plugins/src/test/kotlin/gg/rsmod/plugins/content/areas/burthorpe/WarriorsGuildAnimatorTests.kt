@@ -56,6 +56,14 @@ class WarriorsGuildAnimatorTests {
         assertEquals(2, w.shotDistance(58))
         assertEquals(14, w.shotDistance(216))
         assertEquals(1 + 5, w.shotTokens(18, 5))
+        // Calculator:Shot put rev15211456: the 14-yard maximum requires D=5.
+        val dusted = w.shotX(99, 100, WarriorsGuildAnimator.Throw.STANDING, 18, dustedHands = true)
+        assertEquals(216, dusted)
+        assertEquals(14, w.shotDistance(dusted))
+        assertEquals(151.2, w.shotXp(dusted), 0.001)
+        assertEquals(21.6, w.shotEnergy(dusted), 0.001)
+        assertEquals(0.864, w.shotSuccess(dusted), 0.001)
+        assertEquals(5, dusted - w.shotX(99, 100, WarriorsGuildAnimator.Throw.STANDING, 18))
     }
 
     @Test
