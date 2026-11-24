@@ -11,6 +11,10 @@ import kotlin.random.Random
  * own check accounts may enter (CoxTestGate); anyone else gets the rev-667 'Nothing interesting happens.' as for any unhandled option.
  */
 
+// MULTI-GEBIEDEN 24-11 (GPT-B MULTI-02, OSRS Wiki Chambers of Xeric: party fights, Vanguards together): every raid room is
+// multi-combat. An instance follows its source squares (Tile.isMulti), so register the copied cache regions - as ToaRaid does.
+CoxMap.CACHE_REGIONS.forEach { region -> set_multi_combat_region(region) }
+
 /** The entrance warning was accepted once (tsps: only the first time). */
 val COX_WARNED = gg.rsmod.game.model.attr.AttributeKey<Boolean>(persistenceKey = "cox_entrance_warned")
 

@@ -31,11 +31,18 @@ object MultiCombatZones {
         z: Int,
     ): Int = (x shl 16) or (z and 0xFFFF)
 
-    /** The surface of Gielinor (z below 4500) and Prifddinas: the area the wiki map describes. */
+    /**
+     * The surface of Gielinor and Prifddinas: the area the wiki map describes. MULTI-GEBIEDEN 24-11 (GPT-B MULTI-03/-04): the
+     * map's highest surface tile is z 3968, but this used to claim everything below z 4500 - so the dungeons at z 4160..4499
+     * (Corporeal Beast's lair, Waterbirth Island Dungeon, Dagannoth Kings) read the polygon-less map as single and never reached
+     * their multi.yml chunks/regions. The surface now ends at z 4160 (map row 65); everything above follows multi.yml.
+     */
     fun covers(
         x: Int,
         z: Int,
-    ): Boolean = z < 4500 || (x in 3100..3400 && z in 5950..6250)
+    ): Boolean = z < SURFACE_END_Z || (x in 3100..3400 && z in 5950..6250)
+
+    const val SURFACE_END_Z = 4160
 
     fun contains(
         x: Int,

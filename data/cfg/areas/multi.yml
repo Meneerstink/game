@@ -105,6 +105,24 @@ regions:
 - 14682
 
 
+# MULTI-GEBIEDEN 24-11 (GPT-B MULTI-01/-04/-06/-07, RS Wiki Chaos Tunnels/Bork + OSRS Wiki Multicombat area):
+# Bork 12374 + Chaos Tunnels 12629 12630 12885 12886 13141 13142; GWD south-west 11345; Waterbirth route 7236 7492 7748,
+# first level 9886 10142, Dagannoth Kings 11589; Castle Wars underground 9620 (lobbies there have no combat).
+- 12374
+- 12629
+- 12630
+- 12885
+- 12886
+- 13141
+- 13142
+- 11345
+- 7236
+- 7492
+- 7748
+- 9886
+- 10142
+- 11589
+- 9620
 chunks:
 - 26870233
 - 26870234

@@ -36,4 +36,26 @@ class MultiCombatZonesTests {
         assertFalse(MultiCombatZones.contains(3052, 3767), "Forgotten Cemetery breach site is single")
         assertFalse(MultiCombatZones.covers(2900, 5300), "God Wars is not on the surface map")
     }
+
+    /** MULTI-GEBIEDEN 24-11: the low-z dungeons follow multi.yml, the whole surface map stays covered. */
+    @Test
+    fun `low z dungeons are not surface and every surface polygon tile stays covered`() {
+        MultiCombatZones.load(root.resolve("areas").resolve("dmm-multicombat-zones.json").toFile())
+        assertFalse(MultiCombatZones.covers(2986, 4383), "Corporeal Beast's lair")
+        assertFalse(MultiCombatZones.covers(2906, 4441), "Dagannoth Kings")
+        assertFalse(MultiCombatZones.covers(1900, 4380), "Waterbirth Island Dungeon route")
+        assertTrue(MultiCombatZones.covers(1630, 4000), "Wintertodt (surface)")
+        val json = com.google.gson.Gson().fromJson(root.resolve("areas").resolve("dmm-multicombat-zones.json").toFile().readText(),
+            com.google.gson.JsonObject::class.java)
+        val outside = mutableListOf<String>()
+        json.getAsJsonArray("features").forEach { f ->
+            f.asJsonObject.getAsJsonObject("geometry").getAsJsonArray("coordinates").forEach { ring ->
+                ring.asJsonArray.forEach { p ->
+                    val x = p.asJsonArray[0].asInt; val z = p.asJsonArray[1].asInt
+                    if (!MultiCombatZones.covers(x, z)) outside += "$x,$z"
+                }
+            }
+        }
+        assertTrue(outside.isEmpty(), "surface map points outside covers(): ${outside.take(5)}")
+    }
 }
