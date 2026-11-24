@@ -14,6 +14,26 @@ import io.mockk.mockk
 import kotlin.test.*
 
 class GodSpellTrainingTests {
+    @Test fun `untrained god spells allow arena PvP but never count it toward100 or allow an outside player`() {
+        val a = Account()
+        val target = mockk<Player>(relaxed = true)
+        every { target.tile } returns MageArena.FOE_TILE
+        GodSpellTraining.SPELLS.forEach { training ->
+            assertFalse(GodSpellTraining.canCast(a.player, target, training.spell), "MA1 still required")
+            a.attrs[COMPLETED_MAGE_ARENA] = true
+            assertTrue(GodSpellTraining.canCast(a.player, target, training.spell))
+            repeat(100) { GodSpellTraining.cast(a.player, target, training.spell) }
+            assertEquals(0, GodSpellTraining.casts(a.player, training))
+            every { target.tile } returns Tile(3200, 3900)
+            assertFalse(GodSpellTraining.canCast(a.player, target, training.spell))
+            every { target.tile } returns MageArena.FOE_TILE
+            every { a.player.tile } returns Tile(3200, 3900)
+            assertFalse(GodSpellTraining.canCast(a.player, target, training.spell))
+            every { a.player.tile } returns MageArena.ARRIVAL
+            a.attrs[COMPLETED_MAGE_ARENA] = false
+        }
+    }
+
     private class Account {
         val attrs = AttributeMap()
         val player = mockk<Player>(relaxed = true)

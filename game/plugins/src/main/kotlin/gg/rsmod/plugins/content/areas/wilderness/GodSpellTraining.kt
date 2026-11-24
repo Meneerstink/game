@@ -43,7 +43,9 @@ object GodSpellTraining {
     /** Called by the common manual/autocast validation BEFORE any runes, animation or XP. */
     fun canCast(player: Player, target: Pawn, spell: CombatSpell): Boolean {
         val training = SPELLS.firstOrNull { it.spell == spell } ?: return true
-        if (casts(player, training) == REQUIRED_CASTS || trainingTarget(player, target)) return true
+        // Wilderness hard diary: untrained god spells may hit players inside the arena, but PvP never trains them.
+        val arenaPvp = target is Player && MageArena.completed(player) && arenaTile(player.tile) && arenaTile(target.tile)
+        if (casts(player, training) == REQUIRED_CASTS || trainingTarget(player, target) || arenaPvp) return true
         player.message("You still need to train with the ${training.word} spell inside the arena before you can use it outside.")
         return false
     }
