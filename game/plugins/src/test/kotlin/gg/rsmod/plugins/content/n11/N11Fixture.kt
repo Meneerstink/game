@@ -21,7 +21,7 @@ import java.io.File
 import java.net.URLClassLoader
 
 /** Cache-free inventories; compiled script tests still run the production handlers and queues. */
-internal class N11Fixture : AutoCloseable {
+class N11Fixture : AutoCloseable {
     val definitions = mockk<DefinitionSet>()
     val defs = mutableMapOf<Int, ItemDef>()
     val world = mockk<World>(relaxed = true)

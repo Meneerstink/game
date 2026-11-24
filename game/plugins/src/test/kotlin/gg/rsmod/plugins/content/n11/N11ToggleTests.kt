@@ -11,6 +11,75 @@ import io.mockk.verify
 import kotlin.test.*
 
 class N11ToggleTests {
+    private fun museum(f: N11Fixture): gg.rsmod.game.model.varp.VarpSet {
+        val varps = gg.rsmod.game.model.varp.VarpSet((0..1100).toSet())
+        every { f.player.varps } returns varps
+        every { f.definitions.get(gg.rsmod.game.fs.def.VarbitDef::class.java, any()) } answers {
+            gg.rsmod.game.fs.def.VarbitDef(secondArg()).apply {
+                varp = 1011
+                startBit = mapOf(3645 to 2, 3646 to 3, 3647 to 4, 3648 to 5, 3649 to 6).getValue(id)
+                endBit = startBit
+            }
+        }
+        every { f.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, any()) } answers {
+            gg.rsmod.game.fs.def.ObjectDef(secondArg()).apply { options[0] = if (id == 24452) "Look-at" else "Study" }
+        }
+        return varps
+    }
+
+    @Test fun `museum five correct displays each award ten Kudos once and never a guaranteed lamp`() {
+        N11Fixture().use { f ->
+            val varps = museum(f)
+            varps.setState(1011, 3) // unrelated native bits must survive
+            f.load("areas.varrock.Varrock_museum_displays_plugin")
+            val displays = gg.rsmod.plugins.content.areas.varrock.VarrockMuseum.EXHIBITS
+            displays.forEachIndexed { i, display ->
+                repeat(28) { f.inventory[it] = Item(100000 + it) }
+                val held = Item(display.item)
+                f.inventory[0] = held
+                val obj = gg.rsmod.game.model.entity.DynamicObject(display.root, 10, 0, display.tile)
+                f.attrs[gg.rsmod.game.model.attr.INTERACTING_OBJ_ATTR] = java.lang.ref.WeakReference(obj)
+                assertFalse(gg.rsmod.plugins.content.areas.varrock.VarrockMuseum.place(f.player, obj, 0, held), "identify first")
+                f.attrs[gg.rsmod.plugins.content.areas.varrock.VarrockMuseum.CASE_TOLD] = 31
+                assertTrue(f.repo.executeItemOnObject(f.player, display.root, display.item))
+                assertNull(f.inventory[0])
+                assertEquals((i + 1) * 10, varps.getState(1010))
+                assertTrue(gg.rsmod.plugins.content.areas.varrock.VarrockMuseum.displayed(f.player, display.item))
+                f.inventory[0] = Item(display.item)
+                f.repo.executeItemOnObject(f.player, display.root, display.item)
+                assertEquals(display.item, f.inventory[0]?.id, "duplicate submission keeps the duplicate")
+                assertEquals((i + 1) * 10, varps.getState(1010))
+                assertTrue(f.inventory.none { it != null && it.id in 11185..11189 }, "cleaning case grants no lamp")
+                f.attrs[gg.rsmod.plugins.content.areas.varrock.VarrockMuseum.CASE_TOLD] = 0
+            }
+            assertEquals(127, varps.getState(1011))
+            f.queues.terminateTasks() // native persistent varps, no delayed reward
+            assertEquals(50, varps.getState(1010))
+        }
+    }
+
+    @Test fun `museum rejects stale replaced dropped wrong-case and wrong-tile artefacts without changing Kudos`() {
+        N11Fixture().use { f ->
+            val varps = museum(f)
+            f.attrs[gg.rsmod.plugins.content.areas.varrock.VarrockMuseum.CASE_TOLD] = 31
+            val first = gg.rsmod.plugins.content.areas.varrock.VarrockMuseum.EXHIBITS.first()
+            val other = gg.rsmod.plugins.content.areas.varrock.VarrockMuseum.EXHIBITS.last()
+            val obj = gg.rsmod.game.model.entity.DynamicObject(first.root, 10, 0, first.tile)
+            val held = Item(first.item)
+            f.inventory[0] = Item(first.item)
+            assertFalse(gg.rsmod.plugins.content.areas.varrock.VarrockMuseum.place(f.player, obj, 0, held))
+            f.inventory[0] = null
+            assertFalse(gg.rsmod.plugins.content.areas.varrock.VarrockMuseum.place(f.player, obj, 0, held))
+            f.inventory[0] = held
+            assertFalse(gg.rsmod.plugins.content.areas.varrock.VarrockMuseum.place(f.player,
+                gg.rsmod.game.model.entity.DynamicObject(other.root, 10, 0, other.tile), 0, held))
+            assertFalse(gg.rsmod.plugins.content.areas.varrock.VarrockMuseum.place(f.player,
+                gg.rsmod.game.model.entity.DynamicObject(first.root, 10, 0, first.tile.transform(1, 0)), 0, held))
+            assertEquals(0, varps.getState(1010))
+            assertSame(held, f.inventory[0])
+        }
+    }
+
     @Test fun `Slayer bell reserves one wall on a double click and restores it after death even if player logs out`() {
         N11Fixture().use { f ->
             val wall = gg.rsmod.game.model.entity.DynamicObject(22545, 4, 0, gg.rsmod.game.model.Tile(3201, 3200))
