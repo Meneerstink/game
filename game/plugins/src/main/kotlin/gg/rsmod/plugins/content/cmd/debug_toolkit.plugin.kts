@@ -356,7 +356,10 @@ gg.rsmod.game.CommandServerCommands.handlers["nearnpcs"] = { w, a ->
         val near = ArrayList<String>()
         w.npcs.forEach { n ->
             if (n.tile.height == p.tile.height && n.tile.isWithinRadius(p.tile, r) && !n.isDead()) {
-                near += "${n.id}#${n.index}@${n.tile.x},${n.tile.z} hp=${n.getCurrentLifepoints()} t=${who(n.getCombatTarget())}"
+                // NPC-SOORT-DRAKEN (24-11): the species tags too (fiery, dragon, demon ...) - what the Pearl bolts (e) / Fire cape rules read.
+                val sp = n.combatDef.species.joinToString("+") { it.toString().lowercase() }
+                near += "${n.id}#${n.index}@${n.tile.x},${n.tile.z} hp=${n.getCurrentLifepoints()} t=${who(n.getCombatTarget())}" +
+                    if (sp.isEmpty()) "" else " sp=$sp"
             }
         }
         "tick=${w.currentCycle} ${p.username}@${p.tile.x},${p.tile.z} t=${who(p.getCombatTarget())} | ${near.joinToString(" | ")}"
