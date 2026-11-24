@@ -30,6 +30,36 @@ import kotlin.test.assertNull
  */
 class EquipActionTests {
     @Test
+    fun `Monkey talisman Hold and waxed Sled Ride equip using their real metadata`() {
+        val metadata = com.fasterxml.jackson.databind.ObjectMapper(com.fasterxml.jackson.dataformat.yaml.YAMLFactory())
+            .readTree(Paths.get("..", "..", "data", "cfg", "items.yml").toFile())
+        for ((id, secondary) in listOf(Items.MONKEY_TALISMAN to -1, Items.SLED_4084 to 5)) {
+            val equipment = metadata.first { it.path("id").asInt() == id }.path("equipment")
+            assertEquals(3, equipment.path("equip_slot").asInt())
+            assertEquals(secondary, equipment.path("equip_type").asInt())
+            val def = DEFINITIONS.get(ItemDef::class.java, id)
+            def.equipSlot = equipment.path("equip_slot").asInt()
+            def.equipType = equipment.path("equip_type").asInt()
+            val player = newPlayer()
+            player.inventory.add(id)
+            player.equipment[EquipmentType.SHIELD.id] = Item(Items.RUNE_KITESHIELD)
+            val slot = player.inventory.getItemIndex(id)
+            assertEquals(EquipAction.Result.SUCCESS, EquipAction.equip(player, player.inventory[slot]!!, slot))
+            assertEquals(id, player.equipment[EquipmentType.WEAPON.id]?.id)
+            assertEquals(0, player.inventory.getItemCount(id))
+            if (secondary == 5) {
+                assertNull(player.equipment[EquipmentType.SHIELD.id])
+                assertEquals(1, player.inventory.getItemCount(Items.RUNE_KITESHIELD))
+            } else {
+                assertEquals(Items.RUNE_KITESHIELD, player.equipment[EquipmentType.SHIELD.id]?.id)
+            }
+            assertEquals(EquipAction.Result.SUCCESS, EquipAction.unequip(player, EquipmentType.WEAPON.id))
+            assertEquals(1, player.inventory.getItemCount(id))
+        }
+        assertEquals(-1, DEFINITIONS.get(ItemDef::class.java, Items.SLED).equipSlot, "unwaxed sled stays unwearable")
+    }
+
+    @Test
     fun `equipping a one-handed weapon into empty slots succeeds`() {
         val player = newPlayer()
 
