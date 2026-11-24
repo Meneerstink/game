@@ -1,6 +1,9 @@
 package gg.rsmod.plugins.content.mechanics.pvp.breach
 
 import gg.rsmod.game.model.attr.AttributeMap
+import gg.rsmod.game.model.attr.DAMAGE_CREDIT_ATTR
+import gg.rsmod.game.model.entity.Pawn
+import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.plugins.api.HitType
@@ -61,6 +64,32 @@ class BreachRewardTests {
             for (type in listOf(HitType.MAGIC, HitType.CRIT_MAGIC, HitType.REGULAR_HIT)) {
                 assertEquals(10, DeadmanBreach.modifyIncomingDamage(shade, type, 10, source, true), "magic and other damage ignore flat armour")
             }
+        } finally { unmockkObject(DeadmanBreach) }
+    }
+
+    @Test
+    fun `direct hits credit breach damage on impact after the HP cap and credit a summon's owner`() {
+        mockkObject(DeadmanBreach)
+        try {
+            val npc = mockk<Npc>(relaxed = true)
+            every { npc.attr } returns AttributeMap()
+            every { DeadmanBreach.isBreachNpc(npc) } returns true
+            val owner = player("owner")
+            val hit = npc.hit(80, delay = 5, source = owner)
+            assertEquals(0, DeadmanBreach.contribution(npc).size, "queued/cancelled hits must not claim a slot")
+            hit.hitmarks.single().damage = 1 // actual engine cap: only one HP remained at impact
+            val actions = hit.javaClass.declaredMethods.single { it.name.startsWith("invokeActions") }.apply { isAccessible = true }
+            actions.invoke(hit)
+            assertEquals(1, DeadmanBreach.contribution(npc).damageOf("owner"), "overkill is never damage dealt")
+            npc.hit(500, delay = 5, source = owner) // cancelled: no impact actions run
+            assertEquals(1, DeadmanBreach.contribution(npc).damageOf("owner"))
+            val summon = mockk<Npc>(relaxed = true)
+            every { summon.attr } returns AttributeMap()
+            summon.attr[DAMAGE_CREDIT_ATTR] = java.lang.ref.WeakReference<Pawn>(owner)
+            val summonedHit = npc.hit(4, source = summon)
+            assertEquals(1, DeadmanBreach.contribution(npc).damageOf("owner"))
+            actions.invoke(summonedHit)
+            assertEquals(5, DeadmanBreach.contribution(npc).damageOf("owner"), "the summoned attack belongs to its player")
         } finally { unmockkObject(DeadmanBreach) }
     }
 
