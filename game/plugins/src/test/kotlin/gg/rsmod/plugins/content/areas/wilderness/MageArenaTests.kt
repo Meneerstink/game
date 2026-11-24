@@ -21,6 +21,8 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.skill.SkillSet
+import gg.rsmod.game.model.shop.Shop
+import gg.rsmod.game.model.shop.PurchasePolicy
 import gg.rsmod.game.plugin.PluginRepository
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.HitType
@@ -35,6 +37,41 @@ import java.net.URLClassLoader
 import kotlin.test.*
 
 class MageArenaTests {
+    @Test fun `compiled guardian shop charges 80000 refuses staff sales and restocks one per100 ticks`() {
+        val a = Account()
+        every { a.defs.get(ItemDef::class.java, any()) } answers {
+            ItemDef(secondArg()).apply { cost = 80000; stacks = id == Items.COINS_995; tradeable = true }
+        }
+        val repo = PluginRepository(a.world)
+        every { a.world.plugins } returns repo
+        URLClassLoader(arrayOf(File("scripts/build/classes/kotlin/main").toURI().toURL()), javaClass.classLoader).use {
+            it.loadClass("gg.rsmod.plugins.content.areas.wilderness.Chamber_guardian_plugin")
+                .getConstructor(PluginRepository::class.java, World::class.java, Server::class.java)
+                .newInstance(repo, a.world, mockk<Server>(relaxed = true))
+        }
+        val field = PluginRepository::class.java.getDeclaredField("shops").apply { isAccessible = true }
+        val shop = (field.get(repo) as Map<*, *>)["Mage Arena Staves"] as Shop
+        assertEquals(PurchasePolicy.BUY_NONE, shop.purchasePolicy)
+        assertEquals(MageArena.STAFF_BY_CAPE.values.toList(), shop.items.filterNotNull().map { it.item })
+        shop.cycle(a.world) // align to cycle1; normal periodic shop restock
+        shop.items.filterNotNull().forEachIndexed { slot, item ->
+            assertEquals(5, item.currentAmount)
+            assertEquals(100, item.resupplyCycles)
+            a.inventory.add(Items.COINS_995, 80000)
+            shop.currency.sellToPlayer(a.player, shop, slot, 1)
+            assertEquals(0, a.inventory.getItemCount(Items.COINS_995))
+            assertEquals(1, a.inventory.getItemCount(item.item))
+            assertEquals(4, item.currentAmount)
+            shop.currency.buyFromPlayer(a.player, shop, a.inventory.getItemIndex(item.item), 1)
+            assertEquals(1, a.inventory.getItemCount(item.item))
+            assertEquals(0, a.inventory.getItemCount(Items.COINS_995))
+        }
+        repeat(99) { shop.cycle(a.world) }
+        assertTrue(shop.items.filterNotNull().all { it.currentAmount == 4 })
+        shop.cycle(a.world)
+        assertTrue(shop.items.filterNotNull().all { it.currentAmount == 5 })
+    }
+
     private class Account {
         val player = mockk<Player>(relaxed = true)
         val attrs = AttributeMap()

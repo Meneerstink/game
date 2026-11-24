@@ -10,12 +10,13 @@ val chamberGuardian = Npcs.CHAMBER_GUARDIAN
 create_shop(
     "Mage Arena Staves",
     currency = CoinCurrency(),
-    purchasePolicy = PurchasePolicy.BUY_STOCK,
+    purchasePolicy = PurchasePolicy.BUY_NONE,
     containsSamples = false,
 ) {
-    items[0] = ShopItem(Items.SARADOMIN_STAFF, amount = 10, sellPrice = 80000, buyPrice = 40000)
-    items[1] = ShopItem(Items.GUTHIX_STAFF, amount = 10, sellPrice = 80000, buyPrice = 40000)
-    items[2] = ShopItem(Items.ZAMORAK_STAFF, amount = 10, sellPrice = 80000, buyPrice = 40000)
+    // OSRS Wiki Mage Arena Staffs.: five each, 100-tick restock, no purchases from players.
+    items[0] = ShopItem(Items.SARADOMIN_STAFF, amount = 5, sellPrice = 80000, resupplyCycles = 100)
+    items[1] = ShopItem(Items.GUTHIX_STAFF, amount = 5, sellPrice = 80000, resupplyCycles = 100)
+    items[2] = ShopItem(Items.ZAMORAK_STAFF, amount = 5, sellPrice = 80000, resupplyCycles = 100)
 }
 
 on_npc_option(chamberGuardian, option = "talk-to") {
