@@ -198,7 +198,7 @@ class MageArenaTests {
             assertEquals(0, a.inventory.getItemCount(Items.COINS_995))
             assertEquals(1, a.inventory.getItemCount(item.item))
             assertEquals(4, item.currentAmount)
-            shop.currency.buyFromPlayer(a.player, shop, a.inventory.getItemIndex(item.item), 1)
+            shop.currency.buyFromPlayer(a.player, shop, a.inventory.getItemIndex(item.item, skipAttrItems = false), 1)
             assertEquals(1, a.inventory.getItemCount(item.item))
             assertEquals(0, a.inventory.getItemCount(Items.COINS_995))
         }
