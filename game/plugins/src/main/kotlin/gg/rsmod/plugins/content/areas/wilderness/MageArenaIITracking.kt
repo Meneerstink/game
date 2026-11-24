@@ -40,6 +40,8 @@ object MageArenaIITracking {
     const val SHAKING_BELOW = 15
 
     const val NOT_HERE = "The symbol doesn't seem to work here, I should try using it in the Wilderness."
+    /** MA2-03 (owner 25-11 'neutrale melding'): own neutral line, the OSRS wording has no public source (wiki/transcript/recording). */
+    const val NOTHING_TO_TRACK = "The symbol has nothing left to track."
     const val MOVED = "It appears the creatures have moved locations, the symbol glows slightly as it locates their new positions."
     const val HURTS = "The power of the enchanted symbol hurts you in the process."
 
