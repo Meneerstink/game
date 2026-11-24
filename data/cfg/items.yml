@@ -304899,3 +304899,27 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 25680
+  name: "Lava dragon bones"
+  examine: "Bones of a lava dragon."
+  tradeable: true
+  weight: 1.6
+  equipment: null
+- id: 25681
+  name: "Lava dragon bones"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25682
+  name: "Lava scale"
+  examine: "A scale from the hide of a lava dragon."
+  tradeable: true
+  weight: 0.01
+  equipment: null
+- id: 25683
+  name: "Lava scale"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

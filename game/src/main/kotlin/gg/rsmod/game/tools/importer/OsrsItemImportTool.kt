@@ -414,6 +414,9 @@ object OsrsItemImportTool {
             "toa-hood" to listOf(Spec(27267)),
             // N462 07-11 (ChatGPT-B Crondis): Gricoller's can 13353 waters the palm too (OSRS Wiki Palm of Resourcefulness).
             "toa-gricoller" to listOf(Spec(13353)),
+            // LAVA-DRAAK-DROPS 24-11: the two 'Always' drops of the Lava dragon (OSRS Wiki Lava dragon): Lava dragon bones 11943 and
+            // Lava scale 11992, both tradeable with notes (Wiki). Bury XP 85 = BoneData.
+            "lava-dragon" to listOf(Spec(11943, noted = true), Spec(11992, noted = true)),
             // N462 ToA chest commons not imported yet (wiki Chest (Tombs of Amascut): Lily of the Sands 1-46 noted, Blood essence 1-6).
             "toa-commons" to listOf(Spec(27272, noted = true), Spec(26390, noted = true), Spec(26392)), // Lily of the Sands, Blood essence (inactive + active)
             // Voidwaker and its three pieces. The wiki's "slash sword" styles are the 667 scimitar style set 6: Rune scimitar

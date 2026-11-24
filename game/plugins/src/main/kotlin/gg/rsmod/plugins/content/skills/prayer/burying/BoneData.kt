@@ -30,6 +30,8 @@ enum class BoneData(
     BABY_DRAGON_BONES(bone = Items.BABYDRAGON_BONES, experience = 30.0),
     WYVERN_BONES(bone = Items.WYVERN_BONES, experience = 50.0),
     DRAGON_BONES(bone = Items.DRAGON_BONES, experience = 72.0),
+    // LAVA-DRAAK-DROPS 24-11: OSRS Wiki Lava dragon bones - 85 Prayer XP when buried.
+    LAVA_DRAGON_BONES(bone = Items.LAVA_DRAGON_BONES_OSRS_11943, experience = 85.0),
     FAYRG(bone = Items.FAYRG_BONES, experience = 84.0),
     RAURG_BONES(bone = Items.RAURG_BONES, experience = 96.0),
     DAGANNOTH(bone = Items.DAGANNOTH_BONES, experience = 125.0),

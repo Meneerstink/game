@@ -53,9 +53,9 @@ ElementalWeakness.idOverrides[Npcs.LAVA_DRAGON_OSRS] = ElementalWeakness.Weaknes
 
 val lavadragonDrops = DropTableFactory.build {
     guaranteed {
-        nothing(1) // Missing item: Lava dragon bones; source quantity 1, chance Always.
+        obj(Items.LAVA_DRAGON_BONES_OSRS_11943, quantity = 1) // LAVA-DRAAK-DROPS 24-11: OSRS Wiki Lava dragon, Always.
         obj(Items.BLACK_DRAGONHIDE, quantity = 1)
-        nothing(1) // Missing item: Lava scale; source quantity 1, chance Always.
+        obj(Items.LAVA_SCALE_OSRS_11992, quantity = 1) // LAVA-DRAAK-DROPS 24-11: OSRS Wiki Lava dragon, Always.
     }
     main {
         total(128)

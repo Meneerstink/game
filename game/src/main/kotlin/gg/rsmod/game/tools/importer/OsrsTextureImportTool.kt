@@ -240,7 +240,9 @@ object OsrsTextureImportTool {
             }
         }
         out.faceTexture = texture
-        out.faceTexSpace = space
+        // LAVA-DRAAK-DROPS 24-11: without texture spaces (texSpaceCount 0) a textured face maps on its own vertices and the 667
+        // format stores no space byte - the decoder then leaves faceTexSpace null, so an array of -1 here failed the round-trip check.
+        out.faceTexSpace = if (source.texSpaceCount > 0) space else null
         out.texMappingType = types?.copyOf()
         out.texSpaceDefA = source.texSpaceDefA?.copyOf()
         out.texSpaceDefB = source.texSpaceDefB?.copyOf()
