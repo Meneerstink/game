@@ -98,7 +98,6 @@ object MageArenaIIEncounter {
     class State(val follower: Follower, val owner: WeakReference<Player>, val point: Int) {
         var attacks = 0
         var boundUntil = -1
-        var teleBlockApplied = false
         val healers = mutableListOf<Npc>()
     }
 
@@ -169,16 +168,10 @@ object MageArenaIIEncounter {
         player.attr.remove(ACTIVE)
     }
 
-    /** Its energy balls go with it; its Tele Block fades immediately on its death (Wiki). */
+    /** Despawn removes actors, but does not cure Tele Block: only a kill does that (Wiki). */
     fun release(state: State) {
         state.healers.forEach { if (it.isSpawned()) it.world.remove(it) }
         state.healers.clear()
-        val owner = state.owner.get()
-        if (state.teleBlockApplied && owner != null) {
-            owner.timers.remove(TELEBLOCK_TIMER)
-            owner.timers.remove(gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.TELEBLOCK_WARNING_TIMER)
-        }
-        state.teleBlockApplied = false
         occupied.entries.removeIf { it.key == state.point }
     }
 
@@ -189,6 +182,7 @@ object MageArenaIIEncounter {
     fun died(npc: Npc) {
         val state = stateOf(npc) ?: return
         release(state)
+        state.owner.get()?.let { gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.clearTeleblockFrom(it, state) }
         state.owner.get()?.attr?.get(ACTIVE)?.remove(state.follower.god)
     }
 
@@ -300,8 +294,8 @@ object MageArenaIIEncounter {
             wait(SPECIAL_LAND_TICKS)
             if (!npc.isAlive() || !target.isOnline || target.timers.has(TELEBLOCK_TIMER)) return@queue
             if (npc.world.randomDouble() >= accuracy(npc, target, CombatClass.MAGIC)) { target.graphic(Graphic(85, 124)); return@queue }
-            gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.teleblock(target, if (protects(target, CombatClass.MAGIC)) TELE_BLOCK_PROTECTED_TICKS else TELE_BLOCK_TICKS)
-            state.teleBlockApplied = true
+            gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.teleblock(target,
+                if (protects(target, CombatClass.MAGIC)) TELE_BLOCK_PROTECTED_TICKS else TELE_BLOCK_TICKS, source = state)
             target.message("A teleport block has been cast on you!")
         }
     }

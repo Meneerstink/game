@@ -14,6 +14,8 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.key.EQUIPMENT_KEY
 import gg.rsmod.game.model.skill.SkillSet
+import gg.rsmod.game.model.timer.TimerMap
+import gg.rsmod.game.model.timer.TELEBLOCK_TIMER
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.game.model.queue.TaskPriority
 import gg.rsmod.plugins.api.BonusSlot
@@ -25,6 +27,7 @@ import gg.rsmod.plugins.content.combat.Combat
 import gg.rsmod.plugins.content.combat.formula.MagicCombatFormula
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
 import gg.rsmod.plugins.content.mechanics.prayer.Prayers
+import gg.rsmod.plugins.content.mechanics.hud.TimerExpiry
 import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 import io.mockk.every
 import io.mockk.coEvery
@@ -36,6 +39,41 @@ import kotlin.coroutines.startCoroutine
 import kotlin.test.*
 
 class MageArenaIIGuardianTests {
+    @Test fun `despawn retains boss teleblock while death clears only its own cast`() {
+        val world = mockk<World>(relaxed = true)
+        val definitions = mockk<DefinitionSet>()
+        every { definitions.get(NpcDef::class.java, any()) } answers { NpcDef(secondArg()) }
+        every { world.definitions } returns definitions
+        every { world.spawn(any<Npc>()) } returns true
+        val owner = mockk<Player>(relaxed = true)
+        val timers = TimerMap()
+        every { owner.world } returns world
+        every { owner.attr } returns AttributeMap()
+        every { owner.timers } returns timers
+        mockkObject(MageArenaAssets)
+        try {
+            every { MageArenaAssets.npc(any()) } answers { localNpc(firstArg()) }
+            every { MageArenaAssets.sequence(any()) } returns null
+            val actor = MageArenaIIEncounter.summon(owner, MageArenaII.God.SARADOMIN,
+                MageArenaIITracking.Location(11_000, Tile(3200, 3900)))!!
+            val state = MageArenaIIEncounter.stateOf(actor)!!
+            TimerExpiry.teleblock(owner, 200, source = state)
+            MageArenaIIEncounter.dismiss(actor)
+            assertEquals(200, timers[TELEBLOCK_TIMER], "fleeing must not cure boss TB")
+            assertEquals(150, timers[TimerExpiry.TELEBLOCK_WARNING_TIMER])
+            MageArenaIIEncounter.died(actor)
+            assertFalse(timers.has(TELEBLOCK_TIMER))
+            TimerExpiry.teleblock(owner, 200, source = state)
+            timers.remove(TELEBLOCK_TIMER)
+            TimerExpiry.teleblock(owner, 500)
+            MageArenaIIEncounter.died(actor)
+            assertEquals(500, timers[TELEBLOCK_TIMER], "a stale death must not cure a PKer's new TB")
+        } finally {
+            MageArenaIIEncounter.dismissAll(owner)
+            unmockkObject(MageArenaAssets)
+        }
+    }
+
     @Test fun `MA2 rolls can hit and miss under Protect Deflect and Ruinous without changing generic NPC protection`() {
         val target = mockk<Player>(relaxed = true)
         every { target.attr } returns AttributeMap()
