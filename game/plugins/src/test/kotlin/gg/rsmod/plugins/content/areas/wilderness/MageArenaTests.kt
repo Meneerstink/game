@@ -24,6 +24,16 @@ import gg.rsmod.game.model.skill.SkillSet
 import gg.rsmod.game.model.shop.Shop
 import gg.rsmod.game.model.shop.PurchasePolicy
 import gg.rsmod.game.plugin.PluginRepository
+import gg.rsmod.game.plugin.Plugin
+import gg.rsmod.game.model.attr.INTERACTING_OBJ_ATTR
+import gg.rsmod.game.model.entity.DynamicObject
+import gg.rsmod.game.model.entity.GameObject
+import gg.rsmod.plugins.api.cfg.Objs
+import gg.rsmod.plugins.content.magic.TeleportType
+import gg.rsmod.plugins.content.magic.canTeleport
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
+import java.lang.ref.WeakReference
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.NpcSpecies
@@ -37,6 +47,40 @@ import java.net.URLClassLoader
 import kotlin.test.*
 
 class MageArenaTests {
+    @Test fun `compiled entrance lever requires MA1 while bank and arena exit remain available before MA1`() {
+        val a = Account()
+        every { a.defs.get(ObjectDef::class.java, any()) } answers {
+            ObjectDef(secondArg()).apply { options[0] = "Pull" }
+        }
+        every { a.world.isSpawned(any<GameObject>()) } returns true
+        every { a.player.interfaces.currentModal } returns -1
+        every { a.player.executePlugin<Unit>(any()) } answers { firstArg<Plugin.() -> Unit>().invoke(Plugin(a.player)) }
+        val repo = PluginRepository(a.world)
+        every { a.world.plugins } returns repo
+        var teleports = 0
+        mockkStatic("gg.rsmod.plugins.content.magic.PawnExtKt")
+        try {
+            every { a.player.canTeleport(TeleportType.LEVER, any()) } answers { teleports++; true }
+            URLClassLoader(arrayOf(File("scripts/build/classes/kotlin/main").toURI().toURL()), javaClass.classLoader).use {
+                it.loadClass("gg.rsmod.plugins.content.objs.levers.Levers_plugin")
+                    .getConstructor(PluginRepository::class.java, World::class.java, Server::class.java)
+                    .newInstance(repo, a.world, mockk<Server>(relaxed = true))
+                fun pull(id: Int, tile: Tile) {
+                    a.attrs[INTERACTING_OBJ_ATTR] = WeakReference<GameObject>(DynamicObject(id, 0, 0, tile))
+                    assertTrue(repo.executeObject(a.player, id, 1))
+                }
+                pull(Objs.LEVER_9706, Tile(3104, 3956))
+                assertEquals(0, teleports)
+                pull(Objs.LEVER_5959, Tile(3090, 3956))
+                pull(Objs.LEVER_9707, Tile(3105, 3952))
+                assertEquals(2, teleports)
+                a.complete()
+                pull(Objs.LEVER_9706, Tile(3104, 3956))
+                assertEquals(3, teleports)
+            }
+        } finally { unmockkStatic("gg.rsmod.plugins.content.magic.PawnExtKt") }
+    }
+
     @Test fun `compiled guardian shop charges 80000 refuses staff sales and restocks one per100 ticks`() {
         val a = Account()
         every { a.defs.get(ItemDef::class.java, any()) } answers {

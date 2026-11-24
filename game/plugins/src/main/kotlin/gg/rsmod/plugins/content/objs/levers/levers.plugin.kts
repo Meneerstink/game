@@ -6,6 +6,7 @@ import gg.rsmod.game.model.entity.GameObject
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.canTeleport
+import gg.rsmod.plugins.content.areas.wilderness.MageArena
 
 // List of valid lever object IDs
 val lever =
@@ -188,6 +189,11 @@ on_obj_option(obj = Objs.LEVER_9706, option = "pull") {
     if (obj.isSpawned(world)) {
         when (obj.tile.x) {
             3104 -> {
+                // OSRS Wiki Mage Arena, Miniquest: arena access requires MA1; bank and exit do not.
+                if (!MageArena.completed(player)) {
+                    player.message("You must complete Mage Arena I before entering the arena.")
+                    return@on_obj_option
+                }
                 // Check if the player is being attacked, locked, dead, or has a modal interface open
                 if (player.isLocked() || player.isDead() || player.interfaces.currentModal != -1) {
                     player.message("Your teleport was interrupted!")
