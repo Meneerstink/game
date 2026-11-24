@@ -11,6 +11,119 @@ import io.mockk.verify
 import kotlin.test.*
 
 class N11ToggleTests {
+    @Test fun `cocktail native mixing button keeps original shaker and cannot pay twice after replacement or logout`() {
+        N11Fixture().use { f ->
+            val making = gg.rsmod.plugins.content.skills.cooking.CocktailMaking
+            f.menu(Items.COCKTAIL_SHAKER, "Mix-cocktail")
+            making.POURS.forEach { f.menu(it.input, "Pour") }
+            making.GARNISHES.forEach { f.menu(it.input, "Add-ingreds") }
+            every { f.player.interfaces.isVisible(436) } returns true
+            f.load("skills.cooking.Cocktail_making_plugin")
+            val recipe = making.MIXES.getValue(23)
+            fun prepare(): Item {
+                f.inventory.removeAll()
+                val shaker = Item(Items.COCKTAIL_SHAKER)
+                f.inventory[0] = shaker
+                recipe.ingredients.forEach { (id, amount) -> f.inventory.add(id, amount) }
+                f.select(0)
+                f.repo.executeItem(f.player, Items.COCKTAIL_SHAKER, 1)
+                return shaker
+            }
+            prepare()
+            f.repo.executeButton(f.player, 436, 23)
+            f.repo.executeButton(f.player, 436, 23)
+            repeat(4) { f.queues.cycle() }
+            assertEquals(1, f.inventory.getItemCount(Items.MIXED_BLAST))
+            verify(exactly = 1) { f.player.addXp(gg.rsmod.plugins.api.Skills.COOKING, 30.0, any(), any()) }
+            val dropped = prepare()
+            f.repo.executeButton(f.player, 436, 23)
+            f.inventory[0] = Item(Items.COCKTAIL_SHAKER)
+            repeat(4) { f.queues.cycle() }
+            assertEquals(0, f.inventory.getItemCount(Items.MIXED_BLAST))
+            assertFalse(making.make(f.player, recipe, 0, dropped))
+            prepare()
+            f.repo.executeButton(f.player, 436, 23)
+            f.queues.terminateTasks()
+            repeat(4) { f.queues.cycle() }
+            assertEquals(0, f.inventory.getItemCount(Items.MIXED_BLAST))
+        }
+    }
+
+    @Test fun `all seven cocktail recipes pour real drinks with exact ingredients and one returned shaker in full inventory`() {
+        val making = gg.rsmod.plugins.content.skills.cooking.CocktailMaking
+        for (recipe in making.MIXES.values + making.POURS + making.GARNISHES) N11Fixture().use { f ->
+            val input = Item(recipe.input)
+            f.inventory[0] = input
+            recipe.ingredients.forEach { (id, count) -> f.inventory.add(id, count) }
+            every { f.skills.getCurrentLevel(gg.rsmod.plugins.api.Skills.COOKING) } returns recipe.level - 1
+            assertFalse(making.make(f.player, recipe, 0, input))
+            every { f.skills.getCurrentLevel(gg.rsmod.plugins.api.Skills.COOKING) } returns recipe.level
+            val missing = recipe.ingredients.keys.first()
+            val count = f.inventory.getItemCount(missing)
+            f.inventory.remove(missing, count)
+            assertFalse(making.make(f.player, recipe, 0, input))
+            assertSame(input, f.inventory[0])
+            f.inventory.add(missing, count)
+            while (f.inventory.hasSpace) f.inventory.add(100000)
+            assertTrue(making.make(f.player, recipe, 0, input), "recipe ${recipe.input}->${recipe.output}")
+            assertEquals(1, f.inventory.getItemCount(recipe.output))
+            assertEquals(if (recipe.returnsShaker) 1 else 0, f.inventory.getItemCount(Items.COCKTAIL_SHAKER))
+            assertFalse(making.make(f.player, recipe, 0, input))
+            if (recipe.xp > 0) verify(exactly = 1) { f.player.addXp(gg.rsmod.plugins.api.Skills.COOKING, recipe.xp, any(), any()) }
+            else verify(exactly = 0) { f.player.addXp(any(), any(), any(), any()) }
+        }
+    }
+
+    @Test fun `cocktail fruit preparation returns four pineapple rings only with room and preserves knife`() {
+        val making = gg.rsmod.plugins.content.skills.cooking.CocktailMaking
+        making.CUTS.forEach { cut ->
+            for (output in listOf(cut.chunks, cut.slices)) N11Fixture().use { f ->
+                val fruit = Item(cut.fruit)
+                f.inventory[0] = fruit
+                assertFalse(making.cut(f.player, cut, output, 0, fruit))
+                f.inventory[1] = Item(Items.KNIFE)
+                while (f.inventory.hasSpace) f.inventory.add(100000)
+                val amount = if (output == cut.slices) cut.slicesAmount else 1
+                if (amount > 1) {
+                    assertFalse(making.cut(f.player, cut, output, 0, fruit))
+                    for (i in 2..amount) f.inventory[i] = null
+                }
+                assertTrue(making.cut(f.player, cut, output, 0, fruit))
+                assertEquals(amount, f.inventory.getItemCount(output))
+                assertEquals(1, f.inventory.getItemCount(Items.KNIFE))
+                assertFalse(making.cut(f.player, cut, output, 0, fruit))
+                verify(exactly = 0) { f.player.addXp(any(), any(), any(), any()) }
+            }
+        }
+    }
+
+    @Test fun `cocktail heating reuses range cooking and never burns the drink`() {
+        val saturday = gg.rsmod.plugins.content.skills.cooking.CookingData.MIXED_SATURDAY
+        val dragon = gg.rsmod.plugins.content.skills.cooking.CookingData.MIXED_DRAGON
+        assertEquals(32, saturday.levelRequirement)
+        assertEquals(0.0, saturday.experience)
+        assertEquals(118, dragon.lowChance)
+        assertEquals(492, dragon.highChance)
+        for (recipe in listOf(saturday, dragon)) N11Fixture().use { f ->
+            assertTrue(recipe.rangeOnly)
+            assertEquals(recipe.cooked, recipe.burnt)
+            every { f.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, any()) } answers {
+                gg.rsmod.game.fs.def.ObjectDef(secondArg()).apply { name = "Range" }
+            }
+            every { f.skills.getCurrentLevel(gg.rsmod.plugins.api.Skills.COOKING) } returns 99
+            every { f.world.isSpawned(any<gg.rsmod.game.model.entity.GameObject>()) } returns true
+            val range = gg.rsmod.game.model.entity.DynamicObject(4172, 10, 0, f.player.tile)
+            f.attrs[gg.rsmod.game.model.attr.INTERACTING_OBJ_ATTR] = java.lang.ref.WeakReference(range)
+            f.inventory[0] = Item(recipe.raw)
+            f.player.queue {
+                gg.rsmod.plugins.content.skills.cooking.CookingAction.cook(this, recipe, 1)
+            }
+            repeat(10) { f.queues.cycle() }
+            assertEquals(1, f.inventory.getItemCount(recipe.cooked))
+            assertEquals(0, f.inventory.getItemCount(recipe.raw))
+        }
+    }
+
     @Test fun `panning permission mud cooldown full inventory search and repeated clicks cannot duplicate finds or XP`() {
         N11Fixture().use { f ->
             f.menu(Items.PANNING_TRAY, "", "", "", "Search")
