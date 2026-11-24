@@ -66,6 +66,8 @@ internal class N11Fixture : AutoCloseable {
             c[1].split('|').forEachIndexed { i, option -> definition.inventoryMenu[i] = option.ifEmpty { null } }
             c[2].split('|').forEachIndexed { i, option -> definition.equipmentMenu[i] = option.ifEmpty { null } }
         }
+        // The GE census omits partially charged masks; native 667 8903..8919 retain the same Wear/Remove-charge slots.
+        for (id in 8903..8919 step 2) menu(id, "", "Wear", "", "Remove-charge", "")
         select(0)
     }
 
