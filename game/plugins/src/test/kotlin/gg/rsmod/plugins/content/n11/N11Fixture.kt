@@ -30,6 +30,7 @@ class N11Fixture : AutoCloseable {
     val timers = TimerMap()
     val skills = mockk<SkillSet>(relaxed = true)
     val inventory = container()
+    val bank = container()
     val equipment = container()
     val queues = PawnQueueTaskSet()
     val repo = PluginRepository(world)
@@ -47,6 +48,7 @@ class N11Fixture : AutoCloseable {
         every { player.attr } returns attrs
         every { player.timers } returns timers
         every { player.inventory } returns inventory
+        every { player.bank } returns bank
         every { player.equipment } returns equipment
         every { player.skills } returns skills
         every { player.tile } returns Tile(3200, 3200)

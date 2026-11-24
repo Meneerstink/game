@@ -200,8 +200,6 @@ class N11ToggleTests {
     }
 
     private fun museum(f: N11Fixture): gg.rsmod.game.model.varp.VarpSet {
-        val bank = f.container()
-        every { f.player.bank } returns bank
         val varps = gg.rsmod.game.model.varp.VarpSet((0..1100).toSet())
         every { f.player.varps } returns varps
         every { f.definitions.get(gg.rsmod.game.fs.def.VarbitDef::class.java, any()) } answers {
