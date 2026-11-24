@@ -178,6 +178,10 @@ class MageArenaTests {
         every { a.defs.get(ItemDef::class.java, any()) } answers {
             ItemDef(secondArg()).apply { cost = 80000; stacks = id == Items.COINS_995; tradeable = true }
         }
+        // The script binds "talk-to" and "trade"; on_npc_option checks the npc's cache options (Chamber Guardian: Talk-to, Trade).
+        every { a.defs.get(NpcDef::class.java, any()) } answers {
+            NpcDef(secondArg()).also { it.options[0] = "Talk-to"; it.options[2] = "Trade" }
+        }
         val repo = PluginRepository(a.world)
         every { a.world.plugins } returns repo
         URLClassLoader(arrayOf(File("scripts/build/classes/kotlin/main").toURI().toURL()), javaClass.classLoader).use {
