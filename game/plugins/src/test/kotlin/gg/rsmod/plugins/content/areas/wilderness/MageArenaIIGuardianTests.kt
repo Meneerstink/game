@@ -28,6 +28,40 @@ import kotlin.coroutines.startCoroutine
 import kotlin.test.*
 
 class MageArenaIIGuardianTests {
+    @Test fun `symbol summoned guardians install the existing impact filter including delayed typeless damage`() {
+        val definitions = mockk<DefinitionSet>()
+        every { definitions.get(NpcDef::class.java, any()) } answers { NpcDef(secondArg()) }
+        val world = mockk<World>(relaxed = true)
+        every { world.definitions } returns definitions
+        every { world.spawn(any<Npc>()) } returns true
+        val owner = mockk<Player>(relaxed = true)
+        every { owner.world } returns world
+        every { owner.attr } returns AttributeMap()
+        mockkObject(MageArenaAssets)
+        try {
+            every { MageArenaAssets.npc(any()) } answers { localNpc(firstArg()) }
+            every { MageArenaAssets.sequence(any()) } returns null
+            MageArenaIIGuardians.ALL.forEachIndexed { index, guardian ->
+                val actor = MageArenaIIEncounter.summon(owner, guardian.god,
+                    MageArenaIITracking.Location(10_000 + index, Tile(3200, 3900)))!!
+                val filter = assertNotNull(actor.hitModifier, "real summon must install the impact rule")
+                val delayedSpecial = Hit.Builder().addHit(25, HitType.REGULAR_HIT.id).build()
+                val matching = Hit.Builder().addHit(30, HitType.MAGIC.id).build().apply {
+                    sourceCombatClass = CombatClass.MAGIC
+                    sourceSpellId = guardian.spell.uniqueId
+                }
+                val recoil = Hit.Builder().addHit(4, HitType.REFLECTED.id).build()
+                filter(delayedSpecial); filter(matching); filter(recoil)
+                assertEquals(0, delayedSpecial.hitmarks.single().damage)
+                assertEquals(30, matching.hitmarks.single().damage)
+                assertEquals(4, recoil.hitmarks.single().damage)
+            }
+        } finally {
+            MageArenaIIEncounter.dismissAll(owner)
+            unmockkObject(MageArenaAssets)
+        }
+    }
+
     @Test fun `unreachable target suspends after one route attempt instead of retrying within the tick`() {
         val actor = mockk<Npc>(relaxed = true)
         val target = mockk<Player>(relaxed = true)

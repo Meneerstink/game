@@ -127,6 +127,9 @@ object MageArenaIIEncounter {
         npc.attr[gg.rsmod.plugins.content.combat.Combat.OWNER_ONLY_TARGET_ATTR] = true
         npc.respawnOverride = false
         npc.attr[STATE] = State(follower, WeakReference(player), location.point)
+        val guardian = MageArenaIIGuardians.ALL.first { it.god == god }
+        // The launch gate protects XP; this same rule must also cover direct and delayed special hits at impact.
+        npc.hitModifier = { hit -> MageArenaIIGuardians.modifyHit(guardian, hit) }
         if (!player.world.spawn(npc)) return null
         occupied[location.point] = WeakReference(npc)
         (player.attr[ACTIVE] ?: mutableMapOf<MageArenaII.God, WeakReference<Npc>>().also { player.attr[ACTIVE] = it })[god] = WeakReference(npc)
