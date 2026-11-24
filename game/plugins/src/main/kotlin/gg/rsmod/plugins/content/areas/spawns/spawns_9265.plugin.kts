@@ -203,7 +203,8 @@ spawn_npc(
     direction = Direction.NORTH,
     static = false,
 ) // Elf warrior
-spawn_npc(npc = Npcs.EOIN, x = 2337, z = 3175, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Eoin
+// EOIN-VAST 24-11: 2337,3175 is a blocked tile in this map (npcpath trace); OSRS Wiki map centre 2340,3173, open here.
+spawn_npc(npc = Npcs.EOIN, x = 2340, z = 3173, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Eoin
 spawn_npc(npc = Npcs.EUDAV, x = 2334, z = 3182, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Eudav
 spawn_npc(
     npc = Npcs.GETHIN,
