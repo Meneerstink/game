@@ -21,6 +21,9 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.skill.SkillSet
+import gg.rsmod.game.model.timer.TimerMap
+import gg.rsmod.game.model.timer.GOD_SPELL_CHARGE_TIMER
+import gg.rsmod.game.model.attr.GOD_SPELL_CHARGE_ATTR
 import gg.rsmod.game.model.shop.Shop
 import gg.rsmod.game.model.shop.PurchasePolicy
 import gg.rsmod.game.plugin.PluginRepository
@@ -47,6 +50,24 @@ import java.net.URLClassLoader
 import kotlin.test.*
 
 class MageArenaTests {
+    @Test fun `Charge recast cooldown ends at100 while its700 tick buff remains and refreshes on recast`() {
+        val a = Account()
+        val timers = TimerMap()
+        every { a.player.timers } returns timers
+        MageArenaCharge.activate(a.player)
+        fun tick() { timers.getTimers().entries.forEach { it.setValue(it.value - 1) } }
+        repeat(99) { tick() }
+        assertTrue(timers.has(MageArenaCharge.COOLDOWN))
+        assertEquals(601, timers[GOD_SPELL_CHARGE_TIMER])
+        tick()
+        assertFalse(timers.has(MageArenaCharge.COOLDOWN))
+        assertEquals(600, timers[GOD_SPELL_CHARGE_TIMER])
+        assertEquals(true, a.attrs[GOD_SPELL_CHARGE_ATTR])
+        MageArenaCharge.activate(a.player)
+        assertEquals(700, timers[GOD_SPELL_CHARGE_TIMER])
+        assertEquals(100, timers[MageArenaCharge.COOLDOWN])
+    }
+
     @Test fun `compiled entrance lever requires MA1 while bank and arena exit remain available before MA1`() {
         val a = Account()
         every { a.defs.get(ObjectDef::class.java, any()) } answers {
