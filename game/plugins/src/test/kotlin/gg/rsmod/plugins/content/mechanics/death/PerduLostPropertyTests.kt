@@ -20,6 +20,7 @@ import kotlin.test.Test
 import kotlin.test.assertNull
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.test.assertNotNull
 
 /**
  * Owner 2026-10-04 ("a lot of items need to go to Perdu", "exactly OSRS"): Perdu's OSRS Lost Property. OSRS Wiki "Colossal blade":
@@ -28,6 +29,32 @@ import kotlin.test.assertTrue
  * multiples of".
  */
 class PerduLostPropertyTests {
+    @Test fun `fresh MA2 completion unlocks all four250k capes without colour history and claims still recheck ownership`() {
+        val player = newPlayer()
+        val ma2 = gg.rsmod.plugins.content.areas.wilderness.MageArenaII
+        val ancient = assertNotNull(gg.rsmod.plugins.content.items.osrs.AncientCape.assets.cape)
+        val capes = listOf(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_GUTHIX_CAPE, Items.IMBUED_ZAMORAK_CAPE, ancient)
+        assertTrue(PerduLostProperty.unlocked(player).isEmpty())
+        assertTrue(PerduLostProperty.available(player).none { it.itemId in capes })
+        player.attr[ma2.STARTED] = true
+        player.attr[ma2.DELIVERED] = 7
+        val offers = PerduLostProperty.available(player).filter { it.itemId in capes }
+        assertEquals(capes.toSet(), offers.map { it.itemId }.toSet())
+        assertTrue(offers.all { it.price == 250_000L })
+        offers.forEach { entry ->
+            player.inventory.add(Items.COINS_995, 250_000)
+            val offer = PerduReclaim.Offer(entry.itemId, 1, entry.price, property = entry)
+            assertNull(PerduReclaim.claim(player, offer))
+            assertEquals(1, player.inventory.getItemCount(entry.itemId))
+            assertEquals(0, player.inventory.getItemCount(Items.COINS_995))
+            assertTrue(PerduLostProperty.available(player).none { it.itemId == entry.itemId })
+            assertEquals("You don't need that back - you still have it.", PerduReclaim.claim(player, offer))
+            player.inventory.remove(entry.itemId, 1)
+            player.bank.add(entry.variants.first(), 1)
+            assertTrue(PerduLostProperty.available(player).none { it.itemId == entry.itemId })
+        }
+    }
+
     @Test
     fun `old MA2 death records cannot bypass completion or the 250k lost property price`() {
         val player = newPlayer()
