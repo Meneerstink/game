@@ -14,6 +14,9 @@ class N11RemoveChargeTests {
     }
 
     private fun load(f: N11Fixture) {
+        // Partial masks are absent from the GE-only census fixture. Supply their real cache menu
+        // before loading the script: string option registration resolves the slot at load time.
+        ItemCharges.removable.keys.forEach { f.def(it).inventoryMenu[3] = "Remove-charge" }
         ItemActionGuard.install(f.repo)
         f.load("items.charges.Remove_charges_plugin")
     }
@@ -27,8 +30,6 @@ class N11RemoveChargeTests {
         ItemCharges.removable.forEach { (charged, empty) ->
             N11Fixture().use { f ->
                 load(f)
-                // The older menu census contains only GE forms; partial masks have the same native menu.
-                f.def(charged).inventoryMenu[3] = "Remove-charge"
                 repeat(28) { f.inventory[it] = Item(100000 + it) }
                 val held = Item(charged)
                 f.inventory[0] = held
