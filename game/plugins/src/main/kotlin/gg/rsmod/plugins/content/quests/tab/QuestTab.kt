@@ -176,7 +176,7 @@ object QuestTab {
     private const val C_ORANGE = "ff981f"
 
     /** The gear button: hide the completed "Other Quests" (OSRS quest list filter). */
-    private val HIDE_DONE = AttributeKey<Boolean>(persistenceKey = "quest_list_hide_done")
+    internal val HIDE_DONE = AttributeKey<Boolean>(persistenceKey = "quest_list_hide_done")
 
     /** OSRS quest colours from the real quest state; a quest of a bracket not reached yet reads grey. */
     private fun questColour(player: Player, name: String, open: Boolean): String {
@@ -200,6 +200,9 @@ object QuestTab {
         val legacy = !QuestBrackets.applies(player)
         val out = ArrayList<QuestRow>()
         val inBrackets = HashSet<String>()
+        // N646 (owner 22-11 'filter knop in quest list doet het niet'): the Filter hid completed quests only under Other Quests,
+        // below the 36 bracket quests - the visible list never changed. It now hides them in the brackets too.
+        val hide = player.attr[HIDE_DONE] == true
         DeadmanBrackets.Bracket.values().forEach { bracket ->
             val step = QuestBrackets.step(bracket)
             val open = legacy || CombatBracketsUi.reached(player, bracket)
@@ -209,6 +212,7 @@ object QuestTab {
                 inBrackets += q
                 val rfd = q.startsWith("RFD: ")
                 val col = if (rfd) (if (open) C_GREEN else C_LATER) else questColour(player, q, open)
+                if (hide && col == C_GREEN) return@forEach
                 out += QuestRow(ROW_QUEST, if (rfd) "Recipe for Disaster" else q, "<col=$col>${display(q)}</col>", bracket.ordinal)
             }
             val chosen = QuestBrackets.chosenOption(player, bracket)
@@ -227,7 +231,6 @@ object QuestTab {
         }
         out += QuestRow(ROW_GAP, "", "")
         out += QuestRow(ROW_OTHER_HEAD, "", "<col=$C_ORANGE>Other Quests</col>")
-        val hide = player.attr[HIDE_DONE] == true
         gg.rsmod.plugins.content.quests.QuestList.ENTRIES
             .filter { it.name !in inBrackets }
             .sortedBy { it.name.removePrefix("The ") }

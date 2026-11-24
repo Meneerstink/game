@@ -216,6 +216,20 @@ class QuestTabTests {
     }
 
     @Test
+    fun `N646 - the Filter hides completed quests in the brackets too, not only under Other Quests`() {
+        val account = Account(isNew = false)
+        val green = "<col=0dc10d>"
+        val shown = QuestTab.questRows(account.player)
+        account.attributes[QuestTab.HIDE_DONE] = true
+        val filtered = QuestTab.questRows(account.player)
+        assertFalse(filtered.any { it.kind == QuestTab.ROW_QUEST && it.text.startsWith(green) }, "a completed quest is still listed")
+        // Headers and storylines stay; only completed quest rows go.
+        assertEquals(shown.count { it.kind != QuestTab.ROW_QUEST }, filtered.count { it.kind != QuestTab.ROW_QUEST })
+        // The list is cut at the panel's row count, so with the filter at least as many open quests fit.
+        assertTrue(filtered.count { it.kind == QuestTab.ROW_QUEST } >= shown.count { it.kind == QuestTab.ROW_QUEST && !it.text.startsWith(green) })
+    }
+
+    @Test
     fun `accounts from before the choices get no note`() {
         val view = DeadmanGroupsView.view(Account(isNew = false).player)
         assertFalse(view.showNote)
