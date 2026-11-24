@@ -27,6 +27,8 @@ class MagicDelayedEffectTests {
         val caster = mockk<Player>(relaxed = true)
         every { caster.world } returns world
         every { caster.attr } returns AttributeMap()
+        // Slayer level 1 = the default monster requirement (NpcCombatDef slayerReq 1); the slayerReq 99 case below must stay gated.
+        every { caster.skills.getMaxLevel(gg.rsmod.plugins.api.Skills.SLAYER) } returns 1
         every { world.instanceAllocator.getMap(any()) } returns null
         every { caster.tile } returns Tile(2816, 5570)
         every { world.getMultiCombatChunks() } returns emptySet()
