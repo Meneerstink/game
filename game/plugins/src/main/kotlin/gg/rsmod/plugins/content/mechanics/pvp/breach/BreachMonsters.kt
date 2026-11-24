@@ -5,6 +5,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.plugins.content.combat.attack.NpcAttacks
+import gg.rsmod.plugins.content.combat.formula.ElementalWeakness
 import java.io.File
 import java.io.FileReader
 
@@ -720,13 +721,20 @@ object BreachMonsters {
     val FREEZE_IMMUNE: Set<Int> = setOf(14459, 14463, 14464, 14470)
 
     /**
-     * Where the Annihilation infobox's elemental weakness differs from the regular monster of the same name (the shared by-name
-     * table): Jal-ImKot "Water 30", Thermonuclear smoke devil none (the regular one is Air 20). Guarded by BreachWikiInfoboxTests.
+     * OSRS Wiki Annihilation infoboxes (rechecked 2026-11-24): Jal-ImKot Water 30, smoke devil Air 20.
+     * The six Zemouregal Summons share one name but have different weaknesses, so a by-name lookup cannot represent them.
+     * Guarded for every variant by BreachWikiInfoboxTests.
      */
-    val WEAKNESS_OVERRIDES: Map<Int, gg.rsmod.plugins.content.combat.formula.ElementalWeakness.Weakness?> =
+    val WEAKNESS_OVERRIDES: Map<Int, ElementalWeakness.Weakness?> =
         mapOf(
-            14453 to gg.rsmod.plugins.content.combat.formula.ElementalWeakness.Weakness(gg.rsmod.plugins.content.combat.formula.ElementalWeakness.Element.WATER, 30),
-            14460 to null,
+            14453 to ElementalWeakness.Weakness(ElementalWeakness.Element.WATER, 30),
+            14460 to ElementalWeakness.Weakness(ElementalWeakness.Element.AIR, 20),
+            14471 to ElementalWeakness.Weakness(ElementalWeakness.Element.FIRE, 50), // Mummy
+            14472 to ElementalWeakness.Weakness(ElementalWeakness.Element.AIR, 40), // Shade
+            14473 to ElementalWeakness.Weakness(ElementalWeakness.Element.FIRE, 50), // Undead One
+            14474 to ElementalWeakness.Weakness(ElementalWeakness.Element.FIRE, 50), // Pirate
+            14475 to null, // Fremennik
+            14476 to null, // Khazard
         )
 
     /** The monsters a breach spawns (everything but Zemouregal's summons). */
