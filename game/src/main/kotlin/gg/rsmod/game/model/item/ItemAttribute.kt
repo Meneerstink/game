@@ -122,4 +122,7 @@ enum class ItemAttribute {
     CLUE_LIGHT_G,
     CLUE_LIGHT_H,
 
+    /** Four two-bit spice dose counts on this physical stew (red/orange/brown/yellow). Appended for existing saves. */
+    SPICY_STEW_DOSES,
+
 }
