@@ -8661,7 +8661,7 @@
     "source": "osrs+matrix",
     "attack_anim": -1,
     "block_anim": -1,
-    "death_anim": -1,
+    "death_anim": 9467,
     "death_delay": 1,
     "respawn_delay": 60,
     "attack_gfx": -1,
