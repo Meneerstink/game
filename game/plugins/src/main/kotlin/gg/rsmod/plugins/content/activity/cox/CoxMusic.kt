@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.activity.cox
 
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.Tile
 import gg.rsmod.plugins.api.ext.playSong
 
 /**
@@ -17,11 +18,35 @@ object CoxMusic {
     const val LOWER_DEPTHS = 1027
     const val FIRE_IN_THE_DEEP = 1028
 
+    data class Track(val id: Int, val name: String)
+
+    fun track(floor: Int, olm: Boolean = false): Track = when {
+        olm -> Track(FIRE_IN_THE_DEEP, "Fire in the Deep")
+        floor <= 0 -> Track(UPPER_DEPTHS, "Upper Depths")
+        else -> Track(LOWER_DEPTHS, "Lower Depths")
+    }
+
+    /** Use this player's floor, not the party's furthest progress (a death returns to the previous floor). */
+    fun at(raid: CoxRaid, tile: Tile): Track? {
+        if (!raid.map.area.contains(tile)) return null
+        val x = tile.x - raid.map.area.bottomLeftX
+        val z = tile.z - raid.map.area.bottomLeftZ
+        if (x in CoxMap.OLM_AT_CHUNK_X * 8 until (CoxMap.OLM_AT_CHUNK_X + CoxMap.OLM_WIDTH) * 8 &&
+            z in CoxMap.OLM_AT_CHUNK_Z * 8 until (CoxMap.OLM_AT_CHUNK_Z + CoxMap.OLM_HEIGHT) * 8) return track(0, olm = true)
+        val floor = CoxLayouts.FLOOR_PLANES.indexOf(tile.height)
+        return if (z in 0 until CoxMap.OLM_AT_CHUNK_Z * 8 && floor in raid.layout.floors.indices) track(floor) else null
+    }
+
+    /** The generic region playlist has no entries for these composed floors; replay explicitly when a song ends or a raider returns. */
+    fun resume(p: Player): Boolean {
+        val raid = CoxRaids.raidAt(p.tile) ?: return false
+        val song = at(raid, p.tile) ?: return false
+        p.playSong(song.id, song.name)
+        return true
+    }
+
     fun floor(p: Player, floor: Int, olm: Boolean = false) {
-        when {
-            olm -> p.playSong(FIRE_IN_THE_DEEP, "Fire in the Deep")
-            floor <= 0 -> p.playSong(UPPER_DEPTHS, "Upper Depths")
-            else -> p.playSong(LOWER_DEPTHS, "Lower Depths")
-        }
+        val song = track(floor, olm)
+        p.playSong(song.id, song.name)
     }
 }

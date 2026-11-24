@@ -106,6 +106,7 @@ object CoxRaids : KLogging() {
             return
         }
         player.moveTo(respawnTile(raid))
+        CoxMusic.resume(player)
         CoxPartyTab.open(player, raid)
         CoxPointsOverlay.open(player)
     }

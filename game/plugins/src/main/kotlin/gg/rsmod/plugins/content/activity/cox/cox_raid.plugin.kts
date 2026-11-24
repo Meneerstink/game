@@ -198,6 +198,7 @@ on_player_death {
     player.attr.remove(COX_DIED_IN)
     val raid = CoxRaids.byId(id) ?: return@on_player_death
     player.teleportTo(CoxRaids.respawnTile(raid))
+    CoxMusic.resume(player)
 }
 
 /*

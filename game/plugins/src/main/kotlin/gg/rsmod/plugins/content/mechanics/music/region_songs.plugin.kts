@@ -123,6 +123,8 @@ on_song_end {
         // If the playlist is enabled, but shuffle is not, play the next song in the list
         songIndex = playlistSongs[(playlistSongs.indexOf(finishedSongIndex) + 1) % 12]
     } else {
+        // CoX floors share source templates and have no region-playlist entries. Keep their floor track playing.
+        if (gg.rsmod.plugins.content.activity.cox.CoxMusic.resume(player)) return@on_song_end
         // If the playlist is off, find out if we're in any region / area that has any associated songs and play a
         // random one
         val songsToChoose = world.getService(RegionMusicService::class.java)?.tracksAt(player).orEmpty()
