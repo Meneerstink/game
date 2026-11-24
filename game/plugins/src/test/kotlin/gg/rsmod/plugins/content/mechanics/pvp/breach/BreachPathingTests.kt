@@ -65,7 +65,7 @@ class BreachPathingTests {
     fun `large breach landings never straddle a wall between otherwise walkable tiles`() {
         // The 667 cache encodes walls as directional flags, not blocked tiles (CollisionManager.canStep).
         val corner = Tile(3300, 3800, 0)
-        for (size in 2..5) for (direction in listOf(Direction.EAST, Direction.NORTH)) {
+        for (size in 2..5) for (direction in listOf(Direction.EAST, Direction.NORTH, Direction.NORTH_EAST, Direction.NORTH_WEST)) {
             val world = mockk<World>(relaxed = true)
             val chunks = ChunkSet(world)
             val map = CollisionManager(chunks)
@@ -74,7 +74,8 @@ class BreachPathingTests {
             every { world.filestore.data(any<Int>(), any<String>()) } returns byteArrayOf(1)
             assertTrue(DeadmanBreach.fits(world, corner, size), "open ground fits size $size")
             // Only flag the far side of the internal edge: a correct link check considers both tiles.
-            val other = corner.step(direction)
+            val from = if (direction == Direction.NORTH_WEST) corner.transform(1, 0) else corner
+            val other = from.step(direction)
             map.applyUpdate(CollisionUpdate.Builder().apply {
                 setType(CollisionUpdate.Type.ADD)
                 putTile(other, false, direction.getOpposite())
