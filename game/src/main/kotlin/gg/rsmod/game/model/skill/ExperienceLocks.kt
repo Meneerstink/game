@@ -25,8 +25,19 @@ object ExperienceLocks {
         player.attr[HITPOINTS_DISABLED] = if (disabled) 1 else 0
     }
 
+    /**
+     * FONTEIN-RUNES (24-11): a spell cast at the Fountain of Rune costs no runes and gives "no experience" (OSRS Wiki 'Fountain of
+     * Rune'). Combat-spell XP is given when the hit lands a few ticks later, so the cast blocks all XP until this cycle (not saved).
+     */
+    val ALL_BLOCKED_UNTIL = AttributeKey<Int>()
+
+    fun blockAllUntil(player: Player, cycle: Int) {
+        if ((player.attr[ALL_BLOCKED_UNTIL] ?: 0) < cycle) player.attr[ALL_BLOCKED_UNTIL] = cycle
+    }
+
     // The seven OSRS combat skills are 0..6 in the 667 skill table: Attack, Defence,
     // Strength, Constitution, Ranged, Prayer, Magic. Summoning (23) is deliberately absent.
     fun blocks(player: Player, skill: Int): Boolean =
-        (skill in 0..6 && combatDisabled(player)) || (skill == 3 && hitpointsDisabled(player))
+        (skill in 0..6 && combatDisabled(player)) || (skill == 3 && hitpointsDisabled(player)) ||
+            player.attr[ALL_BLOCKED_UNTIL]?.let { player.world.currentCycle <= it } == true
 }

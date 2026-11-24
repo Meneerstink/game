@@ -11,6 +11,7 @@ import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Anims
 import gg.rsmod.plugins.api.cfg.Gfx
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.getCombatTarget
 import gg.rsmod.plugins.content.drops.DropTableFactory
@@ -62,7 +63,7 @@ object Pickpocketing {
         )
     private val messages =
         mapOf(
-            1 to "You successfully pick the {npc}'s pocket.",
+            1 to "You pick {npc}'s pocket.",
             2 to "Your lightning-fast reactions allow you to steal double loot.",
             3 to "Your lightning-fast reactions allow you to steal triple loot.",
             4 to "Your lightning-fast reactions allow you to steal quadruple loot.",
@@ -145,16 +146,30 @@ object Pickpocketing {
         repeat(totalMultiplier) { DropTableFactory.createDropInventory(player, target.id, DropTableType.PICKPOCKET) }
         player.addXp(Skills.THIEVING, targetInfo.xp, checkBrawlingGloves = true)
         gg.rsmod.plugins.content.skills.summoning.SkillingPets.pickpocket(player, targetInfo)
-        player.filterableMessage(
-            messages[displayMultiplier]!!.replace(
-                "{npc}",
-                player.world.definitions
-                    .get(NpcDef::class.java, target.id)
-                    .name
-                    .lowercase(),
-            ).replace("martin the ", "") // Fix martin's name in pickpocket message
-            ,
+        player.filterableMessage(messages[displayMultiplier]!!.replace("{npc}", pocketOwner(player, target)))
+    }
+
+    /** Npcs with a proper name: OSRS names them without "the" ("You fail to pick Martin's pocket."). */
+    private val NAMED =
+        setOf(
+            Npcs.AGNAR, Npcs.ARVEL, Npcs.BLACKEYE, Npcs.BORROKAR, Npcs.CUFFS, Npcs.FREIDIR, Npcs.FREYGERD, Npcs.GOREU, Npcs.GUMMY,
+            Npcs.INGA, Npcs.JEFF, Npcs.JENNELLA, Npcs.KELYN, Npcs.LANZIG, Npcs.LENSA, Npcs.MAWRTH, Npcs.NARF, Npcs.NO_FINGERS,
+            Npcs.PONTAK, Npcs.RUSTY, Npcs.SASSILIK,
         )
+
+    /**
+     * PICKPOCKET-NAAM (24-11): whose pocket the OSRS chat line names. Sources (RuneLite client tests/patterns, OSRS chat):
+     * "You pick the hero's pocket." (generic npc: "the" + lower case), "You fail to pick Martin's pocket." (proper name, no "the"),
+     * "You pick the Menaphite's pocket." (OSRS Wiki Menaphite Thug). The old line said "successfully" and lower-cased proper names.
+     */
+    fun pocketOwner(player: Player, target: Npc): String {
+        val name = player.world.definitions.get(NpcDef::class.java, target.id).name
+        return when {
+            target.id == Npcs.MARTIN_THE_MASTER_GARDENER -> "Martin"
+            target.id == Npcs.MENAPHITE_THUG || target.id == Npcs.MENAPHITE_THUG_1905 -> "the Menaphite"
+            target.id in NAMED -> name
+            else -> "the " + name.lowercase()
+        }
     }
 
     private fun getMultiplier(
@@ -187,6 +202,8 @@ object Pickpocketing {
             handleHamFailure(player)
             return
         }
+        // OSRS chat on a failed pickpocket (RuneLite TimersAndBuffs: "You fail to pick Martin's pocket.").
+        player.filterableMessage("You fail to pick ${pocketOwner(player, target)}'s pocket.")
         target.facePawn(player)
         target.animate(Anims.ATTACK_PUNCH)
         target.forceChat(targetInfo.onCaught.random().replace("{name}", player.username))
