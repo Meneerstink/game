@@ -5789,9 +5789,9 @@
   equipment: null
 - id: 677
   name: "Panning tray"
-  examine: "An empty tray for panning./This tray contains mud."
+  examine: "An empty tray for panning."
   tradeable: false
-  weight: 0.0
+  weight: 0.085
   equipment: null
 - id: 678
   name: "Panning tray"
@@ -5801,9 +5801,9 @@
   equipment: null
 - id: 679
   name: "Panning tray"
-  examine: "An empty tray for panning./This tray contains mud."
+  examine: "This tray contains mud."
   tradeable: false
-  weight: 0.0
+  weight: 0.17
   equipment: null
 - id: 680
   name: "Nuggets"

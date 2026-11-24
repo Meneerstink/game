@@ -11,6 +11,75 @@ import io.mockk.verify
 import kotlin.test.*
 
 class N11ToggleTests {
+    @Test fun `panning permission mud cooldown full inventory search and repeated clicks cannot duplicate finds or XP`() {
+        N11Fixture().use { f ->
+            f.menu(Items.PANNING_TRAY, "", "", "", "Search")
+            f.menu(Items.PANNING_TRAY_679, "", "Search")
+            every { f.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, any()) } answers {
+                gg.rsmod.game.fs.def.ObjectDef(secondArg()).apply { options[0] = "Pan" }
+            }
+            val anim = io.mockk.mockk<gg.rsmod.game.fs.def.AnimDef>()
+            every { anim.cycleLength } returns 4
+            every { f.definitions.get(gg.rsmod.game.fs.def.AnimDef::class.java, any()) } returns anim
+            f.load("areas.digsite.Panning_plugin")
+            repeat(28) { f.inventory[it] = Item(100000 + it) }
+            f.inventory[0] = Item(Items.PANNING_TRAY)
+            assertFalse(gg.rsmod.plugins.content.areas.digsite.Panning.pan(f.player))
+            val tea = Item(Items.CUP_OF_TEA_1978)
+            f.inventory[1] = tea
+            assertTrue(gg.rsmod.plugins.content.areas.digsite.Panning.bribe(f.player, 1, tea))
+            f.inventory[1] = Item(100001)
+            assertTrue(gg.rsmod.plugins.content.areas.digsite.Panning.pan(f.player))
+            assertFalse(gg.rsmod.plugins.content.areas.digsite.Panning.pan(f.player))
+            assertEquals(Items.PANNING_TRAY_679, f.inventory[0]?.id)
+            verify(exactly = 1) { f.player.addXp(gg.rsmod.plugins.api.Skills.FISHING, 2.0, any(), any()) }
+            verify(exactly = 1) { f.player.addXp(gg.rsmod.plugins.api.Skills.MINING, 2.0, any(), any()) }
+            val mud = f.inventory[0]!!
+            f.timers.remove(gg.rsmod.plugins.content.areas.digsite.Panning.DELAY)
+            assertFalse(gg.rsmod.plugins.content.areas.digsite.Panning.search(f.player, 0, mud))
+            verify(exactly = 0) { f.world.random(any<Int>()) }
+            f.inventory[1] = null
+            every { f.world.random(39) } returns 4 // nuggets
+            assertTrue(f.repo.executeItem(f.player, Items.PANNING_TRAY_679, 2))
+            f.repo.executeItem(f.player, Items.PANNING_TRAY_679, 2)
+            assertEquals(1, f.inventory.getItemCount(Items.NUGGETS))
+            assertEquals(1, f.inventory.getItemCount(Items.PANNING_TRAY))
+            f.queues.terminateTasks()
+            assertEquals(true, f.attrs[gg.rsmod.plugins.content.areas.digsite.Panning.PERMISSION])
+            assertFalse(gg.rsmod.plugins.content.areas.digsite.Panning.search(f.player, 0, mud))
+        }
+    }
+
+    @Test fun `panning table has exact forty slots and tea and nugget transactions are idempotent`() {
+        val table = (0..39).map { gg.rsmod.plugins.content.areas.digsite.Panning.reward(it, true) }.groupingBy { it }.eachCount()
+        assertEquals(mapOf(Items.COINS_995 to 4, Items.NUGGETS to 4, Items.OYSTER to 3, Items.UNCUT_OPAL to 3,
+            Items.UNCUT_JADE to 3, Items.SPECIAL_CUP to 3, null to 20), table)
+        assertEquals(23, (0..39).count { gg.rsmod.plugins.content.areas.digsite.Panning.reward(it, false) == null })
+        gg.rsmod.plugins.content.areas.digsite.Panning.TEA.forEach { teaId ->
+            N11Fixture().use { f ->
+                val tea = Item(teaId)
+                f.inventory[0] = tea
+                assertFalse(gg.rsmod.plugins.content.areas.digsite.Panning.bribe(f.player, 0, Item(teaId)))
+                assertTrue(gg.rsmod.plugins.content.areas.digsite.Panning.bribe(f.player, 0, tea))
+                val second = Item(teaId)
+                f.inventory[0] = second
+                assertFalse(gg.rsmod.plugins.content.areas.digsite.Panning.bribe(f.player, 0, second))
+                assertSame(second, f.inventory[0])
+            }
+        }
+        N11Fixture().use { f ->
+            repeat(28) { f.inventory[it] = Item(100000 + it) }
+            f.inventory[0] = Item(Items.NUGGETS)
+            f.inventory[1] = Item(Items.NUGGETS)
+            assertFalse(gg.rsmod.plugins.content.areas.digsite.Panning.exchangeNuggets(f.player))
+            f.inventory[2] = Item(Items.NUGGETS)
+            assertTrue(gg.rsmod.plugins.content.areas.digsite.Panning.exchangeNuggets(f.player))
+            assertEquals(0, f.inventory.getItemCount(Items.NUGGETS))
+            assertEquals(1, f.inventory.getItemCount(Items.GOLD_ORE))
+            assertFalse(gg.rsmod.plugins.content.areas.digsite.Panning.exchangeNuggets(f.player))
+        }
+    }
+
     private fun museum(f: N11Fixture): gg.rsmod.game.model.varp.VarpSet {
         val varps = gg.rsmod.game.model.varp.VarpSet((0..1100).toSet())
         every { f.player.varps } returns varps
