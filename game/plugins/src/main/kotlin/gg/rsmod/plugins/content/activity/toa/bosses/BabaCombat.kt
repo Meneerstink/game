@@ -94,6 +94,8 @@ object BabaCombat : CombatScript() {
         // ONZEKER T02: source boss SW3804,5406 is the adapter's provisional spawn, not a measured OSRS NPC spawn.
         var coffinTiles: Map<Tile, Int> = COFFINS_OSRS.mapKeys { (tile, _) -> origin.transform(tile.x - 3804, tile.z - 5406) }
         private val coffinCleanup = mutableMapOf<Tile, () -> Unit>()
+        private var coffinAttacker: Npc? = null
+        private var coffinTarget: Tile? = null
         private var autoCount = 0
         private var specialIndex = 0
         private var underTicks = 0
@@ -177,14 +179,32 @@ object BabaCombat : CombatScript() {
             later(2) { rollingStones(rows, rollingInterval(false), 1, Direction.WEST, 24, 24) }
         }
         private fun minionsTick() {
+            // Wiki ToA/Strategies (Baboon's Discharge): one baboon stops attacking players and
+            // attacks a sarcophagus for 20 per hit until it opens. Keep that assignment while
+            // walking; the old tick%12 branch sent it back to ranging on the other two swings.
+            if (coffinAttacker?.let { !it.isSpawned() || it.isDead() } != false ||
+                (coffinTarget?.let { coffins[it] } ?: 0) <= 0) {
+                coffinAttacker = null; coffinTarget = null
+            }
+            // Preserve the existing selection cadence; the exact OSRS selection interval is unpublished.
+            if (coffinAttacker == null && tick % (BABOON_STATS.speed * 3) == 0) {
+                coffinAttacker = baboons.firstOrNull { it.isSpawned() && !it.isDead() }
+                coffinTarget = coffinAttacker?.let { b -> coffins.filterValues { it > 0 }.keys.minByOrNull { it.getDistance(b.tile) } }
+                if (coffinTarget == null) coffinAttacker = null
+            }
             baboons.toList().forEach { b ->
                 if (b.isDead() || !b.isSpawned()) { baboons.remove(b); return@forEach }
+                val coffin = coffinTarget
+                if (b === coffinAttacker && coffin != null) {
+                    if (!b.tile.isWithinRadius(coffin, 1)) b.walkTo(coffin)
+                    else {
+                        b.stopMovement(); b.faceTile(coffin)
+                        if (tick % BABOON_STATS.speed == 0) { animate(9742, b); damageCoffin(coffin, 20) }
+                    }
+                    return@forEach
+                }
                 if (tick % BABOON_STATS.speed != 0) return@forEach
-                val coffin = coffins.filterValues { it > 0 }.keys.minByOrNull { it.getDistance(b.tile) }
-                if (coffin != null && b === baboons.firstOrNull() && tick % (BABOON_STATS.speed * 3) == 0) {
-                    b.walkTo(coffin)
-                    if (b.tile.isWithinRadius(coffin, 1)) damageCoffin(coffin, 20)
-                } else players().minByOrNull { it.tile.getDistance(b.tile) }?.let { p ->
+                players().minByOrNull { it.tile.getDistance(b.tile) }?.let { p ->
                     // N609 14-11: the baboon's own projectile is 2243 TOA_BABOON_RANGED_TRAVEL_2 (model 46350 at 38/128, RuneLite gameval +
                     // ToA Extended Baba.PROJECTILE_ID_BABOON_ATTACK); 2244 TOA_BABA_RANGED_TRAVEL is Ba-Ba's full-size one.
                     ToaBossFx.projectile(b, p, 2243, false, 2)
@@ -321,6 +341,7 @@ object BabaCombat : CombatScript() {
             baboons.removeAll { !it.isSpawned() || it.isDead() }
             if (baboons.isNotEmpty()) return
             tiles.forEach { tile -> spawn(ToaBossNpcs.BABOON, tile, BABOON_STATS, path = false, group = false)?.let { baboon ->
+                baboon.smartPathfinding = true // Route around Ba-Ba, debris and the other sarcophagi.
                 baboon.combatDef = baboon.combatDef.copy(lifepoints = 10)
                 baboon.setCurrentLifepoints(10)
                 guaranteeMaxHit(baboon)
@@ -381,6 +402,6 @@ object BabaCombat : CombatScript() {
             boulders.toList().forEach { remove(it) }; boulders.clear()
             nextAttack = tick + stats.speed
         }
-        override fun close() { coffinCleanup.clear(); coffins.clear(); baboons.clear(); debris.clear(); boulders.clear(); blockers.clear(); maxHitTargets.clear(); super.close() }
+        override fun close() { coffinAttacker = null; coffinTarget = null; coffinCleanup.clear(); coffins.clear(); baboons.clear(); debris.clear(); boulders.clear(); blockers.clear(); maxHitTargets.clear(); super.close() }
     }
 }

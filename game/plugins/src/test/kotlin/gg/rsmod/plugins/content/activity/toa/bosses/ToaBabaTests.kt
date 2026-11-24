@@ -10,6 +10,49 @@ import io.mockk.mockk
 import kotlin.test.*
 
 class ToaBabaTests {
+    @Test fun `a baboon keeps approaching its sarcophagus on every tick and opens it with four tick hits`() {
+        val f = ToaTestFixture()
+        val s = BabaCombat.Session(f.npc, ToaTestContext())
+        val coffin = Tile(3200, 3206)
+        s.coffinTiles = mapOf(coffin to 3)
+        s.configure(); s.nextAttack = Int.MAX_VALUE
+        val baboon = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
+        every { baboon.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+        every { baboon.isSpawned() } returns true; every { baboon.isDead() } returns false
+        every { baboon.tile } returns Tile(3200, 3200)
+        s.baboons += baboon
+        repeat(5) { s.cycle() }
+        io.mockk.verify(exactly = 5) { baboon.walkTo(coffin) }
+        every { baboon.tile } returns coffin.transform(0, -1)
+        val openId = assertNotNull(ToaBossFx.loc(45753))
+        repeat(15) { s.cycle() } // hits at ticks 8,12,16: 60 of the 90 coffin HP
+        io.mockk.verify(exactly = 0) { f.world.spawn(match<gg.rsmod.game.model.entity.DynamicObject> { it.id == openId }) }
+        repeat(5) { s.cycle() } // ticks 20 and 24: fifth hit opens the coffin
+        io.mockk.verify(exactly = 1) { f.world.spawn(match<gg.rsmod.game.model.entity.DynamicObject> { it.id == openId }) }
+        s.close(); repeat(10) { s.cycle() }
+        io.mockk.verify(exactly = 5) { baboon.walkTo(coffin) }
+    }
+
+    @Test fun `another baboon takes over after the coffin attacker dies`() {
+        val f = ToaTestFixture(); val s = BabaCombat.Session(f.npc, ToaTestContext())
+        val coffin = Tile(3200, 3206)
+        s.coffinTiles = mapOf(coffin to 3); s.configure(); s.nextAttack = Int.MAX_VALUE
+        val first = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
+        val second = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
+        listOf(first, second).forEach { b ->
+            every { b.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+            every { b.isSpawned() } returns true; every { b.isDead() } returns false
+            every { b.tile } returns Tile(3200, 3200)
+            s.baboons += b
+        }
+        s.cycle()
+        every { first.isDead() } returns true
+        repeat(12) { s.cycle() }
+        io.mockk.verify(exactly = 1) { first.walkTo(coffin) }
+        io.mockk.verify(exactly = 1) { second.walkTo(coffin) }
+        s.close()
+    }
+
     @Test fun `base shockwave is the 1447 shape - 3x3 plus one tile at distance 2 each way, 13 tiles`() {
         val c = Tile(3200, 3200)
         val tiles = BabaCombat.shockwaveTiles(c)
