@@ -51,8 +51,10 @@ class Dmm2BootTests {
         assertEquals(7, store.contract.rewards.size)
         store.contract.rewards.forEach { (reward, id) -> assertEquals(parsed["item:${reward.sourceId}"], id) }
         assertEquals(25015, store.contract.exitBlueprint)
-        assertEquals(16, store.contract.skins.size)
-        assertEquals(setOf(24980,24981,24982,24983,24984,24985,24986,25001,25002,25003,25004,25005,25006,25007,25008,25009),
+        // DMM2BOOT-OUDROOD 24-11: 17 since the Imbued ancient cape was published (its cosmetic 25646 is the 17th skin).
+        assertEquals(17, store.contract.skins.size)
+        assertEquals(setOf(24980,24981,24982,24983,24984,24985,24986,25001,25002,25003,25004,25005,25006,25007,25008,25009,
+            Dmm2Ids.ItemId.ANCIENT_DEADMAN_CAPE.local),
             store.contract.skins.map { it.cosmetic }.toSet())
     }
 
