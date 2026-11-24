@@ -136,7 +136,9 @@ try {
         Git -Arguments @('push', $Remote, "${expected}:refs/heads/$Branch") | Write-Host
         Assert-State 'after push'
     }
+    if (!$DryRun -and $Dossier) { Add-Content -LiteralPath $Dossier -Encoding UTF8 -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm') ${Agent}: LIVE $expected | build+gerichte tests exit0, bootcheck exit0, release exit0, push $Remote $Branch exit0; fase-logs live-$round-* in $LogDirectory" }
     $completed = $true
+    Write-Host "LIVE ROUND COMPLETE HEAD=$expected dryrun=$DryRun"
 } catch {
     $failure = $_.Exception.Message
     $rollback = 'niet van toepassing'
