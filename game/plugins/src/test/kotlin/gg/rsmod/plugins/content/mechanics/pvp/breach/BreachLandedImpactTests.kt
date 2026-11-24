@@ -103,15 +103,19 @@ class BreachLandedImpactTests {
             )) {
                 var roll: NpcAttacks.HitRoll? = null
                 val capture: (NpcAttacks.HitRoll) -> Unit = { roll = it }
-                fun swing() {
+                fun swing(combatDef: String = "breach_dscim") {
                     hit.invoke(NpcAttacks, npc, target, NpcAttacks.HitDef(offense = offense, defence = defence, max = 210), 0,
-                        DragonfireTable.Type.CHROMATIC, "breach_test_prayer_roll", capture)
+                        DragonfireTable.Type.CHROMATIC, combatDef, capture)
                 }
                 unprotected = 0.9
                 swing()
                 assertEquals(style, npc.combatDef.attackStyleType, "$offense against $defence uses the correct formula style")
                 assertEquals(false, roll!!.landHit, "$offense damage remains blocked")
                 assertEquals(true, roll!!.landsIgnoringPrayer, "$offense accurate effect still lands")
+                if (offense == "slash") {
+                    swing("ordinary_melee")
+                    assertEquals(false, roll!!.landsIgnoringPrayer, "unrelated melee effects keep their protection behavior")
+                }
                 unprotected = 0.1
                 swing()
                 assertEquals(false, roll!!.landsIgnoringPrayer, "$offense true miss must apply no effect")
