@@ -153,15 +153,17 @@ object SpecialAttackSupport {
 
     /**
      * Every other attackable pawn within one tile of [target] that the caster may hit, for the
-     * multi-way specials (Dragon 2h, Dragon halberd, Rune thrownaxe). Empty outside multi zones.
+     * target-based area attacks (OSRS Wiki Multicombat area). Self-based or unverified 667
+     * specials explicitly retain requireCasterMulti; secondary victims always remain in multi.
      */
     fun adjacentTargets(
         player: Player,
         target: Pawn,
         radius: Int = 1,
+        requireCasterMulti: Boolean = false,
     ): List<Pawn> {
         val world = player.world
-        if (!player.tile.isMulti(world) || !target.tile.isMulti(world)) return emptyList()
+        if ((requireCasterMulti && !player.tile.isMulti(world)) || !target.tile.isMulti(world)) return emptyList()
         val result = mutableListOf<Pawn>()
         for (x in -radius..radius) {
             for (z in -radius..radius) {
@@ -194,6 +196,8 @@ object SpecialAttackSupport {
         other: Pawn,
     ): Boolean {
         if (other.isDead() || other.invisible || !other.tile.isMulti(attacker.world)) return false
+        if (other is Npc && other.attr[Combat.OWNER_ONLY_TARGET_ATTR] == true &&
+            other.owner != null && other.owner !== attacker) return false
         return when (other) {
             is Npc -> other.isSpawned() &&
                 // N24: a player's splash reads the definition his client shows (an awake strykewyrm's transmog), like Combat.canEngage.
