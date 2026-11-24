@@ -81,6 +81,8 @@ class N11ToggleTests {
     }
 
     private fun museum(f: N11Fixture): gg.rsmod.game.model.varp.VarpSet {
+        val bank = f.container()
+        every { f.player.bank } returns bank
         val varps = gg.rsmod.game.model.varp.VarpSet((0..1100).toSet())
         every { f.player.varps } returns varps
         every { f.definitions.get(gg.rsmod.game.fs.def.VarbitDef::class.java, any()) } answers {
@@ -106,6 +108,8 @@ class N11ToggleTests {
                 repeat(28) { f.inventory[it] = Item(100000 + it) }
                 val held = Item(display.item)
                 f.inventory[0] = held
+                f.inventory[1] = Item(display.item)
+                f.player.bank[0] = Item(display.item)
                 f.attrs[gg.rsmod.game.model.attr.INTERACTING_ITEM] = java.lang.ref.WeakReference(held)
                 val obj = gg.rsmod.game.model.entity.DynamicObject(display.root, 10, 0, display.tile)
                 f.attrs[gg.rsmod.game.model.attr.INTERACTING_OBJ_ATTR] = java.lang.ref.WeakReference(obj)
@@ -113,6 +117,8 @@ class N11ToggleTests {
                 f.attrs[gg.rsmod.plugins.content.areas.varrock.VarrockMuseum.CASE_TOLD] = 31
                 assertTrue(f.repo.executeItemOnObject(f.player, display.root, display.item))
                 assertNull(f.inventory[0])
+                assertEquals(if (display.item == Items.POTTERY) 1 else 0, f.inventory.getItemCount(display.item))
+                assertEquals(if (display.item == Items.POTTERY) 1 else 0, f.player.bank.getItemCount(display.item))
                 assertEquals((i + 1) * 10, varps.getState(1010))
                 assertTrue(gg.rsmod.plugins.content.areas.varrock.VarrockMuseum.displayed(f.player, display.item))
                 f.inventory[0] = Item(display.item)

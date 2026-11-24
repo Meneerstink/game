@@ -50,6 +50,12 @@ object VarrockMuseum {
         if (!TheDigSite.isFinished(player) || expected.id != target.item || player.inventory[slot] !== expected ||
             displayed(player, target.item) || (player.attr[CASE_TOLD] ?: 0) and (1 shl target.toldBit) == 0) return false
         if (!player.inventory.remove(expected.id, 1, beginSlot = slot).hasSucceeded()) return false
+        // Wiki artefact pages: all copies of the four unique finds are taken, including banked copies.
+        // Pottery remains a common find and only one piece is handed in.
+        if (target.item != Items.POTTERY) {
+            player.inventory.remove(target.item, player.inventory.getItemCount(target.item))
+            player.bank.remove(target.item, player.bank.getItemCount(target.item))
+        }
         player.setVarbit(target.varbit, 1)
         player.setVarp(KUDOS_VARP, player.getVarp(KUDOS_VARP) + 10)
         player.playSound(Sfx.VM_GAIN_KUDOS)
