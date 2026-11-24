@@ -12,6 +12,7 @@ import gg.rsmod.game.model.skill.SkillSet
 import gg.rsmod.plugins.api.BonusSlot
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.NpcSpecies
+import gg.rsmod.plugins.api.NpcSkills
 import gg.rsmod.plugins.api.PrayerIcon
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
@@ -199,6 +200,30 @@ class MagicCombatFormulaTests {
     }
 
     // ---- helpers ----
+
+    @Test
+    fun `NPC magic defence uses Magic unless its instance explicitly requests Defence`() {
+        val npc = newNpc()
+        every { npc.stats.getCurrentLevel(NpcSkills.MAGIC) } returns 390
+        every { npc.stats.getCurrentLevel(NpcSkills.DEFENCE) } returns 160
+        npc.equipmentBonuses[BonusSlot.DEFENCE_MAGIC.id] = 40
+        val attacker = newPlayer()
+        assertEquals((390 + 9) * 104, MagicCombatFormula.getDefenceRoll(attacker, npc))
+        npc.attr[MagicCombatFormula.USE_DEFENCE_LEVEL] = true
+        assertEquals((160 + 9) * 104, MagicCombatFormula.getDefenceRoll(attacker, npc))
+        every { npc.stats.getCurrentLevel(NpcSkills.DEFENCE) } returns 80
+        assertEquals((80 + 9) * 104, MagicCombatFormula.getDefenceRoll(attacker, npc))
+        npc.attr[MagicCombatFormula.USE_DEFENCE_LEVEL] = false
+        assertEquals((390 + 9) * 104, MagicCombatFormula.getDefenceRoll(attacker, npc))
+    }
+
+    @Test
+    fun `Ice demon 150 percent fire weakness adds damage once in the spell formula`() {
+        val npc = newNpc()
+        npc.attr[ElementalWeakness.INSTANCE] = ElementalWeakness.Weakness(ElementalWeakness.Element.FIRE, 150)
+        val player = newPlayer(spell = CombatSpell.FIRE_WAVE)
+        assertEquals(50.0, MagicCombatFormula.getMaxHit(player, npc, 1.0, 1.0))
+    }
 
     private fun getMaxHit(player: Player): Double {
         val target = newPlayer()

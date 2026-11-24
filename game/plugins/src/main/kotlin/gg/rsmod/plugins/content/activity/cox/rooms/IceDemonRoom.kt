@@ -14,6 +14,7 @@ import gg.rsmod.plugins.content.activity.cox.CoxLaidRoom
 import gg.rsmod.plugins.content.activity.cox.CoxRaid
 import gg.rsmod.plugins.content.combat.Combat
 import gg.rsmod.plugins.content.combat.formula.ElementalWeakness
+import gg.rsmod.plugins.content.combat.formula.MagicCombatFormula
 
 /**
  * The Ice Demon (puzzle room). Wiki (Ice demon; Brazier; Chambers of Xeric, Gaining points): light the braziers with a tinderbox and kindling
@@ -42,7 +43,12 @@ class IceDemonRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid,
     override fun load() {
         val d = DEMON[variant]
         storm = placeLoc(29876, tile(d[0].x, d[0].z, 2), rotation = 0)
-        demon = spawn(7584, tile(d[0].x, d[0].z, 2), speed = 3, deathSeq = 67)?.also { it.faceTile(tile(d[1].x, d[1].z, 2)) }
+        demon = spawn(7584, tile(d[0].x, d[0].z, 2), speed = 3, deathSeq = 67)?.also {
+            it.faceTile(tile(d[1].x, d[1].z, 2))
+            // Wiki Ice demon: magic defence is calculated from Defence, not Magic.
+            it.attr[MagicCombatFormula.USE_DEFENCE_LEVEL] = true
+            it.attr[ElementalWeakness.INSTANCE] = ElementalWeakness.Weakness(ElementalWeakness.Element.FIRE, 150)
+        }
         (0..3).shuffled().take(minOf(scaling().size, 4)).forEach { i ->
             val s = FIENDS[variant][i]
             spawn(7586, tile(s.x, s.z))?.let { f -> val b = BRAZIERS[variant][i]; f.faceTile(tile(b.x, b.z)); icefiends[i] = f to intArrayOf(world.random(3..4)) }
@@ -207,12 +213,18 @@ class IceDemonRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid,
     override fun incoming(npc: Npc, hit: Hit) {
         if (npc !== demon) return
         if (stage != Stage.FIGHTING) { hit.hitmarks.forEach { it.damage = 0 }; return }
+        resist(hit)
+    }
+
+    internal fun resist(hit: Hit) {
         val p = hit.source as? Player ?: return
         val magic = hit.sourceCombatClass == CombatClass.MAGIC
         val fire = magic && ElementalWeakness.elementOf(p.attr[Combat.CASTING_SPELL]) == ElementalWeakness.Element.FIRE
         val weapon = p.getEquipment(EquipmentType.WEAPON)?.id
         val demonbane = !magic && weapon != null && weapon in DEMONBANE
-        hit.hitmarks.forEach { it.damage = when { fire -> it.damage * 5 / 2; demonbane -> it.damage; else -> it.damage / 3 } }
+        // The standard spell formula already adds the 150% elemental weakness before rolling damage.
+        // Multiplying a fire hit by 5/2 again made an unboosted base-20 spell hit up to 125 instead of 50.
+        hit.hitmarks.forEach { it.damage = when { fire || demonbane -> it.damage; else -> it.damage / 3 } }
     }
 
     override fun onNpcDeath(npc: Npc) {

@@ -259,13 +259,19 @@ object MagicCombatFormula : CombatFormula {
         // called by anything before this fix, which is itself evidence the target-based
         // path was never wired in. See RSPS_DECISIONS.md.
         // "Damage per second/Magic": NPC magic defence roll = (9 + NPC Magic level) × (NPC magic defence + 64);
-        // a monster's Defence level plays no part.
-        val a = Math.floor(target.stats.getCurrentLevel(NpcSkills.MAGIC) * AncientCurses.drainMultiplier(target, Skills.MAGIC)) + 9.0
+        // Ice demon is an explicit per-instance exception: its Defence level replaces Magic.
+        val useDefence = target.attr[USE_DEFENCE_LEVEL] == true
+        val level = if (useDefence) NpcSkills.DEFENCE else NpcSkills.MAGIC
+        val skill = if (useDefence) Skills.DEFENCE else Skills.MAGIC
+        val a = Math.floor(target.stats.getCurrentLevel(level) * AncientCurses.drainMultiplier(target, skill)) + 9.0
         val b = getEquipmentDefenceBonus(target)
 
         val maxRoll = a * (b + 64.0)
         return maxRoll.toInt()
     }
+
+    /** OSRS Wiki Ice demon: its magic defence roll uses Defence instead of Magic. Scoped to the spawned NPC. */
+    val USE_DEFENCE_LEVEL = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
 
     public fun getDefenceRoll(target: Player): Int {
         var effectiveLvl = getEffectiveDefenceLevel(target)
