@@ -70,6 +70,7 @@ class MageArenaTests {
         every { a.defs.get(NpcDef::class.java, any()) } answers {
             NpcDef(secondArg()).apply { name = "Lundail"; options[0] = "Talk-to"; options[2] = "Trade" }
         }
+        every { a.defs.getNullable(NpcDef::class.java, any()) } answers { NpcDef(secondArg()) }
         every { a.player.executePlugin<Unit>(any()) } answers { firstArg<Plugin.() -> Unit>().invoke(Plugin(a.player)) }
         every { a.player.queue(any(), any(), any()) } answers {
             queues.queue(a.player, kotlinx.coroutines.Dispatchers.Unconfined, firstArg(), thirdArg(), persistent = secondArg())
