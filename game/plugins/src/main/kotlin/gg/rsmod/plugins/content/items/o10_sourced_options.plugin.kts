@@ -63,3 +63,33 @@ boundWhereCached(Items.ZADIMUS_CORPSE, "bury") { p ->
         messageBox("You hear a ghostly wailing sound coming from the corpse and a whispering voice says,'Let me rest in a sacred place and assist you I will'")
     }
 }
+
+/*
+ * Second wiki round 24-11 20:0x:
+ *  - Shaman robe Search: Transcript:Watchtower "Searching the shaman robe" (three boxes). The shamans count as killed once Watchtower
+ *    is completed (the quest has no server steps here; QuestStatus is the only state); cyan crystal = 2382 (wiki Crystal, version 3).
+ *  - Silvthrill rod Inspect/Look-at: Transcript:In Aid of the Myreque "Inspecting the rod" (7637 unenchanted, 7638 enchanted).
+ */
+val SHAMANS_CRYSTAL = Items.CRYSTAL_2382
+
+boundWhereCached(Items.SHAMAN_ROBE, "search") { p ->
+    p.queue {
+        when {
+            !gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(p, "Watchtower") ->
+                itemMessageBox("You search the robe, but find nothing. Maybe you need to defeat the shamans first.", Items.SHAMAN_ROBE)
+            p.inventory.contains(SHAMANS_CRYSTAL) || p.bank.contains(SHAMANS_CRYSTAL) ->
+                doubleItemMessageBox("You search the robe, but find nothing. You already have the shamans' crystal.", Items.SHAMAN_ROBE, SHAMANS_CRYSTAL)
+            p.inventory.add(SHAMANS_CRYSTAL, 1).hasSucceeded() ->
+                doubleItemMessageBox("You search the robe and find a crystal!", Items.SHAMAN_ROBE, SHAMANS_CRYSTAL)
+            else -> p.message("You don't have enough inventory space.")
+        }
+    }
+}
+
+val ROD_INSPECT = mapOf(
+    Items.SILVTHRILL_ROD_7637 to "This rod looks very similar to the rod you saw fused to the top of the coffin. However, this rod lacks both mortal and divine energies that the original gave off.",
+    Items.SILVTHRILL_ROD_7638 to "This rod looks very similar to the rod you saw fused to the top of the coffin. However, this rod lacks the divine energies that the original gave off.",
+)
+ROD_INSPECT.forEach { (rod, text) ->
+    listOf("inspect", "look-at").forEach { op -> boundWhereCached(rod, op) { p -> p.queue { itemMessageBox(text, rod) } } }
+}
