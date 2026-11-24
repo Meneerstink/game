@@ -97,3 +97,18 @@ ROD_INSPECT.forEach { (rod, text) ->
 // Address form Wiki rev15186886 / King's Ransom transcript rev15389571; the form is already in native 667 interface 586.
 boundWhereCached(Items.ADDRESS_FORM, "read") { p -> p.openInterface(586, InterfaceDestination.MAIN_SCREEN) }
 on_button(interfaceId = 586, component = 6) { player.closeInterface(InterfaceDestination.MAIN_SCREEN) }
+
+// Ogre bow Wiki rev15183145: only the pre-quest message is sourced. A post-quest
+// kill counter/message needs its own source and is deliberately not fabricated.
+fun checkOgrePrequest(p: gg.rsmod.game.model.entity.Player) {
+    if (!gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(p, "Big Chompy Bird Hunting")) {
+        p.message("You've scratched up no kills yet! You've got to complete the quest first!")
+    }
+}
+listOf(Items.OGRE_BOW, Items.COMP_OGRE_BOW).forEach { bow ->
+    boundWhereCached(bow, "check kills") { p -> checkOgrePrequest(p) }
+    val def = world.definitions.get(ItemDef::class.java, bow)
+    if (def.equipmentMenu.any { it.equals("check kills", ignoreCase = true) }) {
+        on_equipment_option(item = bow, option = "check kills") { checkOgrePrequest(player) }
+    }
+}
