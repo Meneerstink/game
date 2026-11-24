@@ -93,3 +93,7 @@ val ROD_INSPECT = mapOf(
 ROD_INSPECT.forEach { (rod, text) ->
     listOf("inspect", "look-at").forEach { op -> boundWhereCached(rod, op) { p -> p.queue { itemMessageBox(text, rod) } } }
 }
+
+// Address form Wiki rev15186886 / King's Ransom transcript rev15389571; the form is already in native 667 interface 586.
+boundWhereCached(Items.ADDRESS_FORM, "read") { p -> p.openInterface(586, InterfaceDestination.MAIN_SCREEN) }
+on_button(interfaceId = 586, component = 6) { player.closeInterface(InterfaceDestination.MAIN_SCREEN) }
