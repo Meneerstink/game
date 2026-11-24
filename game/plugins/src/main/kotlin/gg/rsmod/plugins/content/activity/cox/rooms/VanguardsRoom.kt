@@ -14,7 +14,7 @@ import gg.rsmod.plugins.content.activity.cox.CoxRaid
  * The Vanguards. Wiki (Vanguard): they rise when a player comes near; the melee one hits its target three times, the ranged and magic
  * ones fire at their target and two tiles around it; protection prayers reduce, not stop, the damage; a difference of more than 40% of
  * their health (33.3% with five or more) makes them shuffle at once and heal to full, otherwise they shuffle every 20-36 ticks; in their
- * shells they can't be hurt, a fatal hit in the shell leaves 1 hitpoint.
+ * shells they cannot be attacked; hits already in flight still land, but leave at least 1 hitpoint.
  * tsps rsprox (843, 3285, 3389): woken 7428, 5 ticks later melee 7527 / ranged 7528 / magic 7529 (rise 7438 / 7443 / 7433); attacks every 4
  * ticks: melee 7441 (sound 3308); ranged 7446 (sound 239) projectiles 1332-1334 landing 2 ticks later as gfx 305 (sound 360); magic 7436
  * (sound 3530) three projectiles 1331 landing 3 ticks later as gfx 659 (sound 156); swirls 57 (healthy) / 56 (low) every 2 ticks before a
@@ -50,16 +50,19 @@ class VanguardsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid
     private fun unbalanced(): Boolean {
         val l = living()
         if (l.size < 2) return false
-        val limit = (if (scaling().size >= 5) 100 / 3 else 40) * l.maxOf { it.getMaximumLifepoints() } / 100
-        return l.maxOf { it.getCurrentLifepoints() } - l.minOf { it.getCurrentLifepoints() } > limit
+        return exceedsBalance(l.minOf { it.getCurrentLifepoints() }, l.maxOf { it.getCurrentLifepoints() },
+            l.maxOf { it.getMaximumLifepoints() }, scaling().size)
     }
 
     override fun onTick() {
         when (stage) {
             Stage.BURIED -> if (raiders().any { p -> vanguards.any { p.tile.getDistance(it.tile) < 7 } }) rise()
             Stage.FIGHTING -> {
+                // Wiki Vanguard: exceeding the balance limit triggers an immediate shuffle/heal.
+                // The six-tick warning belongs to the periodic shuffle, not a grace period for an unbalanced team.
+                if (unbalanced()) { shuffle(); return }
                 fightAll()
-                if (warning < 0 && (unbalanced() || tick >= nextShuffle)) warning = 0
+                if (warning < 0 && tick >= nextShuffle) warning = 0
                 if (warning >= 0) {
                     if (warning % 2 == 0) swirl()
                     if (++warning > 6) shuffle()
@@ -174,12 +177,17 @@ class VanguardsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid
         }
     }
 
-    /** In the shell nothing hurts; a fatal hit in the shell, or one that leaves the others out of balance, leaves 1 (Wiki). */
+    /** In-flight hits can hurt a shuffling Vanguard, but cannot kill it (Wiki). */
     override fun incoming(npc: Npc, hit: Hit) {
         if (npc !in vanguards) return
         if (npc in shelled) {
-            hit.hitmarks.forEach { it.damage = 0 }
-            (hit.source as? Player)?.message("The Vanguard is protected by its shell.")
+            // New attacks are refused by the walking form's lack of an Attack option (Combat.canEngage).
+            // Wiki Strategies: attacks already in flight still land while shuffling, but cannot kill it.
+            var left = if (stage == Stage.SHUFFLING) (npc.getCurrentLifepoints() - 1).coerceAtLeast(0) else 0
+            hit.hitmarks.forEach { mark ->
+                val damage = minOf(mark.damage, left)
+                mark.damage = damage; left -= damage
+            }
             return
         }
         val total = hit.hitmarks.sumOf { it.damage }
@@ -210,6 +218,11 @@ class VanguardsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid
     }
 
     companion object {
+        /** Wiki: more than 40% in teams of 1-4, or one third in teams of 5+. Keep the fractional threshold. */
+        internal fun exceedsBalance(low: Int, high: Int, maximum: Int, size: Int): Boolean =
+            if (size >= 5) (high.toLong() - low) * 3 > maximum
+            else (high.toLong() - low) * 5 > maximum.toLong() * 2
+
         /** The three spots' centres by version (tsps). */
         val SPOTS = listOf(
             listOf(Tile(3285, 5329), Tile(3277, 5334), Tile(3276, 5324)),
