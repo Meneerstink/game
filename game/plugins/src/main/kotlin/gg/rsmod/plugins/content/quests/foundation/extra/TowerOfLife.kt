@@ -26,7 +26,11 @@ object TowerOfLife : ShortQuest(
     val OUTFIT = listOf(Items.HARD_HAT, Items.BUILDERS_SHIRT, Items.BUILDERS_TROUSERS, Items.BUILDERS_BOOTS)
     val REPAIR_POST = Tile(2647, 3222, 1)
     val HOMUNCULUS_POST = Tile(2646, 3218, 3)
-    val BASEMENT = Tile(3039, 4400, 0)
+    /** Beside the basement ladder 17974 (OSRS map 3038,4375); the old 3039,4400 was not a standable tile (TOWER-KELDERLUIK 24-11). */
+    val BASEMENT = Tile(3038, 4376, 0)
+    /** TOWER-KELDERLUIK: the trapdoor on the ground floor (owner 24-11) and the tile the basement ladder brings the player back to. */
+    val TRAPDOOR = Tile(2651, 3220, 0)
+    val TRAPDOOR_EXIT = Tile(2651, 3221, 0)
 
     override fun onReset(player: Player) { player.attr.remove(OUTFIT_REQUESTED) }
 

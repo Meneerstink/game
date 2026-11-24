@@ -192,16 +192,60 @@ on_obj_option(Objs.PLANT_21924, "Search") {
 on_obj_option(Objs.PRESSURE_MACHINE, "Fix") {
     if (!TowerOfLife.isFinished(player) && TowerOfLife.stage(player) == 2) FoundationQuests.trySearch(player, TowerOfLife, 2)
 }
-listOf(Objs.TRAPDOOR_21921 to "Open", Objs.TRAPDOOR_21922 to "Climb-down").forEach { (obj, option) ->
-    on_obj_option(obj, option) {
-        player.queue {
-            if (TowerOfLife.isFinished(player)) with(TowerOfLife) { offerTravel("the Tower of Life basement", BASEMENT) }
-            else player.message("You need to complete Tower of Life to enter the basement.")
-        }
+// TOWER-KELDERLUIK (24-11): OSRS Wiki "Trapdoor (Tower of Life)" (objects 21921/21922): on the tower's ground floor, leads to the
+// basement, usable after partial completion of the quest. Neither the 667 nor the OSRS map holds it (a server spawn), and no
+// source gives its tile: owner 24-11 chose a free ground-floor tile beside the crates (2651,3220). Partial completion = the
+// alchemists created the Homunculus (step 2 done).
+spawn_obj(obj = Objs.TRAPDOOR_21921, x = TowerOfLife.TRAPDOOR.x, z = TowerOfLife.TRAPDOOR.z, type = 22, rot = 0)
+fun towerBasementOpen(player: gg.rsmod.game.model.entity.Player): Boolean = TowerOfLife.isFinished(player) || TowerOfLife.stage(player) >= 3
+on_obj_option(Objs.TRAPDOOR_21921, "Open") {
+    val trapdoor = player.getInteractingGameObj()
+    if (!towerBasementOpen(player)) {
+        player.message("You need to help the builders finish the tower before you can go down there.")
+        return@on_obj_option
+    }
+    player.lockingQueue(lockState = LockState.FULL) {
+        player.animate(Anims.REACH_FORWARD_OPEN)
+        wait(1)
+        world.spawn(DynamicObject(Objs.TRAPDOOR_21922, trapdoor.type, trapdoor.rot, trapdoor.tile))
     }
 }
+on_obj_option(Objs.TRAPDOOR_21922, "Close") {
+    val trapdoor = player.getInteractingGameObj()
+    player.lockingQueue(lockState = LockState.FULL) {
+        player.animate(Anims.REACH_FORWARD_OPEN)
+        wait(1)
+        world.spawn(DynamicObject(Objs.TRAPDOOR_21921, trapdoor.type, trapdoor.rot, trapdoor.tile))
+    }
+}
+on_obj_option(Objs.TRAPDOOR_21922, "Climb-down") {
+    if (!towerBasementOpen(player)) {
+        player.message("You need to help the builders finish the tower before you can go down there.")
+        return@on_obj_option
+    }
+    player.lockingQueue(lockState = LockState.FULL) {
+        player.animate(Anims.REACH_DOWN)
+        wait(2)
+        player.moveTo(TowerOfLife.BASEMENT)
+    }
+}
+// 17974 is both the basement ladder (OSRS 3038,4375) and the tower's floor-2 ladder (2647,3221 -> 17975 on floor 3). Before
+// 24-11 every 17974 sent the player outside the tower, the floor-2 one too; now the basement one climbs to the trapdoor and the
+// tower one climbs a floor like the ladder fallback.
 on_obj_option(17974, "Climb-up") {
-    player.queue { with(TowerOfLife) { offerTravel("outside the Tower of Life", Tile(2648, 3213, 0)) } }
+    val ladder = player.getInteractingGameObj()
+    val destination = if (player.tile.z > 4000) TowerOfLife.TRAPDOOR_EXIT else gg.rsmod.plugins.content.mechanics.ladders.GenericLadders.destination(
+        world, ladder, player.tile, gg.rsmod.plugins.content.mechanics.ladders.GenericLadders.Direction.UP)
+    if (destination == null) {
+        player.message(gg.rsmod.game.model.entity.Entity.NOTHING_INTERESTING_HAPPENS)
+        return@on_obj_option
+    }
+    player.lockingQueue(lockState = LockState.FULL) {
+        wait(1)
+        player.animate(Anims.LADDER_CLIMB, idleOnly = true)
+        wait(2)
+        player.moveTo(destination)
+    }
 }
 
 // Repeatable gathering after losing the worm; the automatic search is the short quest's first step.
