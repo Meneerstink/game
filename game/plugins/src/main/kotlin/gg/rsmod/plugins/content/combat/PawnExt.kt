@@ -114,6 +114,7 @@ fun Pawn.isAttackedByOtherThan(other: Pawn): Boolean {
     }
     return timers.has(Combat.PJ_TIMER) && liveLastHitBy().let {
         it != null && !Combat.sameSide(it, other) && !SinglesPlus.ignoresReservation(this, other, it) &&
+            !gg.rsmod.plugins.content.npcs.definitions.barrows.BarrowsCombat.ignoresReservation(this, other, it) &&
             !gg.rsmod.plugins.content.scrolls.ClueGuardianPvp.ignoresNpc(this, other, it) &&
             !gg.rsmod.plugins.content.areas.wilderness.MageArenaPvp.ignoresReservation(this, other, it)
     }

@@ -464,7 +464,9 @@ object Combat {
     fun sameSide(
         a: Pawn,
         b: Pawn,
-    ): Boolean = a === b || actingFor(a)?.let { it === actingFor(b) } == true || bossSide(a) === bossSide(b) && bossSide(a) != null
+    ): Boolean = a === b || actingFor(a)?.let { it === actingFor(b) } == true ||
+        gg.rsmod.plugins.content.npcs.definitions.barrows.BarrowsCombat.sameEncounter(a, b) ||
+        bossSide(a) === bossSide(b) && bossSide(a) != null
 
     /**
      * N522 (testclient 2026-11-04): a spider boss and the spiderlings she summoned are one attacker for the single-way rules - in the
