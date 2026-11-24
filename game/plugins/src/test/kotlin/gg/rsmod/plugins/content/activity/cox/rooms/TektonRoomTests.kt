@@ -14,6 +14,8 @@ class TektonRoomTests {
     @Test fun `anvil repair and enrage transitions retain drained Defence and current hitpoints`() {
         val world = mockk<World>(relaxed = true)
         every { world.gameContext.npcStatCount } returns 5
+        every { world.npcUpdateBlocks } returns gg.rsmod.plugins.content.skills.summoning.SummoningTestCache.npcUpdateBlocks
+        every { world.definitions } returns gg.rsmod.plugins.content.skills.summoning.SummoningTestCache.definitions
         every { world.players.entries } returns arrayOfNulls<Player>(0)
         val raid = CoxRaid(1, CoxLayout(null, false, emptyList()), mockk<InstancedMap>(), world, "test")
         val room = TektonRoom(raid, 0, CoxLaidRoom(gg.rsmod.plugins.content.activity.cox.CoxRoom.TEKTON, 0, 0, CoxDirection.NORTH, 0))
