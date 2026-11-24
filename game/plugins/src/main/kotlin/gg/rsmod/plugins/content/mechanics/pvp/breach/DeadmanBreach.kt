@@ -46,7 +46,7 @@ import kotlin.random.Random
  * - Location via Perdu (grand_exchange_hub) and the broadcast at opening.
  *
  * ADAPTED where the sources are silent (listed for the owner): the projectile cadence spreads a breach's monsters evenly over the
- * 15 minutes; which of the two types opens is a fair coin; the regional spawner stands on the region's spawn point nearest its centre;
+ * 15 minutes; the mystery opening's type is a fair coin (fixed slots alternate); the regional spawner stands on the region's spawn point nearest its centre;
  * the broadcast and Perdu wording. The Breach and Boss Spawn animations and the breach spawn/despawn graphics are OSRS skeletal\n * animations baked into classic frames (SkeletalBakeTool, 2026-09-27).
  */
 object DeadmanBreach {
@@ -285,6 +285,21 @@ object DeadmanBreach {
         error("no breach slot within a week of $now")
     }
 
+    /**
+     * Jagex "Deadman: Armageddon & While Guthix Sleeps Updates" (17 July 2024): fixed-time breaches alternate between
+     * localised and regional; the mystery-time breach chooses randomly. A stable calendar phase survives restarts and
+     * ignores the random openings. The source does not specify which type starts the alternating sequence.
+     */
+    internal fun scheduledKind(opening: ZonedDateTime, plan: Schedule = schedule): Kind? {
+        val utc = opening.withZoneSameInstant(ZoneOffset.UTC)
+        val hours = plan.hours.distinct().sorted()
+        val slot = hours.indexOf(utc.hour)
+        if (utc.dayOfWeek !in plan.days || slot < 0 || utc.minute != 0 || utc.second != 0 || utc.nano != 0) return null
+        val weeks = Math.floorDiv(utc.toLocalDate().toEpochDay() + 3, 7)
+        val daysBefore = weeks * plan.days.size + plan.days.count { it.value < utc.dayOfWeek.value }
+        return if ((daysBefore * hours.size + slot) % 2L == 0L) Kind.LOCALISED else Kind.REGIONAL
+    }
+
     fun start(world: World) {
         locations = loadLocations(world)
         schedule = try { loadSchedule() } catch (e: Exception) { gg.rsmod.game.Server.logger.error("Breach schedule not loaded, using the default: {}", e.toString()); Schedule() }
@@ -294,8 +309,9 @@ object DeadmanBreach {
                 wait(100)
                 val now = ZonedDateTime.now(ZoneOffset.UTC)
                 if (!now.isBefore(nextOpening)) {
+                    val opening = nextOpening
                     nextOpening = nextStart(now)
-                    if (active == null) open(world, null)
+                    if (active == null) open(world, scheduledKind(opening))
                 }
             }
         }
