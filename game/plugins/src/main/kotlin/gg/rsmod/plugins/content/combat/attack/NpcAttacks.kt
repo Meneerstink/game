@@ -832,6 +832,8 @@ object NpcAttacks {
         val landsIgnoringPrayer =
             when {
                 !rollAccuracy -> true
+                // Sever and other landed melee effects still apply when a protection prayer alone blocked the damage.
+                formula === MeleeCombatFormula -> MeleeCombatFormula.getUnprotectedAccuracy(npc, target) >= rollValue
                 formula === MagicCombatFormula -> MagicCombatFormula.getUnprotectedAccuracy(npc, target) >= rollValue
                 formula === RangedCombatFormula -> RangedCombatFormula.getUnprotectedAccuracy(npc, target) >= rollValue
                 else -> landHit
