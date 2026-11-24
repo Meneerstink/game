@@ -16,7 +16,9 @@ MageArenaII.assets.symbol?.let { symbol ->
         }
         val gods = MageArenaII.trackable(player)
         if (gods.isEmpty()) {
-            // OSRS gives no message here (nothing left to track); N620: tests see why.
+            // MA2-03: OSRS does message the player here (Wiki Enchanted_symbol, Changes 30 Nov 2017) but the exact line has no public
+            // source; owner 25-11 00:0x chose a NEUTRAL line over silence. Replace with the OSRS text as soon as a source turns up.
+            player.message(MageArenaIITracking.NOTHING_TO_TRACK)
             gg.rsmod.plugins.content.cmd.TestLib.deny(player, "MA2 symbol: nothing trackable (started=${MageArenaII.started(player)} completed=${MageArenaII.completed(player)})")
             return@on_item_option
         }

@@ -51,6 +51,9 @@ object OsrsFxImportTool {
             // DMM2: cache 2686 source IDs, same order as the phase-3 bundle plan.
             "dmm2-spots" to listOf(3030, 3031, 3032, 3033, 3565, 3566, 3567, 3568, 3569, 3570, 3571, 4020),
             "dmm2-fire-av" to listOf(116), // ENCHANT_AMULET_LVL3, wiki creating-fire visual (rev15329402).
+            // LAVA-DRAAK-VUUR 24-11: OSRS-model dragons breathe with gameval SpotanimID FIREBREATH_ATTACK 1 next to their
+            // AnimationID DRAGON_FIREBREATH_ALL_ATTACK 81 (already local seq 15610, tx-20260919-162121); 667 gfx 2465 fits the 667 rig only.
+            "lava-dragonfire" to listOf(1),
             // DMM2 fase 7 (Claude 17-11): undead-trinket thrall projectiles = the greater-thrall ones (wiki Trinket_of_undead: "function the same as greater thralls"): THRALL_RANGED_TRAVEL 1906, THRALL_MAGIC_TRAVEL 1907, THRALL_MAGIC_IMPACT 1908.
             "dmm2-thrall-av" to listOf(1906, 1907, 1908),
             // DMM2 fase 7 (Claude 17-11): Armageddon home-teleport effect, OSRS spotanim 2909 (model 54209, seq VFX_DM_ARMAGEDDON_TELEPORT_01 11445,
