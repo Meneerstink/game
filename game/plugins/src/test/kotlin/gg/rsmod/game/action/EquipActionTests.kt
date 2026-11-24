@@ -43,7 +43,7 @@ class EquipActionTests {
             val player = newPlayer()
             player.inventory.add(id)
             player.equipment[EquipmentType.SHIELD.id] = Item(Items.RUNE_KITESHIELD)
-            val slot = player.inventory.getItemIndex(id)
+            val slot = player.inventory.getItemIndex(id, skipAttrItems = false)
             assertEquals(EquipAction.Result.SUCCESS, EquipAction.equip(player, player.inventory[slot]!!, slot))
             assertEquals(id, player.equipment[EquipmentType.WEAPON.id]?.id)
             assertEquals(0, player.inventory.getItemCount(id))
