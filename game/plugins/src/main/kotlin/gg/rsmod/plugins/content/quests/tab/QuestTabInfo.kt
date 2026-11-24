@@ -192,8 +192,8 @@ object QuestTabInfo {
 
     private fun breachPage(player: Player): Page {
         val plan = DeadmanBreach.schedule
-        val days = plan.days.sorted().joinToString(" and ") { it.name.lowercase().replaceFirstChar { c -> c.titlecase(Locale.US) } }
-        val hours = plan.hours.joinToString(", ") { String.format(Locale.US, "%02d", it) }
+        val days = if (plan.days.size == 7) "every day" else "on " + plan.days.sorted().joinToString(", ") { it.name.take(3).lowercase().replaceFirstChar { c -> c.titlecase(Locale.US) } }
+        val hours = plan.hours.joinToString(", ") { String.format(Locale.US, "%02d:00", it) }
         val active = DeadmanBreach.active
         val bar: String
         val map: Tile?
@@ -208,9 +208,9 @@ object QuestTabInfo {
             map = null
         }
         return Page(
-            "Monsters break through on $days",
+            "Monsters break through $days",
             listOfNotNull(
-                Fact("Opens at (UTC)", "$hours:00"),
+                Fact("Opens at (UTC)", hours + if (plan.randomPerDay) " + random" else ""),
                 Fact("Monsters appear", "for about 15 minutes"),
                 Fact("Left alive", "gone about 30 minutes later"),
                 // DMM-ARMAGEDDON D3 (owner 20-11-2026): MvP + the next 15 by damage get loot and Deadman Points; only the MvP the unique.
