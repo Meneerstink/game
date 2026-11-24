@@ -39,19 +39,22 @@ BOUWEN + TESTEN: C:/RSPS/tools/remote/rgradle.cmd <argumenten> (werklaptop; voor
   Spelersbewijs: de TWEEDE testserver op de werklaptop: bash C:/RSPS/work/claude-scripts/lib/rb_server.sh prep / run (achtergrond) /
   tl cmd "<commando>" (spawnen, teleporteren, opties). Geen werklaptop ma/di/do 07:00-14:00.
 
-LIVE (max 2 rondes, uitsluitend bij afzonderlijke LIVE-toestemming; alles synchroon):
-  Gebruik tools/gpt/Invoke-LiveRound.ps1 voor de HELE ronde merge -> build -> bootcheck -> release -> push -> slot vrij.
-  Voorbereiding in eigen worktree: git merge project48; los conflicten op zonder werk van anderen te verliezen; commit.
-  Geef Repository=C:\RSPS\game\game, Branch=project48, ExpectedHead=<vooraf vastgelegde volledige HEAD>,
-  SourceRef=<volledige eigen commit>, plus absolute BuildScript/BootcheckScript/ReleaseScript paden mee.
-  De fase-scripts draaien op de voorgrond en eindigen pas als AL hun kinderen klaar zijn; controleer elke native exitcode.
-  BuildScript: rgradle :game:installDist + gerichte tests, --priority low. BootcheckScript: rb_server prep/run + log/tl-bewijs.
-  ReleaseScript: release_live_nobuild.ps1 met exitcontrole. Scripts mogen de branch/HEAD niet veranderen.
-  De wrapper houdt een CreateNew-handle met eigen token vast tot ALLE fases inclusief git push audit project48 klaar zijn.
-  CreateNew-fout / bezet slot = STOP, geen enkele vervolgstap. NOOIT een slot overnemen op basis van leeftijd.
-  Voor/na iedere fase: eigen lease, branch, schone tracked/index, geen git-operatie/lock en verwachte HEAD vereist.
-  Fout/onderbreking: STOP; marker laten staan voor Claude, geen automatische reset --hard of slot-delete.
-  Eerst DROOG bewijzen met -DryRun -SlotPath <apart proefpad>; dit doet GEEN merge/build/release/push.
-  Daarna dossierregel 'ChatGPT-B: LIVE <tijd> <hash> <punten>' alleen bij bewezen geslaagde echte ronde.
+LIVE (max 2 rondes; EEN build per ronde; eigenaar gaf GPT-A en GPT-B LIVE-toestemming):
+  1. In eigen worktree: git merge project48; conflicten oplossen, committen. Alleen deze voorbereiding buiten het slot.
+  2. Gebruik C:\RSPS\tools\gpt\Invoke-LiveRound.ps1 voor merge -> build -> bootcheck -> release -> push.
+     Stel RSPS_LIVE_TESTS in als JSON-array met uitsluitend de gerichte plugin-testfilters van je kaart.
+     Parameters: -Repository C:\RSPS\game\game -ExpectedHead <volledige vooraf gelezen HEAD>
+       -SourceRef <volledige eigen commit> -Agent ChatGPT-B -Dossier <eigen dossierpad>.
+     Vaste fases in C:\RSPS\tools\gpt\live: Build.ps1 (rgradle :game:installDist + RSPS_LIVE_TESTS),
+       Bootcheck.ps1 (rb_server prep/run, eigen logmonitor + online, zelf stoppen), Release.ps1 (no-build release + exitcontrole).
+  3. CreateNew + gehouden handle; bezet = STOP VOOR merge/build, nooit overnemen op leeftijd. Verder aan volgend kaartpunt.
+  4. Wrapper controleert per fase lease/HEAD/branch/schone tracked/index/locks; elke fase naar aparte stdout/stderr-log,
+     het pad wordt vooraf geprint. Geen fase-uitvoer door ReadToEnd of pipe; server los met eigen log en gecontroleerd gestopt.
+  5. Rode build/bootcheck: alleen als HEAD nog de eigen merge is en de werkmap schoon is terug op ExpectedHead.
+     ELKE fout = STOP + dossier + slotmarker BEHOUDEN voor Claude; geen volgende merge/build/release/push.
+  6. Succes: slot pas vrij na build+tests, bootcheck, HEALTHY-release en git push audit project48.
+     Schrijf 'ChatGPT-B: LIVE <tijd> <hash> <punten>' in eigen dossier. Claude controleert daarna de testclient.
+  7. Bewijs vooraf buiten live: -DryRun met apart -SlotPath; tools/gpt/Test-LiveRound.py bewijst ook bezet-slot,
+     rode-build-rollback/marker/STOP en een geslaagde ronde naar een LOKALE proefremote (geen VPS).
 VERSLAG (onderaan het dossier, 'ChatGPT-B: EINDVERSLAG'): per punt GEFIXT+LIVE (commit, bron, test) | GEFIXT niet live (waarom) |
   NIET GEDAAN (waarom/wat nodig) | VISUEEL (wat Claude in de testclient moet bekijken: plek + commando).

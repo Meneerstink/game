@@ -5,10 +5,13 @@ param(
     [Parameter(Mandatory=$true)][string]$SourceRef,
     [string]$SlotPath = 'C:\RSPS\team\LIVE-SLOT.txt',
     [string]$Branch = 'project48',
-    [string]$BuildScript,
-    [string]$BootcheckScript,
-    [string]$ReleaseScript,
+    [string]$BuildScript = "$PSScriptRoot\live\Build.ps1",
+    [string]$BootcheckScript = "$PSScriptRoot\live\Bootcheck.ps1",
+    [string]$ReleaseScript = "$PSScriptRoot\live\Release.ps1",
     [string]$Remote = 'audit',
+    [string]$Dossier = 'C:\RSPS\team\dossiers\REST-ONDERZOEK-2411.txt',
+    [string]$LogDirectory = 'C:\RSPS\launcher-logs',
+    [ValidateSet('ChatGPT-A','ChatGPT-B')][string]$Agent = 'ChatGPT-A',
     [switch]$DryRun
 )
 # One foreground process owns the lease through merge/build/bootcheck/release/push.
@@ -21,8 +24,13 @@ $lease = $null
 $completed = $false
 $token = [Guid]::NewGuid().ToString('N')
 $expected = $ExpectedHead
+$merged = $false
+$phase = 'claim'
 $previousToken = $env:RSPS_LIVE_TOKEN
 $previousHead = $env:RSPS_LIVE_EXPECTED_HEAD
+$previousRepository = $env:RSPS_LIVE_REPOSITORY
+$previousSlot = $env:RSPS_LIVE_SLOT
+$round = Get-Date -Format 'yyyyMMdd-HHmmss-fff'
 
 function Invoke-Native([string]$File, [string[]]$Arguments) {
     # All supplied native arguments are single-line and quoted using Windows argv rules.
@@ -75,13 +83,25 @@ function Assert-State([string]$Phase) {
 function Invoke-Phase([string]$Name, [string]$Script) {
     Assert-State $Name
     if ($DryRun) { Write-Host "DRY-RUN $Name HEAD=$expected"; return }
-    Write-Host "LIVE $Name HEAD=$expected"
-    $result = Invoke-Native 'powershell.exe' @('-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', $Script)
-    if ($result) { Write-Host $result }
+    $log = Join-Path $LogDirectory "live-$round-$Name.out.log"
+    $err = Join-Path $LogDirectory "live-$round-$Name.err.log"
+    Write-Host "LIVE $Name HEAD=$expected log=$log stderr=$err"
+    # OS file redirection: no ReadToEnd/pipe that inherits server/daemon handles.
+    $child = Start-Process powershell.exe -ArgumentList @('-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', ('"' + $Script + '"')) -WorkingDirectory $Repository -WindowStyle Hidden -RedirectStandardOutput $log -RedirectStandardError $err -PassThru
+    try {
+        # Cache the process handle before WaitForExit (PowerShell 5 can otherwise
+        # return a null ExitCode from a Start-Process Process object).
+        $null = $child.Handle
+        $child.WaitForExit()
+        $child.Refresh()
+        if ($child.ExitCode -ne 0) { throw "$Name exit $($child.ExitCode); zie $log en $err" }
+    } finally { $child.Dispose() }
+    Write-Host "LIVE $Name exit 0 log=$log"
     Assert-State "after $Name"
 }
 try {
     $Repository = (Resolve-Path -LiteralPath $Repository).Path
+    New-Item -ItemType Directory -Path $LogDirectory -Force | Out-Null
     if (!$DryRun) {
         foreach ($script in @($BuildScript, $BootcheckScript, $ReleaseScript)) {
             if (!$script -or !(Test-Path -LiteralPath $script -PathType Leaf) -or ![IO.Path]::IsPathRooted($script)) {
@@ -97,16 +117,20 @@ try {
     $lease.Write($bytes, 0, $bytes.Length)
     $lease.Flush($true)
     $env:RSPS_LIVE_TOKEN = $token
+    $env:RSPS_LIVE_REPOSITORY = $Repository
+    $env:RSPS_LIVE_SLOT = $SlotPath
     Assert-State 'merge'
     $source = Git -Arguments @('rev-parse', '--verify', "$SourceRef^{commit}")
     if ($DryRun) { Write-Host "DRY-RUN merge $source (no mutation)" } else {
         Git -Arguments @('merge', '--ff-only', $source) | Write-Host
         $expected = $source
+        $merged = $true
         Assert-State 'after merge'
     }
-    Invoke-Phase 'build' $BuildScript
-    Invoke-Phase 'bootcheck' $BootcheckScript
-    Invoke-Phase 'release' $ReleaseScript
+    $phase = 'build'; Invoke-Phase $phase $BuildScript
+    $phase = 'bootcheck'; Invoke-Phase $phase $BootcheckScript
+    $phase = 'release'; Invoke-Phase $phase $ReleaseScript
+    $phase = 'push'
     Assert-State 'push'
     if ($DryRun) { Write-Host "DRY-RUN push $expected (no network)" } else {
         Git -Arguments @('push', $Remote, "${expected}:refs/heads/$Branch") | Write-Host
@@ -114,11 +138,27 @@ try {
     }
     $completed = $true
 } catch {
-    Write-Host "STOP LIVE-ROUND: $($_.Exception.Message)"
+    $failure = $_.Exception.Message
+    $rollback = 'niet van toepassing'
+    if ($merged -and $phase -in @('build', 'bootcheck')) {
+        try {
+            # Only our own exact merge may be reset. Never discard concurrent work.
+            Assert-State 'rollback'
+            Git -Arguments @('reset', '--hard', $ExpectedHead) | Write-Host
+            $expected = $ExpectedHead
+            Assert-State 'after rollback'
+            $rollback = "terug op ExpectedHead $ExpectedHead"
+        } catch { $rollback = "NIET teruggezet: $($_.Exception.Message)" }
+    }
+    $message = "STOP LIVE-ROUND fase=$phase : $failure; $rollback; slotmarker=$SlotPath"
+    Write-Host $message
+    if ($lease -and $Dossier) { Add-Content -LiteralPath $Dossier -Encoding UTF8 -Value "$(Get-Date -Format 'yyyy-MM-dd HH:mm') ${Agent}: $message" }
     exit 1
 } finally {
     $env:RSPS_LIVE_TOKEN = $previousToken
     $env:RSPS_LIVE_EXPECTED_HEAD = $previousHead
+    $env:RSPS_LIVE_REPOSITORY = $previousRepository
+    $env:RSPS_LIVE_SLOT = $previousSlot
     if ($lease) {
         $lease.Dispose()
         if ($completed) {
