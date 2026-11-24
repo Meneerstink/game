@@ -16,6 +16,25 @@ import org.junit.Test
  * merely by [ItemDefCodec] itself.
  */
 class ItemDefCodecTests {
+    @Test
+    fun nativeMonkeyTalismanGainsWideWornModelsWithoutChangingInventoryArtOrHold() {
+        // O10: native 4023 has no worn opcodes; the allocator may return archive-37 ids.
+        val original = ItemDefCodec.cloneWithOverrides(donor(), mapOf(2 to "Monkey talisman", 36 to "Hold"),
+            removedOpcodes = setOf(23, 25))
+        val patched = ItemDefCodec.cloneWithOverrides(original, emptyMap(), shortOverrides = mapOf(23 to 70729, 25 to 70729))
+        val def = decodeServerSide(patched)
+        assertEquals(70729, def.maleWornModel)
+        assertEquals(70729, def.maleWornModel2) // server field for the female opcode 25
+        assertEquals("Hold", def.inventoryMenu[1])
+        assertEquals("Monkey talisman", def.name)
+        assertTrue(ItemDefCodec.describeOpcodes(patched).contains("1=2562"))
+        assertEquals(ItemDefCodec.describeOpcodes(original), ItemDefCodec.describeOpcodes(patched).filterNot {
+            it.startsWith("23=") || it.startsWith("25=")
+        })
+        assertTrue("reapplying the same mesh is idempotent", patched.contentEquals(
+            ItemDefCodec.cloneWithOverrides(patched, emptyMap(), shortOverrides = mapOf(23 to 70729, 25 to 70729))))
+    }
+
     /** A minimal but representative definition: flag, cost, models, camera, name, recolour, links. */
     private fun donor(): ByteArray {
         val buf = Unpooled.buffer()
