@@ -87,6 +87,14 @@ on_button(interfaceId = 387, component = 45) {
     }
 }
 
+// WORN-FOLLOWER-KNOP (owner 24-11): OSRS's 4th bottom button "Call follower" (387:54, WornFollowerButtonTool). Same call as the
+// summoning tab's Call button (familiar, else pet); OSRS Wiki "Call follower": "You do not have a follower." without one.
+on_button(interfaceId = 387, component = 54) {
+    if (!gg.rsmod.plugins.content.skills.summoning.Familiar.call(player) && !gg.rsmod.plugins.content.skills.summoning.Pets.call(player)) {
+        player.message("You do not have a follower.")
+    }
+}
+
 fun bind_unequip(
     equipment: EquipmentType,
     child: Int,
