@@ -64,10 +64,15 @@ class StrykewyrmFightTests {
     private val npcs = mutableListOf<Npc>()
     private val written = HashMap<Client, MutableList<Message>>()
     private val traced = mutableListOf<String>()
+    private var combatTraceWas = false
 
     @Before
     fun traces() {
         AvTrace.enabled = true
+        // STRYKEWYRM-ROOD (24-11): swung() reads SwingAudit's 'swing' line, which is only written with Trace COMBAT on. That was
+        // on only where C:\RSPS\trace.on exists (this laptop), so on the work laptop the three fight tests were red since 18-11.
+        combatTraceWas = Trace.enabled(Trace.Cat.COMBAT)
+        Trace.set(Trace.Cat.COMBAT, true)
         Trace.capture(traced)
         // The combat-loop exits, leash and target changes of the three mounds (combat.plugin.kts, Pawn.attack) - shown when a check fails.
         BreachTrace.watchedNpcIds = Strykewyrms.WYRMS.map { it.mound }.toSet()
@@ -83,6 +88,7 @@ class StrykewyrmFightTests {
         players.clear()
         npcs.clear()
         Trace.stopCapture()
+        Trace.set(Trace.Cat.COMBAT, combatTraceWas)
         AvTrace.enabled = false
         BreachTrace.sink = null
         BreachTrace.watchedNpcIds = emptySet()
