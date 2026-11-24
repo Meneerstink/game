@@ -786,6 +786,8 @@ object NpcAttacks {
             isMelee(offense) -> {
                 val style =
                     when {
+                        // Jellies and the other magical-melee rows roll against magic defence, while melee prayers apply.
+                        h.defence == "magic" -> StyleType.MAGIC_MELEE
                         offense.endsWith("stab") -> StyleType.STAB
                         offense.endsWith("slash") -> StyleType.SLASH
                         else -> StyleType.CRUSH

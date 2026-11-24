@@ -2,6 +2,8 @@ package gg.rsmod.plugins.content.mechanics.pvp.breach
 
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeMap
+import gg.rsmod.game.model.combat.NpcCombatDef
+import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.plugins.content.combat.attack.NpcAttacks
@@ -74,6 +76,7 @@ class BreachLandedImpactTests {
         val target = mockk<Pawn>(relaxed = true)
         every { npc.id } returns -7
         every { npc.world } returns world
+        every { npc.combatDef } returns NpcCombatDef.DEFAULT.copy()
         every { npc.attr } returns AttributeMap()
         every { world.randomDouble() } returns 0.5
         val hit = NpcAttacks::class.java.getDeclaredMethod(
@@ -94,15 +97,19 @@ class BreachLandedImpactTests {
             every { MeleeCombatFormula.getUnprotectedAccuracy(npc, target) } answers { unprotected }
             every { MagicCombatFormula.getUnprotectedAccuracy(npc, target) } answers { unprotected }
             every { RangedCombatFormula.getUnprotectedAccuracy(npc, target) } answers { unprotected }
-            for (offense in listOf("slash", "magic", "range")) {
+            for ((offense, defence, style) in listOf(
+                Triple("slash", "slash", StyleType.SLASH), Triple("magic", "magic", StyleType.MAGIC),
+                Triple("range", "range", StyleType.RANGED), Triple("melee", "magic", StyleType.MAGIC_MELEE),
+            )) {
                 var roll: NpcAttacks.HitRoll? = null
                 val capture: (NpcAttacks.HitRoll) -> Unit = { roll = it }
                 fun swing() {
-                    hit.invoke(NpcAttacks, npc, target, NpcAttacks.HitDef(offense = offense, max = 210), 0,
+                    hit.invoke(NpcAttacks, npc, target, NpcAttacks.HitDef(offense = offense, defence = defence, max = 210), 0,
                         DragonfireTable.Type.CHROMATIC, "breach_test_prayer_roll", capture)
                 }
                 unprotected = 0.9
                 swing()
+                assertEquals(style, npc.combatDef.attackStyleType, "$offense against $defence uses the correct formula style")
                 assertEquals(false, roll!!.landHit, "$offense damage remains blocked")
                 assertEquals(true, roll!!.landsIgnoringPrayer, "$offense accurate effect still lands")
                 unprotected = 0.1
