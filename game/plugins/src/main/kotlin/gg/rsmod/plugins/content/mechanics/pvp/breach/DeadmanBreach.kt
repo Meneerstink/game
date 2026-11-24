@@ -968,14 +968,20 @@ object DeadmanBreach {
         npc: Npc,
         hitType: HitType,
         damage: Int,
+        source: Pawn,
+        accurate: Boolean,
     ): Int {
         if (!isBreachNpc(npc)) return damage
         val m = BreachMonsters.BY_ID[npc.id] ?: return damage
+        val melee = hitType == HitType.MELEE || hitType == HitType.CRIT_MELEE
+        val ranged = hitType == HitType.RANGE || hitType == HitType.CRIT_RANGE
+        // OSRS Wiki "Flat armour": successful player melee/ranged only; magic, misses, thralls and other damage ignore it.
+        val afterArmour = if (source is Player && accurate && (melee || ranged)) (damage - m.stats.flatArmour).coerceAtLeast(0) else damage
         val result =
             when {
-                hitType == HitType.MELEE && m.immuneMelee -> 0
-                hitType == HitType.RANGE && m.immuneRanged -> 0
-                else -> damage
+                melee && m.immuneMelee -> 0
+                ranged && m.immuneRanged -> 0
+                else -> afterArmour
             }
         gg.rsmod.game.model.BreachTrace.log("damage.in") { "npc=${npc.id}#${npc.index} type=$hitType raw=$damage final=$result hp=${npc.getCurrentLifepoints()}" }
         return result

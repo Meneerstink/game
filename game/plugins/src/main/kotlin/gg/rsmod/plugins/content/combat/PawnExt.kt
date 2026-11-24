@@ -307,7 +307,7 @@ fun Pawn.dealHit(
     }
     // Deadman breach monsters Porazdir, Justiciar Zachariah and Derwen: "completely immune to melee and ranged attacks".
     if (target is Npc && damage > 0) {
-        damage = gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.modifyIncomingDamage(target, hitType, damage.toInt()).toDouble()
+        damage = gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.modifyIncomingDamage(target, hitType, damage.toInt(), source = this, accurate = landHit).toDouble()
     }
     // N522 bundle 5: the old Vet'ion takes no damage while his skeleton hellhounds live (Kronos-184 Vetion.block).
     if (target is Npc && damage > 0) {

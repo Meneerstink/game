@@ -2,8 +2,12 @@ package gg.rsmod.plugins.content.mechanics.pvp.breach
 
 import gg.rsmod.game.model.attr.AttributeMap
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.entity.Npc
+import gg.rsmod.plugins.api.HitType
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkObject
 import java.util.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -21,6 +25,43 @@ class BreachRewardTests {
         every { p.attr } returns AttributeMap()
         every { p.username } returns name
         return p
+    }
+
+    @Test
+    fun `breach guardian immunity also rejects critical melee and ranged hits`() {
+        mockkObject(DeadmanBreach)
+        try {
+            val source = player()
+            for (id in listOf(14446, 14447, 14448)) {
+                val npc = mockk<Npc>(relaxed = true)
+                every { npc.id } returns id
+                every { DeadmanBreach.isBreachNpc(npc) } returns true
+                for (type in listOf(HitType.MELEE, HitType.CRIT_MELEE, HitType.RANGE, HitType.CRIT_RANGE)) {
+                    assertEquals(0, DeadmanBreach.modifyIncomingDamage(npc, type, 40, source, true), "guardian $id $type")
+                }
+                assertEquals(40, DeadmanBreach.modifyIncomingDamage(npc, HitType.MAGIC, 40, source, true))
+            }
+        } finally { unmockkObject(DeadmanBreach) }
+    }
+
+    @Test
+    fun `Shade summon flat armour adds three per successful player physical hit only`() {
+        mockkObject(DeadmanBreach)
+        try {
+            val shade = mockk<Npc>(relaxed = true)
+            every { shade.id } returns 14472
+            every { DeadmanBreach.isBreachNpc(shade) } returns true
+            val source = player()
+            for (type in listOf(HitType.MELEE, HitType.CRIT_MELEE, HitType.RANGE, HitType.CRIT_RANGE)) {
+                assertEquals(13, DeadmanBreach.modifyIncomingDamage(shade, type, 10, source, true))
+                assertEquals(0, DeadmanBreach.modifyIncomingDamage(shade, type, 0, source, false), "misses stay zero")
+                assertEquals(3, DeadmanBreach.modifyIncomingDamage(shade, type, 0, source, true), "accurate zero roll gets the flat bonus")
+                assertEquals(10, DeadmanBreach.modifyIncomingDamage(shade, type, 10, mockk<Npc>(relaxed = true), true), "summons ignore flat armour")
+            }
+            for (type in listOf(HitType.MAGIC, HitType.CRIT_MAGIC, HitType.REGULAR_HIT)) {
+                assertEquals(10, DeadmanBreach.modifyIncomingDamage(shade, type, 10, source, true), "magic and other damage ignore flat armour")
+            }
+        } finally { unmockkObject(DeadmanBreach) }
     }
 
     @Test

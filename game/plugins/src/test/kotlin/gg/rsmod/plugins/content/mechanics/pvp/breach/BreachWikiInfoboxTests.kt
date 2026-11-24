@@ -96,6 +96,7 @@ class BreachWikiInfoboxTests {
             check("dcrush", s.dcrush, box.int("dcrush"))
             check("dmagic", s.dmagic, box.int("dmagic"))
             check("dranged(dstandard)", s.dranged, box.int("dstandard"))
+            check("flat armour", s.flatArmour, box.int("flatarmour"))
             val poison = box.int("poisonresistance") == 100
             val venom = box.int("venomresistance") == 100
             if (box["poisonresistance"] != null && poison != (m.id in BreachMonsters.POISON_IMMUNE)) failures += "${m.name}: poison immune ours=${m.id in BreachMonsters.POISON_IMMUNE} wiki=$poison"

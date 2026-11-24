@@ -46,6 +46,8 @@ object BreachMonsters {
         val dmagic: Int = 0,
         /** OSRS "dstandard" (rev 667 has one ranged defence; brothers.plugin.kts precedent). */
         val dranged: Int = 0,
+        /** OSRS flat armour, applied only to successful player melee/ranged hits. */
+        val flatArmour: Int = 0,
     )
 
     /** How a monster fights: a cloned Void row ([Template]) or its own sections ([Custom]). */
@@ -610,7 +612,7 @@ object BreachMonsters {
             ),
             // Zemouregal Summons (OSRS Wiki "Zemouregal Summon" versions Mummy / Shade / Undead One / Pirate / Fremennik / Khazard).
             Monster(14471, 15558, "Zemouregal Summon", Stats(35, 250, 150, 150, 1, 1), 4, StyleType.CRUSH, 15688, 15689, 15690, Custom("breach_summon_mummy", 1, listOf(melee("crush", 15688, 16))), summon = true),
-            Monster(14472, 15559, "Zemouregal Summon", Stats(35, 250, 150, 10, 50, 1), 4, StyleType.CRUSH, 15691, 15692, 15693, Custom("breach_summon_shade", 1, listOf(melee("crush", 15691, 16))), summon = true),
+            Monster(14472, 15559, "Zemouregal Summon", Stats(35, 250, 150, 10, 50, 1, flatArmour = -3), 4, StyleType.CRUSH, 15691, 15692, 15693, Custom("breach_summon_shade", 1, listOf(melee("crush", 15691, 16))), summon = true),
             Monster(14473, 15560, "Zemouregal Summon", Stats(35, 200, 150, 100, 1, 1), 4, StyleType.SLASH, 15694, 15695, 15696, Custom("breach_summon_undead", 1, listOf(melee("slash", 15694, 16))), summon = true),
             Monster(14474, 15561, "Zemouregal Summon", Stats(35, 75, 100, 100, 1, 1), 5, StyleType.CRUSH, 15698, 15697, 15699, Custom("breach_summon_pirate", 1, listOf(melee("crush", 15698, 11))), summon = true),
             Monster(14475, 15562, "Zemouregal Summon", Stats(35, 250, 150, 50, 1, 1), 4, StyleType.SLASH, 15705, OSRS_HUMAN_BLOCK, OSRS_HUMAN_DEATH, Custom("breach_summon_fremennik", 1, listOf(melee("slash", 15705, 16))), summon = true),
