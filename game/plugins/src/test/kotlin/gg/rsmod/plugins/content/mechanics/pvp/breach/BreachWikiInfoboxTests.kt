@@ -23,7 +23,7 @@ class BreachWikiInfoboxTests {
         osrsId: Int,
     ) {
         private val fields: Map<String, String> =
-            Regex("^\\|([^=]+?)\\s*=\\s*(.*)$", RegexOption.MULTILINE).findAll(text.substringAfter("{{Infobox Monster").substringBefore("\n}}"))
+            Regex("^\\|([^=\\r\\n]+?)[ \\t]*=[ \\t]*([^\\r\\n]*)", RegexOption.MULTILINE).findAll(text.substringAfter("{{Infobox Monster").substringBefore("\n}}"))
                 .associate { it.groupValues[1].trim() to it.groupValues[2].trim() }
 
         val version: Int =
@@ -40,6 +40,23 @@ class BreachWikiInfoboxTests {
         dir.listFiles { f -> f.name.endsWith(".txt") }?.map { Infobox(it.readText(), osrsId) }?.firstOrNull { box ->
             box["id"]?.split(',')?.map { it.trim() }?.contains(osrsId.toString()) == true
         }
+
+    @Test
+    fun `blank wiki fields do not swallow the next max hit or versioned weakness`() {
+        // Real wiki pages place a blank xpbonus before max hit, and Armageddon's blank weakness before Annihilation's.
+        for (newline in listOf("\n", "\r\n")) {
+            val text = listOf(
+                "{{Infobox Monster", "|version1 = Armageddon", "|version2 = Annihilation", "|id = 13659",
+                "|xpbonus = ", "|max hit = 32", "|elementalweaknesstype1 = ", "|elementalweaknesstype2 = Air",
+                "|elementalweaknesspercent1 = ", "|elementalweaknesspercent2 = 20", "}}",
+            ).joinToString(newline)
+            val box = Infobox(text, 13659)
+            kotlin.test.assertEquals(32, box.int("max hit"))
+            kotlin.test.assertEquals("Air", box["elementalweaknesstype"])
+            kotlin.test.assertEquals(20, box.int("elementalweaknesspercent"))
+            kotlin.test.assertEquals("", box["xpbonus"])
+        }
+    }
 
     @Test
     fun `every breach monster matches its Deadman Annihilation infobox`() {
