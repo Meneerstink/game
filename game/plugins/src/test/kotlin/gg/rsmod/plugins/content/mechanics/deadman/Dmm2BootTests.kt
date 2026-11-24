@@ -27,8 +27,10 @@ class Dmm2BootTests {
 
     @Test fun `published transaction mappings install starter rewards NPCs and exact cosmetic states`() {
         val parsed = Dmm2Ids.parse(File(directory, "ids.tsv").readLines())
-        assertEquals(159, parsed.size) // 171 published lines, 12 comments/blank lines; + loc 60789 exit portal (tx-20261118-143614).
-        assertEquals(86, parsed.keys.count { it.startsWith("item:") })
+        // DMM2BOOT-OUDROOD 24-11: 250 published mappings (263 lines, 13 comments) - 159 + the later published rounds 8eeaf49c2 (Archive
+        // items + Imbued ancient cape, tx 185343-185624) and 66f93fe59 (Soulflame horn); 120 of them items.
+        assertEquals(250, parsed.size)
+        assertEquals(120, parsed.keys.count { it.startsWith("item:") })
         Dmm2Ids.install(emptyList()) // A prior lookup must not hide the subsequently published file.
         val store = boot()
         assertEquals(24949, Dmm2Ids.ItemId.BLOOD_MONEY.local)
@@ -153,6 +155,15 @@ class Dmm2BootTests {
         val f = DeadmanPlayerFixture()
         for (skin in store.contract.skins) {
             f.define(skin.base); f.define(skin.cosmetic)
+            // DMM2BOOT-OUDROOD 24-11: the Imbued ancient cape (Deadman) is made with Ancient fabric, never by Nigel (Wiki rev15403804;
+            // NigelRewardStore.convert) - it must refuse instead of round-tripping.
+            if (Dmm2Ids.ItemId.ANCIENT_DEADMAN_CAPE.matches(skin.cosmetic)) {
+                f.attr[skin.unlock.unlock!!] = 1
+                f.inventory[0] = Item(skin.base)
+                assertEquals(NigelRewardStore.Result.UNSUPPORTED, store.convert(f.player, 0, skin.base))
+                assertEquals(skin.base, f.inventory[0]!!.id)
+                continue
+            }
             f.attr[skin.unlock.unlock!!] = 1
             f.inventory[0] = Item(skin.base).putAttr(ItemAttribute.CHARGES, 137)
             repeat(5) {
