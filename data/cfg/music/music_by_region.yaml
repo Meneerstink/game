@@ -199,6 +199,7 @@ faerie:
   index: 43
   areas:
     - region: 9540
+    - region: 9541
 fanfare:
   index: 44
   areas:
@@ -473,6 +474,7 @@ scape_sad:
   index: 104
   areas:
     - region: 13116
+    - region: 13372
 scape_wild:
   index: 105
   areas:
