@@ -5,21 +5,57 @@ import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.model.Hit
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
+import gg.rsmod.game.model.attr.AttributeMap
+import gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR
 import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.combat.SlayerAssignment
 import gg.rsmod.game.model.entity.Npc
+import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.queue.QueueTask
+import gg.rsmod.game.model.queue.TaskPriority
 import gg.rsmod.plugins.api.BonusSlot
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.NpcSpecies
 import gg.rsmod.plugins.content.combat.Combat
 import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
+import java.lang.ref.WeakReference
+import kotlin.coroutines.startCoroutine
 import kotlin.test.*
 
 class MageArenaIIGuardianTests {
+    @Test fun `unreachable target suspends after one route attempt instead of retrying within the tick`() {
+        val actor = mockk<Npc>(relaxed = true)
+        val target = mockk<Player>(relaxed = true)
+        val attrs = AttributeMap()
+        every { actor.attr } returns attrs
+        attrs[COMBAT_TARGET_FOCUS_ATTR] = WeakReference(target)
+        val task = QueueTask(actor, TaskPriority.STANDARD)
+        var attempts = 0
+        mockkObject(Combat)
+        try {
+            every { Combat.isAttackDelayReady(actor) } returns true
+            every { Combat.canEngage(actor, target) } returns true
+            coEvery { Combat.moveToAttackRange(task, actor, target, 8, true) } answers {
+                attempts++
+                // Bound the old broken implementation too: the test must fail, never hang the test worker.
+                if (attempts > 1) attrs.remove(COMBAT_TARGET_FOCUS_ATTR)
+                false
+            }
+            val run: suspend () -> Unit = { MageArenaIICombatScript.handleSpecialCombat(task) }
+            run.startCoroutine(task)
+            assertEquals(1, attempts)
+            assertTrue(task.suspended(), "failed path must yield a game tick even with no attack delay")
+        } finally {
+            task.terminate()
+            unmockkObject(Combat)
+        }
+    }
+
     private val localNpc: (Int) -> Int? = { 50_000 + it }
     private fun npc(id: Int): Npc {
         val definitions = mockk<DefinitionSet>()

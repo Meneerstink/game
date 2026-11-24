@@ -371,6 +371,8 @@ object MageArenaIICombatScript : CombatScript() {
             npc.facePawn(target)
             val melee = MageArenaIIEncounter.bound(npc)
             if (!npc.moveToAttackRange(it, target, distance = if (melee) 1 else 8, projectile = !melee)) {
+                // A failed route can return without suspending; retry on the next tick (FamiliarCombat).
+                it.wait(1)
                 target = npc.getCombatTarget() ?: break
                 continue
             }
