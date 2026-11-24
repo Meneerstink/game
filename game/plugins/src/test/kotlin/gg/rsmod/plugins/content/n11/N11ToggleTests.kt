@@ -11,6 +11,73 @@ import io.mockk.verify
 import kotlin.test.*
 
 class N11ToggleTests {
+    @Test fun `Slayer bell reserves one wall on a double click and restores it after death even if player logs out`() {
+        N11Fixture().use { f ->
+            val wall = gg.rsmod.game.model.entity.DynamicObject(22545, 4, 0, gg.rsmod.game.model.Tile(3201, 3200))
+            val chunk = io.mockk.mockk<gg.rsmod.game.model.region.Chunk>()
+            every { f.world.chunks.get(any<gg.rsmod.game.model.Tile>(), false) } returns null
+            every { f.world.chunks.get(wall.tile, false) } returns chunk
+            every { chunk.getEntities<gg.rsmod.game.model.entity.GameObject>(wall.tile,
+                gg.rsmod.game.model.EntityType.STATIC_OBJECT, gg.rsmod.game.model.EntityType.DYNAMIC_OBJECT) } returns listOf(wall)
+            val spawned = io.mockk.slot<gg.rsmod.game.model.entity.Npc>()
+            every { f.world.spawn(capture(spawned)) } returns true
+            val worldQueues = gg.rsmod.game.model.queue.impl.WorldQueueTaskSet()
+            every { f.world.queue(any()) } answers {
+                worldQueues.queue(f.world, kotlinx.coroutines.Dispatchers.Unconfined,
+                    gg.rsmod.game.model.queue.TaskPriority.STANDARD, firstArg())
+            }
+            f.inventory[0] = Item(Items.SLAYER_BELL)
+            val opponent = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+            f.attrs[gg.rsmod.game.model.attr.LAST_HIT_BY_ATTR] = java.lang.ref.WeakReference(opponent)
+            f.timers[gg.rsmod.plugins.content.combat.Combat.PJ_TIMER] = 17
+            gg.rsmod.plugins.content.skills.slayer.Molanisks.ring(f.player)
+            gg.rsmod.plugins.content.skills.slayer.Molanisks.ring(f.player)
+            verify(exactly = 1) { f.world.spawn(any<gg.rsmod.game.model.entity.Npc>()) }
+            verify(exactly = 1) { f.world.remove(wall) }
+            assertEquals(false, spawned.captured.respawnOverride)
+            assertSame(opponent, f.attrs[gg.rsmod.game.model.attr.LAST_HIT_BY_ATTR]?.get())
+            assertEquals(17, f.timers[gg.rsmod.plugins.content.combat.Combat.PJ_TIMER])
+            spawned.captured.combatDef = spawned.captured.combatDef.copy(respawnDelay = 2)
+            gg.rsmod.plugins.content.skills.slayer.Molanisks.died(spawned.captured)
+            gg.rsmod.plugins.content.skills.slayer.Molanisks.died(spawned.captured)
+            f.queues.terminateTasks() // logout cannot cancel the world's restoration
+            repeat(4) { worldQueues.cycle() }
+            verify(exactly = 1) { f.world.spawn(wall) }
+            assertEquals(1, f.inventory.getItemCount(Items.SLAYER_BELL))
+        }
+    }
+
+    @Test fun `Slayer bell needs the real item and Slayer 39 but rings outside the cavern without consuming it`() {
+        N11Fixture().use { f ->
+            f.menu(Items.SLAYER_BELL, "Ring")
+            f.load("skills.slayer.Molanisks_plugin")
+            f.repo.executeItem(f.player, Items.SLAYER_BELL, 1)
+            verify(exactly = 0) { f.player.animate(6083) }
+            val bell = Item(Items.SLAYER_BELL)
+            repeat(28) { f.inventory[it] = Item(100000 + it) }
+            f.inventory[0] = bell
+            every { f.skills.getCurrentLevel(gg.rsmod.plugins.api.Skills.SLAYER) } returns 38
+            f.repo.executeItem(f.player, Items.SLAYER_BELL, 1)
+            assertSame(bell, f.inventory[0])
+            verify(exactly = 1) { f.player.animate(6083) }
+            verify(exactly = 0) { f.world.spawn(any<gg.rsmod.game.model.entity.Npc>()) }
+            every { f.skills.getCurrentLevel(gg.rsmod.plugins.api.Skills.SLAYER) } returns 39
+            f.repo.executeItem(f.player, Items.SLAYER_BELL, 1)
+            f.repo.executeItem(f.player, Items.SLAYER_BELL, 1)
+            verify(exactly = 3) { f.player.animate(6083) }
+            assertSame(bell, f.inventory[0])
+            verify(exactly = 0) { f.world.spawn(any<gg.rsmod.game.model.entity.Npc>()) }
+        }
+    }
+
+    @Test fun `Slayer bell wall range includes three tiles and excludes four and other floors`() {
+        val wall = gg.rsmod.game.model.Tile(2744, 5193)
+        for (dx in -3..3) for (dz in -3..3) assertTrue(
+            gg.rsmod.plugins.content.skills.slayer.Molanisks.inRange(wall.transform(dx, dz), wall))
+        assertFalse(gg.rsmod.plugins.content.skills.slayer.Molanisks.inRange(wall.transform(4, 0), wall))
+        assertFalse(gg.rsmod.plugins.content.skills.slayer.Molanisks.inRange(gg.rsmod.game.model.Tile(wall.x, wall.z, 1), wall))
+    }
+
     @Test fun `demonic sigil chants five chosen words without consuming it and rejects a dropped sigil`() {
         N11Fixture().use { f ->
             f.menu(Items.DEMONIC_SIGIL, "Chant")
