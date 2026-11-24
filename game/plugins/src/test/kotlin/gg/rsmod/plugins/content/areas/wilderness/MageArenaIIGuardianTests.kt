@@ -36,7 +36,8 @@ import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import java.lang.ref.WeakReference
-import kotlin.coroutines.startCoroutine
+import kotlin.coroutines.createCoroutine
+import kotlin.coroutines.resume
 import kotlin.test.*
 
 class MageArenaIIGuardianTests {
@@ -191,6 +192,10 @@ class MageArenaIIGuardianTests {
         every { actor.attr } returns attrs
         attrs[COMBAT_TARGET_FOCUS_ATTR] = WeakReference(target)
         val task = QueueTask(actor, TaskPriority.STANDARD)
+        // As the engine queue does (QueueTaskSet): the coroutine exists before anything hashes the task (QueueTask.hashCode
+        // reads it - mockk's argument matcher on `task` below would otherwise hit the uninitialised lateinit).
+        val run: suspend () -> Unit = { MageArenaIICombatScript.handleSpecialCombat(task) }
+        task.coroutine = run.createCoroutine(task)
         var attempts = 0
         mockkObject(Combat)
         try {
@@ -202,8 +207,7 @@ class MageArenaIIGuardianTests {
                 if (attempts > 1) attrs.remove(COMBAT_TARGET_FOCUS_ATTR)
                 false
             }
-            val run: suspend () -> Unit = { MageArenaIICombatScript.handleSpecialCombat(task) }
-            run.startCoroutine(task)
+            task.coroutine.resume(Unit)
             assertEquals(1, attempts)
             assertTrue(task.suspended(), "failed path must yield a game tick even with no attack delay")
         } finally {

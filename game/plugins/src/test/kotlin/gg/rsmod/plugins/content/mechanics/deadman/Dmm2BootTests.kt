@@ -43,7 +43,8 @@ class Dmm2BootTests {
         assertEquals(1206, Dmm2Ids.interfaceId(806))
         assertSame(Dmm2SafeDepositUi, Dmm2Interactions.safeUi)
         assertSame(Dmm2RewardUi, Dmm2Interactions.rewardUi)
-        assertNull(Dmm2Ids.ItemId.ANCIENT_DEADMAN_CAPE.local)
+        // DMM2BOOT-OUDROOD 24-11: the Imbued ancient cape is published since the Archive/Soulflame rounds (Nigel refuses it, below).
+        assertNotNull(Dmm2Ids.ItemId.ANCIENT_DEADMAN_CAPE.local)
         val pack = assertNotNull(DeadmanStarterPack.ids)
         assertEquals(listOf(24954, 24955, 24956, 24957, 24953, 24950, 24951, 25014),
             listOf(pack.sword, pack.bow, pack.staff, pack.tuna, pack.chronicle, pack.chest, pack.legs, pack.cape))
