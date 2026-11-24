@@ -30,12 +30,21 @@ import gg.rsmod.plugins.api.ext.message
 object ItemCharges {
     const val OPTION = "Check-charges"
 
-    /** Native charged GE forms. OSRS Wiki Black mask and the three Broodoo shield pages. */
+    /** Native charged forms. OSRS Wiki Black mask (all ten charge counts) and the three Broodoo shield pages. */
     val removable = mapOf(
         Items.BROODOO_SHIELD_10 to Items.BROODOO_SHIELD,
         Items.BROODOO_SHIELD_10_6237 to Items.BROODOO_SHIELD_6257,
         Items.BROODOO_SHIELD_10_6259 to Items.BROODOO_SHIELD_6279,
         Items.BLACK_MASK_10 to Items.BLACK_MASK,
+        Items.BLACK_MASK_9 to Items.BLACK_MASK,
+        Items.BLACK_MASK_8 to Items.BLACK_MASK,
+        Items.BLACK_MASK_7 to Items.BLACK_MASK,
+        Items.BLACK_MASK_6 to Items.BLACK_MASK,
+        Items.BLACK_MASK_5 to Items.BLACK_MASK,
+        Items.BLACK_MASK_4 to Items.BLACK_MASK,
+        Items.BLACK_MASK_3 to Items.BLACK_MASK,
+        Items.BLACK_MASK_2 to Items.BLACK_MASK,
+        Items.BLACK_MASK_1 to Items.BLACK_MASK,
     )
 
     fun removeCharges(player: Player, slot: Int) {
