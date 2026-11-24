@@ -2,10 +2,16 @@
 from pathlib import Path
 import subprocess
 import tempfile
+import shutil
 
 wrapper = Path(__file__).with_name('Invoke-LiveRound.ps1').resolve()
 with tempfile.TemporaryDirectory(prefix='rsps-live-round-proof-') as tmp:
     root = Path(tmp)
+    # Exercise the actual default-path resolution too, with isolated phase files.
+    copied_wrapper = root / 'Invoke-LiveRound.ps1'
+    shutil.copyfile(wrapper, copied_wrapper)
+    phases = root / 'live'
+    phases.mkdir()
     repo = root / 'repo'
     subprocess.run(['git', 'init', '-q', '-b', 'project48', str(repo)], check=True)
     def git(*args):
@@ -22,14 +28,15 @@ with tempfile.TemporaryDirectory(prefix='rsps-live-round-proof-') as tmp:
     slot = root / 'trial-slot.txt'
     dossier = root / 'trial-dossier.txt'
     logs = root / 'logs'
-    fail = root / 'fail.ps1'
+    fail = phases / 'Build.ps1'
     fail.write_text("Write-Output 'intentional red build'; exit 7\n")
-    later = root / 'later.ps1'
+    later = phases / 'Bootcheck.ps1'
     later.write_text("throw 'later phase must never run'\n")
-    args = ['powershell.exe', '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', str(wrapper),
+    release = phases / 'Release.ps1'
+    release.write_text("throw 'later phase must never run'\n")
+    args = ['powershell.exe', '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', str(copied_wrapper),
             '-Repository', str(repo), '-ExpectedHead', baseline, '-SourceRef', 'source',
-            '-SlotPath', str(slot), '-Dossier', str(dossier), '-LogDirectory', str(logs),
-            '-BuildScript', str(fail), '-BootcheckScript', str(later), '-ReleaseScript', str(later)]
+            '-SlotPath', str(slot), '-Dossier', str(dossier), '-LogDirectory', str(logs)]
     def run(extra, expected):
         result = subprocess.run(args + extra, capture_output=True, text=True, timeout=30)
         print(result.stdout, result.stderr)
@@ -54,6 +61,7 @@ with tempfile.TemporaryDirectory(prefix='rsps-live-round-proof-') as tmp:
     git('remote', 'add', 'audit', str(bare))
     fail.write_text("Write-Output 'phase success'; exit 0\n")
     later.write_text("Write-Output 'phase success'; exit 0\n")
+    release.write_text("Write-Output 'phase success'; exit 0\n")
     run([], 0)
     assert not slot.exists() and git('rev-parse', 'HEAD') == source
     assert subprocess.check_output(['git', '--git-dir', str(bare), 'rev-parse', 'project48'], text=True).strip() == source

@@ -5,9 +5,9 @@ param(
     [Parameter(Mandatory=$true)][string]$SourceRef,
     [string]$SlotPath = 'C:\RSPS\team\LIVE-SLOT.txt',
     [string]$Branch = 'project48',
-    [string]$BuildScript = "$PSScriptRoot\live\Build.ps1",
-    [string]$BootcheckScript = "$PSScriptRoot\live\Bootcheck.ps1",
-    [string]$ReleaseScript = "$PSScriptRoot\live\Release.ps1",
+    [string]$BuildScript,
+    [string]$BootcheckScript,
+    [string]$ReleaseScript,
     [string]$Remote = 'audit',
     [string]$Dossier = 'C:\RSPS\team\dossiers\REST-ONDERZOEK-2411.txt',
     [string]$LogDirectory = 'C:\RSPS\launcher-logs',
@@ -20,6 +20,9 @@ param(
 # detach children. They receive RSPS_LIVE_TOKEN and RSPS_LIVE_EXPECTED_HEAD.
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
+if (!$BuildScript) { $BuildScript = Join-Path $PSScriptRoot 'live\Build.ps1' }
+if (!$BootcheckScript) { $BootcheckScript = Join-Path $PSScriptRoot 'live\Bootcheck.ps1' }
+if (!$ReleaseScript) { $ReleaseScript = Join-Path $PSScriptRoot 'live\Release.ps1' }
 $lease = $null
 $completed = $false
 $token = [Guid]::NewGuid().ToString('N')
@@ -105,7 +108,7 @@ try {
     if (!$DryRun) {
         foreach ($script in @($BuildScript, $BootcheckScript, $ReleaseScript)) {
             if (!$script -or !(Test-Path -LiteralPath $script -PathType Leaf) -or ![IO.Path]::IsPathRooted($script)) {
-                throw 'Supply absolute synchronous build, bootcheck and release .ps1 scripts'
+                throw "Supply an absolute existing synchronous phase script: '$script' (root=$PSScriptRoot)"
             }
         }
     } elseif ([IO.Path]::GetFullPath($SlotPath) -ieq 'C:\RSPS\team\LIVE-SLOT.txt') {
