@@ -1029,6 +1029,13 @@ object DeadmanBreach {
 
     fun contribution(npc: Npc): BreachContribution = npc.attr[CONTRIBUTION_ATTR] ?: BreachContribution()
 
+    /** Direct/reflected hits use the engine's final, HP-capped hitmarks, never the requested damage at queue time. */
+    fun recordHit(target: Pawn, source: Pawn, hit: gg.rsmod.game.model.Hit) {
+        if (target !is Npc || !isBreachNpc(target)) return
+        val credited = controllingPlayer(source) ?: return
+        hit.addAction { recordDamage(target, credited, hitmarks.sumOf { it.damage }) }
+    }
+
     /**
      * Poison and venom tick without a source, so the player who applied them is remembered when they take hold: the last pawn
      * that attacked the monster ([gg.rsmod.game.model.attr.LAST_HIT_BY_ATTR], set as the attack lands), credited to a familiar's
@@ -1040,15 +1047,19 @@ object DeadmanBreach {
         target.attr[DOT_SOURCE_ATTR] = controllingPlayer(source)?.username ?: return
     }
 
-    /** A poison/venom tick on a breach monster counts for the player who applied it ([notePoisoner]). */
+    /** A poison/venom tick counts its actual damage at impact, for the poisoner when this tick was queued. */
     fun recordDotDamage(
         target: Pawn,
-        damage: Int,
+        hit: gg.rsmod.game.model.Hit,
     ) {
-        if (damage <= 0 || target !is Npc || !isBreachNpc(target) || target.attr[REWARDED_ATTR] == true) return
+        if (target !is Npc || !isBreachNpc(target) || target.attr[REWARDED_ATTR] == true) return
         val name = target.attr[DOT_SOURCE_ATTR] ?: return
-        val ledger = target.attr[CONTRIBUTION_ATTR] ?: BreachContribution().also { target.attr[CONTRIBUTION_ATTR] = it }
-        ledger.add(name, damage)
+        hit.addAction {
+            val damage = hitmarks.sumOf { it.damage }
+            if (damage <= 0 || target.attr[REWARDED_ATTR] == true) return@addAction
+            val ledger = target.attr[CONTRIBUTION_ATTR] ?: BreachContribution().also { target.attr[CONTRIBUTION_ATTR] = it }
+            ledger.add(name, damage)
+        }
     }
 
     // ---- loot -------------------------------------------------------------------------------------------------------

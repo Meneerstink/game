@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.mechanics.pvp.breach
 
 import gg.rsmod.game.model.attr.AttributeMap
 import gg.rsmod.game.model.attr.DAMAGE_CREDIT_ATTR
+import gg.rsmod.game.model.attr.LAST_HIT_BY_ATTR
 import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.game.model.entity.Player
@@ -90,6 +91,37 @@ class BreachRewardTests {
             assertEquals(1, DeadmanBreach.contribution(npc).damageOf("owner"))
             actions.invoke(summonedHit)
             assertEquals(5, DeadmanBreach.contribution(npc).damageOf("owner"), "the summoned attack belongs to its player")
+        } finally { unmockkObject(DeadmanBreach) }
+    }
+
+    @Test
+    fun `recoil poison and venom only credit capped impact damage and retain the queued poisoner`() {
+        mockkObject(DeadmanBreach)
+        try {
+            val npc = mockk<Npc>(relaxed = true)
+            every { npc.attr } returns AttributeMap()
+            every { DeadmanBreach.isBreachNpc(npc) } returns true
+            val owner = player("original")
+            val other = player("later")
+            val recoil = npc.hit(30, type = HitType.REFLECTED)
+            DeadmanBreach.recordHit(npc, owner, recoil)
+            val actions = recoil.javaClass.declaredMethods.single { it.name.startsWith("invokeActions") }.apply { isAccessible = true }
+            assertEquals(0, DeadmanBreach.contribution(npc).size)
+            recoil.hitmarks.single().damage = 1
+            actions.invoke(recoil)
+            assertEquals(1, DeadmanBreach.contribution(npc).damageOf("original"))
+            for (type in listOf(HitType.POISON, HitType.VENOM)) {
+                npc.attr[LAST_HIT_BY_ATTR] = java.lang.ref.WeakReference<Pawn>(owner)
+                DeadmanBreach.notePoisoner(npc)
+                val tick = npc.hit(20, type = type)
+                DeadmanBreach.recordDotDamage(npc, tick)
+                npc.attr[LAST_HIT_BY_ATTR] = java.lang.ref.WeakReference<Pawn>(other)
+                DeadmanBreach.notePoisoner(npc) // another player poisons before the pending tick lands
+                tick.hitmarks.single().damage = 1
+                actions.invoke(tick)
+            }
+            assertEquals(3, DeadmanBreach.contribution(npc).damageOf("original"))
+            assertEquals(0, DeadmanBreach.contribution(npc).damageOf("later"))
         } finally { unmockkObject(DeadmanBreach) }
     }
 
