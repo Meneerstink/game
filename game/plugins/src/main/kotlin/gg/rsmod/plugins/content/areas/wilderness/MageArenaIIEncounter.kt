@@ -114,12 +114,12 @@ object MageArenaIIEncounter {
     fun stateOf(npc: Npc): State? = npc.attr[STATE]
 
     fun active(player: Player, god: MageArenaII.God): Npc? =
-        player.attr[ACTIVE]?.get(god)?.get()?.takeIf { it.isSpawned() && it.isAlive() }
+        player.attr[ACTIVE]?.get(god)?.get()?.takeIf { it.isSpawned() }
 
     fun summon(player: Player, god: MageArenaII.God, location: MageArenaIITracking.Location): Npc? {
         val follower = FOLLOWERS.first { it.god == god }
         if (active(player, god) != null) return null
-        occupied[location.point]?.get()?.let { if (it.isSpawned() && it.isAlive()) return null }
+        occupied[location.point]?.get()?.let { if (it.isSpawned()) return null }
         val combatId = localNpc(follower.combat) ?: return null
         val npc = Npc(player, combatId, location.tile, player.world)
         npc.publicOwner = true
@@ -158,21 +158,25 @@ object MageArenaIIEncounter {
     }
 
     fun dismiss(npc: Npc) {
-        val state = stateOf(npc) ?: return
-        release(state)
+        // Keep a dying actor reserved until its death hook/drop, including during logout or rotation.
+        if (npc.isSpawned() && !npc.isAlive()) return
+        release(npc)
         if (npc.isSpawned() && npc.isAlive()) npc.world.remove(npc)
     }
 
     fun dismissAll(player: Player) {
         player.attr[ACTIVE]?.values?.mapNotNull { it.get() }?.forEach { dismiss(it) }
-        player.attr.remove(ACTIVE)
     }
 
     /** Despawn removes actors, but does not cure Tele Block: only a kill does that (Wiki). */
-    fun release(state: State) {
+    private fun release(npc: Npc) {
+        val state = stateOf(npc) ?: return
         state.healers.forEach { if (it.isSpawned()) it.world.remove(it) }
         state.healers.clear()
-        occupied.entries.removeIf { it.key == state.point }
+        occupied[state.point]?.takeIf { it.get() === npc }?.let { occupied.remove(state.point, it) }
+        state.owner.get()?.attr?.get(ACTIVE)?.let { active ->
+            if (active[state.follower.god]?.get() === npc) active.remove(state.follower.god)
+        }
     }
 
     /**
@@ -181,9 +185,8 @@ object MageArenaIIEncounter {
      */
     fun died(npc: Npc) {
         val state = stateOf(npc) ?: return
-        release(state)
+        release(npc)
         state.owner.get()?.let { gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.clearTeleblockFrom(it, state) }
-        state.owner.get()?.attr?.get(ACTIVE)?.remove(state.follower.god)
     }
 
     private fun protects(target: Pawn, style: CombatClass): Boolean =
@@ -278,7 +281,7 @@ object MageArenaIIEncounter {
         val aimed = Tile(target.tile)
         npc.queue {
             wait(SPECIAL_LAND_TICKS)
-            if (!npc.isAlive() || !target.isOnline || target.tile != aimed) return@queue
+            if (!npc.isSpawned() || !npc.isAlive() || !target.isOnline || target.tile != aimed) return@queue
             val land = npc.world.randomDouble() < accuracy(npc, target, CombatClass.MAGIC)
             if (!land) { target.graphic(Graphic(85, 124)); return@queue }
             target.graphic(Graphic(ICE_BARRAGE_IMPACT, 0)); target.playSound(gg.rsmod.plugins.api.cfg.Sfx.ICE_BARRAGE_IMPACT)
@@ -292,7 +295,7 @@ object MageArenaIIEncounter {
         seq(state.follower.castSeq)?.let { npc.animate(it) }
         npc.queue {
             wait(SPECIAL_LAND_TICKS)
-            if (!npc.isAlive() || !target.isOnline || target.timers.has(TELEBLOCK_TIMER)) return@queue
+            if (!npc.isSpawned() || !npc.isAlive() || !target.isOnline || target.timers.has(TELEBLOCK_TIMER)) return@queue
             if (npc.world.randomDouble() >= accuracy(npc, target, CombatClass.MAGIC)) { target.graphic(Graphic(85, 124)); return@queue }
             gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.teleblock(target,
                 if (protects(target, CombatClass.MAGIC)) TELE_BLOCK_PROTECTED_TICKS else TELE_BLOCK_TICKS, source = state)
@@ -306,7 +309,7 @@ object MageArenaIIEncounter {
         MageArenaAssets.spotanim(SHOCK_WAVE_PROJ)?.let { npc.world.spawn(npc.createProjectile(aimed, it, ProjectileType.MAGIC)) }
         npc.queue {
             wait(SPECIAL_LAND_TICKS)
-            if (!npc.isAlive() || !target.isOnline || target.tile != aimed) return@queue
+            if (!npc.isSpawned() || !npc.isAlive() || !target.isOnline || target.tile != aimed) return@queue
             val drag = sideTiles(npc).filter { !npc.world.collision.isClipped(it) }.minByOrNull { it.getDistance(target.tile) } ?: return@queue
             target.moveTo(drag)
             if (target.freeze(BIND_TICKS, npc) { target.message("You have been bound.") }) state.boundUntil = npc.world.currentCycle + BIND_TICKS
@@ -325,7 +328,7 @@ object MageArenaIIEncounter {
         MageArenaAssets.spotanim(ENERGY_BALL_PROJ)?.let { npc.world.spawn(npc.createProjectile(target, it, ProjectileType.MAGIC)) }
         npc.queue {
             wait(SPECIAL_LAND_TICKS)
-            if (!npc.isAlive() || !target.isOnline) return@queue
+            if (!npc.isSpawned() || !npc.isAlive() || !target.isOnline) return@queue
             val distance = edgeDistance(npc, target)
             if (distance >= ENERGY_BALL_RANGE) return@queue
             val cap = ENERGY_BALL_MAX * (ENERGY_BALL_RANGE - distance) / (ENERGY_BALL_RANGE - 1)
@@ -344,7 +347,7 @@ object MageArenaIIEncounter {
         val owner = state.owner.get() ?: return
         npc.queue {
             wait(3)
-            if (!npc.isAlive() || npc.world.collision.isClipped(tile)) return@queue
+            if (!npc.isSpawned() || !npc.isAlive() || npc.world.collision.isClipped(tile)) return@queue
             val ball = Npc(owner, healerId, tile, npc.world).apply {
                 publicOwner = true; respawnOverride = false
                 attr[gg.rsmod.plugins.content.combat.Combat.OWNER_ONLY_TARGET_ATTR] = true

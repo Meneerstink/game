@@ -27,6 +27,7 @@ import gg.rsmod.plugins.content.combat.Combat
 import gg.rsmod.plugins.content.combat.formula.MagicCombatFormula
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
 import gg.rsmod.plugins.content.mechanics.prayer.Prayers
+import gg.rsmod.plugins.content.skills.summoning.SummoningTestCache
 import gg.rsmod.plugins.content.mechanics.hud.TimerExpiry
 import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 import io.mockk.every
@@ -39,11 +40,52 @@ import kotlin.coroutines.startCoroutine
 import kotlin.test.*
 
 class MageArenaIIGuardianTests {
+    @Test fun `dying followers keep owner and location reserved and stale death cannot release a replacement`() {
+        val definitions = mockk<DefinitionSet>()
+        every { definitions.get(NpcDef::class.java, any()) } answers { NpcDef(secondArg()) }
+        val world = mockk<World>(relaxed = true)
+        every { world.definitions } returns definitions
+        every { world.npcUpdateBlocks } returns SummoningTestCache.npcUpdateBlocks
+        var index = 0
+        every { world.spawn(any<Npc>()) } answers { firstArg<Npc>().index = ++index; true }
+        every { world.remove(any<Npc>()) } answers { firstArg<Npc>().index = -1 }
+        fun player() = mockk<Player>(relaxed = true).also {
+            every { it.world } returns world
+            every { it.attr } returns AttributeMap()
+        }
+        val owner = player(); val other = player()
+        val location = MageArenaIITracking.Location(20_000, Tile(3200, 3900))
+        val god = MageArenaII.God.SARADOMIN
+        mockkObject(MageArenaAssets)
+        try {
+            every { MageArenaAssets.npc(any()) } answers { localNpc(firstArg()) }
+            every { MageArenaAssets.sequence(any()) } returns null
+            val old = MageArenaIIEncounter.summon(owner, god, location)!!
+            old.setCurrentLifepoints(0)
+            MageArenaIIEncounter.dismissAll(owner) // rotation/logout during the death animation
+            assertSame(old, MageArenaIIEncounter.active(owner, god))
+            assertNull(MageArenaIIEncounter.summon(owner, god, location))
+            assertNull(MageArenaIIEncounter.summon(other, god, location))
+            MageArenaIIEncounter.died(old)
+            old.index = -1 // NpcDeathAction removes it after its hook
+            val replacement = MageArenaIIEncounter.summon(owner, god, location)!!
+            MageArenaIIEncounter.died(old) // stale callback
+            assertSame(replacement, MageArenaIIEncounter.active(owner, god))
+            assertNull(MageArenaIIEncounter.summon(other, god, location))
+            assertNull(MageArenaIIEncounter.summon(owner, god, location))
+        } finally {
+            MageArenaIIEncounter.dismissAll(owner)
+            MageArenaIIEncounter.dismissAll(other)
+            unmockkObject(MageArenaAssets)
+        }
+    }
+
     @Test fun `despawn retains boss teleblock while death clears only its own cast`() {
         val world = mockk<World>(relaxed = true)
         val definitions = mockk<DefinitionSet>()
         every { definitions.get(NpcDef::class.java, any()) } answers { NpcDef(secondArg()) }
         every { world.definitions } returns definitions
+        every { world.npcUpdateBlocks } returns SummoningTestCache.npcUpdateBlocks
         every { world.spawn(any<Npc>()) } returns true
         val owner = mockk<Player>(relaxed = true)
         val timers = TimerMap()
@@ -112,6 +154,7 @@ class MageArenaIIGuardianTests {
         every { definitions.get(NpcDef::class.java, any()) } answers { NpcDef(secondArg()) }
         val world = mockk<World>(relaxed = true)
         every { world.definitions } returns definitions
+        every { world.npcUpdateBlocks } returns SummoningTestCache.npcUpdateBlocks
         every { world.spawn(any<Npc>()) } returns true
         val owner = mockk<Player>(relaxed = true)
         every { owner.world } returns world
@@ -175,6 +218,7 @@ class MageArenaIIGuardianTests {
         every { definitions.get(NpcDef::class.java, any()) } answers { NpcDef(secondArg()).apply { name = "MA2 guardian" } }
         val world = mockk<World>(relaxed = true)
         every { world.definitions } returns definitions
+        every { world.npcUpdateBlocks } returns SummoningTestCache.npcUpdateBlocks
         return Npc(id, Tile(3200, 3900), world).apply { stats = Npc.Stats(5) }
     }
 
