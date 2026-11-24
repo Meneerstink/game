@@ -37,6 +37,7 @@ class N11ToggleTests {
                 repeat(28) { f.inventory[it] = Item(100000 + it) }
                 val held = Item(display.item)
                 f.inventory[0] = held
+                f.attrs[gg.rsmod.game.model.attr.INTERACTING_ITEM] = java.lang.ref.WeakReference(held)
                 val obj = gg.rsmod.game.model.entity.DynamicObject(display.root, 10, 0, display.tile)
                 f.attrs[gg.rsmod.game.model.attr.INTERACTING_OBJ_ATTR] = java.lang.ref.WeakReference(obj)
                 assertFalse(gg.rsmod.plugins.content.areas.varrock.VarrockMuseum.place(f.player, obj, 0, held), "identify first")
@@ -46,6 +47,7 @@ class N11ToggleTests {
                 assertEquals((i + 1) * 10, varps.getState(1010))
                 assertTrue(gg.rsmod.plugins.content.areas.varrock.VarrockMuseum.displayed(f.player, display.item))
                 f.inventory[0] = Item(display.item)
+                f.attrs[gg.rsmod.game.model.attr.INTERACTING_ITEM] = java.lang.ref.WeakReference(f.inventory[0]!!)
                 f.repo.executeItemOnObject(f.player, display.root, display.item)
                 assertEquals(display.item, f.inventory[0]?.id, "duplicate submission keeps the duplicate")
                 assertEquals((i + 1) * 10, varps.getState(1010))

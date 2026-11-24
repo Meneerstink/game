@@ -5,7 +5,7 @@ VarrockMuseum.EXHIBITS.forEach { display ->
     listOf(display.root, display.filled).forEach { objId ->
         on_item_on_obj(obj = objId, item = display.item) {
             val slot = player.getInteractingItemSlot()
-            val held = player.inventory[slot] ?: return@on_item_on_obj
+            val held = player.attr[gg.rsmod.game.model.attr.INTERACTING_ITEM]?.get() ?: return@on_item_on_obj
             VarrockMuseum.place(player, player.getInteractingGameObj(), slot, held)
         }
         on_obj_option(objId, "Study") { VarrockMuseum.study(player, player.getInteractingGameObj()) }
@@ -14,7 +14,7 @@ VarrockMuseum.EXHIBITS.forEach { display ->
 // Before completion pottery already occupies its case (unlike the four other finds).
 on_item_on_obj(obj = 24543, item = Items.POTTERY) {
     val slot = player.getInteractingItemSlot()
-    val held = player.inventory[slot] ?: return@on_item_on_obj
+    val held = player.attr[gg.rsmod.game.model.attr.INTERACTING_ITEM]?.get() ?: return@on_item_on_obj
     VarrockMuseum.place(player, player.getInteractingGameObj(), slot, held)
 }
 on_obj_option(24543, "Study") { VarrockMuseum.study(player, player.getInteractingGameObj()) }
