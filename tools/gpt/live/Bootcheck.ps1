@@ -3,6 +3,7 @@ $scripts = 'C:\RSPS\work\claude-scripts'
 $bash = 'C:\Program Files\Git\bin\bash.exe'
 $server = $null
 $owned = $false
+$ready = $false
 function Invoke-Rb([string[]]$Arguments) {
     & $bash lib/rb_server.sh @Arguments
     if ($LASTEXITCODE -ne 0) { throw "rb_server $($Arguments -join ' ') exit $LASTEXITCODE" }
@@ -43,11 +44,13 @@ try {
     $out = "C:\RSPS\launcher-logs\live-boot-$tag.out.log"
     $err = "C:\RSPS\launcher-logs\live-boot-$tag.err.log"
     $server = Start-Process $bash -ArgumentList @('lib/rb_server.sh', 'run') -WorkingDirectory $scripts -WindowStyle Hidden -RedirectStandardOutput $out -RedirectStandardError $err -PassThru
+    $null = $server.Handle
     $owned = $true
     $line = Wait-Log $out 'RB-SERVER START log=[^\r\n]+' 30
     $log = ($line -replace '^RB-SERVER START log=', '') -replace '^/c/', 'C:/'
     Write-Output "BOOTCHECK serverlog=$log runner=$out"
     Wait-Log $log 'Now listening for incoming connections on port 50215' 180 | Write-Output
+    $ready = $true
     $answer = & $bash lib/rb_server.sh tl cmd online
     if ($LASTEXITCODE -ne 0 -or "$answer" -notmatch '(?i)online|players') { throw "Boot command check failed: $answer" }
     Write-Output "BOOTCHECK online: $answer"
@@ -58,8 +61,20 @@ try {
 } catch { Write-Output "BOOTCHECK STOP: $($_.Exception.Message)"; exit 1 } finally {
     if ($owned) {
         Set-Location -LiteralPath $scripts
-        try { Invoke-Rb @('stop') } finally {
-            if ($server -and !$server.HasExited) { $server.Kill(); $server.WaitForExit() }
+        try {
+            if ($ready) {
+                # Use OUR tunnel to the server whose successful bind was just proved.
+                # The generic rb_server stop kills by shared classpath, so do not use it.
+                Invoke-Rb -Arguments @('tl', 'cmd', 'shutdown')
+                if (!$server.WaitForExit(30000)) { throw 'Own boot server did not stop after shutdown; STOP and retain slot' }
+                Write-Output 'BOOTCHECK own server stopped'
+            }
+        } finally {
+            if ($server -and !$server.HasExited) {
+                & taskkill.exe /PID $server.Id /T /F | Out-Null
+                if ($LASTEXITCODE -ne 0) { throw 'Could not terminate own boot runner; recovery marker required' }
+                $server.WaitForExit()
+            }
             if ($server) { $server.Dispose() }
         }
     }
