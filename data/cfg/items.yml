@@ -25900,6 +25900,9 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs:
+    - skill: 6
+      level: 60
     equip_slot: 1
     equip_type: -1
     appearance_id: 461
@@ -25933,6 +25936,9 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs:
+    - skill: 6
+      level: 60
     equip_slot: 1
     equip_type: -1
     appearance_id: 462
@@ -25966,6 +25972,9 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs:
+    - skill: 6
+      level: 60
     equip_slot: 1
     equip_type: -1
     appearance_id: 463
@@ -25999,6 +26008,9 @@
   tradeable: false
   weight: 2.2
   equipment:
+    skill_reqs:
+    - skill: 6
+      level: 60
     equip_slot: 3
     equip_type: -1
     appearance_id: 464
@@ -26032,6 +26044,9 @@
   tradeable: false
   weight: 2.0
   equipment:
+    skill_reqs:
+    - skill: 6
+      level: 60
     equip_slot: 3
     equip_type: -1
     appearance_id: 465
@@ -26065,6 +26080,9 @@
   tradeable: false
   weight: 2.2
   equipment:
+    skill_reqs:
+    - skill: 6
+      level: 60
     equip_slot: 3
     equip_type: -1
     appearance_id: 466
@@ -121253,6 +121271,9 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs:
+    - skill: 6
+      level: 60
     equip_slot: 1
     equip_type: -1
     appearance_id: 2323

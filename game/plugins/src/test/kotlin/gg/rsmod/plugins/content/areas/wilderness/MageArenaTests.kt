@@ -1,6 +1,10 @@
 package gg.rsmod.plugins.content.areas.wilderness
 
 import gg.rsmod.game.Server
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import gg.rsmod.game.action.EquipAction
+import it.unimi.dsi.fastutil.bytes.Byte2ByteOpenHashMap
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.fs.def.NpcDef
@@ -54,6 +58,31 @@ import java.net.URLClassLoader
 import kotlin.test.*
 
 class MageArenaTests {
+    @Test fun `all normal god capes and staves use metadata Magic60 base requirement including duplicate Guthix cape`() {
+        val metadata = ObjectMapper(YAMLFactory()).readTree(File("../../data/cfg/items.yml")).toList()
+        for (id in listOf(2412, 2413, 2414, 2415, 2416, 2417, 10720)) {
+            val eq = metadata.single { it.path("id").asInt() == id }.path("equipment")
+            val reqs = eq.path("skill_reqs").associate { it.path("skill").asInt() to it.path("level").asInt() }
+            assertEquals(mapOf(Skills.MAGIC to 60), reqs, "item $id metadata")
+            for (base in listOf(59, 60)) {
+                val a = Account()
+                val def = ItemDef(id).apply {
+                    equipSlot = eq.path("equip_slot").asInt()
+                    equipType = -1
+                    skillReqs = Byte2ByteOpenHashMap().apply { reqs.forEach { (skill, level) -> put(skill.toByte(), level.toByte()) } }
+                }
+                every { a.defs.get(ItemDef::class.java, id) } returns def
+                every { a.world.plugins } returns PluginRepository(a.world)
+                a.skills.setBaseLevel(Skills.MAGIC, base)
+                a.skills.setCurrentLevel(Skills.MAGIC, 99) // a temporary boost must not satisfy wield requirements
+                a.inventory[0] = Item(id)
+                assertEquals(if (base == 59) EquipAction.Result.FAILED_REQUIREMENTS else EquipAction.Result.SUCCESS,
+                    EquipAction.equip(a.player, Item(id), 0), "item $id base $base")
+                if (base == 59) assertEquals(id, a.inventory[0]?.id) else assertEquals(id, a.equipment[def.equipSlot]?.id)
+            }
+        }
+    }
+
     @Test fun `god spells dispatch their Prayer Defence and NPC Magic drains at impact without stacking below base`() {
         val a = Account()
         val caster = Account().player
