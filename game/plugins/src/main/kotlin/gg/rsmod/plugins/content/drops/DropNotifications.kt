@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.drops
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.plugins.api.ext.message
 
 /**
  * DROP-MELDINGEN (owner 24-11 'ja', advice: threshold 10,000 coins, untradeable line always on): the OSRS chat lines of the settings
