@@ -135,7 +135,10 @@ object DeadmanBreach {
     }
 
     /** Audit D-14: the breach event ([Active.eventId]) a breach npc was spawned for. */
-    private val BREACH_EVENT_ATTR = AttributeKey<Int>()
+    internal val BREACH_EVENT_ATTR = AttributeKey<Int>()
+
+    /** Summons inherit their parent's event even while a newer breach is open. */
+    fun eventOf(npc: Npc): Int = npc.attr[BREACH_EVENT_ATTR] ?: lastEventId
 
     /** Audit D-14: id of the most recently opened breach event; npcs spawned while none is open belong to it. */
     @Volatile
@@ -581,13 +584,13 @@ object DeadmanBreach {
             gg.rsmod.game.Server.logger.info("Breach spawning stopped: {} monsters spawned, survivors linger {} ticks.", opened.sites.sumOf { it.spawned }, LINGER_TICKS)
             wait(LINGER_TICKS)
             if (closed()) return@queue
-            var removed = 0
             opened.sites.forEach { site ->
                 site.closed = true
-                site.npcs.forEach { if (world.npcs.contains(it) && !it.isDead()) { world.remove(it); removed++ } }
                 site.npcs.clear()
                 lingering -= site
             }
+            // The site's list contains only direct landings. Zemouregal summons and Jad-Rek must expire with their event too.
+            val removed = despawnEvent(world, opened.eventId)
             pruneLive(world)
             gg.rsmod.game.Server.logger.info("Breach cleanup: {} unkilled monsters removed.", removed)
         }
@@ -888,6 +891,7 @@ object DeadmanBreach {
         walkRadius: Int,
         lifetimeTicks: Int = -1,
         test: Boolean = false,
+        eventId: Int? = null,
     ): Npc {
         val npc = Npc(id, Tile(tile), world)
         npc.respawnOverride = false
@@ -905,7 +909,7 @@ object DeadmanBreach {
         npc.attr[BREACH_NPC_ATTR] = true
         // F4: a `breachtest` monster fights like the real one but pays nothing (no loot, emblem or points).
         if (test) markTest(npc)
-        npc.attr[BREACH_EVENT_ATTR] = active?.eventId ?: lastEventId
+        npc.attr[BREACH_EVENT_ATTR] = eventId ?: active?.eventId ?: lastEventId
         // OSRS Wiki: Durial321 "is also capable of running after his target, unlike most NPCs"; I DSCIM YOU "runs at its targets".
         if (id in BreachMonsters.RUNNERS) npc.attr[gg.rsmod.game.model.attr.NPC_RUNS_ATTR] = true
         world.spawn(npc)
@@ -923,6 +927,20 @@ object DeadmanBreach {
             }
         }
         return npc
+    }
+
+    /** All surviving monsters of one expired event, including summons; a newer event is never touched. */
+    internal fun despawnEvent(world: World, eventId: Int): Int {
+        val expired = live.filter { it.attr[BREACH_EVENT_ATTR] == eventId }
+        var removed = 0
+        expired.forEach { npc ->
+            if (world.npcs.contains(npc) && !npc.isDead()) {
+                world.remove(npc)
+                removed++
+            }
+        }
+        live.removeAll(expired.toSet())
+        return removed
     }
 
     /** Drops npcs that died or were removed from [live]. */

@@ -382,7 +382,7 @@ NpcAttacks.onSwing("breach_zemouregal") { npc, target, _ ->
     npc.graphic(BreachMonsters.GFX_ZEMOUREGAL_SUMMON)
     val summon = BreachMonsters.SUMMONS.random()
     val size = world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, summon.id).size.coerceAtLeast(1)
-    val spawned = DeadmanBreach.spawnMonster(world, summon.id, DeadmanBreach.summonTile(world, target, size), 8, DeadmanBreach.LINGER_TICKS, test = DeadmanBreach.isTestNpc(npc))
+    val spawned = DeadmanBreach.spawnMonster(world, summon.id, DeadmanBreach.summonTile(world, target, size), 8, DeadmanBreach.LINGER_TICKS, test = DeadmanBreach.isTestNpc(npc), eventId = DeadmanBreach.eventOf(npc))
     alive += spawned
 }
 
@@ -405,7 +405,7 @@ NpcAttacks.onSwing("tztok_jad") { npc, target, _ ->
     val size = world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, BreachMonsters.TZTOK_JAD_REK).size.coerceAtLeast(1)
     npc.attr[jadRek] =
         DeadmanBreach.spawnMonster(
-            world, BreachMonsters.TZTOK_JAD_REK, DeadmanBreach.summonTile(world, target, size), 8, DeadmanBreach.LINGER_TICKS, test = DeadmanBreach.isTestNpc(npc),
+            world, BreachMonsters.TZTOK_JAD_REK, DeadmanBreach.summonTile(world, target, size), 8, DeadmanBreach.LINGER_TICKS, test = DeadmanBreach.isTestNpc(npc), eventId = DeadmanBreach.eventOf(npc),
         )
 }
 

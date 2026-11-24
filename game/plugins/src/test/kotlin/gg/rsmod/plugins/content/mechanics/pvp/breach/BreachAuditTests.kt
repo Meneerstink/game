@@ -90,6 +90,38 @@ class BreachAuditTests {
     }
 
     @Test
+    fun `natural breach expiry removes its summons as well as landings and leaves a newer event alone`() {
+        val world = mockk<World>(relaxed = true)
+        fun monster(id: Int, event: Int): Npc {
+            val npc = mockk<Npc>(relaxed = true)
+            every { npc.id } returns id
+            every { npc.attr } returns AttributeMap()
+            every { npc.isDead() } returns false
+            every { world.npcs.contains(npc) } returns true
+            npc.attr[DeadmanBreach.BREACH_EVENT_ATTR] = event
+            return npc
+        }
+        val main = monster(14466, 17)
+        val summon = monster(14471, 17)
+        val jadRek = monster(14477, 17)
+        val newer = monster(14462, 18)
+        val before = DeadmanBreach.live.toSet()
+        try {
+            DeadmanBreach.live.clear()
+            DeadmanBreach.live += listOf(main, summon, jadRek, newer)
+            assertEquals(17, DeadmanBreach.eventOf(summon))
+            assertEquals(3, DeadmanBreach.despawnEvent(world, 17))
+            for (npc in listOf(main, summon, jadRek)) verify(exactly = 1) { world.remove(npc) }
+            verify(exactly = 0) { world.remove(newer) }
+            assertEquals(setOf(newer), DeadmanBreach.live.toSet())
+            assertEquals(0, DeadmanBreach.despawnEvent(world, 17), "repeated cleanup pays/removes nothing twice")
+        } finally {
+            DeadmanBreach.live.clear()
+            DeadmanBreach.live += before
+        }
+    }
+
+    @Test
     fun `F4 - a breachtest monster pays no loot, emblem or points`() {
         val world = mockk<World>(relaxed = true)
         val npc = mockk<Npc>(relaxed = true)
