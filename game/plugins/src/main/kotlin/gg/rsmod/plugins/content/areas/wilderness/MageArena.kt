@@ -82,6 +82,7 @@ object MageArena {
     fun completed(player: Player): Boolean = player.attr[COMPLETED_MAGE_ARENA] == true
     fun canStart(player: Player): Boolean = !completed(player) && player.skills.getMaxLevel(Skills.MAGIC) >= 60
     fun active(player: Player): Npc? = player.attr[ACTIVE]?.get()?.takeIf { it.isSpawned() && it.isAlive() }
+    fun ownsDuelNpc(player: Player, npc: Npc): Boolean = npc.owner === player && npc.attr[DUEL_FORM] != null
 
     /** In (or entering) their own Kolodion duel: battle mages do not acquire them (Kolodion engages at once in OSRS). */
     fun dueling(player: Player): Boolean = active(player) != null || player.attr[PENDING] == true

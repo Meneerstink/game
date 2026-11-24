@@ -524,7 +524,9 @@ object Combat {
             gg.rsmod.plugins.content.starter.DeadmanStarterPack.isWeapon(pawn.getEquipment(gg.rsmod.plugins.api.EquipmentType.WEAPON)?.id)) return false
 
         // The low-level gate is also used by instant specials and manual spells, before resources are consumed.
-        if (pawn is Player && target is Player && SinglesPlus.contains(pawn.tile) && SinglesPlus.contains(target.tile) &&
+        if (pawn is Player && target is Player &&
+            ((SinglesPlus.contains(pawn.tile) && SinglesPlus.contains(target.tile)) ||
+                gg.rsmod.plugins.content.areas.wilderness.MageArenaPvp.involved(pawn, target)) &&
             (pawn.isAttackedByOtherThan(target) || target.isAttackedByOtherThan(pawn))) return false
 
         if (pawn is Player) {
