@@ -11,6 +11,31 @@ import io.mockk.verify
 import kotlin.test.*
 
 class N11ToggleTests {
+    @Test fun `demonic sigil chants five chosen words without consuming it and rejects a dropped sigil`() {
+        N11Fixture().use { f ->
+            f.menu(Items.DEMONIC_SIGIL, "Chant")
+            f.load("items.Demonic_sigil_plugin")
+            repeat(28) { f.inventory[it] = Item(100000 + it) }
+            val held = Item(Items.DEMONIC_SIGIL)
+            f.inventory[0] = held
+            f.repo.executeItem(f.player, held.id, 1)
+            f.queues.cycle()
+            listOf("Tarren", "Caldar", "Camerinthum", "Agrith-Naar", "Nahudu").forEachIndexed { i, word ->
+                f.queues.submitReturnValue(gg.rsmod.game.message.impl.ResumePauseButtonMessage(234, i + 2, i + 2))
+                f.queues.cycle()
+                verify(exactly = 1) { f.player.forceChat(word) }
+            }
+            assertSame(held, f.inventory[0])
+            f.repo.executeItem(f.player, held.id, 1)
+            f.queues.cycle()
+            f.inventory[0] = null
+            f.queues.submitReturnValue(gg.rsmod.game.message.impl.ResumePauseButtonMessage(234, 2, 2))
+            f.queues.cycle()
+            verify(exactly = 1) { f.player.forceChat("Tarren") }
+            assertFalse(f.repo.hasItemOption(Items.DEMONIC_SIGIL_MOULD, 1))
+        }
+    }
+
     private fun prepare(f: N11Fixture) {
         AvasAssembler.LEGACY_DEVICES.forEach {
             f.menu(it, "", "Wear", "", "Toggle")
