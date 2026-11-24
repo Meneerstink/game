@@ -131,10 +131,16 @@ class N11ToggleTests {
             every { f.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, any()) } answers {
                 gg.rsmod.game.fs.def.ObjectDef(secondArg()).apply { options[0] = "Pan" }
             }
+            every { f.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, any()) } answers {
+                gg.rsmod.game.fs.def.NpcDef(secondArg()).apply { options[0] = "Talk-to" }
+            }
             val anim = io.mockk.mockk<gg.rsmod.game.fs.def.AnimDef>()
             every { anim.cycleLength } returns 4
             every { f.definitions.get(gg.rsmod.game.fs.def.AnimDef::class.java, any()) } returns anim
             f.load("areas.digsite.Panning_plugin")
+            val guide = f.repo.npcSpawns.single()
+            assertEquals(620, guide.id)
+            assertEquals(gg.rsmod.game.model.Tile(3376, 3379), guide.tile)
             repeat(28) { f.inventory[it] = Item(100000 + it) }
             f.inventory[0] = Item(Items.PANNING_TRAY)
             assertFalse(gg.rsmod.plugins.content.areas.digsite.Panning.pan(f.player))

@@ -1,5 +1,13 @@
 package gg.rsmod.plugins.content.areas.digsite
 
+// Missing from the region's old spawn list. OSRS Wiki Panning guide map: 3376,3379; native 667 npc620.
+spawn_npc(npc = Npcs.PANNING_GUIDE, x = 3376, z = 3379)
+on_npc_option(Npcs.PANNING_GUIDE, "Talk-to") {
+    player.queue {
+        chatNpc("Hello, I am the panning guide. I'm here to teach you how to pan for gold.", npc = Npcs.PANNING_GUIDE)
+    }
+}
+
 fun panHere(player: Player, slot: Int = player.inventory.getItemIndex(Items.PANNING_TRAY, skipAttrItems = false)) {
     if (player.attr[Panning.PERMISSION] != true) {
         player.queue {
