@@ -74,6 +74,9 @@ object NexCombatScript : CombatScript() {
     /** The running No Escape rush (world-owned, see [noEscape]); [busy] is set while it runs. */
     private var rush: Any? = null
 
+    /** NEX-PULL-FLAKY: tests fix Darkan's smoke-rush roll (true = Drag, false = No Escape); null = the random roll. */
+    internal var dragRollForTests: Boolean? = null
+
     /**
      * N25 (LC10 2026-10-16: after a pull Nex stood still for minutes). The old loop `while (canEngage && isAttackDelayReady ...)` +
      * `wait(attackSpeed)` woke one tick before its own ATTACK_DELAY ran out and quit after every attack (class 191, N24/N84): only a
@@ -118,7 +121,7 @@ object NexCombatScript : CombatScript() {
             enc.consumeFirstStageAttack() // Darkan has no separate first attack: the schedule starts at count 1.
             val count = attackCount
             // C4: Darkan NexCombat.java:42-76 - the special is a pure function of (phase, attack count); Drag on Utils.random(4) == 0.
-            val special = NexDarkanRules.special(enc.phase, count, world.random(3) == 0)
+            val special = NexDarkanRules.special(enc.phase, count, dragRollForTests ?: (world.random(3) == 0))
             if (special != null) {
                 attackCount++ // Nex.performAttack -> incrementAttack
                 lastAttackCycle = world.currentCycle // Nex.incrementAttack -> refreshTicksAttacked (shouldStopMeleeing)
@@ -587,6 +590,7 @@ object NexCombatScript : CombatScript() {
         shadowTrapsActive = false
         busy = false
         rush = null
+        dragRollForTests = null
     }
 }
 

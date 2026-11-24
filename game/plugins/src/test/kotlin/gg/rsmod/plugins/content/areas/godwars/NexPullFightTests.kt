@@ -159,6 +159,8 @@ class NexPullFightTests {
 
     @Test
     fun `the pull lands the player beside Nex's body, never inside it`() {
+        // NEX-PULL-FLAKY: a random No Escape rush moved the player between the pull and the check; every smoke rush is a Drag here.
+        NexCombatScript.dragRollForTests = true
         val player = enter("landing", Tile(2918, 5202))
         player.setVarp(AUTO_RETALIATE_OFF_VARP, 1)
         val nex = awaitFight(player)
