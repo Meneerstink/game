@@ -519,6 +519,15 @@ object DeadmanBreach {
         return out
     }
 
+    /**
+     * Owner 2026-09-27: half the monsters at opening, the rest spread over the wiki's 15-minute spawning window.
+     * Counts through the current tick, so the final monster is due before the window closes, for either site type.
+     */
+    internal fun plannedSpawnCount(elapsed: Int, maxNpcs: Int): Int {
+        val burst = maxNpcs / 2
+        return burst + (elapsed + 1).coerceIn(0, SPAWN_WINDOW_TICKS) * (maxNpcs - burst) / SPAWN_WINDOW_TICKS
+    }
+
     private fun run(
         world: World,
         opened: Active,
@@ -532,9 +541,9 @@ object DeadmanBreach {
                     opened.sites.forEach { site ->
                         // Owner decision 2026-09-27: half of a site's monsters come out at once when the breach opens, the rest
                         // spread over the 15 minutes (OSRS gives no cadence; one every 2.5 minutes looked like an empty breach).
-                        val burst = site.maxNpcs / 2
-                        val interval = SPAWN_WINDOW_TICKS / (site.maxNpcs - burst).coerceAtLeast(1)
-                        if (site.spawned < site.maxNpcs && (site.spawned < burst || elapsed >= (site.spawned - burst + 1) * interval)) fire(world, site)
+                        // The final spawn belongs to tick 1499, before the 1500-tick window closes. Using an interval
+                        // of 500 scheduled a local site's sixth monster at tick 1500, so it could never appear.
+                        repeat((plannedSpawnCount(elapsed, site.maxNpcs) - site.spawned).coerceAtLeast(0)) { fire(world, site) }
                     }
 
                 } catch (e: Exception) {
