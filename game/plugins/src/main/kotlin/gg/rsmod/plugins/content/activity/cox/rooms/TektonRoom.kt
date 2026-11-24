@@ -55,6 +55,15 @@ class TektonRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, f
     private fun form(normal: Int, angry: Int) { CoxIds.npc(if (enraged) angry else normal)?.let { tekton?.setTransmogId(it) } }
     private fun anim(normal: Int, angry: Int = normal) { tekton?.let { animate(it, if (enraged) angry else normal) } }
 
+    /** Wiki Tekton, 29 November 2023: repairing at the anvil no longer resets drained Defence.
+     * Both forms have the same Defence level; only their defensive bonuses change.
+     */
+    internal fun configureForm(npc: Npc, form: Int) {
+        val defence = npc.stats.getCurrentLevel(2)
+        configure(npc, form, 3, 7495, keepHp = true)
+        npc.stats.setCurrentLevel(2, minOf(defence, npc.stats.getMaxLevel(2)))
+    }
+
     private fun reachable(): List<Player> {
         val npc = tekton ?: return emptyList()
         val s = npc.getSize()
@@ -135,7 +144,7 @@ class TektonRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, f
         later(if (slash) 2 else 1) { swing(facing, slash) }
         swings++
         wait = 3
-        if (enraged && swings == 6) { enraged = false; CoxIds.npc(7542)?.let { npc.setTransmogId(it) }; configure(npc, 7540, 3, 7495, keepHp = true) }
+        if (enraged && swings == 6) { enraged = false; CoxIds.npc(7542)?.let { npc.setTransmogId(it) }; configureForm(npc, 7540) }
         if (swings >= swingLimit) retreat(npc)
     }
 
@@ -176,7 +185,7 @@ class TektonRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, f
         if (npc.hasMoveDestination()) return
         if (npc.tile.x != home.x || npc.tile.z != home.z) { npc.walkTo(home, detectCollision = false); return }
         state = State.ANVIL
-        configure(npc, 7540, 3, 7495, keepHp = true)
+        configureForm(npc, 7540)
         animate(npc, 7475)
         CoxIds.npc(7545)?.let { npc.setTransmogId(it) }
         anvilTicks = 0
@@ -191,7 +200,7 @@ class TektonRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, f
         if (t % 3 == 0) npc.setCurrentLifepoints(minOf(npc.getMaximumLifepoints(), npc.getCurrentLifepoints() + npc.getMaximumLifepoints() / 100 + 1))
         if (t >= anvilFor) {
             enraged = true; repaired = true
-            configure(npc, 7543, 3, 7495, keepHp = true)
+            configureForm(npc, 7543)
             wake()
         }
     }
