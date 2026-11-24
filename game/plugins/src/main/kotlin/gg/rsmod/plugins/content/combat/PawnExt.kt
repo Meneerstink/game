@@ -103,6 +103,7 @@ fun Pawn.liveLastHitBy(): Pawn? =
 /** Single-way rule: within the PJ window ([Combat.PJ_TIMER], 17 ticks) this pawn is being fought by someone that still exists, other than [other]. */
 // Owner and his familiar are one attacker for the single-way rules (Combat.sameSide, owner A9 2026-10-11).
 fun Pawn.isAttackedByOtherThan(other: Pawn): Boolean {
+    if (this is Npc && gg.rsmod.plugins.content.combat.scripts.impl.GlacorCombatScript.reservedByOther(this, other)) return true
     gg.rsmod.plugins.content.areas.wilderness.MageArenaPvp.reservation(this)?.let { opponent ->
         if (!Combat.sameSide(opponent, other) && !gg.rsmod.plugins.content.areas.wilderness.MageArenaPvp.ownsOpponent(this, other)) return true
     }
