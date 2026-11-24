@@ -195,10 +195,14 @@ object MageArenaIIEncounter {
     private fun protects(target: Pawn, style: CombatClass): Boolean =
         PrayerIcon.values().any { it.id == target.prayerIcon && style in it.protects }
 
-    /** Rolled with the normal formula's accuracy; a matching protection prayer halves rather than blocks (Wiki "up to 20+"). */
+    /** MA2 prayers do not confer immunity. Keep ordinary defence rolls, bypass only the generic NPC full-block rule. */
+    fun accuracy(npc: Npc, target: Pawn, style: CombatClass): Double =
+        if (style == CombatClass.MELEE) MeleeCombatFormula.getUnprotectedAccuracy(npc, target)
+        else MagicCombatFormula.getUnprotectedAccuracy(npc, target)
+
+    /** Existing damage reduction retained; its exact OSRS factor still needs primary-source measurement. */
     private fun hit(npc: Npc, target: Pawn, style: CombatClass, max: Int, delay: Int, landed: Boolean? = null): Int {
-        val formula = if (style == CombatClass.MELEE) MeleeCombatFormula else MagicCombatFormula
-        val land = landed ?: (formula.getAccuracy(npc, target) >= npc.world.randomDouble())
+        val land = landed ?: (npc.world.randomDouble() < accuracy(npc, target, style))
         val cap = if (protects(target, style)) max / 2.0 else max.toDouble()
         val type = if (style == CombatClass.MELEE) HitType.MELEE else HitType.MAGIC
         return npc.dealHit(target, maxHit = cap, landHit = land, delay = delay, hitType = type, applyDeflectProtection = false)
@@ -262,7 +266,7 @@ object MageArenaIIEncounter {
     private fun godSpell(npc: Npc, target: Pawn, f: Follower) {
         npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)
         seq(f.castSeq)?.let { npc.animate(it) }
-        val land = MagicCombatFormula.getAccuracy(npc, target) >= npc.world.randomDouble()
+        val land = npc.world.randomDouble() < accuracy(npc, target, CombatClass.MAGIC)
         // Recorded: the hit lands a tick after the cast; the god-spell graphic on a hit, the splash (85) on a miss.
         target.graphic(Graphic(if (land) gfx(f.castGfx) else 85, if (land) 0 else 124, 30))
         if (target is Player) target.playSound(if (land) f.castSound else 227, delay = 30)
@@ -281,7 +285,7 @@ object MageArenaIIEncounter {
         npc.queue {
             wait(SPECIAL_LAND_TICKS)
             if (!npc.isAlive() || !target.isOnline || target.tile != aimed) return@queue
-            val land = MagicCombatFormula.getAccuracy(npc, target) >= npc.world.randomDouble()
+            val land = npc.world.randomDouble() < accuracy(npc, target, CombatClass.MAGIC)
             if (!land) { target.graphic(Graphic(85, 124)); return@queue }
             target.graphic(Graphic(ICE_BARRAGE_IMPACT, 0)); target.playSound(gg.rsmod.plugins.api.cfg.Sfx.ICE_BARRAGE_IMPACT)
             hit(npc, target, CombatClass.MAGIC, BARRAGE_MAX, delay = 0, landed = true)
@@ -295,7 +299,7 @@ object MageArenaIIEncounter {
         npc.queue {
             wait(SPECIAL_LAND_TICKS)
             if (!npc.isAlive() || !target.isOnline || target.timers.has(TELEBLOCK_TIMER)) return@queue
-            if (MagicCombatFormula.getAccuracy(npc, target) < npc.world.randomDouble()) { target.graphic(Graphic(85, 124)); return@queue }
+            if (npc.world.randomDouble() >= accuracy(npc, target, CombatClass.MAGIC)) { target.graphic(Graphic(85, 124)); return@queue }
             gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.teleblock(target, if (protects(target, CombatClass.MAGIC)) TELE_BLOCK_PROTECTED_TICKS else TELE_BLOCK_TICKS)
             state.teleBlockApplied = true
             target.message("A teleport block has been cast on you!")

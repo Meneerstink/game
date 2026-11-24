@@ -11,12 +11,20 @@ import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.combat.SlayerAssignment
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.container.ItemContainer
+import gg.rsmod.game.model.container.key.EQUIPMENT_KEY
+import gg.rsmod.game.model.skill.SkillSet
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.game.model.queue.TaskPriority
 import gg.rsmod.plugins.api.BonusSlot
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.NpcSpecies
+import gg.rsmod.plugins.api.PrayerIcon
+import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.content.combat.Combat
+import gg.rsmod.plugins.content.combat.formula.MagicCombatFormula
+import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
+import gg.rsmod.plugins.content.mechanics.prayer.Prayers
 import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 import io.mockk.every
 import io.mockk.coEvery
@@ -28,6 +36,39 @@ import kotlin.coroutines.startCoroutine
 import kotlin.test.*
 
 class MageArenaIIGuardianTests {
+    @Test fun `MA2 rolls can hit and miss under Protect Deflect and Ruinous without changing generic NPC protection`() {
+        val target = mockk<Player>(relaxed = true)
+        every { target.attr } returns AttributeMap()
+        every { target.skills } returns SkillSet(25).apply {
+            setBaseLevel(Skills.DEFENCE, 75); setBaseLevel(Skills.MAGIC, 75)
+        }
+        every { target.equipmentBonuses } returns IntArray(18)
+        every { target.equipment } returns ItemContainer(DefinitionSet(), EQUIPMENT_KEY)
+        mockkObject(Prayers)
+        try {
+            every { Prayers.isActive(any(), any()) } returns false
+            MageArenaIIGuardians.ALL.forEach { guardian ->
+                val actor = npc(localNpc(guardian.upstream)!!)
+                actor.combatDef = MageArenaIIGuardians.definition(guardian) { it + 60_000 }!!
+                actor.combatDef.stats.forEachIndexed { index, level -> actor.stats.setMaxLevel(index, level) }
+                actor.combatDef.bonuses.forEachIndexed { index, bonus -> actor.equipmentBonuses[index] = bonus }
+                for ((style, icons) in listOf(
+                    CombatClass.MAGIC to listOf(PrayerIcon.PROTECT_FROM_MAGIC, PrayerIcon.DEFLECT_MAGIC, PrayerIcon.RUINOUS_DAMPEN_MAGIC),
+                    CombatClass.MELEE to listOf(PrayerIcon.PROTECT_FROM_MELEE, PrayerIcon.DEFLECT_MELEE, PrayerIcon.RUINOUS_DAMPEN_MELEE))) {
+                    icons.forEach { icon ->
+                        every { target.prayerIcon } returns icon.id
+                        val chance = MageArenaIIEncounter.accuracy(actor, target, style)
+                        assertTrue(chance > 0.0 && chance < 1.0, "$guardian $icon must allow hits and misses")
+                    }
+                }
+                every { target.prayerIcon } returns PrayerIcon.PROTECT_FROM_MAGIC.id
+                assertEquals(0.0, MagicCombatFormula.getAccuracy(actor, target), "generic formula stays unchanged")
+                every { target.prayerIcon } returns PrayerIcon.PROTECT_FROM_MELEE.id
+                assertEquals(0.0, MeleeCombatFormula.getAccuracy(actor, target), "generic formula stays unchanged")
+            }
+        } finally { unmockkObject(Prayers) }
+    }
+
     @Test fun `symbol summoned guardians install the existing impact filter including delayed typeless damage`() {
         val definitions = mockk<DefinitionSet>()
         every { definitions.get(NpcDef::class.java, any()) } answers { NpcDef(secondArg()) }
