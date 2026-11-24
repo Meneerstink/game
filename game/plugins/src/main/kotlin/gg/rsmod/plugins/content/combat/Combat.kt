@@ -464,7 +464,9 @@ object Combat {
     fun sameSide(
         a: Pawn,
         b: Pawn,
-    ): Boolean = a === b || actingFor(a)?.let { it === actingFor(b) } == true || bossSide(a) === bossSide(b) && bossSide(a) != null
+    ): Boolean = a === b || actingFor(a)?.let { it === actingFor(b) } == true ||
+        gg.rsmod.plugins.content.npcs.definitions.barrows.BarrowsCombat.sameEncounter(a, b) ||
+        bossSide(a) === bossSide(b) && bossSide(a) != null
 
     /**
      * N522 (testclient 2026-11-04): a spider boss and the spiderlings she summoned are one attacker for the single-way rules - in the
@@ -475,7 +477,10 @@ object Combat {
         val npc = pawn as? Npc ?: return null
         val spiders = gg.rsmod.plugins.content.areas.wilderness.bosses.VenenatisCombat
         val calvarion = gg.rsmod.plugins.content.areas.wilderness.bosses.CalvarionCombat
+        val glacor = gg.rsmod.plugins.content.combat.scripts.impl.GlacorCombatScript
         return when (npc.id) {
+            // MULTI-11: only this parent's glacytes share the single-way reservation (RS Glacor encounter).
+            gg.rsmod.plugins.api.cfg.Npcs.GLACOR, in glacor.GLACYTE_IDS -> glacor.encounterParent(npc)
             spiders.SPIDERLING, spiders.SPINDEL_SPIDERLING -> npc.attr[spiders.OWNER]
             spiders.NPC, spiders.SPINDEL -> npc
             // N522 nachtrun deel 2: the same in the singles-plus Skeletal Tomb - Calvar'ion and his hellhounds are one attacker.

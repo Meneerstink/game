@@ -78,7 +78,8 @@ CoxLootItems.local(21015)?.let { bulwark ->
         }
         bash(primary, true)
         bash(primary, false)
-        if (!player.tile.isMulti(world)) return@register
+        // OSRS Wiki Multicombat area: Shield Bash is target-based; the primary victim's zone decides.
+        if (!primary.tile.isMulti(world)) return@register
         val others = (world.npcs.all { n ->
             n != primary && n.nearestTile(player.tile).getDistance(player.tile) <= 5 && n.nearestTile(player.tile).isMulti(world) &&
                 gg.rsmod.plugins.content.combat.specialattack.SpecialAttackSupport.canSplash(player, n)

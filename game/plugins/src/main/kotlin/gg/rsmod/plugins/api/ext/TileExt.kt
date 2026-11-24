@@ -13,6 +13,7 @@ fun Tile.isMulti(world: World): Boolean {
         val source = instanceSource(map, this) ?: return false
         return world.getMultiCombatRegions().contains(source.regionId) || world.getMultiCombatChunks().contains(source.chunkCoords.hashCode())
     }
+    gg.rsmod.plugins.content.areas.wilderness.ClanWarsFfaCombat.classification(this)?.let { return it }
     // Owner decision 2026-09-27: the surface follows the tile-exact OSRS Deadman: Annihilation multicombat map; dungeons and
     // instances keep data/cfg/areas/multi.yml (MultiCombatZones).
     val zones = gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones

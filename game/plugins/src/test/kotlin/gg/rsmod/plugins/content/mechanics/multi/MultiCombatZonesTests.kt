@@ -1,6 +1,13 @@
 package gg.rsmod.plugins.content.mechanics.multi
 
+import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.World
+import gg.rsmod.plugins.content.areas.wilderness.ClanWarsFfaCombat
+import io.mockk.every
+import io.mockk.mockk
+import kotlin.test.assertEquals
 import gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach
+import gg.rsmod.plugins.api.ext.isMulti
 import java.nio.file.Paths
 import kotlin.test.Test
 import kotlin.test.assertFalse
@@ -12,6 +19,25 @@ import kotlin.test.assertTrue
  * Deadman: Annihilation breach table says (data/cfg/deadman/breach-locations.json), which the old multi.yml got wrong for 16.
  */
 class MultiCombatZonesTests {
+    @Test
+    fun `FFA north halves use lookup hashes and preserve the exact arena edges`() {
+        val zones = ClanWarsFfaCombat
+        val world = mockk<World>(relaxed = true)
+        every { world.instanceAllocator.getMap(any()) } returns null
+        every { world.getMultiCombatRegions() } returns emptySet()
+        every { world.getMultiCombatChunks() } returns zones.multiChunks
+        for ((xs, top) in listOf(2756..2878 to 5630, 2948..3071 to 5631)) {
+            for (x in (xs.first - 1)..(xs.last + 1)) {
+                for (z in 5567..(top + 1)) {
+                    val tile = Tile(x, z)
+                    assertEquals(x in xs && z in 5571..top,
+                        tile.isMulti(world), "$x,$z")
+                }
+            }
+        }
+        assertFalse(Tile(2900, 5660).isMulti(world))
+    }
+
     private val root = Paths.get("..", "..", "data", "cfg")
 
     @Test

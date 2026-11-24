@@ -106,7 +106,7 @@ SpecialAttacks.register(60, Items.DRAGON_2H_SWORD) {
     player.graphic(1225)
     // No server cue: sequence 3157 carries its own sound (cache: vorbis 6035); the extra cue doubled the special.
     meleeHit(player, victim)
-    adjacentTargets(player, victim).forEach { other -> meleeHit(player, other) }
+    adjacentTargets(player, victim, requireCasterMulti = true).forEach { other -> meleeHit(player, other) }
 }
 
 /*
@@ -180,7 +180,7 @@ fun vineStrike(
     victim: gg.rsmod.game.model.entity.Pawn,
 ) {
     meleeHit(attacker, victim, accuracy = VINE_ACCURACY, damage = VINE_DAMAGE)
-    adjacentTargets(attacker, victim).take(VINE_MAX_TARGETS - 1).forEach { other ->
+    adjacentTargets(attacker, victim, requireCasterMulti = true).take(VINE_MAX_TARGETS - 1).forEach { other ->
         meleeHit(attacker, other, accuracy = VINE_ACCURACY, damage = VINE_DAMAGE)
     }
 }
@@ -295,7 +295,7 @@ SpecialAttacks.register(60, Items.KORASIS_SWORD_19780, Items.KORASIS_SWORD_19784
     val accuracy = MagicCombatFormula.getAccuracy(player, victim)
     val landHit = accuracy >= world.randomDouble()
     player.dealHit(target = victim, minHit = maxHit * 0.5, maxHit = maxHit * 1.5, landHit = landHit, delay = 1, hitType = HitType.MAGIC)
-    adjacentTargets(player, victim).forEach { other ->
+    adjacentTargets(player, victim, requireCasterMulti = true).forEach { other ->
         val lands = MagicCombatFormula.getAccuracy(player, other) >= world.randomDouble()
         player.dealHit(target = other, minHit = maxHit * 0.5, maxHit = maxHit * 1.5, landHit = lands, delay = 1, hitType = HitType.MAGIC)
     }

@@ -523,12 +523,17 @@ object Barrows {
         npc.respawns = false
         npc.walkRadius = 4
         npc.owner = player
+        npc.attr[gg.rsmod.plugins.content.combat.Combat.OWNER_ONLY_TARGET_ATTR] = true
         if (!world.spawn(npc)) return null
         spawned(player)[brother.key] = WeakReference(npc)
         npc.forceChat(if (tile.height == 3) "You dare disturb my rest!" else "You dare steal from us!")
         world.queue {
             wait(1)
-            if (npc.isSpawned() && !npc.isDead()) npc.attack(player)
+            if (npc.isSpawned() && !npc.isDead()) {
+                val tookOver = BarrowsCombat.takePriority(player, npc)
+                npc.attack(player)
+                if (tookOver) player.attack(npc)
+            }
             // Darkan BarrowsBrother extends OwnedNPC (owner 03-2046 "Verac loses aggro after one hit and clicking away"): the brother's
             // only possible target is his owner, re-targeted every tick he is out of combat; OwnedNPC.processNPC removes him when the
             // owner is more than 15 tiles away (here also offline / out of the crypts).
