@@ -62,6 +62,11 @@ class BreachRewardTests {
                 assertEquals(3, DeadmanBreach.modifyIncomingDamage(shade, type, 0, source, true), "accurate zero roll gets the flat bonus")
                 assertEquals(10, DeadmanBreach.modifyIncomingDamage(shade, type, 10, mockk<Npc>(relaxed = true), true), "summons ignore flat armour")
             }
+            val lizard = mockk<Npc>(relaxed = true)
+            every { lizard.id } returns 14456
+            every { DeadmanBreach.isBreachNpc(lizard) } returns true
+            assertEquals(11, DeadmanBreach.modifyIncomingDamage(lizard, HitType.MELEE, 10, source, true), "Sulphur Lizard has -1 flat armour")
+            assertEquals(10, DeadmanBreach.modifyIncomingDamage(lizard, HitType.MAGIC, 10, source, true))
             for (type in listOf(HitType.MAGIC, HitType.CRIT_MAGIC, HitType.REGULAR_HIT)) {
                 assertEquals(10, DeadmanBreach.modifyIncomingDamage(shade, type, 10, source, true), "magic and other damage ignore flat armour")
             }

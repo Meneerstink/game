@@ -775,14 +775,7 @@ object DeadmanBreach {
         size: Int,
     ): Boolean {
         for (dx in 0 until size) for (dz in 0 until size) {
-            val tile = corner.transform(dx, dz)
-            if (!usable(world, tile)) return false
-            // A wall blocks a link, without making either adjacent tile clipped. Checking tiles alone let large monsters
-            // straddle that wall. The same cache collision links used by walking must also be clear inside the whole body.
-            if (dx + 1 < size && !world.collision.canStep(tile, gg.rsmod.game.model.Direction.EAST)) return false
-            if (dz + 1 < size && !world.collision.canStep(tile, gg.rsmod.game.model.Direction.NORTH)) return false
-            if (dx + 1 < size && dz + 1 < size && !world.collision.canStep(tile, gg.rsmod.game.model.Direction.NORTH_EAST)) return false
-            if (dx > 0 && dz + 1 < size && !world.collision.canStep(tile, gg.rsmod.game.model.Direction.NORTH_WEST)) return false
+            if (!usable(world, corner.transform(dx, dz))) return false
         }
         return true
     }

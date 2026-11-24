@@ -421,7 +421,7 @@ object BreachMonsters {
             ),
             Monster(
                 14456, 12458, "Sulphur Lizard",
-                Stats(2500, 150, 200, 75, 1, 1, dstab = 15, dslash = 25, dcrush = 25, dmagic = 0, dranged = 15),
+                Stats(2500, 150, 200, 75, 1, 1, dstab = 15, dslash = 25, dcrush = 25, dmagic = 0, dranged = 15, flatArmour = -1),
                 // "It attacks with melee, knocking back any players hit by it."
                 5, StyleType.CRUSH, 15656, -1, 15657,
                 Custom("breach_sulphur_lizard", 1, listOf(melee("crush", 15656, 21))),

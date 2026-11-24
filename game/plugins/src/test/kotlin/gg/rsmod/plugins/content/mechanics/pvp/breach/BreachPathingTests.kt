@@ -62,8 +62,8 @@ class BreachPathingTests {
         }
     }
     @Test
-    fun `large breach landings never straddle a wall between otherwise walkable tiles`() {
-        // The 667 cache encodes walls as directional flags, not blocked tiles (CollisionManager.canStep).
+    fun `cache wall flags reject large breach landings in every wall orientation`() {
+        // CollisionMatrix.isClipped rejects ANY directional flag, so the existing usable check already rejects walls.
         val corner = Tile(3300, 3800, 0)
         for (size in 2..5) for (direction in listOf(Direction.EAST, Direction.NORTH, Direction.NORTH_EAST, Direction.NORTH_WEST)) {
             val world = mockk<World>(relaxed = true)
@@ -81,7 +81,7 @@ class BreachPathingTests {
                 putTile(other, false, direction.getOpposite())
             }.build())
             assertFalse(map.isClipped(corner), "a wall does not clip the tile itself")
-            assertFalse(map.isClipped(other), "both tiles remain walkable")
+            assertTrue(map.isClipped(other), "a directional wall flag is already clipped in this engine")
             assertFalse(DeadmanBreach.fits(world, corner, size), "size $size must not cross an internal $direction wall")
             assertTrue(DeadmanBreach.fits(world, corner, 1), "a wall outside a 1x1 body does not invalidate its tile")
         }
