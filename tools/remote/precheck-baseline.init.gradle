@@ -1,0 +1,85 @@
+// Export ONE immutable package only after a successful installDist + targeted tests.
+// No source/configuration secrets: only source hashes, jars and compiled test classes.
+import groovy.json.JsonOutput
+import java.security.MessageDigest
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
+
+def hash = { File f ->
+    def digest = MessageDigest.getInstance('SHA-256')
+    f.withInputStream { input -> byte[] buf = new byte[65536]; int n
+        while ((n = input.read(buf)) > 0) digest.update(buf, 0, n)
+    }
+    digest.digest().encodeHex().toString()
+}
+def sources = { root ->
+    def result = new TreeMap()
+    root.fileTree(root.rootDir) {
+        include '**/src/**/*.kt', '**/src/**/*.kts', '**/src/**/*.java'
+        include '**/*.gradle', '**/*.gradle.kts', 'gradle.properties', 'gradle/**'
+        exclude '**/build/**', '**/.git/**', '**/.gradle/**', 'file-server/**'
+    }.files.each { f -> result[root.relativePath(f).replace('\\', '/')] = hash(f) }
+    result
+}
+gradle.projectsEvaluated {
+    def root = gradle.rootProject
+    def before = sources(root)
+    gradle.buildFinished { outcome ->
+        if (outcome.failure != null) return
+        def install = root.findProject(':game')?.tasks?.findByName('installDist')
+        if (!install?.state?.executed) return
+        def dest = root.file('build/precheck-baselines/' + UUID.randomUUID().toString())
+        try {
+            if (sources(root) != before) throw new IOException('Sources changed during build')
+            def manifest = [version: 1, sources: before, artifacts: new TreeMap(),
+                            jars: [], compiler: [], tests: [:], modules: [:],
+                            javaVersion: System.getProperty('java.version'),
+                            snapshot: ['git', 'rev-parse', 'HEAD'].execute(null, root.rootDir).text.trim()]
+            def copyFile = { File f, String name ->
+                File target = new File(dest, name); target.parentFile.mkdirs()
+                Files.copy(f.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING)
+                manifest.artifacts[name] = hash(target)
+                name
+            }
+            def deps = new LinkedHashSet<File>()
+            [':game', ':game:plugins'].each { name ->
+                def p = root.project(name)
+                ['compileClasspath', 'testCompileClasspath', 'testRuntimeClasspath'].each { c ->
+                    deps.addAll(p.configurations.getByName(c).files.findAll { it.isFile() && it.name.endsWith('.jar') })
+                }
+                def task = p.tasks.getByName('compileKotlin')
+                manifest.modules[name] = [jvmTarget: task.kotlinOptions.jvmTarget,
+                    args: task.kotlinOptions.freeCompilerArgs, languageVersion: task.kotlinOptions.languageVersion,
+                    apiVersion: task.kotlinOptions.apiVersion]
+                def test = p.tasks.findByName('compileTestKotlin')
+                // Never combine a fresh jar with test classes from an unexecuted task.
+                if (test?.state?.executed && !test.state.noSource) {
+                    def prefix = name == ':game' ? 'game-test' : 'plugins-test'
+                    manifest.tests[name] = prefix
+                    p.sourceSets.test.output.classesDirs.files.each { dir ->
+                        if (dir.isDirectory()) p.fileTree(dir).files.each { f ->
+                            copyFile(f, prefix + '/' + dir.toPath().relativize(f.toPath()).toString().replace('\\', '/'))
+                        }
+                    }
+                }
+            }
+            root.file('game/build/install/game/lib').listFiles().findAll { it.name.endsWith('.jar') }.each { deps.add(it) }
+            deps.each { f -> manifest.jars.add(copyFile(f, 'lib/' + hash(f) + '-' + f.name)) }
+            def compiler = root.configurations.detachedConfiguration(
+                root.dependencies.create('org.jetbrains.kotlin:kotlin-compiler-embeddable:1.8.0'),
+                root.dependencies.create('org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable:1.8.0'),
+                root.dependencies.create('org.jetbrains.kotlin:kotlin-scripting-compiler-impl-embeddable:1.8.0'),
+                root.dependencies.create('org.jetbrains:annotations:13.0'),
+                root.dependencies.create('net.java.dev.jna:jna:5.8.0'))
+            compiler.files.each { f -> manifest.compiler.add(copyFile(f, 'compiler/' + f.name)) }
+            new File(dest, 'manifest.json').text = JsonOutput.toJson(manifest)
+            def pointer = root.file('build/precheck-baseline.path.tmp')
+            pointer.text = root.relativePath(dest).replace('\\', '/') + '\n'
+            Files.move(pointer.toPath(), root.file('build/precheck-baseline.path').toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
+            println '[precheck] baseline published: ' + manifest.snapshot
+        } catch (Exception e) {
+            // Do not relabel an otherwise successful build. A missing package is explicit SKIPPED.
+            println '[precheck] PRECHECK OVERGESLAGEN (baseline export: ' + e.message + ')'
+        }
+    }
+}
