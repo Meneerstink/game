@@ -23,6 +23,12 @@ class MaxCapeCombinationTests {
         f.queues.cycle()
     }
 
+    /** The fixture has no cache menus; the plugin binds Dismantle on the Masori assembler (cache 23068: Wear/Dismantle/Commune). */
+    private fun loadCapes(f: N11Fixture) {
+        f.menu(Items.MASORI_ASSEMBLER, "Wear", "Dismantle", "Commune")
+        f.load("items.osrs.Osrs_max_capes_plugin")
+    }
+
     private fun parts(f: N11Fixture, variant: MaxCapes.Variant) {
         f.inventory[0] = Item(variant.component).also { it.attr[ItemAttribute.CHARGES] = 123 }
         f.inventory[1] = Item(MaxCapes.MAX_CAPE)
@@ -33,7 +39,7 @@ class MaxCapeCombinationTests {
 
     @Test fun `all variants combine in a full backpack and knife restores exactly one of each component`() {
         for (variant in MaxCapes.VARIANTS) N11Fixture().use { f ->
-            f.load("items.osrs.Osrs_max_capes_plugin")
+            loadCapes(f)
             repeat(28) { f.inventory[it] = Item(Items.KNIFE) }
             parts(f, variant)
             click(f, f.inventory[0]!!, f.inventory[1]!!)
@@ -56,7 +62,7 @@ class MaxCapeCombinationTests {
     @Test fun `cancelling or replacing any confirmed input does not consume another copy`() {
         val variant = MaxCapes.forCape(Items.DIZANAS_MAX_CAPE)!!
         for (changed in -1..2) N11Fixture().use { f ->
-            f.load("items.osrs.Osrs_max_capes_plugin")
+            loadCapes(f)
             parts(f, variant)
             val originals = (0..2).map { f.inventory[it]!! }
             click(f, originals[0], originals[1])
@@ -73,7 +79,7 @@ class MaxCapeCombinationTests {
     @Test fun `combination refuses missing hood and needle without touching the clicked items`() {
         val variant = MaxCapes.forCape(Items.MASORI_ASSEMBLER_MAX_CAPE)!!
         for (missing in listOf(2, 4)) N11Fixture().use { f ->
-            f.load("items.osrs.Osrs_max_capes_plugin")
+            loadCapes(f)
             parts(f, variant)
             f.inventory[missing] = null
             val component = f.inventory[0]!!
@@ -88,7 +94,7 @@ class MaxCapeCombinationTests {
     @Test fun `knife refuses a full backpack and repeated knife clicks cannot duplicate the cape`() {
         val variant = MaxCapes.forCape(Items.FIRE_MAX_CAPE)!!
         N11Fixture().use { f ->
-            f.load("items.osrs.Osrs_max_capes_plugin")
+            loadCapes(f)
             repeat(28) { f.inventory[it] = Item(Items.KNIFE) }
             val cape = Item(variant.cape)
             f.inventory[0] = cape
@@ -107,7 +113,7 @@ class MaxCapeCombinationTests {
 
     @Test fun `Masori kit alternative consumes one kit converts both items and leaves the needle`() {
         N11Fixture().use { f ->
-            f.load("items.osrs.Osrs_max_capes_plugin")
+            loadCapes(f)
             repeat(28) { f.inventory[it] = Item(Items.KNIFE) }
             f.inventory[0] = Item(Items.MASORI_CRAFTING_KIT)
             f.inventory[1] = Item(Items.ASSEMBLER_MAX_CAPE)
