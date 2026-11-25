@@ -27,8 +27,10 @@ function Wait-Log([string]$Path, [string]$Pattern, [int]$Seconds) {
             if ($server.HasExited) { throw "Boot process exited: $($server.ExitCode)" }
             $remaining = [int]($deadline - [DateTime]::UtcNow).TotalMilliseconds
             if ($remaining -le 0) { throw "Boot log timeout: $Path" }
-            $change = $watch.WaitForChanged([IO.WatcherChangeTypes]::All, $remaining)
-            if ($change.TimedOut) { throw "Boot log timeout: $Path" }
+            # 25-11 Claude: NTFS does not always raise LastWrite/Size for a file another process holds open (Start-Process
+            # redirect) -> 'Boot log timeout' 30 s after a good start (02:42, 03:03). Wake at least every second and re-read;
+            # only the deadline above ends the wait.
+            $null = $watch.WaitForChanged([IO.WatcherChangeTypes]::All, [Math]::Min($remaining, 1000))
         } while ($true)
     } finally { $watch.Dispose() }
 }
@@ -75,6 +77,10 @@ try {
                 Write-Output 'BOOTCHECK own server stopped'
             }
         } finally {
+            if (!$ready -and $server -and !$server.HasExited) {
+                # Boot not proven: the server may still be up behind OUR tunnel (50317 was free at start) - ask it to stop.
+                try { & $bash lib/rb_server.sh tl cmd shutdown | Out-Null; $null = $server.WaitForExit(30000) } catch { }
+            }
             if ($server -and !$server.HasExited) {
                 & taskkill.exe /PID $server.Id /T /F | Out-Null
                 # taskkill /T also reports children that already exited; only a still-running runner is a failure.
