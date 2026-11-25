@@ -63,6 +63,27 @@ object GlacorCombatScript : CombatScript() {
 
     val GLACYTE_IDS = intArrayOf(Npcs.UNSTABLE_GLACYTE, Npcs.SAPPING_GLACYTE, Npcs.ENDURING_GLACYTE)
 
+    fun encounterParent(npc: Npc): Npc? = when (npc.id) {
+        Npcs.GLACOR -> npc
+        in GLACYTE_IDS -> npc.attr[GLACYTE_PARENT]?.get()
+        else -> null
+    }
+
+    /** The existing PJ window belongs to this encounter, including a sibling the player has not hit yet. */
+    fun reservedByOther(npc: Npc, challenger: Pawn): Boolean {
+        val parent = encounterParent(npc) ?: return false
+        return (listOf(parent) + parent.attr[GLACYTES].orEmpty()).any { member ->
+            if (!member.world.npcs.contains(member) || member.isDead()) return@any false
+            val incoming = member.timers.has(Combat.PJ_TIMER) &&
+                member.liveLastHitBy()?.let { !Combat.sameSide(it, challenger) } == true
+            // The parent pauses while the glacytes attack. Their player's continuing incoming PJ window also holds the group.
+            val victim = member.getCombatTarget() as? Player
+            val outgoing = victim != null && victim.isOnline && !victim.isDead() && !Combat.sameSide(victim, challenger) &&
+                victim.timers.has(Combat.PJ_TIMER) && victim.liveLastHitBy()?.let { Combat.sameSide(it, member) } == true
+            incoming || outgoing
+        }
+    }
+
     override suspend fun handleSpecialCombat(it: QueueTask) {
         val npc = it.npc
         var target = npc.getCombatTarget() ?: return

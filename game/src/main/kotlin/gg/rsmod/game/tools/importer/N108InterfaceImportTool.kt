@@ -1013,6 +1013,12 @@ object N108InterfaceImportTool {
                 library.data(spritesIndex, SPRITE_BASE + i, 0)?.let { currentSprites[SPRITE_BASE + i] = CacheItemProbeTool.sha1(it) }
             }
             require(library.index(spritesIndex).archive(SPRITE_BASE - 1) == null || SPRITE_BASE - 1 <= 8518) { "sprite range moved" }
+            // N645 (24-11): this range grew over the Ruinous Powers icons at 8759..8764 on 20-11 (tx-20261120-205644, 165 sprites);
+            // five of those icons moved to RuinousPowersCacheTool.RELOCATED_COLOUR_BASE. 8765.. is still Ruinous: never grow into it.
+            val last = SPRITE_BASE + SPRITES.size - 1
+            require(last < RuinousPowersCacheTool.N108_SPRITE_LIMIT) {
+                "n108 sprites $SPRITE_BASE..$last reach the Ruinous Powers icons (${RuinousPowersCacheTool.N108_SPRITE_LIMIT}..): give new n108 art its own free range"
+            }
         } finally {
             library.close()
         }

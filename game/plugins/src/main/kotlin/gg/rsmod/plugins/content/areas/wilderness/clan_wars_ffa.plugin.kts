@@ -107,14 +107,5 @@ on_player_death {
     }
 }
 
-/* Multi-combat halves of both arenas (north of z 5571). */
-for (x in 2756..2878 step 8) {
-    for (z in 5571..5630 step 8) {
-        set_multi_combat_chunk(gg.rsmod.game.model.region.ChunkCoords(x shr 3, z shr 3).hashCode())
-    }
-}
-for (x in 2948..3071 step 8) {
-    for (z in 5571..5631 step 8) {
-        set_multi_combat_chunk(gg.rsmod.game.model.region.ChunkCoords(x shr 3, z shr 3).hashCode())
-    }
-}
+/* Tile.chunkCoords is also used by the lookup; border tiles are clipped by ClanWarsFfaCombat. */
+ClanWarsFfaCombat.multiChunks.forEach { set_multi_combat_chunk(it) }

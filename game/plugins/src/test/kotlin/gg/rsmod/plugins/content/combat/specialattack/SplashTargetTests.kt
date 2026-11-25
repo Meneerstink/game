@@ -16,6 +16,17 @@ import kotlin.test.assertTrue
  * can_attack hooks (Castle Wars / Soul Wars teams, Duel Arena, breach protection) now gate player victims as well as npcs.
  */
 class SplashTargetTests {
+    @Test
+    fun `shield bash uses the primary zone and self based powerstab keeps its caster gate`() {
+        val root = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons")
+        val shield = java.io.File(root, "cox_weapon_specials.plugin.kts").readText().substringAfter("CoxLootItems.local(21015)")
+        assertTrue("if (!primary.tile.isMulti(world)) return@register" in shield)
+        assertFalse("if (!player.tile.isMulti(world))" in shield)
+        val powerstab = java.io.File(root, "melee_specials.plugin.kts").readText()
+            .substringAfter("SpecialAttacks.register(60, Items.DRAGON_2H_SWORD)").substringBefore("SpecialAttacks.register(")
+        assertTrue("requireCasterMulti = true" in powerstab)
+    }
+
     private val tile = Tile(3200, 3200)
 
     @Test

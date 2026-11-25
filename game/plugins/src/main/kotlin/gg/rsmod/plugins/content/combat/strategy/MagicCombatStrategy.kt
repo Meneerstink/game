@@ -297,16 +297,16 @@ object MagicCombatStrategy : CombatStrategy {
     }
 
     /**
-     * Burst/Barrage hit every attackable pawn within one tile of the primary target when both the
-     * caster and the primary target stand in a multi-way area. Everything else is single-target.
+     * Burst/Barrage use the primary target's multi-way area, including casts from single-way
+     * (OSRS Wiki Multicombat area, Trivia). Secondary victims still pass canSplash.
      */
-    private fun collectTargets(
+    internal fun collectTargets(
         pawn: Pawn,
         target: Pawn,
         spell: CombatSpell,
     ): List<Pawn> {
         val world = pawn.world
-        if (!spell.multiTarget || !pawn.tile.isMulti(world) || !target.tile.isMulti(world)) {
+        if (!spell.multiTarget || !target.tile.isMulti(world)) {
             return listOf(target)
         }
         val result = mutableListOf<Pawn>(target)

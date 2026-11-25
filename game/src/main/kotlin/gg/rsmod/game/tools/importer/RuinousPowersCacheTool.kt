@@ -73,6 +73,19 @@ object RuinousPowersCacheTool {
     // varps <= 2403, clientscripts <= 5396) ----
     const val SPRITE_COLOUR_BASE = 8759
     const val SPRITE_GREY_BASE = SPRITE_COLOUR_BASE + 24
+
+    /**
+     * N645 (owner 22-11 photo, found 24-11): N108InterfaceImportTool's sprite range 8600.. grew to 8764 on 20-11 and replaced the
+     * coloured icons 8759..8764 (slots 0..5) with Drop Viewer art. Protect Item (slot 4) was already repointed to N543's composite
+     * 8817 on 15-11 (built from the intact 8763), so five icons moved to [RELOCATED_COLOUR_BASE].. (first free sprite id on 24-11:
+     * journals end at 9183); `n645` mode writes them and repoints those five structs. 8759..8764 now belong to N108.
+     */
+    val RELOCATED = listOf(0, 1, 2, 3, 5)
+    const val RELOCATED_COLOUR_BASE = 9184
+    /** First sprite id N108InterfaceImportTool may never reach: slot 6 (Dampen Magic) onwards are still the original Ruinous ids. */
+    const val N108_SPRITE_LIMIT = 8765
+
+    fun colourSprite(slot: Int) = if (slot in RELOCATED) RELOCATED_COLOUR_BASE + RELOCATED.indexOf(slot) else SPRITE_COLOUR_BASE + slot
     const val STRUCT_BASE = 2762
     const val ENUM_ID = 5202
     const val ACTIVE_VARP = 2404
@@ -119,7 +132,7 @@ object RuinousPowersCacheTool {
             p1(249); p1(6)
             p1(0); p3(737); p4(cell.level)
             p1(1); p3(738); str("You need a Prayer level of at least ${cell.level} to use ${cell.name}.")
-            p1(0); p3(735); p4(SPRITE_COLOUR_BASE + slot)
+            p1(0); p3(735); p4(colourSprite(slot))
             p1(0); p3(736); p4(SPRITE_GREY_BASE + slot)
             p1(1); p3(734); str("Level ${cell.level}<br>${cell.name}<br>${cell.text}")
             p1(0); p3(739); p4(1)
@@ -502,6 +515,55 @@ object RuinousPowersCacheTool {
     /** The prayer tab's grid size / scrollbar when the stat adjustments open or close (called by 1698). */
     const val STAT_SCROLL_SCRIPT = 1704
 
+    /** Struct opcode 249 (params): replaces the int value of param 735, which must currently be [expected]; refuses anything else. */
+    fun withParam735(struct: ByteArray, expected: Int, value: Int): ByteArray {
+        val out = struct.copyOf()
+        check(out[0].toInt() and 0xFF == 249) { "struct does not start with the params opcode" }
+        var pos = 2
+        repeat(out[1].toInt() and 0xFF) {
+            val isString = out[pos].toInt() == 1
+            val key = ((out[pos + 1].toInt() and 0xFF) shl 16) or ((out[pos + 2].toInt() and 0xFF) shl 8) or (out[pos + 3].toInt() and 0xFF)
+            pos += 4
+            if (isString) {
+                while (out[pos].toInt() != 0) pos++
+                pos++
+            } else {
+                if (key == 735) {
+                    val cur = ((out[pos].toInt() and 0xFF) shl 24) or ((out[pos + 1].toInt() and 0xFF) shl 16) or ((out[pos + 2].toInt() and 0xFF) shl 8) or (out[pos + 3].toInt() and 0xFF)
+                    check(cur == expected) { "param 735 is $cur, expected $expected" }
+                    out[pos] = (value ushr 24).toByte(); out[pos + 1] = (value ushr 16).toByte(); out[pos + 2] = (value ushr 8).toByte(); out[pos + 3] = value.toByte()
+                    return out
+                }
+                pos += 4
+            }
+        }
+        error("struct has no param 735")
+    }
+
+    /** N645 repair: the six overwritten coloured icons at their new ids + their structs pointing there (only param 735 changes). */
+    fun n645Mutations(): List<CacheMutation> {
+        val mutations = ArrayList<CacheMutation>()
+        val osrs = HashMap<Int, ByteArray>()
+        ModernCacheReader(File(SOURCE_CACHE)).use { source ->
+            RELOCATED.forEach { slot -> osrs[slot] = source.file(SPRITE_INDEX, CELLS[slot].osrsColour, 0) ?: error("OSRS sprite ${CELLS[slot].osrsColour} missing") }
+        }
+        val library = CacheLibrary(TARGETS[0])
+        try {
+            RELOCATED.forEach { slot ->
+                val cell = CELLS[slot]
+                check(library.data(SPRITE_INDEX, colourSprite(slot), 0) == null) { "sprite ${colourSprite(slot)} is not free" }
+                mutations += CacheMutation(SPRITE_INDEX, colourSprite(slot), 0, osrs[slot]!!, "N645 Ruinous ${cell.name} icon (osrs ${cell.osrsColour}) -> ${colourSprite(slot)}")
+                val current = requireNotNull(library.data(CONFIG_INDEX, STRUCT_GROUP, STRUCT_BASE + slot)) { "struct ${STRUCT_BASE + slot} missing" }
+                // Only the int of param 735 changes; the rest of the current struct (later text edits, e.g. Protect Item) stays as it is.
+                val patched = withParam735(current, expected = SPRITE_COLOUR_BASE + slot, value = colourSprite(slot))
+                mutations += CacheMutation(CONFIG_INDEX, STRUCT_GROUP, STRUCT_BASE + slot, patched, "N645 struct ${STRUCT_BASE + slot}: ${cell.name} icon -> ${colourSprite(slot)}", expectedCurrentSha1 = CacheItemProbeTool.sha1(current))
+            }
+        } finally {
+            library.close()
+        }
+        return mutations
+    }
+
     // ---- main ----
 
     fun mutations(): List<CacheMutation> {
@@ -519,9 +581,9 @@ object RuinousPowersCacheTool {
             fun absent(index: Int, group: Int, file: Int) =
                 check(library.data(index, group, file) == null) { "idx$index grp$group file$file is not free" }
             CELLS.forEachIndexed { slot, cell ->
-                absent(SPRITE_INDEX, SPRITE_COLOUR_BASE + slot, 0)
+                absent(SPRITE_INDEX, colourSprite(slot), 0)
                 absent(SPRITE_INDEX, SPRITE_GREY_BASE + slot, 0)
-                mutations += CacheMutation(SPRITE_INDEX, SPRITE_COLOUR_BASE + slot, 0, osrsSprites[cell.osrsColour]!!, "Ruinous ${cell.name} icon (osrs ${cell.osrsColour})")
+                mutations += CacheMutation(SPRITE_INDEX, colourSprite(slot), 0, osrsSprites[cell.osrsColour]!!, "Ruinous ${cell.name} icon (osrs ${cell.osrsColour})")
                 mutations += CacheMutation(SPRITE_INDEX, SPRITE_GREY_BASE + slot, 0, osrsSprites[cell.osrsGrey]!!, "Ruinous ${cell.name} grey icon (osrs ${cell.osrsGrey})")
                 absent(CONFIG_INDEX, STRUCT_GROUP, STRUCT_BASE + slot)
                 mutations += CacheMutation(CONFIG_INDEX, STRUCT_GROUP, STRUCT_BASE + slot, struct(slot), "struct ${STRUCT_BASE + slot}: Ruinous ${cell.name}")
@@ -559,7 +621,7 @@ object RuinousPowersCacheTool {
     @JvmStatic
     fun main(args: Array<String>) {
         val apply = "--apply" in args
-        val transaction = CacheTransaction(targets = TARGETS, mutations = if (args.any { it.startsWith("scroll-undo=") }) scrollUndoMutations(args.first { it.startsWith("scroll-undo=") }.substringAfter("=")) else if ("scroll" in args) scrollMutations() else if ("stats-update" in args) statUpdateMutations() else if ("stats" in args) statMutations() else mutations())
+        val transaction = CacheTransaction(targets = TARGETS, mutations = if ("n645" in args) n645Mutations() else if (args.any { it.startsWith("scroll-undo=") }) scrollUndoMutations(args.first { it.startsWith("scroll-undo=") }.substringAfter("=")) else if ("scroll" in args) scrollMutations() else if ("stats-update" in args) statUpdateMutations() else if ("stats" in args) statMutations() else mutations())
         val plan = transaction.preflight()
         val errors = transaction.blockingErrors(plan)
         println("PREFLIGHT transaction=${transaction.id} mutations=${transaction.mutations.size} outcomes=${plan.groupingBy { it.outcome }.eachCount()}")
