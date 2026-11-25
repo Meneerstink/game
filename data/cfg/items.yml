@@ -249474,7 +249474,7 @@
   equipment: null
 - id: 20747
   name: "Max cape"
-  examine: "A cape worn by those who've achieved 99 in all skills."
+  examine: "The cape worn by only the most experienced players."
   tradeable: false
   weight: 0.4
   equipment: null
@@ -249498,7 +249498,7 @@
   equipment: null
 - id: 20751
   name: "Max hood"
-  examine: "A cape worn by those who've achieved 99 in all skills."
+  examine: "The hood worn by only the most experienced players."
   tradeable: false
   weight: 0.4
   equipment:
@@ -249699,7 +249699,7 @@
   equipment: null
 - id: 20767
   name: "Max cape"
-  examine: "A cape worn by those who've achieved 99 in all skills."
+  examine: "The cape worn by only the most experienced players."
   tradeable: false
   weight: 0.453
   equipped_weight: -4.0
@@ -249733,7 +249733,7 @@
     attack_audio: -1
 - id: 20768
   name: "Max hood"
-  examine: "A cape worn by those who've achieved 99 in all skills."
+  examine: "The hood worn by only the most experienced players."
   tradeable: false
   weight: 0.4
   equipment:

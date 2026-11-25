@@ -37,6 +37,11 @@ fun canCombine(
 MaxCapes.VARIANTS.forEach { variant ->
     on_item_on_item(item1 = variant.component, item2 = MaxCapes.MAX_CAPE) {
         if (!canCombine(player, variant)) return@on_item_on_item
+        val first = player.attr[gg.rsmod.game.model.attr.INTERACTING_ITEM]?.get() ?: return@on_item_on_item
+        val second = player.attr[gg.rsmod.game.model.attr.OTHER_ITEM_ATTR]?.get() ?: return@on_item_on_item
+        val component = listOf(first, second).firstOrNull { it.id == variant.component } ?: return@on_item_on_item
+        val cape = listOf(first, second).firstOrNull { it.id == MaxCapes.MAX_CAPE } ?: return@on_item_on_item
+        val hood = player.inventory[slotOf(player, MaxCapes.MAX_HOOD)] ?: return@on_item_on_item
         // Owner 2026-10-03 (buglist E3): combining asks first, then says what happened and sounds (MaxCapes.combine...).
         player.queue {
             val componentName = itemName(player, variant.component)
@@ -44,11 +49,11 @@ MaxCapes.VARIANTS.forEach { variant ->
             // The items must still be there after the GUI (they may have been moved, dropped or banked meanwhile).
             if (!canCombine(player, variant)) return@queue
             val inventory = player.inventory
-            val componentSlot = slotOf(player, variant.component)
-            val capeSlot = slotOf(player, MaxCapes.MAX_CAPE)
-            val hoodSlot = slotOf(player, MaxCapes.MAX_HOOD)
+            // Revalidate the exact objects from this request; another copy may carry different quiver ammo/attributes.
+            val componentSlot = inventory.indexOfFirst { it === component }
+            val capeSlot = inventory.indexOfFirst { it === cape }
+            val hoodSlot = inventory.indexOfFirst { it === hood }
             if (componentSlot == -1 || capeSlot == -1 || hoodSlot == -1) return@queue
-            val component = inventory[componentSlot]!!
             inventory[capeSlot] = null
             inventory[componentSlot] = Item(variant.cape).copyAttr(component)
             inventory[hoodSlot] = Item(variant.hood)

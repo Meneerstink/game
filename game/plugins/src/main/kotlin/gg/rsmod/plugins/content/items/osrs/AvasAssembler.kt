@@ -2,6 +2,8 @@ package gg.rsmod.plugins.content.items.osrs
 
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.messageBox
+import gg.rsmod.plugins.api.ext.options
 
 /**
  * OSRS-IMPORT Ava's assembler - metal attraction and Commune (OSRS Wiki "Ava's assembler" / "Ava's device", raw wikitext
@@ -50,6 +52,18 @@ object AvasAssembler {
         }
     }
 
+    /** Shared by the device menus and the plain max cape's Features menu. */
+    fun commune(player: gg.rsmod.game.model.entity.Player) {
+        player.queue {
+            val stopped = player.attr[GATHERING_STOPPED] == true
+            val text = Commune.forState(stopped)
+            messageBox(*text.intro)
+            if (options("Yes", "No", title = text.question) != 1) return@queue
+            player.attr[GATHERING_STOPPED] = !stopped
+            messageBox(*text.confirm)
+        }
+    }
+
     const val INTERVAL_TICKS = 350
     const val MIN_TILES_MOVED = 3
     const val FULL_MESSAGE = "Ava's contraption makes an odd burping sound."
@@ -60,7 +74,7 @@ object AvasAssembler {
     // OSRS Wiki Ava's attractor / accumulator, checked 2026-10-31. Keep the existing
     // persistence key: all device menus control the same account preference.
     val LEGACY_DEVICES = setOf(Items.AVAS_ATTRACTOR, Items.AVAS_ACCUMULATOR)
-    val GATHERING_DEVICES: Set<Int> get() = gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.ASSEMBLERS + LEGACY_DEVICES + gg.rsmod.plugins.content.skills.RangingSkillcape.CAPES
+    val GATHERING_DEVICES: Set<Int> get() = gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.COMMUNE_DEVICES + LEGACY_DEVICES
     val ATTRACTOR_TABLE = listOf(
         Items.IRON_ARROW to 1975, Items.IRON_DART to 5, Items.IRON_KNIFE to 5,
         Items.IRON_ORE to 5, Items.IRON_NAILS to 5, Items.STEEL_ARROW to 1,
@@ -94,7 +108,7 @@ object AvasAssembler {
         require(roll in 0 until TOTAL_WEIGHT)
         val table = when (device) {
             Items.AVAS_ATTRACTOR -> ATTRACTOR_TABLE
-            Items.AVAS_ACCUMULATOR -> ACCUMULATOR_TABLE
+            Items.AVAS_ACCUMULATOR, Items.ACCUMULATOR_MAX_CAPE -> ACCUMULATOR_TABLE
             else -> ATTRACTION
         }
         var left = roll
