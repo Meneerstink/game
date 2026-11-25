@@ -77,6 +77,58 @@ internal class SkillcapeFixture {
 
 class SkillcapeFeaturesTests {
     @Test
+    fun `cooking hood grants only the worn cooking guild exemption and no cooking skill perk`() {
+        val f = SkillcapeFixture()
+        f.inventory[0] = Item(Items.COOKING_HOOD)
+        assertFalse(SkillcapePerks.worn(f.player, SkillcapePerks.VariantPerk.COOKS_GUILD))
+        f.equipment[EquipmentType.HEAD.id] = f.inventory[0]
+        f.inventory[0] = null
+        assertTrue(SkillcapePerks.worn(f.player, SkillcapePerks.VariantPerk.COOKS_GUILD))
+        assertFalse(SkillcapePerks.worn(f.player, Skillcapes.COOKING), "hood must not prevent food from burning")
+        assertFalse(SkillcapePerks.worn(f.player, SkillcapePerks.VariantPerk.CRAFTING_GUILD))
+        f.equipment[EquipmentType.HEAD.id] = Item(Items.FIREMAKING_HOOD)
+        assertFalse(SkillcapePerks.worn(f.player, SkillcapePerks.VariantPerk.COOKS_GUILD))
+    }
+
+    @Test
+    fun `natural run recovery gains three percent only with worn agility or plain max cape`() {
+        val f = SkillcapeFixture()
+        every { f.player.lock } returns gg.rsmod.game.model.LockState.NONE
+        every { f.player.isRunning() } returns false
+        every { f.player.varps.getState(gg.rsmod.plugins.api.cfg.Varps.RUN_STATE) } returns 0
+        f.skills.setBaseLevel(Skills.AGILITY, 99)
+        f.energy = 50.0
+        gg.rsmod.plugins.content.mechanics.run.RunEnergy.drain(f.player)
+        val normal = f.energy - 50.0
+        assertTrue(normal > 0)
+        for (id in listOf(Items.AGILITY_CAPE, Items.AGILITY_CAPE_T, MaxCapes.MAX_CAPE)) {
+            f.wear(id)
+            f.energy = 50.0
+            gg.rsmod.plugins.content.mechanics.run.RunEnergy.drain(f.player)
+            assertEquals(normal * 1.03, f.energy - 50.0, 1e-10, "worn $id")
+        }
+        for (id in listOf(Items.AGILITY_HOOD) + MaxCapes.WEARABLE_VARIANTS) {
+            f.wear(id)
+            f.energy = 50.0
+            gg.rsmod.plugins.content.mechanics.run.RunEnergy.drain(f.player)
+            assertEquals(normal, f.energy - 50.0, 1e-10, "no Agility perk on $id")
+        }
+        f.equipment[EquipmentType.CAPE.id] = null
+        f.inventory[0] = Item(Items.AGILITY_CAPE)
+        f.energy = 50.0
+        gg.rsmod.plugins.content.mechanics.run.RunEnergy.drain(f.player)
+        assertEquals(normal, f.energy - 50.0, 1e-10, "carrying does not give the passive perk")
+        every { f.player.varps.getState(gg.rsmod.plugins.api.cfg.Varps.RUN_STATE) } returns 3
+        f.energy = 50.0
+        gg.rsmod.plugins.content.mechanics.run.RunEnergy.drain(f.player)
+        val resting = f.energy
+        f.wear(Items.AGILITY_CAPE_T)
+        f.energy = 50.0
+        gg.rsmod.plugins.content.mechanics.run.RunEnergy.drain(f.player)
+        assertEquals(resting, f.energy, "the native resting recovery remains unchanged")
+    }
+
+    @Test
     fun `real cape attraction timer changes steel to mithril after upgrade and respects the shared off switch`() {
         N11Fixture().use { f ->
             f.load("items.osrs.Avas_assembler_plugin")

@@ -68,7 +68,9 @@ object RunEnergy {
                 when (p.getVarp(Varps.RUN_STATE)) {
                     3 -> recoverRateResting(agilityLevel)
                     4 -> recoverRateMusician(agilityLevel)
-                    else -> recoverRateWalking(agilityLevel)
+                    // OSRS Wiki Agility cape: +3% natural restoration while worn, shared by the plain max cape.
+                    else -> recoverRateWalking(agilityLevel) *
+                        if (gg.rsmod.plugins.content.skills.SkillcapePerks.worn(p, gg.rsmod.plugins.content.skills.Skillcapes.AGILITY)) 1.03 else 1.0
                 }
             p.runEnergy = 100.0.coerceAtMost((p.runEnergy + recovery))
             p.sendRunEnergy(p.runEnergy.toInt())

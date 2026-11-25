@@ -46,11 +46,14 @@ object SkillcapePerks {
         return id in capesOf(cape) || id == MaxCapes.MAX_CAPE
     }
 
-    /** One of the [VariantPerk]s: its skillcape, the plain max cape or any max cape variant worn. */
+    /** One of the [VariantPerk]s: its skillcape, the plain max cape or any max cape variant worn.
+     * OSRS Wiki Cooks' Guild also accepts the Cooking hood as headwear, without the cape.
+     */
     fun worn(
         player: Player,
         perk: VariantPerk,
-    ): Boolean = worn(player, perk.cape) || wearingAnyMaxCape(player)
+    ): Boolean = worn(player, perk.cape) || wearingAnyMaxCape(player) ||
+        (perk == VariantPerk.COOKS_GUILD && player.getEquipment(EquipmentType.HEAD)?.id == gg.rsmod.plugins.api.cfg.Items.COOKING_HOOD)
 
     /** Per-day uses of the limited perks (stamina, spellbook swaps, hunter teleports, searches): reset at 00:00 UTC like OSRS. */
     enum class DailyUse(val limit: Int) {
