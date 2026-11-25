@@ -3981,7 +3981,7 @@
   equipment: null
 - id: 532
   name: "Big bones"
-  examine: "Normal: Ew, it's a pile of bones."
+  examine: "Ew it's a pile of bones."
   tradeable: true
   weight: 0.8
   equipment: null
@@ -4257,7 +4257,7 @@
   equipment: null
 - id: 552
   name: "Ghostspeak amulet"
-  examine: "Normal: It lets me talk to ghosts."
+  examine: "It lets me talk to ghosts."
   tradeable: false
   weight: 0.0
   equipment:
@@ -4546,7 +4546,7 @@
   equipment: null
 - id: 583
   name: "Bailing bucket"
-  examine: "Empty: It's a bailing bucket.  Full: It's a bailing bucket full of salty water."
+  examine: "It's a bailing bucket."
   tradeable: true
   weight: 1.0
   equipment: null
@@ -4558,7 +4558,7 @@
   equipment: null
 - id: 585
   name: "Bailing bucket"
-  examine: "Empty: It's a bailing bucket.  Full: It's a bailing bucket full of salty water."
+  examine: "It's a bailing bucket full of salty water."
   tradeable: true
   weight: 1.0
   equipment: null
@@ -6909,25 +6909,25 @@
   equipment: null
 - id: 789
   name: "Twigs"
-  examine: "Twigs bound together in the shape of a (Z/U/T/O)."
+  examine: "Twigs bound together in the shape of a T."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 790
   name: "Twigs"
-  examine: "Twigs bound together in the shape of a (Z/U/T/O)."
+  examine: "Twigs bound together in the shape of a U."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 791
   name: "Twigs"
-  examine: "Twigs bound together in the shape of a (Z/U/T/O)."
+  examine: "Twigs bound together in the shape of a Z."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 792
   name: "Twigs"
-  examine: "Twigs bound together in the shape of a (Z/U/T/O)."
+  examine: "Twigs bound together in the shape of a O."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -10363,7 +10363,7 @@
   equipment: null
 - id: 1007
   name: "Cape"
-  examine: "A (bright/thick/warm) &lt;colour&gt; cape."
+  examine: "A bright red cape."
   tradeable: true
   weight: 0.4
   equipment:
@@ -10591,7 +10591,7 @@
   equipment: null
 - id: 1019
   name: "Cape"
-  examine: "A (bright/thick/warm) &lt;colour&gt; cape."
+  examine: "A warm black cape."
   tradeable: true
   weight: 0.4
   equipment:
@@ -10630,7 +10630,7 @@
   equipment: null
 - id: 1021
   name: "Cape"
-  examine: "A (bright/thick/warm) &lt;colour&gt; cape."
+  examine: "A thick blue cape."
   tradeable: true
   weight: 0.4
   equipment:
@@ -10669,7 +10669,7 @@
   equipment: null
 - id: 1023
   name: "Cape"
-  examine: "A (bright/thick/warm) &lt;colour&gt; cape."
+  examine: "A thick yellow cape."
   tradeable: true
   weight: 0.4
   equipment:
@@ -10744,7 +10744,7 @@
   equipment: null
 - id: 1027
   name: "Cape"
-  examine: "A (bright/thick/warm) &lt;colour&gt; cape."
+  examine: "A thick green cape."
   tradeable: true
   weight: 0.4
   equipment:
@@ -10783,7 +10783,7 @@
   equipment: null
 - id: 1029
   name: "Cape"
-  examine: "A (bright/thick/warm) &lt;colour&gt; cape."
+  examine: "A thick purple cape."
   tradeable: true
   weight: 0.4
   equipment:
@@ -10822,7 +10822,7 @@
   equipment: null
 - id: 1031
   name: "Cape"
-  examine: "A (bright/thick/warm) &lt;colour&gt; cape."
+  examine: "A thick orange cape."
   tradeable: true
   weight: 0.4
   equipment:
@@ -19100,7 +19100,7 @@
   equipment: null
 - id: 1491
   name: "Witch's cat"
-  examine: "On the ground: Curiosity has yet to kill this one..."
+  examine: "A cat."
   tradeable: false
   weight: 1.2
   equipment: null
@@ -19563,109 +19563,109 @@
   equipment: null
 - id: 1555
   name: "Pet kitten"
-  examine: "Inventory: This kitten seems to like you. (Kitten)This cat definitely likes you. (Cat)This cat is so well fed it can hardly move. (Overgrown)"
+  examine: "This kitten seems to like you."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 1556
   name: "Pet kitten"
-  examine: "Inventory: This kitten seems to like you. (Kitten)This cat definitely likes you. (Cat)This cat is so well fed it can hardly move. (Overgrown)"
+  examine: "This kitten seems to like you."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 1557
   name: "Pet kitten"
-  examine: "Inventory: This kitten seems to like you. (Kitten)This cat definitely likes you. (Cat)This cat is so well fed it can hardly move. (Overgrown)"
+  examine: "This kitten seems to like you."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 1558
   name: "Pet kitten"
-  examine: "Inventory: This kitten seems to like you. (Kitten)This cat definitely likes you. (Cat)This cat is so well fed it can hardly move. (Overgrown)"
+  examine: "This kitten seems to like you."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 1559
   name: "Pet kitten"
-  examine: "Inventory: This kitten seems to like you. (Kitten)This cat definitely likes you. (Cat)This cat is so well fed it can hardly move. (Overgrown)"
+  examine: "This kitten seems to like you."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 1560
   name: "Pet kitten"
-  examine: "Inventory: This kitten seems to like you. (Kitten)This cat definitely likes you. (Cat)This cat is so well fed it can hardly move. (Overgrown)"
+  examine: "This kitten seems to like you."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 1561
   name: "Pet cat"
-  examine: "Inventory: This kitten seems to like you. (Kitten)This cat definitely likes you. (Cat)This cat is so well fed it can hardly move. (Overgrown)"
+  examine: "This cat definitely likes you."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 1562
   name: "Pet cat"
-  examine: "Inventory: This kitten seems to like you. (Kitten)This cat definitely likes you. (Cat)This cat is so well fed it can hardly move. (Overgrown)"
+  examine: "This cat definitely likes you."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 1563
   name: "Pet cat"
-  examine: "Inventory: This kitten seems to like you. (Kitten)This cat definitely likes you. (Cat)This cat is so well fed it can hardly move. (Overgrown)"
+  examine: "This cat definitely likes you."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 1564
   name: "Pet cat"
-  examine: "Inventory: This kitten seems to like you. (Kitten)This cat definitely likes you. (Cat)This cat is so well fed it can hardly move. (Overgrown)"
+  examine: "This cat definitely likes you."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 1565
   name: "Pet cat"
-  examine: "Inventory: This kitten seems to like you. (Kitten)This cat definitely likes you. (Cat)This cat is so well fed it can hardly move. (Overgrown)"
+  examine: "This cat definitely likes you."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 1566
   name: "Pet cat"
-  examine: "Inventory: This kitten seems to like you. (Kitten)This cat definitely likes you. (Cat)This cat is so well fed it can hardly move. (Overgrown)"
+  examine: "This cat definitely likes you."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 1567
   name: "Overgrown cat"
-  examine: "Inventory: This kitten seems to like you. (Kitten)This cat definitely likes you. (Cat)This cat is so well fed it can hardly move. (Overgrown)"
+  examine: "This cat is so well fed it can hardly move."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 1568
   name: "Overgrown cat"
-  examine: "Inventory: This kitten seems to like you. (Kitten)This cat definitely likes you. (Cat)This cat is so well fed it can hardly move. (Overgrown)"
+  examine: "This cat is so well fed it can hardly move."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 1569
   name: "Overgrown cat"
-  examine: "Inventory: This kitten seems to like you. (Kitten)This cat definitely likes you. (Cat)This cat is so well fed it can hardly move. (Overgrown)"
+  examine: "This cat is so well fed it can hardly move."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 1570
   name: "Overgrown cat"
-  examine: "Inventory: This kitten seems to like you. (Kitten)This cat definitely likes you. (Cat)This cat is so well fed it can hardly move. (Overgrown)"
+  examine: "This cat is so well fed it can hardly move."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 1571
   name: "Overgrown cat"
-  examine: "Inventory: This kitten seems to like you. (Kitten)This cat definitely likes you. (Cat)This cat is so well fed it can hardly move. (Overgrown)"
+  examine: "This cat is so well fed it can hardly move."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 1572
   name: "Overgrown cat"
-  examine: "Inventory: This kitten seems to like you. (Kitten)This cat definitely likes you. (Cat)This cat is so well fed it can hardly move. (Overgrown)"
+  examine: "This cat is so well fed it can hardly move."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -20964,7 +20964,7 @@
   equipment: null
 - id: 1704
   name: "Amulet of glory"
-  examine: "Uncharged: A very powerful dragonstone amulet.  1-4 charges: A dragonstone amulet with X magic charges."
+  examine: "A very powerful dragonstone amulet."
   tradeable: true
   weight: 0.0
   equipment:
@@ -21003,7 +21003,7 @@
   equipment: null
 - id: 1706
   name: "Amulet of glory (1)"
-  examine: "Uncharged: A very powerful dragonstone amulet.  1-4 charges: A dragonstone amulet with X magic charges."
+  examine: "A dragonstone amulet with 1 magic charge."
   tradeable: true
   weight: 0.0
   equipment:
@@ -21042,7 +21042,7 @@
   equipment: null
 - id: 1708
   name: "Amulet of glory (2)"
-  examine: "Uncharged: A very powerful dragonstone amulet.  1-4 charges: A dragonstone amulet with X magic charges."
+  examine: "A dragonstone amulet with 2 magic charges."
   tradeable: true
   weight: 0.0
   equipment:
@@ -21081,7 +21081,7 @@
   equipment: null
 - id: 1710
   name: "Amulet of glory (3)"
-  examine: "Uncharged: A very powerful dragonstone amulet.  1-4 charges: A dragonstone amulet with X magic charges."
+  examine: "A dragonstone amulet with 3 magic charges."
   tradeable: true
   weight: 0.0
   equipment:
@@ -21120,7 +21120,7 @@
   equipment: null
 - id: 1712
   name: "Amulet of glory (4)"
-  examine: "Uncharged: A very powerful dragonstone amulet.  1-4 charges: A dragonstone amulet with X magic charges."
+  examine: "A dragonstone amulet with 4 magic charges."
   tradeable: true
   weight: 0.0
   equipment:
@@ -22275,13 +22275,13 @@
   equipment: null
 - id: 1841
   name: "Barrel"
-  examine: "An empty barrel/A Splendid barrel."
+  examine: "An empty mining barrel."
   tradeable: true
   weight: 10.0
   equipment: null
 - id: 1842
   name: "Ana in a barrel"
-  examine: "Inventory: A mining barrel with Ana in it.While in the mine cart: It's Ana... in a barrel... in a mine cart."
+  examine: "A mining barrel with Ana in it."
   tradeable: false
   weight: 32.0
   equipment: null
@@ -22875,7 +22875,7 @@
   equipment: null
 - id: 1929
   name: "Bucket of water"
-  examine: "Common bucket: It's a bucket of water.2008 Easter event: It's a bucket of water from the Easter Bunny's warren. Regular bucket filled from Braindeath Island: It's a bucket of... water?"
+  examine: "It's a bucket of water."
   tradeable: true
   weight: 3.0
   equipment: null
@@ -23115,7 +23115,7 @@
   equipment: null
 - id: 1965
   name: "Cabbage"
-  examine: "On ground: Cabbage... yuck!In inventory: Yuck, I don't like cabbage."
+  examine: "Yuck I don't like cabbage."
   tradeable: true
   weight: 0.4
   equipment: null
@@ -23127,7 +23127,7 @@
   equipment: null
 - id: 1967
   name: "Cabbage"
-  examine: "On ground: Cabbage... yuck!In inventory: Yuck, I don't like cabbage."
+  examine: "Yuck I don't like cabbage."
   tradeable: true
   weight: 0.4
   equipment: null
@@ -25059,7 +25059,7 @@
   equipment: null
 - id: 2289
   name: "Plain pizza"
-  examine: "A cheese and tomato pizza. (Whole)Half of this plain pizza has been eaten. (Half)"
+  examine: "A cheese and tomato pizza."
   tradeable: true
   weight: 0.66
   equipment: null
@@ -25131,7 +25131,7 @@
   equipment: null
 - id: 2301
   name: "Pineapple pizza"
-  examine: "A pizza with bits of pineapple on it. (Whole)Half of this pineapple pizza has been eaten. (Half)"
+  examine: "A tropicana pizza."
   tradeable: true
   weight: 0.83
   equipment: null
@@ -25263,7 +25263,7 @@
   equipment: null
 - id: 2323
   name: "Apple pie"
-  examine: "Mmm Apple pie. (Whole)Mmm half an apple pie. (Half)"
+  examine: "Mmm Apple pie."
   tradeable: true
   weight: 0.4
   equipment: null
@@ -25275,7 +25275,7 @@
   equipment: null
 - id: 2325
   name: "Redberry pie"
-  examine: "Looks tasty. (Whole)So tasty I kept some for later. (Half)"
+  examine: "Looks tasty."
   tradeable: true
   weight: 0.4
   equipment: null
@@ -25323,7 +25323,7 @@
   equipment: null
 - id: 2333
   name: "Half a redberry pie"
-  examine: "Looks tasty. (Whole)So tasty I kept some for later. (Half)"
+  examine: "So tasty I kept some for later."
   tradeable: true
   weight: 0.4
   equipment: null
@@ -25335,7 +25335,7 @@
   equipment: null
 - id: 2335
   name: "Half an apple pie"
-  examine: "Mmm Apple pie. (Whole)Mmm half an apple pie. (Half)"
+  examine: "Mmm half an apple pie."
   tradeable: true
   weight: 0.4
   equipment: null
@@ -27361,7 +27361,7 @@
   equipment: null
 - id: 2520
   name: "Toy horsey"
-  examine: "An inexpensive white/black/grey/brown toy horse."
+  examine: "A brown toy horse."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -27373,7 +27373,7 @@
   equipment: null
 - id: 2522
   name: "Toy horsey"
-  examine: "An inexpensive white/black/grey/brown toy horse."
+  examine: "A white toy horse."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -27385,7 +27385,7 @@
   equipment: null
 - id: 2524
   name: "Toy horsey"
-  examine: "An inexpensive white/black/grey/brown toy horse."
+  examine: "A black toy horse."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -27397,7 +27397,7 @@
   equipment: null
 - id: 2526
   name: "Toy horsey"
-  examine: "An inexpensive white/black/grey/brown toy horse."
+  examine: "A grey toy horse."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -35205,13 +35205,13 @@
   equipment: null
 - id: 3179
   name: "Monkey bones"
-  examine: "These are small/medium sized monkey bones."
+  examine: "These are smallish monkey bones."
   tradeable: true
   weight: 0.5
   equipment: null
 - id: 3180
   name: "Monkey bones"
-  examine: "These are small/medium sized monkey bones."
+  examine: "These are medium sized monkey bones."
   tradeable: true
   weight: 0.5
   equipment: null
@@ -35229,7 +35229,7 @@
   equipment: null
 - id: 3183
   name: "Monkey bones"
-  examine: "These are small/medium sized monkey bones."
+  examine: "These are small monkey bones."
   tradeable: true
   weight: 0.5
   equipment: null
@@ -35241,13 +35241,13 @@
   equipment: null
 - id: 3185
   name: "Monkey bones"
-  examine: "These are small/medium sized monkey bones."
+  examine: "These are smallish monkey bones. They smell extremely nauseating."
   tradeable: true
   weight: 0.5
   equipment: null
 - id: 3186
   name: "Monkey bones"
-  examine: "These are small/medium sized monkey bones."
+  examine: "These are smallish monkey bones. They smell extremely nauseating."
   tradeable: true
   weight: 0.5
   equipment: null
@@ -35673,7 +35673,7 @@
   equipment: null
 - id: 3216
   name: "Barrel"
-  examine: "An empty barrel/A Splendid barrel."
+  examine: "An empty barrel."
   tradeable: true
   weight: 10.0
   equipment: null
@@ -36378,7 +36378,7 @@
   equipment: null
 - id: 3329
   name: "Blood'n'tar snelm"
-  examine: "Rounded: A red and black snail shell helmet. Pointed: A red and black pointed snail shell helmet."
+  examine: "A red and black Snail shell helmet."
   tradeable: true
   weight: 2.0
   equipment:
@@ -36573,7 +36573,7 @@
   equipment: null
 - id: 3339
   name: "Blood'n'tar snelm"
-  examine: "Rounded: A red and black snail shell helmet. Pointed: A red and black pointed snail shell helmet."
+  examine: "A red and black pointed snail shell helmet."
   tradeable: true
   weight: 2.0
   equipment:
@@ -37898,7 +37898,7 @@
     absorb_ranged: 4
 - id: 3481
   name: "Gilded platebody"
-  examine: "Rune platebody with complete gold trim &amp; plating."
+  examine: "Rune platebody with gold plate."
   tradeable: true
   weight: 10.0
   equipment:
@@ -41004,7 +41004,7 @@
   equipment: null
 - id: 3839
   name: "Damaged book"
-  examine: "An incomplete book of Saradomin/Guthix/Zamorak/Bandos/ArmadylAn incomplete ancient book"
+  examine: "An incomplete book of Saradomin."
   tradeable: false
   weight: 1.0
   equipment:
@@ -41067,7 +41067,7 @@
     absorb_ranged: 0
 - id: 3841
   name: "Damaged book"
-  examine: "An incomplete book of Saradomin/Guthix/Zamorak/Bandos/ArmadylAn incomplete ancient book"
+  examine: "An incomplete book of Zamorak."
   tradeable: false
   weight: 1.0
   equipment:
@@ -41130,7 +41130,7 @@
     absorb_ranged: 0
 - id: 3843
   name: "Damaged book"
-  examine: "An incomplete book of Saradomin/Guthix/Zamorak/Bandos/ArmadylAn incomplete ancient book"
+  examine: "An incomplete book of Guthix."
   tradeable: false
   weight: 1.0
   equipment:
@@ -42924,7 +42924,7 @@
   equipment: null
 - id: 4041
   name: "Hooded cloak"
-  examine: "The colours of Saradomin/Zamorak."
+  examine: "The colours of Saradomin."
   tradeable: false
   weight: 1.0
   equipment:
@@ -42954,7 +42954,7 @@
     attack_audio: -1
 - id: 4042
   name: "Hooded cloak"
-  examine: "The colours of Saradomin/Zamorak."
+  examine: "The colours of Zamorak."
   tradeable: false
   weight: 1.0
   equipment:
@@ -43415,13 +43415,13 @@
   equipment: null
 - id: 4083
   name: "Sled"
-  examine: "Unwaxed: It needs waxing before I can use it. Waxed: A waxed sled."
+  examine: "It needs waxing before I can use it."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 4084
   name: "Sled"
-  examine: "Unwaxed: It needs waxing before I can use it. Waxed: A waxed sled."
+  examine: "A waxed sled."
   tradeable: false
   weight: 0.018
   equipment:
@@ -43530,7 +43530,7 @@
   equipment: null
 - id: 4089
   name: "Mystic hat"
-  examine: "Blue: A magical hat. "
+  examine: "A magical hat."
   tradeable: true
   weight: 0.4
   equipment:
@@ -43650,7 +43650,7 @@
   equipment: null
 - id: 4095
   name: "Mystic gloves"
-  examine: "Bright/Dark magical gloves."
+  examine: "Magical gloves."
   tradeable: true
   weight: 0.4
   equipment:
@@ -43729,8 +43729,8 @@
   weight: 0.0
   equipment: null
 - id: 4099
-  name: "Mystic hat"
-  examine: "Blue: A magical hat. "
+  name: "Mystic hat (dark)"
+  examine: "A dark magical hat."
   tradeable: true
   weight: 0.4
   equipment:
@@ -43763,13 +43763,13 @@
     absorb_magic: 1
     absorb_ranged: 0
 - id: 4100
-  name: "Mystic hat"
+  name: "Mystic hat (dark)"
   examine: "Swamp this note at any bank for the equivalent item"
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 4101
-  name: "Mystic robe top"
+  name: "Mystic robe top (dark)"
   examine: "The upper half of a magical robe."
   tradeable: true
   weight: 2.7
@@ -43803,13 +43803,13 @@
     absorb_magic: 1
     absorb_ranged: 0
 - id: 4102
-  name: "Mystic robe top"
+  name: "Mystic robe top (dark)"
   examine: "Swamp this note at any bank for the equivalent item"
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 4103
-  name: "Mystic robe bottom"
+  name: "Mystic robe bottom (dark)"
   examine: "The lower half of a magical robe."
   tradeable: true
   weight: 0.0
@@ -43843,14 +43843,14 @@
     absorb_magic: 2
     absorb_ranged: 0
 - id: 4104
-  name: "Mystic robe bottom"
+  name: "Mystic robe bottom (dark)"
   examine: "Swamp this note at any bank for the equivalent item"
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 4105
-  name: "Mystic gloves"
-  examine: "Bright/Dark magical gloves."
+  name: "Mystic gloves (dark)"
+  examine: "Dark magical gloves."
   tradeable: true
   weight: 0.4
   equipment:
@@ -43883,13 +43883,13 @@
     absorb_magic: 0
     absorb_ranged: 0
 - id: 4106
-  name: "Mystic gloves"
+  name: "Mystic gloves (dark)"
   examine: "Swamp this note at any bank for the equivalent item"
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 4107
-  name: "Mystic boots"
+  name: "Mystic boots (dark)"
   examine: "Magical boots."
   tradeable: true
   weight: 0.4
@@ -43923,14 +43923,14 @@
     absorb_magic: 0
     absorb_ranged: 0
 - id: 4108
-  name: "Mystic boots"
+  name: "Mystic boots (dark)"
   examine: "Swamp this note at any bank for the equivalent item"
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 4109
-  name: "Mystic hat"
-  examine: "Blue: A magical hat. "
+  name: "Mystic hat (light)"
+  examine: "A bright magical hat."
   tradeable: true
   weight: 0.4
   equipment:
@@ -43963,13 +43963,13 @@
     absorb_magic: 1
     absorb_ranged: 0
 - id: 4110
-  name: "Mystic hat"
+  name: "Mystic hat (light)"
   examine: "Swamp this note at any bank for the equivalent item"
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 4111
-  name: "Mystic robe top"
+  name: "Mystic robe top (light)"
   examine: "The upper half of a magical robe."
   tradeable: true
   weight: 2.7
@@ -44003,13 +44003,13 @@
     absorb_magic: 1
     absorb_ranged: 0
 - id: 4112
-  name: "Mystic robe top"
+  name: "Mystic robe top (light)"
   examine: "Swamp this note at any bank for the equivalent item"
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 4113
-  name: "Mystic robe bottom"
+  name: "Mystic robe bottom (light)"
   examine: "The lower half of a magical robe."
   tradeable: true
   weight: 0.0
@@ -44043,14 +44043,14 @@
     absorb_magic: 2
     absorb_ranged: 0
 - id: 4114
-  name: "Mystic robe bottom"
+  name: "Mystic robe bottom (light)"
   examine: "Swamp this note at any bank for the equivalent item"
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 4115
-  name: "Mystic gloves"
-  examine: "Bright/Dark magical gloves."
+  name: "Mystic gloves (light)"
+  examine: "Bright magical gloves."
   tradeable: true
   weight: 0.4
   equipment:
@@ -44083,13 +44083,13 @@
     absorb_magic: 0
     absorb_ranged: 0
 - id: 4116
-  name: "Mystic gloves"
+  name: "Mystic gloves (light)"
   examine: "Swamp this note at any bank for the equivalent item"
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 4117
-  name: "Mystic boots"
+  name: "Mystic boots (light)"
   examine: "Magical boots."
   tradeable: true
   weight: 0.4
@@ -44123,7 +44123,7 @@
     absorb_magic: 0
     absorb_ranged: 0
 - id: 4118
-  name: "Mystic boots"
+  name: "Mystic boots (light)"
   examine: "Swamp this note at any bank for the equivalent item"
   tradeable: false
   weight: 0.0
@@ -45246,13 +45246,13 @@
   equipment: null
 - id: 4197
   name: "Decapitated head"
-  examine: "No brain: A gruesome, decapitated head, whose brain has rotted away. Brain: A gruesome, decapitated head - its eyes stare lifelessly at nothing."
+  examine: "A gruesome, decapitated head, whose brain has rotted away."
   tradeable: false
   weight: 3.0
   equipment: null
 - id: 4198
   name: "Decapitated head"
-  examine: "No brain: A gruesome, decapitated head, whose brain has rotted away. Brain: A gruesome, decapitated head - its eyes stare lifelessly at nothing."
+  examine: "A gruesome, decapitated head - its eyes stare lifelessly at nothing."
   tradeable: false
   weight: 3.0
   equipment: null
@@ -45276,7 +45276,7 @@
   equipment: null
 - id: 4202
   name: "Ring of charos"
-  examine: "Unactivated: The Ring of charos.Activated: The power within this ring has been activated."
+  examine: "The Ring of Charos."
   destroy_message: "Another can be received from pickpocketing Dr. Fenkenstrain in the tower."
   tradeable: false
   weight: 0.0
@@ -46149,7 +46149,7 @@
   equipment: null
 - id: 4241
   name: "Nettles"
-  examine: "(In inventory) A handful of nettles (In ground) I better not get stung/I wouldn't like to get stung/I wish I could sting other people/Dock leaves at the ready/These may hurt/nettles sting my leggies(Draynor Village nettles)"
+  examine: "A handful of nettles."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -46203,7 +46203,7 @@
   equipment: null
 - id: 4250
   name: "Ghostspeak amulet"
-  examine: "Normal: It lets me talk to ghosts."
+  examine: "The amulet of ghostspeak glows green from the crone's enchantment."
   tradeable: false
   weight: 0.0
   equipment:
@@ -46433,7 +46433,7 @@
   equipment: null
 - id: 4284
   name: "Bedsheet"
-  examine: "Before Ectofuntus: It's a bedsheet.After Ectofuntus: It's an ectoplasm-covered bedsheet."
+  examine: "It's a bedsheet."
   tradeable: false
   weight: 1.0
   equipment:
@@ -46463,7 +46463,7 @@
     attack_audio: -1
 - id: 4285
   name: "Bedsheet"
-  examine: "Before Ectofuntus: It's a bedsheet.After Ectofuntus: It's an ectoplasm-covered bedsheet."
+  examine: "It's an ectoplasm-covered bedsheet."
   tradeable: false
   weight: 1.0
   equipment:
@@ -49862,7 +49862,7 @@
   equipment: null
 - id: 4522
   name: "Oil lamp"
-  examine: "Empty: An oil lamp with no oil in it.Filled: Not the genie sort."
+  examine: "Not the genie sort."
   tradeable: true
   weight: 0.4
   equipment: null
@@ -49874,13 +49874,13 @@
   equipment: null
 - id: 4524
   name: "Oil lamp"
-  examine: "Empty: An oil lamp with no oil in it.Filled: Not the genie sort."
+  examine: "Not the genie sort."
   tradeable: true
   weight: 0.4
   equipment: null
 - id: 4525
   name: "Oil lamp"
-  examine: "Empty: An oil lamp with no oil in it.Filled: Not the genie sort."
+  examine: "An oil lamp with no oil in it."
   tradeable: true
   weight: 0.4
   equipment: null
@@ -49892,7 +49892,7 @@
   equipment: null
 - id: 4527
   name: "Candle lantern"
-  examine: "Lit: A flickering candle in a glass cage.Unlit: a candle in a glass cage.Without candle: Put a candle in to complete it."
+  examine: "Put a candle in to complete it."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -49904,7 +49904,7 @@
   equipment: null
 - id: 4529
   name: "Candle lantern"
-  examine: "Lit: A flickering candle in a glass cage.Unlit: a candle in a glass cage.Without candle: Put a candle in to complete it."
+  examine: "A candle in a glass cage."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -49916,13 +49916,13 @@
   equipment: null
 - id: 4531
   name: "Candle lantern"
-  examine: "Lit: A flickering candle in a glass cage.Unlit: a candle in a glass cage.Without candle: Put a candle in to complete it."
+  examine: "A flickering candle in a glass cage."
   tradeable: true
   weight: 0.9
   equipment: null
 - id: 4532
   name: "Candle lantern"
-  examine: "Lit: A flickering candle in a glass cage.Unlit: a candle in a glass cage.Without candle: Put a candle in to complete it."
+  examine: "A candle in a glass cage."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -49934,13 +49934,13 @@
   equipment: null
 - id: 4534
   name: "Candle lantern"
-  examine: "Lit: A flickering candle in a glass cage.Unlit: a candle in a glass cage.Without candle: Put a candle in to complete it."
+  examine: "A flickering candle in a glass cage."
   tradeable: true
   weight: 0.9
   equipment: null
 - id: 4535
   name: "Oil lantern"
-  examine: "Unfuelled: Put oil in to complete it. Unlit: An unlit oil lantern. Lit:  It lights your way through the dark places of the earth."
+  examine: "Put oil in to complete it."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -49952,7 +49952,7 @@
   equipment: null
 - id: 4537
   name: "Oil lantern"
-  examine: "Unfuelled: Put oil in to complete it. Unlit: An unlit oil lantern. Lit:  It lights your way through the dark places of the earth."
+  examine: "An unlit oil lantern."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -49964,7 +49964,7 @@
   equipment: null
 - id: 4539
   name: "Oil lantern"
-  examine: "Unfuelled: Put oil in to complete it. Unlit: An unlit oil lantern. Lit:  It lights your way through the dark places of the earth."
+  examine: "It lights your way through the dark places of the earth."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -50774,7 +50774,7 @@
   equipment: null
 - id: 4620
   name: "Black mushroom"
-  examine: "It looks horrible.On ground: Not good for eating."
+  examine: "It looks horrible."
   tradeable: false
   weight: 1.0
   equipment: null
@@ -51330,19 +51330,19 @@
   equipment: null
 - id: 4700
   name: "Sapphire lantern"
-  examine: "Unfuelled: You need to add lamp oil before you can use it. Unlit: A bullseye lantern with a sapphire for a lens. Lit: A lantern casting a bright blue beam."
+  examine: "You need to add lamp oil before you can use it."
   tradeable: false
   weight: 1.3
   equipment: null
 - id: 4701
   name: "Sapphire lantern"
-  examine: "Unfuelled: You need to add lamp oil before you can use it. Unlit: A bullseye lantern with a sapphire for a lens. Lit: A lantern casting a bright blue beam."
+  examine: "A bullseye lantern with a sapphire for a lens."
   tradeable: false
   weight: 1.3
   equipment: null
 - id: 4702
   name: "Sapphire lantern"
-  examine: "Unfuelled: You need to add lamp oil before you can use it. Unlit: A bullseye lantern with a sapphire for a lens. Lit: A lantern casting a bright blue beam."
+  examine: "A lantern casting a bright blue beam."
   tradeable: false
   weight: 1.3
   equipment: null
@@ -56820,7 +56820,7 @@
   equipment: null
 - id: 5013
   name: "Mining helmet"
-  examine: "Unlit: A helmet with an unlit lamp on it.  Lit: A helmet with a lamp on it."
+  examine: "A helmet with a lamp on it."
   tradeable: true
   weight: 1.0
   equipment:
@@ -56853,7 +56853,7 @@
     absorb_ranged: 0
 - id: 5014
   name: "Mining helmet"
-  examine: "Unlit: A helmet with an unlit lamp on it.  Lit: A helmet with a lamp on it."
+  examine: "A helmet with an unlit lamp on it."
   tradeable: true
   weight: 1.0
   equipment:
@@ -57823,55 +57823,55 @@
   equipment: null
 - id: 5070
   name: "Bird's nest"
-  examine: "Full: "
+  examine: "It's a bird's nest with an egg in it."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 5071
   name: "Bird's nest"
-  examine: "Full: "
+  examine: "It's a bird's nest with an egg in it."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 5072
   name: "Bird's nest"
-  examine: "Full: "
+  examine: "It's a bird's nest with an egg in it."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 5073
   name: "Bird's nest"
-  examine: "Full: "
+  examine: "It's a bird's nest with some seeds in it."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 5074
   name: "Bird's nest"
-  examine: "Full: "
+  examine: "It's a bird's nest with a ring in it."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 5075
   name: "Bird's nest"
-  examine: "Full: "
+  examine: "It's an empty bird's nest."
   tradeable: true
   weight: 0.0
   equipment: null
 - id: 5076
   name: "Bird's egg"
-  examine: "A green/red/blue bird's egg."
+  examine: "A red bird's egg."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 5077
   name: "Bird's egg"
-  examine: "A green/red/blue bird's egg."
+  examine: "A blue bird's egg."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 5078
   name: "Bird's egg"
-  examine: "A green/red/blue bird's egg."
+  examine: "A green bird's egg."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -59947,7 +59947,7 @@
   equipment: null
 - id: 5420
   name: "Potatoes (1)"
-  examine: "There are &lt;number of potatoes&gt; in this sack."
+  examine: "There is 1 potato in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -59959,7 +59959,7 @@
   equipment: null
 - id: 5422
   name: "Potatoes (2)"
-  examine: "There are &lt;number of potatoes&gt; in this sack."
+  examine: "There are 2 potatoes in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -59971,7 +59971,7 @@
   equipment: null
 - id: 5424
   name: "Potatoes (3)"
-  examine: "There are &lt;number of potatoes&gt; in this sack."
+  examine: "There are 3 potatoes in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -59983,7 +59983,7 @@
   equipment: null
 - id: 5426
   name: "Potatoes (4)"
-  examine: "There are &lt;number of potatoes&gt; in this sack."
+  examine: "There are 4 potatoes in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -59995,7 +59995,7 @@
   equipment: null
 - id: 5428
   name: "Potatoes (5)"
-  examine: "There are &lt;number of potatoes&gt; in this sack."
+  examine: "There are 5 potatoes in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -60007,7 +60007,7 @@
   equipment: null
 - id: 5430
   name: "Potatoes (6)"
-  examine: "There are &lt;number of potatoes&gt; in this sack."
+  examine: "There are 6 potatoes in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -60019,7 +60019,7 @@
   equipment: null
 - id: 5432
   name: "Potatoes (7)"
-  examine: "There are &lt;number of potatoes&gt; in this sack."
+  examine: "There are 7 potatoes in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -60031,7 +60031,7 @@
   equipment: null
 - id: 5434
   name: "Potatoes (8)"
-  examine: "There are &lt;number of potatoes&gt; in this sack."
+  examine: "There are 8 potatoes in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -60043,7 +60043,7 @@
   equipment: null
 - id: 5436
   name: "Potatoes (9)"
-  examine: "There are &lt;number of potatoes&gt; in this sack."
+  examine: "There are 9 potatoes in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -60055,7 +60055,7 @@
   equipment: null
 - id: 5438
   name: "Potatoes (10)"
-  examine: "There are &lt;number of potatoes&gt; in this sack."
+  examine: "There are 10 potatoes in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -60067,7 +60067,7 @@
   equipment: null
 - id: 5440
   name: "Onions (1)"
-  examine: "There are/is (1-10) onion(s) in this sack."
+  examine: "There is 1 onion in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -60079,7 +60079,7 @@
   equipment: null
 - id: 5442
   name: "Onions (2)"
-  examine: "There are/is (1-10) onion(s) in this sack."
+  examine: "There are 2 onions in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -60091,7 +60091,7 @@
   equipment: null
 - id: 5444
   name: "Onions (3)"
-  examine: "There are/is (1-10) onion(s) in this sack."
+  examine: "There are 3 onions in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -60103,7 +60103,7 @@
   equipment: null
 - id: 5446
   name: "Onions (4)"
-  examine: "There are/is (1-10) onion(s) in this sack."
+  examine: "There are 4 onions in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -60115,7 +60115,7 @@
   equipment: null
 - id: 5448
   name: "Onions (5)"
-  examine: "There are/is (1-10) onion(s) in this sack."
+  examine: "There are 5 onions in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -60127,7 +60127,7 @@
   equipment: null
 - id: 5450
   name: "Onions (6)"
-  examine: "There are/is (1-10) onion(s) in this sack."
+  examine: "There are 6 onions in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -60139,7 +60139,7 @@
   equipment: null
 - id: 5452
   name: "Onions (7)"
-  examine: "There are/is (1-10) onion(s) in this sack."
+  examine: "There are 7 onions in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -60151,7 +60151,7 @@
   equipment: null
 - id: 5454
   name: "Onions (8)"
-  examine: "There are/is (1-10) onion(s) in this sack."
+  examine: "There are 8 onions in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -60163,7 +60163,7 @@
   equipment: null
 - id: 5456
   name: "Onions (9)"
-  examine: "There are/is (1-10) onion(s) in this sack."
+  examine: "There are 9 onions in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -60175,7 +60175,7 @@
   equipment: null
 - id: 5458
   name: "Onions (10)"
-  examine: "There are/is (1-10) onion(s) in this sack."
+  examine: "There are 10 onions in this sack."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -60187,7 +60187,7 @@
   equipment: null
 - id: 5460
   name: "Cabbages (1)"
-  examine: "There are &lt;number of cabbages&gt; in this sack."
+  examine: "There is 1 cabbage in this sack."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -60199,7 +60199,7 @@
   equipment: null
 - id: 5462
   name: "Cabbages (2)"
-  examine: "There are &lt;number of cabbages&gt; in this sack."
+  examine: "There are 2 cabbages in this sack."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -60211,7 +60211,7 @@
   equipment: null
 - id: 5464
   name: "Cabbages (3)"
-  examine: "There are &lt;number of cabbages&gt; in this sack."
+  examine: "There are 3 cabbages in this sack."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -60223,7 +60223,7 @@
   equipment: null
 - id: 5466
   name: "Cabbages (4)"
-  examine: "There are &lt;number of cabbages&gt; in this sack."
+  examine: "There are 4 cabbages in this sack."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -60235,7 +60235,7 @@
   equipment: null
 - id: 5468
   name: "Cabbages (5)"
-  examine: "There are &lt;number of cabbages&gt; in this sack."
+  examine: "There are 5 cabbages in this sack."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -60247,7 +60247,7 @@
   equipment: null
 - id: 5470
   name: "Cabbages (6)"
-  examine: "There are &lt;number of cabbages&gt; in this sack."
+  examine: "There are 6 cabbages in this sack."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -60259,7 +60259,7 @@
   equipment: null
 - id: 5472
   name: "Cabbages (7)"
-  examine: "There are &lt;number of cabbages&gt; in this sack."
+  examine: "There are 7 cabbages in this sack."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -60271,7 +60271,7 @@
   equipment: null
 - id: 5474
   name: "Cabbages (8)"
-  examine: "There are &lt;number of cabbages&gt; in this sack."
+  examine: "There are 8 cabbages in this sack."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -60283,7 +60283,7 @@
   equipment: null
 - id: 5476
   name: "Cabbages (9)"
-  examine: "There are &lt;number of cabbages&gt; in this sack."
+  examine: "There are 9 cabbages in this sack."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -60295,7 +60295,7 @@
   equipment: null
 - id: 5478
   name: "Cabbages (10)"
-  examine: "There are &lt;number of cabbages&gt; in this sack."
+  examine: "There are 10 cabbages in this sack."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -61708,7 +61708,7 @@
     attack_audio: -1
 - id: 5609
   name: "Chicken"
-  examine: "Normal: Yep. Definitely a chicken."
+  examine: "He'd be easier to carry if I cooked and ate him first..."
   tradeable: false
   weight: 0.0
   equipment:
@@ -66974,13 +66974,13 @@
     attack_audio: -1
 - id: 6066
   name: "Mourner trousers"
-  examine: "Damaged: These are in need of a good tailor.Repaired: A pair of mourner trousers."
+  examine: "These are in need of a good tailor."
   tradeable: false
   weight: 2.25
   equipment: null
 - id: 6067
   name: "Mourner trousers"
-  examine: "Damaged: These are in need of a good tailor.Repaired: A pair of mourner trousers."
+  examine: "A pair of mourner trousers."
   tradeable: false
   weight: 2.25
   equipment:
@@ -67580,13 +67580,13 @@
   equipment: null
 - id: 6119
   name: "Square stone"
-  examine: "There is a strange [green/yellow] marking on this stone."
+  examine: "There is a strange yellow marking on this stone."
   tradeable: false
   weight: 1.0
   equipment: null
 - id: 6120
   name: "Square stone"
-  examine: "There is a strange [green/yellow] marking on this stone."
+  examine: "There is a strange green marking on this stone."
   tradeable: false
   weight: 1.0
   equipment: null
@@ -70302,7 +70302,7 @@
   equipment: null
 - id: 6293
   name: "Spider on stick"
-  examine: "Raw: A raw spider threaded onto a skewer stick.Cooked: A nicely roasted spider threaded onto a skewer stick."
+  examine: "A raw spider threaded onto a skewer stick."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -70326,7 +70326,7 @@
   equipment: null
 - id: 6297
   name: "Spider on stick"
-  examine: "Raw: A raw spider threaded onto a skewer stick.Cooked: A nicely roasted spider threaded onto a skewer stick."
+  examine: "A nicely roasted spider threaded onto a skewer stick."
   tradeable: true
   weight: 0.9
   equipment: null
@@ -70991,7 +70991,7 @@
   equipment: null
 - id: 6347
   name: "Villager armband"
-  examine: "A &lt;colour&gt; armband, as worn by the Tai Bwo Wannai locals."
+  examine: "A brown armband, as worn by the Tai Bwo Wannai locals."
   tradeable: true
   weight: 0.5
   equipment:
@@ -71207,7 +71207,7 @@
   equipment: null
 - id: 6359
   name: "Villager armband"
-  examine: "A &lt;colour&gt; armband, as worn by the Tai Bwo Wannai locals."
+  examine: "A light blue armband, as worn by the Tai Bwo Wannai locals."
   tradeable: true
   weight: 0.5
   equipment:
@@ -71387,7 +71387,7 @@
   equipment: null
 - id: 6369
   name: "Villager armband"
-  examine: "A &lt;colour&gt; armband, as worn by the Tai Bwo Wannai locals."
+  examine: "A dark blue armband, as worn by the Tai Bwo Wannai locals."
   tradeable: true
   weight: 0.5
   equipment:
@@ -71567,7 +71567,7 @@
   equipment: null
 - id: 6379
   name: "Villager armband"
-  examine: "A &lt;colour&gt; armband, as worn by the Tai Bwo Wannai locals."
+  examine: "A white armband, as worn by the Tai Bwo Wannai locals."
   tradeable: true
   weight: 0.5
   equipment:
@@ -72623,21 +72623,21 @@
   equipment: null
 - id: 6461
   name: "White tree shoot"
-  examine: "Shoot: A shoot that has been cut from a dying White Tree.Plant pot: A young White Tree sapling.Plant pot after watering: This shoot from a White Tree has been watered and will soon grow."
+  examine: "A shoot that has been cut from a dying White Tree."
   destroy_message: "You can reclaim this item from the place you found it."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 6462
   name: "White tree shoot"
-  examine: "Shoot: A shoot that has been cut from a dying White Tree.Plant pot: A young White Tree sapling.Plant pot after watering: This shoot from a White Tree has been watered and will soon grow."
+  examine: "A shoot that has been cut from a dying White Tree."
   destroy_message: "You can reclaim this item from the place you found it."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 6463
   name: "White tree shoot"
-  examine: "Shoot: A shoot that has been cut from a dying White Tree.Plant pot: A young White Tree sapling.Plant pot after watering: This shoot from a White Tree has been watered and will soon grow."
+  examine: "This shoot from a White Tree has been watered and will soon grow."
   destroy_message: "You can reclaim this item from the place you found it."
   tradeable: false
   weight: 0.0
@@ -72651,7 +72651,7 @@
   equipment: null
 - id: 6465
   name: "Ring of charos (a)"
-  examine: "Unactivated: The Ring of charos.Activated: The power within this ring has been activated."
+  examine: "The power within this ring has been activated."
   destroy_message: "Another can be received from pickpocketing Dr. Fenkenstrain in the tower."
   tradeable: false
   weight: 0.0
@@ -73364,7 +73364,7 @@
     absorb_ranged: 0
 - id: 6542
   name: "Present"
-  examine: "Thanks for all your help! Love, Bob &amp; Neite."
+  examine: "Thanks for all your help! Love, Bob & Neite."
   destroy_message: "You will not get a replacement for the present. Open it for your reward."
   tradeable: false
   weight: 0.0
@@ -73485,73 +73485,73 @@
     attack_audio: -1
 - id: 6549
   name: "Lazy cat"
-  examine: "Inventory: Wild. (wily)Lethargic. (lazy)"
+  examine: "Lethargic."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 6550
   name: "Lazy cat"
-  examine: "Inventory: Wild. (wily)Lethargic. (lazy)"
+  examine: "Lethargic."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 6551
   name: "Lazy cat"
-  examine: "Inventory: Wild. (wily)Lethargic. (lazy)"
+  examine: "Lethargic."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 6552
   name: "Lazy cat"
-  examine: "Inventory: Wild. (wily)Lethargic. (lazy)"
+  examine: "Lethargic."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 6553
   name: "Lazy cat"
-  examine: "Inventory: Wild. (wily)Lethargic. (lazy)"
+  examine: "Lethargic."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 6554
   name: "Lazy cat"
-  examine: "Inventory: Wild. (wily)Lethargic. (lazy)"
+  examine: "Lethargic."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 6555
   name: "Wily cat"
-  examine: "Inventory: Wild. (wily)Lethargic. (lazy)"
+  examine: "Wild."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 6556
   name: "Wily cat"
-  examine: "Inventory: Wild. (wily)Lethargic. (lazy)"
+  examine: "Wild."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 6557
   name: "Wily cat"
-  examine: "Inventory: Wild. (wily)Lethargic. (lazy)"
+  examine: "Wild."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 6558
   name: "Wily cat"
-  examine: "Inventory: Wild. (wily)Lethargic. (lazy)"
+  examine: "Wild."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 6559
   name: "Wily cat"
-  examine: "Inventory: Wild. (wily)Lethargic. (lazy)"
+  examine: "Wild."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 6560
   name: "Wily cat"
-  examine: "Inventory: Wild. (wily)Lethargic. (lazy)"
+  examine: "Wild."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -75551,7 +75551,7 @@
   equipment: null
 - id: 6712
   name: "Bucket of water"
-  examine: "Common bucket: It's a bucket of water.2008 Easter event: It's a bucket of water from the Easter Bunny's warren. Regular bucket filled from Braindeath Island: It's a bucket of... water?"
+  examine: "It's a bucket of... water?"
   tradeable: true
   weight: 3.0
   equipment: null
@@ -76327,7 +76327,7 @@
   equipment: null
 - id: 6773
   name: "Rat pole"
-  examine: "Empty: A pole for putting rats on. With rats: A pole with (one to six) rat(s) on it."
+  examine: "A pole for putting rats on."
   tradeable: false
   weight: 2.2
   equipment:
@@ -76360,7 +76360,7 @@
     absorb_ranged: 0
 - id: 6774
   name: "Rat pole"
-  examine: "Empty: A pole for putting rats on. With rats: A pole with (one to six) rat(s) on it."
+  examine: "A pole with one rat on it."
   tradeable: false
   weight: 2.2
   equipment:
@@ -76393,7 +76393,7 @@
     absorb_ranged: 0
 - id: 6775
   name: "Rat pole"
-  examine: "Empty: A pole for putting rats on. With rats: A pole with (one to six) rat(s) on it."
+  examine: "A pole with two rats on it."
   tradeable: false
   weight: 2.2
   equipment:
@@ -76426,7 +76426,7 @@
     absorb_ranged: 0
 - id: 6776
   name: "Rat pole"
-  examine: "Empty: A pole for putting rats on. With rats: A pole with (one to six) rat(s) on it."
+  examine: "A pole with three rats on it."
   tradeable: false
   weight: 2.2
   equipment:
@@ -76459,7 +76459,7 @@
     absorb_ranged: 0
 - id: 6777
   name: "Rat pole"
-  examine: "Empty: A pole for putting rats on. With rats: A pole with (one to six) rat(s) on it."
+  examine: "A pole with four rats on it."
   tradeable: false
   weight: 2.2
   equipment:
@@ -76492,7 +76492,7 @@
     absorb_ranged: 0
 - id: 6778
   name: "Rat pole"
-  examine: "Empty: A pole for putting rats on. With rats: A pole with (one to six) rat(s) on it."
+  examine: "A pole with five rats on it."
   tradeable: false
   weight: 2.2
   equipment:
@@ -76525,7 +76525,7 @@
     absorb_ranged: 0
 - id: 6779
   name: "Rat pole"
-  examine: "Empty: A pole for putting rats on. With rats: A pole with (one to six) rat(s) on it."
+  examine: "A pole with six rats on it."
   tradeable: false
   weight: 2.2
   equipment:
@@ -78515,7 +78515,7 @@
   equipment: null
 - id: 6959
   name: "Cape"
-  examine: "A (bright/thick/warm) &lt;colour&gt; cape."
+  examine: "It's a bit pink."
   tradeable: true
   weight: 0.4
   equipment:
@@ -80316,7 +80316,7 @@
     absorb_ranged: 0
 - id: 7160
   name: "Killerwatt"
-  examine: "Before being attacked: A ball of Electrical energy."
+  examine: "A ball of Electrical energy."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -82987,7 +82987,7 @@
   equipment: null
 - id: 7413
   name: "Bird's nest"
-  examine: "Full: "
+  examine: "It's a bird's nest with some seeds in it."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -84148,13 +84148,13 @@
   equipment: null
 - id: 7509
   name: "Dwarven rock cake"
-  examine: "Hot: A strange looking cake. Cooled: Cool and heavy as a brick. Only for dwarf consumption."
+  examine: "Red hot and glowing, ouch! Only for dwarf consumption."
   tradeable: false
   weight: 8.5
   equipment: null
 - id: 7510
   name: "Dwarven rock cake"
-  examine: "Hot: A strange looking cake. Cooled: Cool and heavy as a brick. Only for dwarf consumption."
+  examine: "Cool and heavy as a brick. Only for dwarf consumption."
   tradeable: false
   weight: 8.5
   equipment: null
@@ -84687,19 +84687,19 @@
   equipment: null
 - id: 7581
   name: "Overgrown hellcat"
-  examine: "Inventory: Your hellish pet cat!!"
+  examine: "Your hellish pet cat!!"
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 7582
   name: "Hellcat"
-  examine: "Inventory: Your hellish pet cat!!"
+  examine: "Your hellish pet cat!!"
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 7583
   name: "Hell-kitten"
-  examine: "Inventory: Your hellish pet cat!!"
+  examine: "Your hellish pet cat!!"
   tradeable: false
   weight: 0.0
   equipment: null
@@ -84711,7 +84711,7 @@
   equipment: null
 - id: 7585
   name: "Wily hellcat"
-  examine: "Inventory: Your hellish pet cat!!"
+  examine: "Your hellish pet cat!!"
   tradeable: false
   weight: 0.0
   equipment: null
@@ -86360,7 +86360,7 @@
   equipment: null
 - id: 7763
   name: "Toy doll"
-  examine: "In inventory: Nice bit of crafting! When released: Nice bit of crafting that..."
+  examine: "Nice bit of crafting!"
   tradeable: true
   weight: 1.0
   equipment: null
@@ -86372,7 +86372,7 @@
   equipment: null
 - id: 7765
   name: "Toy doll (wound)"
-  examine: "In inventory: Nice bit of crafting! When released: Nice bit of crafting that..."
+  examine: "Nice bit of crafting!"
   tradeable: true
   weight: 1.0
   equipment: null
@@ -86408,7 +86408,7 @@
   equipment: null
 - id: 7771
   name: "Clockwork cat"
-  examine: "Inventory: Nice bit of crafting!As a follower: An amazing piece of crafting."
+  examine: "Nice bit of crafting!"
   tradeable: true
   weight: 1.0
   equipment: null
@@ -86426,21 +86426,21 @@
   equipment: null
 - id: 7774
   name: "Reward token"
-  examine: "Blue/Red/Yellow reward token exchanged at Burgh de Rott/Paterdomus."
+  examine: "Yellow reward token exchanged at Burgh de Rott."
   destroy_message: "Warning! If you destroy this item, you will lose ALL rewards that it relates to and you will have to make another trek in order to get another one."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 7775
   name: "Reward token"
-  examine: "Blue/Red/Yellow reward token exchanged at Burgh de Rott/Paterdomus."
+  examine: "Red reward token exchanged at Burgh de Rott."
   destroy_message: "Warning! If you destroy this item, you will lose ALL rewards that it relates to and you will have to make another trek in order to get another one."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 7776
   name: "Reward token"
-  examine: "Blue/Red/Yellow reward token exchanged at Burgh de Rott/Paterdomus."
+  examine: "Blue reward token exchanged at Burgh de Rott."
   destroy_message: "Warning! If you destroy this item, you will lose ALL rewards that it relates to and you will have to make another trek in order to get another one."
   tradeable: false
   weight: 0.0
@@ -86849,7 +86849,7 @@
   equipment: null
 - id: 7818
   name: "Ram skull"
-  examine: "Unpolished: This needs a good polish."
+  examine: "This needs a good polish."
   tradeable: false
   weight: 0.4
   equipment: null
@@ -86861,7 +86861,7 @@
   equipment: null
 - id: 7820
   name: "Polished ram skull"
-  examine: "Unpolished: This needs a good polish."
+  examine: "This bone belongs in a museum!"
   tradeable: false
   weight: 0.4
   equipment: null
@@ -87299,7 +87299,7 @@
   equipment: null
 - id: 7893
   name: "Experiment bone"
-  examine: "Unpolished: This needs a good polish. Polished: This bone belongs in a museum!"
+  examine: "This needs a good polish."
   tradeable: false
   weight: 0.9
   equipment: null
@@ -87311,7 +87311,7 @@
   equipment: null
 - id: 7895
   name: "Polished experiment bone"
-  examine: "Unpolished: This needs a good polish. Polished: This bone belongs in a museum!"
+  examine: "This bone belongs in a museum!"
   tradeable: false
   weight: 0.9
   equipment: null
@@ -87813,31 +87813,31 @@
   equipment: null
 - id: 7961
   name: "Burnt diary"
-  examine: "A diary with one/two/three/four/five page(s)."
+  examine: "A diary with one page."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 7962
   name: "Burnt diary"
-  examine: "A diary with one/two/three/four/five page(s)."
+  examine: "A diary with two pages."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 7963
   name: "Burnt diary"
-  examine: "A diary with one/two/three/four/five page(s)."
+  examine: "A diary with three pages."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 7964
   name: "Burnt diary"
-  examine: "A diary with one/two/three/four/five page(s)."
+  examine: "A diary with four pages."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 7965
   name: "Burnt diary"
-  examine: "A diary with one/two/three/four/five page(s)."
+  examine: "A diary with five pages."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -88559,7 +88559,7 @@
   equipment: null
 - id: 8085
   name: "Suit of armour"
-  examine: "When unanimated: A dusty old suit of armour. When animated: Aaargh, it's alive!"
+  examine: "A dusty old suit of armour."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -89747,7 +89747,7 @@
   equipment: null
 - id: 8283
   name: "Amulet of glory"
-  examine: "Uncharged: A very powerful dragonstone amulet.  1-4 charges: A dragonstone amulet with X magic charges."
+  examine: "A very powerful dragonstone amulet."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -96112,7 +96112,7 @@
   equipment: null
 - id: 8901
   name: "Black mask (10)"
-  examine: "Charged: A magic cave horror mask.Uncharged: An inert-seeming cave horror mask."
+  examine: "A magic cave horror mask."
   tradeable: true
   weight: 10.0
   equipment:
@@ -96152,7 +96152,7 @@
   equipment: null
 - id: 8903
   name: "Black mask (9)"
-  examine: "Charged: A magic cave horror mask.Uncharged: An inert-seeming cave horror mask."
+  examine: "A magic cave horror mask."
   tradeable: true
   weight: 10.0
   equipment:
@@ -96192,7 +96192,7 @@
   equipment: null
 - id: 8905
   name: "Black mask (8)"
-  examine: "Charged: A magic cave horror mask.Uncharged: An inert-seeming cave horror mask."
+  examine: "A magic cave horror mask."
   tradeable: true
   weight: 10.0
   equipment:
@@ -96232,7 +96232,7 @@
   equipment: null
 - id: 8907
   name: "Black mask (7)"
-  examine: "Charged: A magic cave horror mask.Uncharged: An inert-seeming cave horror mask."
+  examine: "A magic cave horror mask."
   tradeable: true
   weight: 10.0
   equipment:
@@ -96272,7 +96272,7 @@
   equipment: null
 - id: 8909
   name: "Black mask (6)"
-  examine: "Charged: A magic cave horror mask.Uncharged: An inert-seeming cave horror mask."
+  examine: "A magic cave horror mask."
   tradeable: true
   weight: 10.0
   equipment:
@@ -96312,7 +96312,7 @@
   equipment: null
 - id: 8911
   name: "Black mask (5)"
-  examine: "Charged: A magic cave horror mask.Uncharged: An inert-seeming cave horror mask."
+  examine: "A magic cave horror mask."
   tradeable: true
   weight: 10.0
   equipment:
@@ -96352,7 +96352,7 @@
   equipment: null
 - id: 8913
   name: "Black mask (4)"
-  examine: "Charged: A magic cave horror mask.Uncharged: An inert-seeming cave horror mask."
+  examine: "A magic cave horror mask."
   tradeable: true
   weight: 10.0
   equipment:
@@ -96392,7 +96392,7 @@
   equipment: null
 - id: 8915
   name: "Black mask (3)"
-  examine: "Charged: A magic cave horror mask.Uncharged: An inert-seeming cave horror mask."
+  examine: "A magic cave horror mask."
   tradeable: true
   weight: 10.0
   equipment:
@@ -96432,7 +96432,7 @@
   equipment: null
 - id: 8917
   name: "Black mask (2)"
-  examine: "Charged: A magic cave horror mask.Uncharged: An inert-seeming cave horror mask."
+  examine: "A magic cave horror mask."
   tradeable: true
   weight: 10.0
   equipment:
@@ -96472,7 +96472,7 @@
   equipment: null
 - id: 8919
   name: "Black mask (1)"
-  examine: "Charged: A magic cave horror mask.Uncharged: An inert-seeming cave horror mask."
+  examine: "A magic cave horror mask."
   tradeable: true
   weight: 10.0
   equipment:
@@ -96512,7 +96512,7 @@
   equipment: null
 - id: 8921
   name: "Black mask"
-  examine: "Charged: A magic cave horror mask.Uncharged: An inert-seeming cave horror mask."
+  examine: "An inert-seeming cave horror mask."
   tradeable: true
   weight: 10.0
   equipment:
@@ -98234,7 +98234,7 @@
   equipment: null
 - id: 9044
   name: "Pharaoh's sceptre (3)"
-  examine: "Fully charged: This sceptre is fully charged."
+  examine: "An ancient and powerful sceptre."
   tradeable: true
   weight: 2.0
   equipment:
@@ -98274,7 +98274,7 @@
   equipment: null
 - id: 9046
   name: "Pharaoh's sceptre (2)"
-  examine: "Fully charged: This sceptre is fully charged."
+  examine: "An ancient and powerful sceptre."
   tradeable: true
   weight: 2.0
   equipment:
@@ -98314,7 +98314,7 @@
   equipment: null
 - id: 9048
   name: "Pharaoh's sceptre (1)"
-  examine: "Fully charged: This sceptre is fully charged."
+  examine: "An ancient and powerful sceptre."
   tradeable: true
   weight: 2.0
   equipment:
@@ -98354,7 +98354,7 @@
   equipment: null
 - id: 9050
   name: "Pharaoh's sceptre"
-  examine: "Fully charged: This sceptre is fully charged."
+  examine: "An ancient and powerful sceptre."
   tradeable: true
   weight: 2.0
   equipment:
@@ -103064,7 +103064,7 @@
   equipment: null
 - id: 9474
   name: "Reward token"
-  examine: "Blue/Red/Yellow reward token exchanged at Burgh de Rott/Paterdomus."
+  examine: "This entitles you to one free gnome food delivery."
   destroy_message: "Warning! If you destroy this item, you will lose ALL rewards that it relates to and you will have to make another trek in order to get another one."
   tradeable: false
   weight: 0.0
@@ -104381,7 +104381,7 @@
   equipment: null
 - id: 9659
   name: "Bucket of water"
-  examine: "Common bucket: It's a bucket of water.2008 Easter event: It's a bucket of water from the Easter Bunny's warren. Regular bucket filled from Braindeath Island: It's a bucket of... water?"
+  examine: "It's a bucket of water."
   destroy_message: "You can reclaim this item from the place you found it."
   tradeable: false
   weight: 3.0
@@ -113544,7 +113544,7 @@
   equipment: null
 - id: 10356
   name: "Amulet of glory (t3)"
-  examine: "Uncharged: A very powerful dragonstone amulet.  1-4 charges: A dragonstone amulet with X magic charges."
+  examine: "A very powerful dragonstone amulet."
   tradeable: true
   weight: 0.0
   equipment:
@@ -113622,7 +113622,7 @@
   equipment: null
 - id: 10360
   name: "Amulet of glory (t1)"
-  examine: "Uncharged: A very powerful dragonstone amulet.  1-4 charges: A dragonstone amulet with X magic charges."
+  examine: "A very powerful dragonstone amulet."
   tradeable: true
   weight: 0.0
   equipment:
@@ -116307,31 +116307,31 @@
   equipment: null
 - id: 10521
   name: "Collection bag"
-  examine: "A very small/small/medium-sized/large/very large collection bag."
+  examine: "A very small collection bag."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 10522
   name: "Collection bag"
-  examine: "A very small/small/medium-sized/large/very large collection bag."
+  examine: "A small collection bag."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 10523
   name: "Collection bag"
-  examine: "A very small/small/medium-sized/large/very large collection bag."
+  examine: "A medium-sized collection bag."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 10524
   name: "Collection bag"
-  examine: "A very small/small/medium-sized/large/very large collection bag."
+  examine: "A large collection bag."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 10525
   name: "Collection bag"
-  examine: "A very small/small/medium-sized/large/very large collection bag."
+  examine: "A very large collection bag."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -117453,7 +117453,7 @@
   equipment: null
 - id: 10601
   name: "Mystic hat"
-  examine: "Blue: A magical hat. "
+  examine: "A magical hat."
   tradeable: true
   weight: 0.4
   equipment:
@@ -117486,7 +117486,7 @@
     absorb_ranged: 0
 - id: 10602
   name: "Mystic hat"
-  examine: "Blue: A magical hat. "
+  examine: "A magical hat."
   tradeable: true
   weight: 0.4
   equipment:
@@ -117519,7 +117519,7 @@
     absorb_ranged: 0
 - id: 10603
   name: "Mystic hat"
-  examine: "Blue: A magical hat. "
+  examine: "A magical hat."
   tradeable: true
   weight: 0.4
   equipment:
@@ -122588,7 +122588,7 @@
   equipment: null
 - id: 10782
   name: "Gilded platebody"
-  examine: "Rune platebody with complete gold trim &amp; plating."
+  examine: "Rune platebody with complete gold trim & plating."
   tradeable: true
   weight: 10.0
   equipment:
@@ -123533,7 +123533,7 @@
   equipment: null
 - id: 10842
   name: "Decapitated head"
-  examine: "No brain: A gruesome, decapitated head, whose brain has rotted away. Brain: A gruesome, decapitated head - its eyes stare lifelessly at nothing."
+  examine: "The head of the Troll King...nice!"
   destroy_message: "You can reclaim this item from the place you found it."
   tradeable: false
   weight: 3.0
@@ -124439,21 +124439,21 @@
     attack_audio: -1
 - id: 10934
   name: "Reward token"
-  examine: "Blue/Red/Yellow reward token exchanged at Burgh de Rott/Paterdomus."
+  examine: "Yellow reward token earned from helping people journey to Burgh de Rott."
   destroy_message: "Warning! If you destroy this item, you will lose ALL rewards that it relates to and you will have to make another trek in order to get another one."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 10935
   name: "Reward token"
-  examine: "Blue/Red/Yellow reward token exchanged at Burgh de Rott/Paterdomus."
+  examine: "Red reward token earned from helping people journey to Burgh de Rott."
   destroy_message: "Warning! If you destroy this item, you will lose ALL rewards that it relates to and you will have to make another trek in order to get another one."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 10936
   name: "Reward token"
-  examine: "Blue/Red/Yellow reward token exchanged at Burgh de Rott/Paterdomus."
+  examine: "Blue reward token earned from helping people journey to Burgh de Rott."
   destroy_message: "Warning! If you destroy this item, you will lose ALL rewards that it relates to and you will have to make another trek in order to get another one."
   tradeable: false
   weight: 0.0
@@ -124562,21 +124562,21 @@
     attack_audio: -1
 - id: 10942
   name: "Reward token"
-  examine: "Blue/Red/Yellow reward token exchanged at Burgh de Rott/Paterdomus."
+  examine: "Yellow reward token earned from helping people journey to Paterdomus."
   destroy_message: "Warning! If you destroy this item, you will lose ALL rewards that it relates to and you will have to make another trek in order to get another one."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 10943
   name: "Reward token"
-  examine: "Blue/Red/Yellow reward token exchanged at Burgh de Rott/Paterdomus."
+  examine: "Red reward token earned from helping people journey to Paterdomus."
   destroy_message: "Warning! If you destroy this item, you will lose ALL rewards that it relates to and you will have to make another trek in order to get another one."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 10944
   name: "Reward token"
-  examine: "Blue/Red/Yellow reward token exchanged at Burgh de Rott/Paterdomus."
+  examine: "Blue reward token earned from helping people journey to Paterdomus."
   destroy_message: "Warning! If you destroy this item, you will lose ALL rewards that it relates to and you will have to make another trek in order to get another one."
   tradeable: false
   weight: 0.0
@@ -125015,7 +125015,7 @@
   equipment: null
 - id: 10997
   name: "Molanisk"
-  examine: "On wall: That white dot looks like an eye! Off wall: A strange mole-like being."
+  examine: "A strange mole-like being."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -126979,21 +126979,21 @@
   equipment: null
 - id: 11151
   name: "Dream vial (empty)"
-  examine: "When empty: A vessel for holding liquid. Filled with water: A vessel containing water. Filled with Goutweed: A vessel containing water and goutweed."
+  examine: "A vessel for holding liquid."
   destroy_message: "You can reclaim this item from the place you found it."
   tradeable: false
   weight: 1.0
   equipment: null
 - id: 11152
   name: "Dream vial (water)"
-  examine: "When empty: A vessel for holding liquid. Filled with water: A vessel containing water. Filled with Goutweed: A vessel containing water and goutweed."
+  examine: "A vessel containing water."
   destroy_message: "You can reclaim this item from the place you found it."
   tradeable: false
   weight: 1.0
   equipment: null
 - id: 11153
   name: "Dream vial (herb)"
-  examine: "When empty: A vessel for holding liquid. Filled with water: A vessel containing water. Filled with Goutweed: A vessel containing water and goutweed."
+  examine: "A vessel containing water and goutweed."
   destroy_message: "You can reclaim this item from the place you found it."
   tradeable: false
   weight: 1.0
@@ -130313,7 +130313,7 @@
   equipment: null
 - id: 11429
   name: "Attack mix (2)"
-  examine: "One/Two dose(s) of fishy attack potion"
+  examine: "Two doses of fishy Attack potion."
   tradeable: true
   weight: 0.1
   equipment: null
@@ -130325,7 +130325,7 @@
   equipment: null
 - id: 11431
   name: "Attack mix (1)"
-  examine: "One/Two dose(s) of fishy attack potion"
+  examine: "One dose of fishy Attack potion."
   tradeable: true
   weight: 0.1
   equipment: null
@@ -130385,7 +130385,7 @@
   equipment: null
 - id: 11441
   name: "Strength mix (1)"
-  examine: "One/two doses of fishy strength potion."
+  examine: "One dose of fishy strength potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130397,7 +130397,7 @@
   equipment: null
 - id: 11443
   name: "Strength mix (2)"
-  examine: "One/two doses of fishy strength potion."
+  examine: "Two doses of fishy strength potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130409,7 +130409,7 @@
   equipment: null
 - id: 11445
   name: "Combat mix (2)"
-  examine: "One/two doses of a fishy Combat potion"
+  examine: "Two doses of fishy combat potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130421,7 +130421,7 @@
   equipment: null
 - id: 11447
   name: "Combat mix (1)"
-  examine: "One/two doses of a fishy Combat potion"
+  examine: "One dose of fishy combat potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130433,7 +130433,7 @@
   equipment: null
 - id: 11449
   name: "Restore mix (2)"
-  examine: "One/two dose(s) of fishy restore potion."
+  examine: "Two doses of fishy restore potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130445,7 +130445,7 @@
   equipment: null
 - id: 11451
   name: "Restore mix (1)"
-  examine: "One/two dose(s) of fishy restore potion."
+  examine: "One dose of fishy restore potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130457,7 +130457,7 @@
   equipment: null
 - id: 11453
   name: "Energy mix (2)"
-  examine: "One/two doses of fishy energy potion."
+  examine: "Two doses of fishy energy potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130469,7 +130469,7 @@
   equipment: null
 - id: 11455
   name: "Energy mix (1)"
-  examine: "One/two doses of fishy energy potion."
+  examine: "One dose of fishy energy potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130481,7 +130481,7 @@
   equipment: null
 - id: 11457
   name: "Defence mix (2)"
-  examine: "One/two doses of a fishy defence potion"
+  examine: "Two doses of fishy Defence potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130493,7 +130493,7 @@
   equipment: null
 - id: 11459
   name: "Defence mix (1)"
-  examine: "One/two doses of a fishy defence potion"
+  examine: "One dose of fishy Defence potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130529,7 +130529,7 @@
   equipment: null
 - id: 11465
   name: "Prayer mix (2)"
-  examine: "One/two dose(s) of a fishy Prayer potion."
+  examine: "Two doses of fishy Prayer potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130541,7 +130541,7 @@
   equipment: null
 - id: 11467
   name: "Prayer mix (1)"
-  examine: "One/two dose(s) of a fishy Prayer potion."
+  examine: "One dose of fishy Prayer potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130553,7 +130553,7 @@
   equipment: null
 - id: 11469
   name: "Super attack mix (2)"
-  examine: "one/two doses of fishy super attack potion"
+  examine: "Two doses of fishy super attack potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130565,7 +130565,7 @@
   equipment: null
 - id: 11471
   name: "Super attack mix (1)"
-  examine: "one/two doses of fishy super attack potion"
+  examine: "One dose of fishy super attack potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130577,7 +130577,7 @@
   equipment: null
 - id: 11473
   name: "Anti-p supermix (2)"
-  examine: "One/Two dose(s) of fishy super antipoison potion."
+  examine: "Two doses of fishy super antipoison potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130589,7 +130589,7 @@
   equipment: null
 - id: 11475
   name: "Anti-p supermix (1)"
-  examine: "One/Two dose(s) of fishy super antipoison potion."
+  examine: "One dose of fishy super antipoison potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130601,7 +130601,7 @@
   equipment: null
 - id: 11477
   name: "Fishing mix (2)"
-  examine: "One/Two Doses of fishy fishing potion."
+  examine: "Two doses of fishy Fishing potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130613,7 +130613,7 @@
   equipment: null
 - id: 11479
   name: "Fishing mix (1)"
-  examine: "One/Two Doses of fishy fishing potion."
+  examine: "One dose of fishy Fishing potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130625,7 +130625,7 @@
   equipment: null
 - id: 11481
   name: "Super energy mix (2)"
-  examine: "One/Two doses of fishy super energy potion."
+  examine: "Two doses of fishy super energy potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130637,7 +130637,7 @@
   equipment: null
 - id: 11483
   name: "Super energy mix (1)"
-  examine: "One/Two doses of fishy super energy potion."
+  examine: "One dose of fishy super energy potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130649,7 +130649,7 @@
   equipment: null
 - id: 11485
   name: "Super strength mix (2)"
-  examine: "One/Two doses of fishy Super strength potion."
+  examine: "Two doses of fishy Super strength potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130661,7 +130661,7 @@
   equipment: null
 - id: 11487
   name: "Super strength mix (1)"
-  examine: "One/Two doses of fishy Super strength potion."
+  examine: "One dose of fishy Super strength potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130673,7 +130673,7 @@
   equipment: null
 - id: 11489
   name: "Magic essence mix (2)"
-  examine: "One/Two doses of fishy Magic essence potion."
+  examine: "Two doses of fishy Magic essence."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130685,7 +130685,7 @@
   equipment: null
 - id: 11491
   name: "Magic essence mix (1)"
-  examine: "One/Two doses of fishy Magic essence potion."
+  examine: "One dose of fishy Magic essence."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130697,7 +130697,7 @@
   equipment: null
 - id: 11493
   name: "Super restore mix (2)"
-  examine: "One/Two doses of fishy super restore potion."
+  examine: "Two doses of fishy super restore potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130709,7 +130709,7 @@
   equipment: null
 - id: 11495
   name: "Super restore mix (1)"
-  examine: "One/Two doses of fishy super restore potion."
+  examine: "One dose of fishy super restore potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130721,7 +130721,7 @@
   equipment: null
 - id: 11497
   name: "Super defence mix (2)"
-  examine: "One/two doses of fishy super defence potion"
+  examine: "Two doses of fishy super defence potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130733,7 +130733,7 @@
   equipment: null
 - id: 11499
   name: "Super defence mix (1)"
-  examine: "One/two doses of fishy super defence potion"
+  examine: "One dose of fishy super defence potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130745,7 +130745,7 @@
   equipment: null
 - id: 11501
   name: "Antidote+ mix (2)"
-  examine: "One/Two doses of fishy extra strength antidote potion."
+  examine: "Two doses of fishy extra strength antidote potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130757,7 +130757,7 @@
   equipment: null
 - id: 11503
   name: "Antidote+ mix (1)"
-  examine: "One/Two doses of fishy extra strength antidote potion."
+  examine: "One dose of fishy extra strength antidote potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130769,7 +130769,7 @@
   equipment: null
 - id: 11505
   name: "Antifire mix (2)"
-  examine: "One/Two dose(s) of fishy anti-fire breath potion."
+  examine: "Two doses of fishy anti-firebreath potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130781,7 +130781,7 @@
   equipment: null
 - id: 11507
   name: "Antifire mix (1)"
-  examine: "One/Two dose(s) of fishy anti-fire breath potion."
+  examine: "One dose of fishy anti-firebreath potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130793,7 +130793,7 @@
   equipment: null
 - id: 11509
   name: "Ranging mix (2)"
-  examine: "One/Two doses of fishy ranging potion."
+  examine: "Two doses of fishy ranging potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130805,7 +130805,7 @@
   equipment: null
 - id: 11511
   name: "Ranging mix (1)"
-  examine: "One/Two doses of fishy ranging potion."
+  examine: "One dose of fishy ranging potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130817,7 +130817,7 @@
   equipment: null
 - id: 11513
   name: "Magic mix (2)"
-  examine: "One/Two doses of fishy magic potion."
+  examine: "Two doses of fishy Magic potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130829,7 +130829,7 @@
   equipment: null
 - id: 11515
   name: "Magic mix (1)"
-  examine: "One/Two doses of fishy magic potion."
+  examine: "One dose of fishy Magic potion."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130865,7 +130865,7 @@
   equipment: null
 - id: 11521
   name: "Zamorak mix (2)"
-  examine: "One/Two doses of fishy Zamorak potion."
+  examine: "Two doses of fishy Zamorak brew."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -130877,7 +130877,7 @@
   equipment: null
 - id: 11523
   name: "Zamorak mix (1)"
-  examine: "One/Two doses of fishy Zamorak potion."
+  examine: "One dose of fishy Zamorak brew."
   tradeable: true
   weight: 0.0
   equipment: null
@@ -133208,14 +133208,14 @@
   equipment: null
 - id: 11761
   name: "Locked diary"
-  examine: "A locked/unlocked diary."
+  examine: "A locked diary."
   destroy_message: "You can get the diary again from Sandy's desk."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 11762
   name: "Unlocked diary"
-  examine: "A locked/unlocked diary."
+  examine: "An unlocked diary."
   destroy_message: "You can get the diary again from Sandy's desk."
   tradeable: false
   weight: 0.0
@@ -136008,19 +136008,19 @@
   equipment: null
 - id: 12185
   name: "Saradomin owl"
-  examine: "Chick: A fluffy chick.Bird: Lovely blue plumage.Owl: A fantastic saradomin owl."
+  examine: "A fantastic saradomin owl."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12186
   name: "Zamorak hawk"
-  examine: "Chick: A fluffy chick.Bird: Lovely red plumage.Hawk: A stately zamorak hawk."
+  examine: "A stately zamorak hawk."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12187
   name: "Guthix raptor"
-  examine: "Chick: A fluffy chick.Bird: Lovely green plumage.Raptor: An impressive Guthix raptor."
+  examine: "An impressive Guthix raptor."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -136050,7 +136050,7 @@
   equipment: null
 - id: 12192
   name: "Greyhound puppy"
-  examine: "This is one fast little pooch. (Puppy)An aerodynamic doggy. (Adult)"
+  examine: "This is one fast little pooch."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -136062,19 +136062,19 @@
   equipment: null
 - id: 12194
   name: "Dalmatian puppy"
-  examine: "Now, if only I could find another hundred... (Puppy)A purebred doggy. (Adult)"
+  examine: "Now, if only I could find another hundred..."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12195
   name: "Sheepdog puppy"
-  examine: "This little puppy is very quiet. (Puppy)Come by! Come by! (Adult)"
+  examine: "This little puppy is very quiet."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12196
   name: "Bulldog puppy"
-  examine: "One proud little puppy. (Puppy)Looks like it's chewing a wasp. (Adult)"
+  examine: "One proud little puppy."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -136086,7 +136086,7 @@
   equipment: null
 - id: 12198
   name: "Baby giant crab"
-  examine: "Baby: Little NipperAdult: Bigger Nipper."
+  examine: "Little Nipper."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -136098,7 +136098,7 @@
   equipment: null
 - id: 12200
   name: "Squirrel"
-  examine: "Adult: An experienced nut-thief.Baby: A tiny nut-thief."
+  examine: "An experienced nut-thief."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -138187,7 +138187,7 @@
   equipment: null
 - id: 12484
   name: "Raven chick"
-  examine: "Chick: A raven chick."
+  examine: "A raven chick."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -138223,13 +138223,13 @@
   equipment: null
 - id: 12490
   name: "Baby squirrel"
-  examine: "Adult: An experienced nut-thief.Baby: A tiny nut-thief."
+  examine: "A tiny nut-thief."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12491
   name: "Squirrel"
-  examine: "Adult: An experienced nut-thief.Baby: A tiny nut-thief."
+  examine: "An experienced nut-thief."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -138283,13 +138283,13 @@
   equipment: null
 - id: 12500
   name: "Baby giant crab"
-  examine: "Baby: Little NipperAdult: Bigger Nipper."
+  examine: "Little Nipper."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12501
   name: "Giant crab"
-  examine: "Baby: Little NipperAdult: Bigger Nipper."
+  examine: "Bigger Nipper."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -138301,55 +138301,55 @@
   equipment: null
 - id: 12503
   name: "Saradomin chick"
-  examine: "Chick: A fluffy chick.Bird: Lovely blue plumage.Owl: A fantastic saradomin owl."
+  examine: "A fluffy chick."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12504
   name: "Saradomin bird"
-  examine: "Chick: A fluffy chick.Bird: Lovely blue plumage.Owl: A fantastic saradomin owl."
+  examine: "Lovely blue plumage."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12505
   name: "Saradomin owl"
-  examine: "Chick: A fluffy chick.Bird: Lovely blue plumage.Owl: A fantastic saradomin owl."
+  examine: "A fantastic saradomin owl."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12506
   name: "Zamorak chick"
-  examine: "Chick: A fluffy chick.Bird: Lovely red plumage.Hawk: A stately zamorak hawk."
+  examine: "A fluffy chick."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12507
   name: "Zamorak bird"
-  examine: "Chick: A fluffy chick.Bird: Lovely red plumage.Hawk: A stately zamorak hawk."
+  examine: "Lovely red plumage."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12508
   name: "Zamorak hawk"
-  examine: "Chick: A fluffy chick.Bird: Lovely red plumage.Hawk: A stately zamorak hawk."
+  examine: "A stately zamorak hawk."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12509
   name: "Guthix chick"
-  examine: "Chick: A fluffy chick.Bird: Lovely green plumage.Raptor: An impressive Guthix raptor."
+  examine: "A fluffy chick."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12510
   name: "Guthix bird"
-  examine: "Chick: A fluffy chick.Bird: Lovely green plumage.Raptor: An impressive Guthix raptor."
+  examine: "Lovely green plumage."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12511
   name: "Guthix raptor"
-  examine: "Chick: A fluffy chick.Bird: Lovely green plumage.Raptor: An impressive Guthix raptor."
+  examine: "An impressive Guthix raptor."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -138367,13 +138367,13 @@
   equipment: null
 - id: 12514
   name: "Greyhound puppy"
-  examine: "This is one fast little pooch. (Puppy)An aerodynamic doggy. (Adult)"
+  examine: "This is one fast little pooch."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12515
   name: "Greyhound"
-  examine: "This is one fast little pooch. (Puppy)An aerodynamic doggy. (Adult)"
+  examine: "An aerodynamic doggy."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -138391,37 +138391,37 @@
   equipment: null
 - id: 12518
   name: "Dalmatian puppy"
-  examine: "Now, if only I could find another hundred... (Puppy)A purebred doggy. (Adult)"
+  examine: "Now, if only I could find another hundred..."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12519
   name: "Dalmatian"
-  examine: "Now, if only I could find another hundred... (Puppy)A purebred doggy. (Adult)"
+  examine: "A purebred doggy."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12520
   name: "Sheepdog puppy"
-  examine: "This little puppy is very quiet. (Puppy)Come by! Come by! (Adult)"
+  examine: "This little puppy is very quiet."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12521
   name: "Sheepdog"
-  examine: "This little puppy is very quiet. (Puppy)Come by! Come by! (Adult)"
+  examine: "Come by! Come by!"
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12522
   name: "Bulldog puppy"
-  examine: "One proud little puppy. (Puppy)Looks like it's chewing a wasp. (Adult)"
+  examine: "One proud little puppy."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12523
   name: "Bulldog"
-  examine: "One proud little puppy. (Puppy)Looks like it's chewing a wasp. (Adult)"
+  examine: "Looks like it's chewing a wasp."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -139785,13 +139785,13 @@
   equipment: null
 - id: 12650
   name: "Bucket of water"
-  examine: "Common bucket: It's a bucket of water.2008 Easter event: It's a bucket of water from the Easter Bunny's warren. Regular bucket filled from Braindeath Island: It's a bucket of... water?"
+  examine: "It's a bucket of water."
   tradeable: true
   weight: 3.0
   equipment: null
 - id: 12651
   name: "Bucket of water"
-  examine: "Common bucket: It's a bucket of water.2008 Easter event: It's a bucket of water from the Easter Bunny's warren. Regular bucket filled from Braindeath Island: It's a bucket of... water?"
+  examine: "It's a bucket of water."
   tradeable: true
   weight: 3.0
   equipment: null
@@ -140756,25 +140756,25 @@
   equipment: null
 - id: 12704
   name: "Greyhound puppy"
-  examine: "This is one fast little pooch. (Puppy)An aerodynamic doggy. (Adult)"
+  examine: "This is one fast little pooch."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12705
   name: "Greyhound"
-  examine: "This is one fast little pooch. (Puppy)An aerodynamic doggy. (Adult)"
+  examine: "An aerodynamic doggy."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12706
   name: "Greyhound puppy"
-  examine: "This is one fast little pooch. (Puppy)An aerodynamic doggy. (Adult)"
+  examine: "This is one fast little pooch."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12707
   name: "Greyhound"
-  examine: "This is one fast little pooch. (Puppy)An aerodynamic doggy. (Adult)"
+  examine: "An aerodynamic doggy."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -140804,79 +140804,79 @@
   equipment: null
 - id: 12712
   name: "Dalmatian puppy"
-  examine: "Now, if only I could find another hundred... (Puppy)A purebred doggy. (Adult)"
+  examine: "Now, if only I could find another hundred..."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12713
   name: "Dalmatian"
-  examine: "Now, if only I could find another hundred... (Puppy)A purebred doggy. (Adult)"
+  examine: "A purebred doggy."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12714
   name: "Dalmatian puppy"
-  examine: "Now, if only I could find another hundred... (Puppy)A purebred doggy. (Adult)"
+  examine: "Now, if only I could find another hundred..."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12715
   name: "Dalmatian"
-  examine: "Now, if only I could find another hundred... (Puppy)A purebred doggy. (Adult)"
+  examine: "A purebred doggy."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12716
   name: "Sheepdog puppy"
-  examine: "This little puppy is very quiet. (Puppy)Come by! Come by! (Adult)"
+  examine: "This little puppy is very quiet."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12717
   name: "Sheepdog"
-  examine: "This little puppy is very quiet. (Puppy)Come by! Come by! (Adult)"
+  examine: "Come by! Come by!"
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12718
   name: "Sheepdog puppy"
-  examine: "This little puppy is very quiet. (Puppy)Come by! Come by! (Adult)"
+  examine: "This little puppy is very quiet."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12719
   name: "Sheepdog"
-  examine: "This little puppy is very quiet. (Puppy)Come by! Come by! (Adult)"
+  examine: "Come by! Come by!"
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12720
   name: "Bulldog puppy"
-  examine: "One proud little puppy. (Puppy)Looks like it's chewing a wasp. (Adult)"
+  examine: "One proud little puppy."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12721
   name: "Bulldog"
-  examine: "One proud little puppy. (Puppy)Looks like it's chewing a wasp. (Adult)"
+  examine: "Looks like it's chewing a wasp."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12722
   name: "Bulldog puppy"
-  examine: "One proud little puppy. (Puppy)Looks like it's chewing a wasp. (Adult)"
+  examine: "One proud little puppy."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12723
   name: "Bulldog"
-  examine: "One proud little puppy. (Puppy)Looks like it's chewing a wasp. (Adult)"
+  examine: "Looks like it's chewing a wasp."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12724
   name: "Raven chick"
-  examine: "Chick: A raven chick."
+  examine: "A raven chick."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -140888,7 +140888,7 @@
   equipment: null
 - id: 12726
   name: "Raven chick"
-  examine: "Chick: A raven chick."
+  examine: "A raven chick."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -140900,7 +140900,7 @@
   equipment: null
 - id: 12728
   name: "Raven chick"
-  examine: "Chick: A raven chick."
+  examine: "A raven chick."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -140912,7 +140912,7 @@
   equipment: null
 - id: 12730
   name: "Raven chick"
-  examine: "Chick: A raven chick."
+  examine: "A raven chick."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -140924,7 +140924,7 @@
   equipment: null
 - id: 12732
   name: "Raven chick"
-  examine: "Chick: A raven chick."
+  examine: "A raven chick."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -141008,97 +141008,97 @@
   equipment: null
 - id: 12746
   name: "Baby giant crab"
-  examine: "Baby: Little NipperAdult: Bigger Nipper."
+  examine: "Little Nipper."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12747
   name: "Giant crab"
-  examine: "Baby: Little NipperAdult: Bigger Nipper."
+  examine: "Bigger Nipper."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12748
   name: "Baby giant crab"
-  examine: "Baby: Little NipperAdult: Bigger Nipper."
+  examine: "Little Nipper."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12749
   name: "Giant crab"
-  examine: "Baby: Little NipperAdult: Bigger Nipper."
+  examine: "Bigger Nipper."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12750
   name: "Baby giant crab"
-  examine: "Baby: Little NipperAdult: Bigger Nipper."
+  examine: "Little Nipper."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12751
   name: "Giant crab"
-  examine: "Baby: Little NipperAdult: Bigger Nipper."
+  examine: "Bigger Nipper."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12752
   name: "Baby giant crab"
-  examine: "Baby: Little NipperAdult: Bigger Nipper."
+  examine: "Little Nipper."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12753
   name: "Giant crab"
-  examine: "Baby: Little NipperAdult: Bigger Nipper."
+  examine: "Bigger Nipper."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12754
   name: "Baby squirrel"
-  examine: "Adult: An experienced nut-thief.Baby: A tiny nut-thief."
+  examine: "A tiny nut-thief."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12755
   name: "Squirrel"
-  examine: "Adult: An experienced nut-thief.Baby: A tiny nut-thief."
+  examine: "An experienced nut-thief."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12756
   name: "Baby squirrel"
-  examine: "Adult: An experienced nut-thief.Baby: A tiny nut-thief."
+  examine: "A tiny nut-thief."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12757
   name: "Squirrel"
-  examine: "Adult: An experienced nut-thief.Baby: A tiny nut-thief."
+  examine: "An experienced nut-thief."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12758
   name: "Baby squirrel"
-  examine: "Adult: An experienced nut-thief.Baby: A tiny nut-thief."
+  examine: "A tiny nut-thief."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12759
   name: "Squirrel"
-  examine: "Adult: An experienced nut-thief.Baby: A tiny nut-thief."
+  examine: "An experienced nut-thief."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12760
   name: "Baby squirrel"
-  examine: "Adult: An experienced nut-thief.Baby: A tiny nut-thief."
+  examine: "A tiny nut-thief."
   tradeable: false
   weight: 0.0
   equipment: null
 - id: 12761
   name: "Squirrel"
-  examine: "Adult: An experienced nut-thief.Baby: A tiny nut-thief."
+  examine: "An experienced nut-thief."
   tradeable: false
   weight: 0.0
   equipment: null
@@ -143390,7 +143390,7 @@
   equipment: null
 - id: 12908
   name: "Adamant spikeshield 100"
-  examine: "Charged: A spiked square shield.Uncharged: Not so spiky anymore."
+  examine: "A spiked square shield."
   tradeable: true
   weight: 5.0
   equipment:
@@ -143424,7 +143424,7 @@
     absorb_ranged: 6
 - id: 12909
   name: "Adamant spikeshield 80"
-  examine: "Charged: A spiked square shield.Uncharged: Not so spiky anymore."
+  examine: "A spiked square shield."
   tradeable: true
   weight: 5.0
   equipment:
@@ -143458,7 +143458,7 @@
     absorb_ranged: 6
 - id: 12910
   name: "Adamant spikeshield 60"
-  examine: "Charged: A spiked square shield.Uncharged: Not so spiky anymore."
+  examine: "A spiked square shield."
   tradeable: true
   weight: 5.0
   equipment:
@@ -143492,7 +143492,7 @@
     absorb_ranged: 6
 - id: 12911
   name: "Adamant spikeshield 40"
-  examine: "Charged: A spiked square shield.Uncharged: Not so spiky anymore."
+  examine: "A spiked square shield."
   tradeable: true
   weight: 5.0
   equipment:
@@ -143526,7 +143526,7 @@
     absorb_ranged: 6
 - id: 12912
   name: "Adamant spikeshield 20"
-  examine: "Charged: A spiked square shield.Uncharged: Not so spiky anymore."
+  examine: "A spiked square shield."
   tradeable: true
   weight: 5.0
   equipment:
@@ -143560,7 +143560,7 @@
     absorb_ranged: 6
 - id: 12913
   name: "Adamant spikeshield 0"
-  examine: "Charged: A spiked square shield.Uncharged: Not so spiky anymore."
+  examine: "Not so spiky anymore."
   tradeable: true
   weight: 5.0
   equipment:
@@ -143600,7 +143600,7 @@
   equipment: null
 - id: 12915
   name: "Adamant berserker shield 100"
-  examine: "Charged: A large, spiked metal shieldUncharged: Not so spiky anymore!"
+  examine: "A large, spiked metal shield."
   tradeable: true
   weight: 7.0
   equipment:
@@ -143634,7 +143634,7 @@
     absorb_ranged: 6
 - id: 12916
   name: "Adamant berserker shield 80"
-  examine: "Charged: A large, spiked metal shieldUncharged: Not so spiky anymore!"
+  examine: "A large, spiked metal shield."
   tradeable: true
   weight: 7.0
   equipment:
@@ -143668,7 +143668,7 @@
     absorb_ranged: 6
 - id: 12917
   name: "Adamant berserker shield 60"
-  examine: "Charged: A large, spiked metal shieldUncharged: Not so spiky anymore!"
+  examine: "A large, spiked metal shield."
   tradeable: true
   weight: 7.0
   equipment:
@@ -143702,7 +143702,7 @@
     absorb_ranged: 6
 - id: 12918
   name: "Adamant berserker shield 40"
-  examine: "Charged: A large, spiked metal shieldUncharged: Not so spiky anymore!"
+  examine: "A large, spiked metal shield."
   tradeable: true
   weight: 7.0
   equipment:
@@ -143736,7 +143736,7 @@
     absorb_ranged: 6
 - id: 12919
   name: "Adamant berserker shield 20"
-  examine: "Charged: A large, spiked metal shieldUncharged: Not so spiky anymore!"
+  examine: "A large, spiked metal shield."
   tradeable: true
   weight: 7.0
   equipment:
@@ -143770,7 +143770,7 @@
     absorb_ranged: 6
 - id: 12920
   name: "Adamant berserker shield 0"
-  examine: "Charged: A large, spiked metal shieldUncharged: Not so spiky anymore!"
+  examine: "Not so spiky anymore!"
   tradeable: true
   weight: 7.0
   equipment:
@@ -143980,7 +143980,7 @@
     absorb_ranged: 7
 - id: 12927
   name: "Rune spikeshield 0"
-  examine: "Uncharged: Not so spiky anymore."
+  examine: "Not so spiky anymore."
   tradeable: true
   weight: 4.0
   equipment:
@@ -144020,7 +144020,7 @@
   equipment: null
 - id: 12929
   name: "Rune berserker shield 100"
-  examine: "Charged: A Large, spiked metal shield. Uncharged: Not so spiky anymore."
+  examine: "A Large, spiked metal shield."
   tradeable: true
   weight: 6.0
   equipment:
@@ -144054,7 +144054,7 @@
     absorb_ranged: 7
 - id: 12930
   name: "Rune berserker shield 80"
-  examine: "Charged: A Large, spiked metal shield. Uncharged: Not so spiky anymore."
+  examine: "A Large, spiked metal shield."
   tradeable: true
   weight: 6.0
   equipment:
@@ -144088,7 +144088,7 @@
     absorb_ranged: 7
 - id: 12931
   name: "Rune berserker shield 60"
-  examine: "Charged: A Large, spiked metal shield. Uncharged: Not so spiky anymore."
+  examine: "A Large, spiked metal shield."
   tradeable: true
   weight: 6.0
   equipment:
@@ -144122,7 +144122,7 @@
     absorb_ranged: 7
 - id: 12932
   name: "Rune berserker shield 40"
-  examine: "Charged: A Large, spiked metal shield. Uncharged: Not so spiky anymore."
+  examine: "A Large, spiked metal shield."
   tradeable: true
   weight: 6.0
   equipment:
@@ -144156,7 +144156,7 @@
     absorb_ranged: 7
 - id: 12933
   name: "Rune berserker shield 20"
-  examine: "Charged: A Large, spiked metal shield. Uncharged: Not so spiky anymore."
+  examine: "A Large, spiked metal shield."
   tradeable: true
   weight: 6.0
   equipment:
@@ -144190,7 +144190,7 @@
     absorb_ranged: 7
 - id: 12934
   name: "Rune berserker shield 0"
-  examine: "Charged: A Large, spiked metal shield. Uncharged: Not so spiky anymore."
+  examine: "Not so spiky anymore."
   tradeable: true
   weight: 6.0
   equipment:
@@ -144230,7 +144230,7 @@
   equipment: null
 - id: 12936
   name: "Green d'hide coif 100"
-  examine: "Fully charged: A coif made of green dragonhide. Fully degraded: A worn out coif made of green dragonhide."
+  examine: "A coif made of green dragonhide."
   tradeable: true
   weight: 0.9
   equipment:
@@ -144264,7 +144264,7 @@
     absorb_ranged: 1
 - id: 12937
   name: "Green d'hide coif 80"
-  examine: "Fully charged: A coif made of green dragonhide. Fully degraded: A worn out coif made of green dragonhide."
+  examine: "A coif made of green dragonhide."
   tradeable: true
   weight: 0.9
   equipment:
@@ -144298,7 +144298,7 @@
     absorb_ranged: 1
 - id: 12938
   name: "Green d'hide coif 60"
-  examine: "Fully charged: A coif made of green dragonhide. Fully degraded: A worn out coif made of green dragonhide."
+  examine: "A coif made of green dragonhide."
   tradeable: true
   weight: 0.9
   equipment:
@@ -144332,7 +144332,7 @@
     absorb_ranged: 1
 - id: 12939
   name: "Green d'hide coif 40"
-  examine: "Fully charged: A coif made of green dragonhide. Fully degraded: A worn out coif made of green dragonhide."
+  examine: "A coif made of green dragonhide."
   tradeable: true
   weight: 0.9
   equipment:
@@ -144366,7 +144366,7 @@
     absorb_ranged: 1
 - id: 12940
   name: "Green d'hide coif 20"
-  examine: "Fully charged: A coif made of green dragonhide. Fully degraded: A worn out coif made of green dragonhide."
+  examine: "A coif made of green dragonhide."
   tradeable: true
   weight: 0.9
   equipment:
@@ -144400,7 +144400,7 @@
     absorb_ranged: 1
 - id: 12941
   name: "Green d'hide coif 0"
-  examine: "Fully charged: A coif made of green dragonhide. Fully degraded: A worn out coif made of green dragonhide."
+  examine: "A worn out coif made of green dragonhide."
   tradeable: true
   weight: 0.9
   equipment:
@@ -144440,7 +144440,7 @@
   equipment: null
 - id: 12943
   name: "Blue d'hide coif 100"
-  examine: "Fully charged: A coif made of blue dragonhide. Fully degraded: A worn out coif made of blue dragonhide."
+  examine: "A coif made of blue dragonhide."
   tradeable: true
   weight: 1.0
   equipment:
@@ -144474,7 +144474,7 @@
     absorb_ranged: 1
 - id: 12944
   name: "Blue d'hide coif 80"
-  examine: "Fully charged: A coif made of blue dragonhide. Fully degraded: A worn out coif made of blue dragonhide."
+  examine: "A coif made of blue dragonhide."
   tradeable: true
   weight: 1.0
   equipment:
@@ -144508,7 +144508,7 @@
     absorb_ranged: 1
 - id: 12945
   name: "Blue d'hide coif 60"
-  examine: "Fully charged: A coif made of blue dragonhide. Fully degraded: A worn out coif made of blue dragonhide."
+  examine: "A coif made of blue dragonhide."
   tradeable: true
   weight: 1.0
   equipment:
@@ -144542,7 +144542,7 @@
     absorb_ranged: 1
 - id: 12946
   name: "Blue d'hide coif 40"
-  examine: "Fully charged: A coif made of blue dragonhide. Fully degraded: A worn out coif made of blue dragonhide."
+  examine: "A coif made of blue dragonhide."
   tradeable: true
   weight: 1.0
   equipment:
@@ -144576,7 +144576,7 @@
     absorb_ranged: 1
 - id: 12947
   name: "Blue d'hide coif 20"
-  examine: "Fully charged: A coif made of blue dragonhide. Fully degraded: A worn out coif made of blue dragonhide."
+  examine: "A coif made of blue dragonhide."
   tradeable: true
   weight: 1.0
   equipment:
@@ -144610,7 +144610,7 @@
     absorb_ranged: 1
 - id: 12948
   name: "Blue d'hide coif 0"
-  examine: "Fully charged: A coif made of blue dragonhide. Fully degraded: A worn out coif made of blue dragonhide."
+  examine: "A worn out coif made of blue dragonhide."
   tradeable: true
   weight: 1.0
   equipment:
@@ -144650,7 +144650,7 @@
   equipment: null
 - id: 12950
   name: "Red d'hide coif 100"
-  examine: "Fully charged: A coif made of red dragonhide.Fully degraded: A worn out coif made of red dragonhide."
+  examine: "A coif made of red dragonhide."
   tradeable: true
   weight: 1.0
   equipment:
@@ -144684,7 +144684,7 @@
     absorb_ranged: 1
 - id: 12951
   name: "Red d'hide coif 80"
-  examine: "Fully charged: A coif made of red dragonhide.Fully degraded: A worn out coif made of red dragonhide."
+  examine: "A coif made of red dragonhide."
   tradeable: true
   weight: 1.0
   equipment:
@@ -144718,7 +144718,7 @@
     absorb_ranged: 1
 - id: 12952
   name: "Red d'hide coif 60"
-  examine: "Fully charged: A coif made of red dragonhide.Fully degraded: A worn out coif made of red dragonhide."
+  examine: "A coif made of red dragonhide."
   tradeable: true
   weight: 1.0
   equipment:
@@ -144752,7 +144752,7 @@
     absorb_ranged: 1
 - id: 12953
   name: "Red d'hide coif 40"
-  examine: "Fully charged: A coif made of red dragonhide.Fully degraded: A worn out coif made of red dragonhide."
+  examine: "A coif made of red dragonhide."
   tradeable: true
   weight: 1.0
   equipment:
@@ -144786,7 +144786,7 @@
     absorb_ranged: 1
 - id: 12954
   name: "Red d'hide coif 20"
-  examine: "Fully charged: A coif made of red dragonhide.Fully degraded: A worn out coif made of red dragonhide."
+  examine: "A coif made of red dragonhide."
   tradeable: true
   weight: 1.0
   equipment:
@@ -144820,7 +144820,7 @@
     absorb_ranged: 1
 - id: 12955
   name: "Red d'hide coif 0"
-  examine: "Fully charged: A coif made of red dragonhide.Fully degraded: A worn out coif made of red dragonhide."
+  examine: "A worn out coif made of red dragonhide."
   tradeable: true
   weight: 1.0
   equipment:
@@ -144860,7 +144860,7 @@
   equipment: null
 - id: 12957
   name: "Black d'hide coif 100"
-  examine: "Fully charged: A coif made of black dragonhide. Fully degraded: A worn out coif made of black dragonhide."
+  examine: "A coif made of black dragonhide."
   tradeable: true
   weight: 1.0
   equipment:
@@ -144894,7 +144894,7 @@
     absorb_ranged: 1
 - id: 12958
   name: "Black d'hide coif 80"
-  examine: "Fully charged: A coif made of black dragonhide. Fully degraded: A worn out coif made of black dragonhide."
+  examine: "A coif made of black dragonhide."
   tradeable: true
   weight: 1.0
   equipment:
@@ -144928,7 +144928,7 @@
     absorb_ranged: 1
 - id: 12959
   name: "Black d'hide coif 60"
-  examine: "Fully charged: A coif made of black dragonhide. Fully degraded: A worn out coif made of black dragonhide."
+  examine: "A coif made of black dragonhide."
   tradeable: true
   weight: 1.0
   equipment:
@@ -144962,7 +144962,7 @@
     absorb_ranged: 1
 - id: 12960
   name: "Black d'hide coif 40"
-  examine: "Fully charged: A coif made of black dragonhide. Fully degraded: A worn out coif made of black dragonhide."
+  examine: "A coif made of black dragonhide."
   tradeable: true
   weight: 1.0
   equipment:
@@ -144996,7 +144996,7 @@
     absorb_ranged: 1
 - id: 12961
   name: "Black d'hide coif 20"
-  examine: "Fully charged: A coif made of black dragonhide. Fully degraded: A worn out coif made of black dragonhide."
+  examine: "A coif made of black dragonhide."
   tradeable: true
   weight: 1.0
   equipment:
@@ -145030,7 +145030,7 @@
     absorb_ranged: 1
 - id: 12962
   name: "Black d'hide coif 0"
-  examine: "Fully charged: A coif made of black dragonhide. Fully degraded: A worn out coif made of black dragonhide."
+  examine: "A worn out coif made of black dragonhide."
   tradeable: true
   weight: 1.0
   equipment:
@@ -146140,7 +146140,7 @@
   equipment: null
 - id: 13003
   name: "Rune gauntlets"
-  examine: "Fully charged: I have to keep my hands safe!  Worn-Out: A bit worse for wear."
+  examine: "I have to keep my hands safe!"
   tradeable: true
   weight: 0.2
   equipment:
@@ -146174,7 +146174,7 @@
     absorb_ranged: 0
 - id: 13004
   name: "Worn-out rune gauntlets"
-  examine: "Fully charged: I have to keep my hands safe!  Worn-Out: A bit worse for wear."
+  examine: "A bit worse for wear."
   tradeable: true
   weight: 0.2
   equipment:
@@ -146214,7 +146214,7 @@
   equipment: null
 - id: 13006
   name: "Dragon gauntlets"
-  examine: "Uncharged: A bit worse for wear. Charged: I have to keep my hands safe!"
+  examine: "I have to keep my hands safe!"
   tradeable: true
   weight: 0.2
   equipment:
@@ -146248,7 +146248,7 @@
     absorb_ranged: 0
 - id: 13007
   name: "Worn-out dragon gauntlets"
-  examine: "Uncharged: A bit worse for wear. Charged: I have to keep my hands safe!"
+  examine: "A bit worse for wear."
   tradeable: false
   weight: 0.2
   equipment:
@@ -147369,7 +147369,7 @@
   equipment: null
 - id: 13117
   name: "Ivandis flail (30)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A fully charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -147402,7 +147402,7 @@
     absorb_ranged: 0
 - id: 13118
   name: "Ivandis flail (29)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -147468,7 +147468,7 @@
     absorb_ranged: 0
 - id: 13120
   name: "Ivandis flail (27)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -147501,7 +147501,7 @@
     absorb_ranged: 0
 - id: 13121
   name: "Ivandis flail (26)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -147534,7 +147534,7 @@
     absorb_ranged: 0
 - id: 13122
   name: "Ivandis flail (25)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -147567,7 +147567,7 @@
     absorb_ranged: 0
 - id: 13123
   name: "Ivandis flail (24)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -147600,7 +147600,7 @@
     absorb_ranged: 0
 - id: 13124
   name: "Ivandis flail (23)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -147633,7 +147633,7 @@
     absorb_ranged: 0
 - id: 13125
   name: "Ivandis flail (22)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -147666,7 +147666,7 @@
     absorb_ranged: 0
 - id: 13126
   name: "Ivandis flail (21)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -147699,7 +147699,7 @@
     absorb_ranged: 0
 - id: 13127
   name: "Ivandis flail (20)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -147732,7 +147732,7 @@
     absorb_ranged: 0
 - id: 13128
   name: "Ivandis flail (19)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -147765,7 +147765,7 @@
     absorb_ranged: 0
 - id: 13129
   name: "Ivandis flail (18)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -147798,7 +147798,7 @@
     absorb_ranged: 0
 - id: 13130
   name: "Ivandis flail (17)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -147828,7 +147828,7 @@
     attack_audio: -1
 - id: 13131
   name: "Ivandis flail (16)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -147858,7 +147858,7 @@
     attack_audio: -1
 - id: 13132
   name: "Ivandis flail (15)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -147891,7 +147891,7 @@
     absorb_ranged: 0
 - id: 13133
   name: "Ivandis flail (14)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -147924,7 +147924,7 @@
     absorb_ranged: 0
 - id: 13134
   name: "Ivandis flail (13)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -147957,7 +147957,7 @@
     absorb_ranged: 0
 - id: 13135
   name: "Ivandis flail (12)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -147990,7 +147990,7 @@
     absorb_ranged: 0
 - id: 13136
   name: "Ivandis flail (11)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -148023,7 +148023,7 @@
     absorb_ranged: 0
 - id: 13137
   name: "Ivandis flail (10)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -148056,7 +148056,7 @@
     absorb_ranged: 0
 - id: 13138
   name: "Ivandis flail (9)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -148089,7 +148089,7 @@
     absorb_ranged: 0
 - id: 13139
   name: "Ivandis flail (8)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -148122,7 +148122,7 @@
     absorb_ranged: 0
 - id: 13140
   name: "Ivandis flail (7)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -148155,7 +148155,7 @@
     absorb_ranged: 0
 - id: 13141
   name: "Ivandis flail (6)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail."
   tradeable: false
   weight: 5.0
   equipment:
@@ -148185,7 +148185,7 @@
     attack_audio: -1
 - id: 13142
   name: "Ivandis flail (5)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail - it's nearly out of charges."
   tradeable: false
   weight: 5.0
   equipment:
@@ -148218,7 +148218,7 @@
     absorb_ranged: 0
 - id: 13143
   name: "Ivandis flail (4)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail - it's nearly out of charges."
   tradeable: false
   weight: 5.0
   equipment:
@@ -148251,7 +148251,7 @@
     absorb_ranged: 0
 - id: 13144
   name: "Ivandis flail (3)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail - it's nearly out of charges."
   tradeable: false
   weight: 5.0
   equipment:
@@ -148281,7 +148281,7 @@
     attack_audio: -1
 - id: 13145
   name: "Ivandis flail (2)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail - it's nearly out of charges."
   tradeable: false
   weight: 5.0
   equipment:
@@ -148314,7 +148314,7 @@
     absorb_ranged: 0
 - id: 13146
   name: "Ivandis flail (1)"
-  examine: "At 30: A fully charged flail.  At 29-6 charges: A partially charged flail.  At 5-2 charges: A partially charged flail - it's nearly out of charges.  At 1 charge: A partially charged flail - one last charge left."
+  examine: "A partially charged flail - one last charge left."
   tradeable: false
   weight: 5.0
   equipment:
@@ -148462,13 +148462,13 @@
   equipment: null
 - id: 13158
   name: "Columbarium key"
-  examine: "An ornate key: precise workmanship and an ethereal glow. (Legacy of Seergaze)"
+  examine: "An ornate key: precise workmanship and an ethereal glow."
   tradeable: false
   weight: 0.1
   equipment: null
 - id: 13159
   name: "Ornate tomb key"
-  examine: "An ornate key: precise workmanship and an ethereal glow. (Legacy of Seergaze)"
+  examine: "An ornate key: precise workmanship and an ethereal glow."
   destroy_message: "You got this key by cremating a Vyrewatch in the Paterdomus Columbarium."
   tradeable: false
   weight: 0.0
@@ -155026,7 +155026,7 @@
     absorb_ranged: 7
 - id: 13508
   name: "Mystic hat"
-  examine: "Blue: A magical hat. "
+  examine: "A magical hat."
   tradeable: false
   weight: 0.4
   equipment:
@@ -155125,7 +155125,7 @@
     absorb_ranged: 0
 - id: 13511
   name: "Mystic gloves"
-  examine: "Bright/Dark magical gloves."
+  examine: "Magical gloves."
   tradeable: false
   weight: 0.4
   equipment:
@@ -155191,7 +155191,7 @@
     absorb_ranged: 0
 - id: 13513
   name: "Mystic hat"
-  examine: "Blue: A magical hat. "
+  examine: "A magical hat."
   tradeable: false
   weight: 0.4
   equipment:
@@ -155290,7 +155290,7 @@
     absorb_ranged: 0
 - id: 13516
   name: "Mystic gloves"
-  examine: "Bright/Dark magical gloves."
+  examine: "Magical gloves."
   tradeable: false
   weight: 0.4
   equipment:
@@ -155356,7 +155356,7 @@
     absorb_ranged: 0
 - id: 13518
   name: "Mystic hat"
-  examine: "Blue: A magical hat. "
+  examine: "A magical hat."
   tradeable: false
   weight: 0.4
   equipment:
@@ -155455,7 +155455,7 @@
     absorb_ranged: 0
 - id: 13521
   name: "Mystic gloves"
-  examine: "Bright/Dark magical gloves."
+  examine: "Magical gloves."
   tradeable: false
   weight: 0.4
   equipment:
@@ -162714,7 +162714,7 @@
     absorb_ranged: 7
 - id: 13835
   name: "Gilded platebody"
-  examine: "Rune platebody with complete gold trim &amp; plating."
+  examine: "Rune platebody with complete gold trim & plating."
   tradeable: false
   weight: 10.0
   equipment:
@@ -198621,7 +198621,7 @@
     skill_reqs: [{'skill': 1, 'level': 90}]
 - id: 16206
   name: "Primal plateskirt (b)"
-  examine: "When Bound: Designer leg protection. When not bound: Designer leg protection. (Tier 11)"
+  examine: "Designer leg protection."
   tradeable: true
   weight: 8.0
   equipment:
@@ -206733,7 +206733,7 @@
   equipment: null
 - id: 16667
   name: "Primal plateskirt"
-  examine: "When Bound: Designer leg protection. When not bound: Designer leg protection. (Tier 11)"
+  examine: "Designer leg protection."
   tradeable: true
   weight: 8.0
   equipment:
@@ -229045,49 +229045,49 @@
   equipment: null
 - id: 18653
   name: "Flame fragment"
-  examine: "This fragment of elemental fire pulses as if alive. (Taken from a citizen/HAM member/rogue/master farmer/farmer/guard/warrior.)"
+  examine: "This fragment of elemental fire pulses as if alive."
   tradeable: true
   weight: 0.0
   equipment: null
 - id: 18654
   name: "Flame fragment"
-  examine: "This fragment of elemental fire pulses as if alive. (Taken from a citizen/HAM member/rogue/master farmer/farmer/guard/warrior.)"
+  examine: "This fragment of elemental fire pulses as if alive."
   tradeable: true
   weight: 0.0
   equipment: null
 - id: 18655
   name: "Flame fragment"
-  examine: "This fragment of elemental fire pulses as if alive. (Taken from a citizen/HAM member/rogue/master farmer/farmer/guard/warrior.)"
+  examine: "This fragment of elemental fire pulses as if alive."
   tradeable: true
   weight: 0.0
   equipment: null
 - id: 18656
   name: "Flame fragment"
-  examine: "This fragment of elemental fire pulses as if alive. (Taken from a citizen/HAM member/rogue/master farmer/farmer/guard/warrior.)"
+  examine: "This fragment of elemental fire pulses as if alive."
   tradeable: true
   weight: 0.0
   equipment: null
 - id: 18657
   name: "Flame fragment"
-  examine: "This fragment of elemental fire pulses as if alive. (Taken from a citizen/HAM member/rogue/master farmer/farmer/guard/warrior.)"
+  examine: "This fragment of elemental fire pulses as if alive."
   tradeable: true
   weight: 0.0
   equipment: null
 - id: 18658
   name: "Flame fragment"
-  examine: "This fragment of elemental fire pulses as if alive. (Taken from a citizen/HAM member/rogue/master farmer/farmer/guard/warrior.)"
+  examine: "This fragment of elemental fire pulses as if alive."
   tradeable: true
   weight: 0.0
   equipment: null
 - id: 18659
   name: "Flame fragment"
-  examine: "This fragment of elemental fire pulses as if alive. (Taken from a citizen/HAM member/rogue/master farmer/farmer/guard/warrior.)"
+  examine: "This fragment of elemental fire pulses as if alive."
   tradeable: true
   weight: 0.0
   equipment: null
 - id: 18660
   name: "Flame fragment"
-  examine: "This fragment of elemental fire pulses as if alive. (Taken from a citizen/HAM member/rogue/master farmer/farmer/guard/warrior.)"
+  examine: "This fragment of elemental fire pulses as if alive."
   tradeable: true
   weight: 0.0
   equipment: null
