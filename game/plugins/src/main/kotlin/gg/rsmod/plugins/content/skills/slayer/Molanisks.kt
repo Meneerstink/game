@@ -22,7 +22,8 @@ object Molanisks {
     private val WALL = AttributeKey<GameObject>()
     private val active = mutableSetOf<Pair<World, Tile>>()
 
-    fun inRange(player: Tile, wall: Tile): Boolean = player.height == wall.height && player.getDistance(wall) <= 3
+    // Square 7x7 around the wall (Chebyshev), like Tile.isWithinRadius; getDistance is Euclidean-ceil and dropped the corners.
+    fun inRange(player: Tile, wall: Tile): Boolean = player.isWithinRadius(wall, 3)
 
     fun ring(player: Player) {
         if (!player.inventory.contains(Items.SLAYER_BELL)) return
