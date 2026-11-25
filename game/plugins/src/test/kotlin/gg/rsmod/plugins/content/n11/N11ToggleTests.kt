@@ -4,6 +4,7 @@ import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.setVarc
 import gg.rsmod.plugins.content.items.osrs.AvasAssembler
 import gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices
 import io.mockk.every
@@ -11,6 +12,112 @@ import io.mockk.verify
 import kotlin.test.*
 
 class N11ToggleTests {
+    @Test fun `Patchy native Sew opens SMW and stale response or logout cannot consume replacement items`() {
+        N11Fixture().use { f ->
+            val patchy = gg.rsmod.plugins.content.areas.mosleharmless.Patchy
+            val recipe = patchy.RECIPES.first()
+            f.def(Items.COINS_995).stacks = true
+            every { f.definitions.get(gg.rsmod.game.fs.def.VarbitDef::class.java, any()) } answers {
+                gg.rsmod.game.fs.def.VarbitDef(secondArg())
+            }
+            every { f.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, any()) } answers {
+                gg.rsmod.game.fs.def.NpcDef(secondArg()).apply { options[0] = "Talk-to"; options[2] = "Sew" }
+            }
+            val npc = io.mockk.mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
+            every { npc.id } returns gg.rsmod.plugins.api.cfg.Npcs.PATCHY
+            every { npc.tile } returns f.player.tile
+            every { npc.isSpawned() } returns true
+            f.attrs[gg.rsmod.game.model.attr.INTERACTING_NPC_ATTR] = java.lang.ref.WeakReference(npc)
+            f.load("areas.mosleharmless.Patchy_plugin")
+            fun open() {
+                f.inventory.removeAll()
+                f.inventory[0] = Item(Items.COINS_995, 1000)
+                f.inventory[1] = Item(recipe.first)
+                f.inventory[2] = Item(recipe.second)
+                assertTrue(f.repo.executeNpc(f.player, npc.id, 3))
+                f.queues.cycle()
+                f.queues.submitReturnValue(gg.rsmod.game.message.impl.ResumePauseButtonMessage(230, 2, 2))
+                f.queues.cycle()
+                verify { f.player.setVarc(755, recipe.product) }
+            }
+            fun click() {
+                f.queues.submitReturnValue(gg.rsmod.game.message.impl.ResumePauseButtonMessage(916, 14, 14))
+                f.queues.cycle()
+            }
+            open()
+            click()
+            click()
+            assertEquals(1, f.inventory.getItemCount(recipe.product))
+            assertEquals(500, f.inventory.getItemCount(Items.COINS_995))
+            open()
+            f.inventory[1] = Item(recipe.first)
+            click()
+            assertEquals(0, f.inventory.getItemCount(recipe.product))
+            assertEquals(1000, f.inventory.getItemCount(Items.COINS_995))
+            open()
+            f.queues.terminateTasks()
+            click()
+            assertEquals(0, f.inventory.getItemCount(recipe.product))
+        }
+    }
+
+    @Test fun `Patchy nine native products sew and separate at exact prices with full inventory and no second payment`() {
+        val patchy = gg.rsmod.plugins.content.areas.mosleharmless.Patchy
+        assertEquals(listOf(8924, 8925, 8926, 8927, 8928, 8929, 11280, 11282, 13353), patchy.RECIPES.map { it.product })
+        for (recipe in patchy.RECIPES) N11Fixture().use { f ->
+            f.def(Items.COINS_995).stacks = true
+            f.inventory[0] = Item(Items.COINS_995, 2000)
+            f.inventory[1] = Item(recipe.first)
+            f.inventory[2] = Item(recipe.second)
+            while (f.inventory.hasSpace) f.inventory.add(100000)
+            val sew = patchy.select(f.player, recipe, false)!!
+            assertTrue(patchy.exchange(f.player, sew))
+            assertEquals(1500, f.inventory.getItemCount(Items.COINS_995))
+            assertEquals(1, f.inventory.getItemCount(recipe.product))
+            assertFalse(patchy.exchange(f.player, sew))
+            val separate = patchy.select(f.player, recipe, true)!!
+            f.inventory.add(100000) // splitting one item into two needs a slot if coins remain
+            assertFalse(patchy.exchange(f.player, separate))
+            assertEquals(1500, f.inventory.getItemCount(Items.COINS_995))
+            val filler = f.inventory.rawItems.indexOfFirst { it?.id == 100000 }
+            f.inventory[filler] = null
+            assertTrue(patchy.exchange(f.player, separate))
+            assertEquals(900, f.inventory.getItemCount(Items.COINS_995))
+            assertEquals(1, f.inventory.getItemCount(recipe.first))
+            assertEquals(1, f.inventory.getItemCount(recipe.second))
+            assertEquals(0, f.inventory.getItemCount(recipe.product))
+            assertFalse(patchy.exchange(f.player, separate))
+            verify(exactly = 0) { f.player.addXp(any(), any(), any(), any()) }
+        }
+    }
+
+    @Test fun `Patchy missing money missing parts moved or replaced originals never charge and exact payment can free space`() {
+        val patchy = gg.rsmod.plugins.content.areas.mosleharmless.Patchy
+        val recipe = patchy.RECIPES.first()
+        N11Fixture().use { f ->
+            f.def(Items.COINS_995).stacks = true
+            f.inventory[0] = Item(Items.COINS_995, 499)
+            f.inventory[1] = Item(recipe.first)
+            assertNull(patchy.select(f.player, recipe, false))
+            f.inventory[2] = Item(recipe.second)
+            val original = patchy.select(f.player, recipe, false)!!
+            assertFalse(patchy.exchange(f.player, original))
+            f.inventory[0]!!.amount = 500
+            f.inventory[1] = Item(recipe.first)
+            assertFalse(patchy.exchange(f.player, original))
+            val moved = patchy.select(f.player, recipe, false)!!
+            f.inventory[3] = f.inventory[1]
+            f.inventory[1] = null
+            assertFalse(patchy.exchange(f.player, moved))
+            assertEquals(500, f.inventory.getItemCount(Items.COINS_995))
+            assertTrue(patchy.exchange(f.player, patchy.select(f.player, recipe, false)!!))
+            f.inventory[0] = Item(Items.COINS_995, 600)
+            while (f.inventory.hasSpace) f.inventory.add(100000)
+            assertTrue(patchy.exchange(f.player, patchy.select(f.player, recipe, true)!!))
+            assertEquals(0, f.inventory.getItemCount(Items.COINS_995))
+        }
+    }
+
     @Test fun `cocktail native mixing button keeps original shaker and cannot pay twice after replacement or logout`() {
         N11Fixture().use { f ->
             val making = gg.rsmod.plugins.content.skills.cooking.CocktailMaking
