@@ -1,7 +1,9 @@
 . "$PSScriptRoot\Common.ps1"
 try {
     if (!$env:RSPS_LIVE_TESTS) { throw 'RSPS_LIVE_TESTS must contain a JSON array of targeted plugin test filters' }
-    $tests = @($env:RSPS_LIVE_TESTS | ConvertFrom-Json)
+    # PS 5.1: ConvertFrom-Json emits a JSON array as ONE Object[]; unroll it, else only one --tests precedes all filters
+    # and Gradle reads the 2nd filter as a task name ("Task '*N11*' not found", 25-11 00:54).
+    $tests = @(($env:RSPS_LIVE_TESTS | ConvertFrom-Json) | ForEach-Object { $_ })
     if (!$tests.Count) { throw 'No targeted tests supplied' }
     $arguments = @(':game:installDist', ':game:plugins:test')
     foreach ($test in $tests) {
