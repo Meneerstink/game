@@ -19,6 +19,10 @@ import io.mockk.*
 import kotlin.test.*
 
 class MimicEncounterTests {
+    /** COMBATENGAGE-FLAKY: multi comes from mocked multi.yml chunks here; a class that loaded the plugins (multiway_combat) leaves the real surface map in this JVM. */
+    @kotlin.test.BeforeTest
+    fun unloadMultiZones() = gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones.unload()
+
     private val accounts=mutableListOf<Player>()
     // Synthetic complete encounter fixture for lifecycle tests; probabilities are not OSRS assertions.
     private val cacheReady=MimicEncounter.Assets(true,1,0.0,4,0.0,true,arenaRegion=4160)

@@ -18,6 +18,10 @@ import org.junit.Test
  * no longer registers - and leaks - its instance regions as multi.
  */
 class FightCavesMultiTests {
+    /** COMBATENGAGE-FLAKY: multi comes from mocked multi.yml chunks here; a class that loaded the plugins (multiway_combat) leaves the real surface map in this JVM. */
+    @kotlin.test.BeforeTest
+    fun unloadMultiZones() = gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones.unload()
+
     private fun world(multiRegions: Set<Int>): World {
         val chunks = InstancedChunkSet.Builder()
         for (x in 0 until 8) for (z in 0 until 8) for (height in 0..3) {

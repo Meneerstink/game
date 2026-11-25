@@ -50,6 +50,10 @@ import kotlin.test.assertTrue
  * requires a loaded [ItemDef] to decide whether an item stacks.
  */
 class DeathExecutorTests {
+    /** COMBATENGAGE-FLAKY: multi comes from mocked multi.yml chunks here; a class that loaded the plugins (multiway_combat) leaves the real surface map in this JVM. */
+    @kotlin.test.BeforeTest
+    fun unloadMultiZones() = gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones.unload()
+
     @Test fun `a Wilderness PvP death destroys consumables instead of spawning them or storing them in recovery`() {
         val victim = newPlayer()
         every { victim.tile } returns Tile(3424, 10212, 2)

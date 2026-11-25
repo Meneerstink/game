@@ -25,6 +25,10 @@ import kotlin.test.assertTrue
  *    killed, at most seven.
  */
 class BarrowsWikiRulesTests {
+    /** COMBATENGAGE-FLAKY: multi comes from mocked multi.yml chunks here; a class that loaded the plugins (multiway_combat) leaves the real surface map in this JVM. */
+    @kotlin.test.BeforeTest
+    fun unloadMultiZones() = gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones.unload()
+
     @Test
     fun `owned brothers replace crypt combat and share reservations without opening other encounters`() {
         val world = mockk<World>(relaxed = true)

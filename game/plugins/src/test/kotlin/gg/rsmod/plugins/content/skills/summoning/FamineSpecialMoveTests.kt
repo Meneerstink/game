@@ -26,6 +26,10 @@ import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 class FamineSpecialMoveTests {
+    /** COMBATENGAGE-FLAKY: multi comes from mocked multi.yml chunks here; a class that loaded the plugins (multiway_combat) leaves the real surface map in this JVM. */
+    @kotlin.test.BeforeTest
+    fun unloadMultiZones() = gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones.unload()
+
     @kotlin.test.AfterTest
     fun unmockCombat() = io.mockk.unmockkObject(gg.rsmod.plugins.content.combat.Combat)
 

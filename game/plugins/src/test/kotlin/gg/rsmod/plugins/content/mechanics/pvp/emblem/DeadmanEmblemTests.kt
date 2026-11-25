@@ -45,6 +45,10 @@ import kotlin.test.assertTrue
  * through the real [DeathExecutor] (removal, upgrade, exact-tier transfer, one-emblem conflicts, no dupes).
  */
 class DeadmanEmblemTests {
+    /** COMBATENGAGE-FLAKY: multi comes from mocked multi.yml chunks here; a class that loaded the plugins (multiway_combat) leaves the real surface map in this JVM. */
+    @kotlin.test.BeforeTest
+    fun unloadMultiZones() = gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones.unload()
+
     // ---------------------------------------------------------------- tiers and values
 
     @Test

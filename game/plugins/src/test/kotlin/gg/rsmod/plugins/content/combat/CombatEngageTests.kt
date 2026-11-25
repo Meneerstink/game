@@ -38,6 +38,10 @@ import kotlin.test.assertTrue
  * restrictions" items end-to-end against real production code.
  */
 class CombatEngageTests {
+    /** COMBATENGAGE-FLAKY: multi comes from mocked multi.yml chunks here; a class that loaded the plugins (multiway_combat) leaves the real surface map in this JVM. */
+    @kotlin.test.BeforeTest
+    fun unloadMultiZones() = gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones.unload()
+
     @Test
     fun `an opponent can attack a public familiar in multi combat even without an Attack cache option`() {
         val home = Tile(3140, 3640, 0)

@@ -21,6 +21,10 @@ import java.lang.ref.WeakReference
 
 /** Q-042: Glacor rules from the pre-EoC RuneScape Wiki revisions (Glacor 2012-09-23, glacyte pages 2012). Glacors are not in OSRS. */
 class GlacorPreEocRulesTests {
+    /** COMBATENGAGE-FLAKY: multi comes from mocked multi.yml chunks here; a class that loaded the plugins (multiway_combat) leaves the real surface map in this JVM. */
+    @kotlin.test.BeforeTest
+    fun unloadMultiZones() = gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones.unload()
+
     @Test
     fun `only the same glacor and its own glacytes share the player reservation`() {
         val world = mockk<World>(relaxed = true)

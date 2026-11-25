@@ -27,6 +27,10 @@ import kotlin.test.assertTrue
  * out of his fight, and another player's fight stays protected.
  */
 class FamiliarSingleCombatTests {
+    /** COMBATENGAGE-FLAKY: multi comes from mocked multi.yml chunks here; a class that loaded the plugins (multiway_combat) leaves the real surface map in this JVM. */
+    @kotlin.test.BeforeTest
+    fun unloadMultiZones() = gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones.unload()
+
     private var nextIndex = 0
     private val singleTile = Tile(3200, 3200, 0)
     private val multiTile = Tile(3300, 3900, 0)

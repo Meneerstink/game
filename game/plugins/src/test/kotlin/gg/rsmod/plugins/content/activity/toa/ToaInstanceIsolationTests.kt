@@ -6,6 +6,10 @@ import gg.rsmod.plugins.api.ext.isMulti
 import kotlin.test.*
 
 class ToaInstanceIsolationTests {
+    /** COMBATENGAGE-FLAKY: multi comes from mocked multi.yml chunks here; a class that loaded the plugins (multiway_combat) leaves the real surface map in this JVM. */
+    @kotlin.test.BeforeTest
+    fun unloadMultiZones() = gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones.unload()
+
     @Test fun `every raid source square copies all planes from local shifted bank`() {
         val chunks = ToaMap.chunks()
         assertEquals(7, chunks.regionSize)

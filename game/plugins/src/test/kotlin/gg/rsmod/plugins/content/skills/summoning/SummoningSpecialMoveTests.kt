@@ -38,6 +38,10 @@ import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 class SummoningSpecialMoveTests {
+    /** COMBATENGAGE-FLAKY: multi comes from mocked multi.yml chunks here; a class that loaded the plugins (multiway_combat) leaves the real surface map in this JVM. */
+    @kotlin.test.BeforeTest
+    fun unloadMultiZones() = gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones.unload()
+
     @Test
     fun `N516 Howl refuses a guard without spending resources and still works on a man or woman`() {
         for (id in listOf(1, 4)) {

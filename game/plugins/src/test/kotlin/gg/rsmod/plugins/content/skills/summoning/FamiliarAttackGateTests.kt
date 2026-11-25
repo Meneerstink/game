@@ -28,6 +28,10 @@ import kotlin.test.assertTrue
 
 /** N516: exercise the real owner gate before any attack command can set a target. */
 class FamiliarAttackGateTests {
+    /** COMBATENGAGE-FLAKY: multi comes from mocked multi.yml chunks here; a class that loaded the plugins (multiway_combat) leaves the real surface map in this JVM. */
+    @kotlin.test.BeforeTest
+    fun unloadMultiZones() = gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones.unload()
+
     private val danger = Tile(3300, 3900)
     private val guarded = Tile(3165, 3487)
     private val world = mockk<World>(relaxed = true)

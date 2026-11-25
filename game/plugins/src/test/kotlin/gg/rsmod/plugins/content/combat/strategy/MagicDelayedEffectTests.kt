@@ -21,6 +21,10 @@ import kotlin.test.assertTrue
 
 /** M0 interaction stability: effect-only magic callbacks must not mutate stale actors after impact delay. */
 class MagicDelayedEffectTests {
+    /** COMBATENGAGE-FLAKY: multi comes from mocked multi.yml chunks here; a class that loaded the plugins (multiway_combat) leaves the real surface map in this JVM. */
+    @kotlin.test.BeforeTest
+    fun unloadMultiZones() = gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones.unload()
+
     @Test
     fun `burst barrage and target based splashes cross from single to multi with victim gates intact`() {
         val world = mockk<World>(relaxed = true)

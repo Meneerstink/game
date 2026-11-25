@@ -16,6 +16,10 @@ import kotlin.test.assertTrue
  * can_attack hooks (Castle Wars / Soul Wars teams, Duel Arena, breach protection) now gate player victims as well as npcs.
  */
 class SplashTargetTests {
+    /** COMBATENGAGE-FLAKY: multi comes from mocked multi.yml chunks here; a class that loaded the plugins (multiway_combat) leaves the real surface map in this JVM. */
+    @kotlin.test.BeforeTest
+    fun unloadMultiZones() = gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones.unload()
+
     @Test
     fun `shield bash uses the primary zone and self based powerstab keeps its caster gate`() {
         val root = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons")
