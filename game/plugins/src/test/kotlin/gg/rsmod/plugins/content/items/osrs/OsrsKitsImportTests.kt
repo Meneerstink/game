@@ -65,7 +65,9 @@ class OsrsKitsImportTests {
         val bowTypes = gg.rsmod.plugins.content.combat.strategy.ranged.weapon.BowType.values.associateBy { it.item }
         val rangedStrategy = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/RangedCombatStrategy.kt").readText()
         gg.rsmod.plugins.content.combat.strategy.ranged.weapon.Bows.DARK_BOWS.forEach {
-            assertTrue(bowTypes.getValue(it).ammo.contentEquals(bowTypes.getValue(Items.DARK_BOW).ammo), "dark bow ammo for $it")
+            // DMM2 Dark bow (Deadman) / Nigel skins have no own BowType: combat resolves them via CorruptedWeapons.bowBase (RangedAmmo, RangedCombatStrategy).
+            val bow = bowTypes[it] ?: bowTypes.getValue(gg.rsmod.plugins.content.mechanics.deadman.CorruptedWeapons.bowBase(it)!!)
+            assertTrue(bow.ammo.contentEquals(bowTypes.getValue(Items.DARK_BOW).ammo), "dark bow ammo for $it")
         }
         // Audit round 2026-09-17b: OSRS Wiki "Dark bow" - "attackrange = 10", "the maximum possible attack range of
         // 10, so the longrange attack style will not increase its attack range" - every dark bow variant, not the

@@ -63,6 +63,8 @@ class ItemAttachSoundsTests {
         mapOf(
             "items/combine/item_combination.plugin.kts" to "binds CombinationData rows to CombinationAction, which sounds (guarded above)",
             "items/gut_fish.plugin.kts" to "food preparation",
+            "items/o10_item_options.plugin.kts" to "blossomed fungi fill the Druid pouch (P48 O10), nothing is attached",
+            "items/teleport_items.plugin.kts" to "ugthanki dung recharges the Camulet (P48 O20), nothing is attached",
             "items/osrs/ancient_cape.plugin.kts" to "a confirmed one-way conversion (Ancient fabric), not an attach; no sourced OSRS sound id yet (Mage Arena 2)",
             "items/osrs/masori_fortify.plugin.kts" to "crafting with hammer + plates; no sourced OSRS sound id yet",
             "items/osrs/crystal.plugin.kts" to "crystal shards charge crystal equipment",
