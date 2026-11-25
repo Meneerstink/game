@@ -17,8 +17,8 @@ import gg.rsmod.plugins.content.quests.foundation.bracket.TheDigSite
 // artefacts), "Tools (Varrock Museum)" (kit: leather boots + gloves only if not worn/held, rock pick, specimen brush, trowel),
 // "Clean necklace" (shown to an archaeologist = ruby necklaces can be enchanted into digsite pendants; handing it in removes it from
 // inventory and bank), Transcript:Sinco Doar (= the shared Varrock Museum archaeologist dialogue). Object/NPC tiles = the 667 map
-// (tools/cache667/maplocs.py 12853/13109). No source (left out, not invented): the cleaning/pick-up animation, the display cases and
-// kudos (BUGLIJST VARROCK-MUSEUM-KUDOS), the gate refusal line (P48-TEKST). Timing of the repeat (3 ticks) has no source either.
+// (tools/cache667/maplocs.py 12853/13109). Displays/Kudos are handled by varrock_museum_displays (same state, no second cleaner).
+// No source: cleaning/pick-up animation, gate refusal line (P48-TEKST), repeat timing (3 ticks).
 
 private val GATE_Z = 3446
 private val ARCHAEOLOGISTS = intArrayOf(Npcs.BARNABUS_HURMA, Npcs.MARIUS_GISTE, Npcs.CADEN_AZRO, Npcs.THIAS_LEACKE, Npcs.SINCO_DOAR, Npcs.TINSE_TORPE)
@@ -108,7 +108,7 @@ fun cleanOne(player: Player) {
             val item = if (u < 12) UNIQUES[u / 3] else Items.CLEAN_NECKLACE
             val held = player.inventory.contains(item) || player.bank.contains(item)
             val learnt = item == Items.CLEAN_NECKLACE && VarrockMuseum.learnt(player)
-            if (held || learnt) unremarkable() else Item(item)
+            if (held || learnt || VarrockMuseum.displayed(player, item)) unremarkable() else Item(item)
         } else {
             Item(COMMON_ARTEFACTS[world.random(3)])
         }
@@ -208,7 +208,7 @@ private val CASES =
         Items.POTTERY to Pair("I found this piece of pottery - is it of any use?", 22),
     )
 
-private val CASE_TOLD = AttributeKey<Int>(persistenceKey = "museum_case_told")
+private val CASE_TOLD = VarrockMuseum.CASE_TOLD
 
 suspend fun QueueTask.showFind(npcId: Int) {
     chatNpc("Oh? Let's take a look...", npc = npcId)
@@ -259,7 +259,7 @@ suspend fun QueueTask.displayFind(npcId: Int, find: Int) {
     val bit = 1 shl UNIQUES.plus(Items.POTTERY).indexOf(find)
     val told = (player.attr[CASE_TOLD] ?: 0) and bit != 0
     if (told) {
-        // The display cases do not exist on this server yet (BUGLIJST VARROCK-MUSEUM-KUDOS): the "after being told" line.
+        // The "after being told" line remains useful until the find is actually placed.
         val name = when (find) {
             Items.OLD_COIN -> "the old coin"; Items.ANCIENT_COIN -> "the ancient coin"; Items.ANCIENT_SYMBOL -> "the ancient symbol"
             Items.OLD_SYMBOL -> "the old symbol"; else -> "the pottery"

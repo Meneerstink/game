@@ -23,7 +23,7 @@ class N11RemoveChargeTests {
         f.queues.cycle()
     }
 
-    @Test fun `all four native charged forms require shared confirmation and replace in a full inventory`() {
+    @Test fun `all native charged forms require shared confirmation and replace in a full inventory`() {
         ItemCharges.removable.forEach { (charged, empty) ->
             N11Fixture().use { f ->
                 load(f)
@@ -44,6 +44,15 @@ class N11RemoveChargeTests {
                 assertFalse(f.repo.hasItemOption(charged + 1, 4))
                 assertFalse(f.repo.hasEquipmentOption(charged, 4))
             }
+        }
+    }
+
+    @Test fun `all ten black mask charge counts are removable without binding noted or empty masks`() {
+        assertEquals((8901..8919 step 2).toSet(), ItemCharges.removable.filterValues { it == 8921 }.keys)
+        N11Fixture().use { f ->
+            load(f)
+            assertFalse(f.repo.hasItemOption(8921, 4))
+            (8902..8920 step 2).forEach { assertFalse(f.repo.hasItemOption(it, 4)) }
         }
     }
 

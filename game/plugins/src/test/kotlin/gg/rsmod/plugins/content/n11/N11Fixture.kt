@@ -21,7 +21,7 @@ import java.io.File
 import java.net.URLClassLoader
 
 /** Cache-free inventories; compiled script tests still run the production handlers and queues. */
-internal class N11Fixture : AutoCloseable {
+class N11Fixture : AutoCloseable {
     val definitions = mockk<DefinitionSet>()
     val defs = mutableMapOf<Int, ItemDef>()
     val world = mockk<World>(relaxed = true)
@@ -30,6 +30,7 @@ internal class N11Fixture : AutoCloseable {
     val timers = TimerMap()
     val skills = mockk<SkillSet>(relaxed = true)
     val inventory = container()
+    val bank = container()
     val equipment = container()
     val queues = PawnQueueTaskSet()
     val repo = PluginRepository(world)
@@ -47,6 +48,7 @@ internal class N11Fixture : AutoCloseable {
         every { player.attr } returns attrs
         every { player.timers } returns timers
         every { player.inventory } returns inventory
+        every { player.bank } returns bank
         every { player.equipment } returns equipment
         every { player.skills } returns skills
         every { player.tile } returns Tile(3200, 3200)
@@ -66,6 +68,8 @@ internal class N11Fixture : AutoCloseable {
             c[1].split('|').forEachIndexed { i, option -> definition.inventoryMenu[i] = option.ifEmpty { null } }
             c[2].split('|').forEachIndexed { i, option -> definition.equipmentMenu[i] = option.ifEmpty { null } }
         }
+        // The GE census omits partially charged masks; native 667 8903..8919 retain the same Wear/Remove-charge slots.
+        for (id in 8903..8919 step 2) menu(id, "", "Wear", "", "Remove-charge", "")
         select(0)
     }
 

@@ -94,7 +94,7 @@ spawn_item(item = Items.BARREL, amount = 1, x = 2487, z = 3371, respawnCycles = 
 // Region: 9782
 spawn_item(item = Items.COCKTAIL_GLASS, amount = 1, x = 2483, z = 3482, height = 1, respawnCycles = 90)
 spawn_item(item = Items.COCKTAIL_GLASS, amount = 1, x = 2489, z = 3489, height = 1, respawnCycles = 90)
-spawn_item(item = Items.COCKTAIL_SHAKER, amount = 1, x = 2449, z = 3510, height = 1, respawnCycles = 90)
+spawn_item(item = Items.COCKTAIL_SHAKER, amount = 1, x = 2449, z = 3510, height = 1, respawnCycles = 100)
 // ----------------------------------------------------------------------------------------
 
 // Region: 9797
@@ -907,7 +907,7 @@ spawn_item(item = Items.SHORTBOW, amount = 1, x = 3389, z = 3123, respawnCycles 
 // ----------------------------------------------------------------------------------------
 
 // Region: 13364
-spawn_item(item = Items.PANNING_TRAY, amount = 1, x = 3369, z = 3378, respawnCycles = 90)
+spawn_item(item = Items.PANNING_TRAY, amount = 1, x = 3369, z = 3378, respawnCycles = 100)
 // ----------------------------------------------------------------------------------------
 
 // Region: 13365

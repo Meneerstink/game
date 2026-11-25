@@ -14,6 +14,16 @@ enum class CookingData(
     val leftover: Int? = null,
     val rangeOnly: Boolean = false,
 ) {
+    // OSRS Wiki Mixed saturday (heated) / Drunk dragon: heat on a range, never produce a burnt item.
+    // Dragon's 118/492 roll controls XP only; the drink is still finished on a failed roll.
+    MIXED_SATURDAY(
+        raw = Items.MIXED_SATURDAY_9572, cooked = Items.MIXED_SATURDAY_9573, burnt = Items.MIXED_SATURDAY_9573,
+        levelRequirement = 32, experience = 0.0, lowChance = 255, highChance = 255, rangeOnly = true,
+    ),
+    MIXED_DRAGON(
+        raw = Items.MIXED_DRAGON_9576, cooked = Items.DRUNK_DRAGON, burnt = Items.DRUNK_DRAGON,
+        levelRequirement = 32, experience = 130.0, lowChance = 118, highChance = 492, rangeOnly = true,
+    ),
     SHRIMPS(
         raw = Items.RAW_SHRIMPS,
         cooked = Items.SHRIMPS,
