@@ -22,7 +22,7 @@ class OsrsWristFitTests {
             assertTrue(targets.size >= 32, "only ${targets.size} hands meshes found")
             val covered = mutableListOf<String>()
             targets.forEach { t ->
-                val glove = Rev667ModelDecoder.decode(library.data(7, t.local, 0)!!, geometryOnly = true)
+                val glove = Rev667ModelDecoder.decode(ModelArchive.read(library, t.local)!!, geometryOnly = true)
                 val skin = skins.getValue(t.female)
                 OsrsWristFit.sides(skin).forEach { side ->
                     val left = OsrsWristFit.requiredScale(glove, skin, side)
@@ -34,7 +34,7 @@ class OsrsWristFitTests {
             // inside it (the pre-2026-10-06 conversion put the male hand's centre exactly at the forearm's end).
             val inside = mutableListOf<String>()
             targets.forEach { t ->
-                val glove = Rev667ModelDecoder.decode(library.data(7, t.local, 0)!!, geometryOnly = true)
+                val glove = Rev667ModelDecoder.decode(ModelArchive.read(library, t.local)!!, geometryOnly = true)
                 val skin = skins.getValue(t.female)
                 val labels = glove.vertexLabel ?: return@forEach
                 val forearmEnd = OsrsWristFit.sides(skin).maxOf { it.bottom }

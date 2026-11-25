@@ -13,7 +13,8 @@ import java.io.File
  * so the importer reuses it), and on each affected item one more worn-mesh opcode (wear model 2 or 3 of that gender) with
  * that id; every other opcode is copied as is. The item's own worn meshes are read from the live cache, exactly as drawn.
  *
- * Usage: `[--apply]` - without it only plan + preflight run. A second run finds nothing to change.
+ * Usage: `[--apply] [--recut]` - without --apply only plan + preflight run. A second run finds nothing to change. `--recut`
+ * (N549) rewrites the pieces already in the cache with the current [WornForearm.cut].
  */
 object OsrsForearmTool {
     private const val INDEX_ITEM = 19
@@ -71,7 +72,24 @@ object OsrsForearmTool {
                 val mapped = pieces.mapNotNull { p -> existing.modelLocalIdByMappingKey[ModelIdAllocator.mappingKey(p.sourceIdentity, WornForearm.ROLE)]?.let { p.kitModel to it } }.toMap()
                 val changes = plan(reader, library, pieces, mapped)
                 changes.forEach { println("PLAN item ${it.local} ${it.name}: + opcode ${it.opcode} = forearm of kit model ${it.piece.kitModel}") }
-                if (changes.isEmpty()) {
+                if ("--recut" in args) {
+                    // N549 (2026-11-25): WornForearm.cut now raises the piece's top ring to the elbow; rewrite the pieces already
+                    // in the cache (one model, shared by every item that wears it) with the new cut. Items are not touched.
+                    check(changes.isEmpty()) { "--recut: run without it first, ${changes.size} items still need a piece" }
+                    pieces.forEach { piece ->
+                        val id = mapped[piece.kitModel] ?: return@forEach
+                        val current = ModelArchive.read(library, id) ?: error("model $id missing")
+                        if (current.contentEquals(piece.bytes)) return@forEach
+                        val old = Rev667ModelDecoder.decode(current, geometryOnly = true)
+                        val new = Rev667ModelDecoder.decode(piece.bytes, geometryOnly = true)
+                        check(old.vertexCount == new.vertexCount && old.faceCount == new.faceCount) { "model $id: recut changes the topology" }
+                        val moved = (0 until old.vertexCount).filter { old.vertexY[it] != new.vertexY[it] || old.vertexX[it] != new.vertexX[it] || old.vertexZ[it] != new.vertexZ[it] }
+                        moved.forEach { println("RECUT model $id vertex $it y ${old.vertexY[it]} -> ${new.vertexY[it]}") }
+                        check(moved.all { old.vertexX[it] == new.vertexX[it] && old.vertexZ[it] == new.vertexZ[it] }) { "model $id: recut moves more than y" }
+                        mutations += CacheMutation(INDEX_MODEL, id, 0, piece.bytes, "N549 forearm piece of kit model ${piece.kitModel} reaches the elbow",
+                            expectedCurrentSha1 = CacheItemProbeTool.sha1(current))
+                    }
+                } else if (changes.isEmpty()) {
                     println("NOTHING_TO_DO")
                     return
                 }

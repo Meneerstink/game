@@ -127,7 +127,7 @@ class OsrsBodyFrameTests {
                         }
                     val models = mutableListOf<Int>()
                     Rev667ModelReferenceWalkers.walkIdk(kit, library.data(2, 3, kit)!!) { id, role -> if (role == "idk_model") models += id }
-                    val rev667 = models.map { Rev667ModelDecoder.decode(library.data(7, it, 0)!!, geometryOnly = true) }
+                    val rev667 = models.map { Rev667ModelDecoder.decode(ModelArchive.read(library, it)!!, geometryOnly = true) }
                     val (osrsKnee, osrsAnkle) = shinOf(osrs)
                     val (knee, ankle) = shinOf(rev667)
                     assertEquals("OSRS knee of legs kit $kit", shin.knee, osrsKnee)
@@ -156,7 +156,7 @@ class OsrsBodyFrameTests {
                 fun lifted(fitted: ByteArray): ByteArray? = OsrsItemImportTool.decalLifted(fitted).takeIf { !it.contentEquals(fitted) }
                 val stale =
                     targets.filterNot { t ->
-                        val current = library.data(7, t.local, 0)!!
+                        val current = ModelArchive.read(library, t.local)!!
                         val fitted = OsrsModelConversion.convert(reader, t.upstream, mutableListOf(), OsrsBodyFrame.LEGS_SLOT, t.female)
                         current.contentEquals(fitted) || lifted(fitted)?.contentEquals(current) == true
                     }

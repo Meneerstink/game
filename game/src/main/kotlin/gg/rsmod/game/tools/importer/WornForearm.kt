@@ -72,6 +72,14 @@ object WornForearm {
             out.vertexY[new] = kit.vertexY[old]
             out.vertexZ[new] = kit.vertexZ[old]
         }
+        // N549 (2026-11-25): the faces kept start BELOW the elbow band (the band's faces also carry an upper-arm vertex), so the 667
+        // kit's forearm ring sat at y -460 while its forearm runs up to -500 - and 65 OSRS bodies end their own forearm at -483..-467:
+        // a see-through band between sleeve and forearm, standing and walking. The ring the piece shares with the elbow band is
+        // raised to the highest forearm vertex of that arm (per label), so the piece reaches up into every sleeve.
+        val border = (0 until kit.faceCount).filter { f -> listOf(kit.faceA[f], kit.faceB[f], kit.faceC[f]).any { labels[it] !in FOREARM_LABELS } }
+            .flatMap { f -> listOf(kit.faceA[f], kit.faceB[f], kit.faceC[f]) }.filter { labels[it] in FOREARM_LABELS }.toSet()
+        val top = (0 until kit.vertexCount).filter { labels[it] in FOREARM_LABELS }.groupBy { labels[it] }.mapValues { (_, vs) -> vs.minOf { kit.vertexY[it] } }
+        vertices.forEachIndexed { new, old -> if (old in border) out.vertexY[new] = top.getValue(labels[old]) }
         out.vertexLabel = IntArray(vertices.size) { labels[vertices[it]] }
         faces.forEachIndexed { new, old ->
             out.faceA[new] = index.getValue(kit.faceA[old])

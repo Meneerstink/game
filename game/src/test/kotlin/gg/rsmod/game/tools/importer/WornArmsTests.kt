@@ -42,21 +42,34 @@ class WornArmsTests {
         val reader = ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE))
         try {
             val pieces = WornForearm.pieces(library)
+            val existing = ImportBatchOrchestrator.readExistingMapping(File(OsrsItemImportTool.ASSET_MAP))
+            val pieceIds = pieces.mapNotNull { p -> existing.modelLocalIdByMappingKey[ModelIdAllocator.mappingKey(p.sourceIdentity, WornForearm.ROLE)]?.let { p.kitModel to it } }.toMap()
             val itemFiles = reader.files(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_ITEM)
             var checked = 0
+            var withPiece = 0
             val bare = mutableListOf<String>()
             OsrsFxImportTool.importedItems(File(OsrsItemImportTool.ASSET_MAP)).forEach { (upstream, local) ->
                 val def = itemFiles[upstream]?.let { ModernItemDefDecoder.decode(upstream, it) } ?: return@forEach
                 if (!OsrsItemImportTool.removesArms(def)) return@forEach
                 val ops = OsrsForearmTool.shortOps(CacheItemProbeTool.itemData(library, local)!!)
                 pieces.forEach { piece ->
-                    val meshes = piece.wornOps.mapNotNull { ops[it] }.map { Rev667ModelDecoder.decode(library.data(7, it, 0)!!, geometryOnly = true) }
+                    val meshes = piece.wornOps.mapNotNull { ops[it] }.map { Rev667ModelDecoder.decode(ModelArchive.read(library, it)!!, geometryOnly = true) }
                     val end = WornForearm.forearmEnd(meshes)
                     if (end == null || end < piece.kitForearmEnd) bare += "$local ${def.name} ${if (piece.female) "female" else "male"} ends at $end"
+                    // N549: an item wearing the piece must end its own sleeve BELOW the piece's top, or a band of the forearm is see-through.
+                    val pieceId = pieceIds[piece.kitModel]
+                    val wornIds = piece.wornOps.mapNotNull { ops[it] }
+                    if (pieceId != null && pieceId in wornIds) {
+                        val sleeveEnd = WornForearm.forearmEnd(wornIds.filter { it != pieceId }.map { Rev667ModelDecoder.decode(ModelArchive.read(library, it)!!, geometryOnly = true) })
+                        val pieceTop = Rev667ModelDecoder.decode(ModelArchive.read(library, pieceId)!!, geometryOnly = true).vertexY.min()
+                        if (sleeveEnd != null && sleeveEnd < pieceTop) bare += "$local ${def.name} sleeve ends at $sleeveEnd, above the forearm piece top $pieceTop"
+                        withPiece++
+                    }
                     checked++
                 }
             }
             assertTrue(checked >= 68, "only $checked item genders checked")
+            assertTrue(withPiece >= 60, "only $withPiece items wear the forearm piece")
             assertTrue(bare.isEmpty(), "lower forearm left bare: $bare")
         } finally {
             reader.close()
@@ -95,7 +108,8 @@ class WornArmsTests {
         val piece = WornForearm.cut(kit)
         assertEquals(4, piece.vertexCount)
         assertEquals(listOf(4551, 4552), piece.faceColour.map { it.toInt() })
-        assertEquals(listOf(-490, -480, -470, -460), piece.vertexY.toList())
+        // N549: vertices 1 and 2 share face 0 with the elbow -> raised to the highest vertex of their arm (label 19: -490).
+        assertEquals(listOf(-490, -490, -470, -460), piece.vertexY.toList())
         assertEquals(listOf(0, 1, 2), listOf(piece.faceA[0], piece.faceB[0], piece.faceC[0]))
         assertEquals(13, piece.version)
     }

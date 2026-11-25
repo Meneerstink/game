@@ -29,7 +29,7 @@ class SkeletalReplayTests {
         localSeq: Int,
         osrsSeq: Int,
     ): Pair<Double, Double> {
-        val m667 = models.map { Rev667ModelDecoder.decode(lib.data(7, it.first, 0)!!) }
+        val m667 = models.map { Rev667ModelDecoder.decode(ModelArchive.read(lib, it.first)!!) }
         val raws = models.map { ModernModelDecoder.decode(reader.file(7, it.second, 0)!!, flattenTextures = true) }
         val ss = SkeletalBakeTool.decodeSkeletalSeq(reader.file(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_SEQUENCE, osrsSeq)!!)!!
         val clip = SkeletalBakeTool.decodeClip(reader.file(SkeletalBakeTool.INDEX_ANIMAYA, ss.animaya ushr 16, ss.animaya and 0xFFFF)!!)
