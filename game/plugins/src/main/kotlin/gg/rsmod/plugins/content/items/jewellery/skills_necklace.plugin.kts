@@ -58,6 +58,11 @@ SKILLS_NECKLACE.forEach { item ->
             }
         }
     }
+    // N537 stap 3a (census 25-11): the OSRS necklace (6)/(5) lists "Woodcutting Guild" worn and it did nothing. That guild is in
+    // Kourend, which is not in this world (owner: Kourend parked) - a line instead of a silent option, no charge used. ADAPTED wording.
+    if (world.definitions.get(ItemDef::class.java, item).equipmentMenu.any { it.equals("Woodcutting Guild", ignoreCase = true) }) {
+        on_equipment_option(item, option = "Woodcutting Guild") { player.message("The Woodcutting Guild cannot be reached from this world.") }
+    }
 }
 
 /**

@@ -18,3 +18,15 @@ PotionDecanting.emptyableDoseItems(world.definitions).forEach { item ->
         PotionDecanting.empty(player, slot, forcedContainer = Items.VIAL)
     }
 }
+
+// N537 stap 3a (census 25-11: Drink/Empty of every divine potion and the blighted overload did nothing): the owner took these out of
+// play (2026-09-29, RemovedPotions: "cannot be drunk, mixed or decanted"); a click now says so instead of a silent dead option.
+RemovedPotions.divineAndBlightedDoseIds.forEach { item ->
+    listOf("Drink", "Empty").forEach { option ->
+        if (world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, item).inventoryMenu.any { it.equals(option, ignoreCase = true) }) {
+            on_item_option(item = item, option = option) {
+                player.message("This potion has been removed from the game and can no longer be used.")
+            }
+        }
+    }
+}

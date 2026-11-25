@@ -149,4 +149,12 @@ SLAYER_HELMET_VARIANTS.forEach { (helmet, parts) ->
     if (hasMenu(helmet, "Check", worn = true)) {
         on_equipment_option(item = helmet, option = "Check") { player.getSlayerKillsRemaining() }
     }
+    // N537 stap 3a (census 25-11): the OSRS Slayer helmet (i) lists Partner and Log worn, both dead. This server has no slayer
+    // partner and no slayer kill log; ADAPTED: Log shows the current task (as Check), Partner says so.
+    if (hasMenu(helmet, "Log", worn = true)) {
+        on_equipment_option(item = helmet, option = "Log") { player.getSlayerKillsRemaining() }
+    }
+    if (hasMenu(helmet, "Partner", worn = true)) {
+        on_equipment_option(item = helmet, option = "Partner") { player.message("Slayer partners are not available on this world.") }
+    }
 }

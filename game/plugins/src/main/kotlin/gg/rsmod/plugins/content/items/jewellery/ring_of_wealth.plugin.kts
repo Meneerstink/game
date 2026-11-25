@@ -49,6 +49,29 @@ RING_OF_WEALTH.forEach { item ->
             }
         }
     }
+    // N537 stap 3a (census 25-11): the OSRS ring (5) also lists Falador / Dondakan / Boss Log worn and Features in the backpack - dead.
+    val def = world.definitions.get(ItemDef::class.java, item)
+    gg.rsmod.plugins.content.magic.teleports.JewelleryDestinations.RING_OF_WEALTH_WORN_EXTRA.forEach { (location, endTile) ->
+        if (def.equipmentMenu.none { it.equals(location, ignoreCase = true) }) return@forEach
+        on_equipment_option(item, option = location) {
+            gg.rsmod.plugins.content.magic.teleports.JewelleryDestinations.wealthRefusal(player, location)?.let {
+                player.message(it)
+                return@on_equipment_option
+            }
+            player.queue(TaskPriority.STRONG) {
+                player.teleport(endTile, isEquipped = true)
+            }
+        }
+    }
+    if (def.equipmentMenu.any { it.equals("Boss Log", ignoreCase = true) }) {
+        // ADAPTED: OSRS opens the Boss Kill Log; the kill counts per boss here are on the collection log pages.
+        on_equipment_option(item, option = "Boss Log") { gg.rsmod.plugins.content.quests.tab.CollectionLogUi.open(player) }
+    }
+    if (def.inventoryMenu.any { it.equals("Features", ignoreCase = true) }) {
+        on_item_option(item, option = "Features") {
+            player.message("Rub or operate the ring to teleport (one charge each). Boss Log opens the collection log with your kill counts.")
+        }
+    }
 }
 
 /**

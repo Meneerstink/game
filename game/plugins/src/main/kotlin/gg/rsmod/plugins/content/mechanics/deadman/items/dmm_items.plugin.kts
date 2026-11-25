@@ -26,6 +26,16 @@ on_item_option(DmmItems.ESCAPE_CRYSTAL, "auto-afk") {
 on_item_option(DmmItems.ESCAPE_CRYSTAL, "configure") {
     player.queue { DmmItems.autoTeleSet(player, inputInt("Seconds of inactivity (2-300):")) }
 }
+// N537 stap 3a (census 25-11): the worn crystal lists Teleport / Auto-afk / Configure too and those did nothing. Teleport refuses
+// with escapeCrystal's own ring-slot line (the worn ring-of-life mode is not built); Auto-afk and Configure are the inventory ones.
+on_equipment_option(DmmItems.ESCAPE_CRYSTAL, "teleport") { DmmItems.escapeCrystal(player) }
+on_equipment_option(DmmItems.ESCAPE_CRYSTAL, "auto-afk") {
+    DmmItems.autoTeleToggle(player)
+    if (DmmItems.autoTeleEnabled(player)) player.timers[escapeAutoTimer] = 1
+}
+on_equipment_option(DmmItems.ESCAPE_CRYSTAL, "configure") {
+    player.queue { DmmItems.autoTeleSet(player, inputInt("Seconds of inactivity (2-300):")) }
+}
 
 /* Salve amulet (i)/(ei) 'Uncharge' (cache option; the OSRS Wiki lists it but not its effect): the imbue is permanent here. */
 // Nothing is undone, so no shared "Are you sure" question first (ITEM-UNCHARGE-MELDING: after "Yes" the message never showed).
@@ -96,6 +106,25 @@ DmmItems.RING_OF_WEALTH_I_CHARGED.forEach { ring ->
             on_equipment_option(ring, option = name) { DmmItems.wealthTeleport(player, ring, tile, equipped = true) }
         }
     }
+    // N537 stap 3a (census 25-11): the worn Falador / Dondakan / Boss Log did nothing.
+    gg.rsmod.plugins.content.magic.teleports.JewelleryDestinations.RING_OF_WEALTH_WORN_EXTRA.forEach { (name, tile) ->
+        if (ringDef.equipmentMenu.any { it.equals(name, true) }) {
+            on_equipment_option(ring, option = name) {
+                gg.rsmod.plugins.content.magic.teleports.JewelleryDestinations.wealthRefusal(player, name)?.let {
+                    player.message(it)
+                    return@on_equipment_option
+                }
+                DmmItems.wealthTeleport(player, ring, tile, equipped = true)
+            }
+        }
+    }
+    if (ringDef.equipmentMenu.any { it.equals("Boss Log", true) }) {
+        on_equipment_option(ring, option = "Boss Log") { gg.rsmod.plugins.content.quests.tab.CollectionLogUi.open(player) }
+    }
+}
+// N537 stap 3a: the worn uncharged ring's Rub did nothing; same line as its inventory Rub.
+if (world.definitions.get(ItemDef::class.java, DmmItems.RING_OF_WEALTH_I).equipmentMenu.any { it.equals("rub", true) }) {
+    on_equipment_option(DmmItems.RING_OF_WEALTH_I, "rub") { player.message("The ring has lost its charge. It will need to be recharged before you can use it again.") }
 }
 on_item_option(DmmItems.RING_OF_WEALTH_I, "rub") { player.message("The ring has lost its charge. It will need to be recharged before you can use it again.") }
 
@@ -105,6 +134,8 @@ RingOfEndurance.POTIONS.forEach { potion ->
     on_item_on_item(item1 = potion, item2 = DmmItems.RING_OF_ENDURANCE_UNCHARGED) { RingOfEndurance.charge(player, potion) }
 }
 on_item_option(DmmItems.RING_OF_ENDURANCE, "check") { RingOfEndurance.check(player, player.inventory[player.getInteractingItemSlot()]) }
+// N537 stap 3a (census 25-11): the worn ring's Check did nothing.
+on_equipment_option(DmmItems.RING_OF_ENDURANCE, "check") { RingOfEndurance.check(player, player.getEquipment(EquipmentType.RING)) }
 on_item_option(DmmItems.RING_OF_ENDURANCE, "uncharge") { RingOfEndurance.uncharge(player, player.getInteractingItemSlot()) }
 
 /* Ash sanctifier (I-A09). */
@@ -149,11 +180,16 @@ on_global_item_pickup {
 /* Wilderness sword 3 and 4: Teleport to the Fountain of Rune (sword 4 unlimited, sword 3 once a day). */
 for (sword in intArrayOf(DmmItems.WILDERNESS_SWORD_3, DmmItems.WILDERNESS_SWORD_4)) {
     on_item_option(sword, "teleport") { DmmItems.wildernessSwordTeleport(player, sword) }
+    // N537 stap 3a (census 25-11): the wielded sword's Teleport did nothing; same teleport (and daily limit) as from the backpack.
+    on_equipment_option(sword, "teleport") { DmmItems.wildernessSwordTeleport(player, sword) }
 }
 
 /* p48-gptb-rest. Reminisce and Old Memorial recharge await the owner's Kourend decision. */
 on_item_option(BookOfTheDead.ITEM, "check") { BookOfTheDead.check(player) }
 on_item_option(BookOfTheDead.ITEM, "read") { RoseMemoirs.book.open(player) }
+// N537 stap 3a (census 25-11): Reminisce was a dead option. Its teleports all go to Kourend, which is not in this world (owner:
+// Kourend parked); ADAPTED: a line instead of a silent option, no charge used.
+on_item_option(BookOfTheDead.ITEM, "reminisce") { player.message("The memories in this book lead to Kourend, which cannot be reached from this world.") }
 on_item_option(BookOfTheDead.ITEM, "destroy") {
     val slot = player.getInteractingItemSlot()
     val expected = player.inventory[slot] ?: return@on_item_option

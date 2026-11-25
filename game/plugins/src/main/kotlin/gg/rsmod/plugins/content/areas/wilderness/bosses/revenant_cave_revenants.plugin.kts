@@ -128,6 +128,8 @@ on_item_option(item = Items.BRACELET_OF_ETHEREUM, option = "uncharge") {
     RevenantGear.uncharge(player, player.getInteractingItemSlot())
 }
 
+// N537 stap 3b: asks its own question - without this the generic "Are you sure" came first (2x confirm).
+gg.rsmod.plugins.content.items.ItemActionGuard.selfConfirming("dismantle", Items.BRACELET_OF_ETHEREUM_UNCHARGED)
 on_item_option(item = Items.BRACELET_OF_ETHEREUM_UNCHARGED, option = "dismantle") {
     val slot = player.getInteractingItemSlot()
     player.queue {

@@ -334,3 +334,26 @@ DizanasQuiver.AMMO_HOLDERS.forEach { quiverId ->
         }
     }
 }
+
+// N537 stap 3a (census 25-11): "Empty" of the broken quivers did nothing. An unprotected PvP death drops the stored ammo before the
+// quiver breaks (QuiverDeathRules), so a broken quiver normally holds none; should one still carry ammo, it comes out like a whole one.
+listOf(Items.DIZANAS_QUIVER_BROKEN, Items.BLESSED_DIZANAS_QUIVER_BROKEN).forEach { broken ->
+    if (world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, broken).inventoryMenu.none { it.equals("Empty", ignoreCase = true) }) return@forEach
+    on_item_option(item = broken, option = "Empty") {
+        val slot = player.attr[INTERACTING_ITEM_SLOT] ?: return@on_item_option
+        val quiver = player.inventory[slot]?.takeIf { it.id == broken } ?: return@on_item_option
+        val id = quiver.attr[gg.rsmod.game.model.item.ItemAttribute.ATTACHED_ITEM_ID]
+        val count = quiver.attr[gg.rsmod.game.model.item.ItemAttribute.ATTACHED_ITEM_COUNT] ?: 0
+        if (id == null || count <= 0) {
+            player.message("Your quiver holds no ammunition.")
+            return@on_item_option
+        }
+        val added = player.inventory.add(id, count).completed
+        if (added <= 0) {
+            player.message("You don't have enough inventory space.")
+            return@on_item_option
+        }
+        player.inventory[slot] = DizanasQuiver.withStored(quiver, id, count - added)
+        player.message("You empty ${added} x ${ammoName(id)} from your quiver.")
+    }
+}

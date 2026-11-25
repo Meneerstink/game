@@ -53,6 +53,8 @@ OsrsOrnamentKits.ALL.forEach { ornament ->
     }
 }
 
+// N537 stap 3b: asks its own question - without this the generic "Are you sure" came first (2x confirm).
+gg.rsmod.plugins.content.items.ItemActionGuard.selfConfirming("dismantle", Items.AVERNIC_DEFENDER)
 on_item_option(item = Items.AVERNIC_DEFENDER, option = "Dismantle") {
     val slot = player.getInteractingItemSlot()
     player.queue {
@@ -85,5 +87,35 @@ OsrsOrnamentKits.ALL.filter { it.ornamented !in combinationResults }.forEach { o
         player.inventory[baseSlot] = gg.rsmod.game.model.item.Item(ornament.ornamented)
         gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player, ornament.kit, ornament.base)
         player.queue { itemMessageBox(ornament.attachMessage, item = ornament.ornamented) }
+    }
+}
+
+/*
+ * N537 stap 3a (census 25-11): the ToA jewels and the Cursed phalanx list "Attach" in the cache but the option did nothing - only
+ * use-on worked. The option now does the same attach onto the matching item in the backpack (same "Are you sure" item GUI, same
+ * checks, the kit used up), or says which item it needs.
+ */
+OsrsOrnamentKits.ALL.filter { it.ornamented !in combinationResults }.groupBy { it.kit }.forEach { (kit, ornaments) ->
+    if (world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, kit).inventoryMenu.none { it.equals("Attach", ignoreCase = true) }) return@forEach
+    on_item_option(item = kit, option = "Attach") {
+        val kitSlot = player.getInteractingItemSlot()
+        if (player.inventory[kitSlot]?.id != kit) return@on_item_option
+        val ornament = ornaments.firstOrNull { player.inventory.contains(it.base) }
+        if (ornament == null) {
+            val baseName = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, ornaments.first().base).name
+            player.message("You need ${if (baseName.first().lowercaseChar() in "aeiou") "an" else "a"} ${baseName.lowercase()} in your inventory to attach this to.")
+            return@on_item_option
+        }
+        val kitName = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, kit).name
+        player.queue {
+            if (!confirmItemAction(ornament.base, gg.rsmod.plugins.content.items.combine.AttachConfirm.question(kitName),
+                    gg.rsmod.plugins.content.items.combine.AttachConfirm.detail(kitName))) return@queue
+            val baseSlot = player.inventory.getItemIndex(ornament.base, skipAttrItems = false)
+            if (player.inventory[kitSlot]?.id != kit || baseSlot == -1) return@queue
+            player.inventory.remove(item = kit, beginSlot = kitSlot)
+            player.inventory[baseSlot] = gg.rsmod.game.model.item.Item(ornament.ornamented)
+            gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player, kit, ornament.base)
+            itemMessageBox(ornament.attachMessage, item = ornament.ornamented)
+        }
     }
 }

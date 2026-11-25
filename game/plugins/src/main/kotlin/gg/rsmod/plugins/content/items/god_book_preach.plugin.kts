@@ -77,4 +77,7 @@ PASSAGES.keys.forEach { book ->
     val def = world.definitions.get(ItemDef::class.java, book)
     if (def.inventoryMenu.any { it.equals("Preach", ignoreCase = true) }) on_item_option(book, option = "preach") { preach(player, book) }
     if (def.equipmentMenu.any { it.equals("Preach", ignoreCase = true) }) on_equipment_option(item = book, option = "preach") { preach(player, book) }
+    // N537 stap 3a (census 25-11): the worn Book of Darkness (OSRS import) names this option "Read" and it did nothing; it is the
+    // same passage choice as the other worn god books' Preach.
+    if (def.equipmentMenu.any { it.equals("Read", ignoreCase = true) }) on_equipment_option(item = book, option = "read") { preach(player, book) }
 }

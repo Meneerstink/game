@@ -294,6 +294,53 @@ NigelRewardStore.active?.contract?.skins?.forEach { skin ->
     if (skin.base == Items.TOXIC_STAFF_OF_THE_DEAD) itemOption(id, "Uncharge") {
         on_item_option(id, "Uncharge") { DeadmanCosmetics.unchargeToxic(player, player.getInteractingItemSlot(), id) }
     }
+    // N537 stap 3a (census 25-11): Check of the skins (Toxic staff (Deadman), the Deadman crystal armour) did nothing, held and worn;
+    // the same line as the base item's Check (staff_of_the_dead / crystal plugins), read from the skin's own charges.
+    val checkLine: ((Item) -> String)? = when (skin.base) {
+        Items.TOXIC_STAFF_OF_THE_DEAD -> { item -> "Scales: ${gg.rsmod.plugins.content.items.osrs.StaffOfTheDead.scales(item)}" }
+        in gg.rsmod.plugins.content.items.osrs.CrystalEquipment.INACTIVE_FOR,
+        in gg.rsmod.plugins.content.items.osrs.CrystalEquipment.CHARGED_FOR -> { item ->
+            val charges = gg.rsmod.plugins.content.items.osrs.CrystalEquipment.charges(item)
+            val per = gg.rsmod.plugins.content.items.osrs.CrystalEquipment.CHARGES_PER_SHARD
+            val shards = (charges + per - 1) / per
+            "It holds $shards crystal shard${if (shards == 1) "" else "s"} ($charges charges)."
+        }
+        else -> null
+    }
+    // N537 stap 3a (census 25-11): Revert of the crystal armour skins and Uncharge of the Bow of Faerdhinen (c) skin did nothing.
+    // Uncharge keeps the skin (the skin of the inactive bow, same unlock), like the base bow's Uncharge (osrs_bows: shards lost).
+    // Revert would turn the bought skin into a plain seed; ADAPTED: it refuses with a line instead (no item is lost).
+    if (skin.base == Items.BOW_OF_FAERDHINEN_C) itemOption(id, "Uncharge") {
+        gg.rsmod.plugins.content.items.ItemActionGuard.selfConfirming("uncharge", id)
+        on_item_option(id, "Uncharge") {
+            val slot = player.getInteractingItemSlot()
+            val held = player.inventory[slot]?.takeIf { it.id == id } ?: return@on_item_option
+            val result = DeadmanCosmetics.state(held, Item(Items.BOW_OF_FAERDHINEN_INACTIVE))
+            if (result.id == Items.BOW_OF_FAERDHINEN_INACTIVE) {
+                player.message("This skin cannot be uncharged.")
+                return@on_item_option
+            }
+            player.queue {
+                if (options("Yes - the crystal shards used are lost.", "No, cancel.", title = "Revert the bow to its uncharged state?") != 1) return@queue
+                if (player.inventory[slot] !== held) return@queue
+                player.inventory[slot] = result
+            }
+        }
+    }
+    if (skin.base in gg.rsmod.plugins.content.items.osrs.CrystalEquipment.REVERT_SEED) itemOption(id, "Revert") {
+        gg.rsmod.plugins.content.items.ItemActionGuard.selfConfirming("revert", id)
+        on_item_option(id, "Revert") { player.message("A Deadman skin cannot be reverted into a crystal seed.") }
+    }
+    if (checkLine != null) {
+        itemOption(id, "Check") {
+            on_item_option(id, "Check") { player.inventory[player.getInteractingItemSlot()]?.takeIf { it.id == id }?.let { player.message(checkLine(it)) } }
+        }
+        if (world.definitions.getNullable(ItemDef::class.java, id)?.equipmentMenu?.any { it.equals("Check", true) } == true) {
+            on_equipment_option(id, "Check") {
+                EquipmentType.values().mapNotNull { player.getEquipment(it) }.firstOrNull { it.id == id }?.let { player.message(checkLine(it)) }
+            }
+        }
+    }
 }
 Dmm2Ids.ItemId.FORTUITY.local?.let { id -> itemOption(id, "Uncharge") {
     on_item_option(id, "Uncharge") { DeadmanTrinkets.charge(player, player.getInteractingItemSlot(), id, false) }
@@ -399,6 +446,13 @@ Dmm2Ids.ItemId.SCYTHE_EMPTY.local?.let { empty -> Dmm2Ids.ItemId.SCYTHE.local?.l
             val item = player.inventory[player.getInteractingItemSlot()] ?: return@on_item_option
             player.message("Your weapon has ${CorruptedWeapons.scytheCharges(item)} charges.")
         } }
+        // N537 stap 3a (census 25-11): the wielded scythe's Check did nothing.
+        if (world.definitions.getNullable(ItemDef::class.java, id)?.equipmentMenu?.any { it.equals("Check", true) } == true) {
+            on_equipment_option(id, "Check") {
+                val item = player.getEquipment(EquipmentType.WEAPON)?.takeIf { it.id == id } ?: return@on_equipment_option
+                player.message("Your weapon has ${CorruptedWeapons.scytheCharges(item)} charges.")
+            }
+        }
     }
 } }
 

@@ -139,6 +139,8 @@ Blowpipe.Pipe.values().forEach { type ->
 
 // Wiki: dismantling the empty blowpipe or the Tanzanite fang gives 20,000 Zulrah's scales.
 listOf(Items.TOXIC_BLOWPIPE_EMPTY, Items.TANZANITE_FANG).forEach { id ->
+    // N537 stap 3b: asks its own question - without this the generic "Are you sure" came first (2x confirm).
+    gg.rsmod.plugins.content.items.ItemActionGuard.selfConfirming("dismantle", id)
     on_item_option(item = id, option = "Dismantle") {
         val slot = player.getInteractingItemSlot()
         player.queue {
