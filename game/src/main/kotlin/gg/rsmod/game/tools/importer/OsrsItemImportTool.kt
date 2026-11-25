@@ -84,6 +84,8 @@ object OsrsItemImportTool {
         mapOf(
             // O22 Patchy: existing service's three later cosmetic products, no new region/content.
             // OSRS Wiki Partyhat & specs, Pirate hat & patch, Top hat & monocle; no combat/client params.
+            // N72C Lvl-7 Enchant inputs. Names/slots verified in cache 2686; new high ids cannot shift existing worn ranks.
+            "n72c-zenyte" to listOf(Spec(19532, noted = true), Spec(19535, noted = true), Spec(19538, noted = true), Spec(19541, noted = true)),
             "patchy-products" to listOf(Spec(12399, noted = true), Spec(12412, noted = true), Spec(12434, noted = true)),
             // DMM2: exact 51-parent order from docs/dmm2-research/preflight-output/bundle-item.txt (cache 2686).
             // Notes/count forms are imported by their parent; existing trinkets retain their local IDs.

@@ -34,6 +34,8 @@ object OsrsFxImportTool {
      */
     val BATCHES: Map<String, List<Int>> =
         mapOf(
+            "n72c-geomancy" to listOf(1285), // Wiki Geomancy; gameval human7118/spot1285/synth2891.
+
             "p48-archive-fx" to (4427..4435).toList() + listOf(4437, 4438, 4439),
             // DMM-ITEMS Soulflame horn Entice (source2762): gameval SpotanimID VFX_SOULFLAME_HORN_SPOTANIM01 3282 (flame at the horn) +
             // VFX_SOULFLAME_HORN_IMPACT_SPOTANIM01 3283 (on each enticed player); seq + synth halves in SEQ_/SYNTH_BATCHES.
@@ -278,6 +280,8 @@ object OsrsFxImportTool {
      */
     val SEQ_BATCHES: Map<String, List<Int>> =
         mapOf(
+            "n72c-geomancy" to listOf(7118), // Wiki Geomancy; gameval human7118/spot1285/synth2891.
+
             "p48-archive-seq" to (15110..15116).toList() + (15135..15148).toList() + listOf(15158),
             // DMM-ITEMS Soulflame horn Entice: gameval AnimationID SOULFLAME_HORN_BLOW_03 12158 + _BLOW_03_NO_FIRE 12159 (wiki: with
             // nobody to entice 'the flame effect around the mouth of the horn will not appear').
@@ -481,6 +485,8 @@ object OsrsFxImportTool {
     /** OSRS synth sounds by Jagex config name (OSRS Wiki "List of sound IDs", read 2026-09-17). */
     val SYNTH_BATCHES: Map<String, List<Int>> =
         mapOf(
+            "n72c-geomancy" to listOf(2891), // Wiki Geomancy; gameval human7118/spot1285/synth2891.
+
             // OSRS Wiki List of sound IDs/12001-13000 rev15411172 (Jagex spells it zaryas).
             "p48-archive-sfx" to listOf(12648, 12660, 12661, 12662),
             // DMM-ITEMS Soulflame horn Entice: gameval SoundEffectID YAMA_SOULFLAME_HORN_WHOOSH_01 10220, _FIRE_01 10233, _BUFF_01 10236.

@@ -170,9 +170,72 @@ object SpellbookCompletionCacheTool {
         return bytes
     }
 
-    fun plan(sourceJson: File? = null, monsterInfoOnly: Boolean = false): List<CacheMutation> {
+    /** OSRS Jewellery subpage (5285) + Farming Patch Status (179) expressed with native667 widgets.
+     * Menu targets retain native script6 tooltips, inventory/stat refresh and target masks.
+     */
+    fun restPanelsPlan(library: CacheLibrary): List<CacheMutation> {
+        val out = mutableListOf<CacheMutation>()
+        val p11 = requireNotNull(library.index(8).archive("p11_full")).id
+        val b12 = requireNotNull(library.index(8).archive("b12_full")).id
+        fun add(group: Int, id: Int, bytes: ByteArray) {
+            val old = library.data(3, group, id)
+            require(old == null || old.contentEquals(bytes)) { "panel $group:$id already taken" }
+            out += CacheMutation(3, group, id, bytes, "N72C native panel $group:$id", old?.let(CacheItemProbeTool::sha1))
+        }
+        fun c(group: Int, id: Int, type: Int, x: Int, y: Int, w: Int, h: Int, parent: Int = 0,
+              text: String = "", ops: List<String> = emptyList(), scroll: Int = 0, hidden: Boolean = false) {
+            add(group, id, OsrsInterfacePortTool.encode(OsrsInterfacePortTool.C(id, type, x, y, w, h, parent,
+                0, 0, 0, 0, hidden, scrollH = scroll, font = if (type == 4) p11 else -1,
+                text = text, lineHeight = 14, colour = 0xff981f, shadow = true, ops = ops)))
+        }
+        c(1251, 0, 0, 0, 0, 190, 261, -1)
+        c(1251, 1, 3, 0, 0, 190, 261)
+        c(1251, 2, 4, 10, 35, 43, 30, text = "Back", ops = listOf("Back"))
+        val native = listOf(29, 41, 53, 61, 76, 88, 102)
+        native.forEachIndexed { i, id ->
+            var bytes = if (id == 102) component(requireNotNull(library.data(3, 192, 88)), SPELLS.first { it.name == "Lvl-7 Enchant" })
+                else requireNotNull(library.data(3, 192, id)).copyOf()
+            val old = requireNotNull(InterfaceHookProbeTool.componentHooks(bytes)["onLoad"])
+            val args = old.toMutableList().also { it[2] = 1251 shl 16 }
+            // script6 is both onLoad and onVarTransmit. Replace both complete hooks structurally.
+            val from = hook(old); val to = hook(args)
+            var at = SpellRuneArgsTool.indexOf(bytes, from)
+            while (at >= 0) {
+                bytes = bytes.copyOfRange(0, at) + to + bytes.copyOfRange(at + from.size, bytes.size)
+                at = SpellRuneArgsTool.indexOf(bytes, from, at + to.size)
+            }
+            val cell = i + 1
+            ByteBuffer.wrap(bytes).putShort(4, (20 + (cell % 3) * 64).toShort()).putShort(6, (35 + (cell / 3) * 64).toShort())
+                .putShort(8, 32).putShort(10, 32).putShort(16, 0)
+            check(InterfaceHookProbeTool.componentHooks(bytes)["onLoad"] == args)
+            add(1251, 3 + i, bytes)
+        }
+        // A native six-tab, three-column scrolling overview, with real per-player patch data filled by Geomancy.
+        // No source scripts with hardcoded OSRS interface hashes are copied into the667 script table.
+        c(1252, 0, 0, 0, 0, 490, 334, -1)
+        c(1252, 1, 4, 8, 5, 430, 22, text = "Farming Patch Status")
+        c(1252, 2, 4, 463, 5, 22, 22, text = "X", ops = listOf("Close"))
+        c(1252, 3, 0, 8, 65, 456, 260, scroll = 1800)
+        c(1252, 4, 0, 465, 65, 16, 260)
+        listOf("Allotments", "Herbs", "Hops", "Bushes", "Trees", "Special").forEachIndexed { i, name ->
+            c(1252, 5 + i, 4, 10 + i * 79, 38, 78, 22, text = name, ops = listOf("Select"))
+        }
+        // 40 cards cover every one of the34 existing patches and4 compost bins.
+        repeat(40) { i ->
+            c(1252, 11 + i * 3, 0, (i % 3) * 152, (i / 3) * 125, 150, 123, parent = 3, hidden = true)
+            c(1252, 12 + i * 3, 4, 3, 1, 145, 120, parent = 11 + i * 3)
+            c(1252, 13 + i * 3, 3, 0, 0, 150, 123, parent = 11 + i * 3)
+        }
+        return out
+    }
+
+    fun plan(sourceJson: File? = null, monsterInfoOnly: Boolean = false, restReady: Boolean = false): List<CacheMutation> {
         val mutations = mutableListOf<CacheMutation>()
-        val activeSpells = if (monsterInfoOnly) SPELLS.filter { it.name == "Monster Inspect" } else SPELLS
+        val activeSpells = when {
+            monsterInfoOnly -> SPELLS.filter { it.name == "Monster Inspect" }
+            restReady -> SPELLS.filter { it.name in setOf("Jewellery Enchantments", "Lvl-7 Enchant", "Geomancy", "Minigame Teleport") }
+            else -> SPELLS
+        }
         val descriptions = mutableMapOf<Int, String>()
         val library = CacheLibrary(OsrsItemImportTool.TARGETS[0])
         try {
@@ -197,10 +260,17 @@ object SpellbookCompletionCacheTool {
                     add(8, sprite(id), 0, bytes, "N72C sprite OSRS $id -> ${sprite(id)}")
                 }
             }
+            // Keep unsupported Lunar slots inert while retaining the reviewed component ids. A gap crashes the 667 client.
+            if (restReady) for (id in 80..82) {
+                val reserved = OsrsInterfacePortTool.encode(OsrsInterfacePortTool.C(id, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, true))
+                val old = library.data(3, 430, id)
+                require(old == null || old.contentEquals(reserved)) { "430:$id already has content; review its import before replacing it" }
+                add(3, 430, id, reserved, "N72C reserved hidden430:$id (no icon/op/cast until source exists)")
+            }
             // 25-11 Claude: a component id with a missing lower id leaves a null in the client's component array -> NPE in
             // executeOnLoad when the book opens (192:101 without 192:100 broke login). Every new id must follow the existing ones.
             activeSpells.groupBy { it.book }.forEach { (book, spells) ->
-                val present = library.index(3).archive(book)?.fileIds()?.toSet() ?: emptySet()
+                val present = (library.index(3).archive(book)?.fileIds()?.toSet() ?: emptySet()) + mutations.filter { it.indexId == 3 && it.groupId == book }.map { it.fileId }
                 spells.sortedBy { it.component }.fold(present) { have, spell ->
                     check(spell.component in have || (spell.component - 1) in have) {
                         "$book:${spell.component} would leave a gap (highest existing ${have.maxOrNull()}); import the lower ids first"
@@ -231,9 +301,10 @@ object SpellbookCompletionCacheTool {
                 leaves.forEach { leaf ->
                     val def = enum(leaf)
                     val original = def.entries.toMap()
-                    val additions = activeSpells.filter { it.book == book && ((book shl 16) or sortTemplate(it)) in def.entries.values }
-                    if (additions.isNotEmpty()) {
-                        val ordered = def.entries.entries.sortedBy { it.key }.map { it.value as Int }.toMutableList()
+                    val submenu = if (restReady && book == 192) listOf(29, 41, 53, 61, 76, 88, 102).map { (192 shl 16) or it }.toSet() else emptySet()
+                    val additions = activeSpells.filter { it.book == book && it.packed !in submenu && ((book shl 16) or sortTemplate(it)) in def.entries.values }
+                    if (additions.isNotEmpty() || def.entries.values.any { it in submenu }) {
+                        val ordered = def.entries.entries.sortedBy { it.key }.map { it.value as Int }.filterNot { it in submenu }.toMutableList()
                         fun level(packed: Int): Int = SPELLS.firstOrNull { it.packed == packed }?.level ?: run {
                             val bytes = requireNotNull(library.data(3, packed ushr 16, packed and 65535))
                             (InterfaceHookProbeTool.componentHooks(bytes)["onLoad"]?.getOrNull(5) as? Int) ?: 99
@@ -255,7 +326,8 @@ object SpellbookCompletionCacheTool {
                     }
                 }
             }
-            mutations += monsterInfoPlan(library, sourceJson)
+            if (!restReady) mutations += monsterInfoPlan(library, sourceJson)
+            if (restReady) mutations += restPanelsPlan(library)
         }
         finally { library.close() }
         return mutations
@@ -275,11 +347,12 @@ object SpellbookCompletionCacheTool {
         val jsonAt = args.indexOf("--interface-json")
         val sourceJson = if (jsonAt >= 0) File(args.getOrNull(jsonAt + 1) ?: error("--interface-json requires a path")) else null
         val modes = args.filterIndexed { i, _ -> i != jsonAt && (jsonAt < 0 || i != jsonAt + 1) }
-        require(modes.all { it in setOf("--dry-run", "--apply", "--monster-info-only") }) {
+        require(modes.all { it in setOf("--dry-run", "--apply", "--monster-info-only", "--rest-ready") }) {
             "Usage: [--dry-run|--apply] [--monster-info-only] [--interface-json <2686 decode>]"
         }
         require(!("--apply" in args && "--dry-run" in args))
-        val mutations = plan(sourceJson, "--monster-info-only" in args)
+        require(!("--rest-ready" in args && "--monster-info-only" in args)) { "choose one batch mode" }
+        val mutations = plan(sourceJson, "--monster-info-only" in args, "--rest-ready" in args)
         mutations.forEach { println("PLAN ${it.label}") }
         val transaction = CacheTransaction(OsrsItemImportTool.TARGETS, mutations)
         val preflight = transaction.preflight()

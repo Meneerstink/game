@@ -152,4 +152,10 @@ enum class EnchantmentData(
         spell = SpellbookData.LVL_6_ENCHANT,
         sound = 144,
     ),
+    // N72C paired dry-run: n72c-zenyte. Every pending id is checked against its exact
+    // cache name by JewelleryEnchantment before use; a changed allocation fails closed.
+    ZENYTE_BRACELET(25690, Items.TORMENTED_BRACELET, SpellbookData.LVL_7_ENCHANT, 143),
+    ZENYTE_NECKLACE(25692, Items.NECKLACE_OF_ANGUISH, SpellbookData.LVL_7_ENCHANT, 143),
+    ZENYTE_RING(25694, Items.RING_OF_SUFFERING, SpellbookData.LVL_7_ENCHANT, 143),
+    ZENYTE_AMULET(25696, Items.AMULET_OF_TORTURE, SpellbookData.LVL_7_ENCHANT, 143),
 }

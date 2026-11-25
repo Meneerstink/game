@@ -1659,6 +1659,15 @@ enum class SpellbookData(
         sound = -1,
         hitSound = -1,
     ),
+    // N72C: OSRS2686 descriptors; local icons/components from SpellbookCompletionCacheTool.
+    JEWELLERY_ENCHANTMENTS(192, 101, 9200, SpellType.MISC_SPELL_TYPE, "Jewellery Enchantments", 7, sound = -1, hitSound = -1),
+    LVL_7_ENCHANT(192, 102, 9208, SpellType.MISC_SPELL_TYPE, "Lvl-7 Enchant", 93,
+        listOf(Item(Items.COSMIC_RUNE), Item(Items.SOUL_RUNE, 20), Item(Items.BLOOD_RUNE, 20)), -1, -1),
+    MINIGAME_TELEPORT(192, 103, 9212, SpellType.TELEPORT_SPELL_TYPE, "Minigame Teleport", 1, sound = -1, hitSound = -1),
+    ANCIENT_MINIGAME_TELEPORT(193, 55, 19212, SpellType.TELEPORT_SPELL_TYPE, "Minigame Teleport", 1, sound = -1, hitSound = -1),
+    GEOMANCY(430, 83, 9228, SpellType.MISC_SPELL_TYPE, "Geomancy", 65,
+        listOf(Item(Items.ASTRAL_RUNE, 3), Item(Items.NATURE_RUNE, 3), Item(Items.EARTH_RUNE, 8)), -1, -1),
+    LUNAR_MINIGAME_TELEPORT(430, 84, 29212, SpellType.TELEPORT_SPELL_TYPE, "Minigame Teleport", 1, sound = -1, hitSound = -1),
     TELE_GROUP_TROLLHEIM(
         interfaceId = 430,
         component = 76,

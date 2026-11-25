@@ -23,8 +23,8 @@ import gg.rsmod.plugins.content.magic.canTeleport
 val HOME_TELEPORT_TIMER_DELAY = 3000 // 30 minutes of 600 ms ticks
 val HOME_TELEPORT_TIMER = TimerKey(persistenceKey = "home_teleport_delay", tickOffline = true)
 
-val HOME_TELEPORT_ANIMATIONS = intArrayOf(1722, 1723, 1724, 1725, 2798, 2799, 2800, 3195, 4643, 4645, 4646, 4847, 4848, 4849, 4850, 4851, 4852)
-val HOME_TELEPORT_GRAPHICS = intArrayOf(775, 800, 801, 802, 803, 804, 1703, 1704, 1705, 1706, 1707, 1708, 1709, 1710, 1711, 1712, 1713)
+val HOME_TELEPORT_ANIMATIONS = HomeTeleportSequence.ANIMATIONS
+val HOME_TELEPORT_GRAPHICS = HomeTeleportSequence.GRAPHICS
 
 HomeTeleport.values.forEach { teleport ->
 
@@ -60,40 +60,10 @@ val TERMINATE_HOME_TELEPORT: QueueTask.() -> Unit = {
 }
 
 suspend fun QueueTask.castHome(endTile: Tile) {
-    terminateAction = TERMINATE_HOME_TELEPORT
-    fun combatTicks() = if (player.timers.exists(TELEPORT_COMBAT_TIMER)) player.timers[TELEPORT_COMBAT_TIMER] else 0
-    var combat = combatTicks()
-    /** A hit taken re-arms the teleport combat timer: then the cast stops (OSRS: interrupted by combat). */
-    fun hit(): Boolean {
-        val now = combatTicks()
-        val hit = now > combat
-        combat = now
-        return hit
-    }
-    repeat(2) {
-        wait(1)
-        if (hit()) return terminate()
-    }
-    val styleStages = gg.rsmod.plugins.content.mechanics.deadman.DeadmanHomeTeleport.stages(player)
-    if (styleStages != null) {
-        for (stage in styleStages) {
-            player.animate(stage.animation)
-            player.graphic(stage.graphic)
-            repeat(stage.ticks) {
-                wait(1)
-                if (hit()) return terminate()
-            }
-        }
-    } else {
-        for (stage in HOME_TELEPORT_ANIMATIONS.indices) {
-            player.animate(HOME_TELEPORT_ANIMATIONS[stage])
-            player.graphic(HOME_TELEPORT_GRAPHICS[stage])
-            wait(1)
-            if (hit()) return terminate()
-        }
-    }
+    val complete = with(HomeTeleportSequence) { play() }
     player.animate(-1)
     player.graphic(-1)
+    if (!complete) return
     player.moveTo(endTile)
     world.spawn(AreaSound(endTile, HOME_TELEPORT_SOUND, 10, 1))
     player.timers[HOME_TELEPORT_TIMER] = HOME_TELEPORT_TIMER_DELAY
