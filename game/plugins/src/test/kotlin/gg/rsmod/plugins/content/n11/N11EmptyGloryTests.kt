@@ -8,6 +8,8 @@ class N11EmptyGloryTests {
     private fun load(f: N11Fixture) {
         listOf(Items.AMULET_OF_GLORY_6, Items.AMULET_OF_GLORY_5, Items.AMULET_OF_GLORY_4,
             Items.AMULET_OF_GLORY_3, Items.AMULET_OF_GLORY_2, Items.AMULET_OF_GLORY_1,
+            // 25-11 TESTS-ROOD-2511: O26 trimmed (6)/(5) imports, cache menus = the same Wear/Rub + equipment teleports.
+            gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.GLORY_T6, gg.rsmod.plugins.content.areas.wilderness.FountainOfRune.GLORY_T5,
             Items.AMULET_OF_GLORY_T4, Items.AMULET_OF_GLORY_T3, Items.AMULET_OF_GLORY_T2, Items.AMULET_OF_GLORY_T1,
         ).forEach { id ->
             f.menu(id, "", "Wear", "", "Rub")

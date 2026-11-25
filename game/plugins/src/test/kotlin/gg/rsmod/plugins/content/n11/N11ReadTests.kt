@@ -16,7 +16,7 @@ class N11ReadTests {
     @Test fun `all documents have complete attributed text and real Read bindings`() {
         N11Fixture().use { f ->
             f.load("items.books.Documents_plugin")
-            assertEquals(19, ReadableDocuments.entries.size)
+            assertEquals(28, ReadableDocuments.entries.size) // 19 + 9 PROJECT48 O10 Read transcripts (25-11 TESTS-ROOD-2511)
             val source = File("src/main/kotlin/gg/rsmod/plugins/content/items/books/ReadableDocuments.kt").readText()
             ReadableDocuments.entries.forEach { (id, document) ->
                 assertTrue(document.text.isNotBlank())

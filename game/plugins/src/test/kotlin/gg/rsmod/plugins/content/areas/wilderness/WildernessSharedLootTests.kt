@@ -66,11 +66,14 @@ class WildernessSharedLootTests {
             every { defs.get(ItemDef::class.java, ringId) } returns ItemDef(ringId).apply { name = "Ring of wealth (i)" }
             every { f.player.tile } returns Tile(3234, 10332)
             val ring = Item(ringId)
-            for (id in WildernessBossClues.NPCS) {
+            // 25-11 TESTS-ROOD-2511: a sourced boss clue is the tier's Scroll box (OSRS, ClueNpcSources: Callisto elite 1/100).
+        val clueItems = setOf(Items.CLUE_SCROLL_HARD, Items.CLUE_SCROLL_ELITE) + listOf(gg.rsmod.plugins.content.scrolls.ClueScrollTier.HARD, gg.rsmod.plugins.content.scrolls.ClueScrollTier.ELITE)
+            .mapNotNull { gg.rsmod.plugins.content.scrolls.ClueContainers.boxes[it]?.let(gg.rsmod.plugins.content.scrolls.ClueItems::local) }
+        for (id in WildernessBossClues.NPCS) {
                 val source = DropSources.forNpc(f.player, id)!!
                 every { f.player.equipment[EquipmentType.RING.id] } returns null
                 val plain = DropSources.view(f.player, source, 1.0)
-                val clue = plain.lines.singleOrNull { it.item in setOf(Items.CLUE_SCROLL_HARD, Items.CLUE_SCROLL_ELITE) }
+                val clue = plain.lines.singleOrNull { it.item in clueItems }
                     ?: fail("${source.name} ($id): no hard/elite clue line; lines=${plain.lines.map { "${it.item}:${it.name}:${it.normal}" }}")
                 every { f.player.equipment[EquipmentType.RING.id] } returns ring
                 val boosted = DropSources.view(f.player, source, 1.0).lines.single { it.item == clue.item }
