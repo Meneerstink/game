@@ -3671,6 +3671,9 @@
   {"id": 24736, "limit": 13000, "name": "Lily of the Sands"},
   {"id": 24738, "limit": 500, "name": "Blood essence"},
   {"id": 24916, "limit": 5, "name": "Torn prayer scroll"},
+  {"id": 24919, "limit": 13000, "name": "Lizardman fang"},
+  {"id": 24920, "limit": 13000, "name": "Saltpetre"},
+  {"id": 24922, "limit": 13000, "name": "Dynamite"},
   {"id": 24936, "limit": 8, "name": "Elder maul"},
   {"id": 24938, "limit": 8, "name": "Dinh's bulwark"},
   {"id": 24987, "limit": 5, "name": "Armageddon rug"},
@@ -3882,6 +3885,10 @@
   {"id": 25494, "limit": 8, "name": "Twinflame staff"},
   {"id": 25496, "limit": 15, "name": "Tome of Earth (empty)"},
   {"id": 25631, "limit": 11000, "name": "Soiled page"},
+  {"id": 25632, "limit": 5, "name": "Amulet of glory (t6)"},
+  {"id": 25636, "limit": 10000, "name": "Skills necklace(6)"},
+  {"id": 25640, "limit": 10000, "name": "Combat bracelet(6)"},
+  {"id": 25644, "limit": 10000, "name": "Ring of wealth (5)"},
   {"id": 25680, "limit": 7500, "name": "Lava dragon bones"},
   {"id": 25682, "limit": 11000, "name": "Lava scale"}
 ]

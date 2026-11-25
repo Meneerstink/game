@@ -305112,3 +305112,45 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 24919
+  name: "Lizardman fang"
+  examine: "Ripped from the maw of a dying lizardman of Kourend."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24920
+  name: "Saltpetre"
+  examine: "A power that can be added to compost to make fertiliser."
+  tradeable: true
+  weight: 0.003
+  equipment: null
+- id: 24922
+  name: "Dynamite"
+  examine: "A pot of dynamite for blast mining, with a fuse ready to light."
+  tradeable: true
+  weight: 1.36
+  equipment: null
+- id: 25632
+  name: "Amulet of glory (t6)"
+  examine: "A very powerful dragonstone amulet."
+  tradeable: true
+  weight: 0.01
+  equipment: null
+- id: 25636
+  name: "Skills necklace(6)"
+  examine: "This will help me travel."
+  tradeable: true
+  weight: 0.01
+  equipment: null
+- id: 25640
+  name: "Combat bracelet(6)"
+  examine: "A handy way to get around."
+  tradeable: true
+  weight: 0.25
+  equipment: null
+- id: 25644
+  name: "Ring of wealth (5)"
+  examine: "An enchanted ring with five teleport charges."
+  tradeable: true
+  weight: 0.006
+  equipment: null
