@@ -304992,3 +304992,120 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 25684
+  name: "Partyhat & specs"
+  examine: "I have the sudden urge to rob the bank..."
+  tradeable: true
+  weight: 0.453
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 7051
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25685
+  name: "Partyhat & specs"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25686
+  name: "Pirate hat & patch"
+  examine: "All I need now is a parrot."
+  tradeable: true
+  weight: 0.002
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 7052
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25687
+  name: "Pirate hat & patch"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 25688
+  name: "Top hat & monocle"
+  examine: "Like a sir."
+  tradeable: true
+  weight: 1.36
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 7053
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25689
+  name: "Top hat & monocle"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
