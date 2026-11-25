@@ -16,14 +16,21 @@ function Wait-Log([string]$Path, [string]$Pattern, [int]$Seconds) {
     $deadline = [DateTime]::UtcNow.AddSeconds($Seconds)
     try {
         do {
-            $text = if (Test-Path -LiteralPath $Path) { [IO.File]::ReadAllText($Path) } else { '' }
+            # 25-11 Claude: Start-Process keeps its redirect open; ReadAllText then throws a sharing violation (bootcheck 02:08).
+            $text = ''
+            if (Test-Path -LiteralPath $Path) {
+                $fs = [IO.File]::Open($Path, 'Open', 'Read', 'ReadWrite')
+                try { $text = (New-Object IO.StreamReader($fs)).ReadToEnd() } finally { $fs.Dispose() }
+            }
             if ($text -match '(?m)\bERROR\b|Exception') { throw "Boot log contains ERROR/Exception: $Path" }
             if ($text -match $Pattern) { return $Matches[0] }
             if ($server.HasExited) { throw "Boot process exited: $($server.ExitCode)" }
             $remaining = [int]($deadline - [DateTime]::UtcNow).TotalMilliseconds
             if ($remaining -le 0) { throw "Boot log timeout: $Path" }
-            $change = $watch.WaitForChanged([IO.WatcherChangeTypes]::All, $remaining)
-            if ($change.TimedOut) { throw "Boot log timeout: $Path" }
+            # 25-11 Claude: NTFS does not always raise LastWrite/Size for a file another process holds open (Start-Process
+            # redirect) -> 'Boot log timeout' 30 s after a good start (02:42, 03:03). Wake at least every second and re-read;
+            # only the deadline above ends the wait.
+            $null = $watch.WaitForChanged([IO.WatcherChangeTypes]::All, [Math]::Min($remaining, 1000))
         } while ($true)
     } finally { $watch.Dispose() }
 }
@@ -70,9 +77,14 @@ try {
                 Write-Output 'BOOTCHECK own server stopped'
             }
         } finally {
+            if (!$ready -and $server -and !$server.HasExited) {
+                # Boot not proven: the server may still be up behind OUR tunnel (50317 was free at start) - ask it to stop.
+                try { & $bash lib/rb_server.sh tl cmd shutdown | Out-Null; $null = $server.WaitForExit(30000) } catch { }
+            }
             if ($server -and !$server.HasExited) {
                 & taskkill.exe /PID $server.Id /T /F | Out-Null
-                if ($LASTEXITCODE -ne 0) { throw 'Could not terminate own boot runner; recovery marker required' }
+                # taskkill /T also reports children that already exited; only a still-running runner is a failure.
+                if ($LASTEXITCODE -ne 0 -and !$server.WaitForExit(10000)) { throw 'Could not terminate own boot runner; recovery marker required' }
                 $server.WaitForExit()
             }
             if ($server) { $server.Dispose() }
