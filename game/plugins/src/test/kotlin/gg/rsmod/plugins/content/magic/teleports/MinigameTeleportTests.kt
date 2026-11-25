@@ -10,6 +10,7 @@ import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.game.model.timer.TimerMap
 import gg.rsmod.plugins.api.Spellbook
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.api.ext.setSpellbook
 import gg.rsmod.plugins.content.magic.N72Fixture
 import gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions
@@ -53,11 +54,14 @@ class MinigameTeleportTests {
         for (failure in 0..3) N72Fixture().use { f ->
             when (failure) {
                 0 -> f.player.setSpellbook(Spellbook.LUNAR)
-                1 -> f.tile = Tile(3100, 3521)
+                1 -> f.tile = Tile(3100, 3525) // Shared Wilderness helper: first level-1 tile.
                 2 -> f.tile = Tile(3100, 3900)
                 3 -> f.f.timers[TELEBLOCK_TIMER] = 100
             }
+            if (failure == 1) assertEquals(1, f.tile.getWildernessLevel())
+            if (failure == 2) assertTrue(f.tile.getWildernessLevel() > 20)
             val start = f.tile
+            assertNotNull(MinigameTeleport.refusal(f.player, MinigameTeleport.SPELLS[0]), "case$failure")
             MinigameTeleport.cast(f.player, MinigameTeleport.SPELLS[0], MinigameTeleport.DESTINATIONS[0])
             f.tick(35)
             assertEquals(start, f.tile, "case$failure")

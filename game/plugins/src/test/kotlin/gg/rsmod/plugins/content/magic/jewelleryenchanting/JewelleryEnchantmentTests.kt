@@ -23,7 +23,7 @@ class JewelleryEnchantmentTests {
             assertEquals(data.product, f.inventory[0]?.id)
             data.spell.runes.forEach { assertEquals(0, f.inventory.getItemCount(it.id)) }
             verify(exactly = 1) { f.player.addXp(Skills.MAGIC, 110.0) }
-            verify { f.player.animate(721); f.player.graphic(any<gg.rsmod.game.model.Graphic>()) }
+            verify(exactly = 1) { f.player.animate(721); f.player.graphic(452, 92, 0, 0) }
             assertFalse(JewelleryEnchantment.cast(f.player, data.spell, 0, data.raw))
         }
     }
