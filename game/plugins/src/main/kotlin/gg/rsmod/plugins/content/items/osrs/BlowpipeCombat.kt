@@ -41,7 +41,9 @@ object BlowpipeCombat {
         RangedProjectile.values.firstOrNull { dart.itemId in it.items }?.let { world.spawn(player.createProjectile(target, it.gfx, it.type)) }
         player.playSound(Sfx.THROWN)
         // Ava's devices do not work through metallic torso armour (AvasDevices).
-        val capeId = if (AvasDevices.interferes(player)) null else player.getEquipment(EquipmentType.CAPE)?.id
+        val capeId = if (AvasDevices.interferes(player)) null else player.getEquipment(EquipmentType.CAPE)?.id?.let {
+            gg.rsmod.plugins.content.skills.RangingSkillcape.attractionDevice(player, it)
+        }
         val cost = Blowpipe.spendShot(pipe, world.randomDouble(), world.randomDouble(), capeId)
         player.equipment[WEAPON_SLOT] = cost.result
         if (cost.result.id != pipe.id) player.refreshBonuses()

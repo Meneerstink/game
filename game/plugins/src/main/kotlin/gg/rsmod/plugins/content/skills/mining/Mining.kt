@@ -167,14 +167,6 @@ object Mining {
                 player.inventory.add(rock.reward)
             }
         }
-        // OSRS Wiki "Mining cape": "When worn, there is a 5% chance of receiving an extra ore from rocks up to adamantite; stacks with
-        // Varrock armour" (max cape too).
-        if (rock in MINING_CAPE_ROCKS &&
-            gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.Skillcapes.MINING) &&
-            player.world.randomDouble() < 0.05
-        ) {
-            player.inventory.add(rock.reward)
-        }
         val reward =
             if (rock == RockType.ESSENCE &&
                 player.skills
@@ -204,7 +196,13 @@ object Mining {
         }
         val mined = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilSkilling.give(player, reward)
         if (mined.hasSucceeded() && rock == RockType.MITHRIL) ClueTasks.succeeded(player, ClueTasks.Action.MITHRIL_ORE)
-        player.addXp(Skills.MINING, product?.experience ?: rock.experience, checkBrawlingGloves = true)
+        // OSRS Wiki Mining cape: 5% extra ore up to adamantite, with XP for both ores. Deliver the primary ore first.
+        var capeBonusXp = 0.0
+        if (mined.hasSucceeded() && rock in MINING_CAPE_ROCKS &&
+            gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.Skillcapes.MINING) &&
+            player.world.randomDouble() < 0.05 && player.inventory.add(rock.reward).hasSucceeded()
+        ) capeBonusXp = rock.experience
+        player.addXp(Skills.MINING, (product?.experience ?: rock.experience) + capeBonusXp, checkBrawlingGloves = true)
         gg.rsmod.plugins.content.skills.summoning.SkillingPets.mining(player, rock)
         gg.rsmod.plugins.content.scrolls.ClueSkilling.mining(player, rock)
         player.filterableMessage("You manage to mine some $oreName.")

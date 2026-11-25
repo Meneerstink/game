@@ -46,7 +46,7 @@ object AvasDevices {
         )
 
     /** Every item carrying the OSRS "Commune" junk-gathering option: the assembler family and the Accumulator max cape. */
-    val COMMUNE_DEVICES: Set<Int> get() = ASSEMBLERS + gg.rsmod.plugins.api.cfg.Items.ACCUMULATOR_MAX_CAPE
+    val COMMUNE_DEVICES: Set<Int> get() = ASSEMBLERS + gg.rsmod.plugins.api.cfg.Items.ACCUMULATOR_MAX_CAPE + gg.rsmod.plugins.content.skills.RangingSkillcape.CAPES
 
     val INTERFERING_TORSOS: Set<String> =
         setOf(
@@ -102,6 +102,8 @@ object AvasDevices {
                 quiver == gg.rsmod.plugins.content.items.osrs.DizanasQuiver.AvaEffect.ASSEMBLER -> false
                 quiver == gg.rsmod.plugins.content.items.osrs.DizanasQuiver.AvaEffect.ACCUMULATOR -> chance in 20..27
                 device && cape == gg.rsmod.plugins.api.cfg.Items.AVAS_ATTRACTOR -> chance in 20..39
+                device && cape in gg.rsmod.plugins.content.skills.RangingSkillcape.CAPES &&
+                    gg.rsmod.plugins.content.skills.RangingSkillcape.upgraded(player) -> false
                 device && cape in ACCUMULATOR_EFFECT -> chance in 20..27
                 device && cape in ASSEMBLERS -> false
                 else -> true

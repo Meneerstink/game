@@ -60,7 +60,7 @@ object AvasAssembler {
     // OSRS Wiki Ava's attractor / accumulator, checked 2026-10-31. Keep the existing
     // persistence key: all device menus control the same account preference.
     val LEGACY_DEVICES = setOf(Items.AVAS_ATTRACTOR, Items.AVAS_ACCUMULATOR)
-    val GATHERING_DEVICES: Set<Int> get() = gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.ASSEMBLERS + LEGACY_DEVICES
+    val GATHERING_DEVICES: Set<Int> get() = gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.ASSEMBLERS + LEGACY_DEVICES + gg.rsmod.plugins.content.skills.RangingSkillcape.CAPES
     val ATTRACTOR_TABLE = listOf(
         Items.IRON_ARROW to 1975, Items.IRON_DART to 5, Items.IRON_KNIFE to 5,
         Items.IRON_ORE to 5, Items.IRON_NAILS to 5, Items.STEEL_ARROW to 1,

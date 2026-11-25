@@ -78,7 +78,7 @@ on_timer(ATTRACTION_TIMER) {
     if (last != null && last.height == player.tile.height && last.getDistance(player.tile) < AvasAssembler.MIN_TILES_MOVED) return@on_timer
     player.attr[LAST_PICKUP_TILE] = player.tile
 
-    val item = AvasAssembler.attracted(world.random(AvasAssembler.TOTAL_WEIGHT - 1), device)
+    val item = AvasAssembler.attracted(world.random(AvasAssembler.TOTAL_WEIGHT - 1), gg.rsmod.plugins.content.skills.RangingSkillcape.attractionDevice(player, device))
     // Native devices equip attracted wearables only into a free/compatible slot, using
     // the shared equip action so base-level requirements and equipment hooks still apply.
     if (device in AvasAssembler.LEGACY_DEVICES) {
@@ -91,7 +91,8 @@ on_timer(ATTRACTION_TIMER) {
     }
     // Arrows join a matching (or empty) ammunition slot; everything else, and arrows that do not match, go to the inventory.
     val ammo = player.getEquipment(EquipmentType.AMMO)
-    val arrow = device !in AvasAssembler.LEGACY_DEVICES && item in setOf(Items.MITHRIL_ARROW, Items.ADAMANT_ARROW)
+    val arrow = device !in AvasAssembler.LEGACY_DEVICES && device !in gg.rsmod.plugins.content.skills.RangingSkillcape.CAPES &&
+        item in setOf(Items.MITHRIL_ARROW, Items.ADAMANT_ARROW)
     if (arrow && (ammo == null || (ammo.id == item && ammo.amount < Int.MAX_VALUE))) {
         player.equipment[EquipmentType.AMMO.id] = Item(item, (ammo?.amount ?: 0) + 1)
         return@on_timer

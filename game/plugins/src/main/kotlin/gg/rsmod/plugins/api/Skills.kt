@@ -346,12 +346,7 @@ object Skills {
         player: Player,
         data: Skillcapes,
     ): Boolean {
-        if (player.inventory.remove(Items.COINS_995, 99000).hasSucceeded()) {
-            player.inventory.add(if (hasTwo99s(player)) data.trimmedCape else data.untrimmedCape)
-            player.inventory.add(data.hood)
-            return true
-        }
-        return false
+        return gg.rsmod.plugins.content.skills.SkillcapeSeller.purchase(player, data)
     }
 
     /**

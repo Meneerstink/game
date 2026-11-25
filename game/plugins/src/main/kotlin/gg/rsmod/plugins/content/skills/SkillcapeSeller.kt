@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.skills
 
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
@@ -47,6 +48,25 @@ object SkillcapeSeller {
         player: Player,
         cape: Skillcapes,
     ): Boolean = player.skills.getMaxLevel(skill(cape)) >= 99
+
+    /** Recheck after dialogue yields; stage the complete exchange before touching the real inventory. */
+    fun purchase(player: Player, cape: Skillcapes): Boolean {
+        val inventory = player.inventory
+        if (!has99(player, cape) || inventory.freeSlotCount < 2 || inventory.getItemCount(Items.COINS_995) < PRICE) return false
+        val planned = ItemContainer(inventory)
+        if (planned.remove(Items.COINS_995, PRICE, assureFullRemoval = true).hasFailed() ||
+            planned.add(if (Skills.hasTwo99s(player)) cape.trimmedCape else cape.untrimmedCape).hasFailed() ||
+            planned.add(cape.hood).hasFailed()
+        ) return false
+        // Do not replace unrelated item references: another open interface may still refer to them.
+        for (slot in 0 until inventory.capacity) {
+            val before = inventory[slot]
+            val after = planned[slot]
+            if (before?.id != after?.id || before?.amount != after?.amount) inventory[slot] = after
+        }
+        SkillcapeTrim.trimAll(player)
+        return true
+    }
 
     /**
      * Offers the cape when the player has a real 99 in the seller's skill. Returns false when there is nothing to offer or the
@@ -110,7 +130,6 @@ object SkillcapeSeller {
             task.chatNpc("Well, come back and see me when you do.")
             return
         }
-        SkillcapeTrim.trimAll(player)
         task.chatNpc("Excellent! Wear that cape with pride my friend.")
     }
 }

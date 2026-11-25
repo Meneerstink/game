@@ -19,6 +19,18 @@ unfinishedPotionDefinitions.values.forEach { potion ->
             )
         }
     }
+    on_item_on_item(item1 = potion.grimy, item2 = Items.VIAL_OF_WATER) {
+        if (gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.Skillcapes.HERBLORE)) {
+            player.queue(TaskPriority.STRONG) {
+                produceItemBox(
+                    potion.unf,
+                    option = SkillDialogueOption.MAKE,
+                    title = "Choose how many you wish to make, then<br>click on the item to begin.",
+                    logic = ::startGrimyUnfinished,
+                )
+            }
+        }
+    }
 }
 
 finishedPotionDefinitions.values.forEach { potion ->
@@ -65,5 +77,12 @@ fun startFinished(
     val finished = finishedPotionDefinitions[product] ?: return
     player.queue(TaskPriority.WEAK) {
         finishedAction.mix(this, finished, amount)
+    }
+}
+
+fun startGrimyUnfinished(player: Player, product: Int, amount: Int) {
+    val unfinished = unfinishedPotionDefinitions[product] ?: return
+    player.queue(TaskPriority.WEAK) {
+        unfinishedAction.mix(this, unfinished, amount, useGrimy = true)
     }
 }
