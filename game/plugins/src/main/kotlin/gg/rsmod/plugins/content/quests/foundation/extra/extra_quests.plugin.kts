@@ -226,6 +226,7 @@ on_obj_option(Objs.TRAPDOOR_21922, "Climb-down") {
     player.lockingQueue(lockState = LockState.FULL) {
         player.animate(Anims.REACH_DOWN)
         wait(2)
+        // NOT-QUEST-TRAVEL: climbing down the Tower of Life trapdoor is an ordinary object move; OSRS shows no warning.
         player.moveTo(TowerOfLife.BASEMENT)
     }
 }
@@ -244,6 +245,7 @@ on_obj_option(17974, "Climb-up") {
         wait(1)
         player.animate(Anims.LADDER_CLIMB, idleOnly = true)
         wait(2)
+        // NOT-QUEST-TRAVEL: a ladder climb (basement -> trapdoor, or one tower floor up); OSRS shows no warning.
         player.moveTo(destination)
     }
 }

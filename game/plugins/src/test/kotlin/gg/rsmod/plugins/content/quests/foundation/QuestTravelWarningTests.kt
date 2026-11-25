@@ -80,7 +80,9 @@ class QuestTravelWarningTests {
                 lines.indices.filter { i ->
                     val l = lines[i]
                     (l.contains("player.moveTo(") || l.contains("player.teleport(")) &&
-                        (maxOf(0, i - 3)..i).none { lines[it].contains("confirmQuestTravel") }
+                        // 'NOT-QUEST-TRAVEL: <reason>' marks an ordinary object move (ladder/trapdoor) that OSRS never warns about
+                        // (25-11 QUESTTRAVEL-ROOD: Tower of Life basement trapdoor + ladder).
+                        (maxOf(0, i - 3)..i).none { lines[it].contains("confirmQuestTravel") || lines[it].contains("NOT-QUEST-TRAVEL:") }
                 }.map { "${f.name}:${it + 1}" }
             }.toList()
         assertTrue(raw.isEmpty(), "quest moves without the Dangerous-area warning: $raw")

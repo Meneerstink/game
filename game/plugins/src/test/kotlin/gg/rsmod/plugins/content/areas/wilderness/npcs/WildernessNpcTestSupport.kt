@@ -142,7 +142,12 @@ abstract class WildernessNpcContractTests(private val ids: List<Int>) {
             val expected = rows.groupBy { it[0].toInt() to it[1] }
             expected.forEach { (key, entries) ->
                 val wanted = entries.sumOf { row -> row[2].split('/').let { it[0].toDouble()/it[1].toDouble() } }.coerceAtMost(1.0)
-                val found = actual.filter { it.item == key.first && it.quantity == key.second }.sumOf { it.normal }
+                // 25-11 TESTS-ROOD-2511: since the CLUE work a sourced NPC clue drops the tier's Scroll box (OSRS since 2023,
+                // ClueNpcSources.lines) instead of the report's clue scroll; both ids count as the same report row.
+                val box = gg.rsmod.plugins.content.scrolls.ClueOwnership.tier(key.first)
+                    ?.let { gg.rsmod.plugins.content.scrolls.ClueContainers.boxes[it] }
+                    ?.let(gg.rsmod.plugins.content.scrolls.ClueItems::local)
+                val found = actual.filter { (it.item == key.first || it.item == box) && it.quantity == key.second }.sumOf { it.normal }
                 assertEquals(wanted, found, 1e-10, "$id ${entries.map { it[3] }}")
             }
             val tables = DropTableFactory.tables(f.player, id)!!

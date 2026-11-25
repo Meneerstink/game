@@ -275,7 +275,8 @@ class WildernessBossKillCountTests {
                 assertEquals("Your ${source.name} kill count is: <col=ff0000>1,234</col>.", f.messages.last())
                 assertEquals(1234, counts.get(f.player, source.key))
             }
-            assertEquals(bosses.size, f.messages.size)
+            // 25-11 TESTS-ROOD-2511: each boss kill also says 'You earn N Deadman Points' (BossDeadmanPoints) - count the KC lines only.
+            assertEquals(bosses.size, f.messages.count { it.contains(" kill count is: ") })
         } finally {
             unmockkObject(sources)
             pages.reset()
@@ -346,7 +347,8 @@ class WildernessBossMaledictusTests {
         assertTrue(RevenantCaveRevenants.emblem(1) in page.items)
         f.counts[RevenantMaledictus.NPC] = 1
         gg.rsmod.plugins.content.quests.tab.KillCounts.onNpcKilled(f.player, RevenantMaledictus.NPC)
-        assertEquals(listOf("Your Revenant maledictus kill count is: <col=ff0000>1</col>."), f.messages)
+        // 25-11 TESTS-ROOD-2511: the kill also says 'You earn N Deadman Points' (BossDeadmanPoints) - KC lines only.
+        assertEquals(listOf("Your Revenant maledictus kill count is: <col=ff0000>1</col>."), f.messages.filter { it.contains(" kill count is: ") })
         assertEquals(0.19, sources.twice(0.1), 1e-12)
     }
 

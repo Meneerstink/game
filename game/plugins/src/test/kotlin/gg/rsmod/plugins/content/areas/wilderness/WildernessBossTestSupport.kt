@@ -188,7 +188,9 @@ abstract class WildernessBossContractTests(
             assertTrue(f.messages.isEmpty())
         }
         KillCounts.onNpcKilled(f.player, deathId)
-        assertEquals(listOf("Your ${source.name} kill count is: <col=ff0000>1,234</col>."), f.messages)
+        // 25-11 TESTS-ROOD-2511: since PROJECT48 a boss kill also says 'You earn N Deadman Points' (BossDeadmanPoints, own tests);
+        // this test is about the kill-count notification only.
+        assertEquals(listOf("Your ${source.name} kill count is: <col=ff0000>1,234</col>."), f.messages.filter { it.contains(" kill count is: ") })
         assertEquals(1234, f.counts[deathId], "notification never increments the engine counter a second time")
     }
 

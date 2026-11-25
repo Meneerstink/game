@@ -70,7 +70,8 @@ class WildernessSharedLootTests {
                 val source = DropSources.forNpc(f.player, id)!!
                 every { f.player.equipment[EquipmentType.RING.id] } returns null
                 val plain = DropSources.view(f.player, source, 1.0)
-                val clue = plain.lines.single { it.item in setOf(Items.CLUE_SCROLL_HARD, Items.CLUE_SCROLL_ELITE) }
+                val clue = plain.lines.singleOrNull { it.item in setOf(Items.CLUE_SCROLL_HARD, Items.CLUE_SCROLL_ELITE) }
+                    ?: fail("${source.name} ($id): no hard/elite clue line; lines=${plain.lines.map { "${it.item}:${it.name}:${it.normal}" }}")
                 every { f.player.equipment[EquipmentType.RING.id] } returns ring
                 val boosted = DropSources.view(f.player, source, 1.0).lines.single { it.item == clue.item }
                 assertEquals(clue.normal * 2, boosted.normal, 1e-12, source.name)

@@ -4,9 +4,17 @@ import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.content.skills.hunter.ImplingData
 import io.mockk.every
+import io.mockk.mockkObject
+import io.mockk.unmockkObject
+import gg.rsmod.plugins.content.scrolls.*
 import kotlin.test.*
 
 class N11LootTests {
+    // 25-11 TESTS-ROOD-2511: since the CLUE work the jar's clue roll is ClueImplings.roll (own Random, 1/50 elite) and it gives the
+    // tier's Scroll box (OSRS). The test fixes that roll instead of world.random and expects the elite box.
+    private val eliteBox get() = ClueItems.local(ClueContainers.boxes.getValue(ClueScrollTier.ELITE))!!
+    @AfterTest fun unmockClue() = unmockkObject(ClueImplings)
+
     @Test fun `exactly two free slots allow loot jar and clue and retain unrelated object identities`() {
         N11Fixture().use { f ->
             setup(f, clue = true)
@@ -20,7 +28,7 @@ class N11LootTests {
             f.repo.executeItem(f.player, 11256, 3)
             assertEquals(10, f.inventory.getItemCount(9193))
             assertEquals(1, f.inventory.getItemCount(Items.IMPLING_JAR))
-            assertEquals(1, f.inventory.getItemCount(Items.CLUE_SCROLL_ELITE))
+            assertEquals(1, f.inventory.getItemCount(eliteBox))
             assertTrue(f.inventory.isFull)
             assertSame(neighbour, f.inventory[3])
         }
@@ -37,6 +45,9 @@ class N11LootTests {
             }
         }
         every { f.player.bank } returns f.container()
+        mockkObject(ClueImplings)
+        every { ClueImplings.roll(any(), any(), any()) } answers {
+            if (clue) ClueContainers.rewardId(firstArg(), ClueScrollTier.ELITE)?.let { Item(it) } else null }
         setOf(9193, 1705, 1703, 11212, 9341, 5699, 11230, 1616, 11232, 11237, 535, 537, 5316, 5300, 7219).forEach { f.def(it).stacks = true }
         f.load("skills.hunter.Impling_jars_plugin")
     }
@@ -49,7 +60,7 @@ class N11LootTests {
                 assertTrue(f.repo.executeItem(f.player, 11256, 3))
                 assertEquals(10, f.inventory.getItemCount(9193))
                 assertEquals(if (broken) 0 else 1, f.inventory.getItemCount(Items.IMPLING_JAR))
-                assertEquals(1, f.inventory.getItemCount(Items.CLUE_SCROLL_ELITE))
+                assertEquals(1, f.inventory.getItemCount(eliteBox))
                 f.repo.executeItem(f.player, 11256, 3)
                 assertEquals(10, f.inventory.getItemCount(9193))
             }
