@@ -106026,7 +106026,8 @@
   name: "Agility cape"
   examine: "The cape worn by the most agile of heroes."
   tradeable: false
-  weight: 0.4
+  weight: 0.453
+  equipped_weight: -4.0
   equipment:
     skill_reqs: [{'skill': 16, 'level': 99}]
     equip_slot: 1
@@ -106060,7 +106061,8 @@
   name: "Agility cape (t)"
   examine: "It's an Agility cape (t)."
   tradeable: false
-  weight: 0.4
+  weight: 0.453
+  equipped_weight: -4.0
   equipment:
     skill_reqs: [{'skill': 16, 'level': 99}]
     equip_slot: 1
@@ -249651,7 +249653,8 @@
   name: "Max cape"
   examine: "A cape worn by those who've achieved 99 in all skills."
   tradeable: false
-  weight: 0.4
+  weight: 0.453
+  equipped_weight: -4.0
   equipment:
     skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     attack_stab: 0

@@ -43,6 +43,12 @@ class ItemContainer(
 
     override fun iterator(): Iterator<Item?> = items.iterator()
 
+    /** Equipment can override an item's carried weight without changing its definition or physical item. */
+    fun totalWeight(equipped: Boolean = false): Double = items.filterNotNull().sumOf {
+        val def = it.getDef(definitions)
+        if (equipped) def.equippedWeight ?: def.weight else def.weight
+    }
+
     /**
      * Gets the collection of nullable [Item]s in this container.
      */

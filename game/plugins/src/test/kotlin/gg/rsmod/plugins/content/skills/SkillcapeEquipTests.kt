@@ -184,6 +184,40 @@ class SkillcapeEquipTests {
     }
 
     @Test
+    fun `Agility cape weight changes only while equipped and survives swaps without item loss`() {
+        // OSRS Wiki Agility cape/Weight-reducing items: carried 0.453 kg, worn -4 kg;
+        // the plain max cape inherits this, while its cosmetic variants do not.
+        for (id in listOf(Skillcapes.AGILITY.untrimmedCape, Skillcapes.AGILITY.trimmedCape, MaxCapes.MAX_CAPE)) {
+            val p = player()
+            val cape = Item(id)
+            p.inventory[0] = cape
+            p.inventory[1] = Item(id) // another copy stays carried; its weight must remain positive.
+            fun total() = p.inventory.totalWeight() + p.equipment.totalWeight(equipped = true)
+            assertEquals(0.906, total(), 1e-10, "two carried $id")
+            assertEquals(EquipAction.Result.SUCCESS, EquipAction.equip(p, cape, inventorySlot = 0))
+            assertEquals(-3.547, total(), 1e-10, "one worn, one carried $id")
+            assertEquals(EquipAction.Result.SUCCESS, EquipAction.unequip(p, 1))
+            assertEquals(0.906, total(), 1e-10, "both carried again $id")
+            assertEquals(2, p.inventory.getItemCount(id))
+            assertTrue(p.equipment.isEmpty)
+        }
+    }
+
+    @Test
+    fun `hoods other skillcapes and max variants retain their normal weight when worn`() {
+        val overrides = setOf(Skillcapes.AGILITY.untrimmedCape, Skillcapes.AGILITY.trimmedCape, MaxCapes.MAX_CAPE)
+        for ((id, def) in items.filterKeys { it !in overrides }) {
+            assertEquals(null, def.equippedWeight, "no Agility weight perk on $id")
+            val p = player()
+            p.inventory[0] = Item(id)
+            assertEquals(def.weight, p.inventory.totalWeight(), 1e-10, "carried $id")
+            assertEquals(EquipAction.Result.SUCCESS, EquipAction.equip(p, p.inventory[0]!!, inventorySlot = 0))
+            assertEquals(0.0, p.inventory.totalWeight(), 1e-10, "moved out of inventory $id")
+            assertEquals(def.weight, p.equipment.totalWeight(equipped = true), 1e-10, "worn $id")
+        }
+    }
+
+    @Test
     fun `production plugin registers equip and removal hooks for capes only`() {
         val script = File("src/main/kotlin/gg/rsmod/plugins/content/skills/skillcape_boost.plugin.kts").readText()
         assertTrue("listOf(cape.untrimmedCape, cape.trimmedCape)" in script)

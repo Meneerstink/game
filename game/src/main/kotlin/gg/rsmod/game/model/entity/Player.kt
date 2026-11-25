@@ -1010,8 +1010,8 @@ abstract class Player(
      * This method should be called when there's a change in the player's inventory or equipment.
      */
     private fun calculateWeight() {
-        val inventoryWeight = inventory.filterNotNull().sumOf { it.getDef(world.definitions).weight }
-        val equipmentWeight = equipment.filterNotNull().sumOf { it.getDef(world.definitions).weight }
+        val inventoryWeight = inventory.totalWeight()
+        val equipmentWeight = equipment.totalWeight(equipped = true)
         this.weight = inventoryWeight + equipmentWeight
         write(UpdateRunWeightMessage(this.weight.toInt()))
         calculateWeight = false

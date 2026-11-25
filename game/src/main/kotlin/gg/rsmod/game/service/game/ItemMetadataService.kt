@@ -79,6 +79,7 @@ class ItemMetadataService : Service {
             }
             def.tradeable = data.tradeable
             def.weight = data.weight
+            def.equippedWeight = data.equippedWeight
 
             if (data.equipment != null) {
                 val equipment = data.equipment
@@ -145,6 +146,7 @@ class ItemMetadataService : Service {
         val examine: String? = null,
         val tradeable: Boolean = false,
         val weight: Double = 0.0,
+        val equippedWeight: Double? = null,
         val equipment: Equipment? = null,
     )
 

@@ -63,6 +63,8 @@ class ItemDef(
     var examine: String? = null
     var tradeable = false
     var weight = 0.0
+    /** Optional worn weight; the inventory keeps [weight] (e.g. the Agility cape). */
+    var equippedWeight: Double? = null
     var attackSpeed = -1
     var equipSlot = -1
     var equipType = 0
