@@ -305000,7 +305000,7 @@
   equipment:
     equip_slot: 0
     equip_type: -1
-    appearance_id: 7051
+    appearance_id: 7050
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -305039,7 +305039,7 @@
   equipment:
     equip_slot: 0
     equip_type: -1
-    appearance_id: 7052
+    appearance_id: 7051
     remove_head: false
     remove_beard: false
     remove_arms: false
@@ -305078,7 +305078,7 @@
   equipment:
     equip_slot: 0
     equip_type: -1
-    appearance_id: 7053
+    appearance_id: 7052
     remove_head: false
     remove_beard: false
     remove_arms: false
