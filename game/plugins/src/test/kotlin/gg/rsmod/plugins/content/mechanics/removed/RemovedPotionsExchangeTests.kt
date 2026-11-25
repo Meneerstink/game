@@ -27,7 +27,7 @@ class RemovedPotionsExchangeTests {
     @Test
     fun `the GE refuses every removed potion and excluded trinket, noted forms too`() {
         val blocked = RemovedPotions.itemIds + BreachLoot.EXCLUDED_TRINKETS
-        listOf(Items.OVERLOAD_4, Items.EXTREME_ATTACK_3, Items.PRAYER_RENEWAL_4, Items.DIVINE_SUPER_COMBAT_POTION_4, Items.TRINKET_OF_AVARICE).forEach {
+        listOf(Items.OVERLOAD_4, Items.EXTREME_ATTACK_3, Items.PRAYER_RENEWAL_4, Items.DIVINE_SUPER_COMBAT_POTION_4).forEach { // trinkets: DMM2 V10 (20-11) made them obtainable again, EXCLUDED_TRINKETS empty
             assertTrue(it in blocked, "$it in the set")
         }
         blocked.forEach { id ->
