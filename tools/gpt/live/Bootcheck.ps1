@@ -16,7 +16,12 @@ function Wait-Log([string]$Path, [string]$Pattern, [int]$Seconds) {
     $deadline = [DateTime]::UtcNow.AddSeconds($Seconds)
     try {
         do {
-            $text = if (Test-Path -LiteralPath $Path) { [IO.File]::ReadAllText($Path) } else { '' }
+            # 25-11 Claude: Start-Process keeps its redirect open; ReadAllText then throws a sharing violation (bootcheck 02:08).
+            $text = ''
+            if (Test-Path -LiteralPath $Path) {
+                $fs = [IO.File]::Open($Path, 'Open', 'Read', 'ReadWrite')
+                try { $text = (New-Object IO.StreamReader($fs)).ReadToEnd() } finally { $fs.Dispose() }
+            }
             if ($text -match '(?m)\bERROR\b|Exception') { throw "Boot log contains ERROR/Exception: $Path" }
             if ($text -match $Pattern) { return $Matches[0] }
             if ($server.HasExited) { throw "Boot process exited: $($server.ExitCode)" }
@@ -72,7 +77,8 @@ try {
         } finally {
             if ($server -and !$server.HasExited) {
                 & taskkill.exe /PID $server.Id /T /F | Out-Null
-                if ($LASTEXITCODE -ne 0) { throw 'Could not terminate own boot runner; recovery marker required' }
+                # taskkill /T also reports children that already exited; only a still-running runner is a failure.
+                if ($LASTEXITCODE -ne 0 -and !$server.WaitForExit(10000)) { throw 'Could not terminate own boot runner; recovery marker required' }
                 $server.WaitForExit()
             }
             if ($server) { $server.Dispose() }
