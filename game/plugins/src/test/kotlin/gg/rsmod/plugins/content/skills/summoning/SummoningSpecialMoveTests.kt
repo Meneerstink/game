@@ -58,6 +58,7 @@ class SummoningSpecialMoveTests {
             every { plugins.canAttack(player, any()) } returns true
             fun target(npcId: Int): Npc = mockk<Npc>(relaxed = true).also {
                 every { it.id } returns npcId
+                every { it.lock } returns gg.rsmod.game.model.LockState.NONE  // COMBATENGAGE-FLAKY: canEngage asks target.lock.canBeAttacked() since 22-11 (bbe327fa3); a relaxed mock lock is not NONE
                 every { it.owner } returns null
                 every { it.world } returns world
                 every { it.tile } returns player.tile.transform(1, 0)

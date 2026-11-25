@@ -70,6 +70,7 @@ class FamiliarAttackGateTests {
         every { n.timers } returns TimerMap()
         every { n.owner } returns owner
         every { n.entityType } returns EntityType.NPC
+        every { n.lock } returns LockState.NONE  // COMBATENGAGE-FLAKY: canEngage asks target.lock.canBeAttacked() since 22-11 (bbe327fa3); a relaxed mock lock is not NONE
         every { n.isAlive() } returns true
         every { n.isSpawned() } returns true
         every { n.isDead() } returns false
@@ -109,7 +110,8 @@ class FamiliarAttackGateTests {
             val owner = player(tile)
             val familiar = familiar(owner)
             val target = player(tile.transform(1, 0), level)
-            val allowed = tile == danger && level >= 124
+            // DMM-ARMAGEDDON D8 (owner 20-11): only the own bracket, 111-138 for this 138 owner (replaced the old +/-14 levels).
+            val allowed = tile == danger && level >= 111
             assertTrue(Combat.canEngage(familiar, target) == allowed, "tile=$tile level=$level")
             assertTrue(FamiliarCombat.commandAttack(owner, target) == allowed)
             verify(exactly = if (allowed) 1 else 0) { familiar.attack(target, any()) }

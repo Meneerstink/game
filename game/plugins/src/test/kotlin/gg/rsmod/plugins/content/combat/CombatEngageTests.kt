@@ -210,6 +210,7 @@ class CombatEngageTests {
         every { familiar.world } returns world
         every { familiar.tile } returns tile
         every { familiar.entityType } returns EntityType.NPC
+        every { familiar.lock } returns LockState.NONE  // COMBATENGAGE-FLAKY: canEngage asks target.lock.canBeAttacked() since 22-11 (bbe327fa3); a relaxed mock lock is not NONE
         every { familiar.owner } returns owner
         every { familiar.publicOwner } returns true
         every { familiar.isDead() } returns false
