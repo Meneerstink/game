@@ -213,8 +213,22 @@ object SpellbookCompletionCacheTool {
         // A native six-tab, three-column scrolling overview, with real per-player patch data filled by Geomancy.
         // No source scripts with hardcoded OSRS interface hashes are copied into the667 script table.
         c(1252, 0, 0, 0, 0, 490, 334, -1)
-        c(1252, 1, 4, 8, 5, 430, 22, text = "Farming Patch Status")
-        c(1252, 2, 4, 463, 5, 22, 22, text = "X", ops = listOf("Close"))
+        // 25-11 Claude: OSRS steelborder frame (clientscript 228), reusing the sprites the Death's Office import already put in the
+        // cache. Layer 1 holds the pieces as children 131-140, so the client draws them before the content (ids 2+); title = 141.
+        val fw = 490; val fh = 334
+        c(1252, 1, 0, 0, 0, fw, fh)
+        fun piece(id: Int, x: Int, y: Int, w: Int, h: Int, osrs: Int) = add(1252, id, OsrsInterfacePortTool.encode(OsrsInterfacePortTool.C(
+            id, 5, x, y, w, h, 1, 0, 0, 0, 0, false, sprite = DeathsOfficeInterfaceImportTool.sprite(osrs), tiling = true)))
+        piece(131, 1, 1, fw - 2, fh - 2, 297)
+        piece(132, 0, 0, 25, 30, 310); piece(133, fw - 25, 0, 25, 30, 311)
+        piece(134, 0, fh - 30, 25, 30, 312); piece(135, fw - 25, fh - 30, 25, 30, 313)
+        piece(136, -15, 30, 36, fh - 60, 172); piece(137, fw - 21, 30, 36, fh - 60, 315)
+        piece(138, 25, -15, fw - 50, 36, 314); piece(139, 25, fh - 21, fw - 50, 36, 173)
+        piece(140, 5, 14, fw - 10, 26, 2546)
+        add(1252, 2, OsrsInterfacePortTool.encode(OsrsInterfacePortTool.C(2, 5, fw - 29, 6, 26, 23, 0, 0, 0, 0, 0, false,
+            sprite = DeathsOfficeInterfaceImportTool.sprite(535), ops = listOf("Close"))))
+        add(1252, 141, OsrsInterfacePortTool.encode(OsrsInterfacePortTool.C(141, 4, 6, 6, fw - 12, 24, 0, 0, 0, 0, 0, false,
+            font = b12, text = "Farming Patch Status", alignX = 1, alignY = 1, colour = 0xff981f, shadow = true)))
         c(1252, 3, 0, 8, 65, 456, 260, scroll = 1800)
         c(1252, 4, 0, 465, 65, 16, 260)
         listOf("Allotments", "Herbs", "Hops", "Bushes", "Trees", "Special").forEachIndexed { i, name ->
