@@ -19,6 +19,8 @@ class N11ToggleTests {
             val ids = listOf(patchy.PARTYHAT_AND_SPECS, patchy.PIRATE_HAT_AND_PATCH, patchy.TOP_HAT_AND_MONOCLE)
             val names = listOf("Partyhat & specs", "Pirate hat & patch", "Top hat & monocle")
             ids.zip(names).forEach { (id, name) -> f.def(id).name = name }
+            assertEquals(9, patchy.catalogue(f.definitions).size) // cache-only import is not wearable yet
+            ids.forEach { f.def(it).equipSlot = EquipmentType.HEAD.id }
             val recipes = patchy.catalogue(f.definitions)
             assertEquals(12, recipes.size)
             for (recipe in recipes.drop(9)) {

@@ -6,6 +6,7 @@ import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.EquipmentType
 
 /** OSRS Wiki Patchy and individual creation recipes; native 667 item ids (not OSRS ids). */
 object Patchy {
@@ -40,7 +41,8 @@ object Patchy {
     )
     fun catalogue(definitions: DefinitionSet): List<Recipe> = RECIPES + imported.mapNotNull { (recipe, name) ->
         val definition = definitions.getNullable(ItemDef::class.java, recipe.product)
-        recipe.takeIf { definition != null && !definition.noted && definition.name == name }
+        recipe.takeIf { definition != null && !definition.noted && definition.name == name &&
+            definition.equipSlot == EquipmentType.HEAD.id }
     }
     private fun known(player: Player, recipe: Recipe) = recipe in RECIPES || recipe in catalogue(player.world.definitions)
     data class Selection(val recipe: Recipe, val separate: Boolean, val originals: List<Pair<Int, Item>>)
