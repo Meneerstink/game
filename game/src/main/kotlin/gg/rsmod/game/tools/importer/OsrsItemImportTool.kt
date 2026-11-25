@@ -1591,7 +1591,13 @@ object OsrsItemImportTool {
                 val ranks =
                     try {
                         entries.filter { it.notedOf == null && !it.isCount && isWearable(it.def) }
-                            .associate { it.localId to WornAppearanceRankTool.rank(library, it.localId).rank }
+                            // IMPORT-YML-RING-APPEARANCE (25-11): a wear slot + "Wear" is not enough - the client only ranks items
+                            // with a worn model (opcode 23/25, or a lent/bought copy of one). A ring has none, and its "rank" is then
+                            // the NEXT wearable's (Zenyte ring got the Zenyte amulet's 7055); such items get 0, like Berserker ring.
+                            .associate {
+                                val rank = WornAppearanceRankTool.rank(library, it.localId)
+                                it.localId to (if (rank.targetQualifies) rank.rank else 0)
+                            }
                     } finally {
                         library.close()
                     }
