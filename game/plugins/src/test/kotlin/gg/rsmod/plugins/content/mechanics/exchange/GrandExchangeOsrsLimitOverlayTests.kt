@@ -56,8 +56,7 @@ class GrandExchangeOsrsLimitOverlayTests {
                     else -> null
                 }
             }
-        assertTrue(wrong.isEmpty(), wrong.joinToString("
-"))
+        assertTrue(wrong.isEmpty(), wrong.joinToString("\n"))
         assertTrue(5075 in ids && 9297 !in ids, "Bird's nest gets the flag; Adamant bolts (p+) already has it")
     }
 
