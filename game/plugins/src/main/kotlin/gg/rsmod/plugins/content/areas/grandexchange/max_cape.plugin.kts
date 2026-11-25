@@ -6,6 +6,7 @@ import gg.rsmod.plugins.api.cfg.FacialExpression
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.content.items.osrs.MaxCapes
+import gg.rsmod.plugins.api.ext.format
 
 /**
  * Max, the Grand Exchange max-cape seller (owner 2026-09-20: "npc mac is in home he needs a trade option and dialog
@@ -16,7 +17,7 @@ import gg.rsmod.plugins.content.items.osrs.MaxCapes
  * rather than guessed per call site: 120,000 (2026-09-20), 99,000 since N114 (owner 2026-10-22: "de prijs is 99.000"). The cape and hood handed over are the wearable 667 pair
  * ([MaxCapes.MAX_CAPE] / [MaxCapes.MAX_HOOD]) - 20747/20751 are the unwearable copies.
  */
-val MAX_CAPE_PRICE = 99_000
+val MAX_CAPE_PRICE = gg.rsmod.plugins.content.items.osrs.MaxCapeRefund.PRICE
 
 /**
  * "Max stats" is 99 in every trainable skill except Dungeoneering, which is left out of the requirement entirely
@@ -106,6 +107,40 @@ suspend fun QueueTask.sellMaxCape() {
     player.openShop(MAX_CAPE_SHOP)
 }
 
+/** N410 deel 2 (owner 2026-11-25): Max buys the cape + hood back for 80% - the trade itself is [MaxCapeRefund] (tested). */
+suspend fun QueueTask.buyBackMaxCape() {
+    val refund = gg.rsmod.plugins.content.items.osrs.MaxCapeRefund
+    if (!refund.hasPair(player)) {
+        chatNpc(
+            "Bring me the cape and the hood together in your",
+            "backpack, and I'll give you ${refund.REFUND.format()} coins for them.",
+            facialExpression = FacialExpression.CALM_TALK,
+        )
+        return
+    }
+    chatNpc(
+        "I'll take the cape and hood back for ${refund.REFUND.format()} coins.",
+        "That's eighty percent of what you paid.",
+        facialExpression = FacialExpression.CALM_TALK,
+    )
+    if (options("Yes, sell them back for ${refund.REFUND.format()} coins.", "No, I'll keep them.") != 1) {
+        chatPlayer("No, I'll keep them.", facialExpression = FacialExpression.CALM_TALK)
+        return
+    }
+    // The dialogue was open: MaxCapeRefund checks the pair again and takes both before paying.
+    if (refund.sellBack(player)) {
+        chatNpc("A pleasure. It's here if you ever want it back.", facialExpression = FacialExpression.HAPPY)
+    }
+}
+
+on_item_on_npc(item = MaxCapes.MAX_CAPE, npc = Npcs.MAX) {
+    player.queue { buyBackMaxCape() }
+}
+
+on_item_on_npc(item = MaxCapes.MAX_HOOD, npc = Npcs.MAX) {
+    player.queue { buyBackMaxCape() }
+}
+
 on_npc_option(npc = Npcs.MAX, option = "talk-to") {
     player.queue {
         val maxed = hasMaxStats(player)
@@ -127,12 +162,17 @@ on_npc_option(npc = Npcs.MAX, option = "talk-to") {
                 "Can I buy a Max cape?",
                 "What does the Max cape do?",
                 "Who are you, really?",
+                "I'd like to sell my Max cape back.",
                 "Nothing, thanks.",
             )
         ) {
             1 -> {
                 chatPlayer("Can I buy a Max cape?", facialExpression = FacialExpression.CALM_TALK)
                 sellMaxCape()
+            }
+            4 -> {
+                chatPlayer("I'd like to sell my Max cape back.", facialExpression = FacialExpression.CALM_TALK)
+                buyBackMaxCape()
             }
             2 -> {
                 chatPlayer("What does the Max cape actually do?", facialExpression = FacialExpression.THINKING)
