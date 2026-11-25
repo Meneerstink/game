@@ -1,16 +1,18 @@
 package gg.rsmod.plugins.content.areas.wilderness.npcs
 
+import gg.rsmod.game.model.combat.SlayerAssignment
 import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.combat.formula.ElementalWeakness
 
-/** N522 part 5. Source: team/dossiers/N522-NPCS-ONDERZOEK.txt, section 3.
+/** OSRS-NPC-VERVANGEN: native 667 identity/animations, existing N522 stats/loot.
+ * N522 part 5. Source: team/dossiers/N522-NPCS-ONDERZOEK.txt, section 3.
  * HP uses the DSL's x10 unit. Animations: task-card imports/667 human roles.
  * Unresolved source fields are recorded in N522.txt, never guessed here.
  */
 
 // OSRS 3027, doelvariant.
-set_combat_def(npc = Npcs.KING_SCORPION_OSRS) {
+set_combat_def(npc = Npcs.KING_SCORPION) {
     configs {
         attackSpeed = 4
         attackStyle = StyleType.STAB
@@ -41,14 +43,14 @@ set_combat_def(npc = Npcs.KING_SCORPION_OSRS) {
         defenceMagic = 0
         defenceRanged = 5
     }
-    slayer { experience = 30.0 }
+    slayer { assignment = SlayerAssignment.SCORPION; experience = 30.0 }
     anims {
-        attack = 16122
-        block = 16123
-        death = 16124
+        attack = Anims.SCORPION_ATTACK
+        block = Anims.SCORPION_BLOCK
+        death = Anims.SCORPION_DEATH
     }
 }
-ElementalWeakness.idOverrides[Npcs.KING_SCORPION_OSRS] = ElementalWeakness.Weakness(ElementalWeakness.Element.FIRE, 20)
+ElementalWeakness.idOverrides[Npcs.KING_SCORPION] = ElementalWeakness.Weakness(ElementalWeakness.Element.FIRE, 20)
 
 val kingscorpionDrops = DropTableFactory.build {
     guaranteed {
@@ -64,14 +66,14 @@ val kingscorpionDrops = DropTableFactory.build {
         nothing(99)
     }
 }
-DropTableFactory.register(kingscorpionDrops, Npcs.KING_SCORPION_OSRS)
+DropTableFactory.register(kingscorpionDrops, Npcs.KING_SCORPION)
 
-on_npc_death(Npcs.KING_SCORPION_OSRS) {
+on_npc_death(Npcs.KING_SCORPION) {
     val killer = npc.damageMap.getMostDamage() as? Player ?: return@on_npc_death
     DropTableFactory.getDrop(world, killer, npc.id, npc.tile)
 }
 // N522 lifecycle wiring
-on_npc_spawn(15090) {
+on_npc_spawn(Npcs.KING_SCORPION) {
     val spawned = npc
     // Global spawn installs default aggro AFTER local hooks; override on the following cycle.
     spawned.world.queue { wait(1); if (spawned.isSpawned() && !spawned.isDead()) WildernessNpcMechanics.setupAggro(spawned) }

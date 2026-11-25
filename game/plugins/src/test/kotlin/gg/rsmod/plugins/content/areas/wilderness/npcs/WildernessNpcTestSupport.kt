@@ -129,6 +129,15 @@ abstract class WildernessNpcContractTests(private val ids: List<Int>) {
         val f = WildernessNpcTestSupport.Fixture()
         ids.forEach { id ->
             val actual = f.view(id)
+            if (id in listOf(107, 144, 187)) {
+                val source = DropSources.forNpc(f.player, id)!!
+                assertEquals(id, source.modelNpc, "native 667 model in Drop Viewer / Collection Log")
+                assertEquals(id, source.tableNpc, "native 667 table owns the source")
+                assertEquals("npc:$id", source.key)
+                val retired = mapOf(107 to 15089, 144 to 15090, 187 to 15096).getValue(id)
+                assertNull(DropTableFactory.tables(f.player, retired), "retired imported identity has no loot binding")
+                assertFalse(retired in f.repo.allNpcCombatDefs(), "one combat definition on the native identity")
+            }
             val rows = File("src/test/resources/wilderness-npcs/$id.tsv").readLines().filter { it.isNotBlank() && !it.startsWith('#') }.map { it.split('\t') }
             val expected = rows.groupBy { it[0].toInt() to it[1] }
             expected.forEach { (key, entries) ->

@@ -1,7 +1,7 @@
 package gg.rsmod.plugins.content.areas.wilderness.npcs
 
 /** N522 report section 5; compiled plugin, real cache definitions and actual Drop Viewer fractions. */
-class WildernessRogueTests : WildernessNpcContractTests(listOf(15096, 15097)) {
+class WildernessRogueTests : WildernessNpcContractTests(listOf(187, 15097)) {
     @kotlin.test.Test fun `high agility does not introduce the legacy lucky triple or quadruple into the OSRS Rogue`() {
         val f = WildernessNpcTestSupport.Fixture()
         io.mockk.every { f.player.skills.getCurrentLevel(any()) } returns 99
@@ -9,12 +9,13 @@ class WildernessRogueTests : WildernessNpcContractTests(listOf(15096, 15097)) {
         val logic = gg.rsmod.plugins.content.skills.thieving.pickpocketing.Pickpocketing
         val method = logic.javaClass.getDeclaredMethod("getMultiplier",gg.rsmod.game.model.entity.Player::class.java,
             gg.rsmod.plugins.content.skills.thieving.pickpocketing.PickpocketTarget::class.java).apply { isAccessible = true }
-        kotlin.test.assertEquals(1,method.invoke(logic,f.player,gg.rsmod.plugins.content.skills.thieving.pickpocketing.PickpocketTarget.WildernessRogue))
-        kotlin.test.assertEquals(4,method.invoke(logic,f.player,gg.rsmod.plugins.content.skills.thieving.pickpocketing.PickpocketTarget.Rogue), "existing target behaviour remains outside this task")
+        kotlin.test.assertEquals(1,method.invoke(logic,f.player,gg.rsmod.plugins.content.skills.thieving.pickpocketing.PickpocketTarget.Rogue))
     }
-    @kotlin.test.Test fun `only imported level15 has the source correct pickpocket table and Rocky entitlement`() {
-        val target = gg.rsmod.plugins.content.skills.thieving.pickpocketing.PickpocketTarget.WildernessRogue
-        kotlin.test.assertEquals(listOf(15096),target.objectIds)
+    @kotlin.test.Test fun `only native level15 has the source correct pickpocket table and Rocky entitlement`() {
+        val target = gg.rsmod.plugins.content.skills.thieving.pickpocketing.PickpocketTarget.Rogue
+        kotlin.test.assertEquals(listOf(187),target.objectIds)
+        kotlin.test.assertEquals(listOf(target), gg.rsmod.plugins.content.skills.thieving.pickpocketing.PickpocketTarget.values.filter { 187 in it.objectIds }, "one Pickpocket binding for native Rogue")
+        kotlin.test.assertTrue(gg.rsmod.plugins.content.skills.thieving.pickpocketing.PickpocketTarget.values.none { 15096 in it.objectIds || 15097 in it.objectIds })
         kotlin.test.assertEquals(32,target.level)
         kotlin.test.assertEquals(36.5,target.xp)
         kotlin.test.assertEquals(2..2,target.damage)

@@ -19,5 +19,5 @@ spawn_npc(npc = Npcs.HILL_GIANT, x = 3117, z = 3854, walkRadius = 5) // N522 OSR
 spawn_npc(npc = Npcs.LESSER_DEMON, x = 3091, z = 3861, walkRadius = 5) // N522 OSRS O0322 Lesser demon
 spawn_npc(npc = Npcs.LESSER_DEMON, x = 3094, z = 3869, walkRadius = 5) // N522 OSRS O0323 Lesser demon
 
-spawn_npc(npc = Npcs.KING_SCORPION_OSRS, x = 3075, z = 3848, walkRadius = 5) // N522 OSRS O0320 King Scorpion
-spawn_npc(npc = Npcs.KING_SCORPION_OSRS, x = 3090, z = 3841, walkRadius = 5) // N522 OSRS O0321 King Scorpion
+spawn_npc(npc = Npcs.KING_SCORPION, x = 3075, z = 3848, walkRadius = 5) // N522 OSRS O0320 King Scorpion
+spawn_npc(npc = Npcs.KING_SCORPION, x = 3090, z = 3841, walkRadius = 5) // N522 OSRS O0321 King Scorpion

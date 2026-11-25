@@ -70,7 +70,7 @@ class BulkNpcCombatDefsTests {
         // Kree'arra, Barrows brothers and the Ardougne roster have set_combat_def blocks; the generator
         // must leave them to those blocks so a fallback can never shadow curated data.
         val defs = BulkNpcCombatDefs.load(definitions, TABLE).defs
-        listOf(6222, 6260, 50, 2030).forEach { id ->
+        listOf(6222, 6260, 50, 2030, 187).forEach { id ->
             assertTrue(id !in defs, "npc $id has a hand-written combat def and must not appear in the bulk table")
         }
     }

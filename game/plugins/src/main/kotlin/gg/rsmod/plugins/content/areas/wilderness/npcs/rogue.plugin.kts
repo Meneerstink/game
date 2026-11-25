@@ -4,13 +4,14 @@ import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.combat.formula.ElementalWeakness
 
-/** N522 part 5. Source: team/dossiers/N522-NPCS-ONDERZOEK.txt, section 5.
+/** OSRS-NPC-VERVANGEN: native 667 identity/animations, existing N522 stats/loot.
+ * N522 part 5. Source: team/dossiers/N522-NPCS-ONDERZOEK.txt, section 5.
  * HP uses the DSL's x10 unit. Animations: task-card imports/667 human roles.
  * Unresolved source fields are recorded in N522.txt, never guessed here.
  */
 
 // OSRS 526, Level 15.
-set_combat_def(npc = Npcs.ROGUE_OSRS) {
+set_combat_def(npc = Npcs.ROGUE) {
     configs {
         attackSpeed = 4
         attackStyle = StyleType.STAB
@@ -123,7 +124,7 @@ val rogueDrops = DropTableFactory.build {
         nothing(127)
     }
 }
-DropTableFactory.register(rogueDrops, Npcs.ROGUE_OSRS)
+DropTableFactory.register(rogueDrops, Npcs.ROGUE)
 val strongRogueDrops = DropTableFactory.build {
     guaranteed {
         obj(Items.BONES, quantity = 1)
@@ -135,7 +136,7 @@ val strongRogueDrops = DropTableFactory.build {
 }
 DropTableFactory.register(strongRogueDrops, Npcs.ROGUE_OSRS_135)
 
-on_npc_death(Npcs.ROGUE_OSRS, Npcs.ROGUE_OSRS_135) {
+on_npc_death(Npcs.ROGUE, Npcs.ROGUE_OSRS_135) {
     val killer = npc.damageMap.getMostDamage() as? Player ?: return@on_npc_death
     DropTableFactory.getDrop(world, killer, npc.id, npc.tile)
 }

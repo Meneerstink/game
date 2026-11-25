@@ -11476,23 +11476,6 @@
     ]
   },
   {
-    "npc": 15096,
-    "name": "Rogue",
-    "level": 15,
-    "sha256": "0ad4a85ec4e99f8ad8aed4ffe7dd4f848dfbe4f2824fb678e3bad7f01dc308f2",
-    "tier": "easy",
-    "denominator": 128,
-    "sources": [
-      {
-        "url": "https://oldschool.runescape.wiki/w/Rogue#Level_15",
-        "variant": "Level 15",
-        "fractions": [
-          "1/128"
-        ]
-      }
-    ]
-  },
-  {
     "npc": 15098,
     "name": "Lava dragon",
     "level": 252,
