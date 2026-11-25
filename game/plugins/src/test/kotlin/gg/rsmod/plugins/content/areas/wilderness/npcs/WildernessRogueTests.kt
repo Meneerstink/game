@@ -14,8 +14,8 @@ class WildernessRogueTests : WildernessNpcContractTests(listOf(187, 15097)) {
     @kotlin.test.Test fun `only native level15 has the source correct pickpocket table and Rocky entitlement`() {
         val target = gg.rsmod.plugins.content.skills.thieving.pickpocketing.PickpocketTarget.Rogue
         kotlin.test.assertEquals(listOf(187),target.objectIds)
-        kotlin.test.assertEquals(listOf(target), gg.rsmod.plugins.content.skills.thieving.pickpocketing.PickpocketTarget.values.filter { 187 in it.objectIds }, "one Pickpocket binding for native Rogue")
-        kotlin.test.assertTrue(gg.rsmod.plugins.content.skills.thieving.pickpocketing.PickpocketTarget.values.none { 15096 in it.objectIds || 15097 in it.objectIds })
+        kotlin.test.assertEquals(listOf(target), gg.rsmod.plugins.content.skills.thieving.pickpocketing.PickpocketTarget.values().filter { 187 in it.objectIds }, "one Pickpocket binding for native Rogue")
+        kotlin.test.assertTrue(gg.rsmod.plugins.content.skills.thieving.pickpocketing.PickpocketTarget.values().none { 15096 in it.objectIds || 15097 in it.objectIds })
         kotlin.test.assertEquals(32,target.level)
         kotlin.test.assertEquals(36.5,target.xp)
         kotlin.test.assertEquals(2..2,target.damage)
