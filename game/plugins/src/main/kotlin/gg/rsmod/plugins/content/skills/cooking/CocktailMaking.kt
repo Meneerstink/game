@@ -1,6 +1,10 @@
 package gg.rsmod.plugins.content.skills.cooking
 
 import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.model.attr.INTERACTING_ITEM
+import gg.rsmod.game.model.attr.INTERACTING_ITEM_SLOT
+import gg.rsmod.game.model.attr.OTHER_ITEM_ATTR
+import gg.rsmod.game.model.attr.OTHER_ITEM_SLOT_ATTR
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
@@ -16,6 +20,16 @@ object CocktailMaking {
         val ingredients: Map<Int, Int>, val returnsShaker: Boolean = false)
     data class Selection(val slot: Int, val held: WeakReference<Item>)
     val SELECTION = AttributeKey<Selection>()
+
+    /** OpHeldU carries both actual clicked items. Never substitute the first equal inventory id. */
+    fun clickedInput(player: Player, id: Int): Pair<Int, Item>? {
+        for ((reference, slotKey) in listOf(INTERACTING_ITEM to INTERACTING_ITEM_SLOT, OTHER_ITEM_ATTR to OTHER_ITEM_SLOT_ATTR)) {
+            val item = player.attr[reference]?.get() ?: continue
+            val slot = player.attr[slotKey] ?: continue
+            if (item.id == id && player.inventory.rawItems.getOrNull(slot) === item) return slot to item
+        }
+        return null
+    }
 
     // Native interface buttons and their onInvTransmit ingredient lists (not a replacement cooking window).
     val MIXES = linkedMapOf(

@@ -12,6 +12,58 @@ import io.mockk.verify
 import kotlin.test.*
 
 class N11ToggleTests {
+    @Test fun `cocktail item on item uses the clicked duplicate and refuses a replaced fruit after the make window`() {
+        N11Fixture().use { f ->
+            val making = gg.rsmod.plugins.content.skills.cooking.CocktailMaking
+            val cut = making.CUTS.first()
+            f.menu(Items.COCKTAIL_SHAKER, "Mix-cocktail")
+            making.POURS.forEach { f.menu(it.input, "Pour") }
+            making.GARNISHES.forEach { f.menu(it.input, "Add-ingreds") }
+            every { f.definitions.get(gg.rsmod.game.fs.def.VarbitDef::class.java, any()) } answers {
+                gg.rsmod.game.fs.def.VarbitDef(secondArg())
+            }
+            f.load("skills.cooking.Cocktail_making_plugin")
+            fun open(): Item {
+                f.inventory.removeAll()
+                f.inventory[0] = Item(Items.KNIFE)
+                f.inventory[1] = Item(cut.fruit)
+                val clicked = Item(cut.fruit)
+                f.inventory[2] = clicked
+                f.attrs[gg.rsmod.game.model.attr.INTERACTING_ITEM] = java.lang.ref.WeakReference(f.inventory[0]!!)
+                f.attrs[gg.rsmod.game.model.attr.INTERACTING_ITEM_SLOT] = 0
+                f.attrs[gg.rsmod.game.model.attr.OTHER_ITEM_ATTR] = java.lang.ref.WeakReference(clicked)
+                f.attrs[gg.rsmod.game.model.attr.OTHER_ITEM_SLOT_ATTR] = 2
+                assertEquals(2, making.clickedInput(f.player, cut.fruit)!!.first)
+                assertTrue(f.repo.executeItemOnItem(f.player, Items.KNIFE, cut.fruit))
+                f.queues.cycle()
+                return clicked
+            }
+            fun choose() {
+                // The real make quantity is stored in a varbit; this cache-free player has a mocked varp map.
+                every { f.player.varps.getBit(any(), any(), any()) } returns 1
+                f.queues.submitReturnValue(gg.rsmod.game.message.impl.ResumePauseButtonMessage(916, 14, 14))
+                repeat(6) { f.queues.cycle() }
+            }
+            open()
+            val untouched = f.inventory[1]
+            choose()
+            assertSame(untouched, f.inventory[1])
+            assertEquals(1, f.inventory.getItemCount(cut.chunks))
+            open()
+            f.inventory[2] = Item(cut.fruit)
+            assertNull(making.clickedInput(f.player, cut.fruit))
+            choose()
+            assertEquals(0, f.inventory.getItemCount(cut.chunks))
+            assertEquals(2, f.inventory.getItemCount(cut.fruit))
+            // Reversed packet direction also retains the actual fruit, rather than the first equal id.
+            f.attrs[gg.rsmod.game.model.attr.INTERACTING_ITEM] = java.lang.ref.WeakReference(f.inventory[2]!!)
+            f.attrs[gg.rsmod.game.model.attr.INTERACTING_ITEM_SLOT] = 2
+            f.attrs[gg.rsmod.game.model.attr.OTHER_ITEM_ATTR] = java.lang.ref.WeakReference(f.inventory[0]!!)
+            f.attrs[gg.rsmod.game.model.attr.OTHER_ITEM_SLOT_ATTR] = 0
+            assertEquals(2, making.clickedInput(f.player, cut.fruit)!!.first)
+        }
+    }
+
     @Test fun `Patchy optional products stay hidden until real unnoted cache names match dryrun allocation`() {
         val patchy = gg.rsmod.plugins.content.areas.mosleharmless.Patchy
         N11Fixture().use { f ->

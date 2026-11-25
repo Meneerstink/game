@@ -30,8 +30,7 @@ CocktailMaking.POURS.forEach { recipe ->
         } else CocktailMaking.make(player, recipe, slot, held)
     }
     on_item_on_item(item1 = recipe.input, item2 = Items.COCKTAIL_GLASS) {
-        val slot = player.inventory.getItemIndex(recipe.input, skipAttrItems = false)
-        val held = player.inventory.rawItems.getOrNull(slot) ?: return@on_item_on_item
+        val (slot, held) = CocktailMaking.clickedInput(player, recipe.input) ?: return@on_item_on_item
         if (recipe.input in listOf(Items.MIXED_BLIZZARD, Items.MIXED_BLURBERRY_SPECIAL)) {
             player.queue { wait(1); CocktailMaking.make(player, recipe, slot, held) }
         } else CocktailMaking.make(player, recipe, slot, held)
@@ -45,16 +44,14 @@ CocktailMaking.GARNISHES.forEach { recipe ->
     }
     recipe.ingredients.keys.forEach { ingredient ->
         on_item_on_item(item1 = recipe.input, item2 = ingredient) {
-            val slot = player.inventory.getItemIndex(recipe.input, skipAttrItems = false)
-            val held = player.inventory.rawItems.getOrNull(slot) ?: return@on_item_on_item
+            val (slot, held) = CocktailMaking.clickedInput(player, recipe.input) ?: return@on_item_on_item
             CocktailMaking.make(player, recipe, slot, held)
         }
     }
 }
 CocktailMaking.CUTS.forEach { cut ->
     on_item_on_item(item1 = Items.KNIFE, item2 = cut.fruit) {
-        val slot = player.inventory.getItemIndex(cut.fruit, skipAttrItems = false)
-        val held = player.inventory.rawItems.getOrNull(slot) ?: return@on_item_on_item
+        val (slot, held) = CocktailMaking.clickedInput(player, cut.fruit) ?: return@on_item_on_item
         player.queue {
             produceItemBox(cut.chunks, cut.slices, maxItems = player.inventory.getItemCount(cut.fruit), logic = { output, amount ->
                 queue {
