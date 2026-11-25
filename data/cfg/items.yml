@@ -1858,7 +1858,7 @@
   name: "Poison"
   examine: "It's a Poison."
   destroy_message: ""
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 274
@@ -4168,7 +4168,7 @@
 - id: 546
   name: "Shade robe"
   examine: "I feel closer to the gods when I am wearing this. (Top) If a shade had knees, this would keep them nice and warm. (Bottom)"
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 4
@@ -4207,7 +4207,7 @@
 - id: 548
   name: "Shade robe"
   examine: "I feel closer to the gods when I am wearing this. (Top) If a shade had knees, this would keep them nice and warm. (Bottom)"
-  tradeable: false
+  tradeable: true
   weight: 2.0
   equipment:
     equip_slot: 7
@@ -4884,7 +4884,7 @@
 - id: 621
   name: "Ship ticket"
   examine: "Sold in Shilo Village for passage on the 'Lady of the Waves'."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 622
@@ -22426,7 +22426,7 @@
 - id: 1854
   name: "Shantay pass"
   examine: "Allows you to pass through the Shantay pass into the Kharid Desert."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 1855
@@ -37209,7 +37209,7 @@
 - id: 3408
   name: "Serum 207 (4)"
   examine: "X doses serum 207 as described in Herbi Flax's diary."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 3409
@@ -37221,7 +37221,7 @@
 - id: 3410
   name: "Serum 207 (3)"
   examine: "X doses serum 207 as described in Herbi Flax's diary."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 3411
@@ -37233,7 +37233,7 @@
 - id: 3412
   name: "Serum 207 (2)"
   examine: "X doses serum 207 as described in Herbi Flax's diary."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 3413
@@ -37245,7 +37245,7 @@
 - id: 3414
   name: "Serum 207 (1)"
   examine: "X doses serum 207 as described in Herbi Flax's diary."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 3415
@@ -50523,7 +50523,7 @@
 - id: 4591
   name: "Karidian headpiece"
   examine: "Wear it on your head."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 4592
@@ -50547,7 +50547,7 @@
 - id: 4595
   name: "Karidian disguise"
   examine: "It's a Karidian disguise."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 4596
@@ -51235,7 +51235,7 @@
 - id: 4684
   name: "Linen"
   examine: "One sheet of mummy wrap."
-  tradeable: false
+  tradeable: true
   weight: 0.9
   equipment: null
 - id: 4685
@@ -57854,7 +57854,7 @@
 - id: 5075
   name: "Bird's nest"
   examine: "Full: "
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 5076
@@ -83881,7 +83881,7 @@
 - id: 7466
   name: "Cornflour"
   examine: "It's cornflour in a pot."
-  tradeable: false
+  tradeable: true
   weight: 1.0
   equipment: null
 - id: 7467
@@ -90576,7 +90576,7 @@
 - id: 8421
   name: "Bagged oak tree"
   examine: "It's a Bagged oak tree."
-  tradeable: false
+  tradeable: true
   weight: 10.0
   equipment: null
 - id: 8422
@@ -90720,7 +90720,7 @@
 - id: 8445
   name: "Fancy hedge"
   examine: "You can plant this in your garden."
-  tradeable: false
+  tradeable: true
   weight: 10.0
   equipment: null
 - id: 8446
@@ -90732,7 +90732,7 @@
 - id: 8447
   name: "Tall fancy hedge"
   examine: "You can plant this in your garden."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8448
@@ -90744,7 +90744,7 @@
 - id: 8449
   name: "Tall box hedge"
   examine: "It's a Tall box hedge."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8450
@@ -90756,7 +90756,7 @@
 - id: 8451
   name: "Bagged rosemary"
   examine: "It's a Bagged rosemary."
-  tradeable: false
+  tradeable: true
   weight: 10.0
   equipment: null
 - id: 8452
@@ -92178,7 +92178,7 @@
 - id: 8624
   name: "Crystal ball"
   examine: "It's a Crystal ball."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8625
@@ -92190,7 +92190,7 @@
 - id: 8626
   name: "Elemental sphere"
   examine: "It's an Elemental sphere."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8627
@@ -92202,7 +92202,7 @@
 - id: 8628
   name: "Crystal of power"
   examine: "It's a Crystal of power."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8629
@@ -96830,13 +96830,13 @@
 - id: 8940
   name: "Rum"
   examine: "It's a Rum."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8941
   name: "Rum"
   examine: "It's a Rum."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment: null
 - id: 8942
@@ -101426,7 +101426,7 @@
 - id: 9297
   name: "Adamant bolts (p+)"
   examine: "It's an Adamant bolts (p+)."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 13
@@ -101664,7 +101664,7 @@
 - id: 9304
   name: "Adamant bolts (p++)"
   examine: "It's an Adamant bolts (p++)."
-  tradeable: false
+  tradeable: true
   weight: 0.0
   equipment:
     equip_slot: 13
