@@ -23,13 +23,18 @@ def skip(reason):
     return 2
 
 
-def digest(path):
+def long_path(path):
     # 25-11 Claude: Kotlin test classes ('...Tests$departure reduces ... $$inlined$groupingBy$1.class') under
     # build/precheck-pull.XXXX exceed MAX_PATH 260 -> Errno 2 -> baseline never published -> precheck always skipped.
+    # 06:3x: the baseline check (is_file) needs the same prefix, not only the hashing.
     name = str(Path(path).resolve())
     if os.name == 'nt' and not name.startswith('\\\\?\\'):
         name = '\\\\?\\' + name
-    with open(name, 'rb') as stream:
+    return name
+
+
+def digest(path):
+    with open(long_path(path), 'rb') as stream:
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 
@@ -66,7 +71,7 @@ def run():
         return skip('onbekende manifestversie')
     for name, expected in m['artifacts'].items():
         p = package / name
-        if not p.is_file() or digest(p) != expected:
+        if not os.path.isfile(long_path(p)) or digest(p) != expected:
             return skip('baseline artifact ontbreekt of hash wijkt af: ' + name)
     for name in m['jars'] + m['compiler']:
         if name not in m['artifacts']:
