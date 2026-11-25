@@ -664,7 +664,7 @@ object ReadableDocuments {
             My friend, you were right to send me to investigate the dwarf's drunken claims, for I have discovered a treasure beyond our wildest dreams. The aviansie are alive, and I suspect they still guard the Godsword! Beneath the remnants of the temple a great battle is being fought between followers of Bandos, Armadyl, Saradomin and Zamorak. My command was slaughtered and I am grieviously wounded. YOU MUST PREVENT THE GODSWORD FROM FALLING INTO THE WRONG HANDS! I do not know how I am going to get this message to you, why is that talking skull never around when he's needed? Your comrade, Sir Gerry.
         """.trimIndent()),
         // Source: https://oldschool.runescape.wiki/w/Transcript:Old_journal (PROJECT48 O10)
-        Document(Items.OLD_JOURNAL, "Old journal", "https://oldschool.runescape.wiki/w/Old_journal", """
+        Document(Items.OLD_JOURNAL, "Old journal", "https://oldschool.runescape.wiki/w/Transcript:Old_journal", """
             We came to cleanse this underground pass of the dark forces that dwell here. We knew the journey would be treacherous, but even I was not prepared for the darkness that fills this place.
 
             To hold the darkness at bay, I had the mages create some Spheres of Light for us. I have positioned them in the tunnels around the well where we have made camp.
@@ -680,7 +680,7 @@ object ReadableDocuments {
             at my weak soul...
         """.trimIndent()),
         // Source: https://oldschool.runescape.wiki/w/Transcript:Intel_report (PROJECT48 O10)
-        Document(Items.INTEL_REPORT, "Intel report", "https://oldschool.runescape.wiki/w/Intel_report", """
+        Document(Items.INTEL_REPORT, "Intel report", "https://oldschool.runescape.wiki/w/Transcript:Intel_report", """
             Intelligence Report
             There is an archaeologist with mining equipment hanging
             around the statue outside of the city. Could she be on to
@@ -692,13 +692,13 @@ object ReadableDocuments {
             new treasures?
         """.trimIndent()),
         // Source: https://oldschool.runescape.wiki/w/Transcript:Hazelmere%27s_scroll (PROJECT48 O10)
-        Document(Items.HAZELMERES_SCROLL, "Hazelmere's scroll", "https://oldschool.runescape.wiki/w/Hazelmere%27s_scroll", """
+        Document(Items.HAZELMERES_SCROLL, "Hazelmere's scroll", "https://oldschool.runescape.wiki/w/Transcript:Hazelmere%27s_scroll", """
             Es lemanto meso pro eis prit ta Cinqo mond.
             Mi lovos te lemanto Daconia arpos
             et Daconia arpos eto meriz ta priwl!
         """.trimIndent()),
         // Source: https://oldschool.runescape.wiki/w/Transcript:Lumber_order (PROJECT48 O10)
-        Document(Items.LUMBER_ORDER, "Lumber order", "https://oldschool.runescape.wiki/w/Lumber_order", """
+        Document(Items.LUMBER_ORDER, "Lumber order", "https://oldschool.runescape.wiki/w/Transcript:Lumber_order", """
             Karamja shipyard
 
             Order
@@ -708,7 +708,7 @@ object ReadableDocuments {
             Troop capacity: 300
         """.trimIndent()),
         // Source: https://oldschool.runescape.wiki/w/Transcript:Big_Book_of_Bangs (PROJECT48 O10)
-        Document(Items.BIG_BOOK_OF_BANGS, "Big Book of Bangs", "https://oldschool.runescape.wiki/w/Big_Book_of_Bangs", """
+        Document(Items.BIG_BOOK_OF_BANGS, "Big Book of Bangs", "https://oldschool.runescape.wiki/w/Transcript:Big_Book_of_Bangs", """
             Introduction
             In my travels, I have witnessed many explosive creations. One of particular note, is fire oil. Used in the far east, fire oil has an incredible explosive capability. However, it also sticks to anything it touches.
 
@@ -729,7 +729,7 @@ object ReadableDocuments {
             Once combined, exposure to a naked flame will result in an instant reaction so great care must be taken. A fuse of some sort should be used to provide a suitable delay.
         """.trimIndent()),
         // Source: https://oldschool.runescape.wiki/w/Transcript:Lift_manual (PROJECT48 O10)
-        Document(Items.LIFT_MANUAL, "Lift manual", "https://oldschool.runescape.wiki/w/Lift_manual", """
+        Document(Items.LIFT_MANUAL, "Lift manual", "https://oldschool.runescape.wiki/w/Transcript:Lift_manual", """
             Troubleshooting your AMCE Lift-In-A-Box
 
             'My lift doesn't work!'
@@ -745,7 +745,7 @@ object ReadableDocuments {
             (AMCE Lift-In-A-Box, Pulley-Beams-In-A-Box, Beams-In-A-Box and Ropes-In-A-Box are all registered trademarks of Ali Morrisane Commercial Enterprises (AMCE) Ltd.)
         """.trimIndent()),
         // Source: https://oldschool.runescape.wiki/w/Transcript:Queen_help_book (PROJECT48 O10)
-        Document(Items.QUEEN_HELP_BOOK, "Queen help book", "https://oldschool.runescape.wiki/w/Queen_help_book", """
+        Document(Items.QUEEN_HELP_BOOK, "Queen help book", "https://oldschool.runescape.wiki/w/Transcript:Queen_help_book", """
             1) Collector: Pick up yellow egg. Pass to healer. Take omega egg from Defender. Load into turret.
 
             2) Healer: Take yellow egg from Collector. Poison egg in pool. Pass to Attacker.
@@ -755,7 +755,7 @@ object ReadableDocuments {
             4) Defender: Take poisoned, spiked, yellow egg from Attacker. Dunk in lava. Pass to Collector.
         """.trimIndent()),
         // Source: https://oldschool.runescape.wiki/w/Transcript:Tarn%27s_diary (PROJECT48 O10)
-        Document(Items.TARNS_DIARY, "Tarn's diary", "https://oldschool.runescape.wiki/w/Tarn%27s_diary", """
+        Document(Items.TARNS_DIARY, "Tarn's diary", "https://oldschool.runescape.wiki/w/Transcript:Tarn%27s_diary", """
             4th of Bennath
             All my long hours of research have finally paid off! Today I discovered an ancient journal in the great library, which detailed a ceremony for giving life back to greater beasts after they have died! I shall finally be able to unravel the secrets of the Skeletal Wyverns!
 
@@ -793,7 +793,7 @@ object ReadableDocuments {
             Today we excavated the entrance to a building! I do not recognise the style of masonry used, but the creators must have been about the same height and girth as I am, judging by the size of doorways and stair- cases. The temple is fraught with traps, but will make a fine base for me to wait whilst my army of undead retrieve a piece of the Salve Crystal. I have several theories pertaining to the origin of this strange temple. If I am correct we are deep underground, directly below the village of Burgh de Rott. It may be that this temple was built as a fortification against an invasion from the desert nomads, who live to the west of here. Alternatively, perhaps it was built at the bequest of one of the lesser vampyre lords who ruled this area when Drakan came to power. However, I believe that it was probably built to guard an ancient treasure. My reasoning is thus; there doesn't seem to be any type of altar that we have found yet and the temple is littered with traps. Further research may reveal an answer. In the meantime I have enchanted this diary of mine with the spell needed to enhance the powers of the crystal. I await my minions' return.
         """.trimIndent()),
         // Source: https://oldschool.runescape.wiki/w/Transcript:Brewin%27_guide (PROJECT48 O10)
-        Document(Items.BREWIN_GUIDE, "Brewin' guide", "https://oldschool.runescape.wiki/w/Brewin%27_guide", """
+        Document(Items.BREWIN_GUIDE, "Brewin' guide", "https://oldschool.runescape.wiki/w/Transcript:Brewin%27_guide", """
             BREWIN' GUIDE
             A guide to brewin'
 

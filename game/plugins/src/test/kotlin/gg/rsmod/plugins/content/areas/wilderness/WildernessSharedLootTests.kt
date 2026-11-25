@@ -77,6 +77,17 @@ class WildernessSharedLootTests {
                     ?: fail("${source.name} ($id): no hard/elite clue line; lines=${plain.lines.map { "${it.item}:${it.name}:${it.normal}" }}")
                 every { f.player.equipment[EquipmentType.RING.id] } returns ring
                 val boosted = DropSources.view(f.player, source, 1.0).lines.single { it.item == clue.item }
+                if (clue.item !in setOf(Items.CLUE_SCROLL_HARD, Items.CLUE_SCROLL_ELITE)) {
+                    // Scroll box line (ClueNpcSources): 'normal' stays the OSRS base rate, the ring doubles the player's own chance.
+                    assertEquals(clue.your * 2, boosted.your, 1e-12, source.name)
+                    assertEquals(clue.normal, boosted.normal, 1e-12, source.name)
+                    val entry = DropSources.personalWildernessIndex(f.player, DropSources.ItemIndex(emptyMap(), emptyMap()), 1.0, listOf(source))
+                        .sources.getValue(clue.item).single()
+                    assertEquals(boosted.your, maxOf(entry.second, entry.third), 1e-12, "item search: ${source.name}")
+                    every { f.player.equipment[EquipmentType.RING.id] } returns null
+                    assertEquals(clue.your, DropSources.view(f.player, source, 1.0).lines.single { it.item == clue.item }.your, 1e-12)
+                    continue
+                }
                 assertEquals(clue.normal * 2, boosted.normal, 1e-12, source.name)
                 val index = DropSources.personalWildernessIndex(f.player, DropSources.ItemIndex(emptyMap(), emptyMap()), 1.0, listOf(source))
                 assertEquals(boosted.normal, index.sources.getValue(clue.item).single().third, 1e-12, "item search: ${source.name}")
