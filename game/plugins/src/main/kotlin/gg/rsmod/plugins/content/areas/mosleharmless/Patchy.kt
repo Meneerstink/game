@@ -1,6 +1,8 @@
 package gg.rsmod.plugins.content.areas.mosleharmless
 
 import gg.rsmod.game.model.container.ItemContainer
+import gg.rsmod.game.fs.DefinitionSet
+import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.cfg.Items
@@ -26,10 +28,25 @@ object Patchy {
     const val OSRS_PIRATE_HAT_AND_PATCH = 12412
     const val OSRS_TOP_HAT_AND_MONOCLE = 12434
     const val OSRS_DARK_FLIPPERS = 25557 // Kourend dependency remains parked; not offered.
+    // Paired dry-run patchy-products, 25-11: candidates, guarded by the actual cache name and note state.
+    // Claude must update these if fresh allocation differs when applying the batch.
+    const val PARTYHAT_AND_SPECS = 25684
+    const val PIRATE_HAT_AND_PATCH = 25686
+    const val TOP_HAT_AND_MONOCLE = 25688
+    private val imported = listOf(
+        Recipe(Items.BLUE_PARTYHAT, 23582, PARTYHAT_AND_SPECS) to "Partyhat & specs",
+        Recipe(23446, Items.EYE_PATCH, PIRATE_HAT_AND_PATCH) to "Pirate hat & patch",
+        Recipe(Items.TOP_HAT, 23538, TOP_HAT_AND_MONOCLE) to "Top hat & monocle",
+    )
+    fun catalogue(definitions: DefinitionSet): List<Recipe> = RECIPES + imported.mapNotNull { (recipe, name) ->
+        val definition = definitions.getNullable(ItemDef::class.java, recipe.product)
+        recipe.takeIf { definition != null && !definition.noted && definition.name == name }
+    }
+    private fun known(player: Player, recipe: Recipe) = recipe in RECIPES || recipe in catalogue(player.world.definitions)
     data class Selection(val recipe: Recipe, val separate: Boolean, val originals: List<Pair<Int, Item>>)
 
     fun select(player: Player, recipe: Recipe, separate: Boolean): Selection? {
-        if (recipe !in RECIPES) return null
+        if (!known(player, recipe)) return null
         val ids = if (separate) listOf(recipe.product) else listOf(recipe.first, recipe.second)
         val originals = ids.map { id ->
             val slot = player.inventory.rawItems.indexOfFirst { it?.id == id }
@@ -42,7 +59,7 @@ object Patchy {
     /** Check capacity and every original reference before changing anything; no suspension during payment. */
     fun exchange(player: Player, selection: Selection): Boolean {
         val recipe = selection.recipe
-        if (recipe !in RECIPES || selection.originals.any { (slot, item) -> player.inventory.rawItems.getOrNull(slot) !== item }) return false
+        if (!known(player, recipe) || selection.originals.any { (slot, item) -> player.inventory.rawItems.getOrNull(slot) !== item }) return false
         val required = if (selection.separate) listOf(recipe.product) else listOf(recipe.first, recipe.second)
         if (selection.originals.map { it.second.id } != required) return false
         val price = if (selection.separate) SEPARATE_PRICE else SEW_PRICE

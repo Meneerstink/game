@@ -12,6 +12,33 @@ import io.mockk.verify
 import kotlin.test.*
 
 class N11ToggleTests {
+    @Test fun `Patchy optional products stay hidden until real unnoted cache names match dryrun allocation`() {
+        val patchy = gg.rsmod.plugins.content.areas.mosleharmless.Patchy
+        N11Fixture().use { f ->
+            assertEquals(9, patchy.catalogue(f.definitions).size)
+            val ids = listOf(patchy.PARTYHAT_AND_SPECS, patchy.PIRATE_HAT_AND_PATCH, patchy.TOP_HAT_AND_MONOCLE)
+            val names = listOf("Partyhat & specs", "Pirate hat & patch", "Top hat & monocle")
+            ids.zip(names).forEach { (id, name) -> f.def(id).name = name }
+            val recipes = patchy.catalogue(f.definitions)
+            assertEquals(12, recipes.size)
+            for (recipe in recipes.drop(9)) {
+                f.inventory.removeAll()
+                f.def(Items.COINS_995).stacks = true
+                f.inventory.add(Items.COINS_995, 1100)
+                f.inventory.add(recipe.first)
+                f.inventory.add(recipe.second)
+                assertTrue(patchy.exchange(f.player, patchy.select(f.player, recipe, false)!!))
+                assertTrue(patchy.exchange(f.player, patchy.select(f.player, recipe, true)!!))
+                assertEquals(0, f.inventory.getItemCount(Items.COINS_995))
+                assertEquals(1, f.inventory.getItemCount(recipe.first))
+                assertEquals(1, f.inventory.getItemCount(recipe.second))
+            }
+            f.def(ids[0]).name = "An unrelated future item"
+            f.def(ids[1]).noteTemplateId = 799
+            assertEquals(listOf(patchy.TOP_HAT_AND_MONOCLE), patchy.catalogue(f.definitions).drop(9).map { it.product })
+        }
+    }
+
     @Test fun `Patchy native Sew opens SMW and stale response or logout cannot consume replacement items`() {
         N11Fixture().use { f ->
             val patchy = gg.rsmod.plugins.content.areas.mosleharmless.Patchy

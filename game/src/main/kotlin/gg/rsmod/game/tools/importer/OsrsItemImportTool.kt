@@ -82,6 +82,9 @@ object OsrsItemImportTool {
      */
     val BATCHES: Map<String, List<Spec>> by lazy {
         mapOf(
+            // O22 Patchy: existing service's three later cosmetic products, no new region/content.
+            // OSRS Wiki Partyhat & specs, Pirate hat & patch, Top hat & monocle; no combat/client params.
+            "patchy-products" to listOf(Spec(12399, noted = true), Spec(12412, noted = true), Spec(12434, noted = true)),
             // DMM2: exact 51-parent order from docs/dmm2-research/preflight-output/bundle-item.txt (cache 2686).
             // Notes/count forms are imported by their parent; existing trinkets retain their local IDs.
             "dmm2-items" to listOf(

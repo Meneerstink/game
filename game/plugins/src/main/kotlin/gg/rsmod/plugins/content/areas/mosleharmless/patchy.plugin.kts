@@ -7,12 +7,21 @@ suspend fun QueueTask.sewing() {
     val npc = player.getInteractingNpc()
     val separate = options("Sew", "Separate", "No, thank you.")
     if (separate !in 1..2) return
-    val selections = Patchy.RECIPES.associate { it.product to Patchy.select(player, it, separate == 2) }
+    var recipes = Patchy.catalogue(world.definitions)
+    // The native SMW has ten item slots. Later imported products need the two groups named by Wiki Template:Patchy.
+    if (recipes.size > 10) {
+        when (options("Bandana eyepatch", "Other", "No, thank you.")) {
+            1 -> recipes = recipes.take(4)
+            2 -> recipes = recipes.drop(4)
+            else -> return
+        }
+    }
+    val selections = recipes.associate { it.product to Patchy.select(player, it, separate == 2) }
     produceItemBox(
-        *Patchy.RECIPES.map { it.product }.toIntArray(),
+        *recipes.map { it.product }.toIntArray(),
         option = SkillDialogueOption.SELECT,
         maxItems = 1,
-        extraNames = Array(Patchy.RECIPES.size) { "${if (separate == 2) Patchy.SEPARATE_PRICE else Patchy.SEW_PRICE} coins" },
+        extraNames = Array(recipes.size) { "${if (separate == 2) Patchy.SEPARATE_PRICE else Patchy.SEW_PRICE} coins" },
     ) { product, _ ->
         val selection = selections[product] ?: return@produceItemBox
         if (tile.isWithinRadius(npc.tile, 2) && npc.isSpawned()) Patchy.exchange(this, selection)
