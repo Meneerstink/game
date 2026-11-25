@@ -22,7 +22,9 @@ class AvasCommuneTests {
         // Full slayer helmet (charged): no source for its scroll capacity/level (RS Wiki table lacks it) - recorded SOURCE_GAP.
         // N640: the CoX Dark relic's Commune is its own handler (CoxDarkRelic: pick a skill, XP), not an Ava's device.
         val darkRelic = gg.rsmod.plugins.content.activity.cox.CoxIds.item(gg.rsmod.plugins.content.activity.cox.CoxDarkRelic.OSRS_ITEM)
-        val headgear = EnchantedHeadgear.allItems + gg.rsmod.plugins.api.cfg.Items.FULL_SLAYER_HELMET_CHARGED + listOfNotNull(darkRelic)
+        // DMM-ITEMS 21-11: the Royal seed pod's Commune is its own handler (dmm_items: teleport to the Grand Tree), not an Ava's device.
+        val headgear = EnchantedHeadgear.allItems + gg.rsmod.plugins.api.cfg.Items.FULL_SLAYER_HELMET_CHARGED + listOfNotNull(darkRelic) +
+            gg.rsmod.plugins.content.mechanics.deadman.items.DmmItems.ROYAL_SEED_POD
         val offenders =
             DEFINITIONS.getAllKeys(ItemDef::class.java).mapNotNull { id ->
                 val def = DEFINITIONS.getNullable(ItemDef::class.java, id) ?: return@mapNotNull null

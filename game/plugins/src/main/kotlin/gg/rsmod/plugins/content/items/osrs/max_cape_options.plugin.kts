@@ -7,6 +7,7 @@ import gg.rsmod.plugins.content.magic.prepareForTeleport
 import gg.rsmod.plugins.content.magic.teleport
 import gg.rsmod.plugins.content.mechanics.pvp.CityGuards
 import gg.rsmod.plugins.content.skills.SkillcapePerks
+import gg.rsmod.plugins.content.skills.SkillcapeFeatures
 import gg.rsmod.plugins.content.skills.SkillcapePerks.DailyUse
 
 /**
@@ -29,24 +30,31 @@ import gg.rsmod.plugins.content.skills.SkillcapePerks.DailyUse
 
 val CAPE = MaxCapes.MAX_CAPE
 
+fun hasMaxCape(player: Player): Boolean =
+    player.inventory.contains(CAPE) || player.getEquipment(EquipmentType.CAPE)?.id == CAPE
+
 fun arrivalTile(tile: gg.rsmod.game.model.Tile) = CityGuards.nearestWalkable(world, tile, radius = 3) ?: tile
 
 fun capeTeleport(
     player: Player,
     destination: MaxCapeTeleports.Destination,
 ) {
+    if (!hasMaxCape(player)) return
     if (destination.dailyHunterLimit && SkillcapePerks.remainingToday(player, DailyUse.HUNTER_TELEPORT) == 0) {
         player.message("You have used all ${MaxCapeTeleports.HUNTER_TELEPORTS_PER_DAY} of today's Hunter area teleports.")
         return
     }
     player.canTeleport(TeleportType.JEWELRY) {
+        if (!hasMaxCape(player)) return@canTeleport
         if (destination.dailyHunterLimit && !SkillcapePerks.takeDailyUse(player, DailyUse.HUNTER_TELEPORT)) return@canTeleport
         player.teleport(arrivalTile(destination.tile), TeleportType.JEWELRY)
     }
 }
 
 fun teleportHome(player: Player) {
+    if (!hasMaxCape(player)) return
     player.canTeleport(TeleportType.JEWELRY) {
+        if (!hasMaxCape(player)) return@canTeleport
         val type = TeleportType.JEWELRY
         player.lock = LockState.FULL_WITH_DAMAGE_IMMUNITY
         player.queue(TaskPriority.STRONG) {
@@ -96,27 +104,18 @@ suspend fun openPohPortals(
 }
 
 fun staminaBoost(player: Player) {
-    if (!SkillcapePerks.takeDailyUse(player, DailyUse.STAMINA)) {
-        player.message("You have already used the cape's stamina boost today.")
-        return
+    if (hasMaxCape(player) && SkillcapeFeatures.stamina(player)) {
+        player.message("You feel refreshed and your run energy is restored.")
     }
-    gg.rsmod.plugins.content.items.potion.StaminaPotions.drink(player, 100.0, 100)
-    player.message("You feel refreshed and your run energy is restored.")
 }
 
 fun searchCape(player: Player) {
     player.queue {
-        val choice = options("Mithril grapple", "Bronze crossbow", "Pestle and mortar", "Cancel", title = "Search the cape")
+        val choice = options("Mithril grapple and bronze crossbow", "Pestle and mortar", "Cancel", title = "Search the cape")
+        if (!hasMaxCape(player)) return@queue
         when (choice) {
-            1, 2 -> {
-                val item = if (choice == 1) Items.MITH_GRAPPLE_9419 else Items.BRONZE_CROSSBOW
-                if (!SkillcapePerks.takeDailyUse(player, DailyUse.FLETCHING_SEARCH)) {
-                    player.message("You have searched the cape ${MaxCapeTeleports.SEARCHES_PER_DAY} times today already.")
-                    return@queue
-                }
-                if (player.inventory.add(item).hasFailed()) player.message("You don't have enough inventory space.")
-            }
-            3 -> if (player.inventory.add(Items.PESTLE_AND_MORTAR).hasFailed()) player.message("You don't have enough inventory space.")
+            1 -> SkillcapeFeatures.searchFletching(player)
+            2 -> SkillcapeFeatures.searchHerblore(player)
         }
     }
 }
@@ -124,10 +123,13 @@ fun searchCape(player: Player) {
 fun openFeatures(player: Player) {
     player.queue {
         val stamina = "Stamina boost (${SkillcapePerks.remainingToday(player, DailyUse.STAMINA)} left today)"
-        when (options(stamina, "Search the cape", "Customise look", "Cancel", title = "Features")) {
+        val choice = options(stamina, "Search the cape", "Commune", "Customise look", "Cancel", title = "Features")
+        if (!hasMaxCape(player)) return@queue
+        when (choice) {
             1 -> staminaBoost(player)
             2 -> searchCape(player)
-            3 -> MaxCapeLooks.customise(player)
+            3 -> AvasAssembler.commune(player)
+            4 -> MaxCapeLooks.customise(player)
         }
     }
 }

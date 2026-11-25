@@ -105,6 +105,8 @@ object RemovedItems {
         gg.rsmod.plugins.content.items.potion.RemovedPotions.itemIds + gg.rsmod.plugins.content.mechanics.pvp.breach.BreachLoot.EXCLUDED_TRINKETS +
             gg.rsmod.plugins.content.activity.pest_control.VoidDeflectorMigration.UNWEARABLE +
             gg.rsmod.plugins.content.items.armor.DragonChainbodyMigration.UNWEARABLE +
+            // N577 deel 3 stap 2 (25-11): OSRS does not allow these on the GE (OsrsGeUntradeable, source in its KDoc).
+            OsrsGeUntradeable.IDS +
             // SIGIL-NERF 23-11: no GE acquisition; existing items stay pending the owner's compensation decision.
             gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigil.values().filterNot { it.enabled }
                 .flatMap { listOf(it.attunedId, it.unattunedId) }
