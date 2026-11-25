@@ -41,6 +41,27 @@ class GrandExchangeOsrsLimitOverlayTests {
     }
 
     @Test
+    fun `N577 every id that gets the cache GE flag is admitted on the Grand Exchange and not hidden`() {
+        // ge_flag_add.txt is read by GeFlagAddCacheTool: a flagged item the server refuses would show in the GE search but fail on offer.
+        val ids = File(CFG, "ge_flag_add.txt").readLines().filter { it.isNotBlank() && !it.startsWith("#") }.map { it.trim().toInt() }
+        assertTrue(ids.size >= 90, "ge_flag_add.txt has ${ids.size} ids")
+        val hidden = gg.rsmod.plugins.content.mechanics.removed.RemovedItems.geHiddenIds
+        val wrong =
+            ids.mapNotNull { id ->
+                val def = DEFINITIONS.getNullable(ItemDef::class.java, id) ?: return@mapNotNull "$id absent"
+                when {
+                    def.noted -> "$id noted"
+                    id !in TRADEABLE -> "$id ${def.name}: not tradeable"
+                    id in hidden -> "$id ${def.name}: in ge_hidden.txt"
+                    else -> null
+                }
+            }
+        assertTrue(wrong.isEmpty(), wrong.joinToString("
+"))
+        assertTrue(5075 in ids && 9297 !in ids, "Bird's nest gets the flag; Adamant bolts (p+) already has it")
+    }
+
+    @Test
     fun `N577 quest-era items that OSRS lists on the Grand Exchange are tradeable here too`() {
         val flipped =
             listOf(
