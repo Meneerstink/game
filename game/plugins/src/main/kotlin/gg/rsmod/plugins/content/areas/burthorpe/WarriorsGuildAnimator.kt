@@ -107,7 +107,7 @@ object WarriorsGuildAnimator {
             else -> false
         }
 
-    // ---- K06 N372 part 4: shot put (OSRS Wiki "Calculator:Shot put": X = Strength + run energy + style - shot weight) ----
+    // ---- K06 N372 part 4: shot put (OSRS Wiki "Calculator:Shot put": X = L + R + S + D - W) ----
 
     const val SHOT_18LB = 15664
     const val SHOT_22LB = 15665
@@ -126,7 +126,8 @@ object WarriorsGuildAnimator {
         runEnergy: Int,
         style: Throw,
         weight: Int,
-    ): Int = strength + runEnergy + style.bonus - weight
+        dustedHands: Boolean = false,
+    ): Int = strength + runEnergy + style.bonus + (if (dustedHands) 5 else 0) - weight
 
     /** The distance table of the calculator (X < 58 -> 1 yard ... X >= 216 -> 14 yards). */
     private val DISTANCE_STEPS = intArrayOf(58, 71, 84, 97, 110, 124, 137, 150, 163, 176, 190, 203, 216)

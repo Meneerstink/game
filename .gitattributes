@@ -2,5 +2,7 @@
 # compare multi-line snippets written with LF (2026-10-01: half the working copies were CRLF via core.autocrlf, ROOT_CAUSES #119).
 *.kt text eol=lf
 *.kts text eol=lf
+tools/remote/*.sh text eol=lf
+tools/remote/*.gradle text eol=lf
 # Source snapshots must retain the bytes whose SHA-256 is in the CLUE manifest.
 docs/CLUE/sources/*.wiki -text -diff
