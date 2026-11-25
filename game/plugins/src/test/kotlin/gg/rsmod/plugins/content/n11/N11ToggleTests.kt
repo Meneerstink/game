@@ -326,7 +326,7 @@ class N11ToggleTests {
             every { anim.cycleLength } returns 4
             every { f.definitions.get(gg.rsmod.game.fs.def.AnimDef::class.java, any()) } returns anim
             f.load("areas.digsite.Panning_plugin")
-            val guide = f.repo.npcSpawns.single()
+            @Suppress("UNCHECKED_CAST") val guide = (gg.rsmod.game.plugin.PluginRepository::class.java.getDeclaredField("npcSpawns").apply { isAccessible = true }.get(f.repo) as List<gg.rsmod.game.model.entity.Npc>).single() // internal in :game
             assertEquals(620, guide.id)
             assertEquals(gg.rsmod.game.model.Tile(3376, 3379), guide.tile)
             repeat(28) { f.inventory[it] = Item(100000 + it) }
