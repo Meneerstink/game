@@ -19,6 +19,10 @@ import kotlin.test.assertTrue
  * Deadman: Annihilation breach table says (data/cfg/deadman/breach-locations.json), which the old multi.yml got wrong for 16.
  */
 class MultiCombatZonesTests {
+    /** COMBATENGAGE-FLAKY: never leave the real map loaded for the next test classes in this JVM (forkEvery 25). */
+    @kotlin.test.AfterTest
+    fun unloadZones() = MultiCombatZones.unload()
+
     @Test
     fun `FFA north halves use lookup hashes and preserve the exact arena edges`() {
         val zones = ClanWarsFfaCombat

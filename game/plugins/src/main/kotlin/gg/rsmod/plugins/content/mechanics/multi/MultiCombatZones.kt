@@ -49,6 +49,15 @@ object MultiCombatZones {
         z: Int,
     ): Boolean = tiles.contains(key(x, z))
 
+    /**
+     * COMBATENGAGE-FLAKY (25-11): forgets a loaded map. Only tests call this - a test class that loads the real map must not
+     * leave it in the JVM (forkEvery 25), or a later class that mocks multi.yml chunks on a surface tile is decided by this map.
+     */
+    fun unload() {
+        tiles.clear()
+        loaded = false
+    }
+
     fun load(file: File = File(PATH)): Int {
         if (!file.exists()) return 0
         val root = file.reader().use { com.google.gson.Gson().fromJson(it, JsonObject::class.java) }

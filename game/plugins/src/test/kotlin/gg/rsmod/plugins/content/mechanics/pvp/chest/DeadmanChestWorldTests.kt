@@ -751,6 +751,11 @@ class DeadmanChestWorldTests {
     }
 
     companion object {
+        /** COMBATENGAGE-FLAKY: the real multi map loaded below must not stay in the JVM for the next test classes (forkEvery 25). */
+        @org.junit.AfterClass
+        @JvmStatic
+        fun unloadMultiZones() = gg.rsmod.plugins.content.mechanics.multi.MultiCombatZones.unload()
+
         /** Lumbridge: a guarded city, never a chest spot. */
         val SAFE_TILE = Tile(3222, 3218, 0)
 
