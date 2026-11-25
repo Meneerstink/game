@@ -49,6 +49,7 @@ class N11Fixture : AutoCloseable {
         every { player.timers } returns timers
         every { player.inventory } returns inventory
         every { player.bank } returns bank
+        every { player.varcs } returns MutableList(4000) { 0 } // produceItemBox writes varcs[id] (Patchy/Cocktail SMW)
         every { player.equipment } returns equipment
         every { player.skills } returns skills
         every { player.tile } returns Tile(3200, 3200)

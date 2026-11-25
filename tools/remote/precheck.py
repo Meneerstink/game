@@ -24,7 +24,12 @@ def skip(reason):
 
 
 def digest(path):
-    with path.open('rb') as stream:
+    # 25-11 Claude: Kotlin test classes ('...Tests$departure reduces ... $$inlined$groupingBy$1.class') under
+    # build/precheck-pull.XXXX exceed MAX_PATH 260 -> Errno 2 -> baseline never published -> precheck always skipped.
+    name = str(Path(path).resolve())
+    if os.name == 'nt' and not name.startswith('\\\\?\\'):
+        name = '\\\\?\\' + name
+    with open(name, 'rb') as stream:
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 

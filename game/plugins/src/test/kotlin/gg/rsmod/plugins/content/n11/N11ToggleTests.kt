@@ -119,7 +119,7 @@ class N11ToggleTests {
                 f.queues.cycle()
                 f.queues.submitReturnValue(gg.rsmod.game.message.impl.ResumePauseButtonMessage(230, 2, 2))
                 f.queues.cycle()
-                verify { f.player.setVarc(755, recipe.product) }
+                verify { f.player.write(gg.rsmod.game.message.impl.VarcLargeMessage(755, recipe.product)) }; assertEquals(recipe.product, f.player.varcs[755]) // varcs is a real list in N11Fixture
             }
             fun click() {
                 f.queues.submitReturnValue(gg.rsmod.game.message.impl.ResumePauseButtonMessage(916, 14, 14))
@@ -192,7 +192,7 @@ class N11ToggleTests {
             assertFalse(patchy.exchange(f.player, moved))
             assertEquals(500, f.inventory.getItemCount(Items.COINS_995))
             assertTrue(patchy.exchange(f.player, patchy.select(f.player, recipe, false)!!))
-            f.inventory[0] = Item(Items.COINS_995, 600)
+            f.inventory.add(Items.COINS_995, 600) // slot 0 now holds the sewn product; do not overwrite it
             while (f.inventory.hasSpace) f.inventory.add(100000)
             assertTrue(patchy.exchange(f.player, patchy.select(f.player, recipe, true)!!))
             assertEquals(0, f.inventory.getItemCount(Items.COINS_995))
@@ -326,7 +326,7 @@ class N11ToggleTests {
             every { anim.cycleLength } returns 4
             every { f.definitions.get(gg.rsmod.game.fs.def.AnimDef::class.java, any()) } returns anim
             f.load("areas.digsite.Panning_plugin")
-            val guide = f.repo.npcSpawns.single()
+            @Suppress("UNCHECKED_CAST") val guide = (gg.rsmod.game.plugin.PluginRepository::class.java.getDeclaredField("npcSpawns").apply { isAccessible = true }.get(f.repo) as List<gg.rsmod.game.model.entity.Npc>).single() // internal in :game
             assertEquals(620, guide.id)
             assertEquals(gg.rsmod.game.model.Tile(3376, 3379), guide.tile)
             repeat(28) { f.inventory[it] = Item(100000 + it) }
@@ -467,6 +467,7 @@ class N11ToggleTests {
             val wall = gg.rsmod.game.model.entity.DynamicObject(22545, 4, 0, gg.rsmod.game.model.Tile(3201, 3200))
             val chunk = io.mockk.mockk<gg.rsmod.game.model.region.Chunk>()
             every { f.world.chunks.get(any<gg.rsmod.game.model.Tile>(), false) } returns null
+            every { f.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, any()) } answers { gg.rsmod.game.fs.def.NpcDef(secondArg()) }
             every { f.world.chunks.get(wall.tile, false) } returns chunk
             every { chunk.getEntities<gg.rsmod.game.model.entity.GameObject>(wall.tile,
                 gg.rsmod.game.model.EntityType.STATIC_OBJECT, gg.rsmod.game.model.EntityType.DYNAMIC_OBJECT) } returns listOf(wall)
