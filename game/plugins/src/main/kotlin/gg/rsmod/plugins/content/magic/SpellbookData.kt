@@ -1647,6 +1647,18 @@ enum class SpellbookData(
         sound = -1,
         hitSound = -1,
     ),
+    // N72C: OSRS 2686 descriptor 28180; component and sprite reserved by SpellbookCompletionCacheTool.
+    MONSTER_INSPECT(
+        interfaceId = 192,
+        component = 100,
+        uniqueId = 9204,
+        spellType = SpellType.MISC_SPELL_TYPE,
+        spellName = "Monster Inspect",
+        level = 42,
+        runes = listOf(Item(Items.BODY_RUNE, 2), Item(Items.MIND_RUNE, 2)),
+        sound = -1,
+        hitSound = -1,
+    ),
     TELE_GROUP_TROLLHEIM(
         interfaceId = 430,
         component = 76,

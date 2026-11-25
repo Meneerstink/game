@@ -70,6 +70,24 @@ class SpellbookCastGuardTests {
     }
 
     @Test
+    fun `Monster Inspect has its own Standard requirements and refuses another book`() {
+        val player = newPlayer()
+        val data = MagicSpells.getMetadata(SpellbookData.MONSTER_INSPECT.uniqueId)!!
+        player.setSpellbook(Spellbook.ANCIENT)
+        data.runes.forEach { player.inventory.add(it.id, it.amount) }
+        val before = player.inventory.toMap()
+        assertEquals(MagicSpells.WRONG_SPELLBOOK, MagicSpells.castProblem(player, data.lvl, data.runes, data.sprite))
+        assertEquals(before, player.inventory.toMap())
+        player.setSpellbook(Spellbook.STANDARD)
+        assertNull(MagicSpells.castProblem(player, data.lvl, data.runes, data.sprite))
+        player.skills.setCurrentLevel(Skills.MAGIC, 41)
+        assertNotEquals(null, MagicSpells.castProblem(player, data.lvl, data.runes, data.sprite))
+        player.skills.setCurrentLevel(Skills.MAGIC, 99)
+        player.inventory.remove(data.runes.first())
+        assertNotEquals(null, MagicSpells.castProblem(player, data.lvl, data.runes, data.sprite))
+    }
+
+    @Test
     fun `an ancient spell from the standard book is refused and costs nothing`() {
         val player = newPlayer()
         giveRunes(player, CombatSpell.ICE_BARRAGE)

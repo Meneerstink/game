@@ -29,6 +29,7 @@ import gg.rsmod.plugins.content.skills.farming.LunarFarming
 import gg.rsmod.plugins.content.skills.farming.data.CompostBin
 import gg.rsmod.plugins.content.skills.farming.data.Patch
 import gg.rsmod.game.model.TileGraphic
+import gg.rsmod.plugins.content.magic.MonsterInformation
 
 /**
  * Lunar spellbook (interface 430).
@@ -489,16 +490,29 @@ on_magic_spell_button("Magic Imbue") { metadata ->
     }
 }
 
-on_spell_on_npc(430, SpellbookData.MONSTER_EXAMINE.component) {
-    val npc = player.getInteractingNpc()
-    val metadata = spell(SpellbookData.MONSTER_EXAMINE)
-    if (player.castLunar(metadata, xp = 61.0, animation = 6293, graphic = 1060, sound = 3620)) {
-        val def = npc.combatDef
-        player.message("This monster's combat level is ${npc.def.combatLevel}.")
-        player.message("This monster has a maximum of ${def.lifepoints} life points.")
-        player.message("This monster attacks every ${def.attackSpeed} ticks.")
+// Wiki Monster Inspect explicitly shares File:Monster Examine.gif and .ogg. Both use
+// the native 667 6293/1060/3620 assets; no duplicate OSRS asset import is required.
+listOf(SpellbookData.MONSTER_INSPECT to 30.5, SpellbookData.MONSTER_EXAMINE to 61.0).forEach { (data, xp) ->
+    on_spell_on_npc(data.interfaceId, data.component) {
+        if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.UTILITY_SPELL)) return@on_spell_on_npc
+        val npc = player.getInteractingNpc()
+        if (!npc.isSpawned() || npc.isDead() || npc.def.combatLevel <= 0) {
+            player.message("You can't inspect this creature.")
+            return@on_spell_on_npc
+        }
+        val metadata = spell(data)
+        if (!MagicSpells.canCast(player, metadata.lvl, metadata.runes, metadata.sprite) || !MonsterInformation.claim(player)) return@on_spell_on_npc
+        if (player.castLunar(metadata, xp = xp, animation = 6293, graphic = 1060, sound = 3620)) {
+            MonsterInformation.open(player, npc, examine = data == SpellbookData.MONSTER_EXAMINE)
+        }
     }
 }
+
+listOf(5, 8, 11, 14).forEach { component ->
+    on_button(MonsterInformation.INTERFACE, component) { MonsterInformation.select(player, component) }
+}
+on_button(MonsterInformation.INTERFACE, 17) { MonsterInformation.close(player) }
+on_interface_close(MonsterInformation.INTERFACE) { MonsterInformation.onClosed(player) }
 
 on_spell_on_player(430, SpellbookData.STAT_SPY.component) {
     val target = player.getInteractingPlayer()
