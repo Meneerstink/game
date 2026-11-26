@@ -208,7 +208,10 @@ object PvpDeathBreakables {
             // N570: "Items Kept on Death" - untradeables are "converted into their tradeable form and offered to the killer"; the
             // Slayer's staff (e) is a Slayer's staff plus an enchantment that "crumbles to dust", so the killer gets the staff.
             Items.SLAYERS_STAFF_E to listOf(Items.SLAYERS_STAFF),
-        ) + BOUNTY_HUNTER_KITTED.associateWith { listOf(OsrsOrnamentKits.forOrnamented(it)!!.base) }
+        ) + BOUNTY_HUNTER_KITTED.associateWith { listOf(OsrsOrnamentKits.forOrnamented(it)!!.base) } +
+            // CONSTRUCTION-99 deel 7, OSRS Wiki "Heraldic helmet (Construction)" / "Heraldic kiteshield (Construction)": killed by
+            // another player, "the helm will convert into a steel/adamant/rune full helm if it is not protected upon death".
+            gg.rsmod.plugins.content.areas.poh.PohHeraldry.PAINTED_TO_BASE.mapValues { listOf(it.value) }
 
     /**
      * Owner 2026-10-06 ("OSRS rule"), OSRS Wiki "Heavy ballista ornament kit" / "Elder chaos robes ornament kit" (Bounty Hunter, 24 May

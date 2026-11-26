@@ -20,6 +20,8 @@ spawn_npc(npc = Npcs.WHITE_KNIGHT, x = 2980, z = 3329, walkRadius = 5, direction
 spawn_npc(npc = Npcs.WHITE_KNIGHT, x = 2987, z = 3330, walkRadius = 5, direction = Direction.SOUTH)
 spawn_npc(npc = Npcs.WHITE_KNIGHT, x = 2958, z = 3340, height = 1, walkRadius = 5, direction = Direction.NORTH)
 spawn_npc(npc = Npcs.WHITE_KNIGHT, x = 2970, z = 3333, height = 1, walkRadius = 5, direction = Direction.WEST)
+// CONSTRUCTION-99 deel 7: Sir Renitee (OSRS Wiki map: 2982, 3341, first floor of the White Knights' Castle).
+spawn_npc(npc = Npcs.SIR_RENITEE, x = 2982, z = 3341, height = 1, walkRadius = 2, direction = Direction.WEST)
 spawn_npc(npc = Npcs.WHITE_KNIGHT, x = 2966, z = 3329, height = 1, walkRadius = 5, direction = Direction.EAST)
 spawn_npc(npc = Npcs.WHITE_KNIGHT, x = 2961, z = 3353, height = 1, walkRadius = 5, direction = Direction.EAST)
 spawn_npc(npc = Npcs.WHITE_KNIGHT, x = 2973, z = 3337, height = 1, walkRadius = 5, direction = Direction.SOUTH)

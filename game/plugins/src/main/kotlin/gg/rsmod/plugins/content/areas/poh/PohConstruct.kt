@@ -278,7 +278,7 @@ object PohConstruct {
             .mapNotNull { s ->
                 val value = built[s.key(room)] ?: return@mapNotNull null
                 val deco = PohFurniture.DECOS[PohRooms.decoKey(value)] ?: return@mapNotNull null
-                val id = PohRooms.placedObj(value, style) ?: return@mapNotNull null
+                val id = PohRooms.placedObj(value, style, PohHeraldry.crestIndex(player)) ?: return@mapNotNull null
                 val options = world.definitions.get(ObjectDef::class.java, id).options
                 if (options.any { it.equals(REMOVE, true) }) null else s to deco
             }.distinctBy { (s, deco) -> if (s.hotspot.type == "INDIVIDUAL") s.key(room) else deco.key }
@@ -357,6 +357,11 @@ object PohConstruct {
             task.messageBox("You need a watering can with some water in it to plant this.")
             return
         }
+        // Deel 7: a crest piece shows the owner's heraldic crest (OSRS Wiki "Oak wall decoration": "requires ... a heraldic crest").
+        if (deco.crestPiece && PohHeraldry.crest(player) == null) {
+            task.messageBox("You need a family crest for that. Sir Renitee in Falador keeps the records of every family.")
+            return
+        }
         if (!flatpack && !PohBuild.canBuild(task, picked)) return
         val targets = targets(player, room, spot, spot.hotspot.decos.indexOf(deco))
         if (targets.isEmpty()) return
@@ -369,7 +374,7 @@ object PohConstruct {
         targets.forEach { (s, d) ->
             PohRooms.objectsAt(world, s.tile).filter { it.id == s.loc }.forEach { world.remove(it) }
             val habitat = s.hotspot.type == "HABITAT"
-            val id = if (habitat) PohFurniture.habitatObj(s.hotspot, d, s.loc) else d.obj(style)
+            val id = if (habitat) PohFurniture.habitatObj(s.hotspot, d, s.loc) else d.obj(style, PohHeraldry.crestIndex(player))
             if (id > 0) world.spawn(DynamicObject(id, s.type, s.houseRot, s.pieceTile(world, id)))
             PohRooms.setFurniture(player, s.key(room), if (habitat) "${d.key}#${s.hotspot.ids.indexOf(s.loc)}" else d.key)
         }
@@ -396,7 +401,7 @@ object PohConstruct {
         // The old piece goes first, as a Remove would; the hotspot is then built with the next one.
         val world = player.world
         val style = PlayerHouse.styleOf(player)
-        val old = PohRooms.placedObj(PohRooms.furniture(player).getValue(spot.key(room)), style)
+        val old = PohRooms.placedObj(PohRooms.furniture(player).getValue(spot.key(room)), style, PohHeraldry.crestIndex(player))
         val cost = PohMenagerie.UPGRADES[next.key]
         val needed = cost ?: pieceOf(next)
         val ok = player.skills.getCurrentLevel(Skills.CONSTRUCTION) >= needed.level && needed.materials.all { (item, qty) -> PohBuild.countOf(player, item) >= qty }
@@ -430,7 +435,7 @@ object PohConstruct {
         player.animate(PohBuild.REMOVE_ANIM)
         task.wait(2)
         targets.forEach { (s, _) ->
-            val id = built[s.key(room)]?.let { PohRooms.placedObj(it, style) }
+            val id = built[s.key(room)]?.let { PohRooms.placedObj(it, style, PohHeraldry.crestIndex(player)) }
             if (id != null) {
                 PohRooms.objectsAt(world, s.pieceTile(world, id)).filter { it.id == id }.forEach { world.remove(it) }
             }

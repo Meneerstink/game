@@ -81,7 +81,7 @@ object PohWorkshop {
             option == "pull" || option == "challenge-mode" -> player.message("There are no guests in your house to drop into the oubliette.")
             option == "drink" -> player.message("The fountain is only for show.")
             option == "build-in" -> player.message("The cage is built with the oubliette's cage door space.")
-            option == "make-helmet" || option == "use" -> player.message("Heraldry is not available in this house.")
+            (option == "make-helmet" || option == "use") && id in PohHeraldry.STANDS -> player.queue { PohHeraldry.paint(this, id) }
             else -> return false
         }
         return true

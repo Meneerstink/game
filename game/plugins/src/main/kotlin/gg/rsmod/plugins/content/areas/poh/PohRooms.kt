@@ -261,11 +261,12 @@ object PohRooms {
     fun placedObj(
         value: String,
         style: PlayerHouse.Style,
+        crest: Int = PohHeraldry.DEFAULT_CREST,
     ): Int? {
         val deco = PohFurniture.DECOS[decoKey(value)] ?: return null
         // A habitat tile: "KEY#i" = the habitat's own loc for space tile i.
         if (deco.key in PohFurniture.HABITAT_DECOS) return deco.objs.getOrNull(variantOf(value) ?: 0)
-        val obj = deco.obj(style)
+        val obj = deco.obj(style, crest)
         val variant = variantOf(value) ?: return obj
         return PohFurnitureUse.PORTAL_FRAMES[obj]?.plus(variant) ?: obj
     }
@@ -400,7 +401,7 @@ object PohRooms {
         spots(world, style, room, corner).forEach { spot ->
             val copy = copies.firstOrNull { it.id == spot.loc && it.tile == spot.tile }
             copy?.let { handled.add(it) }
-            val id = built[spot.key(room)]?.let { placedObj(it, style) }
+            val id = built[spot.key(room)]?.let { placedObj(it, style, PohHeraldry.crestIndex(player)) }
             if (id != null) {
                 copy?.let { world.remove(it) }
                 if (id > 0) world.spawn(DynamicObject(id, spot.type, spot.houseRot, spot.pieceTile(world, id)))
@@ -447,7 +448,7 @@ object PohRooms {
             if (matchLoc) {
                 all.firstOrNull { it.loc == obj.id && it.tile == obj.tile }
             } else {
-                all.firstOrNull { s -> built[s.key(room)]?.let { placedObj(it, style) } == obj.id && s.pieceTile(world, obj.id) == obj.tile }
+                all.firstOrNull { s -> built[s.key(room)]?.let { placedObj(it, style, PohHeraldry.crestIndex(player)) } == obj.id && s.pieceTile(world, obj.id) == obj.tile }
                     ?: all.firstOrNull { it.pieceTile(world, obj.id) == obj.tile }
             } ?: return null
         return room to spot

@@ -8,7 +8,8 @@ package gg.rsmod.plugins.content.areas.poh
  * Hotspot kinds as 2009scape `BuildHotspotType`: INDIVIDUAL builds one spot; RECURSIVE builds every spot of the same hotspot in the
  * room at once (curtains, bookcases, wall decorations); LINKED builds every spot of a linked group at once, each with the piece of
  * the same index in its own list (the three rug pieces, the combat ring, the hedges, a workbench and its stool). STAIRCASE hotspots
- * build like INDIVIDUAL ones and join the levels ([PohLevels]); CREST hotspots (heraldry) are not offered.
+ * build like INDIVIDUAL ones and join the levels ([PohLevels]); the throne room's and treasure room's crest spaces build like
+ * RECURSIVE ones (deel 7: their pieces show the owner's heraldic crest, [PohHeraldry]).
  */
 object PohFurniture {
     /** One piece: [objs] has one loc id, or one per house style ([PlayerHouse.Style] ordinal; the Wilderness theme uses whitewashed). */
@@ -23,7 +24,18 @@ object PohFurniture {
         /** The flatpack item a workbench makes of this piece (2009scape `Decoration` item), or -1. */
         val flatpack: Int = -1,
     ) {
-        fun obj(style: PlayerHouse.Style): Int = if (objs.size == 1) objs[0] else objs[styleIndex(style).coerceAtMost(objs.size - 1)]
+        /** Deel 7: a crest piece ([PohHeraldry.CREST_PIECES]) has one loc per heraldic crest - [crest] is the owner's crest index. */
+        val crestPiece: Boolean get() = key in PohHeraldry.CREST_PIECES
+
+        fun obj(
+            style: PlayerHouse.Style,
+            crest: Int = PohHeraldry.DEFAULT_CREST,
+        ): Int =
+            when {
+                objs.size == 1 -> objs[0]
+                crestPiece -> objs[crest.coerceIn(0, objs.size - 1)]
+                else -> objs[styleIndex(style).coerceAtMost(objs.size - 1)]
+            }
 
         val watering: Boolean get() = 'W' in tools
     }

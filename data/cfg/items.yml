@@ -93486,7 +93486,7 @@
 - id: 8714
   name: "Rune kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -93525,7 +93525,7 @@
 - id: 8716
   name: "Rune kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -93564,7 +93564,7 @@
 - id: 8718
   name: "Rune kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -93603,7 +93603,7 @@
 - id: 8720
   name: "Rune kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -93642,7 +93642,7 @@
 - id: 8722
   name: "Rune kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -93681,7 +93681,7 @@
 - id: 8724
   name: "Rune kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -93720,7 +93720,7 @@
 - id: 8726
   name: "Rune kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -93759,7 +93759,7 @@
 - id: 8728
   name: "Rune kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -93798,7 +93798,7 @@
 - id: 8730
   name: "Rune kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -93837,7 +93837,7 @@
 - id: 8732
   name: "Rune kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -93876,7 +93876,7 @@
 - id: 8734
   name: "Rune kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -93915,7 +93915,7 @@
 - id: 8736
   name: "Rune kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -93954,7 +93954,7 @@
 - id: 8738
   name: "Rune kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -93993,7 +93993,7 @@
 - id: 8740
   name: "Rune kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -94032,7 +94032,7 @@
 - id: 8742
   name: "Rune kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -94071,7 +94071,7 @@
 - id: 8744
   name: "Rune kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -94110,7 +94110,7 @@
 - id: 8746
   name: "Steel kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -94149,7 +94149,7 @@
 - id: 8748
   name: "Steel kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -94188,7 +94188,7 @@
 - id: 8750
   name: "Steel kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -94227,7 +94227,7 @@
 - id: 8752
   name: "Steel kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -94266,7 +94266,7 @@
 - id: 8754
   name: "Steel kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -94305,7 +94305,7 @@
 - id: 8756
   name: "Steel kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -94344,7 +94344,7 @@
 - id: 8758
   name: "Steel kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -94383,7 +94383,7 @@
 - id: 8760
   name: "Steel kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -94422,7 +94422,7 @@
 - id: 8762
   name: "Steel kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -94461,7 +94461,7 @@
 - id: 8764
   name: "Steel kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -94500,7 +94500,7 @@
 - id: 8766
   name: "Steel kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -94539,7 +94539,7 @@
 - id: 8768
   name: "Steel kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -94578,7 +94578,7 @@
 - id: 8770
   name: "Steel kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -94617,7 +94617,7 @@
 - id: 8772
   name: "Steel kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -94656,7 +94656,7 @@
 - id: 8774
   name: "Steel kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
@@ -94695,7 +94695,7 @@
 - id: 8776
   name: "Steel kiteshield"
   examine: "A large metal shield."
-  tradeable: true
+  tradeable: false
   weight: 5.4
   equipment:
     equip_slot: 5
