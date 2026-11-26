@@ -305163,6 +305163,12 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+- id: 25633
+  name: "Amulet of glory (t6)"
+  examine: "Swap this note at any bank for the equivalent item."
+  tradeable: true
+  weight: 0.0
+  equipment: null
 - id: 25634
   name: "Amulet of glory (t5)"
   examine: "A very powerful dragonstone amulet."
@@ -305196,6 +305202,12 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+- id: 25635
+  name: "Amulet of glory (t5)"
+  examine: "Swap this note at any bank for the equivalent item."
+  tradeable: true
+  weight: 0.0
+  equipment: null
 - id: 25636
   name: "Skills necklace(6)"
   examine: "This will help me travel."
@@ -305226,6 +305238,12 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
+- id: 25637
+  name: "Skills necklace(6)"
+  examine: "Swap this note at any bank for the equivalent item."
+  tradeable: true
+  weight: 0.0
+  equipment: null
 - id: 25638
   name: "Skills necklace(5)"
   examine: "This will help me travel."
@@ -305256,6 +305274,12 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
+- id: 25639
+  name: "Skills necklace(5)"
+  examine: "Swap this note at any bank for the equivalent item."
+  tradeable: true
+  weight: 0.0
+  equipment: null
 - id: 25640
   name: "Combat bracelet(6)"
   examine: "A handy way to get around."
@@ -305289,6 +305313,12 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+- id: 25641
+  name: "Combat bracelet(6)"
+  examine: "Swap this note at any bank for the equivalent item."
+  tradeable: true
+  weight: 0.0
+  equipment: null
 - id: 25642
   name: "Combat bracelet(5)"
   examine: "A handy way to get around."
@@ -305322,6 +305352,12 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+- id: 25643
+  name: "Combat bracelet(5)"
+  examine: "Swap this note at any bank for the equivalent item."
+  tradeable: true
+  weight: 0.0
+  equipment: null
 - id: 25644
   name: "Ring of wealth (5)"
   examine: "An enchanted ring with five teleport charges."
@@ -305352,6 +305388,12 @@
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
+- id: 25645
+  name: "Ring of wealth (5)"
+  examine: "Swap this note at any bank for the equivalent item."
+  tradeable: true
+  weight: 0.0
+  equipment: null
 - id: 25690
   name: "Zenyte bracelet"
   examine: "A fiery glow emanates from this bracelet."
