@@ -59,15 +59,17 @@ object PohConstruct {
         if (PlayerHouse.houseArea(obj.tile) == null) return false
         val option = optionOf(player, obj, opt) ?: return false
         if (option != BUILD && option != REMOVE) {
+            if (PohLevels.handles(obj.id)) return PohLevels.handle(player, obj, option)
             return PohFurnitureUse.handles(obj.id) && PohFurnitureUse.handle(player, obj, option)
         }
         if (!PlayerHouse.ownsHouseAt(player)) return false
         if (option == BUILD && isDoorHotspot(player, obj.id)) {
             val target = doorTarget(player, obj) ?: return false
-            val (cellX, cellZ, side) = target
-            val fixed = PohRooms.FIXED_CELLS.contains(cellX to cellZ)
+            val (cell, side) = target
+            val (cellX, cellZ, plane) = cell
+            val fixed = plane == PohRooms.GROUND_FLOOR && PohRooms.FIXED_CELLS.contains(cellX to cellZ)
             if (fixed) return false
-            player.queue { doorBuild(this, cellX, cellZ, side) }
+            player.queue { doorBuild(this, cellX, cellZ, plane, side) }
             return true
         }
         if (option == BUILD && PohFurniture.hotspotOf(obj.id) != null) {
@@ -91,17 +93,17 @@ object PohConstruct {
     private fun doorTarget(
         player: Player,
         hotspot: GameObject,
-    ): Triple<Int, Int, Int>? {
+    ): Pair<Triple<Int, Int, Int>, Int>? {
         val area = PlayerHouse.houseArea(hotspot.tile) ?: return null
         val (sx, sz) = step(hotspot.rot)
         val across = hotspot.tile.transform(sx, sz)
-        fun cell(t: Tile) = ((t.x - area.bottomLeftX) shr 3) to ((t.z - area.bottomLeftZ) shr 3)
-        val own = cell(hotspot.tile)
+        fun cell(t: Tile) = PohRooms.cellOf(area.bottomLeftX, area.bottomLeftZ, t)
+        val own = cell(hotspot.tile) ?: return null
         val other = cell(across)
         val mine = cell(player.tile)
-        val target = if (mine == other) own else other
-        val from = if (target == own) other else own
-        if (target.first !in 0 until PlayerHouse.HOUSE_CHUNKS || target.second !in 0 until PlayerHouse.HOUSE_CHUNKS) return null
+        val target = (if (mine == other) own else other) ?: return null
+        val from = (if (target == own) other else own) ?: return null
+        if (target.third != from.third) return null
         val dx = from.first - target.first
         val dz = from.second - target.second
         val side =
@@ -111,7 +113,7 @@ object PohConstruct {
                 dx > 0 -> 2
                 else -> 3
             }
-        return Triple(target.first, target.second, side)
+        return target to side
     }
 
     /** The sides of [type]'s template that have a doorway, for rotation [rot]. */
@@ -141,11 +143,12 @@ object PohConstruct {
         task: QueueTask,
         cellX: Int,
         cellZ: Int,
+        plane: Int,
         side: Int,
     ) {
         val player = task.player
         if (!PohBuild.requireBuildMode(player)) return
-        val existing = PohRooms.roomAt(player, cellX, cellZ)
+        val existing = PohRooms.roomAt(player, cellX, cellZ, plane)
         if (existing != null) {
             manageRoom(task, existing, side)
             return
@@ -160,16 +163,24 @@ object PohConstruct {
             task.messageBox("Your house can't be any bigger: with your Construction level it may only be $dim rooms across.")
             return
         }
-        val rooms = PohRooms.RoomType.values().toList()
-        val pieces = rooms.map { PohBuild.Piece(it.ordinal, "${it.displayName}: ${"%,d".format(it.cost)} coins", it.level, 0.0, emptyList()) }
+        if (plane == PohRooms.UPSTAIRS && !PohRooms.supportsAbove(player, cellX, cellZ)) {
+            task.messageBox("There is no room below to hold up a room here.")
+            return
+        }
+        val rooms = PohRooms.RoomType.values().filter { it.buildableOn(plane) }
+        val pieces = rooms.mapIndexed { i, it -> PohBuild.Piece(i, "${it.displayName}: ${"%,d".format(it.cost)} coins", it.level, 0.0, emptyList()) }
         val picked = PohBuild.choose(task, pieces, "Build which room?") ?: return
         val type = rooms[picked.obj]
+        if (!PohRooms.onlyOne(player, type)) {
+            task.messageBox("You can only build one ${type.displayName.lowercase()}.")
+            return
+        }
         if (level < type.level) {
             task.messageBox("You need to have a Construction level of ${type.level} to build that room.")
             return
         }
         if (player.inventory.getItemCount(Items.COINS_995) < type.cost) {
-            task.messageBox("You need ${"%,d".format(type.cost)} coins to build a ${type.displayName.lowercase()}.")
+            task.messageBox("You need ${"%,d".format(type.cost)} coins to build ${PohRooms.aRoom(type)}.")
             return
         }
         val rot = rotationsFacing(player, type, side).firstOrNull()
@@ -177,11 +188,11 @@ object PohConstruct {
             task.messageBox("That room has no doorway that could face this way.")
             return
         }
-        if (task.options("Build it (${"%,d".format(type.cost)} coins)", "Cancel", title = "Build a ${type.displayName.lowercase()} here?") != 1) return
+        if (task.options("Build it (${"%,d".format(type.cost)} coins)", "Cancel", title = "Build ${PohRooms.aRoom(type)} here?") != 1) return
         // Re-check after the dialogue (the coins may have gone, the cell may be taken).
-        if (PohRooms.roomAt(player, cellX, cellZ) != null || player.inventory.getItemCount(Items.COINS_995) < type.cost) return
+        if (PohRooms.roomAt(player, cellX, cellZ, plane) != null || player.inventory.getItemCount(Items.COINS_995) < type.cost) return
         player.inventory.remove(Items.COINS_995, type.cost)
-        PohRooms.addRoom(player, PohRooms.Built(type, cellX, cellZ, 0, rot))
+        PohRooms.addRoom(player, PohRooms.Built(type, cellX, cellZ, plane, rot))
         player.playSound(Sfx.POH_BUILD_WOOD)
         PlayerHouse.rebuild(player)
     }
@@ -213,6 +224,10 @@ object PohConstruct {
                     if (!PlayerHouse.rebuild(player)) return
                 }
                 3 -> {
+                    if (PohRooms.holdsUp(player, current)) {
+                        task.messageBox("You can't remove the $name: it holds up the room above it.")
+                        return
+                    }
                     if (task.options("Yes", "No", title = "Really remove the $name and everything in it?") != 1) return
                     PohRooms.removeRoom(player, current)
                     PlayerHouse.rebuild(player)

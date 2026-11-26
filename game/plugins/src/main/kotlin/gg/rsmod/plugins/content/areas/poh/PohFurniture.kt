@@ -50,8 +50,12 @@ object PohFurniture {
             Hotspot(p[0], p[1].split(',').map(String::toInt).toIntArray(), p[2], ANIMS[p[3]] ?: 3676, p[4].split(',').filter { it.isNotEmpty() }.map { DECOS[it] })
         }
 
-    /** Buildable hotspots (INDIVIDUAL / RECURSIVE / LINKED) with at least one piece that has an OSRS source. */
-    val BUILDABLE: List<Hotspot> = HOTSPOTS.filter { it.type in setOf("INDIVIDUAL", "RECURSIVE", "LINKED") && it.decos.any { d -> d != null } }
+    /**
+     * Buildable hotspots (INDIVIDUAL / RECURSIVE / LINKED / STAIRCASE) with at least one piece that has an OSRS source.
+     * 2009scape's STAIRWAYS_DUNGEON repeats the halls' staircase hotspots (15380/15390) per style; the halls' own entries serve.
+     */
+    val BUILDABLE: List<Hotspot> =
+        HOTSPOTS.filter { it.type in setOf("INDIVIDUAL", "RECURSIVE", "LINKED", "STAIRCASE") && it.key != "STAIRWAYS_DUNGEON" && it.decos.any { d -> d != null } }
 
     private val BY_OBJ: Map<Int, Hotspot> = BUILDABLE.flatMap { h -> h.ids.distinct().map { it to h } }.toMap()
 

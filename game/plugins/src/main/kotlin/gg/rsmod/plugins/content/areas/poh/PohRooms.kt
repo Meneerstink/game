@@ -27,6 +27,77 @@ import gg.rsmod.plugins.api.Skills
 object PohRooms {
     enum class Kind { CHAMBER, LAND, DUNGEON }
 
+    /**
+     * Where a room may be built (Darkan `House.createRoom` / OSRS Wiki): [ANY] on the ground floor or upstairs, [GROUND] only on
+     * the ground floor (gardens, the throne room), [UPSTAIRS] only upstairs (the top of a hall's staircase), [DUNGEON] only
+     * underground, [OUBLIETTE] only underground below a throne room's trapdoor.
+     */
+    enum class Where { ANY, GROUND, UPSTAIRS, DUNGEON, OUBLIETTE }
+
+    /** Levels of a built room ([Built.plane]): the ground floor, upstairs and the dungeon. */
+    const val GROUND_FLOOR = 0
+    const val UPSTAIRS = 1
+    const val DUNGEON = -1
+
+    /**
+     * The dungeon is its own 8x8 grid in the same house map, [DUNGEON_OFFSET] chunks east of the house (out of sight: further
+     * than the client's 52-tile view from any house cell), on height 0; the ground floor is height 0 and upstairs height 1 of
+     * the house's own cells.
+     */
+    const val DUNGEON_OFFSET = 16
+
+    /** The instance chunk (x, z, height) of house cell [x],[z] on [plane]. */
+    fun instanceCell(
+        x: Int,
+        z: Int,
+        plane: Int,
+    ): Triple<Int, Int, Int> = if (plane == DUNGEON) Triple(x + DUNGEON_OFFSET, z, 0) else Triple(x, z, plane)
+
+    /** The house cell (x, z, plane) [tile] of a house map with south-west corner [baseX],[baseZ] is in; null outside every grid. */
+    fun cellOf(
+        baseX: Int,
+        baseZ: Int,
+        tile: Tile,
+    ): Triple<Int, Int, Int>? {
+        val cx = (tile.x - baseX) shr 3
+        val cz = (tile.z - baseZ) shr 3
+        if (cz !in 0 until PlayerHouse.HOUSE_CHUNKS) return null
+        return when {
+            cx in 0 until PlayerHouse.HOUSE_CHUNKS && tile.height in 0..1 -> Triple(cx, cz, tile.height)
+            cx - DUNGEON_OFFSET in 0 until PlayerHouse.HOUSE_CHUNKS && tile.height == 0 -> Triple(cx - DUNGEON_OFFSET, cz, DUNGEON)
+            else -> null
+        }
+    }
+
+    /** The house cell [tile] is in, inside a live house. */
+    fun cellOf(tile: Tile): Triple<Int, Int, Int>? {
+        val area = PlayerHouse.houseArea(tile) ?: return null
+        return cellOf(area.bottomLeftX, area.bottomLeftZ, tile)
+    }
+
+    /** The south-west tile of house cell [x],[z] on [plane] of the house map starting at [baseX],[baseZ]. */
+    fun cornerOf(
+        baseX: Int,
+        baseZ: Int,
+        x: Int,
+        z: Int,
+        plane: Int,
+    ): Tile {
+        val (cx, cz, h) = instanceCell(x, z, plane)
+        return Tile(baseX + cx * 8, baseZ + cz * 8, h)
+    }
+
+    /** The same spot one level up or down ([to]): the dungeon lies [DUNGEON_OFFSET] chunks east, upstairs one height up. */
+    fun sameSpotOn(
+        tile: Tile,
+        from: Int,
+        to: Int,
+    ): Tile {
+        val dx = (if (to == DUNGEON) DUNGEON_OFFSET * 8 else 0) - (if (from == DUNGEON) DUNGEON_OFFSET * 8 else 0)
+        val h = if (to == DUNGEON) 0 else to
+        return Tile(tile.x + dx, tile.z, h)
+    }
+
     enum class RoomType(
         val displayName: String,
         val level: Int,
@@ -34,24 +105,45 @@ object PohRooms {
         val chunkX: Int,
         val chunkZ: Int,
         val kind: Kind,
+        val where: Where = Where.ANY,
     ) {
         PARLOUR("Parlour", 1, 1_000, 0, 7, Kind.CHAMBER),
-        GARDEN("Garden", 1, 1_000, 0, 1, Kind.LAND),
+        GARDEN("Garden", 1, 1_000, 0, 1, Kind.LAND, Where.GROUND),
         KITCHEN("Kitchen", 5, 5_000, 2, 7, Kind.CHAMBER),
         DINING_ROOM("Dining room", 10, 5_000, 4, 7, Kind.CHAMBER),
         WORKSHOP("Workshop", 15, 10_000, 0, 5, Kind.CHAMBER),
         BEDROOM("Bedroom", 20, 10_000, 6, 7, Kind.CHAMBER),
-        SKILL_HALL("Skill hall", 25, 15_000, 1, 6, Kind.CHAMBER),
+        SKILL_HALL("Skill hall", 25, 15_000, 1, 6, Kind.CHAMBER, Where.GROUND),
         GAMES_ROOM("Games room", 30, 25_000, 5, 4, Kind.CHAMBER),
         COMBAT_ROOM("Combat room", 32, 25_000, 3, 4, Kind.CHAMBER),
-        QUEST_HALL("Quest hall", 35, 25_000, 5, 6, Kind.CHAMBER),
+        QUEST_HALL("Quest hall", 35, 25_000, 5, 6, Kind.CHAMBER, Where.GROUND),
         STUDY("Study", 40, 50_000, 4, 5, Kind.CHAMBER),
         COSTUME_ROOM("Costume room", 42, 50_000, 6, 1, Kind.CHAMBER),
         CHAPEL("Chapel", 45, 50_000, 2, 5, Kind.CHAMBER),
         PORTAL_CHAMBER("Portal chamber", 50, 100_000, 1, 4, Kind.CHAMBER),
-        FORMAL_GARDEN("Formal garden", 55, 75_000, 2, 1, Kind.LAND),
-        THRONE_ROOM("Throne room", 60, 150_000, 6, 5, Kind.CHAMBER),
+        FORMAL_GARDEN("Formal garden", 55, 75_000, 2, 1, Kind.LAND, Where.GROUND),
+        THRONE_ROOM("Throne room", 60, 150_000, 6, 5, Kind.CHAMBER, Where.GROUND),
+
+        // Darkan HouseRooms (chunks from 232,632): HALL_SKILL_DOWN 235,638 / HALL_QUEST_DOWN 239,638 are the halls at the top of a
+        // staircase (their stairs lead down), the dungeon rooms OUBLIETTE 238,635, DUNGEON_CORRIDOR 236,635, DUNGEON_JUNCTION 232,635,
+        // DUNGEON_STAIRS 234,635, DUNGEON_PIT 237,634, TREASURE_ROOM 239,636. Levels and prices: OSRS Wiki (the same numbers).
+        SKILL_HALL_UP("Skill hall", 25, 15_000, 3, 6, Kind.CHAMBER, Where.UPSTAIRS),
+        QUEST_HALL_UP("Quest hall", 35, 25_000, 7, 6, Kind.CHAMBER, Where.UPSTAIRS),
+        OUBLIETTE("Oubliette", 65, 150_000, 6, 3, Kind.DUNGEON, Where.OUBLIETTE),
+        DUNGEON_CORRIDOR("Dungeon corridor", 70, 7_500, 4, 3, Kind.DUNGEON, Where.DUNGEON),
+        DUNGEON_JUNCTION("Dungeon junction", 70, 7_500, 0, 3, Kind.DUNGEON, Where.DUNGEON),
+        DUNGEON_STAIRS("Dungeon stairs", 70, 7_500, 2, 3, Kind.DUNGEON, Where.DUNGEON),
+        DUNGEON_PIT("Dungeon pit", 70, 10_000, 5, 2, Kind.DUNGEON, Where.DUNGEON),
+        TREASURE_ROOM("Treasure room", 75, 250_000, 7, 4, Kind.DUNGEON, Where.DUNGEON),
         ;
+
+        /** True when this room may be built on [plane] from a doorway. */
+        fun buildableOn(plane: Int): Boolean =
+            when (plane) {
+                DUNGEON -> where == Where.DUNGEON
+                UPSTAIRS -> where == Where.ANY || where == Where.UPSTAIRS
+                else -> where == Where.ANY || where == Where.GROUND
+            }
 
         /** The template's south-west tile for [style]. */
         fun template(style: PlayerHouse.Style): Tile = style.chunk(chunkX, chunkZ)
@@ -106,6 +198,36 @@ object PohRooms {
             level >= 15 -> 4
             else -> 3
         }
+
+    /** "a parlour" / "an oubliette" / "a dungeon stairs room". */
+    fun aRoom(type: RoomType): String {
+        val name = type.displayName.lowercase().let { if (it.endsWith("stairs")) "$it room" else it }
+        return (if (name.first() in "aeiou") "an " else "a ") + name
+    }
+
+    /** A room upstairs at [x],[z] needs a room below it (a built room or the fixed house's, never a garden). */
+    fun supportsAbove(
+        player: Player,
+        x: Int,
+        z: Int,
+    ): Boolean {
+        val below = roomAt(player, x, z, GROUND_FLOOR)
+        if (below != null) return below.type.kind != Kind.LAND
+        val fixed = PlayerHouse.Room.values().firstOrNull { (it.dx + 1) to (it.dz + 1) == x to z } ?: return false
+        return fixed != PlayerHouse.Room.GARDEN
+    }
+
+    /** True when [room] is a ground-floor room with a room upstairs on it. */
+    fun holdsUp(
+        player: Player,
+        room: Built,
+    ): Boolean = room.plane == GROUND_FLOOR && roomAt(player, room.x, room.z, UPSTAIRS) != null
+
+    /** Darkan `House.createRoom`: one games room (and one menagerie) per house. */
+    fun onlyOne(
+        player: Player,
+        type: RoomType,
+    ): Boolean = type != RoomType.GAMES_ROOM || rooms(player).none { it.type == RoomType.GAMES_ROOM }
 
     fun roomCount(player: Player): Int = FIXED_CELLS.size + rooms(player).size
 
@@ -210,7 +332,7 @@ object PohRooms {
         corner: Tile,
     ): List<Spot> {
         val template = room.type.template(style)
-        val frame = PlayerHouse.RoomFrame(world, Tile(corner.x, corner.z, room.plane), room.rot)
+        val frame = PlayerHouse.RoomFrame(world, corner, room.rot)
         return world.chunks.get(template.chunkCoords, createIfNeeded = true)!!
             .getEntities<StaticObject>(EntityType.STATIC_OBJECT)
             .filter { it.tile.height == template.height }
@@ -261,7 +383,7 @@ object PohRooms {
         val copies =
             world.chunks.get(corner.chunkCoords, createIfNeeded = true)!!
                 .getEntities<StaticObject>(EntityType.STATIC_OBJECT)
-                .filter { it.tile.height == room.plane }
+                .filter { it.tile.height == corner.height }
         val handled = HashSet<StaticObject>()
         spots(world, style, room, corner).forEach { spot ->
             val copy = copies.firstOrNull { it.id == spot.loc && it.tile == spot.tile }
@@ -292,8 +414,8 @@ object PohRooms {
         player: Player,
         tile: Tile,
     ): Built? {
-        val (dx, dz) = PlayerHouse.offsetInHouse(tile) ?: return null
-        return roomAt(player, dx shr 3, dz shr 3, tile.height)
+        val (x, z, plane) = cellOf(tile) ?: return null
+        return roomAt(player, x, z, plane)
     }
 
     /** The spot of a built room at [obj] (a hotspot or a piece standing on one). */
@@ -305,9 +427,16 @@ object PohRooms {
         val room = builtAt(player, obj.tile) ?: return null
         val corner = PlayerHouse.cellCorner(obj.tile) ?: return null
         val world = player.world
+        val style = PlayerHouse.styleOf(player)
+        val all = spots(world, style, room, corner)
+        // A piece: the spot that holds exactly this piece (two hotspots can share a template tile - the skill hall's rug and stairs).
+        val built = furniture(player)
         val spot =
-            spots(world, PlayerHouse.styleOf(player), room, corner).firstOrNull {
-                if (matchLoc) it.loc == obj.id && it.tile == obj.tile else it.pieceTile(world, obj.id) == obj.tile
+            if (matchLoc) {
+                all.firstOrNull { it.loc == obj.id && it.tile == obj.tile }
+            } else {
+                all.firstOrNull { s -> built[s.key(room)]?.let { placedObj(it, style) } == obj.id && s.pieceTile(world, obj.id) == obj.tile }
+                    ?: all.firstOrNull { it.pieceTile(world, obj.id) == obj.tile }
             } ?: return null
         return room to spot
     }

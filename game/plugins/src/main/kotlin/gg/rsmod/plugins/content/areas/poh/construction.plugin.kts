@@ -21,7 +21,7 @@ on_command("condev", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
         }
         "add" -> {
             val type = PohRooms.RoomType.valueOf(args[1].uppercase())
-            PohRooms.addRoom(player, PohRooms.Built(type, args[2].toInt(), args[3].toInt(), 0, args.getOrNull(4)?.toInt() ?: 0))
+            PohRooms.addRoom(player, PohRooms.Built(type, args[2].toInt(), args[3].toInt(), args.getOrNull(5)?.toInt() ?: 0, args.getOrNull(4)?.toInt() ?: 0))
             PlayerHouse.rebuild(player)
         }
         "furn" -> PohRooms.furniture(player).forEach { (k, v) -> player.message("[con] $k = $v", type = ChatMessageType.CONSOLE) }
@@ -29,7 +29,7 @@ on_command("condev", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
     val lvl = player.skills.getCurrentLevel(gg.rsmod.plugins.api.Skills.CONSTRUCTION)
     player.message(
         "[con] rooms=${PohRooms.rooms(player).joinToString(" ") { it.encode() }} count=${PohRooms.roomCount(player)}/${PohRooms.maxRooms(lvl)} " +
-            "dim=${PohRooms.maxDimension(lvl)} cell=${PlayerHouse.offsetInHouse(player.tile)?.let { (it.first shr 3) to (it.second shr 3) }} " +
+            "dim=${PohRooms.maxDimension(lvl)} cell=${PohRooms.cellOf(player.tile)} " +
             "decos=${PohFurniture.DECOS.size} hotspots=${PohFurniture.BUILDABLE.size}",
         type = ChatMessageType.CONSOLE,
     )

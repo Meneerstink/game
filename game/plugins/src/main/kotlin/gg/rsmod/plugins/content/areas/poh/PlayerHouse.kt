@@ -380,6 +380,9 @@ object PlayerHouse {
      * A door hotspot with no partner across the boundary becomes wall ([furnishRooms]), so the rooms' remaining
      * doorways close themselves off and the house is sealed without a single hard-coded wall tile.
      */
+    /** Darkan `HouseConstants.BLACK` (chunk 237,632 plane 0): the dungeon's empty cells. */
+    private val BLACK_CHUNK = Tile(237 * 8, 632 * 8, 0)
+
     /** The house instance is [HOUSE_CHUNKS] x [HOUSE_CHUNKS] chunks (cells 0..7). */
     const val HOUSE_CHUNKS = 8
 
@@ -585,6 +588,7 @@ object PlayerHouse {
     fun build(
         player: Player,
         keepOffset: Pair<Int, Int>? = null,
+        keepHeight: Int = 0,
     ): Tile? {
         val world = player.world
         val style = styleOf(player)
@@ -603,6 +607,18 @@ object PlayerHouse {
                     chunks.set(x, z, 0, (room.baseRot + roomRotation(player, room)) and 3, room.template(style))
                 }
             }
+        }
+        // CONSTRUCTION-99: rooms upstairs (height 1 of their cell) and in the dungeon (its own grid east of the house, Darkan
+        // fills the dungeon's empty cells with the black chunk 237,632).
+        val levels = PohRooms.rooms(player).filter { it.plane != PohRooms.GROUND_FLOOR }
+        if (levels.any { it.plane == PohRooms.DUNGEON }) {
+            for (x in 0 until 8) {
+                for (z in 0 until 8) chunks.set(x + PohRooms.DUNGEON_OFFSET, z, 0, 0, BLACK_CHUNK)
+            }
+        }
+        levels.forEach {
+            val (cx, cz, h) = PohRooms.instanceCell(it.x, it.z, it.plane)
+            chunks.set(cx, cz, h, it.rot, it.type.template(style))
         }
         val config =
             InstancedMapConfiguration.Builder()
@@ -626,9 +642,12 @@ object PlayerHouse {
 
         houses.add(HouseRecord(world, map, player.uid, Room.values().associateWith { frame(it) }))
 
-        val builtRooms = PohRooms.rooms(player).filter { it.plane == 0 && Room.values().none { r -> r.dx + GARDEN_CHUNK_X == it.x && r.dz + GARDEN_CHUNK_Z == it.z } }
+        val builtRooms =
+            PohRooms.rooms(player).filter {
+                it.plane != PohRooms.GROUND_FLOOR || Room.values().none { r -> r.dx + GARDEN_CHUNK_X == it.x && r.dz + GARDEN_CHUNK_Z == it.z }
+            }
 
-        fun builtCorner(room: PohRooms.Built) = Tile(map.area.bottomLeftX + room.x * 8, map.area.bottomLeftZ + room.z * 8, 0)
+        fun builtCorner(room: PohRooms.Built) = PohRooms.cornerOf(map.area.bottomLeftX, map.area.bottomLeftZ, room.x, room.z, room.plane)
 
         furnishRooms(
             world,
@@ -639,6 +658,7 @@ object PlayerHouse {
             garden = corner(Room.GARDEN),
             builtCorners = builtRooms.map { builtCorner(it) },
             gardens = builtRooms.filter { it.type.kind == PohRooms.Kind.LAND }.map { builtCorner(it).chunkCoords }.toSet(),
+            dungeon = builtRooms.filter { it.plane == PohRooms.DUNGEON }.map { builtCorner(it).chunkCoords }.toSet(),
             area = map.area,
         )
         builtRooms.forEach { PohRooms.furnish(world, player, style, it, builtCorner(it), buildMode) }
@@ -651,7 +671,7 @@ object PlayerHouse {
         player.attr[PENDING_SERVANT_ATTR] = map to frame(Room.DINING_ROOM).tile(1, 2)
         player.timers[DUMMY_SPAWN_TIMER] = DUMMY_SPAWN_DELAY
         keepOffset?.let { (dx, dz) ->
-            val spot = Tile(map.area.bottomLeftX + dx, map.area.bottomLeftZ + dz, 0)
+            val spot = Tile(map.area.bottomLeftX + dx, map.area.bottomLeftZ + dz, keepHeight)
             gg.rsmod.plugins.content.mechanics.pvp.CityGuards.nearestWalkable(world, spot, radius = 3)?.let { return it }
         }
         // House Options "When teleporting, arrive at portal" (the default): the garden, in front of the pool and the exit portal,
@@ -700,6 +720,10 @@ object PlayerHouse {
         return Tile((tile.x shr 3) shl 3, (tile.z shr 3) shl 3, tile.height)
     }
 
+    /** The area of [player]'s live house (the newest one), or null. */
+    fun houseAreaOf(player: Player): Area? =
+        houses.lastOrNull { it.owner == player.uid && it.world.instanceAllocator.getMap(it.map.area.bottomLeft) === it.map }?.map?.area
+
     /** The house map area [tile] is in (CONSTRUCTION-99: which cells exist). */
     fun houseArea(tile: Tile): Area? = recordAt(tile)?.map?.area
 
@@ -728,7 +752,7 @@ object PlayerHouse {
         val world = player.world
         val old = world.instanceAllocator.getMap(player.tile)
         val offset = offsetInHouse(player.tile) ?: return false
-        val arrival = build(player, keepOffset = offset) ?: return false
+        val arrival = build(player, keepOffset = offset, keepHeight = player.tile.height) ?: return false
         player.moveTo(arrival)
         if (old != null) world.instanceAllocator.release(world, old)
         return true
@@ -754,20 +778,23 @@ object PlayerHouse {
         builtCorners: List<Tile> = emptyList(),
         gardens: Set<gg.rsmod.game.model.region.ChunkCoords> = emptySet(),
         area: Area? = null,
+        dungeon: Set<gg.rsmod.game.model.region.ChunkCoords> = emptySet(),
     ) {
         fun nameOf(id: Int) = world.definitions.get(ObjectDef::class.java, id).name.lowercase()
         val roomOfChunk = Room.values().zip(roomCorners).associate { (room, corner) -> corner.chunkCoords to room }
-        val builtChunks = builtCorners.map { it.chunkCoords }.toSet()
+        // A cell is its chunk AND its height: upstairs rooms share their chunk with the room below (CONSTRUCTION-99).
+        val builtCells = builtCorners.map { it.chunkCoords to it.height }.toSet()
 
         val spots =
-            (roomCorners + builtCorners).flatMap { corner ->
+            (roomCorners + builtCorners).distinct().flatMap { corner ->
                 world.chunks
                     .get(corner.chunkCoords, createIfNeeded = true)!!
                     .getEntities<StaticObject>(EntityType.STATIC_OBJECT)
+                    .filter { it.tile.height == corner.height }
             }.filter { obj ->
                 val name = nameOf(obj.id)
                 // A built room's furniture spots are [PohRooms.furnish]'s; only its doorways are joined here.
-                if (obj.tile.chunkCoords in builtChunks) name == "door hotspot" else name.endsWith(" space") || name == "door hotspot"
+                if ((obj.tile.chunkCoords to obj.tile.height) in builtCells) name == "door hotspot" else name.endsWith(" space") || name == "door hotspot"
             }
         val doorTiles = spots.filter { nameOf(it.id) == "door hotspot" }.map { it.tile }.toSet()
         spots.forEach { obj ->
@@ -782,16 +809,17 @@ object PlayerHouse {
                             2 -> obj.tile.transform(1, 0)
                             else -> obj.tile.transform(0, -1)
                         }
-                    val connects = across in doorTiles
+                    val connects = across in doorTiles && across.height == obj.tile.height
                     // CONSTRUCTION-99: in building mode a doorway onto an empty cell of the house keeps its hotspot - its Build
                     // builds a new room there (OSRS; [PohConstruct.doorBuild]).
-                    val buildable = buildMode && area != null && (across.x - area.bottomLeftX) in 0 until HOUSE_CHUNKS * 8 && (across.z - area.bottomLeftZ) in 0 until HOUSE_CHUNKS * 8
+                    val buildable = buildMode && area != null && PohRooms.cellOf(area.bottomLeftX, area.bottomLeftZ, across) != null
                     if (!((connects || buildable) && buildMode)) {
                         world.remove(obj)
                     }
                     // A garden has no walls: a doorway of it with no room behind it stays open lawn instead of a lone wall stub.
                     val isGarden = obj.tile.chunkCoords == garden.chunkCoords || obj.tile.chunkCoords in gardens
-                    if (!connects && !(buildable && buildMode) && !isGarden) {
+                    // The dungeon's rooms are cut out of rock: a doorway to nowhere there opens onto the black chunk (Darkan).
+                    if (!connects && !(buildable && buildMode) && !isGarden && obj.tile.chunkCoords !in dungeon) {
                         world.spawn(DynamicObject(style.wall, 0, obj.rot, obj.tile))
                     }
                 }
