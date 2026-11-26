@@ -123,6 +123,12 @@ object PlayerHouse {
          * read from this cache). Owner 2026-10-10 night run: Construction training on its table space, every other spot empty.
          */
         val diningRoom: Tile get() = Tile(squareX + 4 * 8, squareZ + 7 * 8, plane)
+
+        /** Any room template of this style by its chunk in the style's map square (CONSTRUCTION-99 built rooms, [PohRooms]). */
+        fun chunk(
+            chunkX: Int,
+            chunkZ: Int,
+        ): Tile = Tile(squareX + chunkX * 8, squareZ + chunkZ * 8, plane)
     }
 
     /**
@@ -374,6 +380,9 @@ object PlayerHouse {
      * A door hotspot with no partner across the boundary becomes wall ([furnishRooms]), so the rooms' remaining
      * doorways close themselves off and the house is sealed without a single hard-coded wall tile.
      */
+    /** The house instance is [HOUSE_CHUNKS] x [HOUSE_CHUNKS] chunks (cells 0..7). */
+    const val HOUSE_CHUNKS = 8
+
     private const val GARDEN_CHUNK_X = 1
     private const val GARDEN_CHUNK_Z = 1
 
@@ -584,7 +593,11 @@ object PlayerHouse {
         for (x in 0 until 8) {
             for (z in 0 until 8) {
                 val room = Room.values().firstOrNull { it.dx == x - GARDEN_CHUNK_X && it.dz == z - GARDEN_CHUNK_Z }
-                if (room == null) {
+                val built = if (room == null) PohRooms.roomAt(player, x, z) else null
+                if (built != null) {
+                    // CONSTRUCTION-99: a room the player built in this cell.
+                    chunks.set(x, z, 0, built.rot, built.type.template(style))
+                } else if (room == null) {
                     chunks.set(x, z, 0, 0, style.lawn)
                 } else {
                     chunks.set(x, z, 0, (room.baseRot + roomRotation(player, room)) and 3, room.template(style))
@@ -613,7 +626,22 @@ object PlayerHouse {
 
         houses.add(HouseRecord(world, map, player.uid, Room.values().associateWith { frame(it) }))
 
-        furnishRooms(world, style, player, buildMode, Room.values().map { corner(it) }, garden = corner(Room.GARDEN))
+        val builtRooms = PohRooms.rooms(player).filter { it.plane == 0 && Room.values().none { r -> r.dx + GARDEN_CHUNK_X == it.x && r.dz + GARDEN_CHUNK_Z == it.z } }
+
+        fun builtCorner(room: PohRooms.Built) = Tile(map.area.bottomLeftX + room.x * 8, map.area.bottomLeftZ + room.z * 8, 0)
+
+        furnishRooms(
+            world,
+            style,
+            player,
+            buildMode,
+            Room.values().map { corner(it) },
+            garden = corner(Room.GARDEN),
+            builtCorners = builtRooms.map { builtCorner(it) },
+            gardens = builtRooms.filter { it.type.kind == PohRooms.Kind.LAND }.map { builtCorner(it).chunkCoords }.toSet(),
+            area = map.area,
+        )
+        builtRooms.forEach { PohRooms.furnish(world, player, style, it, builtCorner(it), buildMode) }
         furnishChapel(frame(Room.CHAPEL))
         furnishGarden(player, buildMode, frame(Room.GARDEN))
         furnishPvmRoom(frame(Room.PVM_ROOM))
@@ -666,6 +694,15 @@ object PlayerHouse {
     fun ownsHouseAt(player: Player): Boolean = recordAt(player.tile)?.owner == player.uid
 
     /** The player's offset from the south-west corner of the live house [tile] is in, or null outside every house. */
+    /** The south-west tile of the house cell (instance chunk) [tile] is in, or null outside every house. */
+    fun cellCorner(tile: Tile): Tile? {
+        if (recordAt(tile) == null) return null
+        return Tile((tile.x shr 3) shl 3, (tile.z shr 3) shl 3, tile.height)
+    }
+
+    /** The house map area [tile] is in (CONSTRUCTION-99: which cells exist). */
+    fun houseArea(tile: Tile): Area? = recordAt(tile)?.map?.area
+
     fun offsetInHouse(tile: Tile): Pair<Int, Int>? {
         val area = recordAt(tile)?.map?.area ?: return null
         return (tile.x - area.bottomLeftX) to (tile.z - area.bottomLeftZ)
@@ -714,18 +751,23 @@ object PlayerHouse {
         buildMode: Boolean,
         roomCorners: List<Tile>,
         garden: Tile,
+        builtCorners: List<Tile> = emptyList(),
+        gardens: Set<gg.rsmod.game.model.region.ChunkCoords> = emptySet(),
+        area: Area? = null,
     ) {
         fun nameOf(id: Int) = world.definitions.get(ObjectDef::class.java, id).name.lowercase()
         val roomOfChunk = Room.values().zip(roomCorners).associate { (room, corner) -> corner.chunkCoords to room }
+        val builtChunks = builtCorners.map { it.chunkCoords }.toSet()
 
         val spots =
-            roomCorners.flatMap { corner ->
+            (roomCorners + builtCorners).flatMap { corner ->
                 world.chunks
                     .get(corner.chunkCoords, createIfNeeded = true)!!
                     .getEntities<StaticObject>(EntityType.STATIC_OBJECT)
             }.filter { obj ->
                 val name = nameOf(obj.id)
-                name.endsWith(" space") || name == "door hotspot"
+                // A built room's furniture spots are [PohRooms.furnish]'s; only its doorways are joined here.
+                if (obj.tile.chunkCoords in builtChunks) name == "door hotspot" else name.endsWith(" space") || name == "door hotspot"
             }
         val doorTiles = spots.filter { nameOf(it.id) == "door hotspot" }.map { it.tile }.toSet()
         spots.forEach { obj ->
@@ -741,11 +783,15 @@ object PlayerHouse {
                             else -> obj.tile.transform(0, -1)
                         }
                     val connects = across in doorTiles
-                    if (!(connects && buildMode)) {
+                    // CONSTRUCTION-99: in building mode a doorway onto an empty cell of the house keeps its hotspot - its Build
+                    // builds a new room there (OSRS; [PohConstruct.doorBuild]).
+                    val buildable = buildMode && area != null && (across.x - area.bottomLeftX) in 0 until HOUSE_CHUNKS * 8 && (across.z - area.bottomLeftZ) in 0 until HOUSE_CHUNKS * 8
+                    if (!((connects || buildable) && buildMode)) {
                         world.remove(obj)
                     }
                     // A garden has no walls: a doorway of it with no room behind it stays open lawn instead of a lone wall stub.
-                    if (!connects && obj.tile.chunkCoords != garden.chunkCoords) {
+                    val isGarden = obj.tile.chunkCoords == garden.chunkCoords || obj.tile.chunkCoords in gardens
+                    if (!connects && !(buildable && buildMode) && !isGarden) {
                         world.spawn(DynamicObject(style.wall, 0, obj.rot, obj.tile))
                     }
                 }

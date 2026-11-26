@@ -71,7 +71,7 @@ object PohBuild {
     const val BUILD_ANIM = 3683
     const val REMOVE_ANIM = 3685
 
-    private val WATERING_CANS = (Items.WATERING_CAN_1..Items.WATERING_CAN_8).toList()
+    internal val WATERING_CANS = (Items.WATERING_CAN_1..Items.WATERING_CAN_8).toList()
 
     fun requireBuildMode(player: Player): Boolean {
         if (PlayerHouse.isBuildMode(player)) return true
@@ -193,7 +193,7 @@ object PohBuild {
         return true
     }
 
-    private fun takeMaterials(
+    internal fun takeMaterials(
         player: Player,
         piece: Piece,
     ) {
