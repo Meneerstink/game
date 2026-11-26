@@ -102,6 +102,13 @@ class GrandExchangeService(
      * charged by [GrandExchangeBook.match] through [taxPerItem], on house sales as on player trades.
      */
     fun houseQuote(itemId: Int): GeHouseQuote? {
+        val quote = baseHouseQuote(itemId) ?: return null
+        // TRIDENT-FULL-ARBITRAGE: an instant conversion (uncharge, dismantle, attach, charge) never turns a profit through the house.
+        return GeHouseLoops.bound(itemId, quote, ::baseHouseQuote)
+    }
+
+    /** [houseQuote] without the conversion bounds of [GeHouseLoops]. */
+    private fun baseHouseQuote(itemId: Int): GeHouseQuote? {
         // Owner 2026-10-24 (N367, N368): these are in the house like every item (its normal price, buy and sell) - for them this
         // replaces the chest-list rule below (2026-10-17) and the store-item rule (N115).
         // PROJECT48 SIGILS: sigils are traded between players only ("can be traded via the Grand Exchange", obtained from drops, gathering
