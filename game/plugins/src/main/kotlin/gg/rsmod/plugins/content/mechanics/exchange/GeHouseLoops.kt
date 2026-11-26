@@ -14,18 +14,23 @@ import gg.rsmod.plugins.content.items.osrs.PoweredStaves
  * The house therefore holds two rules for every conversion a player can do on the spot, without a skill:
  *  - **break** (uncharge, dismantle, split, revert): its ask for the whole is at least what it pays for the parts;
  *  - **make** (charge, attach a kit, assemble): its bid for the whole is at most what it asks for the parts (coins at 1 gp).
- * Skill products (amulet stringing, chiselling, leather work) only get the break rule: selling the product below the
- * value of its inputs is never right, but buying inputs and training a skill to sell the product is ordinary skilling.
+ * HUIS-SKILL-WINST (owner 2026-11-26): skill products get the make rule too - the house never pays more for a product than
+ * its ingredients cost in the house ([GeSkillRecipes], and every use-item-on-item recipe of [CombinationData]).
  * Parts the house does not buy count 0 in a break; a make that needs a part the house does not sell is no house loop.
  * The convenience fee ([GeTax]) comes on top of these bounds, so a round trip always loses.
  */
 object GeHouseLoops {
-    /** One conversion between [whole] and [parts] (item id to amount); [make] = the parts can be turned into the whole for free. */
+    /**
+     * One conversion between [amount] x [whole] and [parts] (item id to amount); [makes] = the parts can be turned into the
+     * whole, [breaks] = the whole can be turned back into the parts. [kind] names the source of the route (reports, tests).
+     */
     data class Route(
         val whole: Int,
         val parts: Map<Int, Int>,
         val breaks: Boolean,
         val makes: Boolean,
+        val amount: Int = 1,
+        val kind: String = "",
     )
 
     val ROUTES: List<Route> by lazy { buildRoutes() }
@@ -50,7 +55,7 @@ object GeHouseLoops {
         for (route in routes) {
             if (route.breaks) {
                 val partsBid = route.parts.entries.sumOf { (id, amount) -> priceOf(id, base)?.bid?.toLong()?.times(amount) ?: 0L }
-                ask = maxOf(ask, partsBid)
+                ask = maxOf(ask, (partsBid + route.amount - 1) / route.amount)
             }
             if (route.makes) {
                 val partsAsk =
@@ -58,7 +63,7 @@ object GeHouseLoops {
                         val partAsk = priceOf(id, base)?.ask?.toLong() ?: return@fold null
                         sum?.plus(partAsk * amount)
                     }
-                if (partsAsk != null) bid = minOf(bid, partsAsk)
+                if (partsAsk != null) bid = minOf(bid, partsAsk / route.amount)
             }
         }
         val boundedAsk = ask.coerceIn(1L, Int.MAX_VALUE.toLong())
@@ -96,17 +101,19 @@ object GeHouseLoops {
             routes += Route(kit.ornamented, partsOf(kit.base, kit.kit), breaks = kit.returnsKit, makes = true)
             if (!kit.returnsKit) routes += Route(kit.ornamented, mapOf(kit.base to 1), breaks = true, makes = false)
         }
-        // Use-item-on-item combinations: free attachments (no experience: godswords, Kodai wand, wards, (or) kits) both ways,
-        // skill products only the break rule (see the class comment).
+        // Use-item-on-item combinations, both ways: free attachments (godswords, Kodai wand, wards, (or) kits) and, since
+        // HUIS-SKILL-WINST, skill products (amulet stringing, chiselling, leather work) as well.
         for (data in CombinationData.values) {
             val parts = mutableMapOf<Int, Int>()
             data.items.forEach { id -> parts.merge(id, data.quantities[id] ?: 1) { a, _ -> a } }
-            routes += Route(data.resultItem, parts, breaks = true, makes = data.experience == 0.0)
+            routes += Route(data.resultItem, parts, breaks = true, makes = true, kind = "combine:" + data.name)
         }
         // Crystal armour Revert gives the crystal armour seed back.
         for ((armour, seed) in CrystalEquipment.REVERT_SEED) {
             routes += Route(armour, mapOf(seed to 1), breaks = true, makes = false)
         }
+        // HUIS-SKILL-WINST: the recipes of every production skill (make rule only).
+        routes += GeSkillRecipes.routes()
         return routes
     }
 

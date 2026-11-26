@@ -40,6 +40,30 @@ class GeHouseLoopsTests {
     }
 
     @Test
+    fun `the 26-11 onyx amulet stringing no longer pays`() {
+        // HUIS-SKILL-WINST: Onyx amulet (u) + ball of wool cost 1,633,403 gp in the house, the house paid 2,561,074 for the amulet.
+        val parts = mapOf(Items.ONYX_AMULET_6579 to GeHouseQuote(1_633_400, 1_600_000), Items.BALL_OF_WOOL to GeHouseQuote(3, 2))
+        val bounded = GeHouseLoops.bound(Items.ONYX_AMULET_6581, GeHouseQuote(2_561_074, 2_561_074)) { parts[it] }
+        assertEquals(1_633_403, bounded.bid)
+        assertEquals(2_561_074, bounded.ask)
+    }
+
+    @Test
+    fun `a recipe that makes a batch bounds the bid per item`() {
+        // One log whittles 15 arrow shafts: 15 shafts may never fetch more than the log costs.
+        val route = GeHouseLoops.routesOf(Items.ARROW_SHAFT).single { it.makes && it.parts == mapOf(Items.LOGS to 1) }
+        assertEquals(15, route.amount)
+        val bounded = GeHouseLoops.bound(Items.ARROW_SHAFT, GeHouseQuote(10, 10)) { if (it == Items.LOGS) GeHouseQuote(100, 90) else null }
+        assertEquals(6, bounded.bid)
+    }
+
+    @Test
+    fun `runes are not bounded by the essence price`() {
+        // Owner 2026-11-26: Runecrafting stays out of HUIS-SKILL-WINST.
+        assertTrue(GeHouseLoops.routesOf(Items.NATURE_RUNE).none { it.makes })
+    }
+
+    @Test
     fun `a make needing a part the house does not sell leaves the bid alone`() {
         val bounded = GeHouseLoops.bound(Items.TRIDENT_OF_THE_SEAS_FULL, GeHouseQuote(800_000, 800_000)) { null }
         assertEquals(800_000, bounded.bid)
@@ -68,13 +92,13 @@ class GeHouseLoopsTests {
                 assertTrue(whole.bid in 0..whole.ask, "${route.whole}: bid ${whole.bid} ask ${whole.ask}")
                 if (route.breaks) {
                     val partsBid = route.parts.entries.sumOf { (id, n) -> (quoteOf(id)?.bid ?: 0).toLong() * n }
-                    if (partsBid > whole.ask) gains += "break ${route.whole}: ask ${whole.ask} < parts $partsBid"
+                    if (partsBid > whole.ask.toLong() * route.amount) gains += "break ${route.whole}: ask ${whole.ask} x ${route.amount} < parts $partsBid"
                 }
                 if (route.makes) {
                     val asks = route.parts.entries.map { (id, n) -> quoteOf(id)?.ask?.toLong()?.times(n) }
                     if (asks.all { it != null }) {
                         val partsAsk = asks.sumOf { it!! }
-                        if (whole.bid > partsAsk) gains += "make ${route.whole}: bid ${whole.bid} > parts $partsAsk"
+                        if (whole.bid.toLong() * route.amount > partsAsk) gains += "make ${route.kind} ${route.whole}: bid ${whole.bid} x ${route.amount} > parts $partsAsk"
                     }
                 }
                 checked++

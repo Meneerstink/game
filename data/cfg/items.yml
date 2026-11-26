@@ -178977,7 +178977,31 @@
   examine: "It's an Racing boots."
   tradeable: true
   weight: 0.9
-  equipment: null
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 3648
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 15066
   name: "Racing boots"
   examine: "Swap this note at any bank for the equivalent item."
@@ -179001,7 +179025,31 @@
   examine: "It's an Voting hat (red)."
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 3650
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 15070
   name: "Voting hat (red)"
   examine: "Swap this note at any bank for the equivalent item."
@@ -179013,7 +179061,31 @@
   examine: "It's an Voting hat (blue)."
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 3651
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 15072
   name: "Voting hat (blue)"
   examine: "Swap this note at any bank for the equivalent item."
@@ -181275,61 +181347,301 @@
   examine: "An enchanted necklace."
   tradeable: true
   weight: 0.5
-  equipment: null
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 3678
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 15394
   name: "Ali's pendant (2)"
   examine: "An enchanted necklace."
   tradeable: true
   weight: 0.5
-  equipment: null
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 3679
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 15395
   name: "Ali's pendant (3)"
   examine: "An enchanted necklace."
   tradeable: true
   weight: 0.5
-  equipment: null
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 3680
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 15396
   name: "Ali's pendant (4)"
   examine: "An enchanted necklace."
   tradeable: true
   weight: 0.5
-  equipment: null
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 3681
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 15397
   name: "Ali's pendant (5)"
   examine: "An enchanted necklace."
   tradeable: true
   weight: 0.5
-  equipment: null
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 3682
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 15398
   name: "Ferocious ring (5)"
   examine: "It's an Ferocious ring (5)"
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 0
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 15399
   name: "Ferocious ring (4)"
   examine: "It's an Ferocious ring (4)"
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 0
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 15400
   name: "Ferocious ring (3)"
   examine: "It's an Ferocious ring (3)"
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 0
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 15401
   name: "Ferocious ring (2)"
   examine: "It's an Ferocious ring (2)"
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 0
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 15402
   name: "Ferocious ring (1)"
   examine: "It's an Ferocious ring (1)"
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 0
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 15403
   name: "Balmung"
   examine: "A raiding axe from an island kingdom."
@@ -182475,7 +182787,31 @@
   examine: "The shirt of royalty!"
   tradeable: true
   weight: 1.0
-  equipment: null
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 3733
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 15504
   name: "Royal shirt"
   examine: "Swap this note at any bank for the equivalent item."
@@ -182487,7 +182823,31 @@
   examine: "The leggings of royalty!"
   tradeable: true
   weight: 1.0
-  equipment: null
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 3734
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 15506
   name: "Royal leggings"
   examine: "Swap this note at any bank for the equivalent item."
@@ -182499,7 +182859,31 @@
   examine: "The sceptre of royalty!"
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 3735
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 12
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 15508
   name: "Royal sceptre"
   examine: "Swap this note at any bank for the equivalent item."
@@ -182511,7 +182895,31 @@
   examine: "The crown of royalty!"
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 3736
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 15510
   name: "Royal crown"
   examine: "Swap this note at any bank for the equivalent item."
@@ -182523,7 +182931,31 @@
   examine: "The amulet of royalty!"
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 3737
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 15512
   name: "Royal amulet"
   examine: "Swap this note at any bank for the equivalent item."
@@ -235054,7 +235486,31 @@
   examine: "A cunning disguise."
   tradeable: true
   weight: 1.0
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 4849
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 19273
   name: "Fox mask"
   examine: "Swap this note at any bank for the equivalent item."
@@ -235072,7 +235528,31 @@
   examine: "Not to be used in antipoison potions."
   tradeable: true
   weight: 1.0
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 4851
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 19276
   name: "White unicorn mask"
   examine: "Swap this note at any bank for the equivalent item."
@@ -235090,7 +235570,31 @@
   examine: "Not to be used in antipoison potions."
   tradeable: true
   weight: 1.0
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 4853
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 19279
   name: "Black unicorn mask"
   examine: "Swap this note at any bank for the equivalent item."
@@ -235108,7 +235612,31 @@
   examine: "Doesn't let you breathe fire, sadly."
   tradeable: true
   weight: 1.0
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 4855
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 19282
   name: "Green dragon mask"
   examine: "Swap this note at any bank for the equivalent item."
@@ -235126,7 +235654,31 @@
   examine: "Doesn't let you breathe fire, sadly."
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 4857
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 19285
   name: "Blue dragon mask"
   examine: "Swap this note at any bank for the equivalent item."
@@ -235144,7 +235696,31 @@
   examine: "Doesn't let you breathe fire, sadly."
   tradeable: true
   weight: 1.0
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 4859
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 19288
   name: "Red dragon mask"
   examine: "Swap this note at any bank for the equivalent item."
@@ -235162,7 +235738,31 @@
   examine: "Doesn't let you breathe fire, sadly."
   tradeable: true
   weight: 1.0
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 4861
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 19291
   name: "Black dragon mask"
   examine: "Swap this note at any bank for the equivalent item."
@@ -235180,7 +235780,31 @@
   examine: "Doesn't let you breathe fire, sadly."
   tradeable: true
   weight: 1.0
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 4863
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 19294
   name: "Frost dragon mask"
   examine: "Swap this note at any bank for the equivalent item."
@@ -235198,7 +235822,31 @@
   examine: "Never has bronze looked so impressive."
   tradeable: true
   weight: 2.2
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 4865
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 19297
   name: "Bronze dragon mask"
   examine: "Swap this note at any bank for the equivalent item."
@@ -235216,7 +235864,31 @@
   examine: "Never has iron looked so impressive."
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 4867
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 19300
   name: "Iron dragon mask"
   examine: "Swap this note at any bank for the equivalent item."
@@ -235234,7 +235906,31 @@
   examine: "Never has steel looked so impressive."
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 4869
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 19303
   name: "Steel dragon mask"
   examine: "Swap this note at any bank for the equivalent item."
@@ -235252,7 +235948,31 @@
   examine: "Never has mithril looked so impressive."
   tradeable: true
   weight: 2.2
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 4871
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 19306
   name: "Mithril dragon mask"
   examine: "Swap this note at any bank for the equivalent item."
@@ -239398,7 +240118,31 @@
   examine: "An incomplete book of Saradomin/Guthix/Zamorak/Bandos/Armadyl. OR An incomplete ancient book."
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 4959
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 19613
   name: "Bandos' book of war"
   examine: "The holy book of the Big High War God."
@@ -239436,7 +240180,31 @@
   examine: "An incomplete book of Saradomin/Guthix/Zamorak/Bandos/Armadyl. OR An incomplete ancient book."
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 4961
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 19615
   name: "Armadyl's book of law"
   examine: "The holy book of Armadyl."
@@ -243317,7 +244085,31 @@
   examine: "Eye see you."
   tradeable: true
   weight: 3.1
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 5054
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 20071
   name: "Cyclopean helmet"
   examine: "Swap this note at any bank for the equivalent item."
@@ -243614,31 +244406,151 @@
   examine: "A ceremonial mask dedicated to an ancient god."
   tradeable: true
   weight: 0.4
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 5062
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 20116
   name: "Ancient ceremonial top"
   examine: "The top half of ceremonial robes dedicated to an ancient god."
   tradeable: true
   weight: 2.7
-  equipment: null
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 5063
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 20117
   name: "Ancient ceremonial legs"
   examine: "The bottom half of ceremonial robes dedicated to an ancient god."
   tradeable: true
   weight: 1.8
-  equipment: null
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 5064
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 20118
   name: "Ancient ceremonial gloves"
   examine: "Ceremonial gloves dedicated to an ancient god."
   tradeable: true
   weight: 0.4
-  equipment: null
+  equipment:
+    equip_slot: 9
+    equip_type: -1
+    appearance_id: 5065
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 20119
   name: "Ancient ceremonial boots"
   examine: "Ceremonial boots dedicated to an ancient god."
   tradeable: true
   weight: 0.4
-  equipment: null
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 5066
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 20120
   name: "Frozen key"
   examine: "A small, cold key."
@@ -243674,7 +244586,31 @@
   examine: "A ceremonial mask dedicated to an ancient god."
   tradeable: true
   weight: 0.4
-  equipment: null
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 5067
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 20126
   name: "Ancient ceremonial mask"
   examine: "Swap this note at any bank for the equivalent item."
@@ -243686,7 +244622,31 @@
   examine: "The top half of ceremonial robes dedicated to an ancient god."
   tradeable: true
   weight: 2.7
-  equipment: null
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 5068
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 20128
   name: "Ancient ceremonial top"
   examine: "Swap this note at any bank for the equivalent item."
@@ -243698,7 +244658,31 @@
   examine: "The bottom half of ceremonial robes dedicated to an ancient god."
   tradeable: true
   weight: 1.8
-  equipment: null
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 5069
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 20130
   name: "Ancient ceremonial legs"
   examine: "Swap this note at any bank for the equivalent item."
@@ -243710,7 +244694,31 @@
   examine: "Ceremonial gloves dedicated to an ancient god."
   tradeable: true
   weight: 0.4
-  equipment: null
+  equipment:
+    equip_slot: 9
+    equip_type: -1
+    appearance_id: 5070
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 20132
   name: "Ancient ceremonial gloves"
   examine: "Swap this note at any bank for the equivalent item."
@@ -243722,7 +244730,31 @@
   examine: "Ceremonial boots dedicated to an ancient god."
   tradeable: true
   weight: 0.4
-  equipment: null
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 5071
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 20134
   name: "Ancient ceremonial boots"
   examine: "Swap this note at any bank for the equivalent item."
@@ -249279,7 +250311,31 @@
   examine: "A beautiful bouquet of flowers. Also suitable for throwing."
   tradeable: true
   weight: 0.3
-  equipment: null
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 5207
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 12
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 20715
   name: "Bouquet"
   examine: "Swap this note at any bank for the equivalent item."
@@ -249291,7 +250347,31 @@
   examine: "Who'd have thought that water and soap could be so much fun?"
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 5208
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 12
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 20717
   name: "Bubble maker"
   examine: "Swap this note at any bank for the equivalent item."
@@ -255978,7 +257058,32 @@
   examine: "It's an Runecrafter boots"
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 5736
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 20, 'level': 50}]
 - id: 21488
   name: "Shade skull"
   examine: "Imbued with mystical energies."
@@ -256697,13 +257802,61 @@
   examine: "It's an Arcane capacitor amulet (u)"
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 5758
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 21514
   name: "Arcane capacitor (c)"
   examine: "It's an Arcane capacitor (c)"
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 5759
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 21515
   name: "Patch protection scroll"
   examine: "It's an Patch protection scroll"
@@ -256814,7 +257967,32 @@
   examine: "It's an Runecrafter boots"
   tradeable: true
   weight: 0.0
-  equipment: null
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 5763
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 20, 'level': 50}]
 - id: 21520
   name: "Raw tiger shark"
   examine: "I should probably cook this first."
@@ -263789,25 +264967,121 @@
   examine: "It's an Gnome scarf."
   tradeable: true
   weight: 0.2
-  equipment: null
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 6193
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 22216
   name: "Gnome scarf"
   examine: "It's an Gnome scarf."
   tradeable: true
   weight: 0.2
-  equipment: null
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 6194
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 22217
   name: "Gnome scarf"
   examine: "It's an Gnome scarf."
   tradeable: true
   weight: 0.2
-  equipment: null
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 6195
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 22218
   name: "Gnome scarf"
   examine: "It's an Gnome scarf."
   tradeable: true
   weight: 0.2
-  equipment: null
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 6196
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 22219
   name: "Lunar helm"
   examine: "It's an Lunar helm."
@@ -283001,7 +284275,31 @@
   examine: "Makes you look like something really old, for those moments when you want that."
   tradeable: true
   weight: 0.005
-  equipment: null
+  equipment:
+    equip_slot: 12
+    equip_type: -1
+    appearance_id: 0
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
 - id: 23571
   name: "Ring of 3rd Age"
   examine: "Swap this note at any bank for the equivalent item."

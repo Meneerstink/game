@@ -335,6 +335,9 @@ class DeadmanChestTests {
                     line.startsWith("- id: ") -> id = line.removePrefix("- id: ").trim().toInt()
                     line.startsWith("  tradeable: ") && id >= 0 ->
                         DEFINITIONS.getNullable(ItemDef::class.java, id)?.tradeable = line.removePrefix("  tradeable: ").trim() == "true"
+                    // WEAR-ZONDER-EQUIPMENT: the house reads the equipment slot (ItemMetadataService sets it at boot).
+                    line.startsWith("    equip_slot: ") && id >= 0 ->
+                        DEFINITIONS.getNullable(ItemDef::class.java, id)?.equipSlot = line.removePrefix("    equip_slot: ").trim().toInt()
                 }
             }
         }

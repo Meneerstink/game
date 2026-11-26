@@ -132,6 +132,10 @@ class GrandExchangeService(
         if (!GrandExchangeInterface.exchangeable(def)) {
             return null
         }
+        // WEAR-ZONDER-EQUIPMENT (owner 2026-11-26 'Allebei'): an item the cache offers "Wear"/"Wield" for but that has no equipment
+        // data cannot be worn here (the option does nothing). The house does not sell such an item (Mobilising Armies sets, auras,
+        // milestone capes, Pictures, ... - untradeable in RuneScape or without a worn model); players still trade it.
+        if (unwearableWithWearOption(def)) return null
         // N161 (owner 2026-10-22): an item with no OSRS price and cache value 0 is not in the house; players still trade it.
         val seed = GePrice.seed(defs, def)
         if (seed <= 0) return null
@@ -666,5 +670,11 @@ class GrandExchangeService(
 
         /** Items the house always deals in, whatever other list names them (owner 2026-10-24, N367 N368). */
         val HOUSE_ALWAYS: Set<Int> = setOf(gg.rsmod.plugins.api.cfg.Items.HEAVY_BALLISTA, gg.rsmod.plugins.api.cfg.Items.ARMADYL_CROSSBOW)
+
+        private val WEAR_OPTIONS = setOf("wear", "wield", "equip")
+
+        /** WEAR-ZONDER-EQUIPMENT: the cache's inventory menu offers Wear/Wield/Equip, but items.yml gives no equipment slot. */
+        fun unwearableWithWearOption(def: gg.rsmod.game.fs.def.ItemDef): Boolean =
+            def.equipSlot < 0 && def.inventoryMenu.any { it != null && it.lowercase() in WEAR_OPTIONS }
     }
 }
