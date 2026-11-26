@@ -17,7 +17,9 @@ object DropNotifications {
 
     fun notify(player: Player, item: Item) {
         val world = player.world
-        val def = world.definitions.getNullable(ItemDef::class.java, item.id) ?: return
+        val raw = world.definitions.getNullable(ItemDef::class.java, item.id) ?: return
+        // Fixronde 26-11 B-02: a noted drop (Spindel's 60 x Unicorn horn) has a nameless note def - name it (and judge it) by its item.
+        val def = raw.takeIf { it.noted && it.noteLinkId > 0 }?.let { world.definitions.getNullable(ItemDef::class.java, it.noteLinkId) } ?: raw
         val name = (if (item.amount > 1) "${item.amount} x " else "") + def.name
         val untradeable = !def.tradeable || gg.rsmod.plugins.content.mechanics.deadman.sigils.Sigils.isSigilItem(item.id)
         if (untradeable) {
