@@ -240139,7 +240139,7 @@
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
-    prayer: 0
+    prayer: 5
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -240201,7 +240201,7 @@
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
-    prayer: 0
+    prayer: 5
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -244457,7 +244457,7 @@
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
-    prayer: 0
+    prayer: 6
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -244487,7 +244487,7 @@
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
-    prayer: 0
+    prayer: 5
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -244517,7 +244517,7 @@
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -244547,7 +244547,7 @@
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -244607,7 +244607,7 @@
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
-    prayer: 0
+    prayer: 2
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -244643,7 +244643,7 @@
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
-    prayer: 0
+    prayer: 6
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -244679,7 +244679,7 @@
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
-    prayer: 0
+    prayer: 5
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -244715,7 +244715,7 @@
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -244751,7 +244751,7 @@
     defence_ranged: 0
     summoning: 0
     melee_strength: 0
-    prayer: 0
+    prayer: 1
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
