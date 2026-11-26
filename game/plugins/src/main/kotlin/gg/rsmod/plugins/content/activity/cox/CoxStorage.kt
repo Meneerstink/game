@@ -186,6 +186,8 @@ object CoxStorage {
         val room = if (stack) (if (p.inventory.contains(id) || p.inventory.freeSlotCount > 0) Int.MAX_VALUE else 0) else p.inventory.freeSlotCount
         val want = minOf(amount, have, room)
         if (want <= 0) { p.message("Not enough space in your inventory."); return }
+        // Into the inventory first, out of the storage after: a failed add (a full stack) must never lose the items.
+        if (!p.inventory.add(id, want).hasSucceeded()) { p.message("Not enough space in your inventory."); return }
         var left = want
         val it = list.listIterator(list.size)
         while (it.hasPrevious() && left > 0) {
@@ -194,7 +196,6 @@ object CoxStorage {
             val out = minOf(e[1], left); e[1] -= out; left -= out
             if (e[1] <= 0) it.remove()
         }
-        p.inventory.add(id, want)
         if (!v.shared) savePrivate(p, list)
         if (v.shared) p.world.players.entries.filterNotNull().filter { views[key(it)]?.let { o -> o.shared && o.raidId == v.raidId } == true }.forEach { refresh(it) }
         else refresh(p)
