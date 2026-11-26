@@ -17,8 +17,9 @@ import gg.rsmod.plugins.content.mechanics.pvp.BankSecurity
 /**
  * The demon butler (owner 2026-10-10 night run: free - no wage - called like OSRS; fetches planks from the bank, takes items to the
  * bank and un-notes planks). Ported from Darkan (`ServantNPC.requestType`, `ServantHouseD`, `ItemOnServantD`, `HouseServants`
- * DEMON_BUTLER: 26 items a trip, a 12-tick trip, `HouseConstants.BANKABLE_ITEMS`) with Darkan's lines; no fee, no sawmill, no
- * cooking (the house has no kitchen).
+ * DEMON_BUTLER: 26 items a trip, a 12-tick trip, `HouseConstants.BANKABLE_ITEMS`) with Darkan's lines; no wage, no
+ * cooking (the house has no kitchen). CONSTRUCTION-99 (2026-11-26): logs used on him go to the sawmill for the operator's fee
+ * ([SAWMILL]; logs and coins leave at once, the planks come back like un-noted planks - to the bank if the owner left).
  *
  * He waits in the dining room; the dining room's bell-pull calls him to the owner (OSRS; the rev-667 House Options panel has no
  * "Call Servant" button). A trip takes him out of the house for [TRIP_TICKS]: deposits leave the inventory at once (the bank's
@@ -42,7 +43,18 @@ object PohServant {
     /** The planks he un-notes (OSRS: a servant un-notes planks used on him). */
     val PLANKS = setOf(Items.PLANK, Items.OAK_PLANK, Items.TEAK_PLANK, Items.MAHOGANY_PLANK)
 
-    enum class Kind { FETCH, DEPOSIT, UNNOTE }
+    /**
+     * Logs the butler takes to the sawmill -> (plank, fee per plank): the Sawmill operator's own fees (OSRS Wiki 'Sawmill' and
+     * 'Demon butler': the servant charges the usual sawmill fee; Darkan `ItemOnServantD` "Take it to the sawmill.").
+     */
+    val SAWMILL = mapOf(
+        Items.LOGS to (Items.PLANK to 100),
+        Items.OAK_LOGS to (Items.OAK_PLANK to 250),
+        Items.TEAK_LOGS to (Items.TEAK_PLANK to 500),
+        Items.MAHOGANY_LOGS to (Items.MAHOGANY_PLANK to 1500),
+    )
+
+    enum class Kind { FETCH, DEPOSIT, UNNOTE, SAWMILL }
 
     data class Trip(val kind: Kind, val item: Int, val amount: Int)
 
@@ -168,6 +180,19 @@ object PohServant {
             return
         }
         val held = player.inventory.getItemCount(item.id)
+        if (unnoted in SAWMILL) {
+            when (task.options("Take them to the sawmill.", "Take them to the bank.", "Cancel.", title = "Take this to the sawmill?")) {
+                1 -> {
+                    val amount = if (held <= 1) 1 else task.inputInt("How many would you like to create?")
+                    if (amount > 0) request(task, npc, Kind.SAWMILL, item.id, minOf(amount, held))
+                }
+                2 -> {
+                    val amount = if (held <= 1) 1 else task.inputInt("How many would you like me to take?")
+                    if (amount > 0) request(task, npc, Kind.DEPOSIT, item.id, minOf(amount, held))
+                }
+            }
+            return
+        }
         val amount = if (held <= 1) 1 else task.inputInt("How many would you like me to take?")
         if (amount > 0) request(task, npc, Kind.DEPOSIT, item.id, minOf(amount, held))
     }
@@ -204,6 +229,18 @@ object PohServant {
                 }
                 if (take <= 0 || player.inventory.remove(item, take).completed != take) return
                 player.attr[TRIP_ATTR] = Trip(kind, unnoted, take)
+            }
+            Kind.SAWMILL -> {
+                val (plank, fee) = SAWMILL[Item(item).toUnnoted(player.world.definitions).id] ?: return
+                val take = minOf(amount, player.inventory.getItemCount(item))
+                if (take <= 0) return
+                if (player.inventory.getItemCount(Items.COINS_995) < take * fee) {
+                    task.say(npc, "You do not have enough coins to cover the costs of the sawmill.")
+                    return
+                }
+                if (player.inventory.remove(item, take).completed != take) return
+                player.inventory.remove(Items.COINS_995, take * fee)
+                player.attr[TRIP_ATTR] = Trip(kind, plank, take)
             }
             Kind.DEPOSIT -> {
                 val slot = player.inventory.getItemIndex(item, skipAttrItems = false)
@@ -245,7 +282,7 @@ object PohServant {
                         "I have returned with the items you asked me to retrieve."
                     }
                 }
-                Kind.UNNOTE -> {
+                Kind.UNNOTE, Kind.SAWMILL -> {
                     val added = player.inventory.add(trip.item, trip.amount).completed
                     if (added < trip.amount) player.bank.add(trip.item, trip.amount - added)
                     "I have returned with the items you asked me to retrieve."
@@ -263,6 +300,6 @@ object PohServant {
         trip ?: return
         player.attr.remove(TRIP_ATTR)
         player.timers.remove(TRIP_TIMER)
-        if (trip.kind == Kind.UNNOTE) player.bank.add(trip.item, trip.amount)
+        if (trip.kind == Kind.UNNOTE || trip.kind == Kind.SAWMILL) player.bank.add(trip.item, trip.amount)
     }
 }

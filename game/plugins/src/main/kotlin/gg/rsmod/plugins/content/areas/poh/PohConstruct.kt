@@ -208,8 +208,23 @@ object PohConstruct {
         var current = room
         while (true) {
             val name = current.type.displayName.lowercase()
-            val choice = task.options("Rotate clockwise", "Rotate anticlockwise", "Remove room", "Done", title = "The $name")
+            val stuck = stuckPieces(player, current)
+            val labels = listOf("Rotate clockwise", "Rotate anticlockwise", "Remove room") + (if (stuck.isEmpty()) emptyList() else listOf("Remove furniture")) + "Done"
+            val choice =
+                when (labels.getOrNull(task.options(*labels.toTypedArray(), title = "The $name") - 1)) {
+                    "Rotate clockwise" -> 1
+                    "Rotate anticlockwise" -> 2
+                    "Remove room" -> 3
+                    "Remove furniture" -> 4
+                    else -> 5
+                }
             when (choice) {
+                4 -> {
+                    val pieces = stuck.mapIndexed { i, (_, deco) -> PohBuild.Piece(i, deco.name, deco.level, 0.0, emptyList()) }
+                    val picked = PohBuild.choose(task, pieces, "Remove which piece?") { it.name } ?: return
+                    removeFurniture(task, current, stuck[picked.obj].first)
+                    return
+                }
                 1, 2 -> {
                     val clockwise = choice == 1
                     val allowed = rotationsFacing(player, current.type, side)
@@ -237,6 +252,31 @@ object PohConstruct {
                 else -> return
             }
         }
+    }
+
+    /**
+     * CON99-REMOVE: the pieces built in [room] whose loc has no "Remove" in the cache - PohObjectOptionTool took it off ~36 top pieces
+     * (opulent rug, mahogany bookcase, telescope, magic tree ...) for the fixed house, which uses the same locs. Without this they
+     * could never be taken down again; the room's doorway (Build in building mode) offers them instead. A linked group or a
+     * recursive hotspot (a rug's 16 spots) is one entry, as one Remove takes all of it.
+     */
+    private fun stuckPieces(
+        player: Player,
+        room: PohRooms.Built,
+    ): List<Pair<PohRooms.Spot, PohFurniture.Deco>> {
+        val world = player.world
+        val area = PlayerHouse.houseAreaOf(player) ?: return emptyList()
+        val style = PlayerHouse.styleOf(player)
+        val built = PohRooms.furniture(player)
+        val corner = PohRooms.cornerOf(area.bottomLeftX, area.bottomLeftZ, room.x, room.z, room.plane)
+        return PohRooms.spots(world, style, room, corner)
+            .mapNotNull { s ->
+                val value = built[s.key(room)] ?: return@mapNotNull null
+                val deco = PohFurniture.DECOS[PohRooms.decoKey(value)] ?: return@mapNotNull null
+                val id = PohRooms.placedObj(value, style) ?: return@mapNotNull null
+                val options = world.definitions.get(ObjectDef::class.java, id).options
+                if (options.any { it.equals(REMOVE, true) }) null else s to deco
+            }.distinctBy { (s, deco) -> if (s.hotspot.type == "INDIVIDUAL") s.key(room) else deco.key }
     }
 
     private fun pieceOf(deco: PohFurniture.Deco): PohBuild.Piece = PohBuild.Piece(deco.objs.first(), deco.name, deco.level, deco.xp, deco.materials, plant = deco.watering && 'H' !in deco.tools)
