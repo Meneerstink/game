@@ -480,8 +480,9 @@ gg.rsmod.game.CommandServerCommands.handlers["ifbutton"] = { w, a ->
     val iface = a.getOrNull(1)?.toIntOrNull()
     val comp = a.getOrNull(2)?.toIntOrNull()
     val option = a.getOrNull(3)?.toIntOrNull() ?: 1
-    if (p == null || iface == null || comp == null || option !in 1..10) "usage: ifbutton <name> <interface> <component> [option 1-10]"
-    else if (p.gameSystem.inject(gg.rsmod.game.message.impl.IfButtonMessage((iface shl 16) or comp, option - 1, -1, -1, 61)))
+    val slot = a.getOrNull(4)?.toIntOrNull() ?: -1 // fixronde 26-11: a slot of a grid (CoX storage side panel 1125)
+    if (p == null || iface == null || comp == null || option !in 1..10) "usage: ifbutton <name> <interface> <component> [option 1-10] [slot]"
+    else if (p.gameSystem.inject(gg.rsmod.game.message.impl.IfButtonMessage((iface shl 16) or comp, option - 1, slot, -1, 61)))
         "button $iface:$comp op$option for ${p.username} (visible=${p.interfaces.isVisible(iface)})"
     else "no handler"
 }

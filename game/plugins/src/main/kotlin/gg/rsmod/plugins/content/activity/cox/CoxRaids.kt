@@ -397,6 +397,7 @@ object CoxRaids : KLogging() {
     fun leave(player: Player) {
         val raid = raidAt(player.tile)
         if (raid != null) dropRaidItems(player, player.tile)
+        CoxStorage.clearRaidItems(player)   // fixronde 26-11: raid-only items in the private storage stay in this raid
         player.attr[gg.rsmod.game.model.attr.LOC_ALIAS_ATTR]?.clear()   // no 'Reload' steps alias outside (only CoX uses it)
         player.moveTo(OUTSIDE)
         CoxPartyTab.close(player)

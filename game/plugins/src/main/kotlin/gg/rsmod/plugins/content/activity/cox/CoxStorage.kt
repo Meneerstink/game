@@ -40,6 +40,15 @@ object CoxStorage {
     /** Private storage per account: "localId:amount,..." (persists; the mountain's unit hands it out). */
     val PRIVATE = AttributeKey<String>(persistenceKey = "cox_private_storage")
 
+    /**
+     * Fixronde 26-11 (COX-OPSLAG-RAIDITEMS): the raid the raid-only items in the private storage were stored in. Before, they were only
+     * cleared at the mountain's unit, so overloads stored in one raid were there again at the start of the next. Raid ids restart at 1
+     * with the server, hence the server-run stamp in the tag.
+     */
+    val PRIVATE_RAID = AttributeKey<String>(persistenceKey = "cox_private_raid")
+    private val RUN = System.currentTimeMillis()
+    private fun tag(raidId: Long) = "$RUN:$raidId"
+
     private data class View(val shared: Boolean, val size: Int, val mount: Boolean, val raidId: Long)
     private val views = ConcurrentHashMap<String, View>()
     private val shared = ConcurrentHashMap<Long, MutableList<IntArray>>()
@@ -62,6 +71,7 @@ object CoxStorage {
         val raidOnly = CoxRaids.raidOnlyLocal()
         val items = privateItems(p)
         if (items.removeAll { it[0] in raidOnly }) savePrivate(p, items)
+        p.attr.remove(PRIVATE_RAID)
     }
 
     fun tier(raid: CoxRaid) = tiers[raid.id] ?: 0
@@ -79,6 +89,7 @@ object CoxStorage {
         val iface = CoxInterfaces.of(271) ?: return
         val raid = CoxRaids.raidAt(p.tile)
         if (mount) clearRaidItems(p) else if (raid == null) return
+        else if (p.attr[PRIVATE_RAID] != tag(raid.id)) clearRaidItems(p)   // raid-only items of an earlier raid
         val size = if (mount) PRIVATE_SHOWN else TIERS[tier(raid!!)].personal
         views[key(p)] = View(false, size, mount, raid?.id ?: -1)
         p.openInterface(iface, InterfaceDestination.MAIN_SCREEN)
@@ -160,7 +171,7 @@ object CoxStorage {
         val stored = add(list, v.size, id, want, stackable(p, id))
         if (stored <= 0) { p.message(if (v.shared) "The shared storage is full." else "Not enough space in your private storage."); return }
         p.inventory.remove(id, stored)
-        if (!v.shared) savePrivate(p, list)
+        if (!v.shared) { savePrivate(p, list); if (id in CoxRaids.raidOnlyLocal()) p.attr[PRIVATE_RAID] = tag(v.raidId) }
         if (v.shared) p.world.players.entries.filterNotNull().filter { views[key(it)]?.let { o -> o.shared && o.raidId == v.raidId } == true }.forEach { refresh(it) }
         else refresh(p)
     }
