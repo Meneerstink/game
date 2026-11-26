@@ -13,6 +13,7 @@ val cookingObjects =
     arrayOf(
         Objs.CLAY_OVEN,
         Objs.FIREPIT_12285,
+        Objs.FIREPIT_13528,
         Objs.FIREPIT_WITH_HOOK_13529,
         Objs.SMALL_OVEN_13533,
         Objs.FIREPIT_WITH_POT_13531,

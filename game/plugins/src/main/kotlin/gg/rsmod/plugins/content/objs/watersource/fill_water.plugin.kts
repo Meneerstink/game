@@ -15,6 +15,8 @@ val ids =
         Objs.SINK_9143,
         Objs.SINK_9684,
         Objs.SINK_10175,
+        Objs.PUMP_AND_DRAIN_13559,
+        Objs.PUMP_AND_TUB_13561,
         Objs.SINK_13563,
         Objs.SINK_13564,
         Objs.SINK_14917,
