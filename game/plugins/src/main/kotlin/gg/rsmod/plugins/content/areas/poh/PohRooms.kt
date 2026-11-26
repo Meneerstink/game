@@ -180,7 +180,7 @@ object PohRooms {
     /** The fixed house's cells (garden at 1,1; see [PlayerHouse.Room]). */
     val FIXED_CELLS: Set<Pair<Int, Int>> = PlayerHouse.Room.values().map { (it.dx + 1) to (it.dz + 1) }.toSet()
 
-    /** OSRS Wiki maximum rooms (the fixed house's five count, gardens included). */
+    /** OSRS Wiki maximum rooms (gardens included); the fixed house's five are free on top, see [roomCount]. */
     fun maxRooms(level: Int): Int {
         var max = 24
         if (level >= 26) max += minOf(12, (level - 26) / 6 + 1)
@@ -229,7 +229,11 @@ object PohRooms {
         type: RoomType,
     ): Boolean = type != RoomType.GAMES_ROOM || rooms(player).none { it.type == RoomType.GAMES_ROOM }
 
-    fun roomCount(player: Player): Int = FIXED_CELLS.size + rooms(player).size
+    /**
+     * Rooms that count towards [maxRooms]. CON99-VASTHUIS (owner 2026-11-26): the free fixed house (garden, PvP/PvM room, portal
+     * chamber, chapel, dining room) does NOT count, so a player gets the full OSRS room limit on top of it.
+     */
+    fun roomCount(player: Player): Int = rooms(player).size
 
     /** Whether a room at [x],[z] keeps the house inside its maximum dimension. */
     fun fitsDimension(
