@@ -1853,7 +1853,7 @@ object OsrsItemImportTool {
         sb.append("- id: ${entry.localId}\n")
         if (entry.notedOf != null) {
             sb.append("  name: \"${entry.notedOf.def.name}\"\n")
-            sb.append("  examine: \"Swamp this note at any bank for the equivalent item\"\n")
+            sb.append("  examine: \"Swap this note at any bank for the equivalent item.\"\n")
             sb.append("  tradeable: ${entry.notedOf.def.tradeable}\n")
             sb.append("  weight: 0.0\n")
             sb.append("  equipment: null\n")

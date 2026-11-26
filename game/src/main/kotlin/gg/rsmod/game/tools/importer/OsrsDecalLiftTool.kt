@@ -41,6 +41,19 @@ object OsrsDecalLiftTool {
 
     class Lift(val faces: Int, val vertices: Int, val maxMove: Int)
 
+    /**
+     * N537 FIX 2 (2026-11-25, tx-20261125-155625 + tx-20261125-155758): 19 inventory-only models (never worn) whose icon the lift
+     * bent out of shape by more than 10 % went back to the pure OSRS conversion (34016 Ring of suffering/Zenyte ring; Occult/Anguish
+     * kit, Ferocious gloves, Nihil/Blood shard, crystal seed, Ancestral top, 5 mixes, Bottled dragonbreath, storage units, Deadman's
+     * chest, Challenge scroll, Partyhat & specs, Amulet of the Damned). An icon is drawn in priority order by the client (N537 FIX 1),
+     * so it needs no lift; a full run must not lift them again (DECAL-LIFT-ROOD).
+     */
+    val KEEP_PURE: Set<Int> =
+        setOf(
+            34016, 32793, 32834, 33026, 34838, 37042, 40080, 48090, 65024, 66629, 66630, 66631, 66730, 66731, 66732, 66733, 66737,
+            66872, 70731,
+        )
+
     /** The OSRS item meshes this server imported (role model). */
     fun importedModels(): List<Int> {
         val ids = sortedSetOf<Int>()
@@ -271,7 +284,7 @@ object OsrsDecalLiftTool {
     fun main(args: Array<String>) {
         val apply = args.firstOrNull() == "apply"
         val only = args.drop(1).mapNotNull { it.toIntOrNull() }
-        val models = only.ifEmpty { importedModels() }
+        val models = only.ifEmpty { importedModels() - KEEP_PURE }
         val library = CacheLibrary(GAME_CACHE)
         val mutations = ArrayList<CacheMutation>()
         try {

@@ -48,8 +48,9 @@ class OsrsDecalLiftCacheTests {
             val library = CacheLibrary(cache)
             try {
                 val hidden =
-                    models.filter { id ->
-                        val bytes = library.data(7, id, 0) ?: return@filter false
+                    // DECAL-LIFT-ROOD: brede modellen (> 65535) staan in archief 37 -> ModelArchive.read; KEEP_PURE = bewust zonder lift.
+                    (models - OsrsDecalLiftTool.KEEP_PURE).filter { id ->
+                        val bytes = ModelArchive.read(library, id) ?: return@filter false
                         val model = runCatching { Rev667ModelDecoder.decode(bytes) }.getOrNull() ?: return@filter false
                         Rev667ModelEncoder.encode(model).contentEquals(bytes) && OsrsDecalLiftTool.liftAll(model) != null
                     }
