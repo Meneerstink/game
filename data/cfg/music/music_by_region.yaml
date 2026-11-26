@@ -3046,3 +3046,19 @@ a_dangerous_game:
     - region: 13727
     - region: 6580
     - region: 13472
+# Fixronde 26-11 B-06 (nachtrun: 'no region music' in the Revenant Caves): OSRS Wiki Revenants (music track), cacheid 521,
+# 'unlocked in the Revenant Caves' - the six cave squares 3136-3263 x 10048-10239 (OsrsRegionImportTool N522).
+revenants:
+  index: 1030
+  areas:
+    - region: 12701
+    - region: 12702
+    - region: 12703
+    - region: 12957
+    - region: 12958
+    - region: 12959
+# Fixronde 26-11 B-05: OSRS Wiki Scorpia Dances, cacheid 423, 'unlocked in the cave beneath the Scorpion Pit' (ScorpiaPit, square 12961).
+scorpia_dances:
+  index: 1031
+  areas:
+    - region: 12961
