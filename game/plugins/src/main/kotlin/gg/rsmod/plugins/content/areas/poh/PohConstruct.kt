@@ -56,8 +56,12 @@ object PohConstruct {
         obj: GameObject,
         opt: Int,
     ): Boolean {
-        if (!PlayerHouse.ownsHouseAt(player)) return false
+        if (PlayerHouse.houseArea(obj.tile) == null) return false
         val option = optionOf(player, obj, opt) ?: return false
+        if (option != BUILD && option != REMOVE) {
+            return PohFurnitureUse.handles(obj.id) && PohFurnitureUse.handle(player, obj, option)
+        }
+        if (!PlayerHouse.ownsHouseAt(player)) return false
         if (option == BUILD && isDoorHotspot(player, obj.id)) {
             val target = doorTarget(player, obj) ?: return false
             val (cellX, cellZ, side) = target
@@ -71,7 +75,7 @@ object PohConstruct {
             player.queue { buildFurniture(this, found.first, found.second) }
             return true
         }
-        if (option == REMOVE && PohFurniture.PIECE_IDS.containsKey(obj.id)) {
+        if (option == REMOVE && (PohFurniture.PIECE_IDS.containsKey(obj.id) || obj.id in PohFurnitureUse.PORTALS)) {
             val found = PohRooms.spotAt(player, obj, matchLoc = false) ?: return false
             if (PohRooms.furniture(player)[found.second.key(found.first)] == null) return false
             player.queue { removeFurniture(this, found.first, found.second) }
@@ -292,16 +296,15 @@ object PohConstruct {
         if (!PohBuild.requireBuildMode(player) || !PohBuild.confirmRemove(task)) return
         val world = player.world
         val built = PohRooms.furniture(player)
-        val deco = built[spot.key(room)]?.let { PohFurniture.DECOS[it] } ?: return
+        val deco = built[spot.key(room)]?.let { PohFurniture.DECOS[PohRooms.decoKey(it)] } ?: return
         val style = PlayerHouse.styleOf(player)
         val targets = targets(player, room, spot, spot.hotspot.decos.indexOf(deco)).filter { (s, _) -> built[s.key(room)] != null }
         player.lock = LockState.FULL
         player.animate(PohBuild.REMOVE_ANIM)
         task.wait(2)
         targets.forEach { (s, _) ->
-            val placed = built[s.key(room)]?.let { PohFurniture.DECOS[it] }
-            if (placed != null) {
-                val id = placed.obj(style)
+            val id = built[s.key(room)]?.let { PohRooms.placedObj(it, style) }
+            if (id != null) {
                 PohRooms.objectsAt(world, s.pieceTile(world, id)).filter { it.id == id }.forEach { world.remove(it) }
             }
             world.spawn(DynamicObject(s.loc, s.type, s.houseRot, s.tile))

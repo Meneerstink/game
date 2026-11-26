@@ -34,3 +34,13 @@ on_command("condev", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
         type = ChatMessageType.CONSOLE,
     )
 }
+
+// Bones on a built altar (the lit gilded altar 13199 keeps its own offering in prayer_altar.plugin.kts).
+gg.rsmod.plugins.content.skills.prayer.burying.BoneData.values.forEach { data ->
+    PohFurnitureUse.ALTARS.filter { it != PlayerHouse.ALTAR }.forEach { altar ->
+        on_item_on_obj(obj = altar, item = data.bone) {
+            val obj = player.getInteractingGameObj()
+            if (PlayerHouse.houseArea(obj.tile) != null) PohFurnitureUse.offerBones(player, obj, data.bone)
+        }
+    }
+}

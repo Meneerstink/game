@@ -120,6 +120,22 @@ object PohRooms {
         return cells.maxOf { it.first } - cells.minOf { it.first } < dim && cells.maxOf { it.second } - cells.minOf { it.second } < dim
     }
 
+    /** A saved furniture value is "DECO_KEY" or "DECO_KEY#variant" (a directed portal: its destination). */
+    fun decoKey(value: String): String = value.substringBefore('#')
+
+    fun variantOf(value: String): Int? = value.substringAfter('#', "").toIntOrNull()
+
+    /** The loc a saved furniture value places in [style]. */
+    fun placedObj(
+        value: String,
+        style: PlayerHouse.Style,
+    ): Int? {
+        val deco = PohFurniture.DECOS[decoKey(value)] ?: return null
+        val obj = deco.obj(style)
+        val variant = variantOf(value) ?: return obj
+        return PohFurnitureUse.PORTAL_FRAMES[obj]?.plus(variant) ?: obj
+    }
+
     fun furniture(player: Player): Map<String, String> =
         (player.attr[FURNITURE_ATTR] ?: emptyList<String>()).associate { it.substringBefore('=') to it.substringAfter('=') }
 
@@ -250,10 +266,9 @@ object PohRooms {
         spots(world, style, room, corner).forEach { spot ->
             val copy = copies.firstOrNull { it.id == spot.loc && it.tile == spot.tile }
             copy?.let { handled.add(it) }
-            val deco = built[spot.key(room)]?.let { PohFurniture.DECOS[it] }
-            if (deco != null) {
+            val id = built[spot.key(room)]?.let { placedObj(it, style) }
+            if (id != null) {
                 copy?.let { world.remove(it) }
-                val id = deco.obj(style)
                 if (id > 0) world.spawn(DynamicObject(id, spot.type, spot.houseRot, spot.pieceTile(world, id)))
             } else if (!buildMode) {
                 copy?.let { world.remove(it) }

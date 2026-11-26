@@ -137,12 +137,13 @@ object PohBuild {
         task: QueueTask,
         pieces: List<Piece>,
         title: String,
+        label: (Piece) -> String = { "${it.name} (level ${it.level})" },
     ): Piece? {
         var start = 0
         while (true) {
             val rest = pieces.drop(start)
             val page = if (rest.size <= 5) rest else rest.take(4)
-            val labels = page.map { "${it.name} (level ${it.level})" } + if (rest.size > 5) listOf("More...") else emptyList()
+            val labels = page.map(label) + if (rest.size > 5) listOf("More...") else emptyList()
             val picked = task.options(*labels.toTypedArray(), title = title)
             if (rest.size > 5 && picked == 5) {
                 start += 4
