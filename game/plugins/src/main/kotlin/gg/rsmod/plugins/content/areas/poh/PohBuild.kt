@@ -34,6 +34,8 @@ object PohBuild {
         val xp: Double,
         val materials: List<Pair<Int, Int>>,
         val plant: Boolean = false,
+        /** False for a piece the OSRS Wiki lists without tools (the desert, polar and volcanic habitats). */
+        val needsTools: Boolean = true,
     )
 
     /** Nails of any metal (OSRS / 2009scape `NailType`): bronze, iron, steel, black, mithril, adamantite, rune. */
@@ -187,7 +189,7 @@ object PohBuild {
                 task.messageBox("You need a watering can with some water in it to plant this.")
                 return false
             }
-        } else if (!player.inventory.contains(Items.HAMMER) || !player.inventory.contains(Items.SAW)) {
+        } else if (piece.needsTools && (!player.inventory.contains(Items.HAMMER) || !player.inventory.contains(Items.SAW))) {
             task.messageBox("You will need a hammer and saw to build furniture.")
             return false
         }

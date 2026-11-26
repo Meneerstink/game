@@ -117,6 +117,8 @@ object PohRooms {
         GAMES_ROOM("Games room", 30, 25_000, 5, 4, Kind.CHAMBER),
         COMBAT_ROOM("Combat room", 32, 25_000, 3, 4, Kind.CHAMBER),
         QUEST_HALL("Quest hall", 35, 25_000, 5, 6, Kind.CHAMBER, Where.GROUND),
+        /** Deel 6: OSRS Menagerie (outdoors) - Darkan `HouseRooms.MENAGERIE` chunk 239,634, doors on all four sides. */
+        MENAGERIE("Menagerie", 37, 30_000, 7, 2, Kind.LAND, Where.GROUND),
         STUDY("Study", 40, 50_000, 4, 5, Kind.CHAMBER),
         COSTUME_ROOM("Costume room", 42, 50_000, 6, 1, Kind.CHAMBER),
         CHAPEL("Chapel", 45, 50_000, 2, 5, Kind.CHAMBER),
@@ -145,8 +147,12 @@ object PohRooms {
                 else -> where == Where.ANY || where == Where.GROUND
             }
 
-        /** The template's south-west tile for [style]. */
-        fun template(style: PlayerHouse.Style): Tile = style.chunk(chunkX, chunkZ)
+        /**
+         * The template's south-west tile for [style]. The Wilderness theme (an OSRS region) has another room on the menagerie's
+         * chunk and its own OSRS menagerie ids, so a menagerie there uses the whitewashed template (an outdoor room: no walls).
+         */
+        fun template(style: PlayerHouse.Style): Tile =
+            if (this == MENAGERIE && style == PlayerHouse.Style.WILDERNESS) PlayerHouse.Style.WHITEWASHED_STONE.chunk(chunkX, chunkZ) else style.chunk(chunkX, chunkZ)
     }
 
     /** One built room: grid cell (instance chunk), plane, rotation (0-3 clockwise). */
@@ -227,7 +233,7 @@ object PohRooms {
     fun onlyOne(
         player: Player,
         type: RoomType,
-    ): Boolean = type != RoomType.GAMES_ROOM || rooms(player).none { it.type == RoomType.GAMES_ROOM }
+    ): Boolean = (type != RoomType.GAMES_ROOM && type != RoomType.MENAGERIE) || rooms(player).none { it.type == type }
 
     /**
      * Rooms that count towards [maxRooms]. CON99-VASTHUIS (owner 2026-11-26): the free fixed house (garden, PvP/PvM room, portal
@@ -257,6 +263,8 @@ object PohRooms {
         style: PlayerHouse.Style,
     ): Int? {
         val deco = PohFurniture.DECOS[decoKey(value)] ?: return null
+        // A habitat tile: "KEY#i" = the habitat's own loc for space tile i.
+        if (deco.key in PohFurniture.HABITAT_DECOS) return deco.objs.getOrNull(variantOf(value) ?: 0)
         val obj = deco.obj(style)
         val variant = variantOf(value) ?: return obj
         return PohFurnitureUse.PORTAL_FRAMES[obj]?.plus(variant) ?: obj

@@ -57,7 +57,19 @@ object PohFurniture {
      * 2009scape's STAIRWAYS_DUNGEON repeats the halls' staircase hotspots (15380/15390) per style; the halls' own entries serve.
      */
     val BUILDABLE: List<Hotspot> =
-        HOTSPOTS.filter { it.type in setOf("INDIVIDUAL", "RECURSIVE", "LINKED", "STAIRCASE") && it.key != "STAIRWAYS_DUNGEON" && it.decos.any { d -> d != null } }
+        HOTSPOTS.filter { it.type in setOf("INDIVIDUAL", "RECURSIVE", "LINKED", "STAIRCASE", "HABITAT") && it.key != "STAIRWAYS_DUNGEON" && it.decos.any { d -> d != null } }
+
+    /**
+     * Deel 6 (menagerie): a HABITAT hotspot is the room's 66 floor tiles (space 44843+i); one build fills them all, each tile with
+     * the habitat's own loc i ([habitatObj]); the saved value is "KEY#i".
+     */
+    val HABITAT_DECOS: Set<String> = HOTSPOTS.filter { it.type == "HABITAT" }.flatMap { h -> h.decos.mapNotNull { it?.key } }.toSet()
+
+    fun habitatObj(
+        h: Hotspot,
+        deco: Deco,
+        loc: Int,
+    ): Int = deco.objs.getOrNull(h.ids.indexOf(loc)) ?: -1
 
     private val BY_OBJ: Map<Int, Hotspot> = BUILDABLE.flatMap { h -> h.ids.distinct().map { it to h } }.toMap()
 

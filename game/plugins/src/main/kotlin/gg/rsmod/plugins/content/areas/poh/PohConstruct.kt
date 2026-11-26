@@ -60,6 +60,7 @@ object PohConstruct {
         val option = optionOf(player, obj, opt) ?: return false
         if (option != BUILD && option != REMOVE) {
             if (PohLevels.handles(obj.id)) return PohLevels.handle(player, obj, option)
+            if (PohMenagerie.handles(obj.id)) return PohMenagerie.handle(player, obj, option)
             if (PohWorkshop.handles(obj.id) && (option == "upgrade" || !PohFurnitureUse.handles(obj.id))) return PohWorkshop.handle(player, obj, option)
             return PohFurnitureUse.handles(obj.id) && PohFurnitureUse.handle(player, obj, option)
         }
@@ -244,6 +245,10 @@ object PohConstruct {
                         task.messageBox("You can't remove the $name: it holds up the room above it.")
                         return
                     }
+                    if (current.type == PohRooms.RoomType.MENAGERIE && PohMenagerie.stored(player) > 0) {
+                        task.messageBox("You'll have to take your pets out of the pet house before you can remove the $name.")
+                        return
+                    }
                     if (task.options("Yes", "No", title = "Really remove the $name and everything in it?") != 1) return
                     PohRooms.removeRoom(player, current)
                     PlayerHouse.rebuild(player)
@@ -279,7 +284,8 @@ object PohConstruct {
             }.distinctBy { (s, deco) -> if (s.hotspot.type == "INDIVIDUAL") s.key(room) else deco.key }
     }
 
-    private fun pieceOf(deco: PohFurniture.Deco): PohBuild.Piece = PohBuild.Piece(deco.objs.first(), deco.name, deco.level, deco.xp, deco.materials, plant = deco.watering && 'H' !in deco.tools)
+    private fun pieceOf(deco: PohFurniture.Deco): PohBuild.Piece =
+        PohBuild.Piece(deco.objs.first(), deco.name, deco.level, deco.xp, deco.materials, plant = deco.watering && 'H' !in deco.tools, needsTools = deco.tools.isNotEmpty())
 
     /** The spots one build on [spot] fills: its linked group's spots, every spot of a recursive hotspot, or itself. */
     private fun targets(
@@ -293,7 +299,7 @@ object PohConstruct {
         val all = PohRooms.spots(player.world, PlayerHouse.styleOf(player), room, corner)
         return when (h.type) {
             "INDIVIDUAL" -> listOfNotNull(h.decos.getOrNull(decoIndex)?.let { spot to it })
-            "RECURSIVE" -> all.filter { it.hotspot === h }.mapNotNull { s -> h.decos.getOrNull(decoIndex)?.let { s to it } }
+            "RECURSIVE", "HABITAT" -> all.filter { it.hotspot === h }.mapNotNull { s -> h.decos.getOrNull(decoIndex)?.let { s to it } }
             else ->
                 PohFurniture.group(h).flatMap { g ->
                     val deco = g.decos.getOrNull(decoIndex) ?: return@flatMap emptyList()
@@ -327,11 +333,13 @@ object PohConstruct {
         room: PohRooms.Built,
         spot: PohRooms.Spot,
         deco: PohFurniture.Deco,
+        cost: PohBuild.Piece? = null,
     ) {
         val player = task.player
         val world = player.world
-        val picked = pieceOf(deco)
-        val flatpack = deco.flatpack > 0 && player.inventory.contains(deco.flatpack)
+        // [cost]: an upgrade with its own OSRS row (a pet house: the "(Upgrade)" materials and experience, [PohMenagerie.UPGRADES]).
+        val picked = cost ?: pieceOf(deco)
+        val flatpack = cost == null && deco.flatpack > 0 && player.inventory.contains(deco.flatpack)
         if (flatpack) {
             if (player.skills.getCurrentLevel(Skills.CONSTRUCTION) < deco.level) {
                 task.messageBox("You need to have a Construction level of ${deco.level} to build that.")
@@ -360,11 +368,13 @@ object PohConstruct {
         task.wait(2)
         targets.forEach { (s, d) ->
             PohRooms.objectsAt(world, s.tile).filter { it.id == s.loc }.forEach { world.remove(it) }
-            val id = d.obj(style)
+            val habitat = s.hotspot.type == "HABITAT"
+            val id = if (habitat) PohFurniture.habitatObj(s.hotspot, d, s.loc) else d.obj(style)
             if (id > 0) world.spawn(DynamicObject(id, s.type, s.houseRot, s.pieceTile(world, id)))
-            PohRooms.setFurniture(player, s.key(room), d.key)
+            PohRooms.setFurniture(player, s.key(room), if (habitat) "${d.key}#${s.hotspot.ids.indexOf(s.loc)}" else d.key)
         }
-        if (!flatpack) player.addXp(Skills.CONSTRUCTION, deco.xp, checkBrawlingGloves = true)
+        if (!flatpack) player.addXp(Skills.CONSTRUCTION, picked.xp, checkBrawlingGloves = true)
+        PohMenagerie.refreshPets(player)
         player.unlock()
     }
 
@@ -387,13 +397,15 @@ object PohConstruct {
         val world = player.world
         val style = PlayerHouse.styleOf(player)
         val old = PohRooms.placedObj(PohRooms.furniture(player).getValue(spot.key(room)), style)
-        val ok = pieceOf(next).let { p -> player.skills.getCurrentLevel(Skills.CONSTRUCTION) >= p.level && p.materials.all { (item, qty) -> PohBuild.countOf(player, item) >= qty } }
+        val cost = PohMenagerie.UPGRADES[next.key]
+        val needed = cost ?: pieceOf(next)
+        val ok = player.skills.getCurrentLevel(Skills.CONSTRUCTION) >= needed.level && needed.materials.all { (item, qty) -> PohBuild.countOf(player, item) >= qty }
         if (!ok) {
-            PohBuild.canBuild(task, pieceOf(next))
+            PohBuild.canBuild(task, needed)
             return
         }
         if (old != null) PohRooms.objectsAt(world, spot.pieceTile(world, old)).filter { it.id == old }.forEach { world.remove(it) }
-        placePiece(task, room, spot, next)
+        placePiece(task, room, spot, next, cost)
     }
 
     private suspend fun removeFurniture(
@@ -402,8 +414,14 @@ object PohConstruct {
         spot: PohRooms.Spot,
     ) {
         val player = task.player
-        if (!PohBuild.requireBuildMode(player) || !PohBuild.confirmRemove(task)) return
+        if (!PohBuild.requireBuildMode(player)) return
         val world = player.world
+        if (PohRooms.furniture(player)[spot.key(room)]?.let { PohRooms.decoKey(it) } in PohMenagerie.PET_HOUSES && PohMenagerie.stored(player) > 0) {
+            task.messageBox("You'll have to take your pets out of the pet house before you can remove it.")
+            return
+        }
+        if (!PohBuild.confirmRemove(task)) return
+        // Read again after the dialogue: the piece may have changed meanwhile.
         val built = PohRooms.furniture(player)
         val deco = built[spot.key(room)]?.let { PohFurniture.DECOS[PohRooms.decoKey(it)] } ?: return
         val style = PlayerHouse.styleOf(player)
@@ -420,5 +438,6 @@ object PohConstruct {
             PohRooms.setFurniture(player, s.key(room), null)
         }
         player.unlock()
+        PohMenagerie.refreshPets(player)
     }
 }

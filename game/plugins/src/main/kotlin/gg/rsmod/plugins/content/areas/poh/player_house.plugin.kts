@@ -184,6 +184,7 @@ mapOf(
 on_timer(PlayerHouse.DUMMY_SPAWN_TIMER) {
     PlayerHouse.spawnDummy(player)
     PohServant.spawn(player)
+    PohMenagerie.refreshPets(player)
 }
 
 /*
