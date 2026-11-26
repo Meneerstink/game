@@ -130,7 +130,7 @@ object PohFurnitureUse {
 
     /** Every loc this file gives an option to. */
     fun handles(id: Int): Boolean =
-        id in SIT || id in TAKE || id in BURNERS || id in FIREPLACES || id in LECTERNS || id in PORTALS || id == 13640 || id == 13641 ||
+        id in SIT || id in TAKE || id in BURNERS || id in FIREPLACES || id in LECTERNS || id in PORTALS || id == 13639 || id == 13640 || id == 13641 ||
             id == 13308 || id == 13309 || (id in ALTARS && id != PlayerHouse.ALTAR) || id in 13597..13599
 
     /** A furniture option inside a house; true when handled. */
@@ -156,7 +156,7 @@ object PohFurnitureUse {
             }
             option == "enter" && id in PORTALS && id !in setOf(PlayerHouse.VARROCK_PORTAL, PlayerHouse.FALADOR_PORTAL, PlayerHouse.CAMELOT_PORTAL) ->
                 enterPortal(player, PORTALS.getValue(id))
-            option == "direct-portal" && (id == 13640 || id == 13641) -> player.queue { directPortal(this, obj) }
+            option == "direct-portal" && (id == 13639 || id == 13640 || id == 13641) -> player.queue { directPortal(this, obj) }
             option == "ring" && (id == 13308 || id == 13309) -> {
                 if (PlayerHouse.ownsHouseAt(player)) PohServant.call(player) else player.message("I'd better not do this...")
             }

@@ -60,6 +60,7 @@ object PohConstruct {
         val option = optionOf(player, obj, opt) ?: return false
         if (option != BUILD && option != REMOVE) {
             if (PohLevels.handles(obj.id)) return PohLevels.handle(player, obj, option)
+            if (PohWorkshop.handles(obj.id) && (option == "upgrade" || !PohFurnitureUse.handles(obj.id))) return PohWorkshop.handle(player, obj, option)
             return PohFurnitureUse.handles(obj.id) && PohFurnitureUse.handle(player, obj, option)
         }
         if (!PlayerHouse.ownsHouseAt(player)) return false
@@ -274,20 +275,45 @@ object PohConstruct {
         val title = world.definitions.get(ObjectDef::class.java, spot.loc).name
         val pieces = decos.map { pieceOf(it) }
         val picked = PohBuild.choose(task, pieces, title) ?: return
-        val deco = decos[pieces.indexOf(picked)]
-        if ('C' in deco.tools && !player.inventory.contains(Items.CHISEL)) {
+        placePiece(task, room, spot, decos[pieces.indexOf(picked)])
+    }
+
+    /**
+     * Builds [deco] on [spot] (and the rest of its group): from its flatpack when the player carries one (OSRS: a hammer and the
+     * level, no materials and no experience - the workbench gave the experience), else from its materials.
+     */
+    internal suspend fun placePiece(
+        task: QueueTask,
+        room: PohRooms.Built,
+        spot: PohRooms.Spot,
+        deco: PohFurniture.Deco,
+    ) {
+        val player = task.player
+        val world = player.world
+        val picked = pieceOf(deco)
+        val flatpack = deco.flatpack > 0 && player.inventory.contains(deco.flatpack)
+        if (flatpack) {
+            if (player.skills.getCurrentLevel(Skills.CONSTRUCTION) < deco.level) {
+                task.messageBox("You need to have a Construction level of ${deco.level} to build that.")
+                return
+            }
+            if (!player.inventory.contains(Items.HAMMER)) {
+                task.messageBox("You need a hammer to assemble the flatpack.")
+                return
+            }
+        } else if ('C' in deco.tools && !player.inventory.contains(Items.CHISEL)) {
             task.messageBox("You need a chisel to build that.")
             return
         }
-        if ('W' in deco.tools && 'H' in deco.tools && PohBuild.WATERING_CANS.none { player.inventory.contains(it) }) {
+        if (!flatpack && 'W' in deco.tools && 'H' in deco.tools && PohBuild.WATERING_CANS.none { player.inventory.contains(it) }) {
             task.messageBox("You need a watering can with some water in it to plant this.")
             return
         }
-        if (!PohBuild.canBuild(task, picked)) return
+        if (!flatpack && !PohBuild.canBuild(task, picked)) return
         val targets = targets(player, room, spot, spot.hotspot.decos.indexOf(deco))
         if (targets.isEmpty()) return
         val style = PlayerHouse.styleOf(player)
-        PohBuild.takeMaterials(player, picked)
+        if (flatpack) player.inventory.remove(deco.flatpack, 1) else PohBuild.takeMaterials(player, picked)
         player.lock = LockState.FULL
         player.animate(spot.hotspot.anim)
         player.playSound(if (picked.plant) Sfx.FARMING_WATERING else Sfx.POH_BUILD_WOOD)
@@ -298,8 +324,36 @@ object PohConstruct {
             if (id > 0) world.spawn(DynamicObject(id, s.type, s.houseRot, s.pieceTile(world, id)))
             PohRooms.setFurniture(player, s.key(room), d.key)
         }
-        player.addXp(Skills.CONSTRUCTION, deco.xp, checkBrawlingGloves = true)
+        if (!flatpack) player.addXp(Skills.CONSTRUCTION, deco.xp, checkBrawlingGloves = true)
         player.unlock()
+    }
+
+    /** "Upgrade" on a workbench or clockmaker's bench: the next piece of its hotspot built in its place (its full materials). */
+    internal suspend fun upgradePiece(
+        task: QueueTask,
+        obj: GameObject,
+    ) {
+        val player = task.player
+        if (!PlayerHouse.ownsHouseAt(player) || !PohBuild.requireBuildMode(player)) return
+        val (room, spot) = PohRooms.spotAt(player, obj, matchLoc = false) ?: return
+        val key = PohRooms.furniture(player)[spot.key(room)]?.let { PohRooms.decoKey(it) } ?: return
+        val index = spot.hotspot.decos.indexOfFirst { it?.key == key }
+        val next = spot.hotspot.decos.getOrNull(index + 1)
+        if (index < 0 || next == null) {
+            task.messageBox("This can't be upgraded any further.")
+            return
+        }
+        // The old piece goes first, as a Remove would; the hotspot is then built with the next one.
+        val world = player.world
+        val style = PlayerHouse.styleOf(player)
+        val old = PohRooms.placedObj(PohRooms.furniture(player).getValue(spot.key(room)), style)
+        val ok = pieceOf(next).let { p -> player.skills.getCurrentLevel(Skills.CONSTRUCTION) >= p.level && p.materials.all { (item, qty) -> PohBuild.countOf(player, item) >= qty } }
+        if (!ok) {
+            PohBuild.canBuild(task, pieceOf(next))
+            return
+        }
+        if (old != null) PohRooms.objectsAt(world, spot.pieceTile(world, old)).filter { it.id == old }.forEach { world.remove(it) }
+        placePiece(task, room, spot, next)
     }
 
     private suspend fun removeFurniture(

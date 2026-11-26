@@ -154,7 +154,7 @@ object PohBuild {
         }
     }
 
-    private fun countOf(
+    internal fun countOf(
         player: Player,
         item: Int,
     ): Int = if (item == ANY_NAILS) NAILS.sumOf { player.inventory.getItemCount(it) } else player.inventory.getItemCount(item)

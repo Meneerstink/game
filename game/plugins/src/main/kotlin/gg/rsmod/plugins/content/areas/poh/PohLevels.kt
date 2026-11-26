@@ -29,10 +29,14 @@ object PohLevels {
     private val LADDERS = setOf(13328, 13329, 13330)
     private val DOORS = (13344..13349).toSet() + setOf(13314, 13317, 13320, 13323, 13326)
 
+    /** A garden's dungeon entrance (centrepiece): down to the dungeon room below it. */
+    private const val DUNGEON_ENTRANCE = 13409
+
     private const val CLIMB_UP_ANIM = 828
     private const val CLIMB_DOWN_ANIM = 827
 
-    fun handles(id: Int): Boolean = id in STAIRS_UP || id in STAIRS_DOWN || id in SPIRALS || id in TRAPDOORS || id in LADDERS || id in DOORS
+    fun handles(id: Int): Boolean =
+        id in STAIRS_UP || id in STAIRS_DOWN || id in SPIRALS || id in TRAPDOORS || id in LADDERS || id in DOORS || id == DUNGEON_ENTRANCE
 
     fun handle(
         player: Player,
@@ -66,6 +70,7 @@ object PohLevels {
                 }
             }
             option == "open" && id in TRAPDOORS -> player.queue { climb(this, obj, up = false) }
+            option == "enter" && id == DUNGEON_ENTRANCE -> player.queue { climb(this, obj, up = false) }
             else -> return false
         }
         return true
@@ -89,6 +94,7 @@ object PohLevels {
     ): List<PohRooms.RoomType> =
         when {
             piece in TRAPDOORS -> listOf(PohRooms.RoomType.OUBLIETTE)
+            piece == DUNGEON_ENTRANCE -> PohRooms.RoomType.values().filter { it.where == PohRooms.Where.DUNGEON }
             piece in LADDERS -> emptyList()
             to == PohRooms.UPSTAIRS -> listOf(PohRooms.RoomType.SKILL_HALL_UP, PohRooms.RoomType.QUEST_HALL_UP)
             to == PohRooms.DUNGEON -> listOf(PohRooms.RoomType.DUNGEON_STAIRS)
@@ -125,6 +131,7 @@ object PohLevels {
             when (obj.id) {
                 in TRAPDOORS -> "trapdoor"
                 in LADDERS -> "ladder"
+                DUNGEON_ENTRANCE -> "entrance"
                 else -> "stairs"
             }
         val target = PohRooms.roomAt(player, x, z, to)
@@ -138,7 +145,7 @@ object PohLevels {
         } else {
             val area = PlayerHouse.houseArea(obj.tile) ?: return
             val corner = PohRooms.cornerOf(area.bottomLeftX, area.bottomLeftZ, x, z, to)
-            if (builtJoin(player, target, corner) == null) {
+            if (obj.id != DUNGEON_ENTRANCE && builtJoin(player, target, corner) == null) {
                 player.message("${if (noun == "stairs") "These stairs do" else "This $noun does"} not lead anywhere.")
                 return
             }
@@ -173,7 +180,12 @@ object PohLevels {
     ): Boolean {
         val player = task.player
         val where = if (to == PohRooms.UPSTAIRS) "top" else "bottom"
-        val what = if (obj.id in TRAPDOORS) "This trapdoor does" else "These stairs do"
+        val what =
+            when (obj.id) {
+                in TRAPDOORS -> "This trapdoor does"
+                DUNGEON_ENTRANCE -> "This entrance does"
+                else -> "These stairs do"
+            }
         if (task.options("Yes.", "No.", title = "$what not lead anywhere. Build a room at the $where?") != 1) return false
         if (to == PohRooms.GROUND_FLOOR && PohRooms.FIXED_CELLS.contains(x to z)) {
             task.messageBox("There is already a room of your house below.")
@@ -222,7 +234,7 @@ object PohLevels {
         val joins = PohRooms.spots(player.world, PlayerHouse.styleOf(player), room, corner).filter { isJoin(it) }
         val join = joins.firstOrNull { it.templateX == spot.templateX && it.templateZ == spot.templateZ } ?: joins.firstOrNull()
         val deco = join?.hotspot?.decos?.getOrNull(tier)
-        if (join != null && deco != null) PohRooms.setFurniture(player, join.key(room), deco.key)
+        if (join != null && deco != null && obj.id != DUNGEON_ENTRANCE) PohRooms.setFurniture(player, join.key(room), deco.key)
         player.playSound(Sfx.POH_BUILD_WOOD)
         return PlayerHouse.rebuild(player)
     }

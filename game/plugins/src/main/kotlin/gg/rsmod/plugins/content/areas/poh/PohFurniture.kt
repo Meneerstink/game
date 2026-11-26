@@ -7,8 +7,8 @@ package gg.rsmod.plugins.content.areas.poh
  *
  * Hotspot kinds as 2009scape `BuildHotspotType`: INDIVIDUAL builds one spot; RECURSIVE builds every spot of the same hotspot in the
  * room at once (curtains, bookcases, wall decorations); LINKED builds every spot of a linked group at once, each with the piece of
- * the same index in its own list (the three rug pieces, the combat ring, the hedges, a workbench and its stool). STAIRCASE and
- * CREST hotspots are not offered here (stairs need the upper floor; crests the heraldry).
+ * the same index in its own list (the three rug pieces, the combat ring, the hedges, a workbench and its stool). STAIRCASE hotspots
+ * build like INDIVIDUAL ones and join the levels ([PohLevels]); CREST hotspots (heraldry) are not offered.
  */
 object PohFurniture {
     /** One piece: [objs] has one loc id, or one per house style ([PlayerHouse.Style] ordinal; the Wilderness theme uses whitewashed). */
@@ -20,6 +20,8 @@ object PohFurniture {
         val materials: List<Pair<Int, Int>>,
         val tools: String,
         val name: String,
+        /** The flatpack item a workbench makes of this piece (2009scape `Decoration` item), or -1. */
+        val flatpack: Int = -1,
     ) {
         fun obj(style: PlayerHouse.Style): Int = if (objs.size == 1) objs[0] else objs[styleIndex(style).coerceAtMost(objs.size - 1)]
 
@@ -39,7 +41,7 @@ object PohFurniture {
             val p = line.split('|')
             val mats =
                 if (p[4].isEmpty()) emptyList() else p[4].split(',').map { m -> m.substringBefore(':').toInt() to m.substringAfter(':').toInt() }
-            p[0] to Deco(p[0], p[1].split(',').map(String::toInt).toIntArray(), p[2].toInt(), p[3].toDouble(), mats, p[5], p[6])
+            p[0] to Deco(p[0], p[1].split(',').map(String::toInt).toIntArray(), p[2].toInt(), p[3].toDouble(), mats, p[5], p[6], p.getOrNull(7)?.toIntOrNull() ?: -1)
         }
 
     private val ANIMS = mapOf("BUILD_LOW_ANIM" to 3683, "BUILD_MID_ANIM" to 3676, "BUILD_HIGH_ANIM" to 3684, "PLANT_ANIM" to 3691)
