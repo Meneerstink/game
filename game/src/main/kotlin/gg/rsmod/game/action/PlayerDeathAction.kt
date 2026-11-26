@@ -66,9 +66,10 @@ object PlayerDeathAction : KLogging() {
         // engaged with the pre-death opponent until a later interaction happens to reset it.
         player.resetInteractions()
         player.lock()
-        player.queue(TaskPriority.STRONG) {
-            death(player)
-        }
+        player.closeInterfaceModal()
+        // B-09 CALLISTO-ROAR-ONSTERFELIJK: the death task owns the lock and no later queue (a boss knockback/stun in the same
+        // cycle, a teleport) can terminate it or release its lock - see [QueueTask.death].
+        player.queues.queue(player, player.world.coroutineDispatcher, TaskPriority.STRONG, { death(player) }, lock = true, death = true)
     }
 
     private suspend fun QueueTask.death(player: Player) {

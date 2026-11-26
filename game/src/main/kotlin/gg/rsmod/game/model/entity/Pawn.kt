@@ -1078,7 +1078,10 @@ abstract class Pawn(
                 varps.setState(173, attr[LAST_KNOWN_RUN_STATE]!!.toInt())
             }
         }
-        unlock()
+        // B-09: a dying player keeps the death lock; the death task survives the termination and unlocks him itself.
+        if (!queues.hasDeathTask) {
+            unlock()
+        }
         queues.terminateTasks()
     }
 

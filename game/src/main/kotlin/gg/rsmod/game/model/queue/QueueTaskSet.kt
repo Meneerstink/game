@@ -17,6 +17,9 @@ abstract class QueueTaskSet {
 
     val size: Int get() = queue.size
 
+    /** B-09: a death task is queued - see [QueueTask.death]. */
+    val hasDeathTask: Boolean get() = queue.any { it.death }
+
     /** Conformance probe: the origin of every queued task, head first, and whether it holds the lock. */
     fun describe(): List<String> = queue.map { it.origin.substringAfterLast('.') + (if (it.ownsLock) "(lock)" else "") + "/" + it.priority }
 
@@ -62,8 +65,10 @@ abstract class QueueTaskSet {
         block: suspend QueueTask.(CoroutineScope) -> Unit,
         lock: Boolean = false,
         persistent: Boolean = false,
+        death: Boolean = false,
     ) {
         val task = QueueTask(ctx, priority)
+        task.death = death
         val suspendBlock = suspend { block(task, CoroutineScope(dispatcher)) }
 
         task.lock = lock
@@ -170,7 +175,7 @@ abstract class QueueTaskSet {
         val iterator = queue.iterator()
         while (iterator.hasNext()) {
             val task = iterator.next()
-            if (keepPersistent && task.persistent) {
+            if ((keepPersistent && task.persistent) || task.death) {
                 continue
             }
             task.terminate()

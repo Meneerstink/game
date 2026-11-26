@@ -247,6 +247,8 @@ object OldWildernessBosses {
 
         /** Up to 4 tiles back while each step is free, 3 damage, a 2-tick stun (donor). */
         internal fun roar(npc: Npc, p: Player) {
+            // B-09: no knockback/stun on a player who is already dying (the engine also protects his death task).
+            if (p.isDead()) return
             gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.begin(npc, "roar", p)
             npc.animate(CALLISTO_ATTACK)
             val start = Tile(p.tile)

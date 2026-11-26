@@ -68,6 +68,13 @@ data class QueueTask(
      */
     var persistent = false
 
+    /**
+     * B-09 CALLISTO-ROAR-ONSTERFELIJK (nachtrun 25-11): the player's death task. No other task may end it - a boss special that
+     * queued a STRONG knockback in the same cycle the player died (Callisto's roar) terminated it, so the death never finished:
+     * the player stayed alive with all his items and DEATH_FLAG set (npcs refused to attack, ::kick did nothing). It ends itself.
+     */
+    var death = false
+
     /** Conformance probe: the class of the block that started this task (names the plugin/script it came from). */
     var origin: String = ""
 
