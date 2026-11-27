@@ -29,6 +29,7 @@ object Diaries {
         ARDOUGNE("Ardougne", "Ardougne", "Two-pints", "Ardougne"),
         FALADOR("Falador", "Falador", "Sir Rebral", "Falador"),
         LUMBRIDGE("Lumbridge & Draynor", "Lumbridge & Draynor", "Hatius Cosaintus", "Lumbridge & Draynor"),
+        KARAMJA("Karamja", "Karamja", "Pirate Jackie the Fruit", "Karamja"),
     }
 
     class Box(val x1: Int, val z1: Int, val x2: Int, val z2: Int, val h: Int = -1) {

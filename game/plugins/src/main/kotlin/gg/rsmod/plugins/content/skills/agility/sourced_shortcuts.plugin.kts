@@ -1245,6 +1245,7 @@ on_world_init {
                 wait(4)
                 player.animate(-1)
                 player.moveTo(landing)
+                gg.rsmod.plugins.content.diaries.Diaries.event(player, "shortcut:brimhaven vines") // DIARIES-OSRS Karamja medium 15
             }
         }
     }

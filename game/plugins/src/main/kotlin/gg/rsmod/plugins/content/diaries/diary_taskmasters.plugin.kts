@@ -8,7 +8,7 @@ import gg.rsmod.plugins.content.diaries.Diaries.Tier
  * child south of the Grand Tree (2467,3459), the Lesser Fanatic in Edgeville (3121,3516). Talk-to: claim the next tier, get a lost
  * item back, or hear how the diary works.
  */
-class Master(val npc: Int, val diary: Diary, val x: Int, val z: Int)
+class Master(val npc: Int, val diary: Diary, val x: Int, val z: Int, val spawn: Boolean = true)
 
 val MASTERS = listOf(
     Master(DiaryNpcs.WEDGE, Diary.KANDARIN, 2759, 3476),
@@ -18,10 +18,11 @@ val MASTERS = listOf(
     Master(DiaryNpcs.TWO_PINTS, Diary.ARDOUGNE, 2574, 3323),
     Master(DiaryNpcs.SIR_REBRAL, Diary.FALADOR, 2977, 3346),
     Master(DiaryNpcs.HATIUS, Diary.LUMBRIDGE, 2956, 3376),
+    Master(DiaryNpcs.PIRATE_JACKIE, Diary.KARAMJA, 2811, 3191, spawn = false),
 )
 
 MASTERS.forEach { m ->
-    spawn_npc(npc = m.npc, x = m.x, z = m.z, height = 0, walkRadius = 2)
+    if (m.spawn) spawn_npc(npc = m.npc, x = m.x, z = m.z, height = 0, walkRadius = 2)
     on_npc_option(npc = m.npc, option = "talk-to") { player.queue { talk(this, m) } }
 }
 

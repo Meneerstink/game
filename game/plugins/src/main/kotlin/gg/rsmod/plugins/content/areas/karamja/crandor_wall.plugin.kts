@@ -32,5 +32,6 @@ shortcut(CRANDOR_WALL, "Open") {
         val landing = Tile(WALL_X, if (fromSouth) WALL_Z else WALL_Z - 1, 0)
         walkToTile(player, front)
         darkanForceMove(player, landing, 25, 45, 819)
+        gg.rsmod.plugins.content.diaries.Diaries.event(player, "shortcut:crandor wall") // DIARIES-OSRS Karamja medium 2
     }
 }

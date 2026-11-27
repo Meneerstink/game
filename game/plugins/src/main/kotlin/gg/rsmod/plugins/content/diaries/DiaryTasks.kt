@@ -100,6 +100,25 @@ object DiaryTasks {
     val VARROCK_WEST_BANK = Area("Varrock west bank", Box(3180, 3433, 3194, 3447))
     val COOKS_GUILD = Area("Cooks' Guild", Box(3137, 3438, 3148, 3452))
 
+    // ---------------------------------------------------------------------------------------------------------------- Karamja areas
+    val KARAMJA = Area("Karamja", Box(2740, 2880, 3000, 3240))
+    val KARAMJA_PLANTATION = Area("Karamja banana plantation", Box(2900, 3150, 2935, 3175))
+    val MOSS_GIANT_ISLAND = Area("Moss Giant Island", Box(2685, 3195, 2720, 3220))
+    val KARAMJA_NW_GOLD = Area("Karamja north-west peninsula", Box(2725, 3215, 2745, 3235))
+    val MUSA_DOCK = Area("Musa Point docks", Box(2945, 3140, 2965, 3155))
+    val CAIRN_ISLAND = Area("Cairn Island", Box(2752, 2960, 2775, 2990))
+    val MUSA_FISH = Area("Musa Point fishing spots", Box(2915, 3170, 2930, 3185))
+    val POTHOLE = Area("Pothole dungeon", Box(2820, 9470, 2870, 9530))
+    val CRANDOR = Area("Crandor", Box(2810, 3220, 2870, 3310))
+    val VOLCANO_DUNGEON = Area("Karamja Volcano dungeon", Box(2827, 9545, 2870, 9665))
+    val KHAZARD_DOCK = Area("Port Khazard docks", Box(2665, 3135, 2685, 3155))
+    val GLIDER_KARAMJA = Area("Gandius glider", Box(2965, 2968, 2975, 2978))
+    val BRIM_DUNGEON = Area("Brimhaven Dungeon", Box(2625, 9410, 2750, 9600))
+    val BRIM_STONES = Area("Brimhaven Dungeon stepping stones", Box(2644, 9554, 2652, 9565))
+    val SHIPYARD = Area("Karamja shipyard", Box(2945, 3010, 3010, 3070))
+    val TZHAAR = Area("TzHaar city", Box(2368, 5120, 2560, 5200))
+    val KARAMJA_GRAPPLE = Area("Karamja crossbow shortcut", Box(2866, 3122, 2880, 3146))
+
     // ------------------------------------------------------------------------------------------------- Lumbridge & Draynor areas
     val LUMBRIDGE = Area("Lumbridge", Box(3170, 3190, 3265, 3300, 0))
     val DRAYNOR = Area("Draynor Village", Box(3070, 3225, 3130, 3290))
@@ -559,6 +578,61 @@ object DiaryTasks {
             osrs = "Smith an Adamant platebody down Draynor sewer.")
         t(L, Tier.ELITE, 5, "Craft 140 or more Water runes simultaneously from Essence.", Gain(s("Water rune"), count = 140, skill = sk.RUNECRAFTING, once = true), "Runecrafting 76")
         t(L, Tier.ELITE, 6, "Perform the Quest cape emote in the Wise Old Man's house.", Ev("emote:skillcape", WISE_OLD_MAN_HOUSE))
+
+        // --------------------------------------------------------------------------------------------------------- KARAMJA (D5, 27-11)
+        val KJ = Diary.KARAMJA
+        t(KJ, Tier.EASY, 1, "Pick 5 bananas from the plantation located east of the volcano.", Gain(s("Banana"), KARAMJA_PLANTATION, count = 5))
+        t(KJ, Tier.EASY, 2, "Use the rope swing to travel to the Moss Giant Island north-west of Karamja.", Trigger.Xp(Skills.AGILITY, MOSS_GIANT_ISLAND), "Agility 10")
+        t(KJ, Tier.EASY, 3, "Mine some gold from the rocks on the north-west peninsula of Karamja.", Gain(s("Gold ore"), KARAMJA_NW_GOLD, skill = sk.MINING), "Mining 40")
+        t(KJ, Tier.EASY, 4, "Travel to Port Sarim via the dock, east of Musa Point.", Tele(PORT_SARIM, from = MUSA_DOCK))
+        t(KJ, Tier.EASY, 5, "Travel to Ardougne via the port near Brimhaven.", Tele(ARD_EAST, from = BRIMHAVEN_DOCK))
+        t(KJ, Tier.EASY, 6, "Explore Cairn Island to the west of Karamja.", Enter(CAIRN_ISLAND), "Agility 15")
+        t(KJ, Tier.EASY, 7, "Use the Fishing spots north of the banana plantation.", Trigger.Xp(Skills.FISHING, MUSA_FISH))
+        t(KJ, Tier.EASY, 8, "Collect 5 seaweed from anywhere on Karamja.", Gain(s("Seaweed"), KARAMJA, count = 5))
+        t(KJ, Tier.EASY, 9, "Attempt the TzHaar Fight Pits or Fight Cave.", Ev("fightcave:enter"))
+        t(KJ, Tier.EASY, 10, "Kill a jogre in the Pothole dungeon.", Kill(s("Jogre"), POTHOLE))
+        t(KJ, Tier.MEDIUM, 1, "Catch a Lobster at Musa Point.", Gain(s("Raw lobster"), MUSA_FISH, skill = sk.FISHING), "Fishing 40",
+            osrs = "Claim a ticket from the Agility Arena in Brimhaven.")
+        t(KJ, Tier.MEDIUM, 2, "Discover hidden wall in the dungeon below the volcano.", Ev("shortcut:crandor wall"))
+        t(KJ, Tier.MEDIUM, 3, "Visit the Isle of Crandor via the dungeon below the volcano.", Enter(CRANDOR))
+        t(KJ, Tier.MEDIUM, 4, "Use Vigroy and Hajedy's cart service.", Ev("cart:ride"))
+        t(KJ, Tier.MEDIUM, 5, "Kill a Lesser demon in the Karamja Volcano.", Kill(s("Lesser demon"), VOLCANO_DUNGEON),
+            osrs = "Earn 100% favour in the village of Tai Bwo Wannai.")
+        t(KJ, Tier.MEDIUM, 6, "Cook a Swordfish on Karamja.", Gain(s("Swordfish"), KARAMJA, skill = sk.COOKING), "Cooking 45",
+            osrs = "Cook a spider on a stick.")
+        t(KJ, Tier.MEDIUM, 7, "Charter the Lady of the Waves from Cairn Isle to Port Khazard.", Tele(KHAZARD_DOCK, from = KARAMJA))
+        t(KJ, Tier.MEDIUM, 8, "Cut a log from a teak tree.", Gain(s("Teak logs"), KARAMJA, skill = sk.WOODCUTTING), "Woodcutting 35")
+        t(KJ, Tier.MEDIUM, 9, "Cut a log from a mahogany tree.", Gain(s("Mahogany logs"), KARAMJA, skill = sk.WOODCUTTING), "Woodcutting 50")
+        t(KJ, Tier.MEDIUM, 10, "Catch a karambwan.", Gain(s("Raw karambwan"), skill = sk.FISHING), "Fishing 65")
+        t(KJ, Tier.MEDIUM, 11, "Buy a machete on Karamja.", Gain(s("Machete"), KARAMJA), osrs = "Exchange gems for a machete.")
+        t(KJ, Tier.MEDIUM, 12, "Use the gnome glider to travel to Karamja.", Tele(GLIDER_KARAMJA))
+        t(KJ, Tier.MEDIUM, 13, "Grow a healthy fruit tree in the patch near Brimhaven.", Ev("farm_health:karamjafruittree"), "Farming 27")
+        t(KJ, Tier.MEDIUM, 14, "Kill a Jungle spider on Karamja.", Kill(s("Jungle spider"), KARAMJA), osrs = "Trap a horned graahk.")
+        t(KJ, Tier.MEDIUM, 15, "Chop the vines to gain deeper access to Brimhaven Dungeon.", Ev("shortcut:brimhaven vines"), "Woodcutting 10")
+        t(KJ, Tier.MEDIUM, 16, "Cross the lava using the stepping stones within Brimhaven Dungeon.", Trigger.Xp(Skills.AGILITY, BRIM_STONES), "Agility 12")
+        t(KJ, Tier.MEDIUM, 17, "Kill a Fire giant in Brimhaven Dungeon.", Kill(s("Fire giant"), BRIM_DUNGEON),
+            osrs = "Climb the stairs within Brimhaven Dungeon.")
+        t(KJ, Tier.MEDIUM, 18, "Charter a ship from the shipyard in the far east of Karamja.", Ev("charter:sail", SHIPYARD))
+        t(KJ, Tier.MEDIUM, 19, "Cut a Red topaz on Karamja.", Gain(s("Red topaz"), KARAMJA, skill = sk.CRAFTING), "Crafting 16",
+            osrs = "Mine a red topaz from a gem rock.")
+        t(KJ, Tier.HARD, 1, "Speak to TzHaar-Mej-Kah at the Fight Pits.", Talk(s("TzHaar-Mej-Kah"), TZHAAR))
+        t(KJ, Tier.HARD, 2, "Kill a Ket-Zek in the Fight Caves.", Kill(s("Ket-Zek")))
+        t(KJ, Tier.HARD, 3, "Eat a Cooked karambwan on Karamja.", Ev("eat:cooked karambwan", KARAMJA), osrs = "Eat an oomlie wrap.")
+        t(KJ, Tier.HARD, 4, "Craft some nature runes from Essence.", Gain(s("Nature rune"), skill = sk.RUNECRAFTING), "Runecrafting 44")
+        t(KJ, Tier.HARD, 5, "Cook a karambwan thoroughly.", Gain(s("Cooked karambwan"), skill = sk.COOKING), "Cooking 30")
+        t(KJ, Tier.HARD, 6, "Kill a Black demon in Brimhaven Dungeon.", Kill(s("Black demon"), BRIM_DUNGEON),
+            osrs = "Kill a deathwing in the dungeon under the Kharazi Jungle.")
+        t(KJ, Tier.HARD, 7, "Use the crossbow shortcut south of the volcano.", Trigger.Xp(Skills.AGILITY, KARAMJA_GRAPPLE), "Agility 53, Ranged 42, Strength 21")
+        t(KJ, Tier.HARD, 8, "Catch 5 Karambwanji.", Gain(s("Raw karambwanji"), count = 5, skill = sk.FISHING), "Fishing 5",
+            osrs = "Collect 5 palm leaves.")
+        t(KJ, Tier.HARD, 9, "Be assigned a Slayer task by the Slayer Master in Shilo Village.", Ev("slayer_task:duradel"), "Combat 100, Slayer 50")
+        t(KJ, Tier.HARD, 10, "Kill a metal dragon in Brimhaven Dungeon.", Kill(s("Bronze dragon", "Iron dragon", "Steel dragon"), BRIM_DUNGEON))
+        t(KJ, Tier.ELITE, 1, "Craft 56 Nature runes simultaneously from Essence.", Gain(s("Nature rune"), count = 56, skill = sk.RUNECRAFTING, once = true), "Runecrafting 91")
+        t(KJ, Tier.ELITE, 2, "Equip a Fire Cape in the TzHaar city.", EquipCape("fire cape", TZHAAR), osrs = "Equip a Fire Cape or Infernal Cape in Mor Ul Rek.")
+        t(KJ, Tier.ELITE, 3, "Check the health of a palm tree in Brimhaven.", Ev("farm_health:karamjafruittree:palm"), "Farming 68")
+        t(KJ, Tier.ELITE, 4, "Mix a Super antifire potion on Karamja.", Gain(s("Super antifire (3)", "Super antifire(3)"), KARAMJA, skill = sk.HERBLORE), "Herblore 92",
+            osrs = "Create an antivenom potion whilst standing in the horse shoe mine.")
+        t(KJ, Tier.ELITE, 5, "Check the health of your Calquat tree patch.", Ev("farm_health:calquat"), "Farming 72")
     }
 
     val ALL: List<Task> get() = ALL_TASKS

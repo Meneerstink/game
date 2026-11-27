@@ -33,6 +33,7 @@ fun sail(
     port: Ports,
     cost: Int,
 ) {
+    gg.rsmod.plugins.content.diaries.Diaries.event(player, "charter:sail") // DIARIES-OSRS Karamja medium 18 (the player still stands at the origin)
     player.lockingQueue(TaskPriority.WEAK) {
         val varpValue = charter.varpValue
         val delay = charter.delay

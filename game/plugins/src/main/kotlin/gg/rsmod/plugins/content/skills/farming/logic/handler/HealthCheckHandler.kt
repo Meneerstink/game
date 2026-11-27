@@ -22,6 +22,9 @@ class HealthCheckHandler(
                 farmingTimerDelayer.delayIfNeeded(healthCheckWaitTime)
                 wait(healthCheckWaitTime)
                 player.addXp(Skills.FARMING, state.seed!!.harvest.healthCheckXp!!)
+                // DIARIES-OSRS (Karamja medium 13 / elite 3 / 5): the patch, and the patch with its seed.
+                gg.rsmod.plugins.content.diaries.Diaries.event(player, "farm_health:${patch.name.lowercase()}")
+                gg.rsmod.plugins.content.diaries.Diaries.event(player, "farm_health:${patch.name.lowercase()}:${state.seed!!.name.lowercase()}")
                 // OSRS Wiki Tangleroot: "The pet chance is rolled primarily during a patch's check-health stage".
                 gg.rsmod.plugins.content.skills.summoning.SkillingPets.farming(player, state.seed!!)
                 player.filterableMessage(

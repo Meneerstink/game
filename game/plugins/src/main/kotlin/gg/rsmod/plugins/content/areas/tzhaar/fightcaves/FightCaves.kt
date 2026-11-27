@@ -92,6 +92,7 @@ object FightCaves {
 
     /** Allocates the instance and moves the player inside; [wave] is the wave to (re)start. */
     fun enter(player: Player, wave: Int, resume: Boolean) {
+        gg.rsmod.plugins.content.diaries.Diaries.event(player, "fightcave:enter") // DIARIES-OSRS Karamja easy 9
         val world = player.world
         sessions.remove(player)?.let { it.finished = true }
 

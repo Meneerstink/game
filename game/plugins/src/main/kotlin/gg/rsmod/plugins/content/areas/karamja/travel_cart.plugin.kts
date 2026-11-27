@@ -86,6 +86,7 @@ fun ride(player: Player, cart: Cart, offer: Boolean) {
             player.message("Oh no! On the trip a monkey swung out from the trees and stole your rum!")
         }
         player.moveTo(cart.destination)
+        gg.rsmod.plugins.content.diaries.Diaries.event(player, "cart:ride") // DIARIES-OSRS Karamja medium 4
         player.openInterface(FADE_OUT, InterfaceDestination.MAIN_SCREEN_FULL)
         wait(2)
         player.closeMainInterface()

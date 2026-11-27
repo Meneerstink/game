@@ -16,6 +16,7 @@ Food.values.forEach { food ->
         if (player.inventory[inventorySlot]?.id != food.item) return@on_item_option
         if (player.inventory.remove(item = food.item, beginSlot = inventorySlot).hasSucceeded()) {
             Foods.eat(player, food)
+            gg.rsmod.plugins.content.diaries.Diaries.event(player, "eat:${world.definitions.get(ItemDef::class.java, food.item).name.lowercase()}") // DIARIES-OSRS Karamja hard 3
             if (food == Food.CABBAGE) gg.rsmod.plugins.content.scrolls.TreasureTrailGuardianDialogue.ateCabbage(player)
             if (food.replacement != -1) {
                 player.inventory.add(item = food.replacement, beginSlot = inventorySlot)
