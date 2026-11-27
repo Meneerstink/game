@@ -307025,3 +307025,267 @@
   tradeable: false
   weight: 5.15
   equipment: null
+- id: 25705
+  name: "Kandarin headgear 1"
+  examine: "A hat with a jewelled eye upon it."
+  tradeable: false
+  weight: 0.01
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 7061
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -3
+    attack_ranged: -1
+    defence_stab: 4
+    defence_slash: 5
+    defence_crush: 3
+    defence_magic: -1
+    defence_ranged: 4
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25706
+  name: "Kandarin headgear 2"
+  examine: "A helm with a jewelled eye upon it."
+  tradeable: false
+  weight: 0.01
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 7062
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -3
+    attack_ranged: -1
+    defence_stab: 7
+    defence_slash: 8
+    defence_crush: 6
+    defence_magic: -1
+    defence_ranged: 7
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25707
+  name: "Kandarin headgear 3"
+  examine: "A helm with a jewelled eye upon it."
+  tradeable: false
+  weight: 0.01
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 7063
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -3
+    attack_ranged: -1
+    defence_stab: 9
+    defence_slash: 10
+    defence_crush: 8
+    defence_magic: -1
+    defence_ranged: 9
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25708
+  name: "Kandarin headgear 4"
+  examine: "A full helm with a jewelled eye upon it."
+  tradeable: false
+  weight: 0.01
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 7064
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -3
+    attack_ranged: -1
+    defence_stab: 10
+    defence_slash: 11
+    defence_crush: 9
+    defence_magic: -1
+    defence_ranged: 10
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25709
+  name: "Western banner 1"
+  examine: "A mysterious crystal banner."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 7065
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 5
+    attack_stab: 12
+    attack_slash: 12
+    attack_crush: 12
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 1
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 12
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2555
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25710
+  name: "Western banner 2"
+  examine: "A mysterious crystal banner."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 7066
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 6
+    attack_stab: 15
+    attack_slash: 15
+    attack_crush: 15
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 1
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 16
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2555
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25711
+  name: "Western banner 3"
+  examine: "A mysterious crystal banner."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 7067
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 5
+    attack_stab: 17
+    attack_slash: 17
+    attack_crush: 17
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 1
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 18
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2555
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25712
+  name: "Western banner 4"
+  examine: "A mysterious crystal banner."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 7068
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 5
+    attack_stab: 24
+    attack_slash: 24
+    attack_crush: 24
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 1
+    defence_slash: 1
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 28
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2555
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
