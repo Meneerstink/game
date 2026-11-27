@@ -609,6 +609,23 @@ class ModernObjectDef(val id: Int) {
                     96 -> buf.u8()
                     // Conditional sub-menu entry (OSRS POH spirit tree / fairy ring "Tree > Grand Exchange"): the parent op, a varp
                     // and varbit (0xFFFF = none), the value range that shows it, then its text. Rev 667 has no sub-menus.
+                    // Sub-sub-menus (OSRS POH fairy ring 29228 'Favourites > Favourite 1 > AIP', nachtrun 27-11, layout read from its
+                    // bytes): 100 = parent op, sub id (u8), text; 102 = parent op, sub id (u16), varp, varbit, value range, text.
+                    // Rev 667 has no sub-menus; they are read past and dropped.
+                    100 -> {
+                        buf.u8()
+                        buf.u8()
+                        buf.string()
+                    }
+                    102 -> {
+                        buf.u8()
+                        buf.u16()
+                        buf.u16()
+                        buf.u16()
+                        buf.i32()
+                        buf.i32()
+                        buf.string()
+                    }
                     101 -> {
                         val parent = buf.u8()
                         buf.u16()

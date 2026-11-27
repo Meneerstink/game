@@ -120,6 +120,28 @@ object PohSweep {
         return report
     }
 
+    /** `condev fill <x> <z> <plane> <tier>`: every hotspot of that built room gets its piece of [tier] (or its top one); for photos. */
+    fun fill(
+        player: Player,
+        x: Int,
+        z: Int,
+        plane: Int,
+        tier: Int,
+    ): Int {
+        val room = PohRooms.rooms(player).firstOrNull { it.x == x && it.z == z && it.plane == plane } ?: return -1
+        val c = corner(player, room) ?: return -1
+        var n = 0
+        PohRooms.spots(player.world, PlayerHouse.styleOf(player), room, c).forEach { s ->
+            val decos = s.hotspot.decos.filterNotNull()
+            if (decos.isEmpty()) return@forEach
+            val d = decos[tier.coerceIn(0, decos.size - 1)]
+            PohRooms.setFurniture(player, s.key(room), if (s.hotspot.type == "HABITAT") "${d.key}#${s.hotspot.ids.indexOf(s.loc)}" else d.key)
+            n++
+        }
+        PlayerHouse.rebuild(player)
+        return n
+    }
+
     private fun staticAt(
         player: Player,
         tile: Tile,

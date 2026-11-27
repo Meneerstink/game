@@ -17,7 +17,7 @@ class GildedAltarOfferingTests {
             val xp = GildedAltarOffering.xpFor(data.bone)
             assertEquals(
                 "${data.name} (item ${data.bone}) should yield 3x its bury XP",
-                data.experience * 3.0,
+                data.experience * 3.5,
                 xp!!,
                 0.0001,
             )

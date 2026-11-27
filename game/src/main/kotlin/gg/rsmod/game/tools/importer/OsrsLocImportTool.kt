@@ -68,6 +68,14 @@ object OsrsLocImportTool {
             // "Ornate pool of Rejuvenation", the pool every house's Superior Garden holds (PlayerHouse.POOL). Its water
             // animation 7304 comes from OsrsFxImportTool batch "poh-pool", which must be applied first.
             "poh-pool" to listOf(29241),
+            // CONSTRUCTION-99 nachtrun 27-11 (C6, owner 27-11 'Construction = ALLES, ook de OSRS-only kamers'): the Superior garden's
+            // buildable pieces (RuneLite gameval ObjectID POH_*; the room template + hotspots came with the Wilderness theme import,
+            // 67034-67051, and 29241/29229/29248-29253 are in already): pools restoration..recovery 29237-29240, spirit tree 29227, fairy
+            // ring 29228, Wilderness obelisk 31554, topiaries 29230-29236, Zen theme 29242-29247, TzHaar (volcanic) theme 29254-29261,
+            // redwood 29262-29264 + obsidian 29267-29269 fences, garden benches teak/gnome/marble/obsidian 29270-29277.
+            "poh-superior-garden" to listOf(29237, 29238, 29239, 29240, 29227, 29228, 31554, 29230, 29231, 29232, 29233, 29234, 29235, 29236,
+                29242, 29243, 29244, 29245, 29246, 29247, 29254, 29255, 29256, 29257, 29258, 29259, 29260, 29261,
+                29262, 29263, 29264, 29267, 29268, 29269, 29270, 29271, 29272, 29273, 29274, 29275, 29276, 29277),
             // Owner 2026-10-10 (POH: only teleports and PvP/PvM functions, OSRS pieces): Altar of the Occult - variants 31858
             // standard / 31859 ancient / 31860 lunar and their multiloc 29150 (variants first, the multiloc points at them) -
             // the crystalline Portal Nexus 33410, the Ornate Jewellery Box 37520 and the Spiritual fairy tree 29229.

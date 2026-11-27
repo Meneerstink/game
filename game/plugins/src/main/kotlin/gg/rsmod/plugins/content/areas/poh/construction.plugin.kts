@@ -37,6 +37,7 @@ on_command("condev", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
                     .chunked(8).forEach { l -> player.message("[tmplpos] " + l.joinToString(" ") { "${it.id}@${it.tile.x - t.x},${it.tile.z - t.z}r${it.rot}" }, type = ChatMessageType.CONSOLE) }
             }
         }
+        "fill" -> player.message("[con] filled " + PohSweep.fill(player, args[1].toInt(), args[2].toInt(), args.getOrElse(3) { "0" }.toInt(), args.getOrElse(4) { "99" }.toInt()), type = ChatMessageType.CONSOLE)
         "sweep" -> {
             val arg = args.getOrNull(1)?.uppercase()
             val styles = if (arg == "ALL") PlayerHouse.Style.values().toList() else listOf(arg?.let { PlayerHouse.Style.valueOf(it) } ?: PlayerHouse.styleOf(player))
