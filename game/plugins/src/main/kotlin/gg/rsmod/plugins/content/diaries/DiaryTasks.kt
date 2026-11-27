@@ -100,6 +100,24 @@ object DiaryTasks {
     val VARROCK_WEST_BANK = Area("Varrock west bank", Box(3180, 3433, 3194, 3447))
     val COOKS_GUILD = Area("Cooks' Guild", Box(3137, 3438, 3148, 3452))
 
+    // -------------------------------------------------------------------------------------------------------------- Fremennik areas
+    val FREM_PROVINCE = Area("Fremennik Province", Box(2490, 3570, 2810, 3770))
+    val RELLEKKA = Area("Rellekka", Box(2615, 3640, 2700, 3720))
+    val KELDAGRIM = Area("Keldagrim", Box(2810, 10140, 2940, 10230))
+    val WATERBIRTH = Area("Waterbirth Island", Box(2490, 3710, 2560, 3770))
+    val WATERBIRTH_DUNGEON = Area("Waterbirth Island Dungeon", Box(1790, 4350, 1980, 4420))
+    val TROLL_STRONGHOLD = Area("Troll Stronghold", Box(2820, 10040, 2860, 10110))
+    val MISCELLANIA_RING = Area("Miscellania fairy ring", Box(2508, 3879, 2518, 3889))
+    val LIGHTHOUSE = Area("Lighthouse", Box(2500, 3630, 2520, 3645))
+    val TROLLHEIM = Area("Trollheim", Box(2816, 3640, 2950, 3780))
+    val TROLLHEIM_TELE = Area("Trollheim", Box(2886, 3673, 2892, 3680))
+    val WATERBIRTH_TELE = Area("Waterbirth Island", Box(2524, 3736, 2530, 3742))
+    val FREM_ISLES = Area("Fremennik Isles", Box(2300, 3770, 2430, 3900))
+    val FREM_SLAYER = Area("Fremennik Slayer Dungeon", Box(2680, 9980, 2820, 10050))
+    val JATIZSO = Area("Jatizso", Box(2370, 3780, 2430, 3830))
+    val NEITIZNOT = Area("Neitiznot", Box(2300, 3770, 2370, 3830))
+    val GWD = Area("God Wars Dungeon", Box(2820, 5250, 2950, 5380))
+
     // ---------------------------------------------------------------------------------------------------------------- Karamja areas
     val KARAMJA = Area("Karamja", Box(2740, 2880, 3000, 3240))
     val KARAMJA_PLANTATION = Area("Karamja banana plantation", Box(2900, 3150, 2935, 3175))
@@ -634,6 +652,56 @@ object DiaryTasks {
         t(KJ, Tier.ELITE, 4, "Mix a Super antifire potion on Karamja.", Gain(s("Super antifire (3)", "Super antifire(3)"), KARAMJA, skill = sk.HERBLORE), "Herblore 92",
             osrs = "Create an antivenom potion whilst standing in the horse shoe mine.")
         t(KJ, Tier.ELITE, 5, "Check the health of your Calquat tree patch.", Ev("farm_health:calquat"), "Farming 72")
+
+        // ------------------------------------------------------------------------------------------------------- FREMENNIK (D5, 27-11)
+        val FR = Diary.FREMENNIK
+        t(FR, Tier.EASY, 1, "Catch a fish in Rellekka.", Trigger.Xp(Skills.FISHING, RELLEKKA), osrs = "Catch a Cerulean twitch.")
+        t(FR, Tier.EASY, 2, "Change your boots at Yrsa's Shoe Store.", Talk(s("Yrsa"), RELLEKKA))
+        t(FR, Tier.EASY, 3, "Kill 5 Rock crabs.", Steps(List(5) { Kill(s("Rock crab"), FREM_PROVINCE) }))
+        t(FR, Tier.EASY, 4, "Craft a tiara from scratch in Rellekka.", Steps(listOf(Gain(s("Silver ore"), RELLEKKA, skill = sk.MINING),
+            Gain(s("Silver bar"), RELLEKKA, skill = sk.SMITHING), Gain(s("Tiara"), RELLEKKA, skill = sk.CRAFTING))), "Mining 20, Smithing 20, Crafting 23")
+        t(FR, Tier.EASY, 5, "Browse the Stonemasons shop.", Talk(s("Stonemason"), KELDAGRIM))
+        t(FR, Tier.EASY, 6, "Collect 5 Snape grass on Waterbirth Island.", Gain(s("Snape grass"), WATERBIRTH, count = 5))
+        t(FR, Tier.EASY, 7, "Steal from the Keldagrim crafting or baker's stall.", Trigger.Xp(Skills.THIEVING, KELDAGRIM), "Thieving 5")
+        t(FR, Tier.EASY, 8, "Fill a bucket with water at the Rellekka well.", Gain(s("Bucket of water"), RELLEKKA))
+        t(FR, Tier.EASY, 9, "Enter the Troll Stronghold.", Enter(TROLL_STRONGHOLD))
+        t(FR, Tier.EASY, 10, "Chop and burn some oak logs in the Fremennik Province.",
+            Steps(listOf(Gain(s("Oak logs"), FREM_PROVINCE, skill = sk.WOODCUTTING), Burn(s("Oak logs"), FREM_PROVINCE))), "Woodcutting 15, Firemaking 15")
+        t(FR, Tier.MEDIUM, 1, "Slay a Brine rat.", Kill(s("Brine rat")), "Slayer 47")
+        t(FR, Tier.MEDIUM, 2, "Kill a Dagannoth on Waterbirth Island.", Kill(s("Dagannoth"), WATERBIRTH_DUNGEON),
+            osrs = "Travel to the Snowy Hunter Area via Eagle.")
+        t(FR, Tier.MEDIUM, 3, "Mine some coal in Rellekka.", Gain(s("Coal"), RELLEKKA, skill = sk.MINING), "Mining 30")
+        t(FR, Tier.MEDIUM, 4, "Steal from the Rellekka Fish stalls.", Trigger.Xp(Skills.THIEVING, RELLEKKA), "Thieving 42")
+        t(FR, Tier.MEDIUM, 5, "Travel to Miscellania by Fairy ring.", Tele(MISCELLANIA_RING))
+        t(FR, Tier.MEDIUM, 6, "Kill a Rock lobster on Waterbirth Island.", Kill(s("Rock lobster"), WATERBIRTH_DUNGEON), osrs = "Catch a Snowy knight.")
+        t(FR, Tier.MEDIUM, 7, "Kill a Wallasalki on Waterbirth Island.", Kill(s("Wallasalki"), WATERBIRTH_DUNGEON),
+            osrs = "Pick up your Pet Rock from your POH Menagerie.")
+        t(FR, Tier.MEDIUM, 8, "Visit the Lighthouse.", Enter(LIGHTHOUSE), osrs = "Visit the Lighthouse from Waterbirth island.")
+        t(FR, Tier.MEDIUM, 9, "Kill a Mountain troll in Trollheim.", Kill(s("Mountain troll"), TROLLHEIM), osrs = "Mine some gold at the Arzinian mine.")
+        t(FR, Tier.HARD, 1, "Teleport to Trollheim.", Tele(TROLLHEIM_TELE), "Magic 61")
+        t(FR, Tier.HARD, 2, "Kill an Ice troll on the Fremennik Isles.", Kill(s("Ice troll runt", "Ice troll male", "Ice troll female", "Ice troll grunt"), FREM_ISLES),
+            osrs = "Catch a Sabre-toothed Kyatt.")
+        t(FR, Tier.HARD, 3, "Mix a super defence potion in the Fremennik Province.",
+            Gain(s("Super defence(3)", "Super defence (3)"), FREM_PROVINCE, skill = sk.HERBLORE), "Herblore 66")
+        t(FR, Tier.HARD, 4, "Steal from the Keldagrim Gem Stall.", Gain(s("Uncut sapphire", "Uncut emerald", "Uncut ruby", "Uncut diamond"), KELDAGRIM, skill = sk.THIEVING),
+            "Thieving 75")
+        t(FR, Tier.HARD, 5, "Kill a Kurask in the Fremennik Slayer Dungeon.", Kill(s("Kurask"), FREM_SLAYER), "Slayer 70",
+            osrs = "Craft a Neitiznot shield on Neitiznot.")
+        t(FR, Tier.HARD, 6, "Mine 5 Adamantite ores on Jatizso.", Gain(s("Adamantite ore"), JATIZSO, count = 5, skill = sk.MINING), "Mining 70")
+        t(FR, Tier.HARD, 7, "Kill a Spiritual ranger in the God Wars Dungeon.", Kill(s("Spiritual ranger"), GWD), "Slayer 63",
+            osrs = "Obtain 100% support from your kingdom subjects.")
+        t(FR, Tier.HARD, 8, "Teleport to Waterbirth Island.", Tele(WATERBIRTH_TELE), "Magic 72")
+        t(FR, Tier.HARD, 9, "Smelt a Runite bar in Keldagrim.", Gain(s("Runite bar"), KELDAGRIM, skill = sk.SMITHING), "Smithing 85",
+            osrs = "Obtain the Blast Furnace Foreman's permission to use the Blast Furnace for free.")
+        t(FR, Tier.ELITE, 1, "Kill each of the Dagannoth Kings.",
+            Trigger.All(listOf(Kill(s("Dagannoth Rex")), Kill(s("Dagannoth Prime")), Kill(s("Dagannoth Supreme")))))
+        t(FR, Tier.ELITE, 2, "Craft 56 astral runes simultaneously from Essence.", Gain(s("Astral rune"), count = 56, skill = sk.RUNECRAFTING, once = true), "Runecrafting 82")
+        t(FR, Tier.ELITE, 3, "Create a dragonstone amulet in the Neitiznot furnace.", Gain(emptySet(), NEITIZNOT, ids = setOf(1683), skill = sk.CRAFTING), "Crafting 80")
+        t(FR, Tier.ELITE, 4, "Catch a Shark in Rellekka.", Gain(s("Raw shark"), RELLEKKA, skill = sk.FISHING), "Fishing 76",
+            osrs = "Complete a lap of the Rellekka agility course.")
+        t(FR, Tier.ELITE, 5, "Kill the generals of Armadyl, Bandos, Saradomin and Zamorak in the God Wars Dungeon.",
+            Trigger.All(listOf(Kill(s("Kree'arra")), Kill(s("General Graardor")), Kill(s("Commander Zilyana")), Kill(s("K'ril Tsutsaroth")))))
+        t(FR, Tier.ELITE, 6, "Slay a Spiritual mage within the Godwars Dungeon.", Kill(s("Spiritual mage"), GWD), "Slayer 83")
     }
 
     val ALL: List<Task> get() = ALL_TASKS

@@ -115,6 +115,30 @@ object DiaryItems {
         return true
     }
 
+    /** Fremennik sea boots (OSRS Wiki): Rellekka marketplace teleports, 1 / 3 / 5 a day (boots 1-3), boots 4 unlimited. */
+    val SEA_BOOTS_DAY = AttributeKey<Int>(persistenceKey = "diary_seaboots_day")
+    val SEA_BOOTS_USED = AttributeKey<Int>(persistenceKey = "diary_seaboots_used")
+    val RELLEKKA_MARKET = Tile(2642, 3678, 0)
+
+    fun seaBootsTeleport(player: Player, boots: Int) {
+        val uses = when (boots) {
+            gg.rsmod.plugins.api.cfg.Items.FREMENNIK_SEA_BOOTS_1 -> 1
+            gg.rsmod.plugins.api.cfg.Items.FREMENNIK_SEA_BOOTS_2 -> 3
+            gg.rsmod.plugins.api.cfg.Items.FREMENNIK_SEA_BOOTS_3 -> 5
+            else -> Int.MAX_VALUE
+        }
+        player.canTeleport(TeleportType.JEWELRY) {
+            val used = if (player.attr[SEA_BOOTS_DAY] == today()) player.attr[SEA_BOOTS_USED] ?: 0 else 0
+            if (used >= uses) {
+                player.message("You have used all of your boots' teleports for today.")
+                return@canTeleport
+            }
+            player.attr[SEA_BOOTS_DAY] = today()
+            player.attr[SEA_BOOTS_USED] = used + 1
+            player.teleport(RELLEKKA_MARKET, TeleportType.JEWELRY)
+        }
+    }
+
     /** Explorer's ring (OSRS Wiki): run energy 50% 2x / 3x / 4x a day (ring 1-3), ring 4 full energy 3x a day. Shared day counter. */
     val EXPLORER_RUN_DAY = AttributeKey<Int>(persistenceKey = "diary_explorer_run_day")
     val EXPLORER_RUN_USED = AttributeKey<Int>(persistenceKey = "diary_explorer_run_used")

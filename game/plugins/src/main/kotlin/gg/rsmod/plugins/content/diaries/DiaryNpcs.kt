@@ -11,6 +11,7 @@ object DiaryNpcs {
     const val TOBY = 15372 // OSRS 5525 (batch "diaries-2", Varrock 3225,3415)
     const val TWO_PINTS = 15373 // OSRS 5519 (batch "diaries-3", Flying Horse Inn 2574,3323)
     const val PIRATE_JACKIE = 1055 // 667 npc, already spawned at the Brimhaven Agility Arena (spawns_11057)
+    const val THORODIN = 15376 // OSRS 5526 (batch "diaries-6", Rellekka 2659,3627)
     const val HATIUS = 15375 // OSRS 5523 (batch "diaries-5", Rising Sun Inn Falador 2956,3376 = OSRS today)
     const val SIR_REBRAL = 15374 // OSRS 5524 (batch "diaries-4", White Knights' Castle courtyard 2978,3347)
 }
