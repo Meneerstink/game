@@ -108,14 +108,23 @@ object DiaryUi {
         if (met) "<str>$part</str>" else "<col=$HEADER>$part</col><col=$TODO>"
     }
 
-    fun requirementMet(player: Player, part: String): Boolean {
-        if (part.equals("Lunar spellbook", true)) return runCatching { player.getSpellbook() == gg.rsmod.plugins.api.Spellbook.LUNAR }.getOrDefault(false)
+    /**
+     * One requirement part ('Fishing 70', 'Combat 100', 'Lunar spellbook'). OSRS lets almost every diary skill requirement be boosted, so
+     * the higher of the current and the real level counts. [unknown] = the answer for a part this cannot read (shown as missing, never
+     * blocking a task).
+     */
+    fun requirementMet(player: Player, part: String, unknown: Boolean = false): Boolean {
+        if (part.equals("Lunar spellbook", true)) return runCatching { player.getSpellbook() == gg.rsmod.plugins.api.Spellbook.LUNAR }.getOrDefault(unknown)
         val name = part.substringBeforeLast(' ')
-        val level = part.substringAfterLast(' ').toIntOrNull() ?: return false
+        val level = part.substringAfterLast(' ').toIntOrNull() ?: return unknown
         if (name.equals("Combat", true)) return player.combatLevel >= level
-        val skill = SKILL_NAMES.indexOfFirst { it.equals(name, true) }.takeIf { it >= 0 } ?: return false
-        return player.skills.getMaxLevel(skill) >= level
+        val skill = SKILL_NAMES.indexOfFirst { it.equals(name, true) }.takeIf { it >= 0 } ?: return unknown
+        return maxOf(player.skills.getMaxLevel(skill), player.skills.getCurrentLevel(skill)) >= level
     }
+
+    /** OSRS: a task only counts with its requirements (the content itself enforces them there; ours is 667 content). */
+    fun meetsRequirements(player: Player, req: String): Boolean =
+        req.isBlank() || req.split(", ").all { requirementMet(player, it.trim(), unknown = true) }
 
     /** Skill ids 0..24 (gg.rsmod.plugins.api.Skills order) by the names DiaryTasks uses in its requirements. */
     val SKILL_NAMES = listOf("Attack", "Defence", "Strength", "Hitpoints", "Ranged", "Prayer", "Magic", "Cooking", "Woodcutting", "Fletching",

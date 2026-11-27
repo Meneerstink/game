@@ -209,7 +209,8 @@ object Diaries {
             }
         }
         if (!changed) return
-        val completed = updated.filter { complete(it.trigger, prog[it.id] ?: 0) }
+        // A task without its OSRS requirements keeps its progress and completes on a later event once the levels are there.
+        val completed = updated.filter { complete(it.trigger, prog[it.id] ?: 0) && runCatching { DiaryUi.meetsRequirements(player, it.req) }.getOrDefault(true) }
         // OSRS: completing or updating another task resets the 'from scratch' / 'in a row' tasks.
         for (task in TASKS) {
             if (task.id in done || task in updated) continue

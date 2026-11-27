@@ -39,6 +39,12 @@ class DiariesTests {
         every { p.username } returns "diarytest"
         every { world.definitions } returns definitions
         every { definitions.get(ItemDef::class.java, any()) } answers { ItemDef(secondArg()) }
+        every { p.skills } returns maxed
+        every { p.combatLevel } returns 126
+    }
+    private val maxed = mockk<gg.rsmod.game.model.skill.SkillSet>().also { s ->
+        every { s.getMaxLevel(any()) } returns 99
+        every { s.getCurrentLevel(any()) } returns 99
     }
     private val headgear = intArrayOf(30001, 30002, 30003, 30004)
 
@@ -117,6 +123,7 @@ class DiariesTests {
         every { player.skills } returns skills
         every { skills.getMaxLevel(any()) } returns 1
         every { skills.getMaxLevel(10) } returns 99 // Fishing
+        every { skills.getCurrentLevel(any()) } returns 1
         val first = Diaries.tasks(Diary.KANDARIN, Tier.EASY).first()
         Diaries.adminSet(player, first.id, true)
         val lines = DiaryUi.journalLines(player, Diary.KANDARIN)
@@ -130,6 +137,21 @@ class DiariesTests {
         assertTrue(DiaryUi.requirement(player, "Farming 13").startsWith("<col=800000>Farming 13"))
         assertEquals("<col=800000>Western Area Tasks</col>", DiaryUi.journalLines(player, Diary.WESTERN)[0])
         lines.forEach { assertTrue(it.replace(Regex("<[^>]*>"), "").length <= DiaryUi.JOURNAL_CHARS + 30, it) }
+    }
+
+    @Test
+    fun `a task needs its OSRS requirement - boosted counts, it completes once the level is there`() {
+        val task = Diaries.TASKS.first { it.req == "Agility 35" && it.trigger is Diaries.Trigger.Ev }
+        val key = (task.trigger as Diaries.Trigger.Ev).key
+        val low = mockk<gg.rsmod.game.model.skill.SkillSet>()
+        every { player.skills } returns low
+        every { low.getMaxLevel(any()) } returns 30
+        every { low.getCurrentLevel(any()) } returns 30
+        Diaries.event(player, key)
+        assertFalse(Diaries.isDone(player, task.id))
+        every { low.getCurrentLevel(16) } returns 35 // a boost to 35
+        Diaries.event(player, key)
+        assertTrue(Diaries.isDone(player, task.id))
     }
 
     @Test
