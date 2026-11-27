@@ -66,7 +66,13 @@ object PohWorkshop {
             option == "stand-on" || option == "get-down" -> player.message("There is nobody here to duel with on the balance beam.")
             id in CHESTS -> player.message("The chest is empty.")
             id in GAMES -> player.message("There is nobody here to play with.")
-            id in HEADS -> player.message("The mounted head stares back at you silently.")
+            id in HEADS -> {
+                player.message("The mounted head stares back at you silently.")
+                // DIARIES-OSRS Desert elite 4 (OSRS Wiki: "Speak to the KQ head in your POH"); only in your own house.
+                if (id == 13487 && option == "talk-to" && PlayerHouse.ownsHouseAt(player)) {
+                    gg.rsmod.plugins.content.diaries.Diaries.event(player, "poh_talk:kq head")
+                }
+            }
             option == "read" -> player.message("It's ${java.time.LocalTime.now(java.time.ZoneOffset.UTC).let { "%d:%02d".format(it.hour, it.minute) }} (game time).")
             option == "light" -> player.message("The lights are already burning as bright as they can.")
             option == "play" -> {

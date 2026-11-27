@@ -796,7 +796,7 @@ object DiaryTasks {
         t(DE, Tier.ELITE, 1, "Bake a wild pie at the Nardah Clay Oven.", Gain(s("Wild pie"), NARDAH, skill = sk.COOKING), "Cooking 85")
         t(DE, Tier.ELITE, 2, "Cast Ice Barrage against a foe in the Desert.", Ev("spell:ice barrage", DESERT), "Magic 94")
         t(DE, Tier.ELITE, 3, "Fletch some Dragon darts at the Bedabin Camp.", Gain(s("Dragon dart"), BEDABIN, skill = sk.FLETCHING), "Fletching 95")
-        t(DE, Tier.ELITE, 4, "Mount a Kalphite Queen head in your POH.", Ev("poh_build:kalphite queen head (mounted)"), "Construction 78", osrs = "Speak to the KQ head in your POH.")
+        t(DE, Tier.ELITE, 4, "Speak to the KQ head in your POH.", Ev("poh_talk:kq head"), "Construction 78")
         t(DE, Tier.ELITE, 5, "Kill the Kalphite Queen 5 times.", Steps(List(5) { Kill(s("Kalphite Queen")) }),
             osrs = "Steal from the Grand Gold Chest in the final room of Pyramid Plunder.")
         t(DE, Tier.ELITE, 6, "Restore at least 85 Prayer points when praying at the Altar in Sophanem.", PrayUp(SOPHANEM), "Prayer 85")
