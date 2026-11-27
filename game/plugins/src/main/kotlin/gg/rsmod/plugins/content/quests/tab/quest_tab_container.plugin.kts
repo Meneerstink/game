@@ -25,6 +25,10 @@ on_timer(TASKS_TAB_TIMER) {
 for (r in 0 until gg.rsmod.plugins.content.diaries.DiaryUi.DY.ROWS) {
     on_button(interfaceId = gg.rsmod.plugins.content.diaries.DiaryUi.INTERFACE, component = gg.rsmod.plugins.content.diaries.DiaryUi.DY.row(r) + 16) { gg.rsmod.plugins.content.diaries.DiaryUi.openJournal(player, r) }
 }
+// The OSRS diary journal (741 journalscroll as 1243): its close button.
+on_button(interfaceId = gg.rsmod.plugins.content.diaries.DiaryUi.J.INTERFACE, component = gg.rsmod.plugins.content.diaries.DiaryUi.J.CLOSE) {
+    gg.rsmod.plugins.content.diaries.DiaryUi.close(player)
+}
 
 QuestTab.Tab.values().forEach { tab ->
     on_button(interfaceId = QuestTab.CONTAINER, component = N.Q.tab(tab.index)) {

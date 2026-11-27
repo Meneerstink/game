@@ -268,6 +268,12 @@ class QuestTabTests {
         assertEquals(gg.rsmod.game.tools.importer.N108InterfaceImportTool.DIARIES, gg.rsmod.plugins.content.diaries.DiaryUi.INTERFACE)
         assertEquals(listOf(dy.LIST, dy.SCROLLBAR, dy.ROW_FIRST, dy.ROW_STRIDE, dy.ROWS, dy.ROW_H, dy.SEG_W, dy.SEG_H),
             listOf(ui.LIST, ui.SCROLLBAR, ui.ROW_FIRST, ui.ROW_STRIDE, ui.ROWS, ui.ROW_H, ui.SEG_W, ui.SEG_H))
+        // The OSRS diary journal (741 journalscroll): plugin numbers == DiaryJournalInterfaceTool's (OSRS component numbers).
+        val jt = gg.rsmod.game.tools.importer.DiaryJournalInterfaceTool
+        val j = gg.rsmod.plugins.content.diaries.DiaryUi.J
+        assertEquals(listOf(jt.INTERFACE, jt.TITLE, jt.TEXTLAYER, jt.LINE_FIRST, jt.LINES, jt.LINE_H, jt.SCROLLBAR, jt.CLOSE),
+            listOf(j.INTERFACE, j.TITLE, j.TEXTLAYER, j.LINE_FIRST, j.LINES, j.LINE_H, j.SCROLLBAR, j.CLOSE))
+        assertEquals(listOf(2, 3, 4, 200, 204, 205), listOf(jt.TITLE, jt.TEXTLAYER, jt.LINE_FIRST, jt.LINES, jt.SCROLLBAR, jt.CLOSE))
         assertEquals(gg.rsmod.game.tools.importer.N108InterfaceImportTool.TASKS, InterfaceDestination.ACHIEVEMENTS_TAB.interfaceId)
         assertEquals(gg.rsmod.game.tools.importer.N108InterfaceImportTool.CONTAINER, InterfaceDestination.QUEST_TAB.interfaceId)
         assertEquals(with(gg.rsmod.game.tools.importer.N108InterfaceImportTool) { listOf(DEADMAN, DROPS_LOG, QUESTS, DIARIES) }, QuestTab.Tab.values().map { it.panel })

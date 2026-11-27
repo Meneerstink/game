@@ -20,10 +20,11 @@ import gg.rsmod.plugins.api.ext.playJingle
 object Diaries {
     enum class Tier(val title: String) { EASY("Easy"), MEDIUM("Medium"), HARD("Hard"), ELITE("Elite") }
 
-    enum class Diary(val title: String, val areaName: String, val taskmaster: String) {
-        KANDARIN("Kandarin", "Kandarin", "the 'Wedge'"),
-        WESTERN("Western Provinces", "Western Provinces", "the Elder gnome child"),
-        WILDERNESS("Wilderness", "Wilderness", "the Lesser Fanatic"),
+    /** [journalHeader]: the first journal line '<header> Tasks' (OSRS 741 qj1; RuneLite DiaryRequirementsPlugin's title keys). */
+    enum class Diary(val title: String, val areaName: String, val taskmaster: String, val journalHeader: String) {
+        KANDARIN("Kandarin", "Kandarin", "the 'Wedge'", "Kandarin"),
+        WESTERN("Western Provinces", "Western Provinces", "the Elder gnome child", "Western Area"),
+        WILDERNESS("Wilderness", "Wilderness", "the Lesser Fanatic", "Wilderness Area"),
     }
 
     class Box(val x1: Int, val z1: Int, val x2: Int, val z2: Int, val h: Int = -1) {

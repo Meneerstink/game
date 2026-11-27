@@ -2,11 +2,12 @@ package gg.rsmod.plugins.content.diaries
 
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.InterfaceDestination
+import gg.rsmod.plugins.api.ext.closeInterface
+import gg.rsmod.plugins.api.ext.getSpellbook
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openInterface
-import gg.rsmod.plugins.api.ext.runClientScript
-import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.api.ext.setComponentText
+import gg.rsmod.plugins.api.ext.setInterfaceEvents
 import gg.rsmod.plugins.content.diaries.Diaries.Diary
 import gg.rsmod.plugins.content.diaries.Diaries.Tier
 import gg.rsmod.plugins.content.quests.tab.N108Ui
@@ -79,9 +80,47 @@ object DiaryUi {
         N108Ui.scroll(player, p, DY.LIST, DY.SCROLLBAR, DY.ROWS * DY.ROW_H)
     }
 
-    /** The diary's journal: OSRS order easy -> elite, done tasks struck through. */
-    /** Characters per journal line (quest scroll 275, font p12: measured in the test client 27-11). */
-    const val JOURNAL_CHARS = 52
+    /**
+     * The diary's journal = OSRS interface 741 `journalscroll` (owner 27-11 12:0x: the 667 quest scroll 275 was not the OSRS screen),
+     * ported as [J.INTERFACE] by DiaryJournalInterfaceTool with the OSRS component numbers.
+     */
+    object J {
+        const val INTERFACE = 1243
+        const val TITLE = 2
+        const val TEXTLAYER = 3
+        const val LINE_FIRST = 4
+        const val LINES = 200
+        const val LINE_H = 20
+        const val SCROLLBAR = 204
+        const val CLOSE = 205
+    }
+
+    /** Characters per journal line: the 404 px text layer in p12 (RuneLite wraps by font width; ~6.4 px per character). */
+    const val JOURNAL_CHARS = 60
+
+    /** OSRS journal colours: a task still to do is navy, a done task is struck through (RuneLite DiaryRequirementsPlugin keys on '<str>'). */
+    const val TODO = "000080"
+    const val HEADER = "800000"
+
+    /** RuneLite's 'Diary Requirements' layout (what OSRS players see): a met requirement struck through, a missing one dark red. */
+    fun requirement(player: Player, req: String): String = req.split(", ").joinToString(", ") { part ->
+        val met = requirementMet(player, part.trim())
+        if (met) "<str>$part</str>" else "<col=$HEADER>$part</col><col=$TODO>"
+    }
+
+    fun requirementMet(player: Player, part: String): Boolean {
+        if (part.equals("Lunar spellbook", true)) return runCatching { player.getSpellbook() == gg.rsmod.plugins.api.Spellbook.LUNAR }.getOrDefault(false)
+        val name = part.substringBeforeLast(' ')
+        val level = part.substringAfterLast(' ').toIntOrNull() ?: return false
+        if (name.equals("Combat", true)) return player.combatLevel >= level
+        val skill = SKILL_NAMES.indexOfFirst { it.equals(name, true) }.takeIf { it >= 0 } ?: return false
+        return player.skills.getMaxLevel(skill) >= level
+    }
+
+    /** Skill ids 0..24 (gg.rsmod.plugins.api.Skills order) by the names DiaryTasks uses in its requirements. */
+    val SKILL_NAMES = listOf("Attack", "Defence", "Strength", "Hitpoints", "Ranged", "Prayer", "Magic", "Cooking", "Woodcutting", "Fletching",
+        "Fishing", "Firemaking", "Crafting", "Smithing", "Mining", "Herblore", "Agility", "Thieving", "Slayer", "Farming", "Runecrafting",
+        "Hunter", "Construction", "Summoning", "Dungeoneering")
 
     fun wrap(text: String, max: Int): List<String> {
         val out = ArrayList<String>()
@@ -99,38 +138,45 @@ object DiaryUi {
             player.message("The ${ROWS.getOrNull(row)?.first ?: ""} Achievement Diary is not available yet.")
             return
         }
+        val lines = journalLines(player, diary)
+        val p = J.INTERFACE
+        player.openInterface(dest = InterfaceDestination.MAIN_SCREEN, interfaceId = p)
+        N108Ui.reset(player, p)
+        player.setInterfaceEvents(p, J.CLOSE, -1..-1, 0x2)
+        player.setComponentText(interfaceId = p, component = J.TITLE, "Achievement Diary - ${diary.title}")
+        for (i in 0 until J.LINES) N108Ui.text(player, p, J.LINE_FIRST + i, lines.getOrElse(i) { "" })
+        N108Ui.scrollTop(player, p, J.TEXTLAYER, J.SCROLLBAR, 210)
+        N108Ui.scroll(player, p, J.TEXTLAYER, J.SCROLLBAR, maxOf(210, lines.size * J.LINE_H))
+    }
+
+    /** The OSRS order: '<Area> Tasks', then per tier its name and the tasks; a done task struck through. */
+    fun journalLines(player: Player, diary: Diary): List<String> {
         val done = Diaries.done(player)
         val lines = ArrayList<String>()
+        lines += "<col=$HEADER>${diary.journalHeader} Tasks</col>"
+        lines += ""
         Tier.values().forEach { tier ->
             val tasks = Diaries.tasks(diary, tier)
-            val claimed = Diaries.hasClaimed(player, diary, tier)
-            val tierDone = tasks.all { it.id in done }
-            lines += "<col=800000>${tier.title}</col>" + when {
-                claimed -> " <col=006600>(reward claimed)</col>"
-                tierDone -> " <col=006600>(complete - speak to ${diary.taskmaster})</col>"
-                else -> ""
-            }
+            lines += "<col=$HEADER>${tier.title}</col>"
             tasks.forEach { t ->
-                // OSRS journal: a long task wraps onto the next line instead of running past the scroll edge.
-                val parts = wrap(t.text, JOURNAL_CHARS).toMutableList()
-                val req = if (t.req.isNotEmpty()) "(${t.req})" else ""
-                val reqOnLast = req.isNotEmpty() && parts.last().length + 1 + req.length <= JOURNAL_CHARS
+                val isDone = t.id in done
+                val req = if (t.req.isNotEmpty() && !isDone) " (" + requirement(player, t.req) + ")" else ""
+                // A long task wraps onto the next line (the text layer is 404 px); the requirement goes behind the last part, like RuneLite.
+                val parts = wrap(t.text, JOURNAL_CHARS)
+                val reqPlain = if (t.req.isNotEmpty() && !isDone) " (${t.req})" else ""
                 parts.forEachIndexed { i, s ->
-                    val text = if (reqOnLast && i == parts.lastIndex) "$s <col=7f0000>$req</col>" else s
-                    lines += if (t.id in done) "<str>$text</str>" else text
+                    val last = i == parts.lastIndex
+                    val withReq = last && reqPlain.isNotEmpty() && s.length + reqPlain.length <= JOURNAL_CHARS
+                    lines += if (isDone) "<str>$s</str>" else "<col=$TODO>$s${if (withReq) req else ""}</col>"
+                    if (last && reqPlain.isNotEmpty() && !withReq) lines += "<col=$TODO>${req.trim()}</col>"
                 }
-                if (req.isNotEmpty() && !reqOnLast) wrap(req, JOURNAL_CHARS).forEach { lines += "<col=7f0000>$it</col>" }
             }
             lines += ""
         }
-        player.setComponentHidden(interfaceId = 275, component = 14, hidden = true)
-        player.setComponentText(interfaceId = 275, component = 2, "<col=8A0808>Achievement Diary - ${diary.title}")
-        for (i in 16..315) player.setComponentText(interfaceId = 275, component = i, "")
-        lines.take(299).forEachIndexed { i, s ->
-            player.runClientScript(4265, 275 shl 16 or 16 + i, 0x000080)
-            player.setComponentText(interfaceId = 275, component = 16 + i, text = s)
-        }
-        player.runClientScript(1208, 275 shl 16 or 7, 275 shl 16 or 6, lines.size * 25, 0)
-        player.openInterface(dest = InterfaceDestination.MAIN_SCREEN_FULL, interfaceId = 275)
+        return lines.take(J.LINES)
+    }
+
+    fun close(player: Player) {
+        if (player.interfaces.isVisible(J.INTERFACE)) player.closeInterface(J.INTERFACE)
     }
 }

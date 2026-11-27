@@ -112,6 +112,27 @@ class DiariesTests {
     }
 
     @Test
+    fun `journal reads like the OSRS scroll - header, tiers, done tasks struck through, requirements`() {
+        val skills = mockk<gg.rsmod.game.model.skill.SkillSet>()
+        every { player.skills } returns skills
+        every { skills.getMaxLevel(any()) } returns 1
+        every { skills.getMaxLevel(10) } returns 99 // Fishing
+        val first = Diaries.tasks(Diary.KANDARIN, Tier.EASY).first()
+        Diaries.adminSet(player, first.id, true)
+        val lines = DiaryUi.journalLines(player, Diary.KANDARIN)
+        assertEquals("<col=800000>Kandarin Tasks</col>", lines[0])
+        assertEquals("<col=800000>Easy</col>", lines[2])
+        assertTrue(lines[3].startsWith("<str>") && !lines[3].contains("("), lines[3])
+        assertEquals(Tier.values().map { "<col=800000>${it.title}</col>" }, lines.filter { l -> Tier.values().any { l == "<col=800000>${it.title}</col>" } })
+        assertTrue(lines.size <= DiaryUi.J.LINES)
+        // A task with a skill requirement: met = struck through, missing = dark red.
+        assertTrue(DiaryUi.requirement(player, "Fishing 16").startsWith("<str>Fishing 16"))
+        assertTrue(DiaryUi.requirement(player, "Farming 13").startsWith("<col=800000>Farming 13"))
+        assertEquals("<col=800000>Western Area Tasks</col>", DiaryUi.journalLines(player, Diary.WESTERN)[0])
+        lines.forEach { assertTrue(it.replace(Regex("<[^>]*>"), "").length <= DiaryUi.JOURNAL_CHARS + 30, it) }
+    }
+
+    @Test
     fun `an event finishes its task once and is saved`() {
         val task = Diaries.TASKS.first { it.trigger is Diaries.Trigger.Ev && (it.trigger as Diaries.Trigger.Ev).area == null }
         val key = (task.trigger as Diaries.Trigger.Ev).key
