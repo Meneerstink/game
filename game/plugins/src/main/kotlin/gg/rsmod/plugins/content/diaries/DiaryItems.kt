@@ -106,6 +106,7 @@ object DiaryItems {
      *    Brimhaven Dungeon are now noted".
      *  - Fremennik hard: "Adamantite bars from aviansie killed in the God Wars Dungeon are now noted".
      *  - Fremennik elite: "Dagannoth bones from the Dagannoth Kings are now noted".
+     *  - Falador hard: Giant Mole skins and claws noted.
      * NOT built: the OSRS switch to turn the bars/bones noting off (Pirate Jackie / Thorodin dialogue option).
      */
     fun notedDiaryDrops(player: Player, npcId: Int, tile: Tile, items: List<gg.rsmod.game.model.item.Item>): List<gg.rsmod.game.model.item.Item> {
@@ -118,6 +119,10 @@ object DiaryItems {
             }
             npcId in intArrayOf(gg.rsmod.plugins.api.cfg.Npcs.DAGANNOTH_SUPREME, gg.rsmod.plugins.api.cfg.Npcs.DAGANNOTH_PRIME, gg.rsmod.plugins.api.cfg.Npcs.DAGANNOTH_REX) &&
                 Diaries.hasClaimed(player, Diary.FREMENNIK, Tier.ELITE) -> { id -> id == gg.rsmod.plugins.api.cfg.Items.DAGANNOTH_BONES }
+            // Falador hard: "The Giant Mole's mole skin and claw drops will be noted".
+            npcId == gg.rsmod.plugins.api.cfg.Npcs.GIANT_MOLE && Diaries.hasClaimed(player, Diary.FALADOR, Tier.HARD) -> { id ->
+                id == gg.rsmod.plugins.api.cfg.Items.MOLE_SKIN || id == gg.rsmod.plugins.api.cfg.Items.MOLE_CLAW
+            }
             name == "aviansie" && DiaryTasks.GWD.has(tile) && Diaries.hasClaimed(player, Diary.FREMENNIK, Tier.HARD) -> { id ->
                 world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, id).name.equals("adamantite bar", ignoreCase = true)
             }
@@ -125,6 +130,12 @@ object DiaryItems {
         }
         return items.map { if (!it.getDef(world.definitions).noted && note(it.id)) it.toNoted(world.definitions) else it }
     }
+
+    /** Falador medium (OSRS Wiki "Falador Diary"): "10% more experience from the Falador farming patch" (the farm south of Falador). */
+    fun faladorFarmFactor(player: Player, patch: gg.rsmod.plugins.content.skills.farming.data.Patch): Double =
+        if (patch.name.startsWith("Falador") && patch != gg.rsmod.plugins.content.skills.farming.data.Patch.FaladorTree &&
+            Diaries.hasClaimed(player, Diary.FALADOR, Tier.MEDIUM)
+        ) 1.1 else 1.0
 
     /** Kandarin hard: Camelot Teleport lands at Seers' Village bank when the player chose that at the Wedge. */
     val CAMELOT_SEERS = AttributeKey<Boolean>(persistenceKey = "diary_camelot_seers")

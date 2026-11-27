@@ -44,7 +44,7 @@ class CompostHandler(
                     if (player.inventory.remove(compost.itemId, beginSlot = slot).hasSucceeded()) {
                         player.inventory.add(compost.replacement, beginSlot = slot)
                         state.compost(compost)
-                        player.addXp(Skills.FARMING, compost.xp)
+                        player.addXp(Skills.FARMING, compost.xp * gg.rsmod.plugins.content.diaries.DiaryItems.faladorFarmFactor(player, state.patch))
                         player.filterableMessage("You treat the ${patch.patchName} with compost.")
                     }
                 }

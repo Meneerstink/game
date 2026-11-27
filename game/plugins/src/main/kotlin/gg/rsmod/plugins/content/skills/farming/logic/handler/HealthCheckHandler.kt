@@ -21,7 +21,7 @@ class HealthCheckHandler(
             player.lockingQueue {
                 farmingTimerDelayer.delayIfNeeded(healthCheckWaitTime)
                 wait(healthCheckWaitTime)
-                player.addXp(Skills.FARMING, state.seed!!.harvest.healthCheckXp!!)
+                player.addXp(Skills.FARMING, state.seed!!.harvest.healthCheckXp!! * gg.rsmod.plugins.content.diaries.DiaryItems.faladorFarmFactor(player, state.patch))
                 // DIARIES-OSRS (Karamja medium 13 / elite 3 / 5): the patch, and the patch with its seed.
                 gg.rsmod.plugins.content.diaries.Diaries.event(player, "farm_health:${patch.name.lowercase()}")
                 gg.rsmod.plugins.content.diaries.Diaries.event(player, "farm_health:${patch.name.lowercase()}:${state.seed!!.name.lowercase()}")

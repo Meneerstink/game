@@ -41,7 +41,7 @@ class RakeHandler(
                     if (rollRakingSuccess()) {
                         state.removeWeed()
                         player.inventory.add(Items.WEEDS)
-                        player.addXp(Skills.FARMING, rakingXp)
+                        player.addXp(Skills.FARMING, rakingXp * gg.rsmod.plugins.content.diaries.DiaryItems.faladorFarmFactor(player, state.patch))
                         if (!state.isWeedy) {
                             break
                         }

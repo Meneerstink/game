@@ -45,6 +45,13 @@ class GrowingHandler(
             return true
         }
 
+        // DIARIES-OSRS Falador elite (OSRS Wiki "Falador Diary"): "The tree patch in Falador Park will never get diseased".
+        if (state.patch == gg.rsmod.plugins.content.skills.farming.data.Patch.FaladorTree &&
+            gg.rsmod.plugins.content.diaries.Diaries.hasClaimed(player, gg.rsmod.plugins.content.diaries.Diaries.Diary.FALADOR, gg.rsmod.plugins.content.diaries.Diaries.Tier.ELITE)
+        ) {
+            return true
+        }
+
         return !state.seed!!.growth.canDisease
     }
 

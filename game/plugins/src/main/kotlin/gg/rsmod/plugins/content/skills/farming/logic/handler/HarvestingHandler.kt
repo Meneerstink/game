@@ -42,7 +42,7 @@ class HarvestingHandler(
                 farmingTimerDelayer.delayIfNeeded(harvestWaitTime)
                 wait(harvestWaitTime)
                 if (canHarvest()) {
-                    player.addXp(Skills.FARMING, state.seed!!.harvest.harvestXp)
+                    player.addXp(Skills.FARMING, state.seed!!.harvest.harvestXp * gg.rsmod.plugins.content.diaries.DiaryItems.faladorFarmFactor(player, state.patch))
                     if (state.seed!! == Seed.Limpwurt) {
                         val extra = (player.world.random(player.skills.getCurrentLevel(Skills.FARMING) - 1) - 1) / 10
                         val transaction =

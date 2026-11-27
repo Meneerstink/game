@@ -30,7 +30,7 @@ class PlantingHandler(
                 player.playSound(seed.seedType.plant.plantingTool.plantingSound)
                 farmingTimerDelayer.delayIfNeeded(plantingWaitTime)
                 wait(plantingWaitTime)
-                player.addXp(Skills.FARMING, seed.plant.plantXp)
+                player.addXp(Skills.FARMING, seed.plant.plantXp * gg.rsmod.plugins.content.diaries.DiaryItems.faladorFarmFactor(player, state.patch))
                 player.filterableMessage(
                     seed.seedType.plant.plantingTool
                         .plantedMessage(seed, patch),
