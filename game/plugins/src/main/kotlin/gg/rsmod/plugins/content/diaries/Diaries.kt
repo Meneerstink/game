@@ -35,12 +35,33 @@ object Diaries {
         fun has(t: Tile) = boxes.any { it.has(t) } || pred?.invoke(t) == true
     }
 
+    /** The skill whose experience must come with these items (-1 = any gain counts: bought, picked, given by an npc). */
+    fun producedBy(names: Set<String>): Int {
+        val s = gg.rsmod.plugins.api.Skills
+        fun any(vararg n: String) = names.any { it in n }
+        return when {
+            any("bass", "monkfish", "shark", "chocolate bomb", "lobster", "swordfish", "trout", "salmon") -> s.COOKING
+            names.any { it.startsWith("raw ") } || any("leaping trout", "leaping salmon", "leaping sturgeon") -> s.FISHING
+            names.any { it.contains("longbow") || it.contains("shortbow") } -> s.FLETCHING
+            any("adamant spear", "rune hasta", "gold helmet", "golden helmet") -> s.SMITHING
+            any("teak logs", "mahogany logs", "yew logs", "magic logs", "maple logs") -> s.WOODCUTTING
+            names.any { it.endsWith(" ore") } -> s.MINING
+            any("clean irit", "super antipoison(3)", "super antipoison(4)") || names.any { it.startsWith("stamina mix") } -> s.HERBLORE
+            else -> -1
+        }
+    }
+
     sealed class Trigger {
         /** Kill an npc with one of these (lower-case) names, optionally in an area and only while [cond] holds. */
         class Kill(val names: Set<String>, val area: Area? = null, val cond: ((Player) -> Boolean)? = null) : Trigger()
 
-        /** [count] of these items appear in the inventory (made, caught, bought, picked up - never from the bank). */
-        class Gain(val names: Set<String>, val area: Area? = null, val count: Int = 1, val ids: Set<Int> = emptySet(), val cond: ((Player) -> Boolean)? = null) : Trigger()
+        /**
+         * [count] of these items appear in the inventory (never from the bank). A PRODUCED item ([skill] >= 0: caught, cooked, cut,
+         * mined, fletched, smithed, cleaned, mixed) only counts in a tick that also gave [skill] experience - picking a shark up from
+         * the floor, a trade or a spawn is not 'cooking a shark' (D7 27-11: the bot's own sharks finished Wilderness elite 3).
+         */
+        class Gain(val names: Set<String>, val area: Area? = null, val count: Int = 1, val ids: Set<Int> = emptySet(), val cond: ((Player) -> Boolean)? = null,
+                   val skill: Int = producedBy(names)) : Trigger()
 
         /** These logs leave the inventory in the same tick as Firemaking experience. */
         class Burn(val names: Set<String>, val area: Area? = null) : Trigger()
@@ -131,7 +152,8 @@ object Diaries {
 
     private sealed class E {
         class Killed(val name: String) : E()
-        class Gained(val id: Int, val name: String, val amount: Int) : E()
+        /** [xp] = the skills that gained experience in the same tick. */
+        class Gained(val id: Int, val name: String, val amount: Int, val xp: Set<Int> = emptySet()) : E()
         class Burned(val name: String) : E()
         object At : E()
         class Jump(val from: Tile) : E()
@@ -160,11 +182,12 @@ object Diaries {
         val oldTile = player.attr[SNAP_TILE]
         if (oldInv != null && oldXp != null && !bankOpen) {
             val fmXp = xp[gg.rsmod.plugins.api.Skills.FIREMAKING] > oldXp[gg.rsmod.plugins.api.Skills.FIREMAKING]
+            val xpSkills = xp.indices.filter { xp[it] > oldXp[it] }.toSet()
             inv.forEach { (id, n) ->
                 val d = n - (oldInv[id] ?: 0)
                 if (d > 0) {
                     val def = player.world.definitions.get(ItemDef::class.java, id)
-                    if (!def.noted) events += E.Gained(id, def.name.lowercase(), d)
+                    if (!def.noted) events += E.Gained(id, def.name.lowercase(), d, xpSkills)
                 }
             }
             if (fmXp) oldInv.forEach { (id, n) -> if ((inv[id] ?: 0) < n) events += E.Burned(player.world.definitions.get(ItemDef::class.java, id).name.lowercase()) }
@@ -244,7 +267,8 @@ object Diaries {
 
     private fun amount(player: Player, t: Trigger, e: E): Int = when (t) {
         is Trigger.Kill -> if (e is E.Killed && e.name in t.names && inArea(player, t.area) && t.cond?.invoke(player) != false) 1 else 0
-        is Trigger.Gain -> if (e is E.Gained && (e.name in t.names || e.id in t.ids) && inArea(player, t.area) && t.cond?.invoke(player) != false) e.amount else 0
+        is Trigger.Gain -> if (e is E.Gained && (e.name in t.names || e.id in t.ids) && (t.skill < 0 || t.skill in e.xp) && inArea(player, t.area) &&
+            t.cond?.invoke(player) != false) e.amount else 0
         is Trigger.Burn -> if (e is E.Burned && e.name in t.names && inArea(player, t.area)) 1 else 0
         is Trigger.Enter -> if (e === E.At && inArea(player, t.area) && t.cond?.invoke(player) != false) 1 else 0
         is Trigger.Tele -> if (e is E.Jump && t.area.has(player.tile) && !t.area.has(e.from) && (t.from == null || t.from.has(e.from))) 1 else 0
