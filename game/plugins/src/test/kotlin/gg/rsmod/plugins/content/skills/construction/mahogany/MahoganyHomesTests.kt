@@ -112,7 +112,7 @@ class MahoganyHomesTests {
     }
 
     @Test
-    fun `saws - the saw, the crystal saw and Amy's saw (inventory or wielded); only the crystal saw boosts`() {
+    fun `saws - the saw, the crystal saw and Amy's saw (inventory or wielded) - only the crystal saw boosts`() {
         assertTrue(!MahoganyHomes.hasSaw(player))
         equipment[3] = gg.rsmod.game.model.item.Item(MahoganyHomes.AMYS_SAW)
         assertTrue(MahoganyHomes.hasSaw(player))
