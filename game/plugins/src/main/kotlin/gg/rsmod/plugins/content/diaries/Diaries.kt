@@ -65,7 +65,7 @@ object Diaries {
         /** A named event from a content plugin, see [event]. */
         class Ev(val key: String, val area: Area? = null) : Trigger()
 
-        class Steps(val steps: List<Trigger>, val reset: Boolean = true) : Trigger()
+        class Steps(val steps: List<Trigger>, val reset: Boolean = false) : Trigger()
 
         class All(val parts: List<Trigger>, val reset: Boolean = false) : Trigger()
     }

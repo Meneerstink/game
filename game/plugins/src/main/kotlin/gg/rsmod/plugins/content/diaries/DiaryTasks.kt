@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.diaries
 
+import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.content.diaries.Diaries.Area
 import gg.rsmod.plugins.content.diaries.Diaries.Box
@@ -210,7 +211,7 @@ object DiaryTasks {
         t(D, Tier.HARD, 4, "Smith an Adamant scimitar in the Resource Area.", Gain(s("Adamant scimitar"), RESOURCE_AREA), "Smithing 75")
         t(D, Tier.HARD, 5, "Kill a Lava Dragon.", Kill(s("Lava dragon"), WILDERNESS))
         t(D, Tier.HARD, 6, "Kill the Chaos Elemental.", Kill(s("Chaos Elemental")))
-        t(D, Tier.HARD, 7, "Kill the Crazy Archaeologist, Chaos Fanatic & Scorpia.", All(listOf(Kill(s("Crazy archaeologist")), Kill(s("Chaos Fanatic")), Kill(s("Scorpia"))), reset = true))
+        t(D, Tier.HARD, 7, "Kill the Crazy Archaeologist, Chaos Fanatic & Scorpia.", All(listOf(Kill(s("Crazy archaeologist")), Kill(s("Chaos Fanatic")), Kill(s("Scorpia")))))
         t(D, Tier.HARD, 8, "Take the agility shortcut from Trollheim into the Wilderness.", Ev("shortcut:trollheim wilderness"), "Agility 64")
         t(D, Tier.HARD, 9, "Kill a Spiritual warrior in the Wilderness Godwars Dungeon.", Ev("wildy_gwd:spiritual warrior"), "Slayer 68")
         t(D, Tier.HARD, 10, "Fish some Raw Lava Eel in the Wilderness.", Gain(s("Raw lava eel"), WILDERNESS), "Fishing 53")

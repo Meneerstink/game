@@ -14,6 +14,17 @@ import gg.rsmod.plugins.content.quests.tab.QuestTabInfo.Subject
  */
 
 PaneMountHooks.register(QuestTab.CONTAINER) { player -> QuestTab.mount(player) }
+// DIARIES-OSRS D2: Deadman Tasks in the gameframe Tasks tab; its own redraw every 3 ticks (N108Ui sends only what changed).
+PaneMountHooks.register(QuestTab.TASKS_TAB) { player -> QuestTab.mountTasksTab(player) }
+val TASKS_TAB_TIMER = TimerKey()
+on_timer(TASKS_TAB_TIMER) {
+    player.timers[TASKS_TAB_TIMER] = 3
+    runCatching { QuestTab.refreshTasksTab(player) }.onFailure { gg.rsmod.game.model.Trace.crash("deadman tasks tab", it) }
+}
+// The Achievement Diaries panel: a click on a diary opens its journal.
+for (r in 0 until gg.rsmod.plugins.content.diaries.DiaryUi.DY.ROWS) {
+    on_button(interfaceId = gg.rsmod.plugins.content.diaries.DiaryUi.INTERFACE, component = gg.rsmod.plugins.content.diaries.DiaryUi.DY.row(r) + 16) { gg.rsmod.plugins.content.diaries.DiaryUi.openJournal(player, r) }
+}
 
 QuestTab.Tab.values().forEach { tab ->
     on_button(interfaceId = QuestTab.CONTAINER, component = N.Q.tab(tab.index)) {
@@ -159,6 +170,7 @@ val TASK_MINUTE = TimerKey()
 
 on_login {
     player.timers[TASK_MINUTE] = 100
+    player.timers[TASKS_TAB_TIMER] = 3
     DropSources.warmUp(player)
     // Level and emblem tasks that are already reached complete at once.
     runCatching { DeadmanTasks.check(player) }.onFailure { gg.rsmod.game.model.Trace.crash("deadman tasks login", it) }

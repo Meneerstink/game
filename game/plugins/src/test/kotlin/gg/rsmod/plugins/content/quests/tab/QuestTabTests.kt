@@ -250,16 +250,27 @@ class QuestTabTests {
             account.attributes[QuestTab.SELECTED] = old
             assertEquals(QuestTab.Tab.QUESTS, QuestTab.selected(account.player))
         }
+        // DIARIES-OSRS D2: the old Deadman Tasks tab moved to the gameframe Tasks tab - a saved TASKS opens Deadman.
+        account.attributes[QuestTab.SELECTED] = "TASKS"
+        assertEquals(QuestTab.Tab.DEADMAN, QuestTab.selected(account.player))
         account.attributes[QuestTab.SELECTED] = "SOMETHING_OLD"
         assertEquals(QuestTab.Tab.DEADMAN, QuestTab.selected(account.player))
     }
 
     @Test
-    fun `tabs left to right as the approved design - Quests, Deadman, Deadman Tasks, Drops & Collection Log`() {
-        assertEquals(listOf("QUESTS", "DEADMAN", "TASKS", "DROPS"), QuestTab.Tab.values().map { it.name })
-        assertEquals(listOf("Quests", "Deadman", "Deadman Tasks", "Drops & Collection Log"), gg.rsmod.game.tools.importer.N108InterfaceImportTool.Q.TOOLTIPS)
+    fun `tabs left to right as the approved design v4 - Deadman, Drops & Collection Log, Quests, Achievement Diaries`() {
+        assertEquals(listOf("DEADMAN", "DROPS", "QUESTS", "DIARY"), QuestTab.Tab.values().map { it.name })
+        assertEquals(listOf("Deadman", "Drops & Collection Log", "Quests", "Achievement Diaries"), gg.rsmod.game.tools.importer.N108InterfaceImportTool.Q.TOOLTIPS)
+        assertEquals(listOf("zj_ic_dmm", "qt_ic_log", "qt_ic_quests", "qt_ic_diary"), gg.rsmod.game.tools.importer.N108InterfaceImportTool.Q.ICONS)
+        // The plugin keeps its own copy of the diary panel numbers (fastpatch-safe); they must equal the import tool's.
+        val dy = gg.rsmod.game.tools.importer.N108InterfaceImportTool.DY
+        val ui = gg.rsmod.plugins.content.diaries.DiaryUi.DY
+        assertEquals(gg.rsmod.game.tools.importer.N108InterfaceImportTool.DIARIES, gg.rsmod.plugins.content.diaries.DiaryUi.INTERFACE)
+        assertEquals(listOf(dy.LIST, dy.SCROLLBAR, dy.ROW_FIRST, dy.ROW_STRIDE, dy.ROWS, dy.ROW_H, dy.SEG_W, dy.SEG_H),
+            listOf(ui.LIST, ui.SCROLLBAR, ui.ROW_FIRST, ui.ROW_STRIDE, ui.ROWS, ui.ROW_H, ui.SEG_W, ui.SEG_H))
+        assertEquals(gg.rsmod.game.tools.importer.N108InterfaceImportTool.TASKS, InterfaceDestination.ACHIEVEMENTS_TAB.interfaceId)
         assertEquals(gg.rsmod.game.tools.importer.N108InterfaceImportTool.CONTAINER, InterfaceDestination.QUEST_TAB.interfaceId)
-        assertEquals(with(gg.rsmod.game.tools.importer.N108InterfaceImportTool) { listOf(QUESTS, DEADMAN, TASKS, DROPS_LOG) }, QuestTab.Tab.values().map { it.panel })
+        assertEquals(with(gg.rsmod.game.tools.importer.N108InterfaceImportTool) { listOf(DEADMAN, DROPS_LOG, QUESTS, DIARIES) }, QuestTab.Tab.values().map { it.panel })
         // Four tabs with 2 px gaps across 188 px of the 190 px pane, the panel box 184 x 233 under them.
         assertEquals(188, gg.rsmod.game.tools.importer.N108InterfaceImportTool.Q.TAB_W.sum() + 6)
         gg.rsmod.game.tools.importer.N108InterfaceImportTool.Q.TAB_X.zip(gg.rsmod.game.tools.importer.N108InterfaceImportTool.Q.TAB_W).zipWithNext().forEach { (a, b) -> assertEquals(a.first + a.second + 2, b.first) }

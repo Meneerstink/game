@@ -40,6 +40,7 @@ object N108InterfaceImportTool {
     const val TASK_WINDOW = 1184
 
     /** DMM-TAB: the Combat Brackets window (Bracket Info button). */
+    const val DIARIES = 1242 // DIARIES-OSRS D2: the Achievement Diaries panel (free-id probe 27-11: 1242..1249 free)
     const val BRACKETS = 1240 // 1186-1239 already in the cache (ToA/CoX/DMM2/clue ports); 1240 = first free (census 20-11)
 
     /** First sprite id of this import (probe 2026-10-24: highest sprite group 8518 in both caches). */
@@ -59,13 +60,23 @@ object N108InterfaceImportTool {
         return out
     }
 
+    /**
+     * DIARIES-OSRS D2: art outside the full 8600..8764 range (N645: 8765.. is Ruinous Powers) - fixed ids from the free-id probe of
+     * 27-11 (9216..9227 free in both caches), the png in data/art/n108-extra. The green gem of the Achievement Diaries tab.
+     */
+    val EXTRA_SPRITES = mapOf("qt_ic_diary" to 9220)
+    val EXTRA_DIR = RspsPaths.data("art/n108-extra")
+
     fun spriteId(name: String): Int {
+        EXTRA_SPRITES[name]?.let { return it }
         val i = SPRITES.indexOf(name)
         require(i >= 0) { "sprite '$name' is not in the N108 art" }
         return SPRITE_BASE + i
     }
 
-    fun size(name: String): IntArray = manifest()[name] ?: error("sprite '$name' is not in the N108 art")
+    fun size(name: String): IntArray =
+        if (name in EXTRA_SPRITES) ImageIO.read(File("$EXTRA_DIR/$name.png")).let { intArrayOf(it.width, it.height) }
+        else manifest()[name] ?: error("sprite '$name' is not in the N108 art")
 
     private const val TYPE_LAYER = 0
     private const val TYPE_RECTANGLE = 3
@@ -407,9 +418,12 @@ object N108InterfaceImportTool {
         const val COUNT = BOX + 1
         val TAB_X = intArrayOf(1, 49, 96, 144)
         val TAB_W = intArrayOf(46, 45, 46, 45)
-        val TOOLTIPS = listOf("Quests", "Deadman", "Deadman Tasks", "Drops & Collection Log")
-        /** N288 design A3: the Deadman tab carries the DMM skull of the gameframe (OSRS sprite 4815). */
-        val ICONS = listOf("qt_ic_quests", "zj_ic_dmm", "qt_ic_tasks", "qt_ic_log")
+        /**
+         * DIARIES-OSRS D2 (owner 27-11, ontwerp v4): left to right Deadman, Drops & Collection Log, Quests, Achievement Diaries (the
+         * green gem); Deadman Tasks moved to the gameframe Tasks tab (1056). N288 design A3: the Deadman tab carries the DMM skull.
+         */
+        val TOOLTIPS = listOf("Deadman", "Drops & Collection Log", "Quests", "Achievement Diaries")
+        val ICONS = listOf("zj_ic_dmm", "qt_ic_log", "qt_ic_quests", "qt_ic_diary")
 
         fun tab(i: Int) = TAB_FIRST + i * TAB_STRIDE
     }
@@ -428,6 +442,60 @@ object N108InterfaceImportTool {
         }
         b.layer(Q.BOX, 3, 27, 184, 233, 0)
         return b.done(Q.COUNT)
+    }
+
+    // ================================================================== 4 Achievement Diaries (DIARIES-OSRS D2, ontwerp v4)
+
+    /**
+     * DIARIES-OSRS D2 (owner 27-11, ontwerp v4 'perfect'): the OSRS 'Achievement Diaries' panel behind the green gem - title, a scroll
+     * list with one dark stone box per diary (name left, done/total right, the bar in four pieces under it: easy / medium / hard /
+     * elite) and the OSRS scrollbar. Each piece is a dark track with a green fill (tier done) and an orange fill (started) that the
+     * server shows and sizes. A click on a box opens that diary's journal.
+     */
+    object DY {
+        const val TITLE = 1
+        const val HR = 2
+        const val LIST = 3
+        const val SCROLLBAR = 4
+        const val ROW_FIRST = 5 // per row: box, border, name, count, 4 x (track, green, orange), hit
+        const val ROW_STRIDE = 17
+        const val ROWS = 12
+        const val COUNT = ROW_FIRST + ROWS * ROW_STRIDE
+        const val LIST_X = 4
+        const val LIST_Y = 24
+        const val LIST_W = 160
+        const val LIST_H = 207
+        const val ROW_H = 30
+        const val SEG_W = 36
+        const val SEG_H = 5
+
+        fun row(i: Int) = ROW_FIRST + i * ROW_STRIDE
+    }
+
+    fun diaries(fonts: LootKeyInterfaceImportTool.Fonts): List<Comp> {
+        val b = Builder(fonts)
+        b.add(Comp(0, TYPE_LAYER, 0, 0, 0, 0, -1, resizeX = 1, resizeY = 1))
+        b.t(DY.TITLE, 0, 2, 184, 18, 0, fonts.b12, ORANGE, "Achievement Diaries", alignX = 1)
+        b.g(DY.HR, 5, 21, 0, "qt_hr")
+        b.layer(DY.LIST, DY.LIST_X, DY.LIST_Y, DY.LIST_W, DY.LIST_H, 0)
+        b.scrollbarFor(DY.SCROLLBAR, DY.LIST_X + DY.LIST_W + 2, DY.LIST_Y, DY.LIST_H, 0, DIARIES, DY.LIST)
+        for (i in 0 until DY.ROWS) {
+            val base = DY.row(i)
+            val y = i * DY.ROW_H
+            b.rect(base, 0, y, DY.LIST_W, DY.ROW_H - 2, DY.LIST, 0x3E3529, filled = true)
+            b.rect(base + 1, 0, y, DY.LIST_W, DY.ROW_H - 2, DY.LIST, 0x1C1712)
+            b.t(base + 2, 4, y + 1, 110, 15, DY.LIST, fonts.b12, WHITE, alignY = 0)
+            b.t(base + 3, 96, y + 1, 60, 15, DY.LIST, fonts.b12, WHITE, alignX = 2, alignY = 0)
+            for (k in 0 until 4) {
+                val seg = base + 4 + k * 3
+                val x = 4 + k * (DY.SEG_W + 2)
+                b.rect(seg, x, y + 19, DY.SEG_W, DY.SEG_H, DY.LIST, 0x1A1510, filled = true)
+                b.rect(seg + 1, x, y + 19, DY.SEG_W, DY.SEG_H, DY.LIST, 0x3DB43D, filled = true, hidden = true)
+                b.rect(seg + 2, x, y + 19, DY.SEG_W, DY.SEG_H, DY.LIST, 0xE0701C, filled = true, hidden = true)
+            }
+            b.hit(base + 16, 0, y, DY.LIST_W, DY.ROW_H - 2, DY.LIST, "View")
+        }
+        return b.done(DY.COUNT)
     }
 
     // ---- shared panel header: title (orange bold) left, info right, the line under it
@@ -1001,7 +1069,8 @@ object N108InterfaceImportTool {
         val fonts: LootKeyInterfaceImportTool.Fonts
         val current = HashMap<Int, Map<Int, String>>()
         val currentSprites = HashMap<Int, String>()
-        val ids = listOf(CONTAINER, DEADMAN, QUESTS, TASKS, INFO, VIEWER, DROPS_LOG, LOG, TASK_WINDOW, BRACKETS)
+        val ids = listOf(CONTAINER, DEADMAN, QUESTS, TASKS, INFO, VIEWER, DROPS_LOG, LOG, TASK_WINDOW, BRACKETS, DIARIES)
+        val currentExtra = HashMap<Int, String>()
         try {
             fonts = LootKeyInterfaceImportTool.fonts(library)
             ids.forEach { id ->
@@ -1012,6 +1081,7 @@ object N108InterfaceImportTool {
             SPRITES.indices.forEach { i ->
                 library.data(spritesIndex, SPRITE_BASE + i, 0)?.let { currentSprites[SPRITE_BASE + i] = CacheItemProbeTool.sha1(it) }
             }
+            EXTRA_SPRITES.values.forEach { id -> library.data(spritesIndex, id, 0)?.let { currentExtra[id] = CacheItemProbeTool.sha1(it) } }
             require(library.index(spritesIndex).archive(SPRITE_BASE - 1) == null || SPRITE_BASE - 1 <= 8518) { "sprite range moved" }
             // N645 (24-11): this range grew over the Ruinous Powers icons at 8759..8764 on 20-11 (tx-20261120-205644, 165 sprites);
             // five of those icons moved to RuinousPowersCacheTool.RELOCATED_COLOUR_BASE. 8765.. is still Ruinous: never grow into it.
@@ -1027,6 +1097,10 @@ object N108InterfaceImportTool {
             val image = ImageIO.read(File("$ART_DIR/$name.png")) ?: error("missing $ART_DIR/$name.png")
             mutations += CacheMutation(spritesIndex, SPRITE_BASE + i, 0, StoreArtTool.encode(image), "n108 sprite $name -> ${SPRITE_BASE + i}", expectedCurrentSha1 = currentSprites[SPRITE_BASE + i])
         }
+        EXTRA_SPRITES.forEach { (name, id) ->
+            val image = ImageIO.read(File("$EXTRA_DIR/$name.png")) ?: error("missing $EXTRA_DIR/$name.png")
+            mutations += CacheMutation(spritesIndex, id, 0, StoreArtTool.encode(image), "n108 extra sprite $name -> $id", expectedCurrentSha1 = currentExtra[id])
+        }
         val screens =
             listOf(
                 CONTAINER to container(fonts),
@@ -1039,6 +1113,7 @@ object N108InterfaceImportTool {
                 LOG to log(fonts),
                 TASK_WINDOW to taskWindow(fonts),
                 BRACKETS to brackets(fonts),
+                DIARIES to diaries(fonts),
             )
         screens.forEach { (id, comps) ->
             val have = current.getValue(id)

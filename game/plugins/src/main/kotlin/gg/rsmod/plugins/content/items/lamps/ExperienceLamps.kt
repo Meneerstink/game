@@ -56,9 +56,9 @@ object ExperienceLamps {
             14580 to Reward.Fixed(1_000, 30), // Easy Falador Tasks
             14581 to Reward.Fixed(5_000, 40), // Medium Falador Tasks
             14582 to Reward.Fixed(10_000, 50), // Hard Falador Tasks
-            14633 to Reward.Fixed(1_000, 30), // Easy Seers' Village Tasks
-            14634 to Reward.Fixed(5_000, 40), // Medium Seers' Village Tasks
-            14635 to Reward.Fixed(10_000, 50), // Hard Seers' Village Tasks
+            14633 to Reward.Fixed(2_500, 30), // DIARIES-OSRS: the easy diary lamp (OSRS Wiki Antique lamp (easy): 2,500 xp, level 30)
+            14634 to Reward.Fixed(7_500, 40), // DIARIES-OSRS: the medium diary lamp (7,500 xp, level 40)
+            14635 to Reward.Fixed(15_000, 50), // DIARIES-OSRS: the hard diary lamp (15,000 xp, level 50)
             14711 to Reward.Fixed(2_500, 35), // Glorious Memories
             14740 to Reward.Fixed(200, 10), // The Tale of the Muspah
             15346 to Reward.Fixed(1_000, 25), // Easy Ardougne Tasks
@@ -74,7 +74,7 @@ object ExperienceLamps {
             19758 to Reward.Fixed(30_000, 65), // Elite Varrock Tasks, 30k
             19759 to Reward.Fixed(40_000, 88), // Elite Varrock Tasks, 40k
             19761 to Reward.Fixed(9_000, 49), // Hard Lumbridge Tasks
-            19764 to Reward.Fixed(25_000, 70), // Elite Seers' Village Tasks, 25k
+            19764 to Reward.Fixed(50_000, 70), // DIARIES-OSRS: the elite diary lamp (50,000 xp, level 70)
             19765 to Reward.Fixed(30_000, 83), // Elite Seers' Village Tasks, 30k
             19767 to Reward.Fixed(30_000, 86), // Elite Fremennik Tasks, 30k
             19768 to Reward.Fixed(40_000, 89), // Elite Fremennik Tasks, 40k

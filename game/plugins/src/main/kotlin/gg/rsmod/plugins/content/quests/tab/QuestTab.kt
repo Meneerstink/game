@@ -37,11 +37,16 @@ object QuestTab {
     const val CONTAINER = N108InterfaceImportTool.CONTAINER
     const val QUEST_LIST_INTERFACE = 190
 
+    /**
+     * DIARIES-OSRS D2 (owner 27-11, ontwerp v4): left to right Deadman, Drops & Collection Log, Quests, Achievement Diaries (the green
+     * gem). Deadman Tasks moved to the gameframe Tasks tab ([TASKS_TAB], pane 1056). The new tab is called DIARY because the saved name
+     * "DIARIES" of before 2026-10-24 still means the Quests tab.
+     */
     enum class Tab(val panel: Int) {
-        QUESTS(N108InterfaceImportTool.QUESTS),
         DEADMAN(N108InterfaceImportTool.DEADMAN),
-        TASKS(N108InterfaceImportTool.TASKS),
         DROPS(N108InterfaceImportTool.DROPS_LOG),
+        QUESTS(N108InterfaceImportTool.QUESTS),
+        DIARY(gg.rsmod.plugins.content.diaries.DiaryUi.INTERFACE),
         ;
 
         val index get() = ordinal
@@ -64,6 +69,7 @@ object QuestTab {
         when (val name = player.attr[SELECTED]) {
             null -> DEFAULT
             "GROUPS", "QUEST_LIST", "DIARIES" -> Tab.QUESTS
+            "TASKS" -> Tab.DEADMAN // DIARIES-OSRS D2: Deadman Tasks has its own gameframe tab now
             else -> Tab.values().firstOrNull { it.name == name } ?: DEFAULT
         }
 
@@ -100,7 +106,7 @@ object QuestTab {
                     player.setInterfaceEvents(tab.panel, QP.FILTER, -1..-1, EVENTS_OP1)
                 }
                 Tab.DEADMAN -> listOf(DP.POINTS_HIT, DP.BRACKET_HIT, DP.BACK_HIT, DP.SIGILS_HIT).forEach { player.setInterfaceEvents(tab.panel, it, -1..-1, EVENTS_OP1) }
-                Tab.TASKS -> for (t in 0 until 4) player.setInterfaceEvents(tab.panel, TP.tier(t) + 7, -1..-1, EVENTS_OP1)
+                Tab.DIARY -> for (r in 0 until gg.rsmod.plugins.content.diaries.DiaryUi.DY.ROWS) player.setInterfaceEvents(tab.panel, gg.rsmod.plugins.content.diaries.DiaryUi.DY.row(r) + 16, -1..-1, EVENTS_OP1)
                 Tab.DROPS -> {
                     player.setInterfaceEvents(tab.panel, LP.VIEWER_HIT, -1..-1, EVENTS_OP1)
                     player.setInterfaceEvents(tab.panel, LP.LOG_HIT, -1..-1, EVENTS_OP1)
@@ -129,10 +135,25 @@ object QuestTab {
         when (tab) {
             Tab.QUESTS -> drawQuests(player)
             Tab.DEADMAN -> drawDeadman(player)
-            Tab.TASKS -> drawTasks(player)
+            Tab.DIARY -> gg.rsmod.plugins.content.diaries.DiaryUi.draw(player)
             Tab.DROPS -> drawDrops(player)
         }
         return true
+    }
+
+    /** DIARIES-OSRS D2: the Deadman Tasks panel in the gameframe Tasks tab (pane 1056 slot, [gg.rsmod.plugins.api.InterfaceDestination.ACHIEVEMENTS_TAB]). */
+    const val TASKS_TAB = N108InterfaceImportTool.TASKS
+
+    /** Mount hook of the Tasks tab: the tier buttons' click events and the first draw. */
+    fun mountTasksTab(player: Player) {
+        N108Ui.reset(player, TASKS_TAB)
+        for (t in 0 until 4) player.setInterfaceEvents(TASKS_TAB, TP.tier(t) + 7, -1..-1, EVENTS_OP1)
+        refreshTasksTab(player)
+    }
+
+    /** Draws the Tasks tab when it is open (task progress, a finished task, the minute timer). */
+    fun refreshTasksTab(player: Player) {
+        if (player.interfaces.isVisible(TASKS_TAB)) drawTasks(player)
     }
 
     fun refreshDropsPanel(player: Player) {
@@ -439,7 +460,7 @@ object QuestTab {
     // ================================================================== 3 Deadman Tasks
 
     private fun drawTasks(player: Player) {
-        val p = Tab.TASKS.panel
+        val p = TASKS_TAB
         // DMM-TASKS-OVERLAP: levels and emblem tiers reached since the last task event complete before the tab is drawn
         // (they showed as 1000/1000 under 'Closest to done' without points).
         runCatching { DeadmanTasks.check(player) }.onFailure { gg.rsmod.game.model.Trace.crash("deadman tasks draw", it) }

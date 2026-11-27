@@ -22,7 +22,7 @@ object DiaryRewards {
         Diary.WILDERNESS to (1..4).map { "Wilderness sword $it" },
     )
 
-    private var ids: Map<Diary, IntArray>? = null
+    internal var ids: Map<Diary, IntArray>? = null
 
     fun items(world: gg.rsmod.game.model.World, diary: Diary): IntArray {
         ids?.let { return it[diary]!! }

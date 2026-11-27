@@ -12,7 +12,8 @@ enum class InterfaceDestination(
     CHAT_BOX_PANE(interfaceId = 752, fixedChildId = 192, resizeChildId = 73),
 
     ATTACK_TAB(interfaceId = 884, fixedChildId = 204, resizeChildId = 90),
-    ACHIEVEMENTS_TAB(interfaceId = 1056, fixedChildId = 205, resizeChildId = 91),
+    // DIARIES-OSRS D2 (owner 27-11): the 667 Tasks tab shows the Deadman Tasks panel (N108 1174) instead of the 667 task list 1056.
+    ACHIEVEMENTS_TAB(interfaceId = 1174, fixedChildId = 205, resizeChildId = 91),
     SKILLS_TAB(interfaceId = 320, fixedChildId = 206, resizeChildId = 92),
     // The quest tab container (owner 2026-09-26: tab row + Deadman / Groups / Quest List / Diaries); the 667 quest list 190
     // opens inside it (content/quests/tab/QuestTab).
