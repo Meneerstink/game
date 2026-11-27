@@ -31,6 +31,15 @@ object DiaryItems {
         return DiaryRewards.items(player.world, Diary.MORYTANIA).drop(1).contains(legs)
     }
 
+    /**
+     * OSRS Wiki "Morytania Diary" rewards: 2.5 / 5 / 7.5 / 10% more Slayer experience in the Slayer Tower while on a Slayer task
+     * (easy / medium / hard / elite claimed). The task check is the caller's (only task kills give Slayer xp here).
+     */
+    fun slayerTowerFactor(player: Player): Double {
+        if (!DiaryTasks.SLAYER_TOWER.has(player.tile)) return 1.0
+        return 1.0 + 0.025 * Diaries.claimed(player, Diary.MORYTANIA).coerceIn(0, 4)
+    }
+
     /** OSRS Wiki "Morytania legs 4": "Completely blocks the attack that Ghasts use to turn food into Rotten food" (worn). */
     fun blocksGhastRot(player: Player): Boolean {
         val legs = player.equipment[gg.rsmod.plugins.api.EquipmentType.LEGS.id]?.id ?: return false

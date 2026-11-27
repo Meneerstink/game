@@ -46,7 +46,7 @@ fun Player.handleDecrease(npc: Npc) {
     // N570: Slayer's enchantment, Krystilia's second unusual loot (not tied to Larran's switch).
     if (attr[Krystilia.TASK] == true) SlayersStaffE.rollEnchantment(this, npc)
     if (attr.has(SLAYER_AMOUNT)) {
-        addXp(Skills.SLAYER, gg.rsmod.game.model.combat.NpcEncounter.slayerXp(npc))
+        addXp(Skills.SLAYER, gg.rsmod.game.model.combat.NpcEncounter.slayerXp(npc) * gg.rsmod.plugins.content.diaries.DiaryItems.slayerTowerFactor(this))
         val amount = attr.getOrDefault(SLAYER_AMOUNT, 0)
         // PROJECT48 S63 Sigil of Slaughter: "a 50% chance for a Slayer Task kill to not count towards the task while still gaining
         // you Slayer XP" (OSRS Wiki; there are no bracelets of slaughter/expeditious service here to stack with).
