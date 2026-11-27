@@ -70,6 +70,10 @@ object CollectionLogPages {
     /** The Pest Control page's key: the source key [PestControlRewards] records its rewards with. */
     const val PEST_CONTROL = "pest_control"
 
+    /** Nachtrun 27-11 (C7): Mahogany Homes - OSRS log order Amy's saw, plank sack, (blueprints), carpenter's helmet/shirt/trousers/boots. */
+    const val MAHOGANY_HOMES = "mahogany_homes"
+    val MAHOGANY_HOMES_ITEMS = listOf(25702, 25703, 25698, 25699, 25700, 25701)
+
     /** N462: cache 2686 enum 4805 (ToA collection log): guardian, shadow (u), ward, Masori x3, lightbearer, fang, thread, 4 jewels, 3 kits,
      *  cache of runes, Icthlarin's shroud 1-5, 5 remnants. */
     const val TOA = "toa"
@@ -181,6 +185,9 @@ object CollectionLogPages {
         pages += ClueLogPages.build()
         // ---- Minigames: Pest Control (the reward items recorded when the Void Knight hands them over, PestControlRewards.confirm).
         pages += Page(PEST_CONTROL, Category.MINIGAMES, "Pest Control", emptyList(), PEST_CONTROL_ITEMS)
+        // ---- Nachtrun 27-11 (CONSTRUCTION-99 C7): OSRS Collection log "Mahogany Homes" (recorded when bought from Amy's shop; the count is
+        // the contracts completed). VERVANGING: the Hosidius blueprints are Kourend (parked) and not in the shop, so not on the page.
+        pages += Page(MAHOGANY_HOMES, Category.MINIGAMES, "Mahogany Homes", listOf(MAHOGANY_HOMES), MAHOGANY_HOMES_ITEMS, "Contracts completed")
         // ---- N462 Tombs of Amascut: the 27 slots of the OSRS log in cache order (cache 2686 enum 4805; GPT-A 30-enums-structs.tsv), shown under
         // Bosses (our log has no Raids tab); the count is the account's raid completions (ToaChest.COMPLETIONS, all modes together).
         TOA_ITEMS.mapNotNull(gg.rsmod.plugins.content.activity.toa.core.ToaLootItems::local).takeIf { it.isNotEmpty() }?.let {

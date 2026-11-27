@@ -23,6 +23,7 @@ object KillCounts {
             "chest" -> player.attr[CHESTS] ?: 0
             CollectionLogPages.TOA -> player.attr[gg.rsmod.plugins.content.activity.toa.ToaChest.COMPLETIONS] ?: 0
             CollectionLogPages.COX -> player.attr[gg.rsmod.plugins.content.activity.cox.CoxRewards.COMPLETIONS] ?: 0
+            CollectionLogPages.MAHOGANY_HOMES -> player.attr[gg.rsmod.plugins.content.skills.construction.mahogany.MahoganyHomes.CONTRACTS_DONE] ?: 0
             else -> ClueCompletions.tierForKey(key)?.let { ClueCompletions.get(player, it) }
                 ?: DropSources.byKey(player, key)?.let { source -> ofNpcs(player, source.npcs) } ?: 0
         }

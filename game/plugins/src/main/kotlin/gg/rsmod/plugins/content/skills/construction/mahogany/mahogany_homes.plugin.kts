@@ -13,19 +13,37 @@ MahoganyHomes.HOMES.forEach { spawn_npc(npc = it.npc, x = it.npcTile.x, z = it.n
 
 on_world_init { MahoganyHomes.spawnWorld(world) }
 
+/** Carpenter points; a bought log item goes in the Collection log (OSRS records Mahogany Homes rewards when bought). */
+object CarpenterPoints : PointCurrency("carpenter point", "carpenter points", MahoganyHomes.CARPENTER_POINTS) {
+    override fun sellToPlayer(
+        p: gg.rsmod.game.model.entity.Player,
+        shop: gg.rsmod.game.model.shop.Shop,
+        slot: Int,
+        amt: Int,
+    ) {
+        val id = shop.items[slot]?.item ?: return
+        val before = p.inventory.getItemCount(id)
+        super.sellToPlayer(p, shop, slot, amt)
+        val bought = p.inventory.getItemCount(id) - before
+        if (bought > 0 && id in gg.rsmod.plugins.content.quests.tab.CollectionLogPages.MAHOGANY_HOMES_ITEMS) {
+            gg.rsmod.plugins.content.quests.tab.CollectionLog.record(p, gg.rsmod.plugins.content.quests.tab.CollectionLogPages.MAHOGANY_HOMES, listOf(id to bought))
+        }
+    }
+}
+
 create_shop(
     MahoganyHomes.SHOP,
-    currency = PointCurrency("carpenter point", "carpenter points", MahoganyHomes.CARPENTER_POINTS),
+    currency = CarpenterPoints,
     purchasePolicy = PurchasePolicy.BUY_NONE,
     containsSamples = false,
 ) {
-    items[0] = ShopItem(MahoganyHomes.SUPPLY_CRATE, amount = 1000, sellPrice = 25)
-    items[1] = ShopItem(MahoganyHomes.AMYS_SAW, amount = 1000, sellPrice = 500)
-    items[2] = ShopItem(MahoganyHomes.PLANK_SACK, amount = 1000, sellPrice = 350)
-    items[3] = ShopItem(MahoganyHomes.HELMET, amount = 1000, sellPrice = 400)
-    items[4] = ShopItem(MahoganyHomes.SHIRT, amount = 1000, sellPrice = 800)
-    items[5] = ShopItem(MahoganyHomes.TROUSERS, amount = 1000, sellPrice = 600)
-    items[6] = ShopItem(MahoganyHomes.BOOTS, amount = 1000, sellPrice = 200)
+    items[0] = ShopItem(MahoganyHomes.SUPPLY_CRATE, amount = Int.MAX_VALUE, sellPrice = 25)
+    items[1] = ShopItem(MahoganyHomes.AMYS_SAW, amount = Int.MAX_VALUE, sellPrice = 500)
+    items[2] = ShopItem(MahoganyHomes.PLANK_SACK, amount = Int.MAX_VALUE, sellPrice = 350)
+    items[3] = ShopItem(MahoganyHomes.HELMET, amount = Int.MAX_VALUE, sellPrice = 400)
+    items[4] = ShopItem(MahoganyHomes.SHIRT, amount = Int.MAX_VALUE, sellPrice = 800)
+    items[5] = ShopItem(MahoganyHomes.TROUSERS, amount = Int.MAX_VALUE, sellPrice = 600)
+    items[6] = ShopItem(MahoganyHomes.BOOTS, amount = Int.MAX_VALUE, sellPrice = 200)
 }
 
 fun openRewards(p: gg.rsmod.game.model.entity.Player) {
@@ -144,7 +162,10 @@ gg.rsmod.game.CommandServerCommands.handlers["mhinfo"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
     val c = p?.let { MahoganyHomes.contract(it) }
     if (p == null) {
-        "usage: mhinfo <name>"
+        "usage: mhinfo <name> [points <n>]"
+    } else if (a.getOrNull(1) == "points") {
+        p.attr[MahoganyHomes.CARPENTER_POINTS] = a.getOrNull(2)?.toIntOrNull() ?: 0
+        "points ${p.attr[MahoganyHomes.CARPENTER_POINTS]}"
     } else if (c == null) {
         "no contract (points ${p.attr[MahoganyHomes.CARPENTER_POINTS] ?: 0}, done ${p.attr[MahoganyHomes.CONTRACTS_DONE] ?: 0})"
     } else {
