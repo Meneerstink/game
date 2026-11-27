@@ -6,6 +6,7 @@ import gg.rsmod.game.message.impl.IfSetTextMessage
 import gg.rsmod.game.message.impl.MessageGameMessage
 import gg.rsmod.game.model.attr.AttributeMap
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.ItemTransaction
 import gg.rsmod.game.model.interf.DisplayMode
 import gg.rsmod.game.tools.importer.PestControlRewardsInterfaceImportTool as Tool
@@ -121,13 +122,17 @@ class PestControlRewardsTests {
         every { player.interfaces.displayMode } returns DisplayMode.FIXED
         every { player.skills.getMaxLevel(any()) } returns 99
         every { player.skills.getCurrentLevel(any()) } returns 99
-        every { player.inventory.freeSlotCount } returns 28
-        every { player.inventory.add(any<Int>(), any<Int>()) } answers {
+        // An explicit inventory mock, stubbed with every argument: a default-argument stub (remove(any())) records through the static
+        // remove$default bridge, which on the work laptop ran the real ItemContainer.remove on the mock (NPE in getItemCount, 27-11).
+        val inventory = mockk<ItemContainer>(relaxed = true)
+        every { player.inventory } returns inventory
+        every { inventory.freeSlotCount } returns 28
+        every { inventory.add(any<Int>(), any<Int>(), any(), any(), any(), any()) } answers {
             val amount = secondArg<Int>()
             ItemTransaction(amount, amount, emptyList())
         }
-        every { player.inventory.contains(any<Int>()) } returns true
-        every { player.inventory.remove(any<Int>()) } returns ItemTransaction(1, 1, emptyList())
+        every { inventory.contains(any<Int>()) } returns true
+        every { inventory.remove(any<Int>(), any(), any(), any()) } returns ItemTransaction(1, 1, emptyList())
         every { player.world.definitions.get(ItemDef::class.java, any()) } answers { ItemDef(secondArg()) }
         every { player.world.filestore.index(3).archive(PC_REWARD_INTERFACE)!!.fileIds() } returns
             IntArray(if (extended) Tool.COMPONENT_COUNT else Tool.LEGACY_COMPONENT_COUNT) { it }
