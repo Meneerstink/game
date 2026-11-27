@@ -114,6 +114,37 @@ object DiaryItems {
         return true
     }
 
+    /**
+     * Falador shield prayer restore (OSRS Wiki "Falador shield"): shield 1 = 25%, 2 = 50%, 3 = 100% once a day, 4 = 100% twice a day.
+     * The day counter is shared by every shield (00:00 UTC). Returns the message for the player.
+     */
+    val FALADOR_PRAYER_DAY = AttributeKey<Int>(persistenceKey = "diary_fally_pray_day")
+    val FALADOR_PRAYER_USED = AttributeKey<Int>(persistenceKey = "diary_fally_pray_used")
+
+    fun faladorShieldPercent(shield: Int): Int = when (shield) {
+        gg.rsmod.plugins.api.cfg.Items.FALADOR_SHIELD_1 -> 25
+        gg.rsmod.plugins.api.cfg.Items.FALADOR_SHIELD_2 -> 50
+        else -> 100
+    }
+
+    fun faladorShieldUses(shield: Int): Int = if (shield == gg.rsmod.plugins.api.cfg.Items.FALADOR_SHIELD_4) 2 else 1
+
+    fun faladorPrayerUsed(player: Player): Int = if (player.attr[FALADOR_PRAYER_DAY] == today()) player.attr[FALADOR_PRAYER_USED] ?: 0 else 0
+
+    fun faladorPrayerRestore(player: Player, shield: Int): String {
+        val skills = player.skills
+        val max = skills.getMaxLevel(gg.rsmod.plugins.api.Skills.PRAYER)
+        val cur = skills.getCurrentLevel(gg.rsmod.plugins.api.Skills.PRAYER)
+        val used = faladorPrayerUsed(player)
+        if (used >= faladorShieldUses(shield)) return "You have already used your shield's prayer restore today."
+        if (cur >= max) return "You already have full prayer points."
+        val add = maxOf(1, max * faladorShieldPercent(shield) / 100)
+        skills.setCurrentLevel(gg.rsmod.plugins.api.Skills.PRAYER, minOf(max, cur + add))
+        player.attr[FALADOR_PRAYER_DAY] = today()
+        player.attr[FALADOR_PRAYER_USED] = used + 1
+        return "You feel a surge of energy as your prayer points are restored."
+    }
+
     /** Ardougne medium / hard / elite: Wizard Cromperty gives 100 / 150 / 250 noted pure essence once a day (OSRS Wiki). */
     val CROMPERTY_DAY = AttributeKey<Int>(persistenceKey = "diary_cromperty_day")
 

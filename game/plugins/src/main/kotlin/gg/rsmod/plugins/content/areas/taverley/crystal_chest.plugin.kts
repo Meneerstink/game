@@ -28,6 +28,7 @@ on_item_on_obj(obj = CRYSTAL_CHEST, item = CRYSTAL_KEY) {
 
         player.animate(Anims.REACH_DOWN_OPEN)
         player.message("You unlock the chest with your key.")
+        gg.rsmod.plugins.content.diaries.Diaries.event(player, "chest:crystal") // DIARIES-OSRS Falador medium 3
 
         wait(2)
 

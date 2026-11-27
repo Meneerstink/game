@@ -212,7 +212,9 @@ object PohHeraldry {
         } else {
             task.chatNpc("According to my records, your crest is the symbol of ${crest.label}.", npc = Npcs.SIR_RENITEE, facialExpression = FacialExpression.NORMAL)
         }
-        if (task.options("I don't like that crest. Can I have a different one?", "Thanks!") != 1) {
+        val keepOrChange = task.options("I don't like that crest. Can I have a different one?", "Thanks!")
+        gg.rsmod.plugins.content.diaries.Diaries.event(player, "crest:asked") // DIARIES-OSRS Falador easy 1 (the crest line has been read to the end)
+        if (keepOrChange != 1) {
             task.chatPlayer("Thanks!", facialExpression = FacialExpression.HAPPY)
             task.chatNpc("You're welcome, my ${if (player.appearance.gender == Gender.MALE) "boy" else "girl"}.", npc = Npcs.SIR_RENITEE, facialExpression = FacialExpression.HAPPY)
             return
@@ -240,6 +242,7 @@ object PohHeraldry {
         // Read again after the dialogue: the coins may have gone meanwhile.
         if (player.inventory.remove(Items.COINS_995, chosen.cost).completed < chosen.cost) return
         setCrest(player, chosen)
+        if (chosen == Crest.SARADOMIN) gg.rsmod.plugins.content.diaries.Diaries.event(player, "crest:saradomin") // DIARIES-OSRS Falador hard 2
         task.chatNpc("The ${chosen.description}? Excellent choice!", npc = Npcs.SIR_RENITEE, facialExpression = FacialExpression.HAPPY)
     }
 

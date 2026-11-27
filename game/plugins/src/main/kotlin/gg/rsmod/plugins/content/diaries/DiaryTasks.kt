@@ -99,6 +99,36 @@ object DiaryTasks {
     val VARROCK_WEST_BANK = Area("Varrock west bank", Box(3180, 3433, 3194, 3447))
     val COOKS_GUILD = Area("Cooks' Guild", Box(3137, 3438, 3148, 3452))
 
+    // ------------------------------------------------------------------------------------------------------------- Falador areas
+    val FALADOR = Area("Falador", Box(2935, 3305, 3065, 3395))
+    val FALADOR_WEST_WALL = Area("western Falador wall", Box(2932, 3353, 2938, 3357))
+    val FALADOR_PUMP = Area("Falador west pump", Box(2944, 3378, 2954, 3388))
+    val FALADOR_PARK = Area("Falador Park", Box(2980, 3366, 3026, 3392))
+    val ENTRANA = Area("Entrana", Box(2800, 3325, 2870, 3395))
+    val PORT_SARIM = Area("Port Sarim", Box(3005, 3170, 3060, 3265))
+    val DWARVEN_MINE = Area("Dwarven Mine", Box(2990, 9750, 3070, 9850))
+    val DORIC = Area("Doric's anvil", Box(2948, 3448, 2954, 3454))
+    val CHEMIST = Area("Rimmington Chemist", Box(2928, 3206, 2937, 3215))
+    val CHAOS_TEMPLE_ASGARNIA = Area("Chaos Temple", Box(2930, 3511, 2940, 3521))
+    val FALADOR_FARM = Area("Falador farm", Box(3044, 3298, 3066, 3316))
+    val MUDSKIPPER = Area("Mudskipper Point", Box(2978, 3105, 3012, 3132))
+    val FALADOR_NORTH_WALL_TOP = Area("north Falador wall", Box(3004, 3392, 3007, 3395, 1))
+    val FALADOR_NORTH_WALL_FOOT = Area("north Falador wall", Box(3004, 3390, 3007, 3396, 0))
+    val TAVERLEY_GUTHIX_ALTAR = Area("Altar of Guthix", Box(2920, 3480, 2930, 3490))
+    val CRAFTING_GUILD = Area("Crafting Guild", Box(2929, 3276, 2943, 3290))
+    val MINING_GUILD = Area("Mining Guild", Box(3016, 9730, 3056, 9760))
+    val TAVERLEY = Area("Taverley", Box(2875, 3400, 2945, 3460))
+    val FALADOR_TELE = Area("Falador square", Box(2961, 3375, 2971, 3385))
+    val BLACK_KNIGHTS_FORTRESS = Area("Black Knights' Fortress", Box(3008, 3500, 3035, 3530))
+    val HEROES_GUILD_BASEMENT = Area("Heroes' Guild basement", Box(2880, 9880, 2945, 9920))
+    val ROGUES_DEN = Area("Rogues' Den", Box(3040, 4960, 3070, 5000))
+    val PORT_SARIM_CHURCH = Area("Port Sarim church", Box(3006, 3170, 3018, 3184))
+    val WARRIORS_GUILD = Area("Warriors' Guild", Box(2836, 3533, 2876, 3558))
+    val FALADOR_CASTLE = Area("Falador Castle", Box(2954, 3330, 2996, 3355))
+    val FALADOR_CASTLE_TOP = Area("top of Falador Castle", Box(2954, 3330, 2996, 3355, 3), Box(2954, 3330, 2996, 3355, 2))
+    val TAVERLEY_STRANGE_FLOOR = Area("Taverley dungeon strange floor", Box(2876, 9811, 2882, 9815))
+    val FALADOR_EAST_BANK = Area("Falador east bank", Box(3009, 3353, 3019, 3358))
+
     // ------------------------------------------------------------------------------------------------------------ Ardougne areas
     val ARD_EAST = Area("East Ardougne", Box(2560, 3255, 2700, 3345))
     val ARD_WEST = Area("West Ardougne", Box(2430, 3270, 2559, 3345))
@@ -388,6 +418,67 @@ object DiaryTasks {
         t(A, Tier.ELITE, 7, "Fletch a Magic longbow in Ardougne.", Gain(s("Magic longbow (u)", "Magic longbow"), NEAR_ARDOUGNE, skill = sk.FLETCHING), "Fletching 85",
             osrs = "Complete a lap of Ardougne's rooftop agility course.")
         t(A, Tier.ELITE, 8, "Cast Ice Barrage on another player within Castle Wars.", Ev("spell:ice barrage player", CASTLE_WARS), "Magic 94")
+
+        // ---------------------------------------------------------------------------------------------------- FALADOR (D5, 27-11)
+        val F = Diary.FALADOR
+        val I = gg.rsmod.plugins.api.cfg.Items
+        val initiate = { p: gg.rsmod.game.model.entity.Player ->
+            p.equipment.contains(I.INITIATE_SALLET) && p.equipment.contains(I.INITIATE_HAUBERK) && p.equipment.contains(I.INITIATE_CUISSE) }
+        val proselyte = { p: gg.rsmod.game.model.entity.Player ->
+            p.equipment.contains(I.PROSELYTE_SALLET) && p.equipment.contains(I.PROSELYTE_HAUBERK) &&
+                (p.equipment.contains(I.PROSELYTE_CUISSE) || p.equipment.contains(I.PROSELYTE_TASSET)) }
+        t(F, Tier.EASY, 1, "Find out what your family crest is from Sir Renitee.", Ev("crest:asked"), "Construction 16")
+        t(F, Tier.EASY, 2, "Climb over the western Falador wall.", Trigger.Xp(Skills.AGILITY, FALADOR_WEST_WALL), "Agility 5")
+        t(F, Tier.EASY, 3, "Browse Sarah's farm shop.", Talk(s("Sarah")))
+        t(F, Tier.EASY, 4, "Get a Haircut or a Shave from the Falador Hairdresser.", Talk(s("Hairdresser"), FALADOR))
+        t(F, Tier.EASY, 5, "Fill a bucket from the pump north of Falador west bank.", Gain(s("Bucket of water"), FALADOR_PUMP))
+        t(F, Tier.EASY, 6, "Kill a duck in Falador Park.", Kill(s("Duck", "Drake"), FALADOR_PARK))
+        t(F, Tier.EASY, 7, "Make a mind tiara.", Gain(s("Mind tiara"), skill = sk.RUNECRAFTING))
+        t(F, Tier.EASY, 8, "Take the boat to Entrana.", Tele(ENTRANA, from = PORT_SARIM))
+        t(F, Tier.EASY, 9, "Mine some Iron ore in the Dwarven Mine.", Gain(s("Iron ore"), DWARVEN_MINE, skill = sk.MINING), "Mining 15",
+            osrs = "Repair a broken strut in the Motherlode Mine.")
+        t(F, Tier.EASY, 10, "Talk to the Security guard at Port Sarim jail.", Talk(s("Security guard")),
+            osrs = "Claim a security book from the Security guard at Port Sarim jail.")
+        t(F, Tier.EASY, 11, "Smith some Blurite Limbs on Doric's anvil.", Gain(s("Blurite limbs"), DORIC, skill = sk.SMITHING), "Mining 10, Smithing 13")
+        t(F, Tier.MEDIUM, 1, "Light a Bullseye lantern at the Chemist's in Rimmington.", Ev("light:bullseye lantern", CHEMIST), "Firemaking 49")
+        t(F, Tier.MEDIUM, 2, "Telegrab some Wine of Zamorak at the Chaos Temple by the Wilderness.",
+            Gain(s("Wine of zamorak"), CHAOS_TEMPLE_ASGARNIA, skill = sk.MAGIC), "Magic 33")
+        t(F, Tier.MEDIUM, 3, "Unlock the Crystal chest in Taverley.", Ev("chest:crystal"))
+        t(F, Tier.MEDIUM, 4, "Place a Scarecrow in the Falador farm flower patch.", Ev("plant:scarecrow", FALADOR_FARM), "Farming 23")
+        t(F, Tier.MEDIUM, 5, "Kill a Mogre at Mudskipper Point.", Kill(s("Mogre"), MUDSKIPPER), "Slayer 32")
+        t(F, Tier.MEDIUM, 6, "Kill a rat in Port Sarim.", Kill(s("Rat", "Giant rat"), PORT_SARIM), osrs = "Visit the Port Sarim Rat Pits.")
+        t(F, Tier.MEDIUM, 7, "Grapple up and then jump off the north Falador wall.",
+            Steps(listOf(Trigger.Xp(Skills.AGILITY, FALADOR_NORTH_WALL_TOP), Trigger.Xp(Skills.AGILITY, FALADOR_NORTH_WALL_FOOT))), "Agility 11, Strength 37, Ranged 19")
+        t(F, Tier.MEDIUM, 8, "Pickpocket a Falador guard.", Ev("pickpocket:guard", FALADOR), "Thieving 40")
+        t(F, Tier.MEDIUM, 9, "Pray at the Altar of Guthix in Taverley whilst wearing full Initiate.", PrayUp(TAVERLEY_GUTHIX_ALTAR, initiate), "Prayer 10, Defence 20")
+        t(F, Tier.MEDIUM, 10, "Mine some Gold ore at the Crafting Guild.", Gain(s("Gold ore"), CRAFTING_GUILD, skill = sk.MINING), "Crafting 40, Mining 40")
+        t(F, Tier.MEDIUM, 11, "Mine some Mithril ore in the Mining Guild.", Gain(s("Mithril ore"), MINING_GUILD, skill = sk.MINING), "Mining 60",
+            osrs = "Squeeze through the crevice in the Dwarven mines.")
+        t(F, Tier.MEDIUM, 12, "Chop and burn some Willow logs in Taverley.",
+            Steps(listOf(Gain(s("Willow logs"), TAVERLEY, skill = sk.WOODCUTTING), Burn(s("Willow logs"), TAVERLEY))), "Woodcutting 30, Firemaking 30")
+        t(F, Tier.MEDIUM, 13, "Craft a fruit basket on the Falador Farm loom.", Gain(s("Basket"), FALADOR_FARM, skill = sk.CRAFTING), "Crafting 36")
+        t(F, Tier.MEDIUM, 14, "Teleport to Falador.", Tele(FALADOR_TELE), "Magic 37")
+        t(F, Tier.HARD, 1, "Craft 140 Mind runes simultaneously from Essence.", Gain(s("Mind rune"), count = 140, skill = sk.RUNECRAFTING, once = true), "Runecrafting 56")
+        t(F, Tier.HARD, 2, "Change your family crest to the Saradomin symbol.", Ev("crest:saradomin"), "Prayer 70, Construction 16")
+        t(F, Tier.HARD, 3, "Kill the Giant Mole beneath Falador Park.", Kill(s("Giant mole")))
+        t(F, Tier.HARD, 4, "Kill a Skeletal Wyvern in the Asgarnia Ice Dungeon.", Kill(s("Skeletal wyvern")), "Slayer 72")
+        t(F, Tier.HARD, 5, "Kill a Black Knight in the Black Knights' Fortress.", Kill(s("Black knight"), BLACK_KNIGHTS_FORTRESS),
+            osrs = "Complete a lap of the Falador rooftop agility course.")
+        t(F, Tier.HARD, 6, "Mine some Runite ore in the Mining Guild.", Gain(s("Runite ore"), MINING_GUILD, skill = sk.MINING), "Mining 85",
+            osrs = "Enter the mining guild while wearing a Prospector helmet.")
+        t(F, Tier.HARD, 7, "Kill the Blue Dragon under the Heroes' Guild.", Kill(s("Blue dragon"), HEROES_GUILD_BASEMENT))
+        t(F, Tier.HARD, 8, "Crack a wall safe within Rogues' Den.", Trigger.Xp(Skills.THIEVING, ROGUES_DEN), "Thieving 50")
+        t(F, Tier.HARD, 9, "Recharge your prayer in the Port Sarim church while wearing full Proselyte.", PrayUp(PORT_SARIM_CHURCH, proselyte), "Defence 30, Prayer 20")
+        t(F, Tier.HARD, 10, "Enter the Warriors' Guild.", Enter(WARRIORS_GUILD))
+        t(F, Tier.HARD, 11, "Kill a Dwarf in the Dwarven Mine.", Kill(s("Dwarf", "Chaos dwarf"), DWARVEN_MINE), "Defence 50",
+            osrs = "Equip a dwarven helmet within the dwarven mines.")
+        t(F, Tier.ELITE, 1, "Craft 252 Air Runes simultaneously from Essence.", Gain(s("Air rune"), count = 252, skill = sk.RUNECRAFTING, once = true), "Runecrafting 88")
+        t(F, Tier.ELITE, 2, "Purchase a White 2h Sword from Sir Vyvin.", Gain(s("White 2h sword"), FALADOR_CASTLE))
+        t(F, Tier.ELITE, 3, "Find at least 3 magic roots at once when digging up your magic tree in Falador.",
+            Gain(s("Magic roots"), FALADOR_PARK, count = 3, once = true), "Farming 91, Woodcutting 75")
+        t(F, Tier.ELITE, 4, "Perform a skillcape or quest cape emote at the top of Falador Castle.", Ev("emote:skillcape", FALADOR_CASTLE_TOP))
+        t(F, Tier.ELITE, 5, "Jump over the strange floor in Taverley dungeon.", Trigger.Xp(Skills.AGILITY, TAVERLEY_STRANGE_FLOOR), "Agility 80")
+        t(F, Tier.ELITE, 6, "Mix a Saradomin brew in Falador east bank.", Gain(s("Saradomin brew(3)", "Saradomin brew (3)"), FALADOR_EAST_BANK, skill = sk.HERBLORE), "Herblore 81")
     }
 
     val ALL: List<Task> get() = ALL_TASKS

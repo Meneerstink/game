@@ -27,6 +27,7 @@ object Diaries {
         WILDERNESS("Wilderness", "Wilderness", "the Lesser Fanatic", "Wilderness Area"),
         VARROCK("Varrock", "Varrock", "Toby", "Varrock"),
         ARDOUGNE("Ardougne", "Ardougne", "Two-pints", "Ardougne"),
+        FALADOR("Falador", "Falador", "Sir Rebral", "Falador"),
     }
 
     class Box(val x1: Int, val z1: Int, val x2: Int, val z2: Int, val h: Int = -1) {

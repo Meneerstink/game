@@ -120,7 +120,10 @@ object EmotesTab {
     ) {
         if (busy(p.world.currentCycle, p.attr[EMOTE_UNTIL], p.attr[EMOTE_TILE], p.tile.as30BitInteger)) return
         if (emote == Emote.SKILLCAPE) {
-            if (SkillcapeEmotes.perform(p)) ClueScrollManager.tryEmote(p, emote.component)
+            if (SkillcapeEmotes.perform(p)) {
+                ClueScrollManager.tryEmote(p, emote.component)
+                gg.rsmod.plugins.content.diaries.Diaries.event(p, "emote:skillcape") // DIARIES-OSRS Falador elite 4
+            }
             return
         }
         // At least the unlock value: the goblin emotes share the Lost Tribe progress varbit (Void Emotes.kt: questStage >= 7).

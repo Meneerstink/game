@@ -66,6 +66,7 @@ lightSourceRaw.forEach { raw ->
         // Light the source
         if (player.inventory.remove(raw, beginSlot = slot).hasSucceeded()) {
             player.inventory.add(lightSource.product, beginSlot = slot)
+            gg.rsmod.plugins.content.diaries.Diaries.event(player, "light:${lightSource.name.lowercase().replace('_', ' ')}") // DIARIES-OSRS Falador medium 1
             if (player.timers.has(DARK_ZONE_TIMER)) {
                 val interfaceId = LightSource.getActiveLightSource(player)?.interfaceId ?: return@on_item_on_item
                 player.openInterface(dest = InterfaceDestination.MAIN_SCREEN_OVERLAY, interfaceId = interfaceId)

@@ -50,7 +50,7 @@ class DiariesTests {
 
     init {
         DiaryRewards.ids = mapOf(Diary.KANDARIN to headgear, Diary.WESTERN to intArrayOf(30011, 30012, 30013, 30014), Diary.WILDERNESS to intArrayOf(30021, 30022, 30023, 30024),
-            Diary.VARROCK to intArrayOf(30031, 30032, 30033, 30034), Diary.ARDOUGNE to intArrayOf(30041, 30042, 30043, 30044))
+            Diary.VARROCK to intArrayOf(30031, 30032, 30033, 30034), Diary.ARDOUGNE to intArrayOf(30041, 30042, 30043, 30044), Diary.FALADOR to intArrayOf(30051, 30052, 30053, 30054))
     }
 
     private fun completeTier(diary: Diary, tier: Tier) =
@@ -66,6 +66,7 @@ class DiariesTests {
         assertEquals(42, Diaries.totalCount(Diary.VARROCK))
         assertEquals(listOf(14, 13, 10, 5), Tier.values().map { Diaries.totalCount(Diary.VARROCK, it) })
         assertEquals(listOf(10, 12, 12, 8), Tier.values().map { Diaries.totalCount(Diary.ARDOUGNE, it) })
+        assertEquals(listOf(11, 14, 11, 6), Tier.values().map { Diaries.totalCount(Diary.FALADOR, it) })
         Diary.values().forEach { d -> Tier.values().forEach { t -> assertTrue(Diaries.totalCount(d, t) > 0, "$d $t has no tasks") } }
         // The panel shows the same totals for the three diaries that exist.
         DiaryUi.ROWS.forEachIndexed { i, (_, osrs) -> DiaryUi.diaryOfRow(i)?.let { assertEquals(osrs, Diaries.totalCount(it), "row $i") } }
