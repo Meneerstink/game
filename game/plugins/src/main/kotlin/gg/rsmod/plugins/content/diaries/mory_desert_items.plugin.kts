@@ -50,5 +50,3 @@ amulets.forEachIndexed { i, id ->
     def.equipmentMenu.filterNotNull().distinct().filter(isTele).forEach { opt -> on_equipment_option(id, option = opt) { amuletTele(player, i + 1, opt) } }
 }
 
-// Morytania easy 3: Mazchna, the Canifis Slayer Master (OSRS Wiki: Canifis, north of the pub), had no spawn on this server.
-spawn_npc(npc = Npcs.MAZCHNA, x = 3510, z = 3507, height = 0, walkRadius = 2)
