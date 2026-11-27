@@ -237,4 +237,30 @@ class DiariesTests {
         every { player.tile } returns gg.rsmod.game.model.Tile(3492, 3472, 0) // Canifis
         assertEquals(1.0, DiaryItems.slayerTowerFactor(player), 1e-12)
     }
+
+    @Test
+    fun `a steps task finished without its requirement starts over and completes when done again with the levels`() {
+        // Falador medium 7: grapple up + jump off the north wall (Agility xp on the wall, then at its foot); needs Strength 37 + Ranged 19,
+        // which the agility xp itself does not enforce. Before D7 27-11 the full progress stayed and the task could never complete.
+        val task = Diaries.TASKS.first { it.diary == Diary.FALADOR && it.tier == Tier.MEDIUM && it.text.startsWith("Grapple up") }
+        val skills = mockk<gg.rsmod.game.model.skill.SkillSet>()
+        val xp = DoubleArray(25)
+        var str = 30
+        every { player.skills } returns skills
+        every { skills.maxSkills } returns 25
+        every { skills.getCurrentXp(any()) } answers { xp[firstArg()] }
+        every { skills.getMaxLevel(any()) } answers { if (firstArg<Int>() == 2) str else 99 }
+        every { skills.getCurrentLevel(any()) } answers { if (firstArg<Int>() == 2) str else 99 }
+        val top = gg.rsmod.game.model.Tile(3005, 3394, 1)
+        val foot = gg.rsmod.game.model.Tile(3005, 3394, 0)
+        var at = top
+        every { player.tile } answers { at }
+        fun agility(tile: gg.rsmod.game.model.Tile) { at = tile; xp[16] += 100.0; Diaries.tick(player) }
+        Diaries.tick(player) // first snapshot
+        agility(top); agility(foot)
+        assertFalse(Diaries.isDone(player, task.id), "Strength 30 < 37: the task must not count")
+        str = 37
+        agility(top); agility(foot)
+        assertTrue(Diaries.isDone(player, task.id), "done again with the levels: the task completes")
+    }
 }
