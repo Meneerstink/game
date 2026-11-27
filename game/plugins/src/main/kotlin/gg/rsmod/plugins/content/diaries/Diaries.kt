@@ -247,7 +247,11 @@ object Diaries {
         }
         if (!changed) return
         // A task without its OSRS requirements keeps its progress and completes on a later event once the levels are there.
-        val completed = updated.filter { complete(it.trigger, prog[it.id] ?: 0) && runCatching { DiaryUi.meetsRequirements(player, it.req) }.getOrDefault(true) }
+        val reached = updated.filter { complete(it.trigger, prog[it.id] ?: 0) }
+        val completed = reached.filter { runCatching { DiaryUi.meetsRequirements(player, it.req) }.getOrDefault(true) }
+        // D7 27-11: a Steps/All task finished without the requirements would stay full forever (no later event changes a full
+        // progress, so it is never checked again) - OSRS: the task did not count, so it starts over and is done again with the levels.
+        reached.filter { it !in completed && (it.trigger is Trigger.Steps || it.trigger is Trigger.All) }.forEach { prog[it.id] = 0 }
         // OSRS: completing or updating another task resets the 'from scratch' / 'in a row' tasks.
         for (task in TASKS) {
             if (task.id in done || task in updated) continue
