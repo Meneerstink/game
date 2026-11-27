@@ -153,7 +153,9 @@ object PohRooms {
         /** True when this room may be built on [plane] from a doorway. */
         fun buildableOn(plane: Int): Boolean =
             when (plane) {
-                DUNGEON -> where == Where.DUNGEON
+                // C11 27-11: OSRS has no dungeon pit (2009 room, no Wiki page; its pit guardians were never buildable here) - not
+                // offered any more; a pit already built keeps loading (type stays, owner rule 'bestaand bezit blijft').
+                DUNGEON -> where == Where.DUNGEON && this != DUNGEON_PIT
                 UPSTAIRS -> where == Where.ANY || where == Where.UPSTAIRS
                 else -> where == Where.ANY || where == Where.GROUND
             }
@@ -432,7 +434,8 @@ object PohRooms {
         }
         pieces.sortedBy { world.definitions.get(ObjectDef::class.java, it.id).let { d -> d.width * d.length } }.forEach { world.spawn(it) }
         copies.filter { it !in handled }.forEach { obj ->
-            val name = world.definitions.get(ObjectDef::class.java, obj.id).name.lowercase()
+            val def = world.definitions.get(ObjectDef::class.java, obj.id)
+            val name = def.name.lowercase()
             when {
                 obj.id == WINDOW_SPACE -> {
                     world.remove(obj)
@@ -440,6 +443,9 @@ object PohRooms {
                 }
                 name == "door hotspot" -> Unit
                 name.endsWith(" space") && !buildMode -> world.remove(obj)
+                // C11 27-11: a hotspot without a buildable piece and without 'space' in its name (the dungeon pit's 'Pit guardian'
+                // 36676, a 2009 piece OSRS has not) showed its ghost model outside building mode - every 'Build' loc goes.
+                !buildMode && def.options.any { it == "Build" } -> world.remove(obj)
             }
         }
     }

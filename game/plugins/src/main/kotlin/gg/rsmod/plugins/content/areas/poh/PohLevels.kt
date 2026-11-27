@@ -94,7 +94,7 @@ object PohLevels {
     ): List<PohRooms.RoomType> =
         when {
             piece in TRAPDOORS -> listOf(PohRooms.RoomType.OUBLIETTE)
-            piece == DUNGEON_ENTRANCE -> PohRooms.RoomType.values().filter { it.where == PohRooms.Where.DUNGEON }
+            piece == DUNGEON_ENTRANCE -> PohRooms.RoomType.values().filter { it.buildableOn(PohRooms.DUNGEON) }
             piece in LADDERS -> emptyList()
             to == PohRooms.UPSTAIRS -> listOf(PohRooms.RoomType.SKILL_HALL_UP, PohRooms.RoomType.QUEST_HALL_UP)
             to == PohRooms.DUNGEON -> listOf(PohRooms.RoomType.DUNGEON_STAIRS)

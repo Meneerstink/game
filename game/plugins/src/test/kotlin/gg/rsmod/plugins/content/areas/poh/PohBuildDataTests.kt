@@ -54,4 +54,16 @@ class PohBuildDataTests {
         assertTrue(PlayerHouse.Room.values().filter { it != PlayerHouse.Room.GARDEN }.all { kotlin.math.abs(it.dx) + kotlin.math.abs(it.dz) == 1 })
         assertEquals(5, PlayerHouse.ROOM_COUNT)
     }
+
+    @Test
+    fun `the dungeon offers the OSRS rooms only - no 2009 dungeon pit`() {
+        val dungeon = PohRooms.RoomType.values().filter { it.buildableOn(PohRooms.DUNGEON) }
+        assertEquals(
+            setOf(PohRooms.RoomType.DUNGEON_CORRIDOR, PohRooms.RoomType.DUNGEON_JUNCTION, PohRooms.RoomType.DUNGEON_STAIRS, PohRooms.RoomType.TREASURE_ROOM),
+            dungeon.toSet(),
+        )
+        assertFalse(PohRooms.RoomType.DUNGEON_PIT.buildableOn(PohRooms.DUNGEON))
+        // a pit built before 27-11 still loads (bestaand bezit blijft)
+        assertEquals(PohRooms.RoomType.DUNGEON_PIT, PohRooms.Built.decode("DUNGEON_PIT,0,0,-1,0")?.type)
+    }
 }
