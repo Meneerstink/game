@@ -14,6 +14,17 @@ on_spell_on_item(fromInterface = 192, fromComponent = 38) {
     if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.UTILITY_SPELL)) return@on_spell_on_item
     player.queue(TaskPriority.STRONG) {
         val data = MagicSpells.getMetadata(spellId = SpellbookData.LOW_ALCHEMY.uniqueId) ?: return@queue
+        // DIARIES-OSRS: an Explorer's ring pays the cast only when the runes are missing (runes first, OSRS Wiki), no Magic xp.
+        if (MagicSpells.castProblem(player, data.lvl, data.runes) != null && player.skills.getCurrentLevel(Skills.MAGIC) >= data.lvl &&
+            gg.rsmod.plugins.content.diaries.DiaryItems.explorerAlchCovers(player, high = false)
+        ) {
+            if (!confirmValuableAlchemy(this, player)) return@queue
+            if (performAlchemy(player, highAlchemy = false, grantXp = false)) {
+                gg.rsmod.plugins.content.diaries.DiaryItems.useExplorerAlch(player)
+                player.message("Your ring has ${gg.rsmod.plugins.content.diaries.DiaryItems.explorerAlchLeft(player)} free alchemy casts left today.")
+            }
+            return@queue
+        }
         if (MagicSpells.canCast(player, data.lvl, data.runes)) {
             if (!confirmValuableAlchemy(this, player)) return@queue
             if (performAlchemy(player, highAlchemy = false)) {
@@ -28,6 +39,17 @@ on_spell_on_item(fromInterface = 192, fromComponent = 59) {
     if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.UTILITY_SPELL)) return@on_spell_on_item
     player.queue(TaskPriority.STRONG) {
         val data = MagicSpells.getMetadata(spellId = SpellbookData.HIGH_ALCHEMY.uniqueId) ?: return@queue
+        // DIARIES-OSRS: an Explorer's ring pays the cast only when the runes are missing (runes first, OSRS Wiki), no Magic xp.
+        if (MagicSpells.castProblem(player, data.lvl, data.runes) != null && player.skills.getCurrentLevel(Skills.MAGIC) >= data.lvl &&
+            gg.rsmod.plugins.content.diaries.DiaryItems.explorerAlchCovers(player, high = true)
+        ) {
+            if (!confirmValuableAlchemy(this, player)) return@queue
+            if (performAlchemy(player, highAlchemy = true, grantXp = false)) {
+                gg.rsmod.plugins.content.diaries.DiaryItems.useExplorerAlch(player)
+                player.message("Your ring has ${gg.rsmod.plugins.content.diaries.DiaryItems.explorerAlchLeft(player)} free alchemy casts left today.")
+            }
+            return@queue
+        }
         if (MagicSpells.canCast(player, data.lvl, data.runes)) {
             if (!confirmValuableAlchemy(this, player)) return@queue
             if (performAlchemy(player, highAlchemy = true)) {
@@ -65,6 +87,7 @@ private val ALCH_TIMER_DURATION = 5
 fun performAlchemy(
     player: Player,
     highAlchemy: Boolean,
+    grantXp: Boolean = true,
 ): Boolean {
     if (player.timers.has(ALCH_TIMER) && player.timers[ALCH_TIMER] > 0) {
         return false
@@ -102,7 +125,7 @@ fun performAlchemy(
     player.graphic(graphic)
     if (player.inventory.remove(Item(item.id, 1)).hasSucceeded()) {
         player.inventory.add(Item(Items.COINS_995, coinAmount))
-        player.addXp(Skills.MAGIC, experience, checkBrawlingGloves = true)
+        if (grantXp) player.addXp(Skills.MAGIC, experience, checkBrawlingGloves = true)
         gg.rsmod.plugins.content.diaries.Diaries.event(player, if (highAlchemy) "spell:high level alchemy" else "spell:low level alchemy")
     }
     return true

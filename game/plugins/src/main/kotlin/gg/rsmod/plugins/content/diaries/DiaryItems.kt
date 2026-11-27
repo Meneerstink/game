@@ -226,6 +226,33 @@ object DiaryItems {
 
     fun explorerTier(ring: Int): Int = EXPLORER_RINGS.indexOf(ring) + 1
 
+    /**
+     * OSRS Wiki "Explorer's ring 2/3/4": "Cast Low Level Alchemy (Magic 21) [ring 4: or High Level Alchemy (Magic 55)] without using
+     * any runes 30 times per day (however, does not grant any Magic XP for casting)"; "Casting alchemy spells while holding an
+     * Explorer's ring now consumes runes first, instead of ring charges." So: only used when the runes are missing (alchemy plugin).
+     */
+    val EXPLORER_ALCH_DAY = AttributeKey<Int>(persistenceKey = "diary_explorer_alch_day")
+    val EXPLORER_ALCH_USED = AttributeKey<Int>(persistenceKey = "diary_explorer_alch_used")
+    const val EXPLORER_ALCH_PER_DAY = 30
+
+    fun heldExplorerTier(player: Player): Int =
+        EXPLORER_RINGS.filter { player.equipment.contains(it) || player.inventory.contains(it) }.maxOfOrNull { explorerTier(it) } ?: 0
+
+    fun explorerAlchLeft(player: Player): Int =
+        EXPLORER_ALCH_PER_DAY - (if (player.attr[EXPLORER_ALCH_DAY] == today()) player.attr[EXPLORER_ALCH_USED] ?: 0 else 0)
+
+    /** True when the held ring may pay this cast (tier 2+ low, tier 4 high, charges left). Does not use a charge. */
+    fun explorerAlchCovers(player: Player, high: Boolean): Boolean {
+        val tier = heldExplorerTier(player)
+        return (if (high) tier >= 4 else tier >= 2) && explorerAlchLeft(player) > 0
+    }
+
+    fun useExplorerAlch(player: Player) {
+        val used = EXPLORER_ALCH_PER_DAY - explorerAlchLeft(player)
+        player.attr[EXPLORER_ALCH_DAY] = today()
+        player.attr[EXPLORER_ALCH_USED] = used + 1
+    }
+
     fun explorerRunUses(ring: Int): Int = when (explorerTier(ring)) { 1 -> 2; 2 -> 3; 3 -> 4; else -> 3 }
 
     fun explorerRunRestore(player: Player, ring: Int): String {
