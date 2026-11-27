@@ -242,7 +242,8 @@ on_command("players") {
     }
 }
 
-on_command("locate") {
+// OPERATIE FINAL rechten-proef 27-11: was for every player = find anyone in Deadman (P1); OSRS has no locate. Staff only now.
+on_command("locate", Privilege.MOD_POWER) {
     // Get command arguments
     val args = player.getCommandArgs()
     // Validate command usage and arguments
