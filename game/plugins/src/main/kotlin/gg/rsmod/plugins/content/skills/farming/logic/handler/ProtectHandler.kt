@@ -33,6 +33,7 @@ class ProtectHandler(
                 player.inventory.remove(unnoted, amount = unnotedToRemove)
                 player.inventory.remove(noted, amount = notedToRemove)
                 state.protect()
+                gg.rsmod.plugins.content.diaries.Diaries.event(player, "farming_protect:${state.seed!!.name.lowercase()}") // DIARIES-OSRS
                 true
             } else {
                 false

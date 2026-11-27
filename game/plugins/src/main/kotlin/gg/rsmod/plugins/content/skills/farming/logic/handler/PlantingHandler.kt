@@ -36,6 +36,7 @@ class PlantingHandler(
                         .plantedMessage(seed, patch),
                 )
                 state.plantSeed(seed)
+                gg.rsmod.plugins.content.diaries.Diaries.event(player, "plant:${seed.seedName}") // DIARIES-OSRS (Kandarin easy jute)
             }
         }
     }

@@ -828,7 +828,10 @@ on_world_init {
             val tier = arandarTiers.firstOrNull { (rock, _, _) -> clicked.tile.x == rock.x && clicked.tile.z == rock.z } ?: return@shortcut
             val (_, level, landing) = tier
             if (!player.hasAgility(level, "You need level $level agility to use this shortcut.")) return@shortcut
-            obstacle { darkanForceMove(player, landing, startCycles = 0, speedCycles = 30, anim = if (id == 9296) 2050 else 2049) }
+            obstacle {
+                darkanForceMove(player, landing, startCycles = 0, speedCycles = 30, anim = if (id == 9296) 2050 else 2049)
+                if (level == 85) gg.rsmod.plugins.content.diaries.Diaries.event(player, "shortcut:elven overpass advanced") // DIARIES-OSRS Western elite
+            }
         }
     }
 
@@ -846,6 +849,7 @@ on_world_init {
             }
             player.animate(-1)
             player.addXp(Skills.AGILITY, 1.0)
+            gg.rsmod.plugins.content.diaries.Diaries.event(player, "shortcut:eagles peak") // DIARIES-OSRS Western medium (replaces the eagle)
         }
     }
 
@@ -866,6 +870,7 @@ on_world_init {
             obstacle {
                 if (id == 26328) player.moveTo(Tile(2943, 3767))
                 darkanForceMove(player, landing, startCycles = 25, speedCycles = 60, anim = anim)
+                if (id == 26328) gg.rsmod.plugins.content.diaries.Diaries.event(player, "shortcut:trollheim wilderness") // DIARIES-OSRS Wilderness hard
             }
         }
     }
