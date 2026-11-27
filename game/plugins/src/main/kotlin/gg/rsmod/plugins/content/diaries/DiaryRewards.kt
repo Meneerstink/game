@@ -31,7 +31,9 @@ object DiaryRewards {
         ids?.let { return it[diary]!! }
         val defs = world.definitions
         val byName = HashMap<String, Int>()
-        for (i in 0 until defs.getCount(ItemDef::class.java)) {
+        // No item definitions (a unit test's mocked world, e.g. the light-source checks): no diary items, and nothing cached.
+        val count = runCatching { defs.getCount(ItemDef::class.java) }.getOrNull() ?: return IntArray(4) { -1 }
+        for (i in 0 until count) {
             val d = runCatching { defs.get(ItemDef::class.java, i) }.getOrNull() ?: continue
             if (!d.noted && d.name.isNotEmpty()) byName.putIfAbsent(d.name.lowercase(), i)
         }
