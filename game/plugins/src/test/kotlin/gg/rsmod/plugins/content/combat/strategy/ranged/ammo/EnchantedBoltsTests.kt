@@ -75,6 +75,17 @@ class EnchantedBoltsTests {
     }
 
     @Test
+    fun `Kandarin hard diary adds 10 percent of the base, additive with the Armadyl Eye, also in PvP`() {
+        val diamond = EnchantedBolts.ROSTER.getValue(Items.DIAMOND_DRAGON_BOLTS_E)
+        val npc = npc()
+        val target = player()
+        assertEquals(0.11, EnchantedBolts.chance(diamond, npc, Special.NONE, kandarinHard = true), 1e-12)
+        assertEquals(0.21, EnchantedBolts.chance(diamond, npc, Special.ARMADYL_EYE, kandarinHard = true), 1e-12)
+        assertEquals(diamond.playerChance * 1.1, EnchantedBolts.chance(diamond, target, Special.NONE, kandarinHard = true), 1e-12)
+        assertEquals(0.10, EnchantedBolts.chance(diamond, npc, Special.NONE, kandarinHard = false), 1e-12)
+    }
+
+    @Test
     fun `immunities and player or monster restrictions`() {
         val attacker = player(hp = 99)
         val topaz = EnchantedBolts.ROSTER.getValue(Items.TOPAZ_DRAGON_BOLTS_E)
