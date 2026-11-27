@@ -25,4 +25,12 @@ class FacialExpressionRigTests {
     fun `the default talking pose is the HD one`() {
         assertEquals(FacialExpression.HAPPY_TALKING.hd, FacialExpression.HAPPY_TALKING.animationId)
     }
+
+    @Test
+    fun `the rig check reads head models through ModelArchive (ids from 65536 up live in archive 37)`() {
+        // CHATHEAD-KLEIN-OSRS-NPC 27-11: archive 7 alone missed Le-sabre's 71079, so she got the HD poses and a tiny head.
+        val src = java.io.File("src/main/kotlin/gg/rsmod/plugins/api/ext/ChatheadRig.kt").readText()
+        assertEquals(true, "ModelArchive.read(world.filestore, model)" in src)
+        assertEquals(false, "filestore.data(" in src)
+    }
 }

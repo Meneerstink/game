@@ -2,6 +2,7 @@ package gg.rsmod.plugins.api.ext
 
 import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.model.World
+import gg.rsmod.game.tools.importer.ModelArchive
 import gg.rsmod.game.tools.importer.ModernModelDecoder
 import gg.rsmod.plugins.api.cfg.FacialExpression
 import java.util.concurrent.ConcurrentHashMap
@@ -15,7 +16,6 @@ import java.util.concurrent.ConcurrentHashMap
  * See [FacialExpression] for the measurements.
  */
 object ChatheadRig {
-    private const val MODEL_INDEX = 7
     private const val CLASSIC_MAX_LABEL = 50
     private const val NO_GROUP = 255
 
@@ -29,7 +29,10 @@ object ChatheadRig {
             val heads = world.definitions.getNullable(NpcDef::class.java, npcId)?.chatheadModels ?: return@getOrPut false
             val labels =
                 heads.flatMap { model ->
-                    val bytes = runCatching { world.filestore.data(MODEL_INDEX, model, 0) }.getOrNull() ?: return@flatMap emptyList()
+                    // CHATHEAD-KLEIN-OSRS-NPC 27-11: model ids from 65536 up live in archive 37 (ModelArchive). Reading archive 7 only
+                    // found nothing for them, so every OSRS-imported head with a new model id (Le-sabre 71079, Hatius 71070/71071)
+                    // fell back to the HD poses, which never scale an OSRS head up - a tiny head in the dialogue.
+                    val bytes = runCatching { ModelArchive.read(world.filestore, model) }.getOrNull() ?: return@flatMap emptyList()
                     runCatching { ModernModelDecoder.decode(bytes, flattenTextures = true).vertexLabel?.toList() }.getOrNull() ?: emptyList()
                 }.filter { it != NO_GROUP }
             labels.isNotEmpty() && labels.all { it <= CLASSIC_MAX_LABEL }
