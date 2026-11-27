@@ -201,6 +201,8 @@ on_logout {
 }
 
 on_login {
+    // CON99-BUTLER-VERLIES: a butler errand the server shutdown cut off (saved without the logout hooks) is settled once.
+    PohServant.settleSaved(player)
     player.setVarbit(PlayerHouse.BUILD_MODE_VARBIT, if (PlayerHouse.isBuildMode(player)) 1 else 0)
     val packed = player.attr[PlayerHouse.LOGOUT_OFFSET_ATTR] ?: return@on_login
     player.attr.remove(PlayerHouse.LOGOUT_OFFSET_ATTR)

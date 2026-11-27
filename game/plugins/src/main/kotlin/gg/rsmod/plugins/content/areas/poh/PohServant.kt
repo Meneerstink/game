@@ -61,6 +61,34 @@ object PohServant {
     private val SERVANT_ATTR = AttributeKey<Npc>()
     val TRIP_ATTR = AttributeKey<Trip>()
     val TRIP_TIMER = TimerKey()
+
+    /**
+     * CON99-BUTLER-VERLIES 27-11: the errand also goes into the save ("KIND,item,amount"). A logout settles it before the save
+     * ([settleAway] in on_logout), but a server shutdown saves every player without the logout hooks - the planks had already
+     * left the inventory and the in-memory [TRIP_ATTR] was lost with them. The save now holds the trip next to that same
+     * inventory, and the next login settles it once ([settleSaved]).
+     */
+    val TRIP_SAVED = AttributeKey<String>(persistenceKey = "poh_servant_trip_v1")
+
+    private fun begin(
+        player: Player,
+        trip: Trip,
+    ) {
+        player.attr[TRIP_ATTR] = trip
+        player.attr[TRIP_SAVED] = "${trip.kind.name},${trip.item},${trip.amount}"
+    }
+
+    /** Login: an errand still in the save (the server stopped during it) is settled exactly once, like a logout would have. */
+    fun settleSaved(player: Player) {
+        val saved = player.attr[TRIP_SAVED] ?: return
+        player.attr.remove(TRIP_SAVED)
+        if (player.attr.has(TRIP_ATTR)) return
+        val parts = saved.split(',')
+        val kind = parts.getOrNull(0)?.let { name -> Kind.values().firstOrNull { it.name == name } } ?: return
+        val item = parts.getOrNull(1)?.toIntOrNull() ?: return
+        val amount = parts.getOrNull(2)?.toIntOrNull()?.takeIf { it in 1..CAPACITY } ?: return
+        settleAway(player, Trip(kind, item, amount))
+    }
     /** The last fetch request, item shl 8 or amount (a plain number: a persisted Pair does not survive the save, 2026-10-10). */
     private val LAST_FETCH_ATTR = AttributeKey<Int>(persistenceKey = "poh_servant_last_fetch_v2")
 
@@ -228,7 +256,7 @@ object PohServant {
                     return
                 }
                 if (take <= 0 || player.inventory.remove(item, take).completed != take) return
-                player.attr[TRIP_ATTR] = Trip(kind, unnoted, take)
+                begin(player, Trip(kind, unnoted, take))
             }
             Kind.SAWMILL -> {
                 val (plank, fee) = SAWMILL[Item(item).toUnnoted(player.world.definitions).id] ?: return
@@ -240,7 +268,7 @@ object PohServant {
                 }
                 if (player.inventory.remove(item, take).completed != take) return
                 player.inventory.remove(Items.COINS_995, take * fee)
-                player.attr[TRIP_ATTR] = Trip(kind, plank, take)
+                begin(player, Trip(kind, plank, take))
             }
             Kind.DEPOSIT -> {
                 val slot = player.inventory.getItemIndex(item, skipAttrItems = false)
@@ -250,8 +278,8 @@ object PohServant {
                 if (player.inventory.getItemCount(item) == before) return
             }
         }
-        if (kind == Kind.FETCH) player.attr[TRIP_ATTR] = Trip(kind, item, amount)
-        if (kind == Kind.DEPOSIT) player.attr[TRIP_ATTR] = Trip(kind, item, amount)
+        if (kind == Kind.FETCH) begin(player, Trip(kind, item, amount))
+        if (kind == Kind.DEPOSIT) begin(player, Trip(kind, item, amount))
         player.world.remove(npc)
         player.timers[TRIP_TIMER] = TRIP_TICKS
     }
@@ -260,6 +288,7 @@ object PohServant {
     fun returnFromTrip(player: Player) {
         val trip = player.attr[TRIP_ATTR] ?: return
         player.attr.remove(TRIP_ATTR)
+        player.attr.remove(TRIP_SAVED)
         // Back in the owner's house - the same one, or the one a building-mode toggle / rotation reloaded meanwhile.
         if (!PlayerHouse.ownsHouseAt(player)) {
             settleAway(player, trip)
@@ -299,6 +328,7 @@ object PohServant {
     ) {
         trip ?: return
         player.attr.remove(TRIP_ATTR)
+        player.attr.remove(TRIP_SAVED)
         player.timers.remove(TRIP_TIMER)
         if (trip.kind == Kind.UNNOTE || trip.kind == Kind.SAWMILL) player.bank.add(trip.item, trip.amount)
     }

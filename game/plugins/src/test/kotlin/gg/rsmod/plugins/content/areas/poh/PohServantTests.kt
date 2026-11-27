@@ -60,6 +60,34 @@ class PohServantTests {
     }
 
     @Test
+    fun `an errand a server shutdown saved is settled once at the next login`() {
+        attr[PohServant.TRIP_SAVED] = "UNNOTE,${Items.OAK_PLANK},12"
+        PohServant.settleSaved(player)
+        PohServant.settleSaved(player)
+        assertEquals(12, bank.getItemCount(Items.OAK_PLANK))
+        assertNull(attr[PohServant.TRIP_SAVED])
+    }
+
+    @Test
+    fun `the saved errand is cleared by a normal settle, so a login after a logout pays nothing`() {
+        trip(PohServant.Kind.UNNOTE, Items.OAK_PLANK, 7)
+        attr[PohServant.TRIP_SAVED] = "UNNOTE,${Items.OAK_PLANK},7"
+        PohServant.settleAway(player) // on_logout, before the save
+        PohServant.settleSaved(player) // next login
+        assertEquals(7, bank.getItemCount(Items.OAK_PLANK))
+    }
+
+    @Test
+    fun `a broken or oversized saved errand pays nothing`() {
+        attr[PohServant.TRIP_SAVED] = "UNNOTE,${Items.OAK_PLANK},999"
+        PohServant.settleSaved(player)
+        attr[PohServant.TRIP_SAVED] = "NONSENSE"
+        PohServant.settleSaved(player)
+        assertEquals(0, bank.getItemCount(Items.OAK_PLANK))
+        assertNull(attr[PohServant.TRIP_SAVED])
+    }
+
+    @Test
     fun `a fetch or a deposit cut short adds nothing to the bank`() {
         trip(PohServant.Kind.FETCH, Items.TEAK_PLANK, 26)
         PohServant.settleAway(player)
