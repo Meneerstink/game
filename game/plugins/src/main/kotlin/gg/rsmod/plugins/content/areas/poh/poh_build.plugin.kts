@@ -70,8 +70,8 @@ on_any_item_on_npc(PohServant.NPC) {
 val CONSTRUCTION_CAPES = intArrayOf(Items.CONSTRUCT_CAPE, Items.CONSTRUCT_CAPE_T)
 
 fun capeToHouse(player: Player) {
-    player.canTeleport(TeleportType.JEWELRY) {
-        val type = TeleportType.JEWELRY
+    player.canTeleport(TeleportType.SKILLCAPE) {
+        val type = TeleportType.SKILLCAPE
         player.lock = LockState.FULL_WITH_DAMAGE_IMMUNITY
         player.queue(TaskPriority.STRONG) {
             player.prepareForTeleport()
@@ -91,9 +91,9 @@ fun capeToPortal(player: Player) {
         val towns = PlayerHouse.Location.values().filter { it.offered }
         val pick = options(*towns.map { it.displayName }.toTypedArray(), title = "Teleport to which house portal?")
         val town = towns.getOrNull(pick - 1) ?: return@queue
-        player.canTeleport(TeleportType.JEWELRY) {
+        player.canTeleport(TeleportType.SKILLCAPE) {
             val spot = gg.rsmod.plugins.content.mechanics.pvp.CityGuards.nearestWalkable(world, town.exit, radius = 3) ?: town.exit
-            player.teleport(spot, TeleportType.JEWELRY)
+            player.teleport(spot, TeleportType.SKILLCAPE)
         }
     }
 }

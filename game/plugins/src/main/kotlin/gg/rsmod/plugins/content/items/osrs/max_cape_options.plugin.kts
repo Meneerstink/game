@@ -44,18 +44,18 @@ fun capeTeleport(
         player.message("You have used all ${MaxCapeTeleports.HUNTER_TELEPORTS_PER_DAY} of today's Hunter area teleports.")
         return
     }
-    player.canTeleport(TeleportType.JEWELRY) {
+    player.canTeleport(TeleportType.SKILLCAPE) {
         if (!hasMaxCape(player)) return@canTeleport
         if (destination.dailyHunterLimit && !SkillcapePerks.takeDailyUse(player, DailyUse.HUNTER_TELEPORT)) return@canTeleport
-        player.teleport(arrivalTile(destination.tile), TeleportType.JEWELRY)
+        player.teleport(arrivalTile(destination.tile), TeleportType.SKILLCAPE)
     }
 }
 
 fun teleportHome(player: Player) {
     if (!hasMaxCape(player)) return
-    player.canTeleport(TeleportType.JEWELRY) {
+    player.canTeleport(TeleportType.SKILLCAPE) {
         if (!hasMaxCape(player)) return@canTeleport
-        val type = TeleportType.JEWELRY
+        val type = TeleportType.SKILLCAPE
         player.lock = LockState.FULL_WITH_DAMAGE_IMMUNITY
         player.queue(TaskPriority.STRONG) {
             player.prepareForTeleport()

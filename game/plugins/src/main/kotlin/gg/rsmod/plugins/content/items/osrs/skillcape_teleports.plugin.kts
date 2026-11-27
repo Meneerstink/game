@@ -22,10 +22,10 @@ fun skillcapeTeleport(
         player.message("You have used all ${MaxCapeTeleports.HUNTER_TELEPORTS_PER_DAY} of today's Hunter area teleports.")
         return
     }
-    player.canTeleport(TeleportType.JEWELRY) {
+    player.canTeleport(TeleportType.SKILLCAPE) {
         if (destination.dailyHunterLimit && !SkillcapePerks.takeDailyUse(player, DailyUse.HUNTER_TELEPORT)) return@canTeleport
         val tile = CityGuards.nearestWalkable(world, destination.tile, radius = 3) ?: destination.tile
-        player.teleport(tile, TeleportType.JEWELRY)
+        player.teleport(tile, TeleportType.SKILLCAPE)
     }
 }
 

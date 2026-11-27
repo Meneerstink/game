@@ -81,6 +81,16 @@ enum class TeleportType(
         animation = Anims.JEWELLERY_TELEPORT,
         graphic = Graphic(Gfx.GFX_1684, 0),
         wildLvlRestriction = 30),
+    /**
+     * Skillcape / max cape / Construction cape teleports: the jewellery visuals, but OSRS Wiki "Wilderness" lists no cape among the
+     * teleports that work up to level 30 (only glory, combat bracelet, skills necklace, ring of wealth/slayer/life, seed pods,
+     * Pharaoh's sceptre, escape crystal) - so level 20 (C11 27-11; was [JEWELRY] = 30).
+     */
+    SKILLCAPE(
+        teleportDelay = 5,
+        animation = Anims.JEWELLERY_TELEPORT,
+        graphic = Graphic(Gfx.GFX_1684, 0),
+        wildLvlRestriction = 20),
     /** RS Wiki Ferocious ring: unlike glory jewellery, usable only through level 20 Wilderness. */
     FEROCIOUS_RING(
         teleportDelay = 5,
