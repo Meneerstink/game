@@ -20,6 +20,8 @@ val MASTERS = listOf(
     Master(DiaryNpcs.HATIUS, Diary.LUMBRIDGE, 2956, 3376),
     Master(DiaryNpcs.PIRATE_JACKIE, Diary.KARAMJA, 2811, 3191, spawn = false),
     Master(DiaryNpcs.THORODIN, Diary.FREMENNIK, 2659, 3627),
+    Master(DiaryNpcs.LE_SABRE, Diary.MORYTANIA, 3465, 3478),
+    Master(DiaryNpcs.JARR, Diary.DESERT, 3302, 3122),
 )
 
 MASTERS.forEach { m ->

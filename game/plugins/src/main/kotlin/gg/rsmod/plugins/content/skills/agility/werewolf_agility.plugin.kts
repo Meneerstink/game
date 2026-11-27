@@ -93,6 +93,7 @@ on_npc_option(npc = Npcs.AGILITY_TRAINER_1664, option = "Give-Stick") {
         player.inventory.remove(STICK, count)
         player.werewolfXp(380.0 * count)
         player.message("You give the stick to the werewolf.")
+        gg.rsmod.plugins.content.diaries.Diaries.event(player, "lap:werewolf") // DIARIES-OSRS Morytania medium 2: the stick ends a lap
     } else {
         player.queue { chatNpc("You haven't got a stick to give me!") }
     }

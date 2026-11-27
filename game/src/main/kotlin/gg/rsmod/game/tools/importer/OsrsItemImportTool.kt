@@ -1144,6 +1144,8 @@ object OsrsItemImportTool {
             // Polestaff style, speed 5 = the staff settings of 1381: weapon type 1, render 28, style interface 1).
             "diaries" to listOf(Spec(13137), Spec(13138), Spec(13139), Spec(13140)) +
                 (13141..13144).map { Spec(it, rev667Params = mapOf(644 to 28, 686 to 1), weaponType = 1, attackAudio = 2555) },
+            // DIARIES-OSRS D5 (27-11): Morytania legs 1-4 (13112-13115, legs) and Desert amulet 1-4 (13133-13136, neck) - no 667 item exists.
+            "diaries-2" to (13112..13115).map { Spec(it) } + (13133..13136).map { Spec(it) },
             "mahogany-homes" to listOf(Spec(24872), Spec(24874), Spec(24876), Spec(24878), Spec(24880, rev667Params = mapOf(686 to 5), weaponType = 5), Spec(24882), Spec(24884)),
             "larran" to listOf(Spec(23490)),
             // N522 2e: the Slayer Rewards box icons (OSRS dbtable 117 column 2) that have no 667 item of the same look - display only

@@ -13,6 +13,7 @@ import gg.rsmod.game.model.priv.Privilege
 
 on_obj_options(Objs.ALTAR_6552, options = arrayOf("pray-at", "pray")) {
     player.queue { Spellbooks.toggle(player, Spellbook.ANCIENT) }
+    gg.rsmod.plugins.content.diaries.Diaries.event(player, "altar:ancient") // DIARIES-OSRS Desert hard 7
 }
 
 on_obj_options(Objs.ALTAR_17010, options = arrayOf("pray-at", "pray")) {

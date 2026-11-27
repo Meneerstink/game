@@ -487,6 +487,8 @@ object MagicCombatStrategy : CombatStrategy {
                 val frozen = target.freeze(ticks, pawn) { if (target is Player) target.message("You have been frozen.") }
                 // DIARIES-OSRS Ardougne elite 8: "Cast Ice Barrage on another player within Castle Wars" - a hit that lands.
                 if (spell == CombatSpell.ICE_BARRAGE && target is Player && pawn is Player) gg.rsmod.plugins.content.diaries.Diaries.event(pawn, "spell:ice barrage player")
+                // DIARIES-OSRS Desert elite 2: "Cast Ice Barrage against a foe in the Desert" - a hit that lands, any target.
+                if (spell == CombatSpell.ICE_BARRAGE && pawn is Player) gg.rsmod.plugins.content.diaries.Diaries.event(pawn, "spell:ice barrage")
                 if (!frozen && spell == CombatSpell.ICE_BARRAGE) {
                     // Already frozen / immune: barrage shows the frozen-orb graphic instead.
                     target.graphic(Graphic(1677, 96))

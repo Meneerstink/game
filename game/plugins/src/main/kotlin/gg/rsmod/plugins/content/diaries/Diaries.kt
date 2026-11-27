@@ -31,6 +31,8 @@ object Diaries {
         LUMBRIDGE("Lumbridge & Draynor", "Lumbridge & Draynor", "Hatius Cosaintus", "Lumbridge & Draynor"),
         KARAMJA("Karamja", "Karamja", "Pirate Jackie the Fruit", "Karamja"),
         FREMENNIK("Fremennik", "Fremennik", "Thorodin", "Fremennik"),
+        MORYTANIA("Morytania", "Morytania", "Le-sabrè", "Morytania"),
+        DESERT("Desert", "Desert", "Jarr", "Desert"),
     }
 
     class Box(val x1: Int, val z1: Int, val x2: Int, val z2: Int, val h: Int = -1) {

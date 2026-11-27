@@ -100,6 +100,41 @@ object DiaryTasks {
     val VARROCK_WEST_BANK = Area("Varrock west bank", Box(3180, 3433, 3194, 3447))
     val COOKS_GUILD = Area("Cooks' Guild", Box(3137, 3438, 3148, 3452))
 
+    // ----------------------------------------------------------------------------------------------------- Morytania areas (D5)
+    val MORYTANIA = Area("Morytania", Box(3400, 3180, 3900, 3600), Box(3400, 9600, 3900, 10000), Box(3400, 3530, 3460, 3580))
+    val CANIFIS = Area("Canifis", Box(3470, 3460, 3520, 3510))
+    val CANIFIS_BANK = Area("Canifis bank", Box(3509, 3474, 3516, 3483))
+    val CANIFIS_MUSHROOM = Area("Canifis mushroom patch", Box(3448, 3469, 3455, 3476))
+    val SLAYER_TOWER = Area("Slayer Tower", Box(3400, 3525, 3455, 3580), Box(3400, 9930, 3455, 10010))
+    val PORT_PHASMATYS = Area("Port Phasmatys", Box(3640, 3450, 3720, 3510))
+    val ECTOFUNTUS = Area("Ectofuntus", Box(3648, 3508, 3672, 3530), Box(3640, 9860, 3720, 9910))
+    val MORT_MYRE = Area("Mort Myre Swamp", Box(3400, 3330, 3520, 3460))
+    val HOLLOWS = Area("The Hollows", Box(3490, 3370, 3515, 3390))
+    val MORYTANIA_FARM = Area("Morytania farming patches", Box(3594, 3518, 3606, 3530))
+    val NATURE_GROTTO = Area("Nature Grotto", Box(3430, 9730, 3455, 9755))
+    val DRAGONTOOTH = Area("Dragontooth Isle", Box(3780, 3530, 3840, 3580))
+    val MOS_LE_HARMLESS = Area("Mos Le'Harmless", Box(3640, 2930, 3860, 3060))
+    val SALVE_BRIDGE = Area("Salve bridge", Box(3500, 3420, 3540, 3445))
+    val ABANDONED_MINE = Area("Abandoned Mine", Box(2770, 4480, 2830, 4600), Box(3400, 9600, 3460, 9660))
+    val BURGH_DE_ROTT = Area("Burgh de Rott", Box(3470, 3180, 3560, 3250))
+    val MORTTON = Area("Mort'ton", Box(3470, 3260, 3520, 3310))
+
+    // -------------------------------------------------------------------------------------------------------- Desert areas (D5)
+    val DESERT = Area("Kharidian Desert", Box(3130, 2740, 3520, 3115), Box(3200, 9280, 3520, 9540), Box(3130, 4250, 3400, 4480))
+    val SHANTAY_PASS = Area("Shantay Pass", Box(3295, 3105, 3315, 3130))
+    val KALPHITE_HIVE = Area("Kalphite Hive", Box(3450, 9470, 3520, 9535))
+    val NE_DESERT = Area("north-eastern desert", Box(3400, 3050, 3520, 3115))
+    val BANDIT_CAMP = Area("Bandit Camp", Box(3155, 2960, 3195, 3000))
+    val BEDABIN = Area("Bedabin Camp", Box(3155, 3015, 3190, 3055))
+    val POLLNIVNEACH = Area("Pollnivneach", Box(3330, 2930, 3385, 3010))
+    val UZER = Area("Uzer", Box(3455, 3080, 3510, 3120))
+    val UZER_TEAK = Area("Uzer teak trees", Box(3480, 3040, 3530, 3110))
+    val NARDAH = Area("Nardah", Box(3395, 2880, 3450, 2930))
+    val NARDAH_BALCONY = Area("Nardah Mayor's balcony", Box(3430, 2895, 3450, 2925, 1))
+    val ENAKHRA = Area("Enakhra's Temple", Box(3170, 2910, 3200, 2940))
+    val SOPHANEM = Area("Sophanem", Box(3270, 2750, 3330, 2810), Box(3270, 9150, 3330, 9210))
+    val SMOKE_DUNGEON = Area("Smoke Dungeon", Box(3190, 9330, 3330, 9410))
+
     // -------------------------------------------------------------------------------------------------------------- Fremennik areas
     val FREM_PROVINCE = Area("Fremennik Province", Box(2490, 3570, 2810, 3770))
     val RELLEKKA = Area("Rellekka", Box(2615, 3640, 2700, 3720))
@@ -229,6 +264,12 @@ object DiaryTasks {
         val n = p.equipment.rawItems.filterNotNull().map { p.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, it.id).name.lowercase() }
         return n.any { it.contains("void") && (it.contains("top") || it.contains("body")) } && n.any { it.contains("void") && it.contains("robe") } &&
             n.any { it.contains("void knight gloves") } && n.any { it.contains("void") && (it.contains("helm") || it.contains("hood")) }
+    }
+
+    /** A complete Barrows set: helm, body, legs and weapon of one brother (OSRS Wiki: the weapon counts as part of the set). */
+    private fun barrowsSet(p: gg.rsmod.game.model.entity.Player): Boolean {
+        val n = p.equipment.rawItems.filterNotNull().map { p.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, it.id).name.lowercase() }
+        return listOf("ahrim", "dharok", "guthan", "karil", "torag", "verac").any { b -> n.count { it.startsWith(b) } >= 4 }
     }
 
     init {
@@ -654,6 +695,111 @@ object DiaryTasks {
         t(KJ, Tier.ELITE, 4, "Mix a Super antifire potion on Karamja.", Gain(s("Super antifire (3)", "Super antifire(3)"), KARAMJA, skill = sk.HERBLORE), "Herblore 92",
             osrs = "Create an antivenom potion whilst standing in the horse shoe mine.")
         t(KJ, Tier.ELITE, 5, "Check the health of your Calquat tree patch.", Ev("farm_health:calquat"), "Farming 72")
+
+        // ------------------------------------------------------------------------------------------------------- MORYTANIA (D5, 27-11)
+        val MO = Diary.MORYTANIA
+        val canifisCitizens = s("Boris", "Eduard", "Georgy", "Imre", "Irina", "Joseph", "Lev", "Liliya", "Milla", "Nikita", "Sofiya", "Svetlana",
+            "Vera", "Yadviga", "Yuri", "Zoja", "Galina", "Ksenia", "Lilia", "Nikolai")
+        t(MO, Tier.EASY, 1, "Craft a leather item in Morytania.", Gain(s("Leather gloves", "Leather boots", "Leather cowl", "Leather vambraces",
+            "Leather body", "Leather chaps", "Coif"), MORYTANIA, skill = sk.CRAFTING), "Crafting 15", osrs = "Craft any Snelm from scratch in Morytania.")
+        t(MO, Tier.EASY, 2, "Cook some food on the Port Phasmatys range.", Trigger.Xp(Skills.COOKING, PORT_PHASMATYS), "Cooking 12",
+            osrs = "Cook a thin Snail on the Port Phasmatys range.")
+        t(MO, Tier.EASY, 3, "Get a slayer task from Mazchna.", Ev("slayer_task:mazchna"))
+        t(MO, Tier.EASY, 4, "Kill a Banshee in the Slayer Tower.", Kill(s("Banshee"), SLAYER_TOWER), "Slayer 15")
+        t(MO, Tier.EASY, 5, "Have Sbott in Canifis tan something for you.", Talk(s("Sbott")))
+        t(MO, Tier.EASY, 6, "Enter Mort Myre Swamp.", Enter(MORT_MYRE))
+        t(MO, Tier.EASY, 7, "Kill a Ghoul.", Kill(s("Ghoul")))
+        t(MO, Tier.EASY, 8, "Place a Scarecrow in the Morytania flower patch.", Ev("plant:scarecrow", MORYTANIA_FARM), "Farming 23")
+        t(MO, Tier.EASY, 9, "Bury some bones at the Ectofuntus.", Trigger.Xp(Skills.PRAYER, ECTOFUNTUS), osrs = "Offer some bonemeal at the Ectofuntus.")
+        t(MO, Tier.EASY, 10, "Kill a werewolf in its human form using the Wolfbane Dagger.", Kill(canifisCitizens, cond = { equipped(it, "wolfbane") }))
+        t(MO, Tier.EASY, 11, "Restore your prayer points at the nature altar.", PrayUp(NATURE_GROTTO))
+        t(MO, Tier.MEDIUM, 1, "Kill a Ghast in Mort Myre Swamp.", Kill(s("Ghast"), MORT_MYRE), osrs = "Catch a swamp lizard.")
+        t(MO, Tier.MEDIUM, 2, "Complete a lap of the Werewolf Agility Course.", Ev("lap:werewolf"), "Agility 60",
+            osrs = "Complete a lap of the Canifis agility course.")
+        t(MO, Tier.MEDIUM, 3, "Obtain some Bark from a Hollow tree.", Gain(s("Bark"), MORYTANIA, skill = sk.WOODCUTTING), "Woodcutting 45")
+        t(MO, Tier.MEDIUM, 4, "Travel to Dragontooth Isle.", Enter(DRAGONTOOTH))
+        t(MO, Tier.MEDIUM, 5, "Kill a Bloodveld in the Slayer Tower.", Kill(s("Bloodveld", "Mutated bloodveld"), SLAYER_TOWER), "Slayer 50",
+            osrs = "Kill a Terror Dog.")
+        t(MO, Tier.MEDIUM, 6, "Kill an Infernal Mage in the Slayer Tower.", Kill(s("Infernal mage"), SLAYER_TOWER), "Slayer 45",
+            osrs = "Complete a game of trouble brewing.")
+        t(MO, Tier.MEDIUM, 7, "Visit the Hollows in Mort Myre Swamp.", Enter(HOLLOWS), osrs = "Board the Swampy boat at the Hollows.")
+        t(MO, Tier.MEDIUM, 8, "Make a batch of cannonballs at the Port Phasmatys furnace.", Gain(s("Cannonball"), PORT_PHASMATYS, skill = sk.SMITHING),
+            "Smithing 35")
+        t(MO, Tier.MEDIUM, 9, "Kill a Fever Spider on Braindeath Island.", Kill(s("Fever spider")), "Slayer 42")
+        t(MO, Tier.MEDIUM, 10, "Use an ectophial to return to Port Phasmatys.", Tele(ECTOFUNTUS))
+        t(MO, Tier.MEDIUM, 11, "Mix a Restore potion while in Morytania.", Gain(s("Restore potion(3)", "Restore potion (3)"), MORYTANIA, skill = sk.HERBLORE),
+            "Herblore 22", osrs = "Mix a Guthix Balance potion while in Morytania.")
+        t(MO, Tier.HARD, 1, "Enter the Kharyrll Portal in your POH.", Tele(CANIFIS), "Construction 50, Magic 66")
+        t(MO, Tier.HARD, 2, "Climb up the advanced spike chain within Slayer Tower.", Trigger.Xp(Skills.AGILITY, SLAYER_TOWER), "Agility 71")
+        t(MO, Tier.HARD, 3, "Harvest some Watermelon from the Morytania allotment patch.", Gain(s("Watermelon"), MORYTANIA_FARM, skill = sk.FARMING),
+            "Farming 47", osrs = "Harvest some Watermelon from the Allotment patch on Harmony Island.")
+        t(MO, Tier.HARD, 4, "Chop and burn some mahogany logs on Mos Le'Harmless.",
+            Steps(listOf(Gain(s("Mahogany logs"), MOS_LE_HARMLESS, skill = sk.WOODCUTTING), Burn(s("Mahogany logs"), MOS_LE_HARMLESS))), "Woodcutting 50, Firemaking 50")
+        t(MO, Tier.HARD, 5, "Kill an Aberrant spectre in the Slayer Tower.", Kill(s("Aberrant spectre"), SLAYER_TOWER), "Slayer 60",
+            osrs = "Complete a temple trek with a hard companion.")
+        t(MO, Tier.HARD, 6, "Kill a Cave Horror.", Kill(s("Cave horror")), "Slayer 58")
+        t(MO, Tier.HARD, 7, "Harvest some Bittercap Mushrooms from the patch in Canifis.", Gain(s("Mushroom", "Bittercap mushroom"), CANIFIS_MUSHROOM, skill = sk.FARMING),
+            "Farming 53")
+        t(MO, Tier.HARD, 8, "Pray at the Altar of Nature with Piety activated.", PrayUp(NATURE_GROTTO) { Prayers.isActive(it, Prayer.PIETY) }, "Prayer 70, Defence 70")
+        t(MO, Tier.HARD, 9, "Use the shortcut to get to the bridge over the Salve.", Trigger.Xp(Skills.AGILITY, SALVE_BRIDGE), "Agility 65")
+        t(MO, Tier.HARD, 10, "Mine some Mithril ore in the Abandoned Mine.", Gain(s("Mithril ore"), ABANDONED_MINE, skill = sk.MINING), "Mining 55")
+        t(MO, Tier.ELITE, 1, "Catch a shark in Burgh de Rott.", Gain(s("Raw shark"), BURGH_DE_ROTT, skill = sk.FISHING), "Fishing 96, Strength 76",
+            osrs = "Catch a shark in Burgh de Rott with your bare hands.")
+        t(MO, Tier.ELITE, 2, "Burn some Magic logs in Mort'ton.", Burn(s("Magic logs"), MORTTON), "Firemaking 80",
+            osrs = "Cremate any Shade remains on a Magic or Redwood pyre.")
+        t(MO, Tier.ELITE, 3, "Fertilize the Morytania herb patch using Lunar Magic.", Ev("spell:fertile soil", MORYTANIA_FARM), "Magic 83")
+        t(MO, Tier.ELITE, 4, "Craft a Black dragonhide body in Canifis bank.", Gain(s("Black d'hide body"), CANIFIS_BANK, skill = sk.CRAFTING), "Crafting 84")
+        t(MO, Tier.ELITE, 5, "Kill an Abyssal demon in the Slayer Tower.", Kill(s("Abyssal demon"), SLAYER_TOWER), "Slayer 85")
+        t(MO, Tier.ELITE, 6, "Kill a Nechryael in the Slayer Tower while wearing any complete barrows set.",
+            Kill(s("Nechryael"), SLAYER_TOWER) { barrowsSet(it) }, "Defence 70, Slayer 80", osrs = "Loot the Barrows chest while wearing any complete barrows set.")
+
+        // --------------------------------------------------------------------------------------------------------- DESERT (D5, 27-11)
+        val DE = Diary.DESERT
+        t(DE, Tier.EASY, 1, "Kill a Bandit in the Bandit Camp.", Kill(s("Bandit"), BANDIT_CAMP), osrs = "Catch a Golden Warbler.")
+        t(DE, Tier.EASY, 2, "Mine 5 clay in the north-eastern desert.", Gain(s("Clay"), NE_DESERT, count = 5, skill = sk.MINING))
+        t(DE, Tier.EASY, 3, "Enter the Kalphite Hive.", Enter(KALPHITE_HIVE))
+        t(DE, Tier.EASY, 4, "Enter the Desert with a set of Desert robes equipped.",
+            Enter(DESERT) { equipped(it, "desert shirt") && equipped(it, "desert robe") })
+        t(DE, Tier.EASY, 5, "Kill a Vulture.", Kill(s("Vulture")))
+        t(DE, Tier.EASY, 6, "Have the Nardah Herbalist clean a Herb for you.", Talk(s("Zahur")))
+        t(DE, Tier.EASY, 7, "Kill a Kalphite Worker in the Kalphite Hive.", Kill(s("Kalphite worker"), KALPHITE_HIVE),
+            osrs = "Collect 5 Potato Cactus from the Kalphite Hive.")
+        t(DE, Tier.EASY, 8, "Sell some artefacts to Simon Templeton.", Talk(s("Simon Templeton")))
+        t(DE, Tier.EASY, 9, "Trade with the Bedabin Nomad.", Talk(s("Bedabin Nomad")), osrs = "Open the Sarcophagus in the first room of Pyramid Plunder.")
+        t(DE, Tier.EASY, 10, "Browse Shantay's shop at the Shantay Pass.", Talk(s("Shantay")), osrs = "Cut a desert cactus open to fill a waterskin.")
+        t(DE, Tier.EASY, 11, "Travel from the Shantay Pass to Pollnivneach by Magic Carpet.", Tele(POLLNIVNEACH, from = SHANTAY_PASS))
+        t(DE, Tier.MEDIUM, 1, "Climb to the summit of the Agility Pyramid.", Gain(s("Pyramid top")), "Agility 30")
+        t(DE, Tier.MEDIUM, 2, "Slay a desert lizard.", Kill(s("Desert lizard", "Lizard")), "Slayer 22")
+        t(DE, Tier.MEDIUM, 3, "Kill a Crocodile in the desert.", Kill(s("Crocodile"), DESERT), osrs = "Catch an Orange Salamander.")
+        t(DE, Tier.MEDIUM, 4, "Pickpocket a Bandit in the desert.", Ev("pickpocket:bandit", DESERT), "Thieving 53", osrs = "Steal a feather from the Desert Phoenix.")
+        t(DE, Tier.MEDIUM, 5, "Travel to Uzer via Magic Carpet.", Tele(UZER))
+        t(DE, Tier.MEDIUM, 6, "Visit the Bedabin Camp.", Enter(BEDABIN), osrs = "Travel to the Desert via Eagle.")
+        t(DE, Tier.MEDIUM, 7, "Pray at the Elidinis statuette in Nardah.", PrayUp(NARDAH))
+        t(DE, Tier.MEDIUM, 8, "Create a combat potion in the desert.", Gain(s("Combat potion(3)", "Combat potion (3)"), DESERT, skill = sk.HERBLORE), "Herblore 36")
+        t(DE, Tier.MEDIUM, 9, "Teleport to Enakhra's Temple with the Camulet.", Tele(ENAKHRA))
+        t(DE, Tier.MEDIUM, 10, "Talk to Ali the Snake Charmer in Pollnivneach.", Talk(s("Ali the Snake Charmer"), POLLNIVNEACH), osrs = "Visit the Genie.")
+        t(DE, Tier.MEDIUM, 11, "Teleport to Pollnivneach with a redirected teleport to house tablet.", Tele(POLLNIVNEACH), "Construction 20")
+        t(DE, Tier.MEDIUM, 12, "Chop some Teak Logs near Uzer.", Gain(s("Teak logs"), UZER_TEAK, skill = sk.WOODCUTTING), "Woodcutting 35")
+        t(DE, Tier.HARD, 1, "Knock out and pickpocket a Menaphite Thug.", Ev("pickpocket:menaphite thug"), "Thieving 65")
+        t(DE, Tier.HARD, 2, "Mine some Granite.", Gain(s("Granite (500g)", "Granite (2kg)", "Granite (5kg)"), DESERT, skill = sk.MINING), "Mining 45")
+        t(DE, Tier.HARD, 3, "Refill your waterskins in the Desert using Lunar magic.", Ev("spell:humidify", DESERT), "Magic 68")
+        t(DE, Tier.HARD, 4, "Kill the Kalphite Queen.", Kill(s("Kalphite Queen")))
+        t(DE, Tier.HARD, 5, "Collect 3 Pyramid tops from the Agility Pyramid.", Gain(s("Pyramid top"), count = 3), "Agility 70",
+            osrs = "Complete a lap of the Pollnivneach agility course.")
+        t(DE, Tier.HARD, 6, "Slay a Dust Devil in the desert cave with a Slayer helmet equipped.",
+            Kill(s("Dust devil"), SMOKE_DUNGEON) { equipped(it, "slayer helmet") }, "Slayer 65, Defence 10")
+        t(DE, Tier.HARD, 7, "Activate Ancient Magicks at the altar in the Jaldraocht Pyramid.", Ev("altar:ancient"))
+        t(DE, Tier.HARD, 8, "Defeat a Kalphite Soldier with Keris.", Kill(s("Kalphite soldier"), KALPHITE_HIVE) { equipped(it, "keris") },
+            osrs = "Defeat a Locust Rider with Keris.")
+        t(DE, Tier.HARD, 9, "Burn some yew logs on the Nardah Mayor's balcony.", Burn(s("Yew logs"), NARDAH_BALCONY), "Firemaking 60")
+        t(DE, Tier.HARD, 10, "Create a Mithril Platebody in Nardah.", Gain(s("Mithril platebody"), NARDAH, skill = sk.SMITHING), "Smithing 68")
+        t(DE, Tier.ELITE, 1, "Bake a wild pie at the Nardah Clay Oven.", Gain(s("Wild pie"), NARDAH, skill = sk.COOKING), "Cooking 85")
+        t(DE, Tier.ELITE, 2, "Cast Ice Barrage against a foe in the Desert.", Ev("spell:ice barrage", DESERT), "Magic 94")
+        t(DE, Tier.ELITE, 3, "Fletch some Dragon darts at the Bedabin Camp.", Gain(s("Dragon dart"), BEDABIN, skill = sk.FLETCHING), "Fletching 95")
+        t(DE, Tier.ELITE, 4, "Mount a Kalphite Queen head in your POH.", Ev("poh_build:kalphite queen head (mounted)"), "Construction 78", osrs = "Speak to the KQ head in your POH.")
+        t(DE, Tier.ELITE, 5, "Kill the Kalphite Queen 5 times.", Steps(List(5) { Kill(s("Kalphite Queen")) }),
+            osrs = "Steal from the Grand Gold Chest in the final room of Pyramid Plunder.")
+        t(DE, Tier.ELITE, 6, "Restore at least 85 Prayer points when praying at the Altar in Sophanem.", PrayUp(SOPHANEM), "Prayer 85")
 
         // ------------------------------------------------------------------------------------------------------- FREMENNIK (D5, 27-11)
         val FR = Diary.FREMENNIK

@@ -140,6 +140,8 @@ object OsrsNpcImportTool {
             "diaries-5" to listOf(5523),
             // DIARIES-OSRS D5 (27-11): Thorodin, the Fremennik taskmaster (OSRS Wiki infobox id 5526).
             "diaries-6" to listOf(5526),
+            // DIARIES-OSRS D5 (27-11): Le-sabrè (Morytania, west of Canifis 3465,3478) and Jarr (Desert, Shantay Pass 3302,3122) - OSRS Wiki ids.
+            "diaries-7" to listOf(5521, 5520),
             "mahogany-homes" to listOf(6439, 10408, 10410, 7417, 10409, 10411, 1614, 10418, 3266, 10417, 10421, 10419, 10420, 10414, 10415, 10416),
             // N522 bundle 1 (owner 2026-11-01 "alle osrs wilderness bosses"): OSRS Wiki infobox ids Chaos Fanatic 6619 and Crazy
             // archaeologist 6618 and the scenery "Miniature chaotic clouds" 6620 that wander round the fanatic (classic frames: OsrsNpcProbeTool).

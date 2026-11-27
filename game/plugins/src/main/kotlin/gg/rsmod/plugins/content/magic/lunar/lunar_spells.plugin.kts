@@ -328,6 +328,7 @@ on_magic_spell_button("Humidify") { metadata ->
                 player.inventory.add(full, count)
             }
         }
+        gg.rsmod.plugins.content.diaries.Diaries.event(player, "spell:humidify") // DIARIES-OSRS Desert hard 3
     }
 }
 
@@ -760,5 +761,6 @@ on_spell_on_obj(parent = 430, child = SpellbookData.FERTILE_SOIL.component) {
         LunarFarming.fertilise(state)
         player.addXp(Skills.FARMING, LunarFarming.FERTILE_SOIL_FARMING_XP)
         player.message("You treat the ${state.patch.patchName} with supercompost.")
+        gg.rsmod.plugins.content.diaries.Diaries.event(player, "spell:fertile soil") // DIARIES-OSRS Morytania elite 3
     }
 }

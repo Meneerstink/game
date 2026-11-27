@@ -139,6 +139,61 @@ object DiaryItems {
         }
     }
 
+    /**
+     * Morytania legs (OSRS Wiki "Morytania legs 1-4"): teleports to the slime pit beneath the Ectofuntus 2 / 5 / 5 a day (legs 1-3),
+     * unlimited with legs 4; legs 3 and 4 also teleport to Burgh de Rott without limit.
+     */
+    val MORY_LEGS_DAY = AttributeKey<Int>(persistenceKey = "diary_morylegs_day")
+    val MORY_LEGS_USED = AttributeKey<Int>(persistenceKey = "diary_morylegs_used")
+    val SLIME_PIT = Tile(3683, 9888, 0)
+    val BURGH_DE_ROTT = Tile(3482, 3231, 0)
+
+    fun moryLegsSlime(player: Player, tier: Int) =
+        counted(player, if (tier >= 4) Int.MAX_VALUE else intArrayOf(2, 5, 5)[tier - 1], MORY_LEGS_DAY, MORY_LEGS_USED, "legs") { player.teleport(SLIME_PIT, TeleportType.JEWELRY) }
+
+    fun moryLegsBurgh(player: Player, tier: Int) {
+        if (tier < 3) {
+            player.message("Your legs need to be upgraded before they can take you to Burgh de Rott.")
+            return
+        }
+        player.canTeleport(TeleportType.JEWELRY) { player.teleport(BURGH_DE_ROTT, TeleportType.JEWELRY) }
+    }
+
+    /** Desert amulet (OSRS Wiki "Desert amulet 1-4"): no teleport on amulet 1, Nardah once a day (2-3), unlimited Nardah + Kalphite Cave (4). */
+    val DESERT_AMULET_DAY = AttributeKey<Int>(persistenceKey = "diary_desertamulet_day")
+    val DESERT_AMULET_USED = AttributeKey<Int>(persistenceKey = "diary_desertamulet_used")
+    val NARDAH = Tile(3426, 2911, 0)
+    val KALPHITE_CAVE = Tile(3322, 3122, 0)
+
+    fun desertAmuletNardah(player: Player, tier: Int) {
+        if (tier < 2) {
+            player.message("Your amulet needs to be upgraded before it can teleport you.")
+            return
+        }
+        counted(player, if (tier >= 4) Int.MAX_VALUE else 1, DESERT_AMULET_DAY, DESERT_AMULET_USED, "amulet") { player.teleport(NARDAH, TeleportType.JEWELRY) }
+    }
+
+    fun desertAmuletKalphite(player: Player, tier: Int) {
+        if (tier < 4) {
+            player.message("Your amulet needs to be upgraded before it can take you to the Kalphite Cave.")
+            return
+        }
+        player.canTeleport(TeleportType.JEWELRY) { player.teleport(KALPHITE_CAVE, TeleportType.JEWELRY) }
+    }
+
+    private fun counted(player: Player, uses: Int, dayKey: AttributeKey<Int>, usedKey: AttributeKey<Int>, what: String, go: () -> Unit) {
+        player.canTeleport(TeleportType.JEWELRY) {
+            val used = if (player.attr[dayKey] == today()) player.attr[usedKey] ?: 0 else 0
+            if (used >= uses) {
+                player.message("You have used all of your $what' teleports for today.".replace("amulet'", "amulet's"))
+                return@canTeleport
+            }
+            player.attr[dayKey] = today()
+            player.attr[usedKey] = used + 1
+            go()
+        }
+    }
+
     /** Explorer's ring (OSRS Wiki): run energy 50% 2x / 3x / 4x a day (ring 1-3), ring 4 full energy 3x a day. Shared day counter. */
     val EXPLORER_RUN_DAY = AttributeKey<Int>(persistenceKey = "diary_explorer_run_day")
     val EXPLORER_RUN_USED = AttributeKey<Int>(persistenceKey = "diary_explorer_run_used")
