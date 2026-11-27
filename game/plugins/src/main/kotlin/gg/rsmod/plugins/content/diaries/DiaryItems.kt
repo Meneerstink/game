@@ -100,6 +100,32 @@ object DiaryItems {
         return items.map { if (it.id == gg.rsmod.plugins.api.cfg.Items.DRAGON_BONES) gg.rsmod.game.model.item.Item(gg.rsmod.plugins.api.cfg.Items.DRAGON_BONES_NOTED, it.amount) else it }
     }
 
+    /**
+     * Noted drops from diary rewards (OSRS Wiki rewards sections):
+     *  - Karamja elite: "Red dragonhide from red dragons in the Brimhaven Dungeon is now noted"; "Bars from metal dragons in the
+     *    Brimhaven Dungeon are now noted".
+     *  - Fremennik hard: "Adamantite bars from aviansie killed in the God Wars Dungeon are now noted".
+     *  - Fremennik elite: "Dagannoth bones from the Dagannoth Kings are now noted".
+     * NOT built: the OSRS switch to turn the bars/bones noting off (Pirate Jackie / Thorodin dialogue option).
+     */
+    fun notedDiaryDrops(player: Player, npcId: Int, tile: Tile, items: List<gg.rsmod.game.model.item.Item>): List<gg.rsmod.game.model.item.Item> {
+        val world = player.world
+        val name = world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, npcId)?.name?.lowercase() ?: return items
+        val note: (Int) -> Boolean = when {
+            DiaryTasks.BRIM_DUNGEON.has(tile) && name.endsWith("dragon") && Diaries.hasClaimed(player, Diary.KARAMJA, Tier.ELITE) -> { id ->
+                (id == gg.rsmod.plugins.api.cfg.Items.RED_DRAGONHIDE && name == "red dragon") ||
+                    world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, id).name.endsWith(" bar")
+            }
+            npcId in intArrayOf(gg.rsmod.plugins.api.cfg.Npcs.DAGANNOTH_SUPREME, gg.rsmod.plugins.api.cfg.Npcs.DAGANNOTH_PRIME, gg.rsmod.plugins.api.cfg.Npcs.DAGANNOTH_REX) &&
+                Diaries.hasClaimed(player, Diary.FREMENNIK, Tier.ELITE) -> { id -> id == gg.rsmod.plugins.api.cfg.Items.DAGANNOTH_BONES }
+            name == "aviansie" && DiaryTasks.GWD.has(tile) && Diaries.hasClaimed(player, Diary.FREMENNIK, Tier.HARD) -> { id ->
+                world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, id).name.equals("adamantite bar", ignoreCase = true)
+            }
+            else -> return items
+        }
+        return items.map { if (!it.getDef(world.definitions).noted && note(it.id)) it.toNoted(world.definitions) else it }
+    }
+
     /** Kandarin hard: Camelot Teleport lands at Seers' Village bank when the player chose that at the Wedge. */
     val CAMELOT_SEERS = AttributeKey<Boolean>(persistenceKey = "diary_camelot_seers")
 

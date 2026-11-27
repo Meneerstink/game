@@ -125,7 +125,9 @@ object DropTableFactory {
     ) {
         // DIARIES-OSRS Wilderness elite (OSRS Wiki): "Dragon bones from dragons killed in the Wilderness are now noted" (the KBD lair is
         // not Wilderness, so he is excluded as in OSRS).
-        val items = if (type == DropTableType.KILL) gg.rsmod.plugins.content.diaries.DiaryItems.wildyDragonBones(player, tile, items) else items
+        val items = if (type == DropTableType.KILL) {
+            gg.rsmod.plugins.content.diaries.DiaryItems.notedDiaryDrops(player, npcId, tile, gg.rsmod.plugins.content.diaries.DiaryItems.wildyDragonBones(player, tile, items))
+        } else items
         // Boss contribution rewards already have an owner; do not distribute them a second time.
         val sharers = if (type == DropTableType.KILL && allowLootShare) gg.rsmod.plugins.content.inter.friends.LootShare.sharers(player, tile) else null
         // RuneLite Loot Tracker: what each owner really received from this kill, one event per owner.

@@ -41,9 +41,12 @@ suspend fun board(task: QueueTask, cart: Cart, offer: Boolean) {
         task.chatNpc("Sorry, Bwana, the way to Shilo Village is not safe for you yet: finish what Mosol Rei asks first.", npc = cart.driver, facialExpression = FacialExpression.CALM_TALK)
         return
     }
+    // DIARIES-OSRS Karamja elite (OSRS Wiki "Karamja Diary"): "Free cart rides between Brimhaven and Shilo Village".
+    val fare = if (gg.rsmod.plugins.content.diaries.Diaries.hasClaimed(player, gg.rsmod.plugins.content.diaries.Diaries.Diary.KARAMJA, gg.rsmod.plugins.content.diaries.Diaries.Tier.ELITE)) 0 else CART_FARE
     if (offer) {
         task.chatNpc(
-            "I am offering a cart ride to ${cart.destinationName}, if you're interested. It will cost $CART_FARE coins. Is that okay?",
+            if (fare == 0) "I am offering a cart ride to ${cart.destinationName}, if you're interested. For you it's free, Bwana. Is that okay?"
+            else "I am offering a cart ride to ${cart.destinationName}, if you're interested. It will cost $CART_FARE coins. Is that okay?",
             npc = cart.driver,
             facialExpression = FacialExpression.CALM_TALK,
         )
@@ -54,7 +57,7 @@ suspend fun board(task: QueueTask, cart: Cart, offer: Boolean) {
         }
         task.chatPlayer("Yes please, I'd like to go to ${cart.destinationName}.", facialExpression = FacialExpression.CALM_TALK)
     }
-    if (player.inventory.getItemCount(Items.COINS_995) < CART_FARE) {
+    if (player.inventory.getItemCount(Items.COINS_995) < fare) {
         task.chatNpc(
             "Sorry, but it looks as if you don't have enough money. Come and see me when you have enough for the ride.",
             npc = cart.driver,
@@ -64,7 +67,7 @@ suspend fun board(task: QueueTask, cart: Cart, offer: Boolean) {
     }
     // Deadman: non-teleport transport opens the 7-second timer first; the fare is taken only when the ride starts.
     gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate.requestRoute(player, gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.Kind.TRANSPORT) {
-        if (player.inventory.remove(Items.COINS_995, CART_FARE, assureFullRemoval = true).hasSucceeded()) ride(player, cart, offer)
+        if (fare == 0 || player.inventory.remove(Items.COINS_995, fare, assureFullRemoval = true).hasSucceeded()) ride(player, cart, offer)
     }
 }
 

@@ -322,6 +322,8 @@ object FightCaves {
             addOrDrop(player, Item(Items.FIRE_CAPE))
             runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, gg.rsmod.plugins.content.quests.tab.DropSources.forNpc(player, 2745)?.key ?: "jad", listOf(Items.FIRE_CAPE to 1)) }
         }
+        // DIARIES-OSRS Karamja elite (OSRS Wiki "Karamja Diary"): "Double Tokkul from the TzHaar Fight Cave".
+        if (gg.rsmod.plugins.content.diaries.Diaries.hasClaimed(player, gg.rsmod.plugins.content.diaries.Diaries.Diary.KARAMJA, gg.rsmod.plugins.content.diaries.Diaries.Tier.ELITE)) tokkul *= 2
         if (tokkul > 0) addOrDrop(player, Item(Items.TOKKUL, tokkul))
         world.queue {
             wait(1)
