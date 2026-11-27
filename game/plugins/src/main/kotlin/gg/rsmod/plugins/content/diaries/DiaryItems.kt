@@ -115,20 +115,6 @@ object DiaryItems {
         return true
     }
 
-    /** Karamja gloves 3: unlimited teleports to the Shilo Village gem mine; gloves 4: also to Duradel (OSRS Wiki). */
-    val SHILO_GEM_MINE = Tile(2825, 3001, 0)
-    val DURADEL = Tile(2869, 2981, 0)
-
-    fun karamjaGlovesTeleport(player: Player, gloves: Int, option: String) {
-        val tier = when (gloves) {
-            gg.rsmod.plugins.api.cfg.Items.KARAMJA_GLOVES_3 -> 3
-            gg.rsmod.plugins.api.cfg.Items.KARAMJA_GLOVES_4 -> 4
-            else -> return
-        }
-        val toDuradel = tier == 4 && (option.contains("slayer", true) || option.contains("duradel", true))
-        player.canTeleport(TeleportType.JEWELRY) { player.teleport(if (toDuradel) DURADEL else SHILO_GEM_MINE, TeleportType.JEWELRY) }
-    }
-
     /** Explorer's ring (OSRS Wiki): run energy 50% 2x / 3x / 4x a day (ring 1-3), ring 4 full energy 3x a day. Shared day counter. */
     val EXPLORER_RUN_DAY = AttributeKey<Int>(persistenceKey = "diary_explorer_run_day")
     val EXPLORER_RUN_USED = AttributeKey<Int>(persistenceKey = "diary_explorer_run_used")

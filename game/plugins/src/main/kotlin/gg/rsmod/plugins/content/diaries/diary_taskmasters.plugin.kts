@@ -22,6 +22,11 @@ val MASTERS = listOf(
 )
 
 MASTERS.forEach { m ->
+    // An OSRS-imported taskmaster whose npc is not in this cache yet (import pending) would crash the boot: skip + report it.
+    if (world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, m.npc) == null) {
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.PLUGIN) { "PROBLEM diary taskmaster npc ${m.npc} (${m.diary.name}) missing from the cache" }
+        return@forEach
+    }
     if (m.spawn) spawn_npc(npc = m.npc, x = m.x, z = m.z, height = 0, walkRadius = 2)
     on_npc_option(npc = m.npc, option = "talk-to") { player.queue { talk(this, m) } }
 }

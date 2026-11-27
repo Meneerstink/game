@@ -222,9 +222,11 @@ listOf(Items.ARDOUGNE_CLOAK_2, Items.ARDOUGNE_CLOAK_3, Items.ARDOUGNE_CLOAK_4).f
     }
 }
 
-// Karamja gloves 3/4: Shilo Village underground gem mine ({{Teleport map|2840,9386}}), unlimited.
+// Karamja gloves 3/4: Shilo Village underground gem mine ({{Teleport map|2840,9386}}), unlimited. DIARIES-OSRS 27-11: gloves 4 also
+// teleport to Duradel (OSRS Wiki "Karamja gloves 4": "Unlimited teleports to Duradel/Kuradal").
 listOf(Items.KARAMJA_GLOVES_3, Items.KARAMJA_GLOVES_4).forEach { gloves ->
-    val mine = listOf(Dest("Gem mine", Tile(2840, 9386)))
+    val mine = listOf(Dest("Gem mine", Tile(2840, 9386))) +
+        (if (gloves == Items.KARAMJA_GLOVES_4) listOf(Dest("Duradel", Tile(2869, 2981))) else emptyList())
     bindTeleport(gloves, "Teleport", null, null, mine)
     bindTeleport(gloves, "Teleport", EquipmentType.GLOVES, null, mine)
 }

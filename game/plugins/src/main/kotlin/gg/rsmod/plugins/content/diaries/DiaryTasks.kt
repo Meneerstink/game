@@ -562,12 +562,12 @@ object DiaryTasks {
             osrs = "Collect at least 100 Tears of Guthix in one visit.")
         t(L, Tier.HARD, 6, "Mine some Adamantite ore in the Al Kharid mine.", Gain(s("Adamantite ore"), AL_KHARID_MINE, skill = sk.MINING), "Mining 70",
             osrs = "Take the train from Dorgesh-Kaan to Keldagrim.")
-        t(L, Tier.HARD, 7, "Purchase some Barrows gloves from the Lumbridge bank chest.", Gain(s("Barrows gloves"), LUMBRIDGE_CELLAR))
+        t(L, Tier.HARD, 7, "Purchase some Barrows gloves from the Lumbridge bank chest.", Gain(emptySet(), LUMBRIDGE_CELLAR, ids = setOf(7462), skill = -1)) // 667 name "Gloves"
         t(L, Tier.HARD, 8, "Pick some Belladonna from the farming patch at Draynor Manor.", Gain(s("Cave nightshade"), DRAYNOR_MANOR, skill = sk.FARMING), "Farming 63")
         t(L, Tier.HARD, 9, "Light your mining helmet in the Lumbridge castle basement.", Ev("light:mining helmet", LUMBRIDGE_CELLAR), "Firemaking 65")
         t(L, Tier.HARD, 10, "Recharge your prayer at Emir's Arena with Smite activated.", PrayUp(EMIRS_ARENA) { Prayers.isActive(it, Prayer.SMITE) }, "Prayer 52")
         t(L, Tier.HARD, 11, "Craft, string and enchant an Amulet of Power in Lumbridge.",
-            Steps(listOf(Gain(s("Diamond amulet (u)"), LUMBRIDGE, skill = sk.CRAFTING), Gain(s("Diamond amulet"), LUMBRIDGE, skill = sk.CRAFTING),
+            Steps(listOf(Gain(emptySet(), LUMBRIDGE, ids = setOf(1681), skill = sk.CRAFTING), Gain(emptySet(), LUMBRIDGE, ids = setOf(1700), skill = sk.CRAFTING),
                 Gain(s("Amulet of power"), LUMBRIDGE, skill = sk.MAGIC))), "Crafting 70, Magic 57")
         t(L, Tier.ELITE, 1, "Pickpocket a Hero.", Ev("pickpocket:hero"), "Thieving 80", osrs = "Steal from a Dorgesh-Kaan rich chest.")
         t(L, Tier.ELITE, 2, "Burn some Magic logs in Lumbridge.", Burn(s("Magic logs"), LUMBRIDGE), "Firemaking 75",
@@ -615,7 +615,8 @@ object DiaryTasks {
         t(KJ, Tier.MEDIUM, 18, "Charter a ship from the shipyard in the far east of Karamja.", Ev("charter:sail", SHIPYARD))
         t(KJ, Tier.MEDIUM, 19, "Cut a Red topaz on Karamja.", Gain(s("Red topaz"), KARAMJA, skill = sk.CRAFTING), "Crafting 16",
             osrs = "Mine a red topaz from a gem rock.")
-        t(KJ, Tier.HARD, 1, "Speak to TzHaar-Mej-Kah at the Fight Pits.", Talk(s("TzHaar-Mej-Kah"), TZHAAR))
+        t(KJ, Tier.HARD, 1, "Speak to TzHaar-Mej-Jal at the Fight Cave.", Talk(s("TzHaar-Mej-Jal"), TZHAAR),
+            osrs = "Become the Champion of the Fight Pits. (Deadman: speak to TzHaar-Mej-Kah at the Fight Pits - no Fight Pits map here.)")
         t(KJ, Tier.HARD, 2, "Kill a Ket-Zek in the Fight Caves.", Kill(s("Ket-Zek")))
         t(KJ, Tier.HARD, 3, "Eat a Cooked karambwan on Karamja.", Ev("eat:cooked karambwan", KARAMJA), osrs = "Eat an oomlie wrap.")
         t(KJ, Tier.HARD, 4, "Craft some nature runes from Essence.", Gain(s("Nature rune"), skill = sk.RUNECRAFTING), "Runecrafting 44")
