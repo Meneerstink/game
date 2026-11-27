@@ -43,6 +43,7 @@ fun bonesTo(
     MagicSpells.removeRunes(player, metadata.runes, metadata.sprite)
     gg.rsmod.plugins.content.magic.BonesToFruit.convert(player, produce)
     player.addXp(Skills.MAGIC, xp, checkBrawlingGloves = true)
+    if (produce == Items.PEACH) gg.rsmod.plugins.content.diaries.Diaries.event(player, "spell:bones to peaches") // DIARIES-OSRS Lumbridge hard 1 (the spell only)
 }
 
 on_magic_spell_button("Bones to Bananas") { metadata -> bonesTo(player, metadata, Items.BANANA, 25.0) }

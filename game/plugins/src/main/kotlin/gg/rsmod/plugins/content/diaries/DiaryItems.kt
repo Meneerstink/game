@@ -5,6 +5,7 @@ import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.sendRunEnergy
 import gg.rsmod.plugins.content.diaries.Diaries.Diary
 import gg.rsmod.plugins.content.diaries.Diaries.Tier
 import gg.rsmod.plugins.content.magic.TeleportType
@@ -113,6 +114,53 @@ object DiaryItems {
         player.attr[FARM_TELE_USED] = used + 1
         return true
     }
+
+    /** Explorer's ring (OSRS Wiki): run energy 50% 2x / 3x / 4x a day (ring 1-3), ring 4 full energy 3x a day. Shared day counter. */
+    val EXPLORER_RUN_DAY = AttributeKey<Int>(persistenceKey = "diary_explorer_run_day")
+    val EXPLORER_RUN_USED = AttributeKey<Int>(persistenceKey = "diary_explorer_run_used")
+    private val EXPLORER_RINGS = intArrayOf(gg.rsmod.plugins.api.cfg.Items.EXPLORERS_RING_1, gg.rsmod.plugins.api.cfg.Items.EXPLORERS_RING_2,
+        gg.rsmod.plugins.api.cfg.Items.EXPLORERS_RING_3, gg.rsmod.plugins.api.cfg.Items.EXPLORERS_RING_4)
+
+    fun explorerTier(ring: Int): Int = EXPLORER_RINGS.indexOf(ring) + 1
+
+    fun explorerRunUses(ring: Int): Int = when (explorerTier(ring)) { 1 -> 2; 2 -> 3; 3 -> 4; else -> 3 }
+
+    fun explorerRunRestore(player: Player, ring: Int): String {
+        val used = if (player.attr[EXPLORER_RUN_DAY] == today()) player.attr[EXPLORER_RUN_USED] ?: 0 else 0
+        if (used >= explorerRunUses(ring)) return "You have used all of your ring's run energy restores for today."
+        if (player.runEnergy >= 100.0) return "You already have full run energy."
+        val add = if (explorerTier(ring) == 4) 100.0 else 50.0
+        player.runEnergy = minOf(100.0, player.runEnergy + add)
+        player.sendRunEnergy(player.runEnergy.toInt())
+        player.attr[EXPLORER_RUN_DAY] = today()
+        player.attr[EXPLORER_RUN_USED] = used + 1
+        return "You feel refreshed and renewed."
+    }
+
+    /** Explorer's ring 2: three cabbage-patch teleports a day (South Falador farm); ring 3 and 4 unlimited (OSRS Wiki). */
+    val EXPLORER_TELE_DAY = AttributeKey<Int>(persistenceKey = "diary_explorer_tele_day")
+    val EXPLORER_TELE_USED = AttributeKey<Int>(persistenceKey = "diary_explorer_tele_used")
+    val CABBAGE_PATCH = Tile(3053, 3284, 0)
+
+    fun cabbageTeleport(player: Player, ring: Int) {
+        if (explorerTier(ring) < 2) { player.message("Your ring needs to be upgraded to teleport you to the cabbage patch."); return }
+        player.canTeleport(TeleportType.JEWELRY) {
+            if (!useCabbageTele(player, ring)) player.message("You have used all of your cabbage-patch teleports for today.")
+            else player.teleport(CABBAGE_PATCH, TeleportType.JEWELRY)
+        }
+    }
+
+    private fun useCabbageTele(player: Player, ring: Int): Boolean {
+        if (explorerTier(ring) >= 3) return true
+        val used = if (player.attr[EXPLORER_TELE_DAY] == today()) player.attr[EXPLORER_TELE_USED] ?: 0 else 0
+        if (used >= 3) return false
+        player.attr[EXPLORER_TELE_DAY] = today()
+        player.attr[EXPLORER_TELE_USED] = used + 1
+        return true
+    }
+
+    /** Lumbridge & Draynor elite: "Ability to use fairy rings without the need of a Dramen or Lunar staff" (claimed elite). */
+    fun fairyRingsWithoutStaff(player: Player): Boolean = Diaries.hasClaimed(player, Diary.LUMBRIDGE, Tier.ELITE)
 
     /**
      * Falador shield prayer restore (OSRS Wiki "Falador shield"): shield 1 = 25%, 2 = 50%, 3 = 100% once a day, 4 = 100% twice a day.

@@ -17,6 +17,7 @@ val MASTERS = listOf(
     Master(DiaryNpcs.TOBY, Diary.VARROCK, 3225, 3415),
     Master(DiaryNpcs.TWO_PINTS, Diary.ARDOUGNE, 2574, 3323),
     Master(DiaryNpcs.SIR_REBRAL, Diary.FALADOR, 2977, 3346),
+    Master(DiaryNpcs.HATIUS, Diary.LUMBRIDGE, 2956, 3376),
 )
 
 MASTERS.forEach { m ->

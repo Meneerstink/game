@@ -23,6 +23,7 @@ object DiaryRewards {
         Diary.VARROCK to (1..4).map { "Varrock armour $it" },
         Diary.ARDOUGNE to (1..4).map { "Ardougne cloak $it" },
         Diary.FALADOR to (1..4).map { "Falador shield $it" },
+        Diary.LUMBRIDGE to (1..4).map { "Explorer's ring $it" },
     )
 
     internal var ids: Map<Diary, IntArray>? = null

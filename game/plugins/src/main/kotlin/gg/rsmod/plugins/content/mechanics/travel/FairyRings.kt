@@ -133,7 +133,8 @@ object FairyRings {
             gg.rsmod.plugins.content.quests.foundation.bracket.FairyTaleII.stage(player) >= 2
 
     fun wieldsFairyMagic(player: Player): Boolean =
-        player.getEquipment(EquipmentType.WEAPON)?.id in setOf(Items.DRAMEN_STAFF, Items.LUNAR_STAFF)
+        player.getEquipment(EquipmentType.WEAPON)?.id in setOf(Items.DRAMEN_STAFF, Items.LUNAR_STAFF) ||
+            gg.rsmod.plugins.content.diaries.DiaryItems.fairyRingsWithoutStaff(player) // DIARIES-OSRS Lumbridge & Draynor elite
 
     fun travelLog(player: Player): List<String> = player.attr[TRAVEL_LOG]?.split(',')?.filter { it.length == 3 } ?: emptyList()
 

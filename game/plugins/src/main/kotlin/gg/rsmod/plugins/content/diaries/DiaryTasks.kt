@@ -41,6 +41,7 @@ object DiaryTasks {
     val OTTO = Area("Otto's Grotto", Box(2494, 3480, 2512, 3500))
     val MCGRUBOR = Area("McGrubor's Wood", Box(2620, 3470, 2680, 3530))
     val FAIRY_MCGRUBOR = Area("McGrubor's Wood fairy ring", Box(2640, 3492, 2648, 3499))
+    val ARD_ZOO_UNICORNS = Area("Ardougne zoo unicorn pen", Box(2630, 3261, 2640, 3271)) // fairy ring BIS lands 2635,3266
     val COAL_TRUCKS = Area("Coal trucks", Box(2568, 3466, 2612, 3492))
     val HEMENSTER = Area("Hemenster", Box(2630, 3420, 2650, 3450))
     val CATHERBY_SHORE = Area("Catherby shore", Box(2838, 3422, 2856, 3436))
@@ -98,6 +99,31 @@ object DiaryTasks {
     val PALACE_ALTAR = Area("Varrock Palace altar", Box(3203, 3489, 3213, 3499))
     val VARROCK_WEST_BANK = Area("Varrock west bank", Box(3180, 3433, 3194, 3447))
     val COOKS_GUILD = Area("Cooks' Guild", Box(3137, 3438, 3148, 3452))
+
+    // ------------------------------------------------------------------------------------------------- Lumbridge & Draynor areas
+    val LUMBRIDGE = Area("Lumbridge", Box(3170, 3190, 3265, 3300, 0))
+    val DRAYNOR = Area("Draynor Village", Box(3070, 3225, 3130, 3290))
+    val LUMBRIDGE_SWAMP_CAVES = Area("Lumbridge Swamp Caves", Box(3140, 9530, 3260, 9600))
+    val RUNE_ESS_MINE = Area("Rune essence mine", Box(2880, 4800, 2950, 4870))
+    val DRAYNOR_SEWERS = Area("Draynor Sewers", Box(3080, 9630, 3130, 9690))
+    val AL_KHARID = Area("Al Kharid", Box(3260, 3120, 3330, 3230))
+    val AL_KHARID_MINE = Area("Al Kharid mine", Box(3290, 3270, 3310, 3320))
+    val LUMBRIDGE_KITCHEN = Area("Lumbridge castle kitchen", Box(3205, 3212, 3212, 3217, 0))
+    val HAM_HIDEOUT = Area("H.A.M. Hideout", Box(3140, 9600, 3190, 9660))
+    val RIVER_LUM_GRAPPLE = Area("River Lum", Box(3244, 3176, 3260, 3184))
+    val DRAYNOR_MANOR = Area("Draynor Manor", Box(3080, 3330, 3125, 3375))
+    val WIZARDS_TOWER_RING = Area("Wizards' Tower fairy ring", Box(3104, 3145, 3112, 3153))
+    val LUMBRIDGE_TELE = Area("Lumbridge", Box(3217, 3213, 3227, 3223, 0))
+    val LUMBRIDGE_COW_PEN = Area("Lumbridge cow pen", Box(3253, 3255, 3266, 3298))
+    val PURO_PURO = Area("Puro-Puro", Box(2560, 4290, 2620, 4350))
+    val FIRE_ALTAR = Area("Fire Altar", Box(2570, 4825, 2600, 4855))
+    val AL_KHARID_PALACE = Area("Al Kharid palace", Box(3281, 3159, 3304, 3176))
+    val ZANARIS = Area("Zanaris", Box(2370, 4350, 2480, 4480))
+    val LUMBRIDGE_CANOE = Area("Lumbridge canoe station", Box(3236, 3230, 3246, 3250))
+    val EDGEVILLE_CANOE = Area("Edgeville canoe station", Box(3125, 3496, 3140, 3515))
+    val LUMBRIDGE_CELLAR = Area("Lumbridge castle basement", Box(3205, 9610, 3222, 9628))
+    val EMIRS_ARENA = Area("Emir's Arena", Box(3330, 3200, 3395, 3290))
+    val WISE_OLD_MAN_HOUSE = Area("Wise Old Man's house", Box(3086, 3250, 3094, 3256))
 
     // ------------------------------------------------------------------------------------------------------------- Falador areas
     val FALADOR = Area("Falador", Box(2935, 3305, 3065, 3395))
@@ -372,8 +398,7 @@ object DiaryTasks {
         t(A, Tier.EASY, 9, "View Aleck's Hunter Emporium.", Talk(s("Aleck")))
         t(A, Tier.EASY, 10, "Steal some silk from the Ardougne market.", Gain(s("Silk"), ARD_MARKET, skill = sk.THIEVING), "Thieving 20",
             osrs = "Check what pets you have insured with Probita in Ardougne.")
-        t(A, Tier.MEDIUM, 1, "Pickpocket a Knight of Ardougne.", Ev("pickpocket:knight of ardougne"), "Thieving 55",
-            osrs = "Enter the Unicorn pen in Ardougne zoo using Fairy rings.")
+        t(A, Tier.MEDIUM, 1, "Enter the Unicorn pen in Ardougne zoo using Fairy rings.", Tele(ARD_ZOO_UNICORNS))
         t(A, Tier.MEDIUM, 2, "Grapple over Yanille's south wall.", Ev("shortcut:yanille_grapple"), "Agility 39, Strength 38, Ranged 21")
         t(A, Tier.MEDIUM, 3, "Harvest some strawberries from the Ardougne farming patch.", Gain(s("Strawberry"), ARD_FARM, skill = sk.FARMING), "Farming 31")
         t(A, Tier.MEDIUM, 4, "Cast the Ardougne Teleport spell.", Tele(ARD_TELE), "Magic 51")
@@ -479,6 +504,61 @@ object DiaryTasks {
         t(F, Tier.ELITE, 4, "Perform a skillcape or quest cape emote at the top of Falador Castle.", Ev("emote:skillcape", FALADOR_CASTLE_TOP))
         t(F, Tier.ELITE, 5, "Jump over the strange floor in Taverley dungeon.", Trigger.Xp(Skills.AGILITY, TAVERLEY_STRANGE_FLOOR), "Agility 80")
         t(F, Tier.ELITE, 6, "Mix a Saradomin brew in Falador east bank.", Gain(s("Saradomin brew(3)", "Saradomin brew (3)"), FALADOR_EAST_BANK, skill = sk.HERBLORE), "Herblore 81")
+
+        // ------------------------------------------------------------------------------------------- LUMBRIDGE & DRAYNOR (D5, 27-11)
+        val L = Diary.LUMBRIDGE
+        t(L, Tier.EASY, 1, "Catch some Shrimps in Draynor Village.", Gain(s("Raw shrimps"), DRAYNOR, skill = sk.FISHING),
+            osrs = "Complete a lap of the Draynor Village agility course.")
+        t(L, Tier.EASY, 2, "Slay a Cave bug beneath Lumbridge Swamp.", Kill(s("Cave bug"), LUMBRIDGE_SWAMP_CAVES), "Slayer 7")
+        t(L, Tier.EASY, 3, "Have Sedridor teleport you to the Rune essence mine.", Tele(RUNE_ESS_MINE))
+        t(L, Tier.EASY, 4, "Craft some water runes from Essence.", Gain(s("Water rune"), skill = sk.RUNECRAFTING), "Runecrafting 5")
+        t(L, Tier.EASY, 5, "Learn your age from Hans in Lumbridge.", Talk(s("Hans"), LUMBRIDGE))
+        t(L, Tier.EASY, 6, "Pickpocket a man or woman in Lumbridge.", Trigger.Xp(Skills.THIEVING, LUMBRIDGE))
+        t(L, Tier.EASY, 7, "Chop and burn some oak logs in Lumbridge.",
+            Steps(listOf(Gain(s("Oak logs"), LUMBRIDGE, skill = sk.WOODCUTTING), Burn(s("Oak logs"), LUMBRIDGE))), "Woodcutting 15, Firemaking 15")
+        t(L, Tier.EASY, 8, "Kill a Zombie in Draynor Sewers.", Kill(s("Zombie"), DRAYNOR_SEWERS))
+        t(L, Tier.EASY, 9, "Catch some Anchovies in Al Kharid.", Gain(s("Raw anchovies"), AL_KHARID, skill = sk.FISHING), "Fishing 15")
+        t(L, Tier.EASY, 10, "Bake some Bread on the Lumbridge kitchen range.", Gain(s("Bread"), LUMBRIDGE_KITCHEN, skill = sk.COOKING))
+        t(L, Tier.EASY, 11, "Mine some Iron ore at the Al Kharid mine.", Gain(s("Iron ore"), AL_KHARID_MINE, skill = sk.MINING), "Mining 15")
+        t(L, Tier.EASY, 12, "Enter the H.A.M. Hideout.", Enter(HAM_HIDEOUT))
+        t(L, Tier.MEDIUM, 1, "Kill an Al-Kharid warrior.", Kill(s("Al-kharid warrior", "Al-Kharid warrior"), AL_KHARID),
+            osrs = "Complete a lap of the Al Kharid agility course.")
+        t(L, Tier.MEDIUM, 2, "Grapple across the River Lum.", Trigger.Xp(Skills.AGILITY, RIVER_LUM_GRAPPLE), "Agility 8, Strength 19, Ranged 37")
+        t(L, Tier.MEDIUM, 3, "Purchase an upgraded device from Ava.", Gain(s("Ava's accumulator", "Ava's assembler"), DRAYNOR_MANOR), "Ranged 50")
+        t(L, Tier.MEDIUM, 4, "Travel to the Wizards' Tower by Fairy ring.", Tele(WIZARDS_TOWER_RING))
+        t(L, Tier.MEDIUM, 5, "Cast the Teleport to Lumbridge spell.", Tele(LUMBRIDGE_TELE), "Magic 31")
+        t(L, Tier.MEDIUM, 6, "Catch some Salmon in Lumbridge.", Gain(s("Raw salmon"), LUMBRIDGE, skill = sk.FISHING), "Fishing 30")
+        t(L, Tier.MEDIUM, 7, "Craft a coif in the Lumbridge cow pen.", Gain(s("Coif"), LUMBRIDGE_COW_PEN, skill = sk.CRAFTING), "Crafting 38")
+        t(L, Tier.MEDIUM, 8, "Chop some willow logs in Draynor Village.", Gain(s("Willow logs"), DRAYNOR, skill = sk.WOODCUTTING), "Woodcutting 30")
+        t(L, Tier.MEDIUM, 9, "Pickpocket Martin the Master Gardener.", Ev("pickpocket:martin the master gardener"), "Thieving 38")
+        t(L, Tier.MEDIUM, 10, "Get a slayer task from Chaeldar.", Ev("slayer_task:chaeldar"), "Combat 70")
+        t(L, Tier.MEDIUM, 11, "Catch an Essence or Eclectic impling in Puro-Puro.",
+            Gain(s("Essence impling jar", "Eclectic impling jar"), PURO_PURO, skill = sk.HUNTER), "Hunter 42")
+        t(L, Tier.MEDIUM, 12, "Craft some Lava runes at the fire altar in Al Kharid.", Gain(s("Lava rune"), FIRE_ALTAR, skill = sk.RUNECRAFTING), "Runecrafting 23")
+        t(L, Tier.HARD, 1, "Cast Bones to Peaches in Al Kharid palace.", Ev("spell:bones to peaches", AL_KHARID_PALACE), "Magic 60")
+        t(L, Tier.HARD, 2, "Squeeze past the jutting wall on your way to the cosmic altar.", Trigger.Xp(Skills.AGILITY, ZANARIS), "Agility 46")
+        t(L, Tier.HARD, 3, "Craft 56 Cosmic runes simultaneously from Essence.", Gain(s("Cosmic rune"), count = 56, skill = sk.RUNECRAFTING, once = true), "Runecrafting 59")
+        t(L, Tier.HARD, 4, "Travel from Lumbridge to Edgeville on a Waka Canoe.", Tele(EDGEVILLE_CANOE, from = LUMBRIDGE_CANOE), "Woodcutting 57")
+        t(L, Tier.HARD, 5, "Mine some Mithril ore in the Al Kharid mine.", Gain(s("Mithril ore"), AL_KHARID_MINE, skill = sk.MINING), "Mining 55",
+            osrs = "Collect at least 100 Tears of Guthix in one visit.")
+        t(L, Tier.HARD, 6, "Mine some Adamantite ore in the Al Kharid mine.", Gain(s("Adamantite ore"), AL_KHARID_MINE, skill = sk.MINING), "Mining 70",
+            osrs = "Take the train from Dorgesh-Kaan to Keldagrim.")
+        t(L, Tier.HARD, 7, "Purchase some Barrows gloves from the Lumbridge bank chest.", Gain(s("Barrows gloves"), LUMBRIDGE_CELLAR))
+        t(L, Tier.HARD, 8, "Pick some Belladonna from the farming patch at Draynor Manor.", Gain(s("Cave nightshade"), DRAYNOR_MANOR, skill = sk.FARMING), "Farming 63")
+        t(L, Tier.HARD, 9, "Light your mining helmet in the Lumbridge castle basement.", Ev("light:mining helmet", LUMBRIDGE_CELLAR), "Firemaking 65")
+        t(L, Tier.HARD, 10, "Recharge your prayer at Emir's Arena with Smite activated.", PrayUp(EMIRS_ARENA) { Prayers.isActive(it, Prayer.SMITE) }, "Prayer 52")
+        t(L, Tier.HARD, 11, "Craft, string and enchant an Amulet of Power in Lumbridge.",
+            Steps(listOf(Gain(s("Diamond amulet (u)"), LUMBRIDGE, skill = sk.CRAFTING), Gain(s("Diamond amulet"), LUMBRIDGE, skill = sk.CRAFTING),
+                Gain(s("Amulet of power"), LUMBRIDGE, skill = sk.MAGIC))), "Crafting 70, Magic 57")
+        t(L, Tier.ELITE, 1, "Pickpocket a Hero.", Ev("pickpocket:hero"), "Thieving 80", osrs = "Steal from a Dorgesh-Kaan rich chest.")
+        t(L, Tier.ELITE, 2, "Burn some Magic logs in Lumbridge.", Burn(s("Magic logs"), LUMBRIDGE), "Firemaking 75",
+            osrs = "Grapple across a pylon on the Dorgesh-Kaan Agility Course.")
+        t(L, Tier.ELITE, 3, "Chop some magic logs.", Gain(s("Magic logs"), skill = sk.WOODCUTTING), "Woodcutting 75",
+            osrs = "Chop some magic logs at the Mage Training Arena.")
+        t(L, Tier.ELITE, 4, "Smith an Adamant platebody.", Gain(s("Adamant platebody"), skill = sk.SMITHING), "Smithing 88",
+            osrs = "Smith an Adamant platebody down Draynor sewer.")
+        t(L, Tier.ELITE, 5, "Craft 140 or more Water runes simultaneously from Essence.", Gain(s("Water rune"), count = 140, skill = sk.RUNECRAFTING, once = true), "Runecrafting 76")
+        t(L, Tier.ELITE, 6, "Perform the Quest cape emote in the Wise Old Man's house.", Ev("emote:skillcape", WISE_OLD_MAN_HOUSE))
     }
 
     val ALL: List<Task> get() = ALL_TASKS
