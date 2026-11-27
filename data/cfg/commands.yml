@@ -211,6 +211,11 @@
   usage: "::conform <summoning|curses|equipment|combat|hud|systems|deadman|traversal|quests|stop> [name]"
   description: "Dev tool: run a conformance test suite against the donor references."
   example: "::conform summoning"
+- name: condev
+  rank: admin
+  usage: "::condev rooms | clear | add <TYPE> <x> <z> [rot] | furn | level <n>"
+  description: "Dev tool: report or set up the built rooms of your house (Construction tests)."
+  example: "::condev rooms"
 - name: crown
   rank: admin
   usage: "::crown"
@@ -673,6 +678,11 @@
   usage: "::skullme [white|bronze|green|blue|red|off]"
   description: "Give yourself a 5-minute Deadman PK skull, optionally in a chosen colour."
   example: "::skullme red"
+- name: sigils
+  rank: player
+  usage: "::sigils"
+  description: "Show your attuned Deadman sigils and open the Attuned Sigils window."
+  example: "::sigils"
 - name: song
   rank: admin
   usage: "::song <songId>"
