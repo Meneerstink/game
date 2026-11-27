@@ -174,6 +174,7 @@ object DiaryTasks {
     val CHEMIST = Area("Rimmington Chemist", Box(2928, 3206, 2937, 3215))
     val CHAOS_TEMPLE_ASGARNIA = Area("Chaos Temple", Box(2930, 3511, 2940, 3521))
     val FALADOR_FARM = Area("Falador farm", Box(3044, 3298, 3066, 3316))
+    val ASGARNIA_ICE = Area("Asgarnia Ice Dungeon", Box(2980, 9535, 3070, 9600))
     val MUDSKIPPER = Area("Mudskipper Point", Box(2978, 3105, 3012, 3132))
     val FALADOR_NORTH_WALL_TOP = Area("north Falador wall", Box(3004, 3392, 3007, 3395, 1))
     val FALADOR_NORTH_WALL_FOOT = Area("north Falador wall", Box(3004, 3390, 3007, 3396, 0))
@@ -377,8 +378,8 @@ object DiaryTasks {
         t(V, Tier.EASY, 8, "Buy a newspaper.", Gain(s("Newspaper"), VARROCK))
         t(V, Tier.EASY, 9, "Give a dog a bone!", Ev("dog_bone"))
         t(V, Tier.EASY, 10, "Spin a bowl on the pottery wheel and fire it in the oven in Barb Village.",
-            Steps(listOf(Gain(s("Unfired bowl"), BARB_VILLAGE, skill = sk.CRAFTING), Gain(s("Bowl"), BARB_VILLAGE, skill = sk.CRAFTING))), "Crafting 8")
-        t(V, Tier.EASY, 11, "Speak to Haig Halen after obtaining at least 50 Kudos.", Talk(s("Haig Halen"), cond = { it.getVarp(KUDOS_VARP) >= 50 }))
+            Steps(listOf(Gain(s("Unfired bowl", "Bowl (unfired)"), BARB_VILLAGE, skill = sk.CRAFTING), Gain(s("Bowl"), BARB_VILLAGE, skill = sk.CRAFTING))), "Crafting 8")
+        t(V, Tier.EASY, 11, "Speak to Haig Halen after obtaining at least 50 Kudos.", Talk(s("Haig Halen", "Curator Haig Halen"), cond = { it.getVarp(KUDOS_VARP) >= 50 }))
         t(V, Tier.EASY, 12, "Craft some Earth runes from Essence.", Gain(s("Earth rune"), EARTH_ALTAR, skill = sk.RUNECRAFTING), "Runecrafting 9")
         t(V, Tier.EASY, 13, "Catch some trout in the River Lum at Barbarian Village.", Gain(s("Raw trout"), BARB_VILLAGE), "Fishing 20")
         t(V, Tier.EASY, 14, "Steal from the Tea stall in Varrock.", Gain(s("Cup of tea"), VARROCK, skill = sk.THIEVING), "Thieving 5")
@@ -507,7 +508,8 @@ object DiaryTasks {
             Gain(s("Wine of zamorak"), CHAOS_TEMPLE_ASGARNIA, skill = sk.MAGIC), "Magic 33")
         t(F, Tier.MEDIUM, 3, "Unlock the Crystal chest in Taverley.", Ev("chest:crystal"))
         t(F, Tier.MEDIUM, 4, "Place a Scarecrow in the Falador farm flower patch.", Ev("plant:scarecrow", FALADOR_FARM), "Farming 23")
-        t(F, Tier.MEDIUM, 5, "Kill a Mogre at Mudskipper Point.", Kill(s("Mogre"), MUDSKIPPER), "Slayer 32")
+        t(F, Tier.MEDIUM, 5, "Kill an Ice giant in the Asgarnia Ice Dungeon.", Kill(s("Ice giant"), ASGARNIA_ICE),
+            osrs = "Kill a Mogre at Mudskipper Point.")
         t(F, Tier.MEDIUM, 6, "Kill a rat in Port Sarim.", Kill(s("Rat", "Giant rat"), PORT_SARIM), osrs = "Visit the Port Sarim Rat Pits.")
         t(F, Tier.MEDIUM, 7, "Grapple up and then jump off the north Falador wall.",
             Steps(listOf(Trigger.Xp(Skills.AGILITY, FALADOR_NORTH_WALL_TOP), Trigger.Xp(Skills.AGILITY, FALADOR_NORTH_WALL_FOOT))), "Agility 11, Strength 37, Ranged 19")
@@ -691,7 +693,7 @@ object DiaryTasks {
         t(FR, Tier.HARD, 7, "Kill a Spiritual ranger in the God Wars Dungeon.", Kill(s("Spiritual ranger"), GWD), "Slayer 63",
             osrs = "Obtain 100% support from your kingdom subjects.")
         t(FR, Tier.HARD, 8, "Teleport to Waterbirth Island.", Tele(WATERBIRTH_TELE), "Magic 72")
-        t(FR, Tier.HARD, 9, "Smelt a Runite bar in Keldagrim.", Gain(s("Runite bar"), KELDAGRIM, skill = sk.SMITHING), "Smithing 85",
+        t(FR, Tier.HARD, 9, "Smelt a Runite bar in Keldagrim.", Gain(s("Runite bar", "Rune bar"), KELDAGRIM, skill = sk.SMITHING), "Smithing 85",
             osrs = "Obtain the Blast Furnace Foreman's permission to use the Blast Furnace for free.")
         t(FR, Tier.ELITE, 1, "Kill each of the Dagannoth Kings.",
             Trigger.All(listOf(Kill(s("Dagannoth Rex")), Kill(s("Dagannoth Prime")), Kill(s("Dagannoth Supreme")))))
