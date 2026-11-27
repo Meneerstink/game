@@ -221,4 +221,20 @@ class DiariesTests {
         assertEquals("Varrock", Diary.VARROCK.title)
         assertTrue((Diaries.task("VAR_HA9")!!.trigger as Diaries.Trigger.PrayUp).cond != null)
     }
+
+    @Test
+    fun `slayer tower xp - 2,5 percent per claimed Morytania tier, every floor and the basement, nothing outside`() {
+        every { player.tile } returns gg.rsmod.game.model.Tile(3420, 3550, 0)
+        assertEquals(1.0, DiaryItems.slayerTowerFactor(player), 1e-12)
+        Diaries.setClaimed(player, Diary.MORYTANIA, 4)
+        assertEquals(1.1, DiaryItems.slayerTowerFactor(player), 1e-12)
+        every { player.tile } returns gg.rsmod.game.model.Tile(3420, 3550, 2)
+        assertEquals(1.1, DiaryItems.slayerTowerFactor(player), 1e-12)
+        every { player.tile } returns gg.rsmod.game.model.Tile(3420, 9960, 0)
+        assertEquals(1.1, DiaryItems.slayerTowerFactor(player), 1e-12)
+        Diaries.setClaimed(player, Diary.MORYTANIA, 1)
+        assertEquals(1.025, DiaryItems.slayerTowerFactor(player), 1e-12)
+        every { player.tile } returns gg.rsmod.game.model.Tile(3492, 3472, 0) // Canifis
+        assertEquals(1.0, DiaryItems.slayerTowerFactor(player), 1e-12)
+    }
 }
