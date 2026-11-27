@@ -134,3 +134,16 @@ fun reveal(ghast: Npc, p: Player) {
         world.spawn(back)
     }
 }
+
+// DIARIES-OSRS Morytania easy reward (OSRS Wiki "Morytania Diary"): "Ghasts in the Mort Myre Swamp will ignore you half of the time".
+// Wrapped one tick after the spawn, like the revenants: npc_aggro's global spawn hook sets the default check on the same spawn.
+on_npc_spawn(GHAST) {
+    npc.queue {
+        wait(1)
+        val base = npc.aggroCheck
+        npc.aggroCheck = { n, p ->
+            (base == null || base(n, p)) &&
+                !(gg.rsmod.plugins.content.diaries.Diaries.claimed(p, gg.rsmod.plugins.content.diaries.Diaries.Diary.MORYTANIA) >= 1 && world.random(1) == 0)
+        }
+    }
+}
