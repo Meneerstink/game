@@ -209,6 +209,7 @@ object PohFurnitureUse {
             return
         }
         player.inventory.add(picked.obj, 1)
+        if (picked.obj in PohKitchen.HOUSE_ONLY) PohKitchen.watch(player)
         player.message("You take ${if (picked.name.lowercase().endsWith("s")) "some" else "a"} ${picked.name.lowercase()}.")
     }
 

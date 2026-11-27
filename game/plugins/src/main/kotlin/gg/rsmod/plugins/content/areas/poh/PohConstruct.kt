@@ -376,7 +376,8 @@ object PohConstruct {
         player.animate(spot.hotspot.anim)
         player.playSound(if (picked.plant) Sfx.FARMING_WATERING else Sfx.POH_BUILD_WOOD)
         task.wait(2)
-        targets.forEach { (s, d) ->
+        // Bigger pieces last: overlapping spots of one group share a tile slot (the oubliette's rocnar over its floor, turned).
+        targets.sortedBy { (_, d) -> world.definitions.get(ObjectDef::class.java, d.objs.first()).let { it.width * it.length } }.forEach { (s, d) ->
             PohRooms.objectsAt(world, s.tile).filter { it.id == s.loc }.forEach { world.remove(it) }
             val habitat = s.hotspot.type == "HABITAT"
             val id = if (habitat) PohFurniture.habitatObj(s.hotspot, d, s.loc) else d.obj(style, PohHeraldry.crestIndex(player))

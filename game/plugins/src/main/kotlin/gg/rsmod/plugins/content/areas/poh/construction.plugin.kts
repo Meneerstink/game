@@ -24,6 +24,24 @@ on_command("condev", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
             PohRooms.addRoom(player, PohRooms.Built(type, args[2].toInt(), args[3].toInt(), args.getOrNull(5)?.toInt() ?: 0, args.getOrNull(4)?.toInt() ?: 0))
             PlayerHouse.rebuild(player)
         }
+        "tmpl" -> {
+            // condev tmpl <STYLE> <chunkX> <chunkZ>: the objects of a style's template chunk (ids + names), for the sweep's findings.
+            val style = PlayerHouse.Style.valueOf(args[1].uppercase())
+            val t = style.chunk(args[2].toInt(), args[3].toInt())
+            val objs = world.chunks.get(t.chunkCoords, createIfNeeded = true)!!.getEntities<gg.rsmod.game.model.entity.StaticObject>(gg.rsmod.game.model.EntityType.STATIC_OBJECT)
+                .filter { it.tile.height == t.height }
+            val names = objs.groupBy { it.id }.map { (id, l) -> "$id:${world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, id).name}x${l.size}" }
+            names.chunked(12).forEach { player.message("[tmpl] ${it.joinToString(" ")}", type = ChatMessageType.CONSOLE) }
+            if (args.getOrNull(4) == "pos") {
+                objs.filter { world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, it.id).name.endsWith("space", true) }.sortedBy { it.id }
+                    .chunked(8).forEach { l -> player.message("[tmplpos] " + l.joinToString(" ") { "${it.id}@${it.tile.x - t.x},${it.tile.z - t.z}r${it.rot}" }, type = ChatMessageType.CONSOLE) }
+            }
+        }
+        "sweep" -> {
+            val arg = args.getOrNull(1)?.uppercase()
+            val styles = if (arg == "ALL") PlayerHouse.Style.values().toList() else listOf(arg?.let { PlayerHouse.Style.valueOf(it) } ?: PlayerHouse.styleOf(player))
+            PohSweep.run(player, styles).take(60).forEach { player.message(it, type = ChatMessageType.CONSOLE) }
+        }
         "furn" -> PohRooms.furniture(player).forEach { (k, v) -> player.message("[con] $k = $v", type = ChatMessageType.CONSOLE) }
     }
     val lvl = player.skills.getCurrentLevel(gg.rsmod.plugins.api.Skills.CONSTRUCTION)

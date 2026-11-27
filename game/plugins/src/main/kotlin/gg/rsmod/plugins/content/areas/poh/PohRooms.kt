@@ -149,10 +149,11 @@ object PohRooms {
 
         /**
          * The template's south-west tile for [style]. The Wilderness theme (an OSRS region) has another room on the menagerie's
-         * chunk and its own OSRS menagerie ids, so a menagerie there uses the whitewashed template (an outdoor room: no walls).
+         * chunk and its own OSRS menagerie ids, so a menagerie there uses the whitewashed template (an outdoor room: no walls);
+         * its dungeon pit chunk is empty (nachtrun 27-11 sweep), so the pit uses the whitewashed one too (underground).
          */
         fun template(style: PlayerHouse.Style): Tile =
-            if (this == MENAGERIE && style == PlayerHouse.Style.WILDERNESS) PlayerHouse.Style.WHITEWASHED_STONE.chunk(chunkX, chunkZ) else style.chunk(chunkX, chunkZ)
+            if ((this == MENAGERIE || this == DUNGEON_PIT) && style == PlayerHouse.Style.WILDERNESS) PlayerHouse.Style.WHITEWASHED_STONE.chunk(chunkX, chunkZ) else style.chunk(chunkX, chunkZ)
     }
 
     /** One built room: grid cell (instance chunk), plane, rotation (0-3 clockwise). */
@@ -318,7 +319,7 @@ object PohRooms {
         val tile: Tile,
         private val frame: PlayerHouse.RoomFrame,
     ) {
-        fun key(room: Built) = "${room.x},${room.z},${room.plane}:$loc@$templateX,$templateZ"
+        fun key(room: Built) = "${room.x},${room.z},${room.plane}:${PohFurniture.canonical(loc)}@$templateX,$templateZ"
 
         /** The rotation a loc placed on this spot has in the house. */
         val houseRot: Int get() = (rot + frame.rotation) and 3
@@ -398,17 +399,23 @@ object PohRooms {
                 .getEntities<StaticObject>(EntityType.STATIC_OBJECT)
                 .filter { it.tile.height == corner.height }
         val handled = HashSet<StaticObject>()
+        // Nachtrun 27-11 (sweep): pieces on overlapping spots (the oubliette's 2x2 rocnar over its floor tiles, turned) share a tile
+        // slot; the later spawn replaces the earlier one, so the bigger pieces go last and stay visible.
+        val pieces = ArrayList<DynamicObject>()
         spots(world, style, room, corner).forEach { spot ->
             val copy = copies.firstOrNull { it.id == spot.loc && it.tile == spot.tile }
             copy?.let { handled.add(it) }
             val id = built[spot.key(room)]?.let { placedObj(it, style, PohHeraldry.crestIndex(player)) }
             if (id != null) {
                 copy?.let { world.remove(it) }
-                if (id > 0) world.spawn(DynamicObject(id, spot.type, spot.houseRot, spot.pieceTile(world, id)))
+                if (id > 0) pieces += DynamicObject(id, spot.type, spot.houseRot, spot.pieceTile(world, id))
             } else if (!buildMode) {
                 copy?.let { world.remove(it) }
+                // Nachtrun 27-11: an empty chapel window space is a hole in the wall outside building mode - the style's plain window.
+                if (spot.hotspot.key == "CHAPEL_WINDOW") pieces += DynamicObject(windowOf(style), spot.type, spot.houseRot, spot.tile)
             }
         }
+        pieces.sortedBy { world.definitions.get(ObjectDef::class.java, it.id).let { d -> d.width * d.length } }.forEach { world.spawn(it) }
         copies.filter { it !in handled }.forEach { obj ->
             val name = world.definitions.get(ObjectDef::class.java, obj.id).name.lowercase()
             when {

@@ -83,12 +83,29 @@ object PohFurniture {
         loc: Int,
     ): Int = deco.objs.getOrNull(h.ids.indexOf(loc)) ?: -1
 
+    /**
+     * Nachtrun 27-11 (sweep): the Wilderness theme's template (OSRS region 8302, DMM2 import) carries the parlour's and costume
+     * room's hotspots on renumbered ids 67005-67021 (same tiles and rotations as 15410-15419 / 18810-18815, checked with
+     * `condev tmpl <style> <x> <z> pos`). They build as the 2006 hotspot and save under its id ([canonical]), so a house keeps its
+     * furniture when the style changes.
+     */
+    val ALIASES: Map<Int, Int> =
+        mapOf(
+            67005 to 15410, 67006 to 15411, 67007 to 15412, 67008 to 15413, 67009 to 15414, 67010 to 15415, 67011 to 15416,
+            67012 to 15418, 67013 to 15419,
+            67016 to 18810, 67017 to 18811, 67018 to 18812, 67019 to 18813, 67020 to 18814, 67021 to 18815,
+            // the chapel's window space (whitewashed id: the Wilderness theme builds whitewashed pieces)
+            67074 to 13732,
+        )
+
+    fun canonical(loc: Int): Int = ALIASES[loc] ?: loc
+
     private val BY_OBJ: Map<Int, Hotspot> = BUILDABLE.flatMap { h -> h.ids.distinct().map { it to h } }.toMap()
 
-    fun hotspotOf(obj: Int): Hotspot? = BY_OBJ[obj]
+    fun hotspotOf(obj: Int): Hotspot? = BY_OBJ[canonical(obj)]
 
     /** Every hotspot loc id a house may show in building mode. */
-    val HOTSPOT_IDS: Set<Int> = BY_OBJ.keys
+    val HOTSPOT_IDS: Set<Int> = BY_OBJ.keys + ALIASES.keys
 
     private val GROUP_OF: Map<String, List<Hotspot>> =
         PohFurnitureData.LINKED.flatMap { line ->
