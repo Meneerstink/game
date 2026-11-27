@@ -81,6 +81,12 @@ object DiaryItems {
     fun camelotToSeers(player: Player): Boolean =
         player.attr[CAMELOT_SEERS] == true && Diaries.hasClaimed(player, Diary.KANDARIN, Tier.HARD)
 
+    /** Varrock medium: Varrock Teleport lands at the Grand Exchange when the player chose that at Toby. */
+    val VARROCK_GE = AttributeKey<Boolean>(persistenceKey = "diary_varrock_ge")
+
+    fun varrockToGe(player: Player): Boolean =
+        player.attr[VARROCK_GE] == true && Diaries.hasClaimed(player, Diary.VARROCK, Tier.MEDIUM)
+
     /** Kandarin medium: "10% increased experience from cutting maple trees in Seers' Village". */
     fun mapleXpBonus(player: Player): Double =
         if (Diaries.hasClaimed(player, Diary.KANDARIN, Tier.MEDIUM) && DiaryTasks.SEERS.has(player.tile)) 1.1 else 1.0

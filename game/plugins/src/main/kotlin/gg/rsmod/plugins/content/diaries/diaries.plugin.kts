@@ -24,7 +24,7 @@ on_npc_completed { killer, npc ->
 }
 
 /** Events that content plugins send today (grep 'Diaries.event'); an Ev task with a key outside this list cannot be done. */
-val EMITTED = listOf("lap:", "pest_control:", "hunt:", "pickpocket:", "poh_build:", "estate:", "spell:", "god_spell:", "chest:", "plant:", "organ:", "shortcut:", "farming_protect:")
+val EMITTED = listOf("lap:", "pest_control:", "hunt:", "pickpocket:", "poh_build:", "estate:", "spell:", "god_spell:", "chest:", "plant:", "organ:", "shortcut:", "farming_protect:", "dog_bone", "emote:", "spirit_tree", "tele:", "slayer_task:", "sawmill:", "canoe:")
 
 // Test command (agent bot tests): `diary <name> [set|clear <task|diary>] [list]`.
 gg.rsmod.game.CommandServerCommands.handlers["diary"] = { w, a ->

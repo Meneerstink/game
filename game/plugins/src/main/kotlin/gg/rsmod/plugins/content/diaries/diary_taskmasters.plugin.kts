@@ -14,6 +14,7 @@ val MASTERS = listOf(
     Master(DiaryNpcs.WEDGE, Diary.KANDARIN, 2759, 3476),
     Master(DiaryNpcs.ELDER_GNOME_CHILD, Diary.WESTERN, 2467, 3459),
     Master(DiaryNpcs.LESSER_FANATIC, Diary.WILDERNESS, 3121, 3516),
+    Master(DiaryNpcs.TOBY, Diary.VARROCK, 3225, 3415),
 )
 
 MASTERS.forEach { m ->
@@ -30,6 +31,7 @@ suspend fun talk(task: gg.rsmod.game.model.queue.QueueTask, m: Master) {
     if (claimable != null) opts += "I'd like to claim my ${claimable.title.lowercase()} reward."
     if (Diaries.claimed(player, m.diary) > 0) opts += "I've lost my reward item."
     if (m.diary == Diary.KANDARIN && Diaries.hasClaimed(player, Diary.KANDARIN, Tier.HARD)) opts += "Change my Camelot Teleport destination."
+    if (m.diary == Diary.VARROCK && Diaries.hasClaimed(player, Diary.VARROCK, Tier.MEDIUM)) opts += "Change my Varrock Teleport destination."
     opts += "What is the Achievement Diary?"
     opts += "Nothing, thanks."
     when (opts[task.options(*opts.toTypedArray()) - 1]) {
@@ -54,6 +56,14 @@ suspend fun talk(task: gg.rsmod.game.model.queue.QueueTask, m: Master) {
                 2 -> player.attr[DiaryItems.CAMELOT_SEERS] = true
             }
             task.chatNpc("Your Camelot Teleport will now take you to ${if (player.attr[DiaryItems.CAMELOT_SEERS] == true) "Seers' Village bank" else "Camelot castle"}.")
+        }
+        "Change my Varrock Teleport destination." -> {
+            // Varrock medium (OSRS Wiki): Varrock Teleport can go to the Grand Exchange instead of Varrock Square.
+            when (task.options("Varrock Square", "Grand Exchange", title = "Where should Varrock Teleport take you?")) {
+                1 -> player.attr[DiaryItems.VARROCK_GE] = false
+                2 -> player.attr[DiaryItems.VARROCK_GE] = true
+            }
+            task.chatNpc("Your Varrock Teleport will now take you to ${if (player.attr[DiaryItems.VARROCK_GE] == true) "the Grand Exchange" else "Varrock Square"}.")
         }
         "What is the Achievement Diary?" -> {
             task.chatPlayer("What is the Achievement Diary?")

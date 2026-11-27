@@ -224,6 +224,7 @@ on_obj_option(obj = Objs.PIPE_29370, option = 1) {
         darkanWalkAgility(player, 295, if (entering) Direction.EAST else Direction.WEST, 6)
         player.filterableMessage("You pulled yourself through the pipes.")
         player.addXp(Skills.AGILITY, 10.0)
+        gg.rsmod.plugins.content.diaries.Diaries.event(player, "shortcut:edgeville_pipe") // DIARIES-OSRS Varrock hard 10
     }
 }
 

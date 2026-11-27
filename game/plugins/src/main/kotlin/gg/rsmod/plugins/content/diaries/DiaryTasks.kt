@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.diaries
 
+import gg.rsmod.plugins.api.ext.getVarp
 import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.content.diaries.Diaries.Area
@@ -73,6 +74,30 @@ object DiaryTasks {
     val RESOURCE_AREA = Area("Resource Area", Box(3174, 3924, 3196, 3944))
     val LAVA_MAZE = Area("Lava Maze", Box(3008, 3800, 3110, 3900))
     val REV_CAVES = Area("Revenant Caves", Box(3136, 10048, 3263, 10239)) // DIARIES-OSRS replacement for the Wilderness God Wars Dungeon
+
+    // ------------------------------------------------------------------------------------------------------------ Varrock areas
+    private const val KUDOS_VARP = 1010 // VarrockMuseum.KUDOS_VARP
+    val VARROCK = Area("Varrock", Box(3170, 3370, 3290, 3515))
+    val VARROCK_SE_MINE = Area("south-east Varrock mine", Box(3278, 3358, 3296, 3376))
+    val LUMBER_YARD = Area("Lumber Yard", Box(3295, 3480, 3330, 3515))
+    val SAWMILL = Area("Sawmill", Box(3295, 3484, 3310, 3500))
+    val SOS_2 = Area("Stronghold of Security, level 2", Box(1984, 5184, 2047, 5247))
+    val SOS_3 = Area("Stronghold of Security, level 3", Box(2112, 5248, 2175, 5311))
+    val BARB_VILLAGE = Area("Barbarian Village", Box(3070, 3400, 3112, 3445))
+    val EARTH_ALTAR = Area("Earth Altar", Box(2640, 4820, 2672, 4852))
+    val CHAMPIONS_GUILD = Area("Champions' Guild", Box(3188, 3354, 3194, 3362))
+    val CHAMPIONS_BUSH = Area("Champions' Guild bush patch", Box(3178, 3354, 3184, 3360))
+    val GE_SPIRIT_TREE = Area("Grand Exchange spirit tree", Box(3182, 3505, 3191, 3514))
+    val DIGSITE_TELE = Area("Digsite", Box(3335, 3438, 3348, 3450))
+    val VARROCK_TELE = Area("Varrock Square", Box(3205, 3418, 3222, 3436))
+    val GE_TELE = Area("Grand Exchange", Box(3150, 3468, 3180, 3500))
+    val EDGEVILLE = Area("Edgeville", Box(3070, 3460, 3140, 3520))
+    val PADDEWWA = Area("Paddewwa", Box(3088, 9872, 3106, 9892))
+    val CHURCH_TOP = Area("top of the Varrock church", pred = { it.x in 3252..3261 && it.z in 3470..3489 && it.height >= 1 })
+    val PALACE_GARDEN = Area("Varrock Palace tree patch", Box(3222, 3452, 3236, 3466))
+    val PALACE_ALTAR = Area("Varrock Palace altar", Box(3203, 3489, 3213, 3499))
+    val VARROCK_WEST_BANK = Area("Varrock west bank", Box(3180, 3433, 3194, 3447))
+    val COOKS_GUILD = Area("Cooks' Guild", Box(3137, 3438, 3148, 3452))
 
     private fun s(vararg n: String) = n.map { it.lowercase() }.toSet()
 
@@ -224,6 +249,62 @@ object DiaryTasks {
         t(D, Tier.ELITE, 5, "Steal from the Rogues' chest.", Ev("chest:rogues", ROGUES_CASTLE), "Thieving 84")
         t(D, Tier.ELITE, 6, "Kill a Revenant knight in the Revenant Caves.", Kill(s("Revenant knight"), REV_CAVES), osrs = "Slay a spiritual mage inside the wilderness Godwars Dungeon.")
         t(D, Tier.ELITE, 7, "Burn some Magic logs in the Wilderness.", Burn(s("Magic logs"), WILDERNESS), "Firemaking 75", osrs = "Cut and burn some magic logs in the Resource Area.")
+
+        // ---------------------------------------------------------------------------------------------------- VARROCK (D5, 27-11)
+        val V = Diary.VARROCK
+        val sk = Skills
+        t(V, Tier.EASY, 1, "Browse Thessalia's store.", Talk(s("Thessalia"), VARROCK))
+        t(V, Tier.EASY, 2, "Have Aubury teleport you to the Essence mine.", Tele(ESSENCE_MINE, from = VARROCK))
+        t(V, Tier.EASY, 3, "Mine some Iron in the south-east mining patch near Varrock.", Gain(s("Iron ore"), VARROCK_SE_MINE), "Mining 15")
+        t(V, Tier.EASY, 4, "Make a normal plank at the Sawmill.", Gain(s("Plank"), SAWMILL))
+        t(V, Tier.EASY, 5, "Enter the second level of the Stronghold of Security.", Enter(SOS_2))
+        t(V, Tier.EASY, 6, "Squeeze under the Lumber Yard fence.", Ev("shortcut:lumber_yard_fence"), osrs = "Jump over the fence south of Varrock.")
+        t(V, Tier.EASY, 7, "Chop down a dying tree in the Lumber Yard.", Gain(s("Logs"), LUMBER_YARD, skill = sk.WOODCUTTING))
+        t(V, Tier.EASY, 8, "Buy a newspaper.", Gain(s("Newspaper"), VARROCK))
+        t(V, Tier.EASY, 9, "Give a dog a bone!", Ev("dog_bone"))
+        t(V, Tier.EASY, 10, "Spin a bowl on the pottery wheel and fire it in the oven in Barb Village.",
+            Steps(listOf(Gain(s("Unfired bowl"), BARB_VILLAGE, skill = sk.CRAFTING), Gain(s("Bowl"), BARB_VILLAGE, skill = sk.CRAFTING))), "Crafting 8")
+        t(V, Tier.EASY, 11, "Speak to Haig Halen after obtaining at least 50 Kudos.", Talk(s("Haig Halen"), cond = { it.getVarp(KUDOS_VARP) >= 50 }))
+        t(V, Tier.EASY, 12, "Craft some Earth runes from Essence.", Gain(s("Earth rune"), EARTH_ALTAR, skill = sk.RUNECRAFTING), "Runecrafting 9")
+        t(V, Tier.EASY, 13, "Catch some trout in the River Lum at Barbarian Village.", Gain(s("Raw trout"), BARB_VILLAGE), "Fishing 20")
+        t(V, Tier.EASY, 14, "Steal from the Tea stall in Varrock.", Gain(s("Cup of tea"), VARROCK, skill = sk.THIEVING), "Thieving 5")
+        t(V, Tier.MEDIUM, 1, "Make a Strength potion in Varrock.", Gain(s("Strength potion (3)", "Strength potion (4)", "Strength potion(3)", "Strength potion(4)"), VARROCK, skill = sk.HERBLORE),
+            "Herblore 12", osrs = "Have the Apothecary in Varrock make you a strength potion.")
+        t(V, Tier.MEDIUM, 2, "Enter the Champions' Guild.", Enter(CHAMPIONS_GUILD), "Quest points 32")
+        t(V, Tier.MEDIUM, 3, "Pickpocket a Guard in Varrock.", Ev("pickpocket:guard", VARROCK), "Thieving 40", osrs = "Select a colour for your kitten.")
+        t(V, Tier.MEDIUM, 4, "Use the spirit tree north of Varrock.", Ev("spirit_tree", GE_SPIRIT_TREE))
+        t(V, Tier.MEDIUM, 5, "Perform the 4 emotes from the Stronghold of Security.",
+            All(listOf(Ev("emote:flap"), Ev("emote:slap_head"), Ev("emote:idea"), Ev("emote:stamp"))))
+        t(V, Tier.MEDIUM, 6, "Enter the third level of the Stronghold of Security.", Enter(SOS_3), osrs = "Enter the Tolna dungeon after completing A Soul's Bane.")
+        t(V, Tier.MEDIUM, 7, "Teleport to the digsite using a Digsite pendant.", Tele(DIGSITE_TELE))
+        t(V, Tier.MEDIUM, 8, "Cast the teleport to Varrock spell.", Tele(VARROCK_TELE), "Magic 25")
+        t(V, Tier.MEDIUM, 9, "Get a Slayer task from Vannaka.", Ev("slayer_task:vannaka"), "Combat 40")
+        t(V, Tier.MEDIUM, 10, "Make 20 Mahogany Planks in one go.", Ev("sawmill:mahogany:20"))
+        t(V, Tier.MEDIUM, 11, "Pick some berries from the bush patch by the Champions' Guild.",
+            Gain(s("Redberries", "Cadava berries", "Dwellberries", "Jangerberries", "Whiteberries", "Poison ivy berries"), CHAMPIONS_BUSH, skill = sk.FARMING),
+            "Farming 10", osrs = "Pick a White tree fruit.")
+        t(V, Tier.MEDIUM, 12, "Teleport to the Grand Exchange.", Tele(GE_TELE), osrs = "Use the balloon to travel from Varrock.")
+        t(V, Tier.MEDIUM, 13, "Squeeze through the underwall tunnel to the Grand Exchange.", Ev("shortcut:underwall_tunnel"), "Agility 21",
+            osrs = "Complete a lap of the Varrock Agility course.")
+        t(V, Tier.HARD, 1, "Cook a Shark in the Cooks' Guild.", Gain(s("Shark"), COOKS_GUILD), "Cooking 80",
+            osrs = "Trade furs with the Fancy Dress Seller for a spottier cape and equip it.")
+        t(V, Tier.HARD, 2, "Smith an Adamant scimitar in Varrock.", Gain(s("Adamant scimitar"), VARROCK, skill = sk.SMITHING), "Smithing 75",
+            osrs = "Speak to Orlando Smith when you have achieved 153 Kudos.")
+        t(V, Tier.HARD, 3, "Make a Waka canoe near Edgeville.", Ev("canoe:waka", EDGEVILLE), "Woodcutting 57")
+        t(V, Tier.HARD, 4, "Teleport to Paddewwa.", Tele(PADDEWWA), "Magic 54")
+        t(V, Tier.HARD, 5, "Teleport to Barbarian Village with a skull sceptre.", Ev("tele:skull_sceptre"))
+        t(V, Tier.HARD, 6, "Chop some yew logs in Varrock and burn them at the top of the Varrock church.",
+            Steps(listOf(Gain(s("Yew logs"), VARROCK), Burn(s("Yew logs"), CHURCH_TOP))), "Woodcutting 60, Firemaking 60")
+        t(V, Tier.HARD, 7, "Have the Varrock estate agent decorate your house with Fancy Stone.", Ev("estate:fancy stone", VARROCK), "Construction 50")
+        t(V, Tier.HARD, 8, "Collect at least 2 yew roots from the Tree patch in Varrock Palace.", Gain(s("Yew roots"), PALACE_GARDEN, count = 2), "Farming 68")
+        t(V, Tier.HARD, 9, "Pray at the altar in Varrock palace with Smite active.", PrayUp(PALACE_ALTAR) { Prayers.isActive(it, Prayer.SMITE) }, "Prayer 52")
+        t(V, Tier.HARD, 10, "Squeeze through the obstacle pipe in Edgeville dungeon.", Ev("shortcut:edgeville_pipe"), "Agility 51")
+        t(V, Tier.ELITE, 1, "Create a super combat potion in Varrock west bank.", Gain(s("Super combat potion(4)", "Super combat potion(3)"), VARROCK_WEST_BANK, skill = sk.HERBLORE), "Herblore 90")
+        t(V, Tier.ELITE, 2, "Use Lunar magic to make 20 mahogany planks at the Lumberyard.", Gain(s("Mahogany plank"), LUMBER_YARD, count = 20, skill = sk.MAGIC), "Magic 86, Lunar spellbook")
+        t(V, Tier.ELITE, 3, "Bake a summer pie in the Cooking Guild.", Gain(s("Summer pie"), COOKS_GUILD, skill = sk.COOKING), "Cooking 95")
+        t(V, Tier.ELITE, 4, "Smith and fletch ten rune darts within Varrock.",
+            Steps(listOf(Gain(s("Rune dart tip"), VARROCK, count = 10, skill = sk.SMITHING), Gain(s("Rune dart"), VARROCK, count = 10, skill = sk.FLETCHING))), "Smithing 89, Fletching 81")
+        t(V, Tier.ELITE, 5, "Craft 100 or more earth runes simultaneously from Essence.", Gain(s("Earth rune"), EARTH_ALTAR, count = 100, skill = sk.RUNECRAFTING, once = true), "Runecrafting 78")
     }
 
     val ALL: List<Task> get() = ALL_TASKS

@@ -90,6 +90,8 @@ SAWMILL_PLANKS.forEach { (component, plank) ->
             if (logs <= 0) return@queue
             player.inventory.remove(Items.COINS_995, logs * fee)
             player.inventory.add(made, logs)
+            // DIARIES-OSRS Varrock medium 10: 'Make 20 Mahogany Planks in one go'.
+            if (made == Items.MAHOGANY_PLANK && logs >= 20) gg.rsmod.plugins.content.diaries.Diaries.event(player, "sawmill:mahogany:20")
         }
     }
 }

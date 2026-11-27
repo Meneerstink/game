@@ -25,6 +25,7 @@ object Diaries {
         KANDARIN("Kandarin", "Kandarin", "the 'Wedge'", "Kandarin"),
         WESTERN("Western Provinces", "Western Provinces", "the Elder gnome child", "Western Area"),
         WILDERNESS("Wilderness", "Wilderness", "the Lesser Fanatic", "Wilderness Area"),
+        VARROCK("Varrock", "Varrock", "Toby", "Varrock"),
     }
 
     class Box(val x1: Int, val z1: Int, val x2: Int, val z2: Int, val h: Int = -1) {
@@ -61,7 +62,7 @@ object Diaries {
          * the floor, a trade or a spawn is not 'cooking a shark' (D7 27-11: the bot's own sharks finished Wilderness elite 3).
          */
         class Gain(val names: Set<String>, val area: Area? = null, val count: Int = 1, val ids: Set<Int> = emptySet(), val cond: ((Player) -> Boolean)? = null,
-                   val skill: Int = producedBy(names)) : Trigger()
+                   val skill: Int = producedBy(names), val once: Boolean = false) : Trigger()
 
         /** These logs leave the inventory in the same tick as Firemaking experience. */
         class Burn(val names: Set<String>, val area: Area? = null) : Trigger()
@@ -75,14 +76,14 @@ object Diaries {
         /** Experience in a skill while in the area (shortcuts, chests, health checks). */
         class Xp(val skill: Int, val area: Area) : Trigger()
 
-        /** Prayer points go up while in the area (praying at an altar). */
-        class PrayUp(val area: Area) : Trigger()
+        /** Prayer points go up while in the area (praying at an altar), optionally only while [cond] holds. */
+        class PrayUp(val area: Area, val cond: ((Player) -> Boolean)? = null) : Trigger()
 
         /** Equip a cape whose name starts with [prefix] while in the area. */
         class EquipCape(val prefix: String, val area: Area) : Trigger()
 
         /** Talk to (interact with) an npc with this name. */
-        class Talk(val names: Set<String>, val area: Area? = null) : Trigger()
+        class Talk(val names: Set<String>, val area: Area? = null, val cond: ((Player) -> Boolean)? = null) : Trigger()
 
         /** A named event from a content plugin, see [event]. */
         class Ev(val key: String, val area: Area? = null) : Trigger()
@@ -268,14 +269,14 @@ object Diaries {
     private fun amount(player: Player, t: Trigger, e: E): Int = when (t) {
         is Trigger.Kill -> if (e is E.Killed && e.name in t.names && inArea(player, t.area) && t.cond?.invoke(player) != false) 1 else 0
         is Trigger.Gain -> if (e is E.Gained && (e.name in t.names || e.id in t.ids) && (t.skill < 0 || t.skill in e.xp) && inArea(player, t.area) &&
-            t.cond?.invoke(player) != false) e.amount else 0
+            t.cond?.invoke(player) != false && (!t.once || e.amount >= t.count)) e.amount else 0
         is Trigger.Burn -> if (e is E.Burned && e.name in t.names && inArea(player, t.area)) 1 else 0
         is Trigger.Enter -> if (e === E.At && inArea(player, t.area) && t.cond?.invoke(player) != false) 1 else 0
         is Trigger.Tele -> if (e is E.Jump && t.area.has(player.tile) && !t.area.has(e.from) && (t.from == null || t.from.has(e.from))) 1 else 0
         is Trigger.Xp -> if (e is E.Xp && e.skill == t.skill && t.area.has(player.tile)) 1 else 0
-        is Trigger.PrayUp -> if (e === E.PrayUp && t.area.has(player.tile)) 1 else 0
+        is Trigger.PrayUp -> if (e === E.PrayUp && t.area.has(player.tile) && t.cond?.invoke(player) != false) 1 else 0
         is Trigger.EquipCape -> if (e is E.Cape && e.name.startsWith(t.prefix) && t.area.has(player.tile)) 1 else 0
-        is Trigger.Talk -> if (e is E.Talked && e.name in t.names && inArea(player, t.area)) 1 else 0
+        is Trigger.Talk -> if (e is E.Talked && e.name in t.names && inArea(player, t.area) && t.cond?.invoke(player) != false) 1 else 0
         is Trigger.Ev -> if (e is E.Key && e.key == t.key && inArea(player, t.area)) 1 else 0
         is Trigger.Steps, is Trigger.All -> 0
     }

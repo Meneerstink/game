@@ -124,6 +124,7 @@ fun geTunnel(id: Int) =
             // an instanced copy of the wall (the new-player intro's pk escape) instead of sending him to the real Exchange.
             val other = if (withinGe) target.tile.transform(-4, 2) else target.tile.transform(4, -2)
             underwallTunnelCrawl(player, Tile(target.tile), other, Tile(other.x + if (withinGe) -1 else 1, other.z, other.height))
+            gg.rsmod.plugins.content.diaries.Diaries.event(player, "shortcut:underwall_tunnel") // DIARIES-OSRS Varrock medium (replacement)
         }
     }
 

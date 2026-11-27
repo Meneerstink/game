@@ -129,6 +129,7 @@ object EmotesTab {
             p.queue { messageBox(description) }
             return
         }
+        gg.rsmod.plugins.content.diaries.Diaries.event(p, "emote:${emote.name.lowercase()}") // DIARIES-OSRS Varrock medium 5 (the Stronghold emotes, only an unlocked one)
 
         if (emote == Emote.GIVE_THANKS || emote == Emote.SEAL_OF_APPROVAL) {
             markRunning(p, transformSteps(emote).sumOf { it.wait } + 2)

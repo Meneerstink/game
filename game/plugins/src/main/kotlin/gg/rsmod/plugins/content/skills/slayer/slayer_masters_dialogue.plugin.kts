@@ -228,6 +228,7 @@ suspend fun giveTask(
         player.attr[SLAYER_PREVIOUS_TASK] = selectedAssignment.assignment.identifier
         player.attr[SLAYER_AMOUNT] = world.random(amount)
         player.attr[SLAYER_MASTER] = slayerMaster.id
+        gg.rsmod.plugins.content.diaries.Diaries.event(player, "slayer_task:${slayerMaster.name.lowercase()}") // DIARIES-OSRS Varrock medium 9 (Vannaka)
 
         if (!player.attr.has(STARTED_SLAYER)) {
             player.inventory.add(Item(Items.ENCHANTED_GEM))

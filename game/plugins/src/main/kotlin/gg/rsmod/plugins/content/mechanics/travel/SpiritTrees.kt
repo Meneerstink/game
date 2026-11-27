@@ -100,6 +100,7 @@ object SpiritTrees {
         val type = player.attr[TYPE] ?: TeleportType.SPIRIT_TREE
         ScrollMenu.close(player)
         player.canTeleport(type) {
+            gg.rsmod.plugins.content.diaries.Diaries.event(player, "spirit_tree") // DIARIES-OSRS Varrock medium 4 (the origin tree = where the player stands now)
             player.teleport(dest.tile, type)
         }
     }
@@ -114,6 +115,7 @@ object SpiritTrees {
         val type = player.attr[TYPE] ?: TeleportType.SPIRIT_TREE
         player.closeInterface(INTERFACE)
         player.canTeleport(type) {
+            gg.rsmod.plugins.content.diaries.Diaries.event(player, "spirit_tree") // DIARIES-OSRS Varrock medium 4 (the origin tree = where the player stands now)
             player.teleport(dest.tile, type)
         }
     }

@@ -36,7 +36,9 @@ on_obj_option(obj = Objs.DOOR_2712, option = "open") {
         return@on_obj_option
     }
     // OSRS Wiki "Cooking cape": "acts as a substitute for a chef's hat to enter the Cooks' Guild" - every max cape too (SkillcapePerks).
+    // OSRS Wiki "Varrock armour 3": "Can be worn in place of a chef's hat to access the Cooks' Guild" (armour 4 too).
     if (player.tile.z <= obj.tile.z && !player.hasEquipped(EquipmentType.HEAD, Items.CHEFS_HAT) &&
+        !player.hasEquipped(EquipmentType.CHEST, Items.VARROCK_ARMOUR_3) && !player.hasEquipped(EquipmentType.CHEST, Items.VARROCK_ARMOUR_4) &&
         !gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.SkillcapePerks.VariantPerk.COOKS_GUILD)
     ) {
         player.queue {

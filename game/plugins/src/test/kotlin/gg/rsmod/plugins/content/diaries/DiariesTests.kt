@@ -49,7 +49,8 @@ class DiariesTests {
     private val headgear = intArrayOf(30001, 30002, 30003, 30004)
 
     init {
-        DiaryRewards.ids = mapOf(Diary.KANDARIN to headgear, Diary.WESTERN to intArrayOf(30011, 30012, 30013, 30014), Diary.WILDERNESS to intArrayOf(30021, 30022, 30023, 30024))
+        DiaryRewards.ids = mapOf(Diary.KANDARIN to headgear, Diary.WESTERN to intArrayOf(30011, 30012, 30013, 30014), Diary.WILDERNESS to intArrayOf(30021, 30022, 30023, 30024),
+            Diary.VARROCK to intArrayOf(30031, 30032, 30033, 30034))
     }
 
     private fun completeTier(diary: Diary, tier: Tier) =
@@ -62,6 +63,8 @@ class DiariesTests {
         assertEquals(43, Diaries.totalCount(Diary.KANDARIN))
         assertEquals(44, Diaries.totalCount(Diary.WESTERN))
         assertEquals(40, Diaries.totalCount(Diary.WILDERNESS))
+        assertEquals(42, Diaries.totalCount(Diary.VARROCK))
+        assertEquals(listOf(14, 13, 10, 5), Tier.values().map { Diaries.totalCount(Diary.VARROCK, it) })
         Diary.values().forEach { d -> Tier.values().forEach { t -> assertTrue(Diaries.totalCount(d, t) > 0, "$d $t has no tasks") } }
         // The panel shows the same totals for the three diaries that exist.
         DiaryUi.ROWS.forEachIndexed { i, (_, osrs) -> DiaryUi.diaryOfRow(i)?.let { assertEquals(osrs, Diaries.totalCount(it), "row $i") } }
@@ -201,5 +204,14 @@ class DiariesTests {
         assertEquals(3, DiaryItems.tierOf(player, Diary.KANDARIN, headgear[2]))
         assertEquals(4, DiaryItems.tierOf(player, Diary.KANDARIN, headgear[3]))
         assertEquals(0, DiaryItems.tierOf(player, Diary.KANDARIN, 1))
+    }
+
+    @Test
+    fun `varrock - 100 earth runes must come in one go, the palace altar task needs Smite`() {
+        val task = Diaries.task("VAR_EL5")!!
+        val gain = task.trigger as Diaries.Trigger.Gain
+        assertTrue(gain.once && gain.count == 100, "elite 5 counts one craft of 100 or more")
+        assertEquals("Varrock", Diary.VARROCK.title)
+        assertTrue((Diaries.task("VAR_HA9")!!.trigger as Diaries.Trigger.PrayUp).cond != null)
     }
 }

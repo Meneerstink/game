@@ -8,4 +8,5 @@ object DiaryNpcs {
     const val LESSER_FANATIC = 15369 // OSRS 5514
     const val WEDGE = 15370 // OSRS 5517
     const val ELDER_GNOME_CHILD = 15371 // OSRS 5518
+    const val TOBY = 15372 // OSRS 5525 (batch "diaries-2", Varrock 3225,3415)
 }

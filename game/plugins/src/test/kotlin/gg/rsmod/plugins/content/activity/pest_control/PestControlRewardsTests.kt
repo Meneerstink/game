@@ -45,6 +45,13 @@ class PestControlRewardsTests {
         for (reward in PestControlRewards.Reward.values()) {
             for (option in 1 until reward.children.size) {
                 val (player, sent) = player(1_000)
+                // DIARIES-OSRS: the elite upgrades need the Western Provinces hard diary (OSRS); without it they are refused.
+                if (reward.upgradeFrom.isNotEmpty()) {
+                    PestControlRewards.select(player, reward.children[option])
+                    PestControlRewards.confirm(player)
+                    assertEquals(1_000, player.attr[PEST_POINTS], "${reward.name} option $option without the Western hard diary")
+                    gg.rsmod.plugins.content.diaries.Diaries.setClaimed(player, gg.rsmod.plugins.content.diaries.Diaries.Diary.WESTERN, 3)
+                }
                 PestControlRewards.select(player, reward.children[option])
                 assertEquals("<col=FFFFFF>${reward.optionText(option)}", texts(sent)[reward.children[option]])
                 PestControlRewards.confirm(player)

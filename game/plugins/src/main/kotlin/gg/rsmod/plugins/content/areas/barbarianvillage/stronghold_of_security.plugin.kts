@@ -809,14 +809,18 @@ on_obj_option(obj = Objs.CRADLE_OF_LIFE, option = "search") {
 }
 
 // Skull Sceptre Teleport. SKULLSCEPTRE-LADING (24-11), OSRS Wiki "Skull sceptre": Invoke "consumes one charge", the sceptre "initially
-// holds 10 charges" (more only through the Varrock Diary, which we do not have), "When all charges have been consumed, a non-imbued
+// holds 10 charges" (more through the Varrock Diary: sceptreMax), "When all charges have been consumed, a non-imbued
 // sceptre will self-destruct", "Unimbued Skull Sceptres all share the same charges, and when one shatters, the next is magically back
 // at full charge" - so the charges are the player's, not the item's. Divine "shows the amount of charges the player has left".
 // The two chat lines below have no OSRS source for their exact wording (BUGLIJST SKULLSCEPTRE-LADING).
 val SCEPTRE_USED = gg.rsmod.game.model.attr.AttributeKey<Int>("skull_sceptre_used")
 val SCEPTRE_CHARGES = 10
 
-fun sceptreLeft(p: gg.rsmod.game.model.entity.Player): Int = (SCEPTRE_CHARGES - (p.attr[SCEPTRE_USED] ?: 0)).coerceIn(1, SCEPTRE_CHARGES)
+/** DIARIES-OSRS Varrock rewards (OSRS Wiki "Varrock Diary"): the sceptre holds 14 / 18 / 22 / 26 charges after the easy / medium / hard / elite claim. */
+fun sceptreMax(p: gg.rsmod.game.model.entity.Player): Int =
+    SCEPTRE_CHARGES + 4 * gg.rsmod.plugins.content.diaries.Diaries.claimed(p, gg.rsmod.plugins.content.diaries.Diaries.Diary.VARROCK)
+
+fun sceptreLeft(p: gg.rsmod.game.model.entity.Player): Int = (sceptreMax(p) - (p.attr[SCEPTRE_USED] ?: 0)).coerceIn(1, sceptreMax(p))
 
 fun invokeSceptre(p: gg.rsmod.game.model.entity.Player) {
     p.canTeleport(TeleportType.SKULL_SCEPTRE) {
@@ -824,8 +828,9 @@ fun invokeSceptre(p: gg.rsmod.game.model.entity.Player) {
         val inInventory = p.inventory.contains(Items.SKULL_SCEPTRE)
         if (!inInventory && !p.equipment.contains(Items.SKULL_SCEPTRE)) return@canTeleport
         p.teleport(endTile = Tile(3081, 3421, 0), TeleportType.SKULL_SCEPTRE)
+        gg.rsmod.plugins.content.diaries.Diaries.event(p, "tele:skull_sceptre") // DIARIES-OSRS Varrock hard 5
         val used = (p.attr[SCEPTRE_USED] ?: 0) + 1
-        if (used >= SCEPTRE_CHARGES) {
+        if (used >= sceptreMax(p)) {
             p.attr[SCEPTRE_USED] = 0
             if (inInventory) p.inventory.remove(Items.SKULL_SCEPTRE, 1) else p.equipment.remove(Items.SKULL_SCEPTRE, 1)
             p.message("Your skull sceptre crumbles to dust as you use its last charge.")

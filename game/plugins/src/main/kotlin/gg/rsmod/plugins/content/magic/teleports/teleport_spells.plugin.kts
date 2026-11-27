@@ -45,8 +45,12 @@ fun Player.teleport(
     }
     // DIARIES-OSRS Kandarin hard (OSRS Wiki): "Camelot Teleport can now be used to teleport to Seers' Village bank instead" (the choice is
     // set at the Wedge; the 667 spellbook has no right-click option for it).
+    // DIARIES-OSRS Varrock medium (OSRS Wiki): "The ability to toggle the destination of Varrock Teleport from Varrock Square to the Grand
+    // Exchange" (chosen at Toby, same reason).
     val endTile = if (spell == TeleportSpell.CAMELOT && gg.rsmod.plugins.content.diaries.DiaryItems.camelotToSeers(this))
-        gg.rsmod.game.model.collision.Landing.pick(world.collision, gg.rsmod.game.model.Area(2724, 3486, 2729, 3490), 0) else findValidTile(spell)
+        gg.rsmod.game.model.collision.Landing.pick(world.collision, gg.rsmod.game.model.Area(2724, 3486, 2729, 3490), 0)
+    else if (spell == TeleportSpell.VARROCK && gg.rsmod.plugins.content.diaries.DiaryItems.varrockToGe(this))
+        gg.rsmod.game.model.collision.Landing.pick(world.collision, gg.rsmod.game.model.Area(3161, 3474, 3168, 3481), 0) else findValidTile(spell)
     teleport(spell.type, endTile, spell.xp, data)
 }
 

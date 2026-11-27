@@ -54,6 +54,7 @@ boatChildIds.forEach { button ->
                 val rand = world.random(if (canoe == Canoe.WAKA) 8 else 6)
                 if (rand == 1) {
                     player.addXp(Skills.WOODCUTTING, canoe.experience, checkBrawlingGloves = true)
+                    gg.rsmod.plugins.content.diaries.Diaries.event(player, "canoe:${canoe.name.lowercase()}") // DIARIES-OSRS Varrock hard 3 (waka at Edgeville)
                     player.setVarbit(varbit, CanoeUtils.getCraftValue(canoe, false))
                     player.animate(Anims.RESET)
                     return@lockingQueue

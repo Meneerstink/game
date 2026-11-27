@@ -130,6 +130,8 @@ object OsrsNpcImportTool {
             // Leela, Mariah) is Kourend = parked.
             // DIARIES-OSRS D3: the taskmasters (OSRS Wiki infobox ids) - Lesser Fanatic 5514, the 'Wedge' 5517, Elder gnome child 5518.
             "diaries" to listOf(5514, 5517, 5518),
+            // DIARIES-OSRS D5 (27-11): Toby, the Varrock taskmaster (OSRS Wiki infobox id 5525, Varrock 3225,3415).
+            "diaries-2" to listOf(5525),
             "mahogany-homes" to listOf(6439, 10408, 10410, 7417, 10409, 10411, 1614, 10418, 3266, 10417, 10421, 10419, 10420, 10414, 10415, 10416),
             // N522 bundle 1 (owner 2026-11-01 "alle osrs wilderness bosses"): OSRS Wiki infobox ids Chaos Fanatic 6619 and Crazy
             // archaeologist 6618 and the scenery "Miniature chaotic clouds" 6620 that wander round the fanatic (classic frames: OsrsNpcProbeTool).

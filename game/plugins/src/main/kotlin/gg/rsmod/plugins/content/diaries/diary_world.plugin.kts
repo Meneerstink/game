@@ -93,3 +93,14 @@ run {
         }
     }
 }
+
+// Varrock easy 9 'Give a dog a bone!' - OSRS Wiki "Stray dog": "Feed - It can be fed bones ... When players feed it, it happily barks"
+// (following the player for a while is not ported). The bone is used up.
+listOf(gg.rsmod.plugins.api.cfg.Npcs.STRAY_DOG_5917, gg.rsmod.plugins.api.cfg.Npcs.STRAY_DOG_5918).forEach { dog ->
+    on_item_on_npc(item = gg.rsmod.plugins.api.cfg.Items.BONES, npc = dog) {
+        val npc = player.getInteractingNpc()
+        if (!player.inventory.remove(gg.rsmod.plugins.api.cfg.Items.BONES, 1).hasSucceeded()) return@on_item_on_npc
+        npc.forceChat("Woof!")
+        Diaries.event(player, "dog_bone")
+    }
+}

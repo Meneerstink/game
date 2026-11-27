@@ -28,6 +28,7 @@ on_world_init {
             player.animate(if (entering) ANIM_FENCE_SQUEEZE else 9220)
             wait(1)
             player.moveTo(Tile(target.tile.x + if (entering) 1 else 0, target.tile.z, target.tile.height))
+            gg.rsmod.plugins.content.diaries.Diaries.event(player, "shortcut:lumber_yard_fence") // DIARIES-OSRS Varrock easy (replacement)
         }
     }
     BONE_STILES.forEach { id ->
