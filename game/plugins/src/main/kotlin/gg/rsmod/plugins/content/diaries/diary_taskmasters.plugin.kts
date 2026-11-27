@@ -1,0 +1,56 @@
+package gg.rsmod.plugins.content.diaries
+
+import gg.rsmod.plugins.content.diaries.Diaries.Diary
+import gg.rsmod.plugins.content.diaries.Diaries.Tier
+
+/**
+ * DIARIES-OSRS D3: the taskmasters (OSRS Wiki infobox ids + map pins): the 'Wedge' in front of Camelot (2759,3476), the Elder gnome
+ * child south of the Grand Tree (2467,3459), the Lesser Fanatic in Edgeville (3121,3516). Talk-to: claim the next tier, get a lost
+ * item back, or hear how the diary works.
+ */
+class Master(val npc: Int, val diary: Diary, val x: Int, val z: Int)
+
+val MASTERS = listOf(
+    Master(DiaryNpcs.WEDGE, Diary.KANDARIN, 2759, 3476),
+    Master(DiaryNpcs.ELDER_GNOME_CHILD, Diary.WESTERN, 2467, 3459),
+    Master(DiaryNpcs.LESSER_FANATIC, Diary.WILDERNESS, 3121, 3516),
+)
+
+MASTERS.forEach { m ->
+    spawn_npc(npc = m.npc, x = m.x, z = m.z, height = 0, walkRadius = 2)
+    on_npc_option(npc = m.npc, option = "talk-to") { player.queue { talk(this, m) } }
+}
+
+suspend fun talk(task: gg.rsmod.game.model.queue.QueueTask, m: Master) {
+    val player = task.player
+    val area = m.diary.areaName
+    task.chatNpc("Hello there. I keep track of the Achievement Diary for the $area area. Is there something I can help you with?")
+    val opts = mutableListOf<String>()
+    val claimable = DiaryRewards.claimable(player, m.diary)
+    if (claimable != null) opts += "I'd like to claim my ${claimable.title.lowercase()} reward."
+    if (Diaries.claimed(player, m.diary) > 0) opts += "I've lost my reward item."
+    opts += "What is the Achievement Diary?"
+    opts += "Nothing, thanks."
+    when (opts[task.options(*opts.toTypedArray()) - 1]) {
+        opts.firstOrNull { it.startsWith("I'd like to claim") } -> {
+            task.chatPlayer(opts[0])
+            val msg = DiaryRewards.claim(player, m.diary)
+            task.chatNpc(msg)
+            if (msg.startsWith("Here is your reward")) {
+                val next = Tier.values().getOrNull(Diaries.claimed(player, m.diary))
+                if (next != null) task.chatNpc("If you complete the ${next.title.lowercase()} tasks in the $area area, come back and I'll reward you again.")
+                else task.chatNpc("You have completed every task in the $area area. Well done!")
+            }
+        }
+        "I've lost my reward item." -> {
+            task.chatPlayer("I've lost my reward item.")
+            task.chatNpc(DiaryRewards.reclaim(player, m.diary))
+        }
+        "What is the Achievement Diary?" -> {
+            task.chatPlayer("What is the Achievement Diary?")
+            task.chatNpc("It's a record of the tasks you've done around the world. Open the Achievement Diaries panel in your quest tab - the green gem - to see the $area tasks.")
+            task.chatNpc("Each set of tasks - easy, medium, hard and elite - earns a reward from me once they're all done. You must claim them in order.")
+        }
+        else -> {}
+    }
+}

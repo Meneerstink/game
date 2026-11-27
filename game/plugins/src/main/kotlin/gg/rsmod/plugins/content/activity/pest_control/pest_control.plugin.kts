@@ -149,7 +149,12 @@ mapOf(
     Items.VOID_KNIGHT_ROBE to Items.ELITE_VOID_KNIGHT_ROBE,
 ).forEach { (piece, elite) ->
     on_item_on_npc(item = piece, npc = COMMODORE_TYR) {
-        // Owner 2026-10-10: no requirement besides the points (no Hard Western Provinces Diary, no won-games count).
+        // DIARIES-OSRS (owner 27-11, besluit 4, replaces 10-10 'no requirement'): the OSRS requirement - the Western Provinces hard
+        // diary claimed. Elite pieces a player already owns stay theirs and stay wearable; only a NEW upgrade needs the diary.
+        if (!gg.rsmod.plugins.content.diaries.Diaries.hasClaimed(player, gg.rsmod.plugins.content.diaries.Diaries.Diary.WESTERN, gg.rsmod.plugins.content.diaries.Diaries.Tier.HARD)) {
+            player.message("You need to complete the Western Provinces Hard Diary before your void knight armour can be upgraded.")
+            return@on_item_on_npc
+        }
         if ((player.attr[PEST_POINTS] ?: 0) < ELITE_VOID_UPGRADE_POINTS) {
             player.message("You need $ELITE_VOID_UPGRADE_POINTS Void Knight Commendation Points to upgrade void knight armour.")
             return@on_item_on_npc

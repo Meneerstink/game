@@ -388,6 +388,7 @@ object PohConstruct {
             PohRooms.setFurniture(player, s.key(room), if (habitat) "${d.key}#${s.hotspot.ids.indexOf(s.loc)}" else d.key)
         }
         if (!flatpack) player.addXp(Skills.CONSTRUCTION, picked.xp, checkBrawlingGloves = true)
+        gg.rsmod.plugins.content.diaries.Diaries.event(player, "poh_build:${picked.name.lowercase()}")
         if (!flatpack) PohSuperiorGarden.plantXp(player, deco)
         PohMenagerie.refreshPets(player)
         player.unlock()

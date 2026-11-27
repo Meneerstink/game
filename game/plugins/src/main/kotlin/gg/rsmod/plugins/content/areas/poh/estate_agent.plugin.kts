@@ -118,6 +118,7 @@ suspend fun applyStyle(
     }
     player.inventory.remove(Items.COINS_995, style.cost)
     PlayerHouse.setStyle(player, style)
+    gg.rsmod.plugins.content.diaries.Diaries.event(player, "estate:${style.displayName.lowercase()}")
     task.chatNpc(
         "Consider it done. Your house is now ${style.displayName.lowercase()}.",
         "It will be waiting for you the next time you go home.",

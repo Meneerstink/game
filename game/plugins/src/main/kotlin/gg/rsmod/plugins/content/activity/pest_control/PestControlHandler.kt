@@ -351,6 +351,7 @@ object PestControlHandler {
             }
             zeal >= PC_MIN_ZEAL -> {
                 player.attr[PEST_WINS] = (player.attr[PEST_WINS] ?: 0) + 1
+                gg.rsmod.plugins.content.diaries.Diaries.event(player, "pest_control:${game.tier.name.lowercase()}") // DIARIES-OSRS: a won game with commendation
                 player.playJingle(PC_JINGLE_WIN)
                 // PROJECT48 S61 Sigil of Hoarding (proposal: 3x the reward points of our point-giving minigames; Pest Control is the one with points).
                 val points = gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilSkilling.hoardingReward(player, game.tier.pointsPerWin)

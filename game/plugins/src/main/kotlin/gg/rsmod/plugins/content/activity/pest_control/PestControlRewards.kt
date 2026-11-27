@@ -280,6 +280,12 @@ object PestControlRewards {
         }
         if (!meetsItemRequirement(player, reward)) return
         if (reward.upgradeFrom.isNotEmpty()) {
+            // DIARIES-OSRS (owner 27-11, besluit 4): the OSRS requirement, Western Provinces hard diary claimed (same as Commodore Tyr).
+            if (!gg.rsmod.plugins.content.diaries.Diaries.hasClaimed(player, gg.rsmod.plugins.content.diaries.Diaries.Diary.WESTERN, gg.rsmod.plugins.content.diaries.Diaries.Tier.HARD)) {
+                refused(player)
+                player.message("You need to complete the Western Provinces Hard Diary before your void knight armour can be upgraded.")
+                return
+            }
             // Elite void (owner 2026-10-10, same rule as Commodore Tyr): the normal piece is swapped for the elite one.
             val piece = reward.upgradeFrom.firstOrNull { player.inventory.contains(it) }
             if (piece == null) {

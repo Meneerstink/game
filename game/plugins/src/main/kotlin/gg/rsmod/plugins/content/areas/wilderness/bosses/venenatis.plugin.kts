@@ -16,7 +16,7 @@ WildernessLairs.SURFACE.forEach { p -> spawn_obj(obj = p.id, x = p.tile.x, z = p
 mapOf(WildernessLairs.SILK_CHASM_ENTRANCE to VenenatisCombat.VENENATIS_ARENA, WildernessLairs.WEB_CHASM_ENTRANCE to VenenatisCombat.SPINDEL_ARENA).forEach { (entrance, arena) ->
     on_obj_option(obj = entrance, option = "enter") {
         val arrival = WildernessLairs.LAIR_ARRIVAL.getValue(entrance)
-        WildernessLairs.enter(player) { WildernessLairs.crawl(player, arrival) }
+        WildernessLairs.enter(player, gg.rsmod.game.model.combat.SlayerAssignment.VENENATIS) { WildernessLairs.crawl(player, arrival) }
     }
 
     // "In order to peek inside the lair, the player must have at least 20 kills registered in their name" (OSRS Wiki); the messages: donor.

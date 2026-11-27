@@ -103,6 +103,7 @@ fun performAlchemy(
     if (player.inventory.remove(Item(item.id, 1)).hasSucceeded()) {
         player.inventory.add(Item(Items.COINS_995, coinAmount))
         player.addXp(Skills.MAGIC, experience, checkBrawlingGloves = true)
+        gg.rsmod.plugins.content.diaries.Diaries.event(player, if (highAlchemy) "spell:high level alchemy" else "spell:low level alchemy")
     }
     return true
 }

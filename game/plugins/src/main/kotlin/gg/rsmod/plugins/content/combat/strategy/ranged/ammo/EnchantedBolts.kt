@@ -32,7 +32,7 @@ import kotlin.math.floor
  * "<gem> dragon bolts (e)", fetched 2026-09-13; see `C:\RSPS\OSRS_IMPORT_MASTER.yml`). Gfx 749-758 are the 667 cache ids (Void
  * donor `bolts.gfx.toml`). Sounds 2911-2920 are the OSRS Wiki sound files of each "<gem> bolts (e)" page (N466, 2026-10-30):
  * Diamond is 2913 `crossbow_diamond` - Void's 2910 was wrong, the other nine match. All ten exist in the 667 cache. The Kandarin hard
- * diary does not exist here, so base chances apply. The Armadyl crossbow special doubles the base chance; the Zaryte
+ * diary (DIARIES-OSRS, claimed hard tier) adds 10% of the base, additive with the Armadyl crossbow special that doubles it; the Zaryte
  * crossbow special guarantees the effect on a successful hit and raises the ruby, diamond, onyx and dragonstone values.
  *
  * SOURCE_GAP, deliberately not implemented: Earth's Fury against players (the Agility resistance roll is only given as
@@ -127,10 +127,17 @@ object EnchantedBolts {
         bolt: Bolt,
         target: Pawn,
         special: Special,
+        kandarinHard: Boolean = false,
     ): Double {
         val base = if (target is Player) bolt.playerChance else bolt.monsterChance
-        return if (special == Special.ARMADYL_EYE) base * 2 else base
+        // OSRS Wiki Kandarin Diary (hard): "10% increased chance to trigger the special effect of enchanted bolts, even in PvP
+        // (stacks additively with other increases, such as that of the Armadyl crossbow's special attack)" - x1.1, with ACB x2.1.
+        return base * ((if (special == Special.ARMADYL_EYE) 2.0 else 1.0) + (if (kandarinHard) 0.1 else 0.0))
     }
+
+    /** DIARIES-OSRS D6: the Kandarin hard reward is claimed (OSRS: the benefit follows the claimed tier). */
+    fun kandarinHard(player: Player): Boolean =
+        gg.rsmod.plugins.content.diaries.Diaries.hasClaimed(player, gg.rsmod.plugins.content.diaries.Diaries.Diary.KANDARIN, gg.rsmod.plugins.content.diaries.Diaries.Tier.HARD)
 
     /** Whether the effect can apply to [target] at all (immunities and the sourced player/monster restrictions). */
     fun applicable(
@@ -169,7 +176,7 @@ object EnchantedBolts {
         }
         if (special == Special.ZARYTE_EVOKE) return landedHit
         if (bolt.needsSuccessfulHit && !landedHit) return false
-        return roll < chance(bolt, target, special)
+        return roll < chance(bolt, target, special, kandarinHard(attacker))
     }
 
     /**

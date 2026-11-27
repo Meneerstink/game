@@ -53,6 +53,7 @@ object GodSpellTraining {
     /** Only the shared successful-launch path calls this; neither an attempted cast nor its eventual damage counts. */
     fun cast(player: Player, target: Pawn, spell: CombatSpell) {
         val training = SPELLS.firstOrNull { it.spell == spell } ?: return
+        if (target is gg.rsmod.game.model.entity.Player) gg.rsmod.plugins.content.diaries.Diaries.event(player, "god_spell:player") // Wilderness hard
         if (!trainingTarget(player, target)) return
         val before = casts(player, training)
         if (before == REQUIRED_CASTS) return

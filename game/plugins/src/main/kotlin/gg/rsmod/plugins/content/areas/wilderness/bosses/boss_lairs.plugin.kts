@@ -10,7 +10,7 @@ WildernessLairs.LAIRS.forEach { lair ->
     // OSRS ops: "Enter" on the caves and the Memorial, "Jump-Down" on Vet'ion's Crevice (cache 2686 loc defs 47140/47141/46996/46995).
     val enter = if (lair.entrance == WildernessLairs.VETION_REST_ENTRANCE) "jump-down" else "enter"
     on_obj_option(obj = lair.entrance, option = enter) {
-        WildernessLairs.enter(player) { WildernessLairs.crawl(player, lair.arrival) }
+        WildernessLairs.enter(player, WildernessLairs.bossTask(lair.name)) { WildernessLairs.crawl(player, lair.arrival) }
     }
 
     on_obj_option(obj = lair.entrance, option = "peek") {

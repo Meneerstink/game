@@ -37,10 +37,38 @@ suspend fun lundailDialogue(it: QueueTask) {
     when (option) {
         1 -> whatAreYouSelling(it)
         2 -> whatsThatBigOldBuilding(it)
-        // OSRS Wiki Transcript:Lundail. This server has no Wilderness Diary completion provider (see
-        // WildernessNpcDrops.mediumDiary); owning a diary reward item must not fabricate diary completion.
-        3 -> it.chatNpc("You'll need to have completed the Easy Wilderness Achievement Diary to qualify for free runes.")
+        // OSRS Wiki Transcript:Lundail + Wilderness Diary rewards (DIARIES-OSRS D6): 40 / 80 / 120 / 200 random runes a day for the
+        // claimed easy / medium / hard / elite tier, from body, mind, nature, chaos, law, cosmic and death runes; once per UTC day.
+        3 -> claimRunes(it)
     }
+}
+
+val LUNDAIL_DAY = gg.rsmod.game.model.attr.AttributeKey<Int>(persistenceKey = "lundail_free_runes_day")
+val FREE_RUNES = intArrayOf(559, 558, 561, 562, 563, 564, 560)
+
+suspend fun claimRunes(it: QueueTask) {
+    val player = it.player
+    val tiers = gg.rsmod.plugins.content.diaries.Diaries.claimed(player, gg.rsmod.plugins.content.diaries.Diaries.Diary.WILDERNESS)
+    if (tiers == 0) {
+        it.chatNpc("You'll need to have completed the Easy Wilderness Achievement Diary to qualify for free runes.")
+        return
+    }
+    val today = java.time.LocalDate.now(java.time.ZoneOffset.UTC).toEpochDay().toInt()
+    if (player.attr[LUNDAIL_DAY] == today) {
+        it.chatNpc("I've already given you your runes for today. Come back tomorrow.")
+        return
+    }
+    val amount = intArrayOf(40, 80, 120, 200)[tiers - 1]
+    val counts = IntArray(FREE_RUNES.size)
+    repeat(amount) { counts[player.world.random(FREE_RUNES.size - 1)]++ }
+    val kinds = counts.count { c -> c > 0 }
+    if (player.inventory.freeSlotCount < kinds && FREE_RUNES.indices.any { i -> counts[i] > 0 && !player.inventory.contains(FREE_RUNES[i]) }) {
+        it.chatNpc("You'll need some more free space in your pack for these.")
+        return
+    }
+    player.attr[LUNDAIL_DAY] = today
+    FREE_RUNES.forEachIndexed { i, rune -> if (counts[i] > 0) player.inventory.add(rune, counts[i]) }
+    it.chatNpc("Here you go: $amount runes, as promised to those who know the Wilderness.")
 }
 
 suspend fun whatAreYouSelling(it: QueueTask) {

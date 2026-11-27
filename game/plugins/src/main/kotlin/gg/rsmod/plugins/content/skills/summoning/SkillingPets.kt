@@ -172,6 +172,7 @@ object SkillingPets {
     fun agilityLap(player: Player, base: Int) {
         // PROJECT48 S60 Sigil of Agile Fortune (proposal: we have no Marks of Grace): a completed lap has a 1 in 3 chance of 10,000 coins.
         roll(player, "Giant Squirrel", Skills.AGILITY, base)
+        gg.rsmod.plugins.content.diaries.Diaries.event(player, "lap:$base") // DIARIES-OSRS: every course lap
     }
 
     fun runecraft(player: Player, rune: Rune?, essence: Int) =

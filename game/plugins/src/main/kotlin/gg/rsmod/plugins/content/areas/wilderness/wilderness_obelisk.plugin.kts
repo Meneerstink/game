@@ -33,7 +33,7 @@ ObeliskIDs.forEach { obeliskID ->
     if (if_obj_has_option(obeliskID, option = "teleport to destination")) {
         on_obj_option(obeliskID, option = "teleport to destination") {
             val obj = player.getInteractingGameObj()
-            val destination = player.attr[OBELISK_DESTINATION]?.let { Obelisk.values().getOrNull(it) }
+            val destination = player.attr[OBELISK_DESTINATION]?.takeIf { obeliskHard(player) }?.let { Obelisk.values().getOrNull(it) }
             if (destination == null) {
                 player.message("You need to set a destination first.")
                 return@on_obj_option
@@ -50,14 +50,22 @@ ObeliskIDs.forEach { obeliskID ->
 
 /**
  * A22: the obelisk destination the player picked with "Set Destination" (index into [Obelisk]); kept with the account like OSRS.
- * OSRS asks for the hard Wilderness Diary first - this server has no diaries, so everyone may set one (ADAPTED).
+ * OSRS asks for the hard Wilderness Diary first (DIARIES-OSRS D6: claimed hard tier; a destination saved before stays stored but is only
+ * used with the diary).
  */
 val OBELISK_DESTINATION = gg.rsmod.game.model.attr.AttributeKey<Int>("obelisk_destination")
 
 /** OSRS "Select Obelisk destination" (OSRS Wiki "Wilderness Obelisk interface.png"): "1: Level 13 Wilderness" .. "6: Level 50 Wilderness". */
 fun obeliskDestinationLines(): List<String> = ScrollMenu.keyed(Obelisk.values().map { "Level ${it.name.removePrefix("LEVEL_")} Wilderness" })
 
+fun obeliskHard(player: Player): Boolean =
+    gg.rsmod.plugins.content.diaries.Diaries.hasClaimed(player, gg.rsmod.plugins.content.diaries.Diaries.Diary.WILDERNESS, gg.rsmod.plugins.content.diaries.Diaries.Tier.HARD)
+
 fun openObeliskDestinations(player: Player) {
+    if (!obeliskHard(player)) {
+        player.message("You need to complete the hard Wilderness Diary to set a destination.")
+        return
+    }
     ScrollMenu.open(player, "Select Obelisk destination", obeliskDestinationLines()) { p, row ->
         val choice = Obelisk.values().getOrNull(row) ?: return@open
         ScrollMenu.close(p)

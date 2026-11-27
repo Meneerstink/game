@@ -19,7 +19,8 @@ import gg.rsmod.plugins.content.combat.*
  * their most recent visit to a boss lair or the Escape Caves. If this happens, the fee is dropped as loot for the killer" and "Players
  * can decrease the fee by killing the six bosses; each kill in which the player deals the most damage to it reduces the fee by 10,000".
  * The prompt, its options and messages: Near Reality WildernessBossEntrance.java (the OSRS wording is in no source). The Wilderness
- * Diary requirement is left out: this game has no Wilderness Diary (OSRS: medium diary OR a Venenatis boss task).
+ * Diary requirement (DIARIES-OSRS D6, OSRS Wiki Silk Chasm / Callisto's Den): "Entering the boss lair requires completion of the medium
+ * Wilderness diary OR a <boss> boss Slayer task, and a fee" - [entryAllowed]; the Escape Caves from the surface need only the fee.
  *
  * The ways: OSRS map placements (openrs2 2499) - the Silk Chasm entrance 47077 (3321,3794 rot 1), the Escape Caves' four surface caves
  * 47175 (rot 0) and their exits inside (47147 3358,10244 / 47148 3336,10287 and 3382,10287 / 47149 3361,10273); the arrival tiles and
@@ -210,7 +211,27 @@ object WildernessLairs {
     }
 
     /** A lair entrance or an Escape Caves surface cave: enters when paid, otherwise the donor prompt. */
-    fun enter(player: Player, enterAction: () -> Unit) {
+    /** The lair's boss task (Krystilia groups Artio with Callisto, Spindel with Venenatis, Calvar'ion with Vet'ion). */
+    fun bossTask(lairName: String): gg.rsmod.game.model.combat.SlayerAssignment? = when (lairName) {
+        "Callisto's Den", "Hunter's End" -> gg.rsmod.game.model.combat.SlayerAssignment.CALLISTO
+        "Vet'ion's Rest", "Skeletal Tomb" -> gg.rsmod.game.model.combat.SlayerAssignment.VETION
+        "Silk Chasm", "Web Chasm" -> gg.rsmod.game.model.combat.SlayerAssignment.VENENATIS
+        else -> null
+    }
+
+    /** OSRS: the medium Wilderness diary (claimed) OR an active boss Slayer task for this lair's boss. */
+    fun entryAllowed(player: Player, task: gg.rsmod.game.model.combat.SlayerAssignment?): Boolean {
+        if (task == null) return true
+        if (gg.rsmod.plugins.content.diaries.Diaries.hasClaimed(player, gg.rsmod.plugins.content.diaries.Diaries.Diary.WILDERNESS, gg.rsmod.plugins.content.diaries.Diaries.Tier.MEDIUM)) return true
+        return gg.rsmod.plugins.content.skills.slayer.Krystilia.active(player) &&
+            player.attr[gg.rsmod.game.model.attr.SLAYER_ASSIGNMENT] == task.identifier
+    }
+
+    fun enter(player: Player, task: gg.rsmod.game.model.combat.SlayerAssignment? = null, enterAction: () -> Unit) {
+        if (!entryAllowed(player, task)) {
+            player.message("You need to have completed the medium Wilderness Diary, or be on a ${task!!.identifier} boss task, to enter.")
+            return
+        }
         val go = {
             player.attr[SINCE_VISIT] = true
             enterAction()
@@ -310,8 +331,12 @@ object WildernessLairs {
         lairName(dest)?.let { lastEntry[it] = cycle }
     }
 
-    /** True while someone entered this player's lair less than 3 ticks ago (owner 11-05: for everyone, no diary exception). */
-    fun entryTeleportLocked(tile: Tile, cycle: Int): Boolean {
+    /**
+     * True while someone entered this player's lair less than 3 ticks ago. OSRS Wiki: "This delay no longer occurs after completion of the
+     * hard Wilderness diary" (owner 11-05 'for everyone' was before this server had the diary; DIARIES-OSRS D6 adds the OSRS exception).
+     */
+    fun entryTeleportLocked(tile: Tile, cycle: Int, player: Player? = null): Boolean {
+        if (player != null && gg.rsmod.plugins.content.diaries.Diaries.hasClaimed(player, gg.rsmod.plugins.content.diaries.Diaries.Diary.WILDERNESS, gg.rsmod.plugins.content.diaries.Diaries.Tier.HARD)) return false
         val lair = lairName(tile) ?: return false
         val at = lastEntry[lair] ?: return false
         return cycle - at in 0 until ENTRY_TELEPORT_LOCK_TICKS

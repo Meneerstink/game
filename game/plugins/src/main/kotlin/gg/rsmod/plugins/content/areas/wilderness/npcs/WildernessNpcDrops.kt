@@ -63,9 +63,9 @@ object WildernessNpcDrops {
     fun observatory(player: Player) = QuestStatus.isCompleted(player, "Observatory Quest")
     fun legends(player: Player) = QuestStatus.isCompleted(player, "Legends' Quest")
 
-    // No Wilderness Diary completion provider exists in this checkout. Never grant medium/elite benefits by default.
-    // Claude handoff: connect the actual completion provider before enabling the alternate pirate table/Ent diary bonus.
-    fun mediumDiary(@Suppress("UNUSED_PARAMETER") player: Player): Boolean = false
+    // DIARIES-OSRS D6: the claimed medium Wilderness diary (zombie pirate table, Ent log bonus).
+    fun mediumDiary(player: Player): Boolean =
+        gg.rsmod.plugins.content.diaries.Diaries.hasClaimed(player, gg.rsmod.plugins.content.diaries.Diaries.Diary.WILDERNESS, gg.rsmod.plugins.content.diaries.Diaries.Tier.MEDIUM)
 
     fun wealth(player: Player): Boolean {
         val id = player.equipment[EquipmentType.RING.id]?.id ?: return false
