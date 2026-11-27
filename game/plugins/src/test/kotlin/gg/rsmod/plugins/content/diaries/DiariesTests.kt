@@ -122,4 +122,41 @@ class DiariesTests {
         assertEquals(count, Diaries.doneCount(player, task.diary))
         assertTrue(attr[Diaries.DONE]!!.contains(task.id))
     }
+
+    @Test
+    fun `wilderness elite notes dragon bones only in the wilderness and only after claiming`() {
+        val bones = listOf(gg.rsmod.game.model.item.Item(gg.rsmod.plugins.api.cfg.Items.DRAGON_BONES, 1))
+        val wildy = gg.rsmod.game.model.Tile(3100, 3900, 0)
+        val lumbridge = gg.rsmod.game.model.Tile(3222, 3218, 0)
+        assertEquals(gg.rsmod.plugins.api.cfg.Items.DRAGON_BONES, DiaryItems.wildyDragonBones(player, wildy, bones)[0].id)
+        Diaries.setClaimed(player, Diary.WILDERNESS, 4)
+        assertEquals(gg.rsmod.plugins.api.cfg.Items.DRAGON_BONES_NOTED, DiaryItems.wildyDragonBones(player, wildy, bones)[0].id)
+        assertEquals(gg.rsmod.plugins.api.cfg.Items.DRAGON_BONES, DiaryItems.wildyDragonBones(player, lumbridge, bones)[0].id)
+        Diaries.setClaimed(player, Diary.WILDERNESS, 3)
+        assertEquals(gg.rsmod.plugins.api.cfg.Items.DRAGON_BONES, DiaryItems.wildyDragonBones(player, wildy, bones)[0].id)
+    }
+
+    @Test
+    fun `camelot to seers needs both the kandarin hard claim and the choice`() {
+        assertFalse(DiaryItems.camelotToSeers(player))
+        attr[DiaryItems.CAMELOT_SEERS] = true
+        assertFalse(DiaryItems.camelotToSeers(player))
+        Diaries.setClaimed(player, Diary.KANDARIN, 3)
+        assertTrue(DiaryItems.camelotToSeers(player))
+        attr[DiaryItems.CAMELOT_SEERS] = false
+        assertFalse(DiaryItems.camelotToSeers(player))
+    }
+
+    @Test
+    fun `rogues chest gives nothing without the medium wilderness diary`() {
+        Diaries.setClaimed(player, Diary.WILDERNESS, 1)
+        repeat(50) { assertTrue(RoguesChest.roll(player).isEmpty()) }
+    }
+
+    @Test
+    fun `headgear tier follows the reward item order`() {
+        assertEquals(3, DiaryItems.tierOf(player, Diary.KANDARIN, headgear[2]))
+        assertEquals(4, DiaryItems.tierOf(player, Diary.KANDARIN, headgear[3]))
+        assertEquals(0, DiaryItems.tierOf(player, Diary.KANDARIN, 1))
+    }
 }

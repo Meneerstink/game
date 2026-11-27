@@ -221,7 +221,7 @@ object DiaryTasks {
         t(D, Tier.ELITE, 2, "Teleport to Ghorrock.", Tele(GHORROCK), "Magic 96")
         t(D, Tier.ELITE, 3, "Cook a Shark in the Wilderness.", Gain(s("Shark"), WILDERNESS), "Cooking 80", osrs = "Fish and Cook a Dark Crab in the Resource Area.")
         t(D, Tier.ELITE, 4, "Mine some Runite ore in the Lava Maze.", Gain(s("Runite ore"), LAVA_MAZE), "Mining 85", osrs = "Smith a rune scimitar from scratch in the Resource Area.")
-        t(D, Tier.ELITE, 5, "Steal from the Rogues' chest.", Xp(Skills.THIEVING, ROGUES_CASTLE), "Thieving 84")
+        t(D, Tier.ELITE, 5, "Steal from the Rogues' chest.", Ev("chest:rogues", ROGUES_CASTLE), "Thieving 84")
         t(D, Tier.ELITE, 6, "Kill a Revenant knight in the Revenant Caves.", Kill(s("Revenant knight"), REV_CAVES), osrs = "Slay a spiritual mage inside the wilderness Godwars Dungeon.")
         t(D, Tier.ELITE, 7, "Burn some Magic logs in the Wilderness.", Burn(s("Magic logs"), WILDERNESS), "Firemaking 75", osrs = "Cut and burn some magic logs in the Resource Area.")
     }

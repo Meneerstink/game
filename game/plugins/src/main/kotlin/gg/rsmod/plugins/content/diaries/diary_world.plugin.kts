@@ -62,11 +62,14 @@ listOf(Diaries.Diary.KANDARIN, Diaries.Diary.WESTERN).forEach { diary ->
     }
 }
 
-// DIARIES-OSRS: Rogues' Castle chests (RoguesChest; Wilderness elite 5 = steal from one). Options as this cache has them.
+// DIARIES-OSRS: Rogues' Castle chests (RoguesChest; Wilderness elite 5 = steal from one). OSRS has 'Open' (springs a trap) and
+// 'Search for traps' (the real unlock); the 667 loc 14773 only has 'Open', so 'Open' is the OSRS 'Search for traps' flow here
+// (choice in dossier DIARIES-OSRS, nachtrun 27-11).
 run {
     val ops = world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, RoguesChest.CHEST).options.map { it?.lowercase() }
-    println("[diaries] rogues chest ${RoguesChest.CHEST} options=$ops")
-    if ("search for traps" in ops) on_obj_option(obj = RoguesChest.CHEST, option = "search for traps") {
+    val op = listOf("search for traps", "open").firstOrNull { it in ops }
+    if (op == null) println("[diaries] PROBLEM rogues chest ${RoguesChest.CHEST} has no usable option: $ops")
+    else on_obj_option(obj = RoguesChest.CHEST, option = op) {
         val chest = player.getInteractingGameObj()
         if (!RoguesChest.canOpen(player)) {
             player.message("You need a Thieving level of ${RoguesChest.LEVEL} to open this chest.")
@@ -85,12 +88,8 @@ run {
             if (loot.isEmpty()) player.message("You open the chest, but find nothing of interest.")
             else { player.message("You open the chest and take some loot."); RoguesChest.give(player, loot) }
             gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "rogues-chest ${player.username} loot=${loot.joinToString { "${it.id}x${it.amount}" }}" }
+            Diaries.event(player, "chest:rogues")
             RoguesChest.rogues(player)
         }
-    }
-    if ("open" in ops) on_obj_option(obj = RoguesChest.CHEST, option = "open") {
-        // OSRS: opening without searching springs the trap.
-        player.message("You have activated a trap on the chest.")
-        player.hit(damage = (1..10).random())
     }
 }
