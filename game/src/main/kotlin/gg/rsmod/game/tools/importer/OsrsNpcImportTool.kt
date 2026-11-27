@@ -128,7 +128,7 @@ object OsrsNpcImportTool {
             // Nachtrun 27-11 (CONSTRUCTION-99 C7): Mahogany Homes - Amy (Falador), Marlo (Varrock), Ellie (East Ardougne) and the 9
             // homeowners Larry, Norman, Tau, Jess, Noella, Ross, Bob, Jeff, Sarah (OSRS Wiki infobox ids). Hosidius (Angelo, Barbara,
             // Leela, Mariah) is Kourend = parked.
-            "mahogany-homes" to listOf(6439, 10408, 10410, 10418, 3266, 10417, 10421, 10419, 10420, 10414, 10415, 10416),
+            "mahogany-homes" to listOf(6439, 10408, 10410, 7417, 10409, 10411, 1614, 10418, 3266, 10417, 10421, 10419, 10420, 10414, 10415, 10416),
             // N522 bundle 1 (owner 2026-11-01 "alle osrs wilderness bosses"): OSRS Wiki infobox ids Chaos Fanatic 6619 and Crazy
             // archaeologist 6618 and the scenery "Miniature chaotic clouds" 6620 that wander round the fanatic (classic frames: OsrsNpcProbeTool).
             "wildy-bosses-1" to listOf(6619, 6618, 6620),

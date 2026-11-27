@@ -9,7 +9,10 @@ import gg.rsmod.plugins.api.ext.calculateAndSetCombatLevel
  * DropTableFactory. The red rate line is sent from the level-up route (skills/level_up.plugin.kts).
  */
 
-XpRates.factor = { player, skill -> AnnihilationTier.xpRate(player, skill) }
+// Nachtrun 27-11 (CONSTRUCTION-99 C7): the carpenter's outfit (OSRS: up to 2.5 % on every Construction gain) on top of the tier rate.
+XpRates.factor = { player, skill ->
+    AnnihilationTier.xpRate(player, skill) * gg.rsmod.plugins.content.skills.construction.mahogany.MahoganyHomes.outfitBonus(player, skill)
+}
 
 on_login {
     // The combat level is known before the tier is recorded (runetek5's login computes it too; doing it here keeps the

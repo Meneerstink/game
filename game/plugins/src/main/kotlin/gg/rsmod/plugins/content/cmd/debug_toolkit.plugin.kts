@@ -324,6 +324,22 @@ gg.rsmod.game.CommandServerCommands.handlers["findloc"] = { w, a ->
         "loc $id near ${p.tile.x},${p.tile.z}: ${found.joinToString("; ").ifEmpty { "none" }}"
     }
 }
+// `locsat x z h [x2 z2]` (nachtrun 27-11, Mahogany Homes): every object on a tile (or box) - id, name, type, rot, static/dynamic.
+gg.rsmod.game.CommandServerCommands.handlers["locsat"] = { w, a ->
+    val n = a.mapNotNull { it.toIntOrNull() }
+    if (n.size < 3) {
+        "usage: locsat <x> <z> <h> [x2 z2]"
+    } else {
+        val found = ArrayList<String>()
+        for (x in n[0]..(n.getOrNull(3) ?: n[0])) for (z in n[1]..(n.getOrNull(4) ?: n[1])) {
+            val t = gg.rsmod.game.model.Tile(x, z, n[2])
+            w.chunks.get(t, createIfNeeded = false)
+                ?.getEntities<gg.rsmod.game.model.entity.GameObject>(t, gg.rsmod.game.model.EntityType.STATIC_OBJECT, gg.rsmod.game.model.EntityType.DYNAMIC_OBJECT)
+                ?.forEach { found += "$x,$z ${it.id}'${it.getDef(w.definitions).name}' t${it.type} r${it.rot}${if (it.entityType == gg.rsmod.game.model.EntityType.DYNAMIC_OBJECT) " dyn" else ""}" }
+        }
+        found.joinToString("; ").ifEmpty { "none" }
+    }
+}
 // `specbars` (N443, owner 2026-10-30: Craw's bow shows a special attack bar and "de spec werkt niet"): the client draws the bar for
 // every weapon whose cache param 687 is set; lists the weapons that show a bar without a special the server knows, and the reverse.
 gg.rsmod.game.CommandServerCommands.handlers["specbars"] = { w, _ ->

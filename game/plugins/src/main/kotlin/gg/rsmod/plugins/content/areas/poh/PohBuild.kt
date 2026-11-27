@@ -9,6 +9,7 @@ import gg.rsmod.plugins.api.cfg.Anims
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.*
+import gg.rsmod.plugins.content.skills.construction.mahogany.MahoganyHomes
 
 /**
  * Building mode (owner 2026-10-10 night run): the house stays fully furnished; building mode makes exactly two things buildable -
@@ -159,7 +160,15 @@ object PohBuild {
     internal fun countOf(
         player: Player,
         item: Int,
-    ): Int = if (item == ANY_NAILS) NAILS.sumOf { player.inventory.getItemCount(it) } else player.inventory.getItemCount(item)
+    ): Int =
+        if (item == ANY_NAILS) {
+            NAILS.sumOf { player.inventory.getItemCount(it) }
+        } else if (item in MahoganyHomes.PLANKS) {
+            // Nachtrun 27-11 (C7): planks are used straight from the plank sack (OSRS Wiki "Plank sack").
+            MahoganyHomes.planks(player, item)
+        } else {
+            player.inventory.getItemCount(item)
+        }
 
     private fun nameOf(
         player: Player,
@@ -172,7 +181,9 @@ object PohBuild {
         piece: Piece,
     ): Boolean {
         val player = task.player
-        if (player.skills.getCurrentLevel(Skills.CONSTRUCTION) < piece.level) {
+        // OSRS Wiki "Crystal saw": in the inventory, +3 for furniture that needs a hammer and saw (nachtrun 27-11, C7).
+        val boost = if (piece.needsTools && !piece.plant) MahoganyHomes.crystalSawBoost(player) else 0
+        if (player.skills.getCurrentLevel(Skills.CONSTRUCTION) + boost < piece.level) {
             task.messageBox("You need to have a Construction level of ${piece.level} to build that.")
             return false
         }
@@ -189,7 +200,7 @@ object PohBuild {
                 task.messageBox("You need a watering can with some water in it to plant this.")
                 return false
             }
-        } else if (piece.needsTools && (!player.inventory.contains(Items.HAMMER) || !player.inventory.contains(Items.SAW))) {
+        } else if (piece.needsTools && (!player.inventory.contains(Items.HAMMER) || !MahoganyHomes.hasSaw(player))) {
             task.messageBox("You will need a hammer and saw to build furniture.")
             return false
         }
@@ -211,6 +222,8 @@ object PohBuild {
                         left -= take
                     }
                 }
+            } else if (item in MahoganyHomes.PLANKS) {
+                MahoganyHomes.takePlanks(player, item, qty)
             } else {
                 player.inventory.remove(item, qty)
             }
