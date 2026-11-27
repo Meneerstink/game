@@ -20,7 +20,7 @@ object MahoganyHomesData {
 
     val CONTRACTORS = listOf(
         "Amy|15365|2990,3365,0",
-        "Marlo|15366|3242,3478,0",
+        "Marlo|15366|3240,3474,0",
         "Ellie|15367|2638,3294,0",
     )
 
