@@ -22,7 +22,7 @@ create_shop(
 }
 
 on_npc_option(npc = Npcs.GHOST_SHOPKEEPER, option = "talk-to") {
-    if (player.hasEquipped(EquipmentType.AMULET, Items.GHOSTSPEAK_AMULET)) {
+    if (gg.rsmod.plugins.content.diaries.DiaryItems.ghostspeak(player)) {
         player.queue {
             chatNpc(
                 "Can I help you at all?",
@@ -48,7 +48,7 @@ on_npc_option(npc = Npcs.GHOST_SHOPKEEPER, option = "talk-to") {
 }
 
 on_npc_option(npc = Npcs.GHOST_SHOPKEEPER, option = "trade") {
-    if (player.hasEquipped(EquipmentType.AMULET, Items.GHOSTSPEAK_AMULET)) {
+    if (gg.rsmod.plugins.content.diaries.DiaryItems.ghostspeak(player)) {
         player.openShop("Port Phasmatys General Store")
     } else {
         player.queue {

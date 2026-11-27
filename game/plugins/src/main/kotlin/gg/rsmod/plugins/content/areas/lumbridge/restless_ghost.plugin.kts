@@ -21,7 +21,7 @@ on_npc_option(Npcs.RESTLESS_GHOST, option = "talk-to") {
 }
 
 suspend fun talkingToGhost(it: QueueTask) {
-    if (it.player.hasEquipped(EquipmentType.AMULET, Items.GHOSTSPEAK_AMULET)) {
+    if (gg.rsmod.plugins.content.diaries.DiaryItems.ghostspeak(it.player)) {
         it.chatNpc("Not very good actually.", npc = Npcs.RESTLESS_GHOST, facialExpression = FacialExpression.SAD)
         it.chatPlayer("What's the problem?")
         it.chatNpc(
@@ -141,7 +141,7 @@ suspend fun talkingToGhost(it: QueueTask) {
     } else if (it.player.inventory.contains(Items.GHOSTSPEAK_AMULET)) {
         it.chatNpc("Wooo wooo wooooo!")
         it.chatPlayer("Why can't I understand you? Oh, yeah, it might help if I", "wear this amulet!")
-    } else if (!it.player.hasEquipped(EquipmentType.AMULET, Items.GHOSTSPEAK_AMULET)) {
+    } else if (!gg.rsmod.plugins.content.diaries.DiaryItems.ghostspeak(it.player)) {
         it.chatNpc("Wooo wooo wooooo!")
         when (
             it.options(

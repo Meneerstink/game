@@ -57,8 +57,8 @@ set_combat_def(GHAST) {
 // Void npcCondition registrations for the ghast row (has_druid_pouch / has_no_druid_pouch / has_food / has_no_food).
 NpcAttacks.condition("has_druid_pouch") { _, t -> t is Player && hasFilledPouch(t) }
 NpcAttacks.condition("has_no_druid_pouch") { _, t -> t is Player && !hasFilledPouch(t) }
-NpcAttacks.condition("has_food") { _, t -> t is Player && !hasFilledPouch(t) && rottableSlot(t) != null }
-NpcAttacks.condition("has_no_food") { _, t -> t is Player && !hasFilledPouch(t) && rottableSlot(t) == null }
+NpcAttacks.condition("has_food") { _, t -> t is Player && !hasFilledPouch(t) && rottableSlot(t) != null && !gg.rsmod.plugins.content.diaries.DiaryItems.blocksGhastRot(t) }
+NpcAttacks.condition("has_no_food") { _, t -> t is Player && !hasFilledPouch(t) && (rottableSlot(t) == null || gg.rsmod.plugins.content.diaries.DiaryItems.blocksGhastRot(t)) }
 
 // The Void energy section hits 10-20 (1-2 hp); the wiki (Mod Ash) says 1-3 - the same section with max 30.
 // In on_world_init: the attack table is loaded by npc_attacks.plugin.kts, whose load order is not fixed.

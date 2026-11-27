@@ -22,6 +22,21 @@ import gg.rsmod.plugins.content.magic.teleport
  * Days are UTC days (OSRS resets at 00:00 UTC).
  */
 object DiaryItems {
+    /**
+     * OSRS Wiki "Morytania legs 2/3/4": "When worn: Acts as a ghostspeak amulet". Every ghost that needs the amulet asks this.
+     */
+    fun ghostspeak(player: Player): Boolean {
+        if (player.equipment[gg.rsmod.plugins.api.EquipmentType.AMULET.id]?.id == gg.rsmod.plugins.api.cfg.Items.GHOSTSPEAK_AMULET) return true
+        val legs = player.equipment[gg.rsmod.plugins.api.EquipmentType.LEGS.id]?.id ?: return false
+        return DiaryRewards.items(player.world, Diary.MORYTANIA).drop(1).contains(legs)
+    }
+
+    /** OSRS Wiki "Morytania legs 4": "Completely blocks the attack that Ghasts use to turn food into Rotten food" (worn). */
+    fun blocksGhastRot(player: Player): Boolean {
+        val legs = player.equipment[gg.rsmod.plugins.api.EquipmentType.LEGS.id]?.id ?: return false
+        return DiaryRewards.items(player.world, Diary.MORYTANIA).lastOrNull() == legs
+    }
+
     private val SHERLOCK = Tile(2733, 3415, 0)
     private val PISCATORIS = Tile(2337, 3690, 0)
     private val KANDARIN_DAY = AttributeKey<Int>(persistenceKey = "diary_kandarin_tele_day")

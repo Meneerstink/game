@@ -27,7 +27,7 @@ val FADE_OUT_INTERFACE = 170
 val GHOST_CAPTAIN_UNLIMITED = AttributeKey<Boolean>(persistenceKey = "ghost_captain_unlimited")
 
 fun onIsland(p: Player) = p.tile.x >= 3750
-fun understands(p: Player) = p.hasEquipped(EquipmentType.AMULET, Items.GHOSTSPEAK_AMULET)
+fun understands(p: Player) = gg.rsmod.plugins.content.diaries.DiaryItems.ghostspeak(p)
 fun unlimited(p: Player) = p.attr[GHOST_CAPTAIN_UNLIMITED] == true
 
 fun row(p: Player, destination: Tile, arrival: String?) {
