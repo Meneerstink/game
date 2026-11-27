@@ -43,7 +43,10 @@ fun Player.teleport(
         message("You need to complete Plague City to use this teleport.")
         return
     }
-    val endTile = findValidTile(spell)
+    // DIARIES-OSRS Kandarin hard (OSRS Wiki): "Camelot Teleport can now be used to teleport to Seers' Village bank instead" (the choice is
+    // set at the Wedge; the 667 spellbook has no right-click option for it).
+    val endTile = if (spell == TeleportSpell.CAMELOT && gg.rsmod.plugins.content.diaries.DiaryItems.camelotToSeers(this))
+        gg.rsmod.game.model.collision.Landing.pick(world.collision, gg.rsmod.game.model.Area(2724, 3486, 2729, 3490), 0) else findValidTile(spell)
     teleport(spell.type, endTile, spell.xp, data)
 }
 

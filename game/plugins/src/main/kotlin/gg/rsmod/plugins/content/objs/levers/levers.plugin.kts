@@ -154,6 +154,16 @@ on_obj_option(obj = Objs.LEVER_1815, option = "pull", lineOfSightDistance = 1) {
                 // Check if the player is being attacked, locked, dead, or has a modal interface open
                 if (player.isLocked() || player.isDead() || player.interfaces.currentModal != -1) {
                     player.message("Your teleport was interrupted!")
+                } else if (gg.rsmod.plugins.content.diaries.Diaries.hasClaimed(player, gg.rsmod.plugins.content.diaries.Diaries.Diary.WILDERNESS,
+                        gg.rsmod.plugins.content.diaries.Diaries.Tier.EASY)) {
+                    // DIARIES-OSRS Wilderness easy (OSRS Wiki): "You can now use the Wilderness lever to teleport to Edgeville, as an
+                    // alternative to East Ardougne". Edgeville lever 1814 stands at 3090,3474; the landing is the tile south of it.
+                    player.queue {
+                        when (options("East Ardougne", "Edgeville", title = "Where would you like to teleport to?")) {
+                            1 -> pullLever(player, obj, 2561, 3311)
+                            2 -> pullLever(player, obj, 3090, 3473)
+                        }
+                    }
                 } else {
                     pullLever(player, obj, 2561, 3311)
                 }

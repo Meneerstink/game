@@ -94,6 +94,8 @@ enum class LightSource(
             if (gg.rsmod.plugins.content.skills.SkillcapePerks.wornOrCarried(player, gg.rsmod.plugins.content.skills.Skillcapes.FIREMAKING)) {
                 return UNLIT_TORCH
             }
+            // DIARIES-OSRS: Kandarin headgear "Acts as a light source when worn or held in the inventory" (OSRS Wiki).
+            if (gg.rsmod.plugins.content.diaries.DiaryItems.headgearCarried(player)) return UNLIT_TORCH
             for (source in values()) {
                 // N419: a worn light (the lit mining helmet) lights the way as well as a carried one.
                 if (player.inventory.contains(source.product) || player.equipment.contains(source.product)) {

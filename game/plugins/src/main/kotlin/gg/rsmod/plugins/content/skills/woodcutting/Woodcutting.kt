@@ -104,7 +104,8 @@ object Woodcutting {
         infernoAdze: Boolean,
         farmingTreeState: PatchState?,
     ): Boolean {
-        player.addXp(Skills.WOODCUTTING, tree.xp, checkBrawlingGloves = true)
+        // DIARIES-OSRS Kandarin medium: +10% xp from maple trees in Seers' Village.
+        player.addXp(Skills.WOODCUTTING, tree.xp * (if (tree == TreeType.MAPLE) gg.rsmod.plugins.content.diaries.DiaryItems.mapleXpBonus(player) else 1.0), checkBrawlingGloves = true)
         gg.rsmod.plugins.content.scrolls.ClueSkilling.woodcutting(player, tree)
         if (tree == TreeType.YEW) ClueTasks.succeeded(player, ClueTasks.Action.YEW_LOG)
         when (tree) {
@@ -138,6 +139,10 @@ object Woodcutting {
                         player.addXp(Skills.FIREMAKING, tree.xp)
                     } else {
                         gg.rsmod.plugins.content.mechanics.deadman.sigils.SigilSkilling.give(player, tree.log)
+                        // DIARIES-OSRS: Kandarin headgear worn = double logs from regular trees (no additional experience).
+                        if (tree == TreeType.TREE && gg.rsmod.plugins.content.diaries.DiaryItems.headgearWorn(player) && player.inventory.freeSlotCount > 0) {
+                            player.inventory.add(tree.log, 1)
+                        }
                     }
                     gg.rsmod.plugins.content.skills.summoning.SkillingPets.woodcutting(player, tree)
                 }

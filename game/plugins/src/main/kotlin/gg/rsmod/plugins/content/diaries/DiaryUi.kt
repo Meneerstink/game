@@ -80,6 +80,19 @@ object DiaryUi {
     }
 
     /** The diary's journal: OSRS order easy -> elite, done tasks struck through. */
+    /** Characters per journal line (quest scroll 275, font p12: measured in the test client 27-11). */
+    const val JOURNAL_CHARS = 52
+
+    fun wrap(text: String, max: Int): List<String> {
+        val out = ArrayList<String>()
+        var cur = ""
+        text.split(' ').forEach { w ->
+            cur = if (cur.isEmpty()) w else if (cur.length + 1 + w.length <= max) "$cur $w" else { out += cur; w }
+        }
+        if (cur.isNotEmpty()) out += cur
+        return out.ifEmpty { listOf("") }
+    }
+
     fun openJournal(player: Player, row: Int) {
         val diary = diaryOfRow(row)
         if (diary == null) {
@@ -98,8 +111,15 @@ object DiaryUi {
                 else -> ""
             }
             tasks.forEach { t ->
-                val text = t.text + if (t.req.isNotEmpty()) " <col=7f0000>(${t.req})</col>" else ""
-                lines += if (t.id in done) "<str>$text</str>" else text
+                // OSRS journal: a long task wraps onto the next line instead of running past the scroll edge.
+                val parts = wrap(t.text, JOURNAL_CHARS).toMutableList()
+                val req = if (t.req.isNotEmpty()) "(${t.req})" else ""
+                val reqOnLast = req.isNotEmpty() && parts.last().length + 1 + req.length <= JOURNAL_CHARS
+                parts.forEachIndexed { i, s ->
+                    val text = if (reqOnLast && i == parts.lastIndex) "$s <col=7f0000>$req</col>" else s
+                    lines += if (t.id in done) "<str>$text</str>" else text
+                }
+                if (req.isNotEmpty() && !reqOnLast) wrap(req, JOURNAL_CHARS).forEach { lines += "<col=7f0000>$it</col>" }
             }
             lines += ""
         }

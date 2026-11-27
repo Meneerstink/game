@@ -29,6 +29,7 @@ suspend fun talk(task: gg.rsmod.game.model.queue.QueueTask, m: Master) {
     val claimable = DiaryRewards.claimable(player, m.diary)
     if (claimable != null) opts += "I'd like to claim my ${claimable.title.lowercase()} reward."
     if (Diaries.claimed(player, m.diary) > 0) opts += "I've lost my reward item."
+    if (m.diary == Diary.KANDARIN && Diaries.hasClaimed(player, Diary.KANDARIN, Tier.HARD)) opts += "Change my Camelot Teleport destination."
     opts += "What is the Achievement Diary?"
     opts += "Nothing, thanks."
     when (opts[task.options(*opts.toTypedArray()) - 1]) {
@@ -45,6 +46,14 @@ suspend fun talk(task: gg.rsmod.game.model.queue.QueueTask, m: Master) {
         "I've lost my reward item." -> {
             task.chatPlayer("I've lost my reward item.")
             task.chatNpc(DiaryRewards.reclaim(player, m.diary))
+        }
+        "Change my Camelot Teleport destination." -> {
+            // Kandarin hard (OSRS Wiki): Camelot Teleport can teleport to Seers' Village bank instead.
+            when (task.options("Camelot castle", "Seers' Village bank", title = "Where should Camelot Teleport take you?")) {
+                1 -> player.attr[DiaryItems.CAMELOT_SEERS] = false
+                2 -> player.attr[DiaryItems.CAMELOT_SEERS] = true
+            }
+            task.chatNpc("Your Camelot Teleport will now take you to ${if (player.attr[DiaryItems.CAMELOT_SEERS] == true) "Seers' Village bank" else "Camelot castle"}.")
         }
         "What is the Achievement Diary?" -> {
             task.chatPlayer("What is the Achievement Diary?")

@@ -71,6 +71,7 @@ object DiaryTasks {
     val GHORROCK = Area("Ghorrock", Box(2968, 3868, 2985, 3880))
     val ROGUES_CASTLE = Area("Rogues' Castle", Box(3275, 3920, 3300, 3950))
     val RESOURCE_AREA = Area("Resource Area", Box(3174, 3924, 3196, 3944))
+    val LAVA_MAZE = Area("Lava Maze", Box(3008, 3800, 3110, 3900))
     val REV_CAVES = Area("Revenant Caves", Box(3136, 10048, 3263, 10239)) // DIARIES-OSRS replacement for the Wilderness God Wars Dungeon
 
     private fun s(vararg n: String) = n.map { it.lowercase() }.toSet()
@@ -204,12 +205,12 @@ object DiaryTasks {
         t(D, Tier.MEDIUM, 7, "Charge an Earth Orb.", Gain(s("Earth orb")), "Magic 60")
         t(D, Tier.MEDIUM, 8, "Kill a Revenant pyrefiend in the Revenant Caves.", Kill(s("Revenant pyrefiend"), REV_CAVES), osrs = "Kill a Bloodveld in the Wilderness Godwars Dungeon.")
         t(D, Tier.MEDIUM, 9, "Talk to the Emblem Trader in Edgeville about emblems.", Talk(s("Emblem Trader", "Deadman Store")))
-        t(D, Tier.MEDIUM, 10, "Smith a Golden helmet in the Resource Area.", Gain(s("Gold helmet"), RESOURCE_AREA), "Smithing 50")
+        t(D, Tier.MEDIUM, 10, "Smith a Gold helmet.", Gain(s("Gold helmet", "Golden helmet")), "Smithing 50", osrs = "Smith a Golden helmet in the Resource Area.")
         t(D, Tier.MEDIUM, 11, "Open the Muddy Chest in the lava maze.", Ev("chest:muddy"))
         t(D, Tier.HARD, 1, "Cast any of the 3 God spells against another player in the Wilderness.", Ev("god_spell:player", WILDERNESS), "Magic 60")
         t(D, Tier.HARD, 2, "Charge an Air Orb.", Gain(s("Air orb")), "Magic 66")
         t(D, Tier.HARD, 3, "Catch a Black warlock.", Ev("hunt:black warlock"), "Hunter 54", osrs = "Catch a Black Salamander in the Wilderness.")
-        t(D, Tier.HARD, 4, "Smith an Adamant scimitar in the Resource Area.", Gain(s("Adamant scimitar"), RESOURCE_AREA), "Smithing 75")
+        t(D, Tier.HARD, 4, "Mine some Adamantite ore in the Wilderness.", Gain(s("Adamantite ore"), WILDERNESS), "Mining 70", osrs = "Smith an Adamant scimitar in the Resource Area.")
         t(D, Tier.HARD, 5, "Kill a Lava Dragon.", Kill(s("Lava dragon"), WILDERNESS))
         t(D, Tier.HARD, 6, "Kill the Chaos Elemental.", Kill(s("Chaos Elemental")))
         t(D, Tier.HARD, 7, "Kill the Crazy Archaeologist, Chaos Fanatic & Scorpia.", All(listOf(Kill(s("Crazy archaeologist")), Kill(s("Chaos Fanatic")), Kill(s("Scorpia")))))
@@ -218,11 +219,11 @@ object DiaryTasks {
         t(D, Tier.HARD, 10, "Fish some Raw Lava Eel in the Wilderness.", Gain(s("Raw lava eel"), WILDERNESS), "Fishing 53")
         t(D, Tier.ELITE, 1, "Kill Callisto, Venenatis & Vet'ion.", All(listOf(Kill(s("Callisto", "Artio")), Kill(s("Venenatis", "Spindel")), Kill(s("Vet'ion", "Calvar'ion")))))
         t(D, Tier.ELITE, 2, "Teleport to Ghorrock.", Tele(GHORROCK), "Magic 96")
-        t(D, Tier.ELITE, 3, "Cook a Shark in the Resource Area.", Gain(s("Shark"), RESOURCE_AREA), "Cooking 80", osrs = "Fish and Cook a Dark Crab in the Resource Area.")
-        t(D, Tier.ELITE, 4, "Smith a rune scimitar from scratch in the Resource Area.", Steps(listOf(Gain(s("Runite ore"), RESOURCE_AREA), Gain(s("Runite bar", "Rune bar"), RESOURCE_AREA), Gain(s("Rune scimitar"), RESOURCE_AREA))), "Mining 85, Smithing 90")
+        t(D, Tier.ELITE, 3, "Cook a Shark in the Wilderness.", Gain(s("Shark"), WILDERNESS), "Cooking 80", osrs = "Fish and Cook a Dark Crab in the Resource Area.")
+        t(D, Tier.ELITE, 4, "Mine some Runite ore in the Lava Maze.", Gain(s("Runite ore"), LAVA_MAZE), "Mining 85", osrs = "Smith a rune scimitar from scratch in the Resource Area.")
         t(D, Tier.ELITE, 5, "Steal from the Rogues' chest.", Xp(Skills.THIEVING, ROGUES_CASTLE), "Thieving 84")
         t(D, Tier.ELITE, 6, "Kill a Revenant knight in the Revenant Caves.", Kill(s("Revenant knight"), REV_CAVES), osrs = "Slay a spiritual mage inside the wilderness Godwars Dungeon.")
-        t(D, Tier.ELITE, 7, "Cut and burn some magic logs in the Resource Area.", Steps(listOf(Gain(s("Magic logs"), RESOURCE_AREA), Burn(s("Magic logs"), RESOURCE_AREA))), "Woodcutting 75, Firemaking 75")
+        t(D, Tier.ELITE, 7, "Burn some Magic logs in the Wilderness.", Burn(s("Magic logs"), WILDERNESS), "Firemaking 75", osrs = "Cut and burn some magic logs in the Resource Area.")
     }
 
     val ALL: List<Task> get() = ALL_TASKS

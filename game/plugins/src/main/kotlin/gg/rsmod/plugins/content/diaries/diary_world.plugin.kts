@@ -46,3 +46,51 @@ on_obj_option(obj = 170, option = "Open") {
         player.unlock()
     }
 }
+
+// DIARIES-OSRS D6: Teleport on the Kandarin headgear and Western banners (inventory + worn), see DiaryItems. Only where the cache has
+// the option (headgear 1/2 have none; an unknown option fails the plugin load).
+fun hasOp(id: Int, worn: Boolean): Boolean {
+    val d = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, id)
+    return (if (worn) d.equipmentMenu.toList() else d.inventoryMenu.toList()).any { it?.lowercase() == "teleport" }
+}
+listOf(Diaries.Diary.KANDARIN, Diaries.Diary.WESTERN).forEach { diary ->
+    DiaryRewards.items(world, diary).filter { it >= 0 }.forEach { id ->
+        val go: (gg.rsmod.game.model.entity.Player) -> Unit =
+            if (diary == Diaries.Diary.KANDARIN) { p -> DiaryItems.headgearTeleport(p, id) } else { p -> DiaryItems.bannerTeleport(p, id) }
+        if (hasOp(id, false)) on_item_option(id, "teleport") { go(player) }
+        if (hasOp(id, true)) on_equipment_option(id, "teleport") { go(player) }
+    }
+}
+
+// DIARIES-OSRS: Rogues' Castle chests (RoguesChest; Wilderness elite 5 = steal from one). Options as this cache has them.
+run {
+    val ops = world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, RoguesChest.CHEST).options.map { it?.lowercase() }
+    println("[diaries] rogues chest ${RoguesChest.CHEST} options=$ops")
+    if ("search for traps" in ops) on_obj_option(obj = RoguesChest.CHEST, option = "search for traps") {
+        val chest = player.getInteractingGameObj()
+        if (!RoguesChest.canOpen(player)) {
+            player.message("You need a Thieving level of ${RoguesChest.LEVEL} to open this chest.")
+            return@on_obj_option
+        }
+        player.lockingQueue {
+            player.message("You search the chest for traps.")
+            player.animate(536)
+            wait(3)
+            player.message("You find a trap on the chest and disable it.")
+            player.animate(536)
+            wait(2)
+            val loot = RoguesChest.roll(player)
+            player.addXp(Skills.THIEVING, RoguesChest.XP)
+            world.spawnTemporaryObject(DynamicObject(RoguesChest.CHEST + 1, chest.type, chest.rot, chest.tile), RoguesChest.RESET_TICKS, DynamicObject(chest))
+            if (loot.isEmpty()) player.message("You open the chest, but find nothing of interest.")
+            else { player.message("You open the chest and take some loot."); RoguesChest.give(player, loot) }
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "rogues-chest ${player.username} loot=${loot.joinToString { "${it.id}x${it.amount}" }}" }
+            RoguesChest.rogues(player)
+        }
+    }
+    if ("open" in ops) on_obj_option(obj = RoguesChest.CHEST, option = "open") {
+        // OSRS: opening without searching springs the trap.
+        player.message("You have activated a trap on the chest.")
+        player.hit(damage = (1..10).random())
+    }
+}
