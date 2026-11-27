@@ -9,4 +9,5 @@ object DiaryNpcs {
     const val WEDGE = 15370 // OSRS 5517
     const val ELDER_GNOME_CHILD = 15371 // OSRS 5518
     const val TOBY = 15372 // OSRS 5525 (batch "diaries-2", Varrock 3225,3415)
+    const val TWO_PINTS = 15373 // OSRS 5519 (batch "diaries-3", Flying Horse Inn 2574,3323)
 }

@@ -70,6 +70,7 @@ fun attemptPickableDoor(player: Player) {
         return
     }
     player.message("You pick the lock.")
+    gg.rsmod.plugins.content.diaries.Diaries.event(player, "picklock:${site.tile.x},${site.tile.z}") // DIARIES-OSRS Ardougne (Yanille dungeon basement, West Ardougne door)
     player.addXp(Skills.THIEVING, site.xp, checkBrawlingGloves = true)
     player.queue {
         // One shared crossing rule for every door script (DoorCrossing, owner priority #1 2026-10-03).

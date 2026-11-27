@@ -37,7 +37,7 @@ object DiaryUi {
 
     /** The twelve OSRS diaries in the OSRS list order, with their OSRS task totals for the ones we do not have yet. */
     val ROWS = listOf(
-        "Ardougne" to 43, "Desert" to 39, "Falador" to 42, "Fremennik" to 34, "Kandarin" to 43, "Karamja" to 44,
+        "Ardougne" to 42 /* OSRS Wiki "Ardougne Diary" 10/12/12/8 (27-11) */, "Desert" to 39, "Falador" to 42, "Fremennik" to 34, "Kandarin" to 43, "Karamja" to 44,
         "Kourend & Kebos" to 43, "Lumbridge & Draynor" to 41, "Morytania" to 38, "Varrock" to 42, "Western Provinces" to 44, "Wilderness" to 40,
     )
 

@@ -26,6 +26,7 @@ object Diaries {
         WESTERN("Western Provinces", "Western Provinces", "the Elder gnome child", "Western Area"),
         WILDERNESS("Wilderness", "Wilderness", "the Lesser Fanatic", "Wilderness Area"),
         VARROCK("Varrock", "Varrock", "Toby", "Varrock"),
+        ARDOUGNE("Ardougne", "Ardougne", "Two-pints", "Ardougne"),
     }
 
     class Box(val x1: Int, val z1: Int, val x2: Int, val z2: Int, val h: Int = -1) {

@@ -81,6 +81,59 @@ object DiaryItems {
     fun camelotToSeers(player: Player): Boolean =
         player.attr[CAMELOT_SEERS] == true && Diaries.hasClaimed(player, Diary.KANDARIN, Tier.HARD)
 
+    /**
+     * Ardougne (OSRS Wiki "Ardougne Diary" rewards): "10% increased chance of successfully pickpocketing within Ardougne" (medium) and
+     * "anywhere around Gielinor" (hard).
+     */
+    fun ardougnePickpocketFactor(player: Player): Double = when {
+        Diaries.hasClaimed(player, Diary.ARDOUGNE, Tier.HARD) -> 1.1
+        Diaries.hasClaimed(player, Diary.ARDOUGNE, Tier.MEDIUM) && DiaryTasks.NEAR_ARDOUGNE.has(player.tile) -> 1.1
+        else -> 1.0
+    }
+
+    /** Ardougne cloak 2 / 3: three / five teleports a day to the Ardougne farm; cloak 4 unlimited (OSRS Wiki). Day = 00:00 UTC. */
+    val FARM_TELE_DAY = AttributeKey<Int>(persistenceKey = "diary_ard_farm_day")
+    val FARM_TELE_USED = AttributeKey<Int>(persistenceKey = "diary_ard_farm_used")
+
+    fun farmTeleLimit(cloak: Int): Int = when (cloak) {
+        gg.rsmod.plugins.api.cfg.Items.ARDOUGNE_CLOAK_2 -> 3
+        gg.rsmod.plugins.api.cfg.Items.ARDOUGNE_CLOAK_3 -> 5
+        else -> Int.MAX_VALUE
+    }
+
+    private fun today() = java.time.LocalDate.now(java.time.ZoneOffset.UTC).toEpochDay().toInt()
+
+    fun farmTelesUsed(player: Player): Int = if (player.attr[FARM_TELE_DAY] == today()) player.attr[FARM_TELE_USED] ?: 0 else 0
+
+    /** True (and counted) when [cloak] still has a farm teleport left today; the counter is shared by every cloak, like OSRS. */
+    fun useFarmTele(player: Player, cloak: Int): Boolean {
+        val used = farmTelesUsed(player)
+        if (used >= farmTeleLimit(cloak)) return false
+        player.attr[FARM_TELE_DAY] = today()
+        player.attr[FARM_TELE_USED] = used + 1
+        return true
+    }
+
+    /** Ardougne medium / hard / elite: Wizard Cromperty gives 100 / 150 / 250 noted pure essence once a day (OSRS Wiki). */
+    val CROMPERTY_DAY = AttributeKey<Int>(persistenceKey = "diary_cromperty_day")
+
+    fun crompertyEssence(player: Player): Int = when (Diaries.claimed(player, Diary.ARDOUGNE)) {
+        2 -> 100
+        3 -> 150
+        4 -> 250
+        else -> 0
+    }
+
+    fun crompertyClaimedToday(player: Player) = player.attr[CROMPERTY_DAY] == today()
+
+    fun markCrompertyToday(player: Player) { player.attr[CROMPERTY_DAY] = today() }
+
+    /** Ardougne hard: "Watchtower Teleport can now be used to teleport to Yanille instead" (chosen at Two-pints). */
+    val WATCHTOWER_YANILLE = AttributeKey<Boolean>(persistenceKey = "diary_watchtower_yanille")
+
+    fun watchtowerToYanille(player: Player): Boolean =
+        player.attr[WATCHTOWER_YANILLE] == true && Diaries.hasClaimed(player, Diary.ARDOUGNE, Tier.HARD)
+
     /** Varrock medium: Varrock Teleport lands at the Grand Exchange when the player chose that at Toby. */
     val VARROCK_GE = AttributeKey<Boolean>(persistenceKey = "diary_varrock_ge")
 

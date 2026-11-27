@@ -137,6 +137,7 @@ on_any_item_on_obj(Objs.TOTEM_POLE_2938) {
             }
         }
         player.lock = LockState.NONE
+        gg.rsmod.plugins.content.diaries.Diaries.event(player, "totem:recharge") // DIARIES-OSRS Ardougne hard 1
         itemMessageBox("You feel a power emanating from the totem pole as it recharges your $itemType. You can now " +
             "rub the $itemType to teleport and wear it to $extraMessage.", item = firstItem.id)
         wait(1)

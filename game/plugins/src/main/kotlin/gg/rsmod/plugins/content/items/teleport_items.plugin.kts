@@ -207,12 +207,19 @@ listOf(Items.ARDOUGNE_CLOAK_2, Items.ARDOUGNE_CLOAK_3, Items.ARDOUGNE_CLOAK_4).f
         player.queue {
             when (options("Kandarin Monastery.", "Ardougne Farm.", "Nowhere.", title = "Where would you like to teleport to?")) {
                 1 -> player.itemTeleport(cloak, null, null, MONASTERY.tile, TeleportType.MONASTERY)
-                2 -> player.itemTeleport(cloak, null, null, ARDOUGNE_FARM.tile, TeleportType.FARM_PATCH)
+                2 -> if (gg.rsmod.plugins.content.diaries.DiaryItems.useFarmTele(player, cloak))
+                    player.itemTeleport(cloak, null, null, ARDOUGNE_FARM.tile, TeleportType.FARM_PATCH)
+                else player.message("You have used all of your Ardougne Farm teleports for today.")
             }
         }
     }
     bindTeleport(cloak, "Kandarin Monastery", EquipmentType.CAPE, null, listOf(MONASTERY), TeleportType.MONASTERY)
-    bindTeleport(cloak, "Ardougne Farm", EquipmentType.CAPE, null, listOf(ARDOUGNE_FARM), TeleportType.FARM_PATCH)
+    on_equipment_option(cloak, option = "Ardougne Farm") {
+        // DIARIES-OSRS: 3 / 5 / unlimited a day (cloak 2 / 3 / 4), shared with the inventory option above.
+        if (gg.rsmod.plugins.content.diaries.DiaryItems.useFarmTele(player, cloak))
+            player.itemTeleport(cloak, EquipmentType.CAPE, null, ARDOUGNE_FARM.tile, TeleportType.FARM_PATCH)
+        else player.message("You have used all of your Ardougne Farm teleports for today.")
+    }
 }
 
 // Karamja gloves 3/4: Shilo Village underground gem mine ({{Teleport map|2840,9386}}), unlimited.

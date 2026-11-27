@@ -389,6 +389,9 @@ object PohConstruct {
         }
         if (!flatpack) player.addXp(Skills.CONSTRUCTION, picked.xp, checkBrawlingGloves = true)
         gg.rsmod.plugins.content.diaries.Diaries.event(player, "poh_build:${picked.name.lowercase()}")
+        // DIARIES-OSRS Ardougne hard 10 (replacement): any Yanille portal (teak, mahogany or marble).
+        if (picked.name.contains("yanille", ignoreCase = true) && picked.name.contains("portal", ignoreCase = true))
+            gg.rsmod.plugins.content.diaries.Diaries.event(player, "poh_build:yanille_portal")
         if (!flatpack) PohSuperiorGarden.plantXp(player, deco)
         PohMenagerie.refreshPets(player)
         player.unlock()

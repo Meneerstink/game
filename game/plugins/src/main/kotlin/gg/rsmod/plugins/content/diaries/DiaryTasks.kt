@@ -99,6 +99,27 @@ object DiaryTasks {
     val VARROCK_WEST_BANK = Area("Varrock west bank", Box(3180, 3433, 3194, 3447))
     val COOKS_GUILD = Area("Cooks' Guild", Box(3137, 3438, 3148, 3452))
 
+    // ------------------------------------------------------------------------------------------------------------ Ardougne areas
+    val ARD_EAST = Area("East Ardougne", Box(2560, 3255, 2700, 3345))
+    val ARD_WEST = Area("West Ardougne", Box(2430, 3270, 2559, 3345))
+    val ARD_MARKET = Area("Ardougne market", Box(2650, 3295, 2675, 3320))
+    val ARD_CHURCH = Area("East Ardougne church", Box(2611, 3302, 2623, 3312))
+    val BRIMHAVEN_DOCK = Area("Brimhaven docks", Box(2755, 3220, 2790, 3240))
+    val COMBAT_CAMP = Area("Combat Training Camp", Box(2513, 3355, 2534, 3378))
+    val ARD_FARM = Area("Ardougne farming patch", Box(2660, 3370, 2675, 3380))
+    val ARD_BUSH = Area("Ardougne bush patch", Box(2612, 3220, 2622, 3230))
+    val GNOME_VILLAGE_PATCH = Area("Tree Gnome Village fruit tree patch", Box(2484, 3172, 2496, 3184))
+    val YANILLE = Area("Yanille", Box(2532, 3070, 2620, 3110))
+    val YANILLE_WITCHAVEN = Area("Yanille or Witchaven", Box(2532, 3070, 2620, 3110), Box(2700, 3265, 2740, 3300))
+    val YANILLE_DUNGEON = Area("Yanille Agility dungeon", Box(2560, 9470, 2630, 9530))
+    val MAGIC_GUILD = Area("Magic Guild", Box(2584, 3082, 2597, 3094))
+    val WATCHTOWER_TELE = Area("Watchtower", Box(2540, 3105, 2560, 3120))
+    val ARD_TELE = Area("Ardougne market", Box(2655, 3295, 2670, 3312))
+    val CASTLE_WARS = Area("Castle Wars", Box(2365, 3070, 2450, 3140), Box(2365, 9470, 2435, 9535))
+    val LEGENDS_GUILD = Area("Legends' Guild", Box(2723, 3373, 2735, 3383))
+    val DEATH_ALTAR = Area("Death Altar", Box(2190, 4815, 2230, 4855))
+    val NEAR_ARDOUGNE = Area("near Ardougne", Box(2430, 3140, 2745, 3400), Box(2532, 3070, 2620, 3110))
+
     private fun s(vararg n: String) = n.map { it.lowercase() }.toSet()
 
     private val ALL_TASKS = ArrayList<Task>()
@@ -305,6 +326,68 @@ object DiaryTasks {
         t(V, Tier.ELITE, 4, "Smith and fletch ten rune darts within Varrock.",
             Steps(listOf(Gain(s("Rune dart tip"), VARROCK, count = 10, skill = sk.SMITHING), Gain(s("Rune dart"), VARROCK, count = 10, skill = sk.FLETCHING))), "Smithing 89, Fletching 81")
         t(V, Tier.ELITE, 5, "Craft 100 or more earth runes simultaneously from Essence.", Gain(s("Earth rune"), EARTH_ALTAR, count = 100, skill = sk.RUNECRAFTING, once = true), "Runecrafting 78")
+
+        // ---------------------------------------------------------------------------------------------------- ARDOUGNE (D5, 27-11)
+        val A = Diary.ARDOUGNE
+        t(A, Tier.EASY, 1, "Have Wizard Cromperty teleport you to the Rune Essence mine.", Tele(ESSENCE_MINE, from = ARD_EAST))
+        t(A, Tier.EASY, 2, "Steal a cake from the Ardougne market stalls.", Gain(s("Cake"), ARD_MARKET, skill = sk.THIEVING), "Thieving 5")
+        t(A, Tier.EASY, 3, "Talk to the Silk trader in Ardougne market.", Talk(s("Silk trader", "Silk merchant"), ARD_MARKET),
+            osrs = "Sell silk to the Silk trader in Ardougne for 60 coins each.")
+        t(A, Tier.EASY, 4, "Use the altar in East Ardougne's church.", PrayUp(ARD_CHURCH))
+        t(A, Tier.EASY, 5, "Sail from Ardougne to Brimhaven with Captain Barnaby.", Tele(BRIMHAVEN_DOCK, from = ARD_EAST),
+            osrs = "Go out fishing on the Fishing Trawler.")
+        t(A, Tier.EASY, 6, "Enter the Combat Training Camp north of W. Ardougne.", Enter(COMBAT_CAMP))
+        t(A, Tier.EASY, 7, "Have Tindel Marchant identify a Rusted Sword for you.", Ev("tindel:identify"))
+        t(A, Tier.EASY, 8, "Use the Ardougne Lever to teleport to the Wilderness.", Tele(LEVER, from = ARD_EAST))
+        t(A, Tier.EASY, 9, "View Aleck's Hunter Emporium.", Talk(s("Aleck")))
+        t(A, Tier.EASY, 10, "Steal some silk from the Ardougne market.", Gain(s("Silk"), ARD_MARKET, skill = sk.THIEVING), "Thieving 20",
+            osrs = "Check what pets you have insured with Probita in Ardougne.")
+        t(A, Tier.MEDIUM, 1, "Pickpocket a Knight of Ardougne.", Ev("pickpocket:knight of ardougne"), "Thieving 55",
+            osrs = "Enter the Unicorn pen in Ardougne zoo using Fairy rings.")
+        t(A, Tier.MEDIUM, 2, "Grapple over Yanille's south wall.", Ev("shortcut:yanille_grapple"), "Agility 39, Strength 38, Ranged 21")
+        t(A, Tier.MEDIUM, 3, "Harvest some strawberries from the Ardougne farming patch.", Gain(s("Strawberry"), ARD_FARM, skill = sk.FARMING), "Farming 31")
+        t(A, Tier.MEDIUM, 4, "Cast the Ardougne Teleport spell.", Tele(ARD_TELE), "Magic 51")
+        t(A, Tier.MEDIUM, 5, "Teleport to Castle Wars.", Tele(CASTLE_WARS), osrs = "Travel to Castlewars by Hot Air Balloon.")
+        t(A, Tier.MEDIUM, 6, "Steal some fur from the Ardougne market.", Gain(s("Fur", "Grey wolf fur"), ARD_MARKET, skill = sk.THIEVING), "Thieving 35",
+            osrs = "Claim buckets of sand from Bert in Yanille.")
+        t(A, Tier.MEDIUM, 7, "Steal from the Ardougne spice stall.", Gain(s("Spice"), ARD_MARKET, skill = sk.THIEVING), "Thieving 65",
+            osrs = "Catch any fish on the Fishing Platform.")
+        t(A, Tier.MEDIUM, 8, "Pickpocket the master farmer north of Ardougne.", Ev("pickpocket:master farmer"), "Thieving 38")
+        t(A, Tier.MEDIUM, 9, "Pick the lock of the door north of West Ardougne.", Ev("picklock:2565,3356"), "Thieving 46",
+            osrs = "Collect some Nightshade from the Skavid Caves.")
+        t(A, Tier.MEDIUM, 10, "Pickpocket a Guard in East Ardougne.", Ev("pickpocket:guard", ARD_EAST), "Thieving 40",
+            osrs = "Kill a swordchick in the Tower of Life.")
+        t(A, Tier.MEDIUM, 11, "Smith a Mithril plateskirt in Yanille.", Gain(s("Mithril plateskirt"), YANILLE, skill = sk.SMITHING), "Smithing 56",
+            osrs = "Equip Iban's upgraded staff or upgrade an Iban staff.")
+        t(A, Tier.MEDIUM, 12, "Enter the Yanille Agility dungeon.", Enter(YANILLE_DUNGEON), osrs = "Visit the Island East of the Necromancer's Tower.")
+        t(A, Tier.HARD, 1, "Recharge some Jewellery at the Totem in the Legends Guild.", Ev("totem:recharge"))
+        t(A, Tier.HARD, 2, "Enter the Magic Guild.", Enter(MAGIC_GUILD), "Magic 66")
+        t(A, Tier.HARD, 3, "Pickpocket a Paladin in Ardougne.", Ev("pickpocket:paladin"), "Thieving 70", osrs = "Steal from a chest in Ardougne Castle.")
+        t(A, Tier.HARD, 4, "Steal from the gem stall in East Ardougne.",
+            Gain(s("Uncut sapphire", "Uncut emerald", "Uncut ruby", "Uncut diamond", "Sapphire", "Emerald", "Ruby", "Diamond"), ARD_MARKET, skill = sk.THIEVING),
+            "Thieving 75", osrs = "Have a zookeeper put you in Ardougne Zoo's monkey cage.")
+        t(A, Tier.HARD, 5, "Teleport to the Watchtower.", Tele(WATCHTOWER_TELE), "Magic 58")
+        t(A, Tier.HARD, 6, "Enter the Legends' Guild.", Enter(LEGENDS_GUILD), osrs = "Catch a Red Salamander.")
+        t(A, Tier.HARD, 7, "Check the health of a Palm tree near tree gnome village.", Trigger.Xp(Skills.FARMING, GNOME_VILLAGE_PATCH), "Farming 68")
+        t(A, Tier.HARD, 8, "Pick some Poison Ivy berries from the patch south of Ardougne.", Gain(s("Poison ivy berries"), ARD_BUSH, skill = sk.FARMING), "Farming 70")
+        t(A, Tier.HARD, 9, "Smith a Mithril platebody near Ardougne.", Gain(s("Mithril platebody"), NEAR_ARDOUGNE, skill = sk.SMITHING), "Smithing 68")
+        t(A, Tier.HARD, 10, "Build a Yanille portal in your portal chamber.", Ev("poh_build:yanille_portal"), "Construction 50",
+            osrs = "Enter your POH from Yanille.")
+        t(A, Tier.HARD, 11, "Smith a Dragon sq shield in West Ardougne.", Gain(s("Dragon sq shield"), ARD_WEST, skill = sk.SMITHING), "Smithing 60")
+        t(A, Tier.HARD, 12, "Craft some Death runes from Essence.", Gain(s("Death rune"), DEATH_ALTAR, skill = sk.RUNECRAFTING), "Runecrafting 65")
+        t(A, Tier.ELITE, 1, "Cook a Manta ray in Ardougne.", Gain(s("Manta ray"), NEAR_ARDOUGNE, skill = sk.COOKING), "Cooking 91",
+            osrs = "Catch a Manta ray in the Fishing Trawler and cook it in Port Khazard.")
+        t(A, Tier.ELITE, 2, "Picklock the door to the basement of Yanille Agility Dungeon.", Ev("picklock:2601,9482"), "Thieving 82")
+        t(A, Tier.ELITE, 3, "Pickpocket a Hero.", Ev("pickpocket:hero"), "Thieving 80")
+        t(A, Tier.ELITE, 4, "Make a rune crossbow yourself within Witchaven or Yanille.",
+            Steps(listOf(Gain(s("Runite limbs"), YANILLE, skill = sk.SMITHING), Gain(s("Rune crossbow"), YANILLE_WITCHAVEN, skill = sk.FLETCHING))),
+            "Smithing 91, Fletching 69", osrs = "Make a rune crossbow yourself from scratch within Witchaven or Yanille.")
+        t(A, Tier.ELITE, 5, "Burn some Magic logs in Yanille.", Burn(s("Magic logs"), YANILLE), "Firemaking 75",
+            osrs = "Imbue a Salve amulet at Nightmare Zone, or equip a Salve amulet that was imbued there.")
+        t(A, Tier.ELITE, 6, "Pick some Torstol from the patch north of Ardougne.", Gain(s("Grimy torstol"), ARD_FARM), "Farming 85")
+        t(A, Tier.ELITE, 7, "Fletch a Magic longbow in Ardougne.", Gain(s("Magic longbow (u)", "Magic longbow"), NEAR_ARDOUGNE, skill = sk.FLETCHING), "Fletching 85",
+            osrs = "Complete a lap of Ardougne's rooftop agility course.")
+        t(A, Tier.ELITE, 8, "Cast Ice Barrage on another player within Castle Wars.", Ev("spell:ice barrage player", CASTLE_WARS), "Magic 94")
     }
 
     val ALL: List<Task> get() = ALL_TASKS

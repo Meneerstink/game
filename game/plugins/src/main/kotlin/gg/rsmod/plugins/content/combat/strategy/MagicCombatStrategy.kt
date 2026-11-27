@@ -485,6 +485,8 @@ object MagicCombatStrategy : CombatStrategy {
                         gg.rsmod.plugins.content.items.osrs.AncientSceptres.freezeTicks(effect.ticks, sceptreBoost),
                     ) + gg.rsmod.plugins.content.items.osrs.BarkArmour.bindBonus(pawn, spell)
                 val frozen = target.freeze(ticks, pawn) { if (target is Player) target.message("You have been frozen.") }
+                // DIARIES-OSRS Ardougne elite 8: "Cast Ice Barrage on another player within Castle Wars" - a hit that lands.
+                if (spell == CombatSpell.ICE_BARRAGE && target is Player && pawn is Player) gg.rsmod.plugins.content.diaries.Diaries.event(pawn, "spell:ice barrage player")
                 if (!frozen && spell == CombatSpell.ICE_BARRAGE) {
                     // Already frozen / immune: barrage shows the frozen-orb graphic instead.
                     target.graphic(Graphic(1677, 96))

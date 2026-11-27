@@ -47,6 +47,7 @@ suspend fun QueueTask.identify(rusty: Int) {
     // The wiki notes the scimitar box shows the rusty sword picture (sic); the right item is shown here.
     doubleItemMessageBox("You hand Tindel 100 coins plus the rusty $noun.", rusty, Items.COINS_995, amount2 = FEE)
     val o = roll(if (rusty == Items.RUSTY_SCIMITAR) SCIMITAR else SWORD)
+    gg.rsmod.plugins.content.diaries.Diaries.event(p, "tindel:identify") // DIARIES-OSRS Ardougne easy 7 (the identify itself counts, also when the sword is worthless)
     when (o.item) {
         0 -> chatNpc("Sorry my friend, but the item wasn't worth anything. I've disposed of it for you.")
         -1 -> {

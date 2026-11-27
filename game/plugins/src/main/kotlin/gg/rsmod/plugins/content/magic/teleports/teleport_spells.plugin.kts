@@ -49,6 +49,8 @@ fun Player.teleport(
     // Exchange" (chosen at Toby, same reason).
     val endTile = if (spell == TeleportSpell.CAMELOT && gg.rsmod.plugins.content.diaries.DiaryItems.camelotToSeers(this))
         gg.rsmod.game.model.collision.Landing.pick(world.collision, gg.rsmod.game.model.Area(2724, 3486, 2729, 3490), 0)
+    else if (spell == TeleportSpell.WATCHTOWER && gg.rsmod.plugins.content.diaries.DiaryItems.watchtowerToYanille(this))
+        gg.rsmod.game.model.collision.Landing.pick(world.collision, gg.rsmod.game.model.Area(2574, 3088, 2578, 3092), 0)
     else if (spell == TeleportSpell.VARROCK && gg.rsmod.plugins.content.diaries.DiaryItems.varrockToGe(this))
         gg.rsmod.game.model.collision.Landing.pick(world.collision, gg.rsmod.game.model.Area(3161, 3474, 3168, 3481), 0) else findValidTile(spell)
     teleport(spell.type, endTile, spell.xp, data)

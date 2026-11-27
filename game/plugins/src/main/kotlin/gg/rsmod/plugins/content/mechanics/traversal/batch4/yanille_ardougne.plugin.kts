@@ -74,6 +74,7 @@ on_world_init {
                 wait(11)
                 player.animate(-1)
                 player.moveTo(Tile(landing.x, landing.z, 1))
+                gg.rsmod.plugins.content.diaries.Diaries.event(player, "shortcut:yanille_grapple") // DIARIES-OSRS Ardougne medium 2
             }
         }
     }
