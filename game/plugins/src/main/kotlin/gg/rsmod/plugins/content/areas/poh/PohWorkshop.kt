@@ -43,13 +43,12 @@ object PohWorkshop {
 
     private val RINGS = (13126..13145).toSet()
     private val CHESTS = setOf(13283, 13285, 13287, 13289, 13291, 13385, 13387, 13389)
-    private val STORAGE = (18766..18768).toSet() + (18772..18808).toSet()
     private val GAMES = setOf(13379, 13390, 13392, 13393, 13394, 13395, 13396, 13397, 13398, 13400, 13402, 13404)
     private val HEADS = (13481..13487).toSet()
     private val LOOK = (13155..13171).toSet() + (13200..13207).toSet() + (13214..13216).toSet() + (13656..13664).toSet() +
         setOf(13313, 13316, 13319, 13322, 13325, 13480, 13672, 13673, 13674, 13716, 13717, 13718, 13639)
 
-    fun handles(id: Int): Boolean = id in WORKBENCHES || id in CRAFTING_TABLES || id in RINGS || id in CHESTS || id in STORAGE || id in GAMES || id in HEADS || id in LOOK
+    fun handles(id: Int): Boolean = id in WORKBENCHES || id in CRAFTING_TABLES || id in RINGS || id in CHESTS || id in GAMES || id in HEADS || id in LOOK
 
     fun handle(
         player: Player,
@@ -66,7 +65,6 @@ object PohWorkshop {
             option == "climb-over" || option == "walk-through" -> across(player, obj)
             option == "stand-on" || option == "get-down" -> player.message("There is nobody here to duel with on the balance beam.")
             id in CHESTS -> player.message("The chest is empty.")
-            id in STORAGE -> player.message("Costume storage is not used in this house.")
             id in GAMES -> player.message("There is nobody here to play with.")
             id in HEADS -> player.message("The mounted head stares back at you silently.")
             option == "read" -> player.message("It's ${java.time.LocalTime.now(java.time.ZoneOffset.UTC).let { "%d:%02d".format(it.hour, it.minute) }} (game time).")
@@ -76,7 +74,7 @@ object PohWorkshop {
                 player.message("You play a short tune.")
             }
             option == "change-clothes" || option == "preen" -> player.message("You admire your reflection; for a new look, visit a hairdresser or Thessalia.")
-            option == "observe" -> player.message("You look through the telescope and see the night sky.")
+            option == "observe" && id in TELESCOPE_SPREAD -> telescope(player, TELESCOPE_SPREAD.getValue(id))
             option == "study" -> player.message("You study the chart for a while.")
             option == "pull" || option == "challenge-mode" -> player.message("There are no guests in your house to drop into the oubliette.")
             option == "drink" -> player.message("The fountain is only for show.")
@@ -85,6 +83,30 @@ object PohWorkshop {
             else -> return false
         }
         return true
+    }
+
+    /**
+     * Nachtrun 27-11 (C1): the telescope, as before 2026-10-11 (2009scape TelescopePlugin): the sky view 782, the look-through
+     * animation 3649, then when the next shooting star lands as a guess whose spread shrinks with the telescope (oak 24, teak 9,
+     * mahogany 2 minutes either way) - this server's own star timer (ShootingStarHandler, 100 ticks a minute).
+     */
+    private val TELESCOPE_SPREAD = mapOf(13656 to 24, 13657 to 9, 13658 to 2)
+
+    private fun telescope(
+        player: Player,
+        spread: Int,
+    ) {
+        // WEAK: a STANDARD task pauses while a main-screen interface is open (ROOT_CAUSES #92), and 782 is one.
+        player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) {
+            player.animate(3649)
+            player.openInterface(782, gg.rsmod.plugins.api.InterfaceDestination.MAIN_SCREEN)
+            wait(2)
+            val world = player.world
+            val timer = gg.rsmod.plugins.content.activity.shooting_star.ShootingStarEventTimer
+            val minutes = (if (world.timers.has(timer)) world.timers[timer] else 0) / 100
+            val guess = (minutes + world.random(-spread..spread)).coerceAtLeast(1)
+            messageBox("You see a shooting star! The star looks like it will land", "in about $guess minutes!")
+        }
     }
 
     /** Workbench "Work-at": a category, then a piece up to the bench's level; materials -> flatpack, with the experience. */

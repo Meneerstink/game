@@ -201,7 +201,9 @@ object PohStorage {
     fun returnToBank(player: Player) {
         val map = read(player)
         var moved = 0
-        map.values.forEach { ids ->
+        // Nachtrun 27-11 (C4): a family the player has a BUILT piece for stays stored ([PohCostume]); only the rest goes to the bank.
+        val built = PohCostume.builtFamilies(player)
+        map.filterKeys { it !in built }.values.forEach { ids ->
             val iterator = ids.iterator()
             while (iterator.hasNext()) {
                 if (player.bank.add(iterator.next(), 1).hasSucceeded()) {
@@ -210,7 +212,7 @@ object PohStorage {
                 }
             }
         }
-        val left = map.values.any { it.isNotEmpty() }
+        val left = map.filterKeys { it !in built }.values.any { it.isNotEmpty() }
         if (moved > 0) {
             write(player, map)
             player.message("Your house's costume room is gone: the $moved item${if (moved == 1) "" else "s"} you had stored there ${if (moved == 1) "is" else "are"} in your bank.")
@@ -219,6 +221,12 @@ object PohStorage {
             player.message("Your bank is full - the rest of your costume room items will follow when there is space.")
         }
     }
+
+    /** Where-owned check ([gg.rsmod.plugins.content.mechanics.ownership.Possessions]): true when any of [ids] is stored. */
+    fun holdsAny(
+        player: Player,
+        ids: Set<Int>,
+    ): Boolean = read(player).values.any { stored -> stored.any { it in ids } }
 
     /** Takes [itemId] out of [family] and reports whether it was there; the caller gives the item back. */
     fun take(

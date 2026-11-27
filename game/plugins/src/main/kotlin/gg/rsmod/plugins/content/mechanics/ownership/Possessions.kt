@@ -52,6 +52,8 @@ object Possessions {
         val follower = gg.rsmod.plugins.content.skills.summoning.Pets.itemOf(player)
         if (follower != null && follower in ids) return "following you"
         if (onGrandExchange(player, ids)) return "the Grand Exchange"
+        // Nachtrun 27-11 (C4): the costume room of the player's house (PohStorage keeps it on the player, not in a container).
+        if (gg.rsmod.plugins.content.areas.poh.PohStorage.holdsAny(player, ids)) return "your house's costume room"
         return null
     }
 

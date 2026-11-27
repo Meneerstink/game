@@ -35,6 +35,7 @@ object PohStorageUi {
     private const val OP1 = 2
 
     private val FAMILY = AttributeKey<PohStorage.Family>()
+    private val BOX = AttributeKey<PohCostume.Box>()
     private val PAGE = AttributeKey<Int>()
 
     /** What a row shows: a set, or a page turn. */
@@ -58,10 +59,13 @@ object PohStorageUi {
         return slice + listOfNotNull(if (more) Row.More else null, if (page > 0) Row.Back else null)
     }
 
+    /** Nachtrun 27-11 (C4): the storage of one built costume-room piece, with its OSRS capacity ([PohCostume]). */
     fun open(
         player: Player,
-        family: PohStorage.Family,
+        box: PohCostume.Box,
     ) {
+        val family = box.family
+        player.attr[BOX] = box
         player.attr[FAMILY] = family
         player.attr[PAGE] = 0
         player.openInterface(INTERFACE, InterfaceDestination.MAIN_SCREEN)
@@ -78,7 +82,7 @@ object PohStorageUi {
 
     private fun render(player: Player) {
         val family = player.attr[FAMILY] ?: return
-        val rows = rows(PohStorageSets.of(family), player.attr[PAGE] ?: 0)
+        val rows = rows(setsOf(player, family), player.attr[PAGE] ?: 0)
         player.setComponentText(INTERFACE, TITLE, family.displayName)
         for (row in 0 until ROWS) {
             val shown = rows.getOrNull(row)
@@ -97,6 +101,11 @@ object PohStorageUi {
         }
     }
 
+    private fun setsOf(
+        player: Player,
+        family: PohStorage.Family,
+    ): List<PohStorageSets.StorageSet> = player.attr[BOX]?.let { PohCostume.sets(it) } ?: PohStorageSets.of(family)
+
     /** A click on row [row]'s "Select". */
     fun select(
         player: Player,
@@ -104,7 +113,7 @@ object PohStorageUi {
     ) {
         val family = player.attr[FAMILY] ?: return
         val page = player.attr[PAGE] ?: 0
-        when (val clicked = rows(PohStorageSets.of(family), page).getOrNull(row) ?: return) {
+        when (val clicked = rows(setsOf(player, family), page).getOrNull(row) ?: return) {
             Row.More -> player.attr[PAGE] = page + 1
             Row.Back -> player.attr[PAGE] = (page - 1).coerceAtLeast(0)
             is Row.SetRow -> transfer(player, clicked.set)
@@ -117,6 +126,7 @@ object PohStorageUi {
         player: Player,
         set: PohStorageSets.StorageSet,
     ) {
+        if (!PlayerHouse.ownsHouseAt(player)) return
         val stored = PohStorage.stored(player, set.family)
         val out = set.ids.filter { it in stored }
         if (out.isNotEmpty()) {
@@ -133,6 +143,16 @@ object PohStorageUi {
         val carried = set.ids.filter { player.inventory.contains(it) }
         if (carried.isEmpty()) {
             player.message("You don't have that item in your inventory.")
+            return
+        }
+        // Only the owner's own house, and only while the piece is still there (the interface may outlive a Remove).
+        val box = player.attr[BOX]
+        if (box == null || !PlayerHouse.ownsHouseAt(player) || box.family !in PohCostume.builtFamilies(player)) {
+            player.message("You can only store items in your own costume room.")
+            return
+        }
+        PohCostume.refusal(player, box, set)?.let {
+            player.message(it)
             return
         }
         carried.forEach { id ->

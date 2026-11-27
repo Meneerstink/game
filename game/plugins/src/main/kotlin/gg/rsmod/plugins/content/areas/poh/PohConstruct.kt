@@ -61,6 +61,7 @@ object PohConstruct {
         if (option != BUILD && option != REMOVE) {
             if (PohLevels.handles(obj.id)) return PohLevels.handle(player, obj, option)
             if (PohMenagerie.handles(obj.id)) return PohMenagerie.handle(player, obj, option)
+            if (PohCostume.handles(obj.id)) return PohCostume.handle(player, obj, option)
             if (PohWorkshop.handles(obj.id) && (option == "upgrade" || !PohFurnitureUse.handles(obj.id))) return PohWorkshop.handle(player, obj, option)
             return PohFurnitureUse.handles(obj.id) && PohFurnitureUse.handle(player, obj, option)
         }
@@ -245,6 +246,10 @@ object PohConstruct {
                         task.messageBox("You can't remove the $name: it holds up the room above it.")
                         return
                     }
+                    if (current.type == PohRooms.RoomType.COSTUME_ROOM && PohCostume.anyStored(player)) {
+                        task.messageBox("You'll have to empty the furniture before you can remove the $name.")
+                        return
+                    }
                     if (current.type == PohRooms.RoomType.MENAGERIE && PohMenagerie.stored(player) > 0) {
                         task.messageBox("You'll have to take your pets out of the pet house before you can remove the $name.")
                         return
@@ -391,6 +396,17 @@ object PohConstruct {
         val player = task.player
         if (!PlayerHouse.ownsHouseAt(player) || !PohBuild.requireBuildMode(player)) return
         val (room, spot) = PohRooms.spotAt(player, obj, matchLoc = false) ?: return
+        upgradeAt(task, room, spot)
+    }
+
+    /** Builds the next piece of [spot]'s hotspot in place of the built one (the OSRS upgrade row when there is one). */
+    internal suspend fun upgradeAt(
+        task: QueueTask,
+        room: PohRooms.Built,
+        spot: PohRooms.Spot,
+    ) {
+        val player = task.player
+        if (!PlayerHouse.ownsHouseAt(player) || !PohBuild.requireBuildMode(player)) return
         val key = PohRooms.furniture(player)[spot.key(room)]?.let { PohRooms.decoKey(it) } ?: return
         val index = spot.hotspot.decos.indexOfFirst { it?.key == key }
         val next = spot.hotspot.decos.getOrNull(index + 1)
@@ -402,7 +418,7 @@ object PohConstruct {
         val world = player.world
         val style = PlayerHouse.styleOf(player)
         val old = PohRooms.placedObj(PohRooms.furniture(player).getValue(spot.key(room)), style, PohHeraldry.crestIndex(player))
-        val cost = PohMenagerie.UPGRADES[next.key]
+        val cost = PohMenagerie.UPGRADES[next.key] ?: spot.hotspot.decos[index]?.let { PohCostume.upgradeCost(it, next) }
         val needed = cost ?: pieceOf(next)
         val ok = player.skills.getCurrentLevel(Skills.CONSTRUCTION) >= needed.level && needed.materials.all { (item, qty) -> PohBuild.countOf(player, item) >= qty }
         if (!ok) {
@@ -423,6 +439,20 @@ object PohConstruct {
         val world = player.world
         if (PohRooms.furniture(player)[spot.key(room)]?.let { PohRooms.decoKey(it) } in PohMenagerie.PET_HOUSES && PohMenagerie.stored(player) > 0) {
             task.messageBox("You'll have to take your pets out of the pet house before you can remove it.")
+            return
+        }
+        val costumeKey = PohRooms.furniture(player)[spot.key(room)]?.let { PohRooms.decoKey(it) }
+        if (costumeKey != null && PohCostume.holdsItems(player, costumeKey)) {
+            // OSRS: a piece that stores items can't be removed while it holds them; it can be upgraded, the contents stay.
+            val i = spot.hotspot.decos.indexOfFirst { it?.key == costumeKey }
+            val next = spot.hotspot.decos.getOrNull(i + 1)
+            if (next == null) {
+                task.messageBox("You'll need to empty it before you can remove it.")
+                return
+            }
+            if (PohCostume.upgradeCost(spot.hotspot.decos[i]!!, next) == null) return
+            if (task.options("Upgrade to ${next.name.lowercase()} (contents stay)", "Cancel", title = "It isn't empty - you can't remove it.") != 1) return
+            upgradeAt(task, room, spot)
             return
         }
         if (!PohBuild.confirmRemove(task)) return
