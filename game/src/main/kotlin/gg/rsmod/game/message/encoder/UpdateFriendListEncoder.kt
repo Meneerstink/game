@@ -15,18 +15,18 @@ class UpdateFriendListEncoder : MessageEncoder<UpdateFriendListMessage>() {
                 message.friends.forEach { friend ->
                     // Building the string bytes for username
                     val usernameData = ByteArray(friend.username.length + 1)
-                    System.arraycopy(friend.username.toByteArray(), 0, usernameData, 0, usernameData.size - 1)
+                    System.arraycopy(friend.username.toByteArray(gg.rsmod.util.io.BufferUtils.JAGEX_CHARSET), 0, usernameData, 0, usernameData.size - 1)
                     usernameData[usernameData.size - 1] = 0
 
                     // Building the stream bytes for oldUsername
                     val oldUsernameData = ByteArray(friend.oldUsername.length + 1)
-                    System.arraycopy(friend.oldUsername.toByteArray(), 0, oldUsernameData, 0, oldUsernameData.size - 1)
+                    System.arraycopy(friend.oldUsername.toByteArray(gg.rsmod.util.io.BufferUtils.JAGEX_CHARSET), 0, oldUsernameData, 0, oldUsernameData.size - 1)
                     oldUsernameData[oldUsernameData.size - 1] = 0
 
                     // Building the string bytes for worldName
                     val worldNameString = "World ${friend.world}"
                     val worldNameData = ByteArray("World ${friend.world}".length + 1)
-                    System.arraycopy(worldNameString.toByteArray(), 0, worldNameData, 0, worldNameData.size - 1)
+                    System.arraycopy(worldNameString.toByteArray(gg.rsmod.util.io.BufferUtils.JAGEX_CHARSET), 0, worldNameData, 0, worldNameData.size - 1)
                     worldNameData[worldNameData.size - 1] = 0
 
                     // The client reads this byte as "useFormerName" (ServerConnectionReader UPDATE_FRIENDLIST): 1 makes it look up

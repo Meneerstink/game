@@ -23,7 +23,7 @@ class VarcStringEncoder : MessageEncoder<VarcStringMessage>() {
         when (key) {
             "text" -> {
                 val data = ByteArray(message.text.length + 1)
-                System.arraycopy(message.text.toByteArray(), 0, data, 0, data.size - 1)
+                System.arraycopy(message.text.toByteArray(gg.rsmod.util.io.BufferUtils.JAGEX_CHARSET), 0, data, 0, data.size - 1)
                 data[data.size - 1] = 0
                 data
             }

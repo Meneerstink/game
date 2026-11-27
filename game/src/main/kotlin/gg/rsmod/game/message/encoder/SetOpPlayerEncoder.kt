@@ -15,7 +15,7 @@ class SetOpPlayerEncoder : MessageEncoder<SetOpPlayerMessage>() {
             "option" -> {
                 val option = message.option
                 val data = ByteArray(option.length + 1)
-                System.arraycopy(option.toByteArray(), 0, data, 0, data.size - 1)
+                System.arraycopy(option.toByteArray(gg.rsmod.util.io.BufferUtils.JAGEX_CHARSET), 0, data, 0, data.size - 1)
                 data[data.size - 1] = 0
                 data
             }

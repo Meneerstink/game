@@ -6,6 +6,12 @@ import io.netty.buffer.ByteBuf
  * @author Tom <rspsmods@gmail.com>
  */
 object BufferUtils {
+    /**
+     * 667 cache and client strings are Cp1252 (client Packet.gjstr). The platform default (UTF-8 on the Linux VPS) turned
+     * 'Le-sabrè' (0xE8) into 'Le-sabr?' on live while the Windows testserver showed it right (DIARIES-OSRS A9 27-11).
+     */
+    val JAGEX_CHARSET: java.nio.charset.Charset = java.nio.charset.Charset.forName("windows-1252")
+
     fun ByteBuf.readString(): String {
         if (isReadable) {
             val start = readerIndex()
@@ -16,7 +22,7 @@ object BufferUtils {
             readerIndex(start)
             readBytes(data)
 
-            return String(data, 0, size - 1)
+            return String(data, 0, size - 1, JAGEX_CHARSET)
         } else {
             return ""
         }
@@ -32,7 +38,7 @@ object BufferUtils {
             readerIndex(start)
             readBytes(data)
 
-            return String(data, 0, size - 1)
+            return String(data, 0, size - 1, JAGEX_CHARSET)
         } else {
             return ""
         }

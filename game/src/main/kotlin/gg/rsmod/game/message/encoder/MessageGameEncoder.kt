@@ -26,7 +26,7 @@ class MessageGameEncoder : MessageEncoder<MessageGameMessage>() {
             "username" -> {
                 if (message.username != null) {
                     val data = ByteArray(message.username.length + 1)
-                    System.arraycopy(message.username.toByteArray(), 0, data, 0, data.size - 1)
+                    System.arraycopy(message.username.toByteArray(gg.rsmod.util.io.BufferUtils.JAGEX_CHARSET), 0, data, 0, data.size - 1)
                     data[data.size - 1] = 0
                     data
                 } else {
@@ -35,7 +35,7 @@ class MessageGameEncoder : MessageEncoder<MessageGameMessage>() {
             }
             "message" -> {
                 val data = ByteArray(message.message.length + 1)
-                System.arraycopy(message.message.toByteArray(), 0, data, 0, data.size - 1)
+                System.arraycopy(message.message.toByteArray(gg.rsmod.util.io.BufferUtils.JAGEX_CHARSET), 0, data, 0, data.size - 1)
                 data[data.size - 1] = 0
                 data
             }

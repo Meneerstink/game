@@ -36,7 +36,7 @@ class RunClientScriptEncoder : MessageEncoder<RunClientScriptMessage>() {
                     val value = message.args[i]
                     when (value) {
                         is String -> {
-                            value.toByteArray().forEach { args.add(it) }
+                            value.toByteArray(gg.rsmod.util.io.BufferUtils.JAGEX_CHARSET).forEach { args.add(it) }
                             args.add(0) // Terminator
                         }
                         is Number -> {
