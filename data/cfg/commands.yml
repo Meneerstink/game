@@ -1109,7 +1109,7 @@
   description: "Show the top 10 killstreaks and your own best and current streak."
   example: "::killstreaks"
 - name: locate
-  rank: player
+  rank: moderator
   category: players
   usage: "::locate <player>"
   description: "Show which area an online player is in (_ for spaces in names)."
