@@ -321,6 +321,11 @@ object OsrsRegionImportTool {
             // the same slot as Fremennik 13244/13245/13246 -> Style.stainedGlass 13246).
             "dmm2-poh-wilderness" to Batch(listOf(8302), listOf(60651), "DMM2 Wilderness (Deadman) house style template, OSRS 8302 plane 0",
                 nativeLocsBelow = 15500, stripOps = setOf(60651)),
+            // Nachtrun 27-11 (CONSTRUCTION-99 C6): OSRS house-template square 7535 (the 2016+ rooms: Achievement gallery, Portal Nexus room,
+            // League hall) onto the empty rev-667 square 7535 - the Achievement gallery's room template (PohRooms.RoomType.ACHIEVEMENT_GALLERY).
+            "poh-osrs-7535" to Batch(listOf(7535), emptyList(), "OSRS house templates 7535 (Achievement gallery)", nativeLocsBelow = 15500),
+            // Nachtrun 27-11: the same templates for the tropical wood (plane 0) and fancy stone (plane 1) styles, as 7759 is to 7503.
+            "poh-osrs-7791" to Batch(listOf(7791), emptyList(), "OSRS house templates 7791 (Achievement gallery, tropical/fancy)", nativeLocsBelow = 15500),
             "cox-entrance" to Batch(listOf(4918, 4919, 5174, 5175), emptyList(), "Chambers of Xeric entrance: Mount Quidamortem + fairy ring BLS",
                 clearTileFlags = 0x8, dropHiddenOverlays = true),
             // CoX 15-11 18:3x (test client screens\COX\pad-midden.png: the lake south of the mountain drew as a flat dark-grey plate while the

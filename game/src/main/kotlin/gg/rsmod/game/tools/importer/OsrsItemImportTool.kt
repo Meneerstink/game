@@ -1138,6 +1138,9 @@ object OsrsItemImportTool {
             // / 29640 (1), noteable, tradeable; drink/mix handled in mechanics/pvp/breach/blighted_overload.plugin.kts.
             "blighted-overload" to listOf(Spec(29631, noted = true), Spec(29634, noted = true), Spec(29637, noted = true), Spec(29640, noted = true)),
             // N522 nachtrun deel 3: Larran's key (OSRS Wiki infobox id 23490, stackable, not noteable) - Krystilia's Wilderness Slayer key.
+            // Nachtrun 27-11 (CONSTRUCTION-99 C7): the Mahogany Homes reward shop - Carpenter's helmet/shirt/trousers/boots, Amy's saw
+            // (weapon slot, OSRS Wiki infobox), plank sack, supply crate. Untradeable, not noteable.
+            "mahogany-homes" to listOf(Spec(24872), Spec(24874), Spec(24876), Spec(24878), Spec(24880, rev667Params = mapOf(686 to 5), weaponType = 5), Spec(24882), Spec(24884)),
             "larran" to listOf(Spec(23490)),
             // N522 2e: the Slayer Rewards box icons (OSRS dbtable 117 column 2) that have no 667 item of the same look - display only
             // (SlayerRewardsInterfaceImportTool.ICON_IMPORTS: 24641-24648; 23493 is the Larran's key count look already at 24636).

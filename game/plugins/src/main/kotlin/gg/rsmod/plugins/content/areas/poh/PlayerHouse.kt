@@ -129,6 +129,21 @@ object PlayerHouse {
             chunkX: Int,
             chunkZ: Int,
         ): Tile = Tile(squareX + chunkX * 8, squareZ + chunkZ * 8, plane)
+
+        /**
+         * Nachtrun 27-11: the same chunk in the OSRS 2016+ house templates (squares 7535 / 7791, imported as "poh-osrs-7535" and
+         * "poh-osrs-7791"): laid out like 7503 / 7759 - one style per plane, same x. The Wilderness theme has no OSRS template, so it
+         * uses whitewashed stone (as its menagerie and dungeon pit do).
+         */
+        fun osrsChunk(
+            chunkX: Int,
+            chunkZ: Int,
+        ): Tile =
+            if (this == WILDERNESS) {
+                WHITEWASHED_STONE.osrsChunk(chunkX, chunkZ)
+            } else {
+                Tile(squareX + chunkX * 8, OSRS_TEMPLATE_Z + chunkZ * 8, plane)
+            }
     }
 
     /**
@@ -262,6 +277,9 @@ object PlayerHouse {
 
     /** Building mode (House Options / the portal's "building mode" entry; client varbit 2176, CS2 2680). Persisted like OSRS. */
     val BUILD_MODE_ATTR = AttributeKey<Boolean>(persistenceKey = "poh_build_mode")
+    /** South edge of the OSRS 2016+ house template squares 7535 / 7791 (Achievement gallery, Portal Nexus room, League hall). */
+    const val OSRS_TEMPLATE_Z = 7104
+
     const val BUILD_MODE_VARBIT = 2176
 
     fun isBuildMode(player: Player): Boolean = player.attr[BUILD_MODE_ATTR] == true

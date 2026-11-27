@@ -33,7 +33,9 @@ object PohFurnitureUse {
         (13581..13587).zip(listOf(4073, 4075, 4079, 4081, 4083, 4085, 4087)).toMap() +
             (13300..13306).zip(listOf(4089, 4091, 4093, 4095, 4097, 4099, 4101)).toMap() +
             (13665..13671).zip(listOf(4111, 4112, 4113, 4114, 4115, 4116, 4117)).toMap() +
-            mapOf(13694 to 4097, 13695 to 4099, 13696 to 4101)
+            mapOf(13694 to 4097, 13695 to 4099, 13696 to 4101) +
+            // Nachtrun 27-11: the Superior garden's benches (teak, gnome, marble, obsidian; both halves) - the wooden bench's sit.
+            (71354..71361).associateWith { 4089 }
 
     // ---- take-item furniture (Darkan HouseController.handleLarders / handleShelves / handleTools / handleWeapons) ----
 

@@ -306848,3 +306848,180 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 25698
+  name: "Carpenter's helmet"
+  examine: "The headgear of a superior builder."
+  tradeable: false
+  weight: 1.02
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 7056
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25699
+  name: "Carpenter's shirt"
+  examine: "The shirt of a superior builder."
+  tradeable: false
+  weight: 0.62
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 7057
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25700
+  name: "Carpenter's trousers"
+  examine: "The trousers of a superior builder."
+  tradeable: false
+  weight: 0.71
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 7058
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25701
+  name: "Carpenter's boots"
+  examine: "The boots of a superior builder."
+  tradeable: false
+  weight: 0.42
+  equipment:
+    equip_slot: 10
+    equip_type: -1
+    appearance_id: 7059
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25702
+  name: "Amy's saw"
+  examine: "She saw scope for improvement."
+  tradeable: false
+  weight: 0.8
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 7060
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 5
+    attack_speed: 5
+    attack_stab: 2
+    attack_slash: 5
+    attack_crush: -2
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 2
+    defence_crush: 1
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 5
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 25703
+  name: "Plank sack"
+  examine: "Lets you carry some extra planks."
+  tradeable: false
+  weight: 5.25
+  equipment: null
+- id: 25704
+  name: "Supply crate"
+  examine: "Some stuff you might find handy for Construction."
+  tradeable: false
+  weight: 5.15
+  equipment: null

@@ -62,6 +62,8 @@ object PohConstruct {
             if (PohLevels.handles(obj.id)) return PohLevels.handle(player, obj, option)
             if (PohMenagerie.handles(obj.id)) return PohMenagerie.handle(player, obj, option)
             if (PohCostume.handles(obj.id)) return PohCostume.handle(player, obj, option)
+            if (PohSuperiorGarden.handles(obj.id)) return PohSuperiorGarden.handle(player, obj, option)
+            if (PohGallery.handles(obj.id)) return PohGallery.handle(player, obj, option)
             if (PohWorkshop.handles(obj.id) && (option == "upgrade" || !PohFurnitureUse.handles(obj.id))) return PohWorkshop.handle(player, obj, option)
             return PohFurnitureUse.handles(obj.id) && PohFurnitureUse.handle(player, obj, option)
         }
@@ -367,6 +369,7 @@ object PohConstruct {
             task.messageBox("You need a family crest for that. Sir Renitee in Falador keeps the records of every family.")
             return
         }
+        if (!flatpack && !PohSuperiorGarden.canPlant(task, deco)) return
         if (!flatpack && !PohBuild.canBuild(task, picked)) return
         val targets = targets(player, room, spot, spot.hotspot.decos.indexOf(deco))
         if (targets.isEmpty()) return
@@ -385,6 +388,7 @@ object PohConstruct {
             PohRooms.setFurniture(player, s.key(room), if (habitat) "${d.key}#${s.hotspot.ids.indexOf(s.loc)}" else d.key)
         }
         if (!flatpack) player.addXp(Skills.CONSTRUCTION, picked.xp, checkBrawlingGloves = true)
+        if (!flatpack) PohSuperiorGarden.plantXp(player, deco)
         PohMenagerie.refreshPets(player)
         player.unlock()
     }
@@ -405,12 +409,14 @@ object PohConstruct {
         task: QueueTask,
         room: PohRooms.Built,
         spot: PohRooms.Spot,
+        target: PohFurniture.Deco? = null,
     ) {
         val player = task.player
         if (!PlayerHouse.ownsHouseAt(player) || !PohBuild.requireBuildMode(player)) return
         val key = PohRooms.furniture(player)[spot.key(room)]?.let { PohRooms.decoKey(it) } ?: return
         val index = spot.hotspot.decos.indexOfFirst { it?.key == key }
-        val next = spot.hotspot.decos.getOrNull(index + 1)
+        // [target]: an upgrade that is not simply the next piece (an Ancient or Lunar altar to the occult altar, PohGallery).
+        val next = target?.takeIf { it.key != key } ?: spot.hotspot.decos.getOrNull(index + 1)
         if (index < 0 || next == null) {
             task.messageBox("This can't be upgraded any further.")
             return
@@ -419,7 +425,7 @@ object PohConstruct {
         val world = player.world
         val style = PlayerHouse.styleOf(player)
         val old = PohRooms.placedObj(PohRooms.furniture(player).getValue(spot.key(room)), style, PohHeraldry.crestIndex(player))
-        val cost = PohMenagerie.UPGRADES[next.key] ?: spot.hotspot.decos[index]?.let { PohCostume.upgradeCost(it, next) }
+        val cost = PohMenagerie.UPGRADES[next.key] ?: PohSuperiorGarden.UPGRADES[next.key] ?: PohGallery.upgradeCost(spot.hotspot.decos[index]!!, next) ?: spot.hotspot.decos[index]?.let { PohCostume.upgradeCost(it, next) }
         val needed = cost ?: pieceOf(next)
         val ok = player.skills.getCurrentLevel(Skills.CONSTRUCTION) >= needed.level && needed.materials.all { (item, qty) -> PohBuild.countOf(player, item) >= qty }
         if (!ok) {
@@ -461,7 +467,8 @@ object PohConstruct {
         val built = PohRooms.furniture(player)
         val deco = built[spot.key(room)]?.let { PohFurniture.DECOS[PohRooms.decoKey(it)] } ?: return
         val style = PlayerHouse.styleOf(player)
-        val targets = targets(player, room, spot, spot.hotspot.decos.indexOf(deco)).filter { (s, _) -> built[s.key(room)] != null }
+        // A clipped topiary is still the topiary hotspot's piece (PohSuperiorGarden.baseDeco).
+        val targets = targets(player, room, spot, spot.hotspot.decos.indexOf(PohGallery.baseDeco(PohSuperiorGarden.baseDeco(deco)))).filter { (s, _) -> built[s.key(room)] != null }
         player.lock = LockState.FULL
         player.animate(PohBuild.REMOVE_ANIM)
         task.wait(2)

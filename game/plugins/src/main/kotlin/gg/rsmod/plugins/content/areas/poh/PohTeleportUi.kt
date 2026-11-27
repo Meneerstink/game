@@ -88,10 +88,20 @@ object PohTeleportUi {
         )
     }
 
-    fun openJewelleryBox(player: Player) {
+    /**
+     * [boxes]: how many of the six jewellery rows the box holds (nachtrun 27-11, Achievement gallery - OSRS Wiki "Jewellery box":
+     * basic = ring of dueling + games necklace, fancy = + combat bracelet + skills necklace, ornate = all six); the rest are hidden
+     * and get no click events.
+     */
+    fun openJewelleryBox(
+        player: Player,
+        boxes: Int = PohTeleportInterfaceImportTool.BOXES.size,
+    ) {
         player.openInterface(JEWELLERY_BOX, InterfaceDestination.MAIN_SCREEN)
         player.setInterfaceEvents(JEWELLERY_BOX, CLOSE, -1..-1, OP1)
         PohTeleportInterfaceImportTool.BOXES.forEachIndexed { i, box ->
+            player.setComponentHidden(JEWELLERY_BOX, Box.box(i), i >= boxes)
+            if (i >= boxes) return@forEachIndexed
             player.setComponentItem(JEWELLERY_BOX, Box.box(i) + Box.BOX_ITEM, box.item, NO_COUNT)
             box.destinations.indices.forEach { d -> player.setInterfaceEvents(JEWELLERY_BOX, Box.button(i, d), -1..-1, OP1) }
         }

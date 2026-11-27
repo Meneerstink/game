@@ -124,6 +124,17 @@ object PohRooms {
         CHAPEL("Chapel", 45, 50_000, 2, 5, Kind.CHAMBER),
         PORTAL_CHAMBER("Portal chamber", 50, 100_000, 1, 4, Kind.CHAMBER),
         FORMAL_GARDEN("Formal garden", 55, 75_000, 2, 1, Kind.LAND, Where.GROUND),
+        /**
+         * Nachtrun 27-11 (C6): the OSRS-only Superior garden (OSRS Wiki: level 65, 75,000 coins, doors nesw). Its template is the
+         * Wilderness theme's OSRS region chunk 5,0 (the OSRS POH map) for every style - see [template].
+         */
+        SUPERIOR_GARDEN("Superior garden", 65, 75_000, 5, 0, Kind.LAND, Where.GROUND),
+
+        /**
+         * Nachtrun 27-11 (C6): the OSRS-only Achievement gallery (OSRS Wiki: level 80, 200,000 coins, doors north and south, one per
+         * house). Its template is OSRS house square 7535 chunk 1,0 (batch "poh-osrs-7535") for every style - see [template].
+         */
+        ACHIEVEMENT_GALLERY("Achievement gallery", 80, 200_000, 1, 0, Kind.CHAMBER),
         THRONE_ROOM("Throne room", 60, 150_000, 6, 5, Kind.CHAMBER, Where.GROUND),
 
         // Darkan HouseRooms (chunks from 232,632): HALL_SKILL_DOWN 235,638 / HALL_QUEST_DOWN 239,638 are the halls at the top of a
@@ -153,7 +164,11 @@ object PohRooms {
          * its dungeon pit chunk is empty (nachtrun 27-11 sweep), so the pit uses the whitewashed one too (underground).
          */
         fun template(style: PlayerHouse.Style): Tile =
-            if ((this == MENAGERIE || this == DUNGEON_PIT) && style == PlayerHouse.Style.WILDERNESS) PlayerHouse.Style.WHITEWASHED_STONE.chunk(chunkX, chunkZ) else style.chunk(chunkX, chunkZ)
+            if (this == SUPERIOR_GARDEN) {
+                PlayerHouse.Style.WILDERNESS.chunk(chunkX, chunkZ)
+            } else if (this == ACHIEVEMENT_GALLERY) {
+                style.osrsChunk(chunkX, chunkZ)
+            } else if ((this == MENAGERIE || this == DUNGEON_PIT) && style == PlayerHouse.Style.WILDERNESS) PlayerHouse.Style.WHITEWASHED_STONE.chunk(chunkX, chunkZ) else style.chunk(chunkX, chunkZ)
     }
 
     /** One built room: grid cell (instance chunk), plane, rotation (0-3 clockwise). */
@@ -234,7 +249,7 @@ object PohRooms {
     fun onlyOne(
         player: Player,
         type: RoomType,
-    ): Boolean = (type != RoomType.GAMES_ROOM && type != RoomType.MENAGERIE) || rooms(player).none { it.type == type }
+    ): Boolean = (type != RoomType.GAMES_ROOM && type != RoomType.MENAGERIE && type != RoomType.ACHIEVEMENT_GALLERY) || rooms(player).none { it.type == type }
 
     /**
      * Rooms that count towards [maxRooms]. CON99-VASTHUIS (owner 2026-11-26): the free fixed house (garden, PvP/PvM room, portal
