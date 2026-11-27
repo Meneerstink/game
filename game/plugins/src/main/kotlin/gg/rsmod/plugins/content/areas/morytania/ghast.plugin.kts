@@ -137,13 +137,26 @@ fun reveal(ghast: Npc, p: Player) {
 
 // DIARIES-OSRS Morytania easy reward (OSRS Wiki "Morytania Diary"): "Ghasts in the Mort Myre Swamp will ignore you half of the time".
 // Wrapped one tick after the spawn, like the revenants: npc_aggro's global spawn hook sets the default check on the same spawn.
+// 27-11 bugtest: npc_aggro runs this check every 1-3 ticks, so a fresh 50% roll per check let the ghast attack within a few ticks
+// anyway. The roll is now made once per ghast and player and held IGNORE_HOLD ticks (no source for the length: one minute, the same
+// as the visible ghast's 100-tick idle limit), so half of the encounters really are ignored.
+val IGNORE_HOLD = 100
 on_npc_spawn(GHAST) {
     npc.queue {
         wait(1)
         val base = npc.aggroCheck
+        val decided = HashMap<String, Pair<Int, Boolean>>() // username -> (valid until cycle, ignores)
         npc.aggroCheck = { n, p ->
-            (base == null || base(n, p)) &&
-                !(gg.rsmod.plugins.content.diaries.Diaries.claimed(p, gg.rsmod.plugins.content.diaries.Diaries.Diary.MORYTANIA) >= 1 && world.random(1) == 0)
+            (base == null || base(n, p)) && !ignoresHalf(p, decided)
         }
     }
+}
+
+fun ignoresHalf(p: Player, decided: HashMap<String, Pair<Int, Boolean>>): Boolean {
+    if (gg.rsmod.plugins.content.diaries.Diaries.claimed(p, gg.rsmod.plugins.content.diaries.Diaries.Diary.MORYTANIA) < 1) return false
+    val now = world.currentCycle
+    decided[p.username]?.let { (until, ignores) -> if (now < until) return ignores }
+    val ignores = world.random(1) == 0
+    decided[p.username] = (now + IGNORE_HOLD) to ignores
+    return ignores
 }
