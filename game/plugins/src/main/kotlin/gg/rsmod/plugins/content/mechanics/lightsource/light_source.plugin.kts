@@ -56,7 +56,9 @@ lightSourceRaw.forEach { raw ->
     on_item_on_item(item1 = raw, item2 = Items.TINDERBOX_590) {
         val lightSource = LightSource.values().firstOrNull { it.raw == raw } ?: return@on_item_on_item
         val name = getName(raw)
-        val slot = player.getInteractingSlot()
+        // DIARIES-OSRS 27-11: item-on-item sets the item/other-item slots, not INTERACTING_SLOT_ATTR (that NPE'd every lighting).
+        val slot = if (player.attr[gg.rsmod.game.model.attr.INTERACTING_ITEM_ID] == raw) player.attr[gg.rsmod.game.model.attr.INTERACTING_ITEM_SLOT] ?: -1
+            else player.attr[gg.rsmod.game.model.attr.OTHER_ITEM_SLOT_ATTR] ?: player.inventory.rawItems.indexOfFirst { it?.id == raw }
         // Check if the player has the required Firemaking level.
         if (player.skills.getCurrentLevel(Skills.FIREMAKING) < lightSource.levelRequired) {
             player.message("You need a Firemaking level of ${lightSource.levelRequired} to light the $name.")
