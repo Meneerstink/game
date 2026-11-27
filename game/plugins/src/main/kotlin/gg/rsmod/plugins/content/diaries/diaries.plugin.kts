@@ -14,6 +14,10 @@ on_login {
     player.timers[DIARY_TICK] = 1
 }
 
+on_player_death {
+    gg.rsmod.plugins.content.diaries.Diaries.respawned(player)
+}
+
 on_timer(DIARY_TICK) {
     player.timers[DIARY_TICK] = 1
     runCatching { Diaries.tick(player) }.onFailure { gg.rsmod.game.model.Trace.crash("diary tick", it) }

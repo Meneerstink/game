@@ -109,6 +109,12 @@ object Diaries {
     private val SNAP_INV = AttributeKey<Map<Int, Int>>()
     private val SNAP_XP = AttributeKey<DoubleArray>()
     private val SNAP_TILE = AttributeKey<Tile>()
+
+    /** A death respawn is no teleport: the next snapshot starts at the respawn tile (live A9 27-11: dying near Shantay counted
+     *  'Teleport to the Grand Exchange'). Called from the player-death hook, which runs after the respawn move. */
+    fun respawned(player: Player) {
+        player.attr[SNAP_TILE] = player.tile
+    }
     private val SNAP_PRAY = AttributeKey<Int>()
     private val SNAP_CAPE = AttributeKey<Int>()
     private val SNAP_TALK = AttributeKey<Int>()
